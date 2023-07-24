@@ -45,10 +45,9 @@
   </tr>
 </table>
 
-## 프로젝트 관리도구
-[![image](https://img.shields.io/badge/Notion-000000.svg?style=for-the-badge&logo=Notion&logoColor=white)](https://www.notion.so/1b49f8005abd408da3ff585427499d70)
-
 ## 사용하는 기술
+### 프로젝트 관리
+[![image](https://img.shields.io/badge/Notion-000000.svg?style=for-the-badge&logo=Notion&logoColor=white)](https://www.notion.so/1b49f8005abd408da3ff585427499d70)
 ### FE
 <img src="https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white" /> <img src="https://img.shields.io/badge/React-61DAFB.svg?style=for-the-badge&logo=React&logoColor=black" /> <img src="https://img.shields.io/badge/React%20Router-CA4245.svg?style=for-the-badge&logo=React-Router&logoColor=white" /> <img src="https://img.shields.io/badge/Vite-646CFF.svg?style=for-the-badge&logo=Vite&logoColor=white" />
 ### BE
