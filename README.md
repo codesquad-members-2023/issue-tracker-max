@@ -5,7 +5,7 @@
 | team | members                                        | repository                                       |
 | ---- | ---------------------------------------------- | ------------------------------------------------ |
 | 1    |                                                |                                                  |
-| 2    |                                                |                                                  |
+| 2    | [만두](https://github.com/road-jin), [Ape](https://github.com/crtEvent), [litae](https://github.com/qkdflrgs)                               | [Link](https://github.com/BibimMandu-IssueTacker/issue-tracker)                                          |
 | 3    |  |  |
 | 4    |  |  |
 | 5    |  |  |
