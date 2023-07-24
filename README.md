@@ -10,7 +10,7 @@
 | 4    |  |  |
 | 5    |  |  |
 | 6    |  |  |
-| 7    |  |  |
+| 7    | 지안, 이안, 하나, 보노, 푸반, 쿤디 |  https://github.com/room-number7-presents/issue-tracker-max |
 | 8    |  |  |
 
 * 팀 정보를 업데이트해서 main 브랜치로 PR 보내 주세요.
