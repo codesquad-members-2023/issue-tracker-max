@@ -8,7 +8,7 @@
 | 2    |                                                |                                                  |
 | 3    |  |  |
 | 4    |  |  |
-| 5    |  |  |
+| 5    | 감귤, 시오, light, geppeto, 퓨즈  | https://github.com/codesquad-issue-team-05/issue-tracker-max |
 | 6    |  |  |
 | 7    |  |  |
 | 8    |  |  |
