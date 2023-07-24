@@ -4,7 +4,7 @@
 개발 이슈를 관리하는 기능을 구현하는 프로젝트 입니다
 ## 구성원
 
-<table>
+<table align="center">
   <tr>
     <th colspan="3">#BE</th>
     <th colspan="2">#FE</th>
