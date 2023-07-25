@@ -1,4 +1,4 @@
-package kr.codesquad.issuetracker.label.domain;
+package kr.codesquad.issuetracker.domain;
 
 import lombok.Getter;
 

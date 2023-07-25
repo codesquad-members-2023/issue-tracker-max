@@ -1,4 +1,4 @@
-package kr.codesquad.issuetracker.comment.domain;
+package kr.codesquad.issuetracker.domain;
 
 import java.time.LocalDateTime;
 

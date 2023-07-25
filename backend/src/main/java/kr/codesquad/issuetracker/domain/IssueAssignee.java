@@ -1,4 +1,4 @@
-package kr.codesquad.issuetracker.useraccount.domain;
+package kr.codesquad.issuetracker.domain;
 
 import lombok.Getter;
 
