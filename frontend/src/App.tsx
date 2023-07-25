@@ -1,3 +1,10 @@
+import { ThemeProvider } from "styled-components";
+import { designSystem } from "./constants/designSystem";
+
 export default function App() {
-  return <div>hello world</div>;
+  return (
+    <ThemeProvider theme={designSystem}>
+      <div>hello world</div>
+    </ThemeProvider>
+  );
 }
