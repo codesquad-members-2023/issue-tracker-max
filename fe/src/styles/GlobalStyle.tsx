@@ -42,7 +42,18 @@ export default createGlobalStyle`
     list-style: none;
   }
 
-  button,
+  button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+  }
+
+  button:disabled{
+    cursor: not-allowed;
+  }
+  
   input,
   select {
     margin: 0;
