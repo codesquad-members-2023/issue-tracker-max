@@ -1,4 +1,4 @@
-package kr.codesquad.issuetracker.infrastructure.security;
+package kr.codesquad.issuetracker.infrastructure.security.hash;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

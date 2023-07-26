@@ -16,7 +16,7 @@ import kr.codesquad.issuetracker.domain.UserAccount;
 import kr.codesquad.issuetracker.exception.ApplicationException;
 import kr.codesquad.issuetracker.exception.ErrorCode;
 import kr.codesquad.issuetracker.infrastructure.persistence.UserAccountRepository;
-import kr.codesquad.issuetracker.infrastructure.security.PasswordEncoder;
+import kr.codesquad.issuetracker.infrastructure.security.hash.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
