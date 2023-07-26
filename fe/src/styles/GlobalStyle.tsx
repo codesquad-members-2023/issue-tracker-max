@@ -50,7 +50,7 @@ export default createGlobalStyle`
     color: inherit;
   }
 
-  button:disabled{
+  button:disabled {
     cursor: not-allowed;
   }
   
