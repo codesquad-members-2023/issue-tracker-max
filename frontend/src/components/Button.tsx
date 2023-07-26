@@ -19,21 +19,28 @@ export default function Button({
   onClick: () => void;
   children: string;
 }) {
+
+  const buttonMap = {
+    container: ConatinerButton,
+    outline: OutlineButton,
+    ghost: GhostButton,
+  };
+
+  const ButtonComponent = buttonMap[type];
+
   return (
-    <StyledButton {...{ size, type, flexible, selected, disabled, onClick }}>
+    <ButtonComponent {...{ size, flexible, selected, disabled, onClick }}>
       <div>
         {icon && <img src={`/src/assets/${icon}.svg`} alt={icon} />}
         <span>{children}</span>
       </div>
-    </StyledButton>
+    </ButtonComponent>
   );
 }
 
 const StyledButton = styled.button<{
   size: "small" | "medium" | "large";
-  type: "container" | "outline" | "ghost";
   flexible?: "flexible" | "fixed";
-  selected?: boolean;
 }>`
   width: ${({ size, flexible }) =>
     flexible === "flexible"
@@ -47,26 +54,13 @@ const StyledButton = styled.button<{
     size === "large" ? "56px" : size === "medium" ? "48px" : "40px"};
   padding: ${({ flexible }) =>
     flexible === "flexible" ? "0 24px 0 24px" : ""};
-  border: ${({ theme: { color }, type }) =>
-    type === "outline" ? `1px solid ${color.brandBorderDefault}` : "none"};
   border-radius: ${({ theme: { radius }, size }) =>
     size === "large" ? radius.large : radius.medium};
-  font: ${({ theme: { font }, size, selected }) => {
+  font: ${({ theme: { font }, size }) => {
     const fontSize = size === "large" ? 20 : size === "medium" ? 16 : 12;
-    const fontType = selected ? "selectedBold" : "availableMedium";
 
-    return font[`${fontType}${fontSize}`];
+    return font[`availableMedium${fontSize}`];
   }};
-  background-color: ${({ theme: { color }, type }) =>
-    type === "container" ? color.brandSurfaceDefault : color.brandSurfaceWeak};
-  color: ${({ theme: { color }, type, selected }) =>
-    type === "container"
-      ? color.brandTextDefault
-      : type === "outline"
-      ? color.brandTextWeak
-      : selected
-      ? color.neutralTextStrong
-      : color.neutralTextDefault};
   opacity: ${({ theme: { opacity } }) => opacity.default};
 
   &:hover {
@@ -89,22 +83,52 @@ const StyledButton = styled.button<{
 
   img {
     padding: 4px;
-    filter: ${({ theme: { themeMode }, type, selected }) =>
-      "brightness(0) saturate(100%) " +
-      (type === "container"
-        ? "invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)"
-        : type === "outline"
-        ? "invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)"
-        : selected
-        ? themeMode === "light"
-          ? "invert(8%) sepia(6%) saturate(6138%) hue-rotate(203deg) brightness(94%) contrast(98%)"
-          : "invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)"
-        : themeMode === "light"
-        ? "invert(31%) sepia(8%) saturate(1775%) hue-rotate(197deg) brightness(93%) contrast(91%)"
-        : "invert(85%) sepia(17%) saturate(218%) hue-rotate(195deg) brightness(91%) contrast(85%)")};
   }
 
   span {
     padding: 0 8px 0 8px;
+  }
+`;
+
+const ConatinerButton = styled(StyledButton)`
+  background-color: ${({ theme: { color } }) => color.brandSurfaceDefault};
+  color: ${({ theme: { color } }) => color.brandTextDefault};
+
+  img {
+    filter: brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%);
+  }
+`;
+
+const OutlineButton = styled(StyledButton)`
+  border: 1px solid ${({ theme: { color } }) => color.brandBorderDefault};
+  background-color: ${({ theme: { color } }) => color.brandSurfaceWeak};
+  color: ${({ theme: { color } }) => color.brandTextWeak};
+
+  img {
+    filter: brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%);
+  }
+`
+
+
+const GhostButton = styled(StyledButton)<{selected?: boolean}>`
+  font: ${({ theme: { font }, size, selected }) => {
+    const fontSize = size === "large" ? 20 : size === "medium" ? 16 : 12;
+    const fontType = selected ? "selectedBold" : "availableMedium";
+
+    return font[`${fontType}${fontSize}`];
+  }};
+  background-color: ${({ theme: { color } }) => color.brandSurfaceWeak};
+  color: ${({ theme: { color }, selected }) =>
+    selected ? color.neutralTextStrong : color.neutralTextDefault};
+
+  img {
+    filter: ${({ theme: { themeMode }, selected }) =>
+      selected
+        ? themeMode === "light"
+          ? "brightness(0) saturate(100%) invert(8%) sepia(6%) saturate(6138%) hue-rotate(203deg) brightness(94%) contrast(98%)"
+          : "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)"
+        : themeMode === "light"
+        ? "brightness(0) saturate(100%) invert(31%) sepia(8%) saturate(1775%) hue-rotate(197deg) brightness(93%) contrast(91%)"
+        : "brightness(0) saturate(100%) invert(85%) sepia(17%) saturate(218%) hue-rotate(195deg) brightness(91%) contrast(85%)"};
   }
 `;
