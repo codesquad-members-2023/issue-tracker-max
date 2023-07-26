@@ -1,6 +1,7 @@
 package kr.codesquad.issuetracker.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
 import java.util.stream.Stream;
@@ -110,5 +111,83 @@ public class AuthAcceptanceTest {
 			.body(Map.of(
 				"loginId", "iambruni",
 				"password", "asdf123444!"));
+	}
+
+	@Test
+	void 로그인을_성공한다() {
+		// given
+		var given = 올바른_로그인_정보가_주어지면();
+
+		// when
+		var response = given
+			.when().post("/api/auth/login")
+			.then().log().all()
+			.extract();
+
+		// then
+		assertAll(
+			() -> assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED),
+			() -> assertThat(response.body().jsonPath().getString("tokenType")).isNotNull(),
+			() -> assertThat(response.body().jsonPath().getString("accessToken")).isNotNull()
+		);
+	}
+
+	@Test
+	void 로그인_아이디가_없어_로그인에_실패한다() {
+		// given
+		var given = 존재하지_않는_로그인_아이디가_주어지면();
+
+		// when
+		var response = given
+			.when().post("/api/auth/login")
+			.then().log().all()
+			.extract();
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_NOT_FOUND);
+	}
+
+	@Test
+	void 비밀번호가_일치하지_않아_로그인에_실패한다() {
+		// given
+		var given = 일치하지_않는_비밀번호가_주어지면();
+
+		// when
+		var response = given
+			.when().post("/api/auth/login")
+			.then().log().all()
+			.extract();
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+	}
+
+	private RequestSpecification 올바른_로그인_정보가_주어지면() {
+		return RestAssured
+			.given().log().all()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.body(Map.of(
+				"loginId", "iambruni",
+				"password", "asdf1234"));
+	}
+
+	private RequestSpecification 존재하지_않는_로그인_아이디가_주어지면() {
+		return RestAssured
+			.given().log().all()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.body(Map.of(
+				"loginId", "iamnotbruni",
+				"password", "asdf1234"
+			));
+	}
+
+	private RequestSpecification 일치하지_않는_비밀번호가_주어지면() {
+		return RestAssured
+			.given().log().all()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.body(Map.of(
+				"loginId", "iambruni",
+				"password", "asdf12345"
+			));
 	}
 }

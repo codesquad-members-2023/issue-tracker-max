@@ -44,7 +44,7 @@ public class DatabaseInitializer {
 	@Transactional
 	public void initTables() {
 		jdbcTemplate.update(
-			"INSERT INTO user_account(login_id, password, profile_url) VALUES('iambruni', 'asdf1234', 'default_url')",
+			"INSERT INTO user_account(login_id, password, profile_url) VALUES('iambruni', '312433c28349f63c4f387953ff337046e794bea0f9b9ebfcb08e90046ded9c76', 'default_url')",
 			Map.of());
 	}
 
