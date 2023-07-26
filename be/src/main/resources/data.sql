@@ -13,12 +13,12 @@ values ('라벨 1', '#F08080', '#000000'),
        ('라벨 2', '#98FB98', '#000000'),
        ('라벨 3', '#6495ED', '#000000');
 
-INSERT INTO issue (member_id, PIC_id, milestone_id, title)
-values (1, 1, 1, '제목 1'),
-       (2, 3, 2, '제목 2'),
-       (3, 1, 3, '제목 3'),
-       (3, 2, 1, '제목 4'),
-       (1, 3, 1, '제목 5');
+INSERT INTO issue (member_id, milestone_id, title)
+values (1, 1, '제목 1'),
+       (2, 2, '제목 2'),
+       (3, 3, '제목 3'),
+       (3, 1, '제목 4'),
+       (1, 1, '제목 5');
 
 INSERT INTO issue_label (issue_id, label_id)
 values (1, 1),
@@ -30,7 +30,16 @@ values (1, 1),
        (4, 2),
        (4, 3);
 
-# 이슈 아이디 5개, 멤버 아이디 3개
+INSERT INTO issue_PIC (issue_id, PIC_id)
+values (1, 1),
+       (1, 2),
+       (2, 3),
+       (3, 1),
+       (3, 3),
+       (4, 1),
+       (4, 2),
+       (4, 3);
+
 INSERT INTO  comment (issue_id, member_id, contents)
 values (1, 1, '1번 댓글입니다.'),
        (1, 2, '2번 댓글입니다.'),

@@ -1,4 +1,5 @@
 DROP Table if exists comment;
+DROP Table if exists issue_PIC;
 DROP Table if exists issue_label;
 DROP Table if exists issue;
 DROP Table if exists label;
@@ -44,6 +45,14 @@ CREATE TABLE issue_label
     PRIMARY KEY (id)
 );
 
+CREATE TABLE issue_PIC
+(
+    id       bigint AUTO_INCREMENT,
+    issue_id bigint NOT NULL,
+    PIC_id   bigint NOT NULL,
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE file
 (
     id  bigint AUTO_INCREMENT,
@@ -53,14 +62,13 @@ CREATE TABLE file
 
 CREATE TABLE issue
 (
-    id             bigint AUTO_INCREMENT,
-    member_id      bigint      NOT NULL,
-    PIC_id         bigint,
-    milestone_id   bigint,
-    title          varchar(50) NOT NULL,
-    status         varchar(20) NOT NULL default 'open',
-    deleted        boolean     NOT NULL default FALSE,
-    created_at     timestamp            default current_timestamp,
+    id           bigint AUTO_INCREMENT,
+    member_id    bigint      NOT NULL,
+    milestone_id bigint,
+    title        varchar(50) NOT NULL,
+    status       varchar(20) NOT NULL default 'open',
+    deleted      boolean     NOT NULL default FALSE,
+    created_at   timestamp            default current_timestamp,
     PRIMARY KEY (id)
 );
 
@@ -80,9 +88,6 @@ ALTER TABLE issue
     ADD CONSTRAINT fk_issue_member_id FOREIGN KEY (member_id) REFERENCES member (id);
 
 ALTER TABLE issue
-    ADD CONSTRAINT fk_issue_PIC_id FOREIGN KEY (PIC_id) REFERENCES member (id);
-
-ALTER TABLE issue
     ADD CONSTRAINT fk_issue_milestone_id FOREIGN KEY (milestone_id) REFERENCES milestone (id);
 
 ALTER TABLE comment
@@ -99,3 +104,9 @@ ALTER TABLE issue_label
 
 ALTER TABLE issue_label
     ADD CONSTRAINT fk_issue_label_label_id FOREIGN KEY (label_id) REFERENCES label (id);
+
+ALTER TABLE issue_PIC
+    ADD CONSTRAINT fk_issue_PIC_issue_id FOREIGN KEY (issue_id) REFERENCES issue (id);
+
+ALTER TABLE issue_PIC
+    ADD CONSTRAINT fk_issue_PIC_PIC_id FOREIGN KEY (PIC_id) REFERENCES member (id);
