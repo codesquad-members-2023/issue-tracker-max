@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -62,6 +64,18 @@ class AuthServiceTest {
 					.extracting("errorCode").isEqualTo(ErrorCode.DUPLICATED_LOGIN_ID),
 				() -> then(userAccountRepository).should(never()).save(any(UserAccount.class))
 			);
+		}
+
+		@DisplayName("존재하지 않는 아이디로 로그인 시 예외가 발생한다.")
+		@Test
+		void notExistLoginId() {
+			// given
+			given(userAccountRepository.findByLoginId(anyString())).willReturn(Optional.empty());
+
+			// when & then
+			assertThatThrownBy(() -> authService.login("applePIE", "12341234"))
+				.isInstanceOf(ApplicationException.class)
+				.extracting("errorCode").isEqualTo(ErrorCode.USER_NOT_FOUND);
 		}
 	}
 }
