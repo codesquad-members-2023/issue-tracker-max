@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter, Routes, Route, Outlet, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyles } from './styles/GlobalStyles.ts';
 import { theme } from './styles/Theme';
@@ -16,6 +16,8 @@ type ThemeMode = 'light' | 'dark';
 export const App = () => {
   /* 라이트모드/다크모드 테스트용 */
   const [currentMode, setCurrentMode] = useState<ThemeMode>('light');
+  console.log(setCurrentMode);
+
 
   return (
     <>
