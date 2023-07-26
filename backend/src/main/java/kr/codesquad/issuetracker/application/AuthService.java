@@ -7,7 +7,9 @@ import kr.codesquad.issuetracker.domain.UserAccount;
 import kr.codesquad.issuetracker.exception.ApplicationException;
 import kr.codesquad.issuetracker.exception.ErrorCode;
 import kr.codesquad.issuetracker.infrastructure.persistence.UserAccountRepository;
-import kr.codesquad.issuetracker.infrastructure.security.PasswordEncoder;
+import kr.codesquad.issuetracker.infrastructure.security.hash.PasswordEncoder;
+import kr.codesquad.issuetracker.infrastructure.security.jwt.JwtProvider;
+import kr.codesquad.issuetracker.presentation.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
 
 	private final PasswordEncoder passwordEncoder;
+	private final JwtProvider jwtProvider;
 	private final UserAccountRepository userAccountRepository;
 
 	@Transactional
@@ -25,5 +28,17 @@ public class AuthService {
 
 		UserAccount userAccount = new UserAccount(loginId, passwordEncoder.encrypt(password));
 		userAccountRepository.save(userAccount);
+	}
+
+	@Transactional(readOnly = true)
+	public TokenResponse login(final String loginId, final String password) {
+		UserAccount findUserAccount = userAccountRepository.findByLoginId(loginId)
+			.orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+		if (!findUserAccount.isSamePassword(passwordEncoder.encrypt(password))) {
+			throw new ApplicationException(ErrorCode.FAILED_LOGIN);
+		}
+
+		return new TokenResponse(jwtProvider.createToken(String.valueOf(findUserAccount.getId())));
 	}
 }
