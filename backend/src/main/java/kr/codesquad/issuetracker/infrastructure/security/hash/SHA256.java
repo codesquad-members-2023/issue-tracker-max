@@ -3,6 +3,9 @@ package kr.codesquad.issuetracker.infrastructure.security.hash;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import kr.codesquad.issuetracker.exception.ApplicationException;
+import kr.codesquad.issuetracker.exception.ErrorCode;
+
 public class SHA256 implements PasswordEncoder {
 
 	@Override
@@ -11,8 +14,8 @@ public class SHA256 implements PasswordEncoder {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			md.update(text.getBytes());
 			return bytesToHex(md.digest());
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException();
+		} catch (NoSuchAlgorithmException | NullPointerException e) {
+			throw new ApplicationException(ErrorCode.FAILED_ENCRYPTION);
 		}
 	}
 
