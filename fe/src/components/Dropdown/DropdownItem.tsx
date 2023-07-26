@@ -1,6 +1,6 @@
-import { styled } from "styled-components";
 import checkOffCircle from "@assets/icon/checkOffCircle.svg";
 import checkOnCircle from "@assets/icon/checkOnCircle.svg";
+import { styled } from "styled-components";
 import { DropdownItemType } from "./types";
 
 export default function DropdownItem({ item }: { item: DropdownItemType }) {

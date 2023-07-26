@@ -1,9 +1,9 @@
-import { useState } from "react";
-import styled, { ThemeProvider } from "styled-components";
-import GlobalStyle from "@styles/GlobalStyle";
-import { lightMode, darkMode } from "@styles/designSystem";
 import DropdownIndicator from "@components/Dropdown/DropdownIndicator";
 import Logo from "@components/common/Logo";
+import GlobalStyle from "@styles/GlobalStyle";
+import { darkMode, lightMode } from "@styles/designSystem";
+import { useState } from "react";
+import styled, { ThemeProvider } from "styled-components";
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<"light" | "dark">("light");

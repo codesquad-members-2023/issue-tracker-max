@@ -1,12 +1,12 @@
+import chevronDown from "@assets/icon/chevronDown.svg";
+import DropdownPanel from "@components/Dropdown/DropdownPanel";
 import { useState } from "react";
 import { styled } from "styled-components";
-import DropdownPanel from "@components/Dropdown/DropdownPanel";
-import chevronDown from "@assets/icon/chevronDown.svg";
 import {
-  DropdownNameKOR,
-  DropdownName,
-  DropdownPanelVariant,
   DropdownItemType,
+  DropdownName,
+  DropdownNameKOR,
+  DropdownPanelVariant,
 } from "./types";
 
 export default function DropdownIndicator({
