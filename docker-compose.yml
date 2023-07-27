@@ -3,18 +3,14 @@ services:
   app:
     container_name: issue_tracker_app
     image: yhkim951107/issue_tracker_app:latest
-    depends_on:
-      - db
     ports:
       - 8080:8080
     volumes:
       - issue_tracker_app:/app
-  web:
-    container_name: kiosk_web
-    image: yhkim951107/kiosk_web:latest
-    depends_on:
-      - db
-    ports:
-      - 3000:3000
+#  web:
+#    container_name: issue_tracker_web
+#    image: yhkim951107/issue_tracker_web:latest
+#    ports:
+#      - 3000:3000
 volumes:
   issue_tracker_app:
