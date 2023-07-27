@@ -9,9 +9,9 @@ const font = {
   selectedBold20: "700 20px/32px Pretendard, sans-serif",
   selectedBold16: "700 16px/24px Pretendard, sans-serif",
   selectedBold12: "700 16px/24px Pretendard, sans-serif",
-  availableBold20: "500 20px/32px Pretendard, sans-serif",
-  availableBold16: "500 16px/24px Pretendard, sans-serif",
-  availableBold12: "500 12px/16px Pretendard, sans-serif",
+  availableMedium20: "500 20px/32px Pretendard, sans-serif",
+  availableMedium16: "500 16px/24px Pretendard, sans-serif",
+  availableMedium12: "500 12px/16px Pretendard, sans-serif",
 };
 
 const color = {
@@ -101,11 +101,20 @@ const mode = {
 };
 
 export const designSystem = {
-  font,
-  color,
-  radius,
-  border,
-  opacity,
-  light: mode.light,
-  dark: mode.dark,
+  light: {
+    font,
+    radius,
+    border,
+    opacity,  
+    color: mode.light,
+    dropShadow: mode.light.dropShadow
+  },
+  dark: {
+    font,
+    radius,
+    border,
+    opacity,
+    color: mode.dark,
+    dropShadow: mode.dark.dropShadow
+  }
 };
