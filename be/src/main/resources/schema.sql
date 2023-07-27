@@ -10,8 +10,9 @@ DROP Table if exists file;
 CREATE TABLE member
 (
     id       bigint AUTO_INCREMENT,
-    email    varchar(50) NOT NULL UNIQUE,
-    password varchar(50) NOT NULL,
+    email    varchar(50)  NOT NULL UNIQUE,
+    password varchar(50)  NOT NULL,
+    profile  varchar(255) NOT NULL,
     PRIMARY KEY (id)
 );
 
