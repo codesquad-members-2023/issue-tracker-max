@@ -1,8 +1,8 @@
-import { ThemeProvider } from "styled-components";
-import { lightTheme } from "./theme";
-import { darkTheme } from "./theme";
-import Theme from "./constant/Theme";
-import React, { useState } from "react";
+import { ThemeProvider } from 'styled-components';
+import { lightTheme } from './theme';
+import { darkTheme } from './theme';
+import Theme from './constant/Theme';
+import React, { useState } from 'react';
 
 const { light, dark } = Theme;
 

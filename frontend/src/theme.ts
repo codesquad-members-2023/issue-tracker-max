@@ -1,6 +1,6 @@
-import Typography from "./design/Typography";
-import Color from "./design/Color";
-import Accent from "./constant/Accent";
+import Typography from './design/Typography';
+import Color from './design/Color';
+import Accent from './constant/Accent';
 
 const { blue, navy, red } = Accent;
 
@@ -37,14 +37,14 @@ const baseTheme = {
 
   objectStyles: {
     radius: {
-      half: "50%",
-      medium: "12px",
-      large: "16px",
+      half: '50%',
+      medium: '12px',
+      large: '16px',
     },
     border: {
-      default: "1px solid",
-      icon: "1.6px solid",
-      dash: "1px dashed",
+      default: '1px solid',
+      icon: '1.6px solid',
+      dash: '1px dashed',
     },
     opacity: {
       hover: 0.8,
@@ -52,8 +52,8 @@ const baseTheme = {
       disabled: 0.32,
     },
     dropShadow: {
-      lightMode: "0px 0px 8px 0px rgba(20, 20, 43, 0.04);",
-      darkMode: "0px 0px 16px 0px rgba(20, 20, 43, 0.80);",
+      lightMode: '0px 0px 8px 0px rgba(20, 20, 43, 0.04);',
+      darkMode: '0px 0px 16px 0px rgba(20, 20, 43, 0.80);',
     },
   },
 };

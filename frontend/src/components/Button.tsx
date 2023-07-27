@@ -1,12 +1,12 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 type ButtonProps = {
   theme: Record<string, unknown>;
-  $Flexible: "Flexible" | "Fixed";
-  $Type: "Contained" | "Outline" | "Ghost";
-  $ElementPattern: "Text Only" | "Icon+Text";
-  $States: "Enabled" | "Hover" | "Press" | "Disabled" | "Selected/Active";
-  $Size: "L" | "M" | "S";
+  $Flexible: 'Flexible' | 'Fixed';
+  $Type: 'Contained' | 'Outline' | 'Ghost';
+  $ElementPattern: 'Text Only' | 'Icon+Text';
+  $States: 'Enabled' | 'Hover' | 'Press' | 'Disabled' | 'Selected/Active';
+  $Size: 'L' | 'M' | 'S';
   children: React.ReactNode;
   disabled: boolean;
 };
@@ -21,7 +21,6 @@ function Button({
   disabled,
   ...props
 }: ButtonProps) {
-
   return (
     <Container
       $Flexible={$Flexible}
@@ -36,9 +35,6 @@ function Button({
   );
 }
 
-
-const Container = styled.button<ButtonProps>`
-
-`;
+const Container = styled.button<ButtonProps>``;
 
 export default Button;
