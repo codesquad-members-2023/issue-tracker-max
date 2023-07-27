@@ -16,7 +16,7 @@ export default function App() {
       <Button
         icon="alertCircle"
         size="medium"
-        type="container"
+        buttonType="container"
         selected
         onClick={onClick}
       >
@@ -25,7 +25,7 @@ export default function App() {
       <Button
         icon="alertCircle"
         size="medium"
-        type="outline"
+        buttonType="outline"
         selected
         onClick={onClick}
       >
@@ -34,7 +34,7 @@ export default function App() {
       <Button
         icon="alertCircle"
         size="medium"
-        type="ghost"
+        buttonType="ghost"
         selected
         onClick={onClick}
       >

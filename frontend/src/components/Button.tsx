@@ -1,34 +1,33 @@
+import { ButtonHTMLAttributes } from "react";
 import { styled } from "styled-components";
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  size: "small" | "medium" | "large";
+  buttonType: "container" | "outline" | "ghost";
+  flexible?: "flexible" | "fixed";
+  icon?: string;
+  selected?: boolean;
+}
 
 export default function Button({
   size,
-  type,
+  buttonType,
   flexible,
   icon,
-  disabled,
   selected,
-  onClick,
   children,
-}: {
-  size: "small" | "medium" | "large";
-  type: "container" | "outline" | "ghost";
-  flexible?: "flexible" | "fixed";
-  icon?: string;
-  disabled?: boolean;
-  selected?: boolean;
-  onClick: () => void;
-  children: string;
-}) {
+  ...props
+}: ButtonProps) {
   const buttonMap = {
     container: ConatinerButton,
     outline: OutlineButton,
     ghost: GhostButton,
   };
 
-  const ButtonComponent = buttonMap[type];
+  const ButtonComponent = buttonMap[buttonType];
 
   return (
-    <ButtonComponent {...{ size, flexible, selected, disabled, onClick }}>
+    <ButtonComponent {...{ $size: size, $flexible: flexible, $selected: selected }} {...props}>
       <div>
         {icon && <img src={`/src/assets/${icon}.svg`} alt={icon} />}
         <span>{children}</span>
@@ -38,25 +37,25 @@ export default function Button({
 }
 
 const StyledButton = styled.button<{
-  size: "small" | "medium" | "large";
-  flexible?: "flexible" | "fixed";
+  $size: "small" | "medium" | "large";
+  $flexible?: "flexible" | "fixed";
 }>`
-  width: ${({ size, flexible }) =>
-    flexible === "flexible"
+  width: ${({ $size, $flexible }) =>
+    $flexible === "flexible"
       ? "fit-content"
-      : size === "large"
+      : $size === "large"
       ? "240px"
-      : size === "medium"
+      : $size === "medium"
       ? "184px"
       : "128px"};
-  height: ${({ size }) =>
-    size === "large" ? "56px" : size === "medium" ? "48px" : "40px"};
-  padding: ${({ flexible }) =>
-    flexible === "flexible" ? "0 24px 0 24px" : ""};
-  border-radius: ${({ theme: { radius }, size }) =>
-    size === "large" ? radius.large : radius.medium};
-  font: ${({ theme: { font }, size }) => {
-    const fontSize = size === "large" ? 20 : size === "medium" ? 16 : 12;
+  height: ${({ $size }) =>
+    $size === "large" ? "56px" : $size === "medium" ? "48px" : "40px"};
+  padding: ${({ $flexible }) =>
+    $flexible === "flexible" ? "0 24px 0 24px" : ""};
+  border-radius: ${({ theme: { radius }, $size }) =>
+    $size === "large" ? radius.large : radius.medium};
+  font: ${({ theme: { font }, $size }) => {
+    const fontSize = $size === "large" ? 20 : $size === "medium" ? 16 : 12;
 
     return font[`availableMedium${fontSize}`];
   }};
@@ -108,18 +107,18 @@ const OutlineButton = styled(StyledButton)`
   }
 `;
 
-const GhostButton = styled(StyledButton)<{ selected?: boolean }>`
-  font: ${({ theme: { font }, size, selected }) => {
-    const fontSize = size === "large" ? 20 : size === "medium" ? 16 : 12;
-    const fontType = selected ? "selectedBold" : "availableMedium";
+const GhostButton = styled(StyledButton)<{ $selected?: boolean }>`
+  font: ${({ theme: { font }, $size, $selected }) => {
+    const fontSize = $size === "large" ? 20 : $size === "medium" ? 16 : 12;
+    const fontType = $selected ? "selectedBold" : "availableMedium";
 
     return font[`${fontType}${fontSize}`];
   }};
-  color: ${({ theme: { color }, selected }) =>
-    selected ? color.neutralTextStrong : color.neutralTextDefault};
+  color: ${({ theme: { color }, $selected }) =>
+    $selected ? color.neutralTextStrong : color.neutralTextDefault};
 
   img {
-    filter: ${({ theme: { iconFilter }, selected }) =>
-      selected ? iconFilter.neutralTextStrong : iconFilter.neutralTextDefault};
+    filter: ${({ theme: { iconFilter }, $selected }) =>
+      $selected ? iconFilter.neutralTextStrong : iconFilter.neutralTextDefault};
   }
 `;
