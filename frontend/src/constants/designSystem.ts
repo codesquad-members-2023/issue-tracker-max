@@ -89,6 +89,10 @@ const mode = {
     brandSurfaceDefault: color.accentBlue,
     brandBorderDefault: color.accentBlue,
 
+    dangerTextDefault: color.accentRed,
+    dangerSurfaceDefault: color.accentRed,
+    dangerBorderDefault: color.accentRed,
+
     paletteBlue: color.accentBlue,
     paletteNavy: color.accentNavy,
     paletteRed: color.accentRed,
