@@ -5,6 +5,7 @@ import java.util.List;
 import codesquard.app.label.entity.Label;
 
 public interface LabelRepository {
+
 	Long save(Label label);
 
 	List<Label> findAll();

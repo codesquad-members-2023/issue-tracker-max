@@ -10,6 +10,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "id")
 @ToString
 public class User {
+
 	private Long id;
 	private String userId;
 	private String email;
