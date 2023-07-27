@@ -1,37 +1,24 @@
-import { ThemeProvider, styled, css } from "styled-components";
+import { ThemeProvider } from "styled-components";
 import { lightTheme } from "./theme";
 import { darkTheme } from "./theme";
-import Theme from "./constants/Theme";
-import { useState } from "react";
+import Theme from "./constant/Theme";
+import React, { useState } from "react";
 
 const { light, dark } = Theme;
 
-function App() {
+const App: React.FC = () => {
   const [theme, setTheme] = useState<Theme>(light);
 
-  const toggleTheme = () => {
-    if (theme === light) {
-      setTheme(dark);
-    } else {
-      setTheme(light);
-    }
-  };
+  function changeTheme() {
+    setTheme((theme) => (theme === light ? dark : light));
+  }
 
   return (
     <ThemeProvider theme={theme === light ? lightTheme : darkTheme}>
-      <StyledApp>
-        <button onClick={toggleTheme}>테마</button>
-        <h1>Helloooooo World!</h1>
-      </StyledApp>
+      <button onClick={changeTheme}>테마</button>
+      <h1>Helloooooo World!</h1>
     </ThemeProvider>
   );
-}
-
-const StyledApp = styled.div`
-  h1 {
-    ${({ theme }) => theme.font.display.bold[32]};
-  }
-  color: ${({ theme }) => theme.color.neutral.text.strong};
-`;
+};
 
 export default App;

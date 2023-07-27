@@ -1,4 +1,4 @@
-import Accent from "../constants/Accent";
+import Accent from "../constant/Accent";
 
 const { blue, navy, red } = Accent;
 
