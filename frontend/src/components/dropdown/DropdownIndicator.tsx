@@ -1,14 +1,16 @@
 import { styled } from "styled-components";
 
 export default function DropdownIndicator({
-  disabled,
   children,
+  disabled,
+  onClick,
 }: {
-  disabled?: boolean;
   children: string;
+  disabled?: boolean;
+  onClick?: () => void;
 }) {
   return (
-    <StyledButton disabled={disabled}>
+    <StyledButton {...{ disabled, onClick }}>
       <span>{children}</span>
       <img src="src/assets/chevronDown.svg" alt="드롭다운 열기" />
     </StyledButton>
