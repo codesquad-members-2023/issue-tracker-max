@@ -2,10 +2,13 @@ package kr.codesquad.issuetracker.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
-import kr.codesquad.issuetracker.infrastructure.security.PasswordEncoder;
-import kr.codesquad.issuetracker.infrastructure.security.SHA256;
+import kr.codesquad.config.JwtConfig;
+import kr.codesquad.issuetracker.infrastructure.security.hash.PasswordEncoder;
+import kr.codesquad.issuetracker.infrastructure.security.hash.SHA256;
 
+@Import(JwtConfig.class)
 @Configuration
 public class SecurityConfig {
 

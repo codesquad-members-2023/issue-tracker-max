@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DatabaseInitializer {
 
 	private static final String TRUNCATE_QUERY = "TRUNCATE TABLE %s";
+	private static final String AUTO_INCREMENT_INIT_QUERY = "ALTER TABLE %s AUTO_INCREMENT = 1";
 
 	@Autowired
 	private DataSource dataSource;
@@ -44,7 +45,7 @@ public class DatabaseInitializer {
 	@Transactional
 	public void initTables() {
 		jdbcTemplate.update(
-			"INSERT INTO user_account(login_id, password, profile_url) VALUES('iambruni', 'asdf1234', 'default_url')",
+			"INSERT INTO user_account(login_id, password, profile_url) VALUES('iambruni', '312433c28349f63c4f387953ff337046e794bea0f9b9ebfcb08e90046ded9c76', 'default_url')",
 			Map.of());
 	}
 
@@ -57,5 +58,6 @@ public class DatabaseInitializer {
 
 	private void truncateTable(final String tableName) {
 		jdbcTemplate.update(String.format(TRUNCATE_QUERY, tableName), Map.of());
+		jdbcTemplate.update(String.format(AUTO_INCREMENT_INIT_QUERY, tableName), Map.of());
 	}
 }

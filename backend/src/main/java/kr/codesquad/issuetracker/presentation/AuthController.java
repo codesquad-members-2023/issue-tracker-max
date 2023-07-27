@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.codesquad.issuetracker.application.AuthService;
+import kr.codesquad.issuetracker.presentation.request.LoginRequest;
 import kr.codesquad.issuetracker.presentation.request.SignupRequest;
+import kr.codesquad.issuetracker.presentation.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -24,5 +26,11 @@ public class AuthController {
 	public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest request) {
 		authService.signup(request.getLoginId(), request.getPassword());
 		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(authService.login(request.getLoginId(), request.getPassword()));
 	}
 }

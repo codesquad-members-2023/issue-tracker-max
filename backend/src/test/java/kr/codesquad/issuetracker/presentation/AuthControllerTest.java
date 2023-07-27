@@ -1,5 +1,6 @@
 package kr.codesquad.issuetracker.presentation;
 
+import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.codesquad.issuetracker.application.AuthService;
 import kr.codesquad.issuetracker.fixture.FixtureFactory;
+import kr.codesquad.issuetracker.presentation.response.TokenResponse;
 
 @WebMvcTest(controllers = AuthController.class)
 class AuthControllerTest {
@@ -37,8 +39,8 @@ class AuthControllerTest {
 			mockMvc.perform(
 					post("/api/auth/signup")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(
-							objectMapper.writeValueAsString(FixtureFactory.createSignupRequest("applePIE", "qwerasdf"))))
+						.content(objectMapper.writeValueAsString(
+							FixtureFactory.createSignupRequest("applePIE", "qwerasdf"))))
 				.andExpect(status().isCreated());
 		}
 
@@ -48,8 +50,32 @@ class AuthControllerTest {
 			mockMvc.perform(
 					post("/api/auth/signup")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(FixtureFactory.createSignupRequest("aaa", "qwerasdf"))))
+						.content(objectMapper.writeValueAsString(
+							FixtureFactory.createSignupRequest("aaa", "qwerasdf"))))
 				.andExpect(status().isBadRequest());
+		}
+	}
+
+	@Nested
+	class LoginTest {
+
+		@DisplayName("로그인에 성공한다.")
+		@Test
+		void login() throws Exception {
+			String id = "applePIE";
+			String pw = "qwer1234";
+
+			given(authService.login(id, pw)).willReturn(new TokenResponse("qwerqwer"));
+
+			mockMvc.perform(
+					post("/api/auth/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(
+							objectMapper.writeValueAsString(FixtureFactory.createLoginRequest(id, pw))
+						)
+				).andExpect(status().isCreated())
+				.andExpect(jsonPath("$.tokenType").exists())
+				.andExpect(jsonPath("$.accessToken").exists());
 		}
 	}
 }

@@ -4,3 +4,6 @@
 ## BUILD
 /out
 /build
+
+## YML
+application-jwt.yml

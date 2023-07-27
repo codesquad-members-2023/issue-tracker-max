@@ -1,4 +1,4 @@
-package kr.codesquad.issuetracker.infrastructure.security;
+package kr.codesquad.issuetracker.infrastructure.security.hash;
 
 public interface PasswordEncoder {
 
