@@ -19,7 +19,6 @@ export default function Button({
   onClick: () => void;
   children: string;
 }) {
-
   const buttonMap = {
     container: ConatinerButton,
     outline: OutlineButton,
@@ -95,22 +94,22 @@ const ConatinerButton = styled(StyledButton)`
   color: ${({ theme: { color } }) => color.brandTextDefault};
 
   img {
-    filter: brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%);
+    filter: ${({ theme: { iconFilter } }) => iconFilter.brandTextDefault};
   }
 `;
 
 const OutlineButton = styled(StyledButton)`
-  border: 1px solid ${({ theme: { color } }) => color.brandBorderDefault};
+  border: ${({ theme: { border, color } }) =>
+    border.default + color.brandBorderDefault};
   background-color: ${({ theme: { color } }) => color.brandSurfaceWeak};
   color: ${({ theme: { color } }) => color.brandTextWeak};
 
   img {
-    filter: brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%);
+    filter: ${({ theme: { iconFilter } }) => iconFilter.brandTextWeak};
   }
-`
+`;
 
-
-const GhostButton = styled(StyledButton)<{selected?: boolean}>`
+const GhostButton = styled(StyledButton)<{ selected?: boolean }>`
   font: ${({ theme: { font }, size, selected }) => {
     const fontSize = size === "large" ? 20 : size === "medium" ? 16 : 12;
     const fontType = selected ? "selectedBold" : "availableMedium";
@@ -122,13 +121,7 @@ const GhostButton = styled(StyledButton)<{selected?: boolean}>`
     selected ? color.neutralTextStrong : color.neutralTextDefault};
 
   img {
-    filter: ${({ theme: { themeMode }, selected }) =>
-      selected
-        ? themeMode === "light"
-          ? "brightness(0) saturate(100%) invert(8%) sepia(6%) saturate(6138%) hue-rotate(203deg) brightness(94%) contrast(98%)"
-          : "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)"
-        : themeMode === "light"
-        ? "brightness(0) saturate(100%) invert(31%) sepia(8%) saturate(1775%) hue-rotate(197deg) brightness(93%) contrast(91%)"
-        : "brightness(0) saturate(100%) invert(85%) sepia(17%) saturate(218%) hue-rotate(195deg) brightness(91%) contrast(85%)"};
+    filter: ${({ theme: { iconFilter }, selected }) =>
+      selected ? iconFilter.neutralTextStrong : iconFilter.neutralTextDefault};
   }
 `;

@@ -6,14 +6,12 @@ import { designSystem } from "./constants/designSystem";
 export default function App() {
   const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
 
-  console.log(themeMode);
-
   const onClick = () => {
     setThemeMode(themeMode === "light" ? "dark" : "light");
   };
 
   return (
-    <ThemeProvider theme={{ ...designSystem[themeMode], themeMode }}>
+    <ThemeProvider theme={designSystem[themeMode]}>
       <div>hello world</div>
       <Button
         icon="alertCircle"
