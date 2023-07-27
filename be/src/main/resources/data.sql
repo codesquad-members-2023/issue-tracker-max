@@ -13,7 +13,7 @@ values ('라벨 1', '#F08080', '#000000'),
        ('라벨 2', '#98FB98', '#000000'),
        ('라벨 3', '#6495ED', '#000000');
 
-INSERT INTO issue (member_id, milestone_id, title)
+INSERT INTO issue (author_id, milestone_id, title)
 values (1, 1, '제목 1'),
        (2, 2, '제목 2'),
        (3, 3, '제목 3'),
@@ -30,7 +30,7 @@ values (1, 1),
        (4, 2),
        (4, 3);
 
-INSERT INTO issue_PIC (issue_id, PIC_id)
+INSERT INTO issue_assignee (issue_id, assignee_id)
 values (1, 1),
        (1, 2),
        (2, 3),
@@ -40,7 +40,7 @@ values (1, 1),
        (4, 2),
        (4, 3);
 
-INSERT INTO  comment (issue_id, member_id, contents)
+INSERT INTO  comment (issue_id, author_id, contents)
 values (1, 1, '1번 댓글입니다.'),
        (1, 2, '2번 댓글입니다.'),
        (1, 2, '3번 댓글입니다.'),
