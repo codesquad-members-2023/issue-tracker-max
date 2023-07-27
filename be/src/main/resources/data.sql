@@ -1,7 +1,7 @@
-INSERT INTO member (email, password, profile)
-values ('nag@codesquad.kr', '1q2w3e4r!', 'https://e7.pngegg.com/pngimages/981/645/png-clipart-default-profile-united-states-computer-icons-desktop-free-high-quality-person-icon-miscellaneous-silhouette.png'),
-       ('joy@codesquad.kr', '1q2w3e4r!', 'https://e7.pngegg.com/pngimages/981/645/png-clipart-default-profile-united-states-computer-icons-desktop-free-high-quality-person-icon-miscellaneous-silhouette.png'),
-       ('ati@codesquad.kr', '1q2w3e4r!', 'https://e7.pngegg.com/pngimages/981/645/png-clipart-default-profile-united-states-computer-icons-desktop-free-high-quality-person-icon-miscellaneous-silhouette.png');
+INSERT INTO member (email, name, password, profile)
+values ('nag@codesquad.kr', 'nag', '1q2w3e4r!', 'https://e7.pngegg.com/pngimages/981/645/png-clipart-default-profile-united-states-computer-icons-desktop-free-high-quality-person-icon-miscellaneous-silhouette.png'),
+       ('joy@codesquad.kr', 'joy', '1q2w3e4r!', 'https://e7.pngegg.com/pngimages/981/645/png-clipart-default-profile-united-states-computer-icons-desktop-free-high-quality-person-icon-miscellaneous-silhouette.png'),
+       ('ati@codesquad.kr', 'ati', '1q2w3e4r!', 'https://e7.pngegg.com/pngimages/981/645/png-clipart-default-profile-united-states-computer-icons-desktop-free-high-quality-person-icon-miscellaneous-silhouette.png');
 
 INSERT INTO milestone (name, due_date)
 values ('마일스톤 1', current_date),
