@@ -3,6 +3,8 @@ name: ci-cd
 on:
   pull_request:
     branches: [ dev, release ]
+  push:
+    branches: [ be/infra/#9-cicd ]
 
 permissions:
   contents: read
