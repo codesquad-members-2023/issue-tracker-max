@@ -4,7 +4,7 @@ type Props = {
   fill?: string;
 };
 
-export const UserImageLarge: React.FC<Props> = ({}: Props) => {
+export const UserImageLarge: React.FC = ({}: Props) => {
   return (
     <svg
       width="32"

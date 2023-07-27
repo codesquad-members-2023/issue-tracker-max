@@ -4,7 +4,7 @@ type Props = {
   stroke?: string;
 };
 
-export const CheckOffCircle: React.FC<Props> = ({}: Props) => {
+export const CheckOffCircle: React.FC = ({}: Props) => {
   return (
     <svg
       width="16"

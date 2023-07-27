@@ -4,7 +4,7 @@ type Props = {
   stroke?: string;
 };
 
-export const Paperclip: React.FC<Props> = ({}: Props) => {
+export const Paperclip: React.FC = ({}: Props) => {
   return (
     <svg
       width="16"

@@ -4,7 +4,7 @@ type Props = {
   stroke?: string;
 };
 
-export const ChevronDown: React.FC<Props> = ({}: Props) => {
+export const ChevronDown: React.FC = ({}: Props) => {
   return (
     <svg
       width="16"

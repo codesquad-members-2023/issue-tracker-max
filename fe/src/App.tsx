@@ -3,8 +3,14 @@ import { darkMode, lightMode } from '@styles/designSystem';
 import { useState } from 'react';
 
 export const App: React.FC = () => {
-  const [isLightMode, setIsLightMode] = useState(true);
-  const theme = isLightMode ? lightMode : darkMode;
+  const [userId, setUserId] = useState();
+  const [accessToken, setAccessToken] = useState();
+  const [currentTheme, setCurrentTheme] = useState(true);
+  const theme = currentTheme ? lightMode : darkMode;
+
+  const resetUserId = () => {};
+  const resetAccessToken = () => {};
+  const toggleCurrentTheme = () => {};
 
   return (
     <ThemeProvider theme={theme}>

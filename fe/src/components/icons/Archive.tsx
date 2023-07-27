@@ -4,7 +4,7 @@ type Props = {
   stroke?: string;
 };
 
-export const Archive: React.FC<Props> = ({}: Props) => {
+export const Archive: React.FC = ({}: Props) => {
   return (
     <svg
       width="16"

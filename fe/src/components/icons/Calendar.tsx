@@ -3,7 +3,7 @@ type Props = {
   height?: number;
   stroke?: string;
 };
-export const Calender: React.FC<Props> = ({}: Props) => {
+export const Calender: React.FC = ({}: Props) => {
   return (
     <svg
       width="16"

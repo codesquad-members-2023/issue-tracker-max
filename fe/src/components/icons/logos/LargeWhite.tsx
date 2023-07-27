@@ -4,7 +4,7 @@ type Props = {
   fill?: string;
 };
 
-export const LargeWhite: React.FC<Props> = ({}: Props) => {
+export const LargeWhite: React.FC = ({}: Props) => {
   return (
     <svg
       width="342"

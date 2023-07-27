@@ -4,7 +4,7 @@ type Props = {
   stroke?: string;
 };
 
-export const XSquare: React.FC<Props> = ({}: Props) => {
+export const XSquare: React.FC = ({}: Props) => {
   return (
     <svg
       width="16"

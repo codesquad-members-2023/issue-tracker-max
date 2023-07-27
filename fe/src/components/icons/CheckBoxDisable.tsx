@@ -5,7 +5,7 @@ type Props = {
   fill?: string;
 };
 
-export const CheckBoxDisable: React.FC<Props> = ({}: Props) => {
+export const CheckBoxDisable: React.FC = ({}: Props) => {
   return (
     <svg
       width="16"

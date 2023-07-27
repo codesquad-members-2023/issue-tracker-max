@@ -4,7 +4,7 @@ type Props = {
   fill?: string;
 };
 
-export const Milestone: React.FC<Props> = ({}: Props) => {
+export const Milestone: React.FC = ({}: Props) => {
   return (
     <svg
       width="16"
