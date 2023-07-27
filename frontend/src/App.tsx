@@ -2,6 +2,7 @@ import { ThemeProvider } from "styled-components";
 import { designSystem } from "./constants/designSystem";
 import DropdownIndicator from "./components/dropdown/DropdownIndicator";
 import { useState } from "react";
+import DropdownPanel from "./components/dropdown/DropdownPanel";
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
@@ -11,6 +12,7 @@ export default function App() {
       <div>hello world</div>
       <DropdownIndicator>Button</DropdownIndicator>
       <DropdownIndicator disabled>Button</DropdownIndicator>
+      <DropdownPanel />
     </ThemeProvider>
   );
 }
