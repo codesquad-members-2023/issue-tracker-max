@@ -49,8 +49,8 @@ jobs:
           docker tag app ${{ secrets.DOCKER_USERNAME}}/issue_tracker_app:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/issue_tracker_app:latest
   cd-pipeline:
-    needs:ㅇ
-    - build-image
+    needs:
+      - build-image
     name: continuos deploy
     runs-on: ubuntu-latest
     environment: dev
