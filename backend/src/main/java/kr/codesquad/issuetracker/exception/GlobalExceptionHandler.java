@@ -13,12 +13,13 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleValidException(MethodArgumentNotValidException e) {
 		String exMessage = e.getBindingResult().getFieldError().getDefaultMessage();
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-			.body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exMessage));
+			.body(new ErrorResponse(ErrorCode.INVALID_INPUT, exMessage));
 	}
 
 	@ExceptionHandler(ApplicationException.class)
 	public ResponseEntity<ErrorResponse> handleApplicationException(ApplicationException e) {
-		int errorCode = e.getErrorCode().getStatusCode();
-		return ResponseEntity.status(errorCode).body(new ErrorResponse(errorCode, e.getErrorCode().getMessage()));
+		ErrorCode errorCode = e.getErrorCode();
+		return ResponseEntity.status(errorCode.getStatusCode())
+			.body(new ErrorResponse(errorCode));
 	}
 }

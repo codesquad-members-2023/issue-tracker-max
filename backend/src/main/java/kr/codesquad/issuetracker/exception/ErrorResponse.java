@@ -5,11 +5,15 @@ import lombok.Getter;
 @Getter
 public class ErrorResponse {
 
-	private int statusCode;
-	private String message;
+	private final ErrorCode errorCode;
+	private final String message;
 
-	public ErrorResponse(int statusCode, String message) {
-		this.statusCode = statusCode;
+	public ErrorResponse(ErrorCode errorCode, String message) {
+		this.errorCode = errorCode;
 		this.message = message;
+	}
+
+	public ErrorResponse(ErrorCode errorCode) {
+		this(errorCode, errorCode.getMessage());
 	}
 }
