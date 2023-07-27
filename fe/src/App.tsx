@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
-import { GlobalStyles } from './styles/GlobalStyles.ts';
-import { theme } from './styles/Theme';
+import { GlobalStyles } from 'styles/GlobalStyles';
+import { theme } from 'styles/Theme';
 
-import { LoginPage } from './pages/Login/index.tsx';
-import { MainPage } from './pages/Main/index.tsx';
-import { NewIssuePage } from './pages/NewIssue/index.tsx';
-import { LabelsPage } from './pages/Labels/index.tsx';
-import { MilestonesPage } from './pages/Milestones/index.tsx';
-import { PageNotFound } from './pages/404.tsx';
+import { LoginPage } from 'pages/Login';
+import { MainPage } from 'pages/Main';
+import { NewIssuePage } from 'pages/NewIssue';
+import { LabelsPage } from 'pages/Labels';
+import { MilestonesPage } from 'pages/Milestones';
+import { PageNotFound } from 'pages/404';
 
 type ThemeMode = 'light' | 'dark';
 
@@ -18,11 +18,11 @@ export const App = () => {
   const [currentMode, setCurrentMode] = useState<ThemeMode>('light');
   console.log(setCurrentMode);
 
-
   return (
     <>
       <ThemeProvider theme={theme[currentMode]}>
         <GlobalStyles />
+        {/* 라우터 테스트용 */}
         <BrowserRouter>
           <Routes>
             <Route>
