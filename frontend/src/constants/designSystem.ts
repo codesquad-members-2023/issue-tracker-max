@@ -9,9 +9,9 @@ const font = {
   selectedBold20: "700 20px/32px Pretendard, sans-serif",
   selectedBold16: "700 16px/24px Pretendard, sans-serif",
   selectedBold12: "700 16px/24px Pretendard, sans-serif",
-  availableBold20: "500 20px/32px Pretendard, sans-serif",
-  availableBold16: "500 16px/24px Pretendard, sans-serif",
-  availableBold12: "500 12px/16px Pretendard, sans-serif",
+  availableMedium20: "500 20px/32px Pretendard, sans-serif",
+  availableMedium16: "500 16px/24px Pretendard, sans-serif",
+  availableMedium12: "500 12px/16px Pretendard, sans-serif",
 };
 
 const color = {
@@ -49,6 +49,29 @@ const opacity = {
   disabled: "0.32",
 };
 
+const iconFilter = {
+  light: {
+    neutralTextDefault:
+      "brightness(0) saturate(100%) invert(31%) sepia(8%) saturate(1775%) hue-rotate(197deg) brightness(93%) contrast(91%)",
+    neutralTextStrong:
+      "brightness(0) saturate(100%) invert(8%) sepia(6%) saturate(6138%) hue-rotate(203deg) brightness(94%) contrast(98%)",
+    brandTextWeak:
+      "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
+    brandTextDefault:
+      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
+  },
+  dark: {
+    neutralTextDefault:
+      "brightness(0) saturate(100%) invert(85%) sepia(17%) saturate(218%) hue-rotate(195deg) brightness(91%) contrast(85%)",
+    neutralTextStrong:
+      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
+    brandTextWeak:
+      "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
+    brandTextDefault:
+      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
+  },
+};
+
 const mode = {
   light: {
     neutralTextWeak: color.grayScale600,
@@ -65,6 +88,10 @@ const mode = {
     brandSurfaceWeak: color.grayScale50,
     brandSurfaceDefault: color.accentBlue,
     brandBorderDefault: color.accentBlue,
+
+    dangerTextDefault: color.accentRed,
+    dangerSurfaceDefault: color.accentRed,
+    dangerBorderDefault: color.accentRed,
 
     paletteBlue: color.accentBlue,
     paletteNavy: color.accentNavy,
@@ -101,11 +128,22 @@ const mode = {
 };
 
 export const designSystem = {
-  font,
-  color,
-  radius,
-  border,
-  opacity,
-  light: mode.light,
-  dark: mode.dark,
+  light: {
+    font,
+    radius,
+    border,
+    opacity,
+    iconFilter: iconFilter.light,
+    color: mode.light,
+    dropShadow: mode.light.dropShadow,
+  },
+  dark: {
+    font,
+    radius,
+    border,
+    opacity,
+    iconFilter: iconFilter.dark,
+    color: mode.dark,
+    dropShadow: mode.dark.dropShadow,
+  },
 };
