@@ -1,8 +1,4 @@
-@font-face {
-  font-family: Pretendard Variable;
-  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/variable/pretendardvariable.css')
-    format('woff');
-}
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css');
 
 :root {
   font-family: 'Pretendard Variable', Pretendard, Inter, system-ui, Avenir,
