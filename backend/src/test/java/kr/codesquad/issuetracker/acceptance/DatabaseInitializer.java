@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DatabaseInitializer {
 
 	private static final String TRUNCATE_QUERY = "TRUNCATE TABLE %s";
+	private static final String AUTO_INCREMENT_INIT_QUERY = "ALTER TABLE %s AUTO_INCREMENT = 1";
 
 	@Autowired
 	private DataSource dataSource;
@@ -57,5 +58,6 @@ public class DatabaseInitializer {
 
 	private void truncateTable(final String tableName) {
 		jdbcTemplate.update(String.format(TRUNCATE_QUERY, tableName), Map.of());
+		jdbcTemplate.update(String.format(AUTO_INCREMENT_INIT_QUERY, tableName), Map.of());
 	}
 }

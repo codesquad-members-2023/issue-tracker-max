@@ -2,78 +2,99 @@ package kr.codesquad.issuetracker.application;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
-
-import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import kr.codesquad.issuetracker.ApplicationTest;
 import kr.codesquad.issuetracker.domain.UserAccount;
 import kr.codesquad.issuetracker.exception.ApplicationException;
 import kr.codesquad.issuetracker.exception.ErrorCode;
 import kr.codesquad.issuetracker.infrastructure.persistence.UserAccountRepository;
 import kr.codesquad.issuetracker.infrastructure.security.hash.PasswordEncoder;
+import kr.codesquad.issuetracker.presentation.response.TokenResponse;
 
-@ExtendWith(MockitoExtension.class)
-class AuthServiceTest {
+@ApplicationTest
+public class AuthServiceTest {
 
-	@Mock
-	private UserAccountRepository userAccountRepository;
-	@Mock
-	private PasswordEncoder passwordEncoder;
-
-	@InjectMocks
+	@Autowired
 	private AuthService authService;
+	@Autowired
+	private UserAccountRepository userAccountRepository;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@DisplayName("회원가입할 때")
 	@Nested
 	class SignupTest {
 
-		@DisplayName("올바른 회원가입 정보가 주어지면 회원가입에 성공한다.")
+		@DisplayName("회원가입에 성공한다.")
 		@Test
-		void signUpTest() {
+		void signupSuccess() {
 			// given
-			given(userAccountRepository.existsByLoginId(anyString())).willReturn(Boolean.FALSE);
 
 			// when
-			authService.signup("bruniii", "asdf1234!");
+			authService.signup("login_id", "password");
+
+			// then
+			assertThat(userAccountRepository.existsByLoginId("login_id")).isTrue();
+		}
+
+		@DisplayName("중복된 로그인 아이디로 회원가입을 시도하면 예외를 던진다.")
+		@Test
+		void givenDuplicatedLoginId_thenThrowsException() {
+			// given
+			userAccountRepository.save(new UserAccount("loginId", "password"));
+
+			// when & then
+			assertThatThrownBy(() -> authService.signup("loginId", "new_password"))
+				.isInstanceOf(ApplicationException.class)
+				.extracting("errorCode").isEqualTo(ErrorCode.DUPLICATED_LOGIN_ID);
+		}
+	}
+
+	@DisplayName("로그인할 때 ")
+	@Nested
+	class LoginTest {
+
+		@DisplayName("로그인에 성공한다.")
+		@Test
+		void loginSuccess() {
+			// given
+			userAccountRepository.save(new UserAccount("loginId", passwordEncoder.encrypt("password")));
+
+			// when
+			TokenResponse response = authService.login("loginId", "password");
 
 			// then
 			assertAll(
-				() -> then(userAccountRepository).should(times(1)).existsByLoginId("bruniii"),
-				() -> then(userAccountRepository).should(times(1)).save(any(UserAccount.class))
+				() -> assertThat(response).isNotNull(),
+				() -> assertThat(response.getTokenType()).isEqualTo("Bearer"),
+				() -> assertThat(response.getAccessToken()).isNotEmpty()
 			);
 		}
 
-		@DisplayName("중복된 로그인 아이디가 주어지면 회원가입에 실패한다.")
+		@DisplayName("잘못된 비밀번호가 주어지면 예외를 던진다.")
 		@Test
-		void duplicatedLoginIdSignupTest() {
+		void givenInvalidPassword_thenThrowsException() {
 			// given
-			given(userAccountRepository.existsByLoginId(anyString())).willReturn(Boolean.TRUE);
+			userAccountRepository.save(new UserAccount("loginId", passwordEncoder.encrypt("password")));
 
 			// when & then
-			assertAll(
-				() -> assertThatThrownBy(() -> authService.signup("bruniii", "asdf1234!"))
-					.isInstanceOf(ApplicationException.class)
-					.extracting("errorCode").isEqualTo(ErrorCode.DUPLICATED_LOGIN_ID),
-				() -> then(userAccountRepository).should(never()).save(any(UserAccount.class))
-			);
+			assertThatThrownBy(() -> authService.login("loginId", "not_password"))
+				.isInstanceOf(ApplicationException.class)
+				.extracting("errorCode").isEqualTo(ErrorCode.FAILED_LOGIN);
 		}
 
-		@DisplayName("존재하지 않는 아이디로 로그인 시 예외가 발생한다.")
+		@DisplayName("존재하지 안흔 로그인 아이디가 주어지면 예외를 던진다.")
 		@Test
-		void notExistLoginId() {
+		void givenNotExistsLoginId_thenThrowsException() {
 			// given
-			given(userAccountRepository.findByLoginId(anyString())).willReturn(Optional.empty());
 
 			// when & then
-			assertThatThrownBy(() -> authService.login("applePIE", "12341234"))
+			assertThatThrownBy(() -> authService.login("loginId", "password"))
 				.isInstanceOf(ApplicationException.class)
 				.extracting("errorCode").isEqualTo(ErrorCode.USER_NOT_FOUND);
 		}
