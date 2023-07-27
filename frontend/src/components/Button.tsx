@@ -27,7 +27,12 @@ export default function Button({
   const ButtonComponent = buttonMap[buttonType];
 
   return (
-    <ButtonComponent {...{ $size: size, $flexible: flexible, $selected: selected }} {...props}>
+    <ButtonComponent
+      $size={size}
+      $flexible={flexible}
+      $selected={selected}
+      {...props}
+    >
       <div>
         {icon && <img src={`/src/assets/${icon}.svg`} alt={icon} />}
         <span>{children}</span>
@@ -40,37 +45,61 @@ const StyledButton = styled.button<{
   $size: "small" | "medium" | "large";
   $flexible?: "flexible" | "fixed";
 }>`
-  width: ${({ $size, $flexible }) =>
-    $flexible === "flexible"
-      ? "fit-content"
-      : $size === "large"
-      ? "240px"
-      : $size === "medium"
-      ? "184px"
-      : "128px"};
-  height: ${({ $size }) =>
-    $size === "large" ? "56px" : $size === "medium" ? "48px" : "40px"};
+  width: ${({ $size, $flexible }) => {
+    if ($flexible === "flexible") {
+      return "fit-content";
+    }
+    switch ($size) {
+      case "large":
+        return "240px";
+      case "medium":
+        return "184px";
+      case "small":
+        return "128px";
+      default:
+        return "";
+    }
+  }};
+  height: ${({ $size }) => {
+    switch ($size) {
+      case "large":
+        return "56px";
+      case "medium":
+        return "48px";
+      case "small":
+        return "40px";
+      default:
+        return "";
+    }
+  }};
   padding: ${({ $flexible }) =>
     $flexible === "flexible" ? "0 24px 0 24px" : ""};
-  border-radius: ${({ theme: { radius }, $size }) =>
-    $size === "large" ? radius.large : radius.medium};
-  font: ${({ theme: { font }, $size }) => {
-    const fontSize = $size === "large" ? 20 : $size === "medium" ? 16 : 12;
-
-    return font[`availableMedium${fontSize}`];
+  border-radius: ${({ theme, $size }) =>
+    $size === "large" ? theme.radius.large : theme.radius.medium};
+  font: ${({ theme, $size }) => {
+    switch ($size) {
+      case "large":
+        return theme.font.availableMedium20;
+      case "medium":
+        return theme.font.availableMedium16;
+      case "small":
+        return theme.font.availableMedium12;
+      default:
+        return "";
+    }
   }};
-  opacity: ${({ theme: { opacity } }) => opacity.default};
+  opacity: ${({ theme }) => theme.opacity.default};
 
   &:hover {
-    opacity: ${({ theme: { opacity } }) => opacity.hover};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 
   &:active {
-    opacity: ${({ theme: { opacity } }) => opacity.press};
+    opacity: ${({ theme }) => theme.opacity.press};
   }
 
   &:disabled {
-    opacity: ${({ theme: { opacity } }) => opacity.disabled};
+    opacity: ${({ theme }) => theme.opacity.disabled};
   }
 
   div {
@@ -89,36 +118,50 @@ const StyledButton = styled.button<{
 `;
 
 const ConatinerButton = styled(StyledButton)`
-  background-color: ${({ theme: { color } }) => color.brandSurfaceDefault};
-  color: ${({ theme: { color } }) => color.brandTextDefault};
+  background-color: ${({ theme }) => theme.color.brandSurfaceDefault};
+  color: ${({ theme }) => theme.color.brandTextDefault};
 
   img {
-    filter: ${({ theme: { iconFilter } }) => iconFilter.brandTextDefault};
+    filter: ${({ theme }) => theme.iconFilter.brandTextDefault};
   }
 `;
 
 const OutlineButton = styled(StyledButton)`
-  border: ${({ theme: { border, color } }) =>
-    border.default + color.brandBorderDefault};
-  color: ${({ theme: { color } }) => color.brandTextWeak};
+  border: ${({ theme }) =>
+    theme.border.default + theme.color.brandBorderDefault};
+  color: ${({ theme }) => theme.color.brandTextWeak};
 
   img {
-    filter: ${({ theme: { iconFilter } }) => iconFilter.brandTextWeak};
+    filter: ${({ theme }) => theme.iconFilter.brandTextWeak};
   }
 `;
 
 const GhostButton = styled(StyledButton)<{ $selected?: boolean }>`
-  font: ${({ theme: { font }, $size, $selected }) => {
-    const fontSize = $size === "large" ? 20 : $size === "medium" ? 16 : 12;
-    const fontType = $selected ? "selectedBold" : "availableMedium";
-
-    return font[`${fontType}${fontSize}`];
+  font: ${({ theme, $size, $selected }) => {
+    switch ($size) {
+      case "large":
+        return $selected
+          ? theme.font.selectedBold20
+          : theme.font.availableMedium20;
+      case "medium":
+        return $selected
+          ? theme.font.selectedBold16
+          : theme.font.availableMedium16;
+      case "small":
+        return $selected
+          ? theme.font.selectedBold12
+          : theme.font.availableMedium12;
+      default:
+        return "";
+    }
   }};
-  color: ${({ theme: { color }, $selected }) =>
-    $selected ? color.neutralTextStrong : color.neutralTextDefault};
+  color: ${({ theme, $selected }) =>
+    $selected ? theme.color.neutralTextStrong : theme.color.neutralTextDefault};
 
   img {
-    filter: ${({ theme: { iconFilter }, $selected }) =>
-      $selected ? iconFilter.neutralTextStrong : iconFilter.neutralTextDefault};
+    filter: ${({ theme, $selected }) =>
+      $selected
+        ? theme.iconFilter.neutralTextStrong
+        : theme.iconFilter.neutralTextDefault};
   }
 `;

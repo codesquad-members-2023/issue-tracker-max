@@ -9,7 +9,7 @@ export default function DropdownPanel({
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(-1);
 
   return (
-    <StyledPanel alignment={alignment}>
+    <StyledPanel $alignment={alignment}>
       <div className="dropdown__header">헤더</div>
       <ul className="dropdown__option-container">
         {["option1", "option2", "option3"].map((option, index) => (
@@ -55,27 +55,28 @@ function DropdownOption({
   );
 }
 
-const StyledPanel = styled.div<{ alignment: "left" | "right" }>`
+const StyledPanel = styled.div<{ $alignment: "left" | "right" }>`
   position: absolute;
-  left: ${({ alignment }) => (alignment === "left" ? "0" : "auto")};
-  right: ${({ alignment }) => (alignment === "right" ? "0" : "auto")};
+  left: ${({ $alignment }) => ($alignment === "left" ? "0" : "auto")};
+  right: ${({ $alignment }) => ($alignment === "right" ? "0" : "auto")};
   z-index: 100;
 
   display: flex;
   flex-direction: column;
   gap: 1px;
   width: 240px;
-  border: ${({ theme: { border, color } }) =>
-    border.default + color.neutralBorderDefault};
-  border-radius: ${({ theme: { radius } }) => radius.large};
+  border: ${({ theme }) =>
+    theme.border.default + theme.color.neutralBorderDefault};
+  border-radius: ${({ theme }) => theme.radius.large};
+  background-color: ${({ theme }) => theme.color.neutralBorderDefault};
 
   & .dropdown__header {
-    border-radius: ${({ theme: { radius } }) =>
-      `${radius.large} ${radius.large} 0px 0px`};
+    border-radius: ${({ theme }) =>
+      `${theme.radius.large} ${theme.radius.large} 0px 0px`};
     padding: 8px 16px;
-    background-color: ${({ theme: { color } }) => color.neutralSurfaceDefault};
-    font: ${({ theme: { font } }) => font.displayMedium12};
-    color: ${({ theme: { color } }) => color.neutralTextWeak};
+    background-color: ${({ theme }) => theme.color.neutralSurfaceDefault};
+    font: ${({ theme }) => theme.font.displayMedium12};
+    color: ${({ theme }) => theme.color.neutralTextWeak};
   }
 
   & .dropdown__option {
@@ -85,23 +86,23 @@ const StyledPanel = styled.div<{ alignment: "left" | "right" }>`
     gap: 8px;
     height: 40px;
     padding: 8px 16px;
-    background-color: ${({ theme: { color } }) => color.neutralSurfaceStrong};
-    font: ${({ theme: { font } }) => font.availableMedium16};
-    color: ${({ theme: { color } }) => color.neutralTextDefault};
+    background-color: ${({ theme }) => theme.color.neutralSurfaceStrong};
+    font: ${({ theme }) => theme.font.availableMedium16};
+    color: ${({ theme }) => theme.color.neutralTextDefault};
 
     &.selected {
-      font: ${({ theme: { font } }) => font.selectedBold16};
-      color: ${({ theme: { color } }) => color.neutralTextStrong};
+      font: ${({ theme }) => theme.font.selectedBold16};
+      color: ${({ theme }) => theme.color.neutralTextStrong};
     }
 
     &:hover {
-      background-color: ${({ theme: { color } }) => color.neutralSurfaceBold};
+      background-color: ${({ theme }) => theme.color.neutralSurfaceBold};
       cursor: pointer;
     }
 
     &:last-child {
-      border-radius: ${({ theme: { radius } }) =>
-        `0px 0px ${radius.large} ${radius.large}`};
+      border-radius: ${({ theme }) =>
+        `0px 0px ${theme.radius.large} ${theme.radius.large}`};
     }
 
     & span {

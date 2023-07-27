@@ -25,19 +25,19 @@ const StyledButton = styled.button`
   width: 80px;
   height: 32px;
   border-radius: 20px;
-  font: ${({ theme: { font } }) => font.availableMedium16};
-  color: ${({ theme: { color } }) => color.neutralTextDefault};
+  font: ${({ theme }) => theme.font.availableMedium16};
+  color: ${({ theme }) => theme.color.neutralTextDefault};
 
   &:hover {
-    opacity: ${({ theme: { opacity } }) => opacity.hover};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 
   &:active {
-    opacity: ${({ theme: { opacity } }) => opacity.press};
+    opacity: ${({ theme }) => theme.opacity.press};
   }
 
   &:disabled {
-    opacity: ${({ theme: { opacity } }) => opacity.disabled};
+    opacity: ${({ theme }) => theme.opacity.disabled};
   }
 
   span {
