@@ -17,11 +17,7 @@ export default function TextInput(props: TextInputProps) {
 
   const isTallType = variant === "tall";
   const textInputState = isFocused ? "active" : hasError ? "error" : "enabled";
-  const typingState = isFocused
-    ? "onTyping"
-    : content
-    ? "typed"
-    : "placeholder";
+  const typingState = isFocused ? "onTyping" : "typed";
 
   const onInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContent(e.target.value);
@@ -105,13 +101,12 @@ const Label = styled.label`
 `;
 
 const Input = styled.input<{
-  $typingState: "placeholder" | "onTyping" | "typed";
+  $typingState: "onTyping" | "typed";
 }>`
   display: flex;
   width: 80%;
   color: ${({ $typingState, theme: { neutral } }) => {
     const type = {
-      placeholder: neutral.text.weak,
       onTyping: neutral.text.strong,
       typed: neutral.text.default,
     };
@@ -119,6 +114,9 @@ const Input = styled.input<{
   }};
   font: ${({ theme: { font } }) => font.displayMD16};
   caret-color: ${({ theme: { palette } }) => palette.blue};
+  &::placeholder {
+    color: ${({ theme: { neutral } }) => neutral.text.weak};
+  }
 `;
 
 const HelpTextArea = styled.span<{
