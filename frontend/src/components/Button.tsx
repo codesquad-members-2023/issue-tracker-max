@@ -101,7 +101,6 @@ const ConatinerButton = styled(StyledButton)`
 const OutlineButton = styled(StyledButton)`
   border: ${({ theme: { border, color } }) =>
     border.default + color.brandBorderDefault};
-  background-color: ${({ theme: { color } }) => color.brandSurfaceWeak};
   color: ${({ theme: { color } }) => color.brandTextWeak};
 
   img {
@@ -116,7 +115,6 @@ const GhostButton = styled(StyledButton)<{ selected?: boolean }>`
 
     return font[`${fontType}${fontSize}`];
   }};
-  background-color: ${({ theme: { color } }) => color.brandSurfaceWeak};
   color: ${({ theme: { color }, selected }) =>
     selected ? color.neutralTextStrong : color.neutralTextDefault};
 
