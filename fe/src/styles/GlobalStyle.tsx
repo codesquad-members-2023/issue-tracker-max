@@ -53,8 +53,11 @@ export default createGlobalStyle`
   button:disabled {
     cursor: not-allowed;
   }
+
+  input {
+    all: unset;
+  }
   
-  input,
   select {
     margin: 0;
   }
