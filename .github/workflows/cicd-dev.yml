@@ -49,29 +49,29 @@ jobs:
           docker tag app ${{ secrets.DOCKER_USERNAME}}/issue_tracker_app:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/issue_tracker_app:latest
 
-  build-react-image:
-    runs-on: ubuntu-latest
-    environment: dev
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./frontend
-    strategy:
-      matrix:
-        node-version: [ 18.x ]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Docker build
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t app .
-          docker tag app ${{ secrets.DOCKER_USERNAME}}/issue_tracker_web:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/issue_tracker_web:latest
+  #  build-react-image:
+  #    runs-on: ubuntu-latest
+  #    environment: dev
+  #    defaults:
+  #      run:
+  #        shell: bash
+  #        working-directory: ./frontend
+  #    strategy:
+  #      matrix:
+  #        node-version: [ 18.x ]
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #      - name: Docker build
+  #        run: |
+  #          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+  #          docker build -t app .
+  #          docker tag app ${{ secrets.DOCKER_USERNAME}}/issue_tracker_web:latest
+  #          docker push ${{ secrets.DOCKER_USERNAME }}/issue_tracker_web:latest
 
   cd-pipeline:
-    needs:
-      - build-image
-      - build-react-image
+    needs:ㅇ
+    - build-image
+    #      - build-react-image
     name: continuos deploy
     runs-on: ubuntu-latest
     environment: dev
