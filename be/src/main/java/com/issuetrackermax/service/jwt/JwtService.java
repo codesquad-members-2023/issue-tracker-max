@@ -1,4 +1,4 @@
-package com.issuetrackermax.service.Jwt;
+package com.issuetrackermax.service.jwt;
 
 import java.util.Map;
 
@@ -20,13 +20,13 @@ public class JwtService {
 	private final MemberRepository memberRepository;
 	private final JwtProvider jwtProvider;
 
+	@Transactional
 	public Jwt login(String email, String password) throws Exception {
-		Member member = memberRepository.findByMemberEmail(email).get();
+		Member member = memberRepository.findByMemberLoginId(email).get();
 
 		if (!verifyPassword(member, password)) {
 			throw new Exception();
 		}
-
 		Jwt jwt = jwtProvider.createJwt(generateMemberClaims(member.getId()));
 
 		jwtRepository.saveRefreshToken(jwt.getRefreshToken(), member.getId());
