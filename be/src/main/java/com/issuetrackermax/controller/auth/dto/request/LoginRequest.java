@@ -1,11 +1,18 @@
 package com.issuetrackermax.controller.auth.dto.request;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class LoginRequest {
-	private final String email;
-	private final String password;
+	private String loginId;
+	private String password;
+
+	@Builder
+	private LoginRequest(String loginId, String password) {
+		this.loginId = loginId;
+		this.password = password;
+	}
 }
