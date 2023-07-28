@@ -1,4 +1,4 @@
-package com.issuetrackermax.service.Member;
+package com.issuetrackermax.service.member;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

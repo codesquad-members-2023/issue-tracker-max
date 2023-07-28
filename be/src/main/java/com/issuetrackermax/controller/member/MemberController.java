@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.issuetrackermax.controller.ApiResponse;
 import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
-import com.issuetrackermax.service.Member.MemberService;
+import com.issuetrackermax.service.member.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,5 +20,5 @@ public class MemberController {
 		memberService.registerMember(signUpRequest);
 		return ApiResponse.success();
 	}
-	
+
 }

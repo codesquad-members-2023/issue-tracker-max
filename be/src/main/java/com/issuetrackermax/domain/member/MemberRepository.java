@@ -27,7 +27,7 @@ public class MemberRepository {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
-	public Optional<Member> findByMemberEmail(String loginId) {
+	public Optional<Member> findByMemberLoginId(String loginId) {
 		String sql = "SELECT id, password, nick_name, login_id, login_type FROM member WHERE login_id = :loginId ";
 		return Optional.ofNullable(
 			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("loginId", loginId), MEMBER_ROW_MAPPER)));

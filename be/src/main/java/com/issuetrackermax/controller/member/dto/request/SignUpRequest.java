@@ -3,15 +3,23 @@ package com.issuetrackermax.controller.member.dto.request;
 import com.issuetrackermax.domain.member.Entity.LoginType;
 import com.issuetrackermax.domain.member.Entity.Member;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class SignUpRequest {
-	private final String loginId;
-	private final String password;
-	private final String nickName;
+	private String loginId;
+	private String password;
+	private String nickName;
+
+	@Builder
+	private SignUpRequest(String loginId, String password, String nickName) {
+		this.loginId = loginId;
+		this.password = password;
+		this.nickName = nickName;
+	}
 
 	public Member toEntity() {
 		return Member.builder()

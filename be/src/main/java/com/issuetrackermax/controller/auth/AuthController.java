@@ -8,7 +8,7 @@ import com.issuetrackermax.controller.ApiResponse;
 import com.issuetrackermax.controller.auth.dto.request.JwtRefreshTokenRequest;
 import com.issuetrackermax.controller.auth.dto.request.LoginRequest;
 import com.issuetrackermax.controller.auth.dto.response.JwtResponse;
-import com.issuetrackermax.service.Jwt.JwtService;
+import com.issuetrackermax.service.jwt.JwtService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +20,7 @@ public class AuthController {
 	@PostMapping("/signin")
 	public ApiResponse<JwtResponse> login(@RequestBody LoginRequest request) throws Exception {
 		return ApiResponse.success(
-			JwtResponse.from(jwtService.login(request.getEmail(), request.getPassword()))
+			JwtResponse.from(jwtService.login(request.getLoginId(), request.getPassword()))
 		);
 	}
 

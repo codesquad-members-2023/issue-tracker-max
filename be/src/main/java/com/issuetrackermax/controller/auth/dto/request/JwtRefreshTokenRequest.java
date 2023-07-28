@@ -1,5 +1,6 @@
 package com.issuetrackermax.controller.auth.dto.request;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,5 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class JwtRefreshTokenRequest {
 	private String refreshToken;
+
+	@Builder
+	private JwtRefreshTokenRequest(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
 }
 

@@ -6,10 +6,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.issuetrackermax.domain.oAuth.InMemoryProviderRepository;
-import com.issuetrackermax.domain.oAuth.entity.OauthProperties;
-import com.issuetrackermax.domain.oAuth.service.OauthProvider;
-import com.issuetrackermax.domain.oAuth.utils.OauthAdapter;
+import com.issuetrackermax.domain.oauth.InMemoryProviderRepository;
+import com.issuetrackermax.domain.oauth.entity.OauthProperties;
+import com.issuetrackermax.domain.oauth.utils.OauthAdapter;
+import com.issuetrackermax.service.oauth.OauthProvider;
 
 @Configuration
 @EnableConfigurationProperties(OauthProperties.class)
