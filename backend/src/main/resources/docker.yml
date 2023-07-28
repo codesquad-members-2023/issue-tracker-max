@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mysql-prod:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: codeSquad123!
+      MYSQL_DATABASE: issue_tracker
+      MYSQL_USER: common
+      MYSQL_PASSWORD: asdf1234
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+  mysql-dev:
+    image: mysql:latest
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: codeSquad123!
+      MYSQL_DATABASE: issue_tracker
+      MYSQL_USER: common
+      MYSQL_PASSWORD: asdf1234
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci

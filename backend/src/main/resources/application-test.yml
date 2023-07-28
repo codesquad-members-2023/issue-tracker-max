@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3307/issue_tracker
+    username: common
+    password: asdf1234
+
+  sql:
+    init:
+      mode: always
+
+jwt:
+  secret-key: 1A3A06151A7154CA3ABD2CEF80F97769BBFC14FF69E9B5E61C75341255BDCE28
+  expiration-milliseconds: 3600000 # 1시간
