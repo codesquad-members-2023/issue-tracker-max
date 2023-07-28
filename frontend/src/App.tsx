@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { ThemeProvider } from "styled-components";
-import Button from "./components/Button";
+import { Button } from "./components/Button";
 import { TextInput } from "./components/TextInput";
+import { DropdownContainer } from "./components/dropdown/DropdownContainer";
 import { designSystem } from "./constants/designSystem";
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={designSystem[themeMode]}>
+      <DropdownTest />
       <TextInputTest />
       <ButtonTest onClick={onClick} />
     </ThemeProvider>
@@ -24,8 +26,8 @@ function ButtonTest({ onClick }: { onClick: () => void }) {
     <div>
       <Button
         icon="alertCircle"
-        size="medium"
-        buttonType="container"
+        size="L"
+        buttonType="Container"
         selected
         onClick={onClick}
       >
@@ -33,8 +35,8 @@ function ButtonTest({ onClick }: { onClick: () => void }) {
       </Button>
       <Button
         icon="alertCircle"
-        size="medium"
-        buttonType="outline"
+        size="M"
+        buttonType="Outline"
         selected
         onClick={onClick}
       >
@@ -42,8 +44,8 @@ function ButtonTest({ onClick }: { onClick: () => void }) {
       </Button>
       <Button
         icon="alertCircle"
-        size="medium"
-        buttonType="ghost"
+        size="S"
+        buttonType="Ghost"
         selected
         onClick={onClick}
       >
@@ -81,4 +83,48 @@ function TextInputTest() {
       />
     </div>
   );
+}
+
+function DropdownTest() {
+  const options = [
+    {
+      name: "옵션1",
+      profile: "",
+      onClick: () => {
+        console.log("옵션1 선택");
+      },
+    },
+    {
+      name: "옵션2",
+      profile: "",
+      onClick: () => {
+        console.log("옵션2 선택");
+      },
+    },
+    {
+      name: "옵션3",
+      profile: "",
+      onClick: () => {
+        console.log("옵션3 선택");
+      },
+    },
+    {
+      name: "옵션4",
+      profile: "",
+      onClick: () => {
+        console.log("옵션4 선택");
+      },
+    },
+    {
+      name: "옵션5",
+      profile: "",
+      onClick: () => {
+        console.log("옵션5 선택");
+      },
+    },
+  ];
+  return (<>
+    <DropdownContainer name="필터" options={options} alignment="Left" />
+    <DropdownContainer name="필터" options={options} alignment="Right" />
+  </>);
 }

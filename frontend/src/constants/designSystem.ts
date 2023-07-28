@@ -49,31 +49,8 @@ const opacity = {
   disabled: "0.32",
 };
 
-const iconFilter = {
-  light: {
-    neutralTextDefault:
-      "brightness(0) saturate(100%) invert(31%) sepia(8%) saturate(1775%) hue-rotate(197deg) brightness(93%) contrast(91%)",
-    neutralTextStrong:
-      "brightness(0) saturate(100%) invert(8%) sepia(6%) saturate(6138%) hue-rotate(203deg) brightness(94%) contrast(98%)",
-    brandTextWeak:
-      "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
-    brandTextDefault:
-      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
-  },
-  dark: {
-    neutralTextDefault:
-      "brightness(0) saturate(100%) invert(85%) sepia(17%) saturate(218%) hue-rotate(195deg) brightness(91%) contrast(85%)",
-    neutralTextStrong:
-      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
-    brandTextWeak:
-      "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
-    brandTextDefault:
-      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
-  },
-};
-
-const mode = {
-  light: {
+const light = {
+  color: {
     neutralTextWeak: color.grayScale600,
     neutralTextDefault: color.grayScale700,
     neutralTextStrong: color.grayScale900,
@@ -96,10 +73,22 @@ const mode = {
     paletteBlue: color.accentBlue,
     paletteNavy: color.accentNavy,
     paletteRed: color.accentRed,
-
-    dropShadow: "0 0 8px 0 rgba(20, 20, 43, 0.04)",
   },
-  dark: {
+  dropShadow: "0 0 8px 0 rgba(20, 20, 43, 0.04)",
+  iconFilter: {
+    neutralTextDefault:
+      "brightness(0) saturate(100%) invert(31%) sepia(8%) saturate(1775%) hue-rotate(197deg) brightness(93%) contrast(91%)",
+    neutralTextStrong:
+      "brightness(0) saturate(100%) invert(8%) sepia(6%) saturate(6138%) hue-rotate(203deg) brightness(94%) contrast(98%)",
+    brandTextWeak:
+      "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
+    brandTextDefault:
+      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
+  }
+};
+
+const dark = {
+  color: {
     neutralTextWeak: color.grayScale500,
     neutralTextDefault: color.grayScale400,
     neutralTextStrong: color.grayScale50,
@@ -122,9 +111,18 @@ const mode = {
     paletteBlue: color.accentBlue,
     paletteNavy: color.accentNavy,
     paletteRed: color.accentRed,
-
-    dropShadow: "0 0 16px 0 rgba(20, 20, 43, 0.8)",
   },
+  dropShadow: "0 0 16px 0 rgba(20, 20, 43, 0.8)",
+  iconFilter: {
+    neutralTextDefault:
+      "brightness(0) saturate(100%) invert(85%) sepia(17%) saturate(218%) hue-rotate(195deg) brightness(91%) contrast(85%)",
+    neutralTextStrong:
+      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
+    brandTextWeak:
+      "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
+    brandTextDefault:
+      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
+  }
 };
 
 export const designSystem = {
@@ -133,17 +131,13 @@ export const designSystem = {
     radius,
     border,
     opacity,
-    iconFilter: iconFilter.light,
-    color: mode.light,
-    dropShadow: mode.light.dropShadow,
+    ...light
   },
   dark: {
     font,
     radius,
     border,
     opacity,
-    iconFilter: iconFilter.dark,
-    color: mode.dark,
-    dropShadow: mode.dark.dropShadow,
+    ...dark
   },
 };

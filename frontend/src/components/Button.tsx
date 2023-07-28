@@ -1,15 +1,15 @@
 import { ButtonHTMLAttributes } from "react";
 import { styled } from "styled-components";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  size: "small" | "medium" | "large";
-  buttonType: "container" | "outline" | "ghost";
-  flexible?: "flexible" | "fixed";
+type ButtonProps = {
+  size: "S" | "M" | "L";
+  buttonType: "Container" | "Outline" | "Ghost";
+  flexible?: "Flexible" | "Fixed";
   icon?: string;
   selected?: boolean;
-}
+};
 
-export default function Button({
+export function Button({
   size,
   buttonType,
   flexible,
@@ -17,17 +17,22 @@ export default function Button({
   selected,
   children,
   ...props
-}: ButtonProps) {
+}: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
   const buttonMap = {
-    container: ConatinerButton,
-    outline: OutlineButton,
-    ghost: GhostButton,
+    Container: ConatinerButton,
+    Outline: OutlineButton,
+    Ghost: GhostButton,
   };
 
   const ButtonComponent = buttonMap[buttonType];
 
   return (
-    <ButtonComponent {...{ $size: size, $flexible: flexible, $selected: selected }} {...props}>
+    <ButtonComponent
+      $size={size}
+      $flexible={flexible === "Flexible"}
+      $selected={selected}
+      {...props}
+    >
       <div>
         {icon && <img src={`/src/assets/${icon}.svg`} alt={icon} />}
         <span>{children}</span>
@@ -37,40 +42,63 @@ export default function Button({
 }
 
 const StyledButton = styled.button<{
-  $size: "small" | "medium" | "large";
-  $flexible?: "flexible" | "fixed";
+  $size: "S" | "M" | "L";
+  $flexible?: boolean;
 }>`
-  width: ${({ $size, $flexible }) =>
-    $flexible === "flexible"
-      ? "fit-content"
-      : $size === "large"
-      ? "240px"
-      : $size === "medium"
-      ? "184px"
-      : "128px"};
-  height: ${({ $size }) =>
-    $size === "large" ? "56px" : $size === "medium" ? "48px" : "40px"};
-  padding: ${({ $flexible }) =>
-    $flexible === "flexible" ? "0 24px 0 24px" : ""};
-  border-radius: ${({ theme: { radius }, $size }) =>
-    $size === "large" ? radius.large : radius.medium};
-  font: ${({ theme: { font }, $size }) => {
-    const fontSize = $size === "large" ? 20 : $size === "medium" ? 16 : 12;
-
-    return font[`availableMedium${fontSize}`];
+  width: ${({ $size, $flexible }) => {
+    if ($flexible) {
+      return "fit-content";
+    }
+    switch ($size) {
+      case "L":
+        return "240px";
+      case "M":
+        return "184px";
+      case "S":
+        return "128px";
+      default:
+        return "";
+    }
   }};
-  opacity: ${({ theme: { opacity } }) => opacity.default};
+  height: ${({ $size }) => {
+    switch ($size) {
+      case "L":
+        return "56px";
+      case "M":
+        return "48px";
+      case "S":
+        return "40px";
+      default:
+        return "";
+    }
+  }};
+  padding: ${({ $flexible }) => ($flexible ? "0 24px 0 24px" : "")};
+  border-radius: ${({ theme, $size }) =>
+    $size === "L" ? theme.radius.large : theme.radius.medium};
+  font: ${({ theme, $size }) => {
+    switch ($size) {
+      case "L":
+        return theme.font.availableMedium20;
+      case "M":
+        return theme.font.availableMedium16;
+      case "S":
+        return theme.font.availableMedium12;
+      default:
+        return "";
+    }
+  }};
+  opacity: ${({ theme }) => theme.opacity.default};
 
   &:hover {
-    opacity: ${({ theme: { opacity } }) => opacity.hover};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 
   &:active {
-    opacity: ${({ theme: { opacity } }) => opacity.press};
+    opacity: ${({ theme }) => theme.opacity.press};
   }
 
   &:disabled {
-    opacity: ${({ theme: { opacity } }) => opacity.disabled};
+    opacity: ${({ theme }) => theme.opacity.disabled};
   }
 
   div {
@@ -89,36 +117,50 @@ const StyledButton = styled.button<{
 `;
 
 const ConatinerButton = styled(StyledButton)`
-  background-color: ${({ theme: { color } }) => color.brandSurfaceDefault};
-  color: ${({ theme: { color } }) => color.brandTextDefault};
+  background-color: ${({ theme }) => theme.color.brandSurfaceDefault};
+  color: ${({ theme }) => theme.color.brandTextDefault};
 
   img {
-    filter: ${({ theme: { iconFilter } }) => iconFilter.brandTextDefault};
+    filter: ${({ theme }) => theme.iconFilter.brandTextDefault};
   }
 `;
 
 const OutlineButton = styled(StyledButton)`
-  border: ${({ theme: { border, color } }) =>
-    border.default + color.brandBorderDefault};
-  color: ${({ theme: { color } }) => color.brandTextWeak};
+  border: ${({ theme }) =>
+    theme.border.default + theme.color.brandBorderDefault};
+  color: ${({ theme }) => theme.color.brandTextWeak};
 
   img {
-    filter: ${({ theme: { iconFilter } }) => iconFilter.brandTextWeak};
+    filter: ${({ theme }) => theme.iconFilter.brandTextWeak};
   }
 `;
 
 const GhostButton = styled(StyledButton)<{ $selected?: boolean }>`
-  font: ${({ theme: { font }, $size, $selected }) => {
-    const fontSize = $size === "large" ? 20 : $size === "medium" ? 16 : 12;
-    const fontType = $selected ? "selectedBold" : "availableMedium";
-
-    return font[`${fontType}${fontSize}`];
+  font: ${({ theme, $size, $selected }) => {
+    switch ($size) {
+      case "L":
+        return $selected
+          ? theme.font.selectedBold20
+          : theme.font.availableMedium20;
+      case "M":
+        return $selected
+          ? theme.font.selectedBold16
+          : theme.font.availableMedium16;
+      case "S":
+        return $selected
+          ? theme.font.selectedBold12
+          : theme.font.availableMedium12;
+      default:
+        return "";
+    }
   }};
-  color: ${({ theme: { color }, $selected }) =>
-    $selected ? color.neutralTextStrong : color.neutralTextDefault};
+  color: ${({ theme, $selected }) =>
+    $selected ? theme.color.neutralTextStrong : theme.color.neutralTextDefault};
 
   img {
-    filter: ${({ theme: { iconFilter }, $selected }) =>
-      $selected ? iconFilter.neutralTextStrong : iconFilter.neutralTextDefault};
+    filter: ${({ theme, $selected }) =>
+      $selected
+        ? theme.iconFilter.neutralTextStrong
+        : theme.iconFilter.neutralTextDefault};
   }
 `;
