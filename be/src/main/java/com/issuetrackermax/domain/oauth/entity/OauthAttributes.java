@@ -1,4 +1,4 @@
-package com.issuetrackermax.domain.oAuth.entity;
+package com.issuetrackermax.domain.oauth.entity;
 
 import java.util.Arrays;
 import java.util.Map;

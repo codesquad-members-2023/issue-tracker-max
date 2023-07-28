@@ -1,4 +1,4 @@
-package com.issuetrackermax.domain.oAuth.service;
+package com.issuetrackermax.service.oauth;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -17,8 +17,8 @@ import com.issuetrackermax.controller.auth.dto.response.OauthTokenResponse;
 import com.issuetrackermax.domain.jwt.service.JwtProvider;
 import com.issuetrackermax.domain.member.Entity.Member;
 import com.issuetrackermax.domain.member.MemberRepository;
-import com.issuetrackermax.domain.oAuth.InMemoryProviderRepository;
-import com.issuetrackermax.domain.oAuth.entity.OauthAttributes;
+import com.issuetrackermax.domain.oauth.InMemoryProviderRepository;
+import com.issuetrackermax.domain.oauth.entity.OauthAttributes;
 
 @Service
 public class OauthService {
@@ -53,10 +53,10 @@ public class OauthService {
 
 	private Member saveOrUpdate(MemberProfileResponse memberProfileResponse) {
 		try {
-			return memberRepository.findByMemberEmail(memberProfileResponse.getLoginId()).get();
+			return memberRepository.findByMemberLoginId(memberProfileResponse.getLoginId()).get();
 		} catch (Exception e) {
 			memberRepository.save(memberProfileResponse.toMember());
-			return memberRepository.findByMemberEmail(memberProfileResponse.getLoginId()).get();
+			return memberRepository.findByMemberLoginId(memberProfileResponse.getLoginId()).get();
 		}
 	}
 
