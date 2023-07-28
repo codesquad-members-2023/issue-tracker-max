@@ -1,27 +1,44 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 
-export default function DropdownPanel({
+export function DropdownPanel({
+  showProfile = true,
   alignment,
+  options,
 }: {
-  alignment: "left" | "right";
+  showProfile?: boolean;
+  alignment: "Left" | "Right";
+  options: {
+    name: string;
+    profile?: string;
+    onClick: () => void;
+  }[];
 }) {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(-1);
+
+  const onOptionClick = (index: number, callback: () => void) => {
+    callback();
+    setSelectedOptionIndex(index);
+  }
 
   return (
     <StyledPanel $alignment={alignment}>
       <div className="dropdown__header">헤더</div>
       <ul className="dropdown__option-container">
-        {["option1", "option2", "option3"].map((option, index) => (
+        {options.map((option, index) => (
           <li
             className={`dropdown__option ${
               selectedOptionIndex === index && "selected"
             }`}
             key={index}
-            onClick={() => setSelectedOptionIndex(index)}
+            onClick={() => onOptionClick(index, option.onClick)}
           >
-            <DropdownOption selected={selectedOptionIndex === index}>
-              {option}
+            <DropdownOption
+              showProfile={showProfile}
+              profile={option.profile}
+              selected={selectedOptionIndex === index}
+            >
+              {option.name}
             </DropdownOption>
           </li>
         ))}
@@ -44,7 +61,7 @@ function DropdownOption({
   return (
     <>
       {showProfile && (
-        <img src={profile ?? "src/assets/userImageSmall.svg"} alt="" />
+        <img src={profile ? profile : "src/assets/userImageSmall.svg"} alt="" />
       )}
       <span>{children}</span>
       <img
@@ -55,10 +72,10 @@ function DropdownOption({
   );
 }
 
-const StyledPanel = styled.div<{ $alignment: "left" | "right" }>`
+const StyledPanel = styled.div<{ $alignment: "Left" | "Right" }>`
   position: absolute;
-  left: ${({ $alignment }) => ($alignment === "left" ? "0" : "auto")};
-  right: ${({ $alignment }) => ($alignment === "right" ? "0" : "auto")};
+  left: ${({ $alignment }) => ($alignment === "Left" ? "0" : "auto")};
+  right: ${({ $alignment }) => ($alignment === "Right" ? "0" : "auto")};
   z-index: 100;
 
   display: flex;

@@ -1,23 +1,46 @@
 import { useState } from "react";
 import { styled } from "styled-components";
-import DropdownIndicator from "./DropdownIndicator";
-import DropdownPanel from "./DropdownPanel";
+import { DropdownIndicator } from "./DropdownIndicator";
+import { DropdownPanel } from "./DropdownPanel";
 
-export default function DropdownContainer() {
+export function DropdownContainer({
+  name,
+  options,
+  showProfile = true,
+  alignment,
+  disabled = false
+}: {
+  name: string;
+  options: {
+    name: string;
+    profile?: string;
+    onClick: () => void;
+  }[];
+  showProfile?: boolean;
+  alignment: "Left" | "Right";
+  disabled?: boolean;
+}) {
   const [isPanelOpened, setIsPanelOpened] = useState(false);
+
+  const openPanel = () => {
+    setIsPanelOpened(true);
+  };
+
+  const closePanel = () => {
+    setIsPanelOpened(false);
+  };
 
   return (
     <StyledContainer>
-      <DropdownIndicator onClick={() => setIsPanelOpened(true)}>
-        버튼
-      </DropdownIndicator>
+      <DropdownIndicator value={name} onClick={openPanel} disabled={disabled} />
       {isPanelOpened && (
         <>
-          <div
-            className="dropdown__dim"
-            onClick={() => setIsPanelOpened(false)}
-          ></div>
-          <DropdownPanel alignment="left" />
+          <div className="dropdown__dim" onClick={closePanel}></div>
+          <DropdownPanel
+            showProfile={showProfile}
+            alignment={alignment}
+            options={options}
+          />
         </>
       )}
     </StyledContainer>
@@ -25,6 +48,7 @@ export default function DropdownContainer() {
 }
 
 const StyledContainer = styled.div`
+  width: fit-content;
   position: relative;
 
   & .dropdown__dim {

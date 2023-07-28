@@ -1,15 +1,15 @@
 import { ButtonHTMLAttributes } from "react";
 import { styled } from "styled-components";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  size: "small" | "medium" | "large";
-  buttonType: "container" | "outline" | "ghost";
-  flexible?: "flexible" | "fixed";
+type ButtonProps = {
+  size: "S" | "M" | "L";
+  buttonType: "Container" | "Outline" | "Ghost";
+  flexible?: "Flexible" | "Fixed";
   icon?: string;
   selected?: boolean;
-}
+};
 
-export default function Button({
+export function Button({
   size,
   buttonType,
   flexible,
@@ -17,11 +17,11 @@ export default function Button({
   selected,
   children,
   ...props
-}: ButtonProps) {
+}: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
   const buttonMap = {
-    container: ConatinerButton,
-    outline: OutlineButton,
-    ghost: GhostButton,
+    Container: ConatinerButton,
+    Outline: OutlineButton,
+    Ghost: GhostButton,
   };
 
   const ButtonComponent = buttonMap[buttonType];
@@ -29,7 +29,7 @@ export default function Button({
   return (
     <ButtonComponent
       $size={size}
-      $flexible={flexible}
+      $flexible={flexible === "Flexible"}
       $selected={selected}
       {...props}
     >
@@ -42,19 +42,19 @@ export default function Button({
 }
 
 const StyledButton = styled.button<{
-  $size: "small" | "medium" | "large";
-  $flexible?: "flexible" | "fixed";
+  $size: "S" | "M" | "L";
+  $flexible?: boolean;
 }>`
   width: ${({ $size, $flexible }) => {
-    if ($flexible === "flexible") {
+    if ($flexible) {
       return "fit-content";
     }
     switch ($size) {
-      case "large":
+      case "L":
         return "240px";
-      case "medium":
+      case "M":
         return "184px";
-      case "small":
+      case "S":
         return "128px";
       default:
         return "";
@@ -62,27 +62,26 @@ const StyledButton = styled.button<{
   }};
   height: ${({ $size }) => {
     switch ($size) {
-      case "large":
+      case "L":
         return "56px";
-      case "medium":
+      case "M":
         return "48px";
-      case "small":
+      case "S":
         return "40px";
       default:
         return "";
     }
   }};
-  padding: ${({ $flexible }) =>
-    $flexible === "flexible" ? "0 24px 0 24px" : ""};
+  padding: ${({ $flexible }) => ($flexible ? "0 24px 0 24px" : "")};
   border-radius: ${({ theme, $size }) =>
-    $size === "large" ? theme.radius.large : theme.radius.medium};
+    $size === "L" ? theme.radius.large : theme.radius.medium};
   font: ${({ theme, $size }) => {
     switch ($size) {
-      case "large":
+      case "L":
         return theme.font.availableMedium20;
-      case "medium":
+      case "M":
         return theme.font.availableMedium16;
-      case "small":
+      case "S":
         return theme.font.availableMedium12;
       default:
         return "";
@@ -139,15 +138,15 @@ const OutlineButton = styled(StyledButton)`
 const GhostButton = styled(StyledButton)<{ $selected?: boolean }>`
   font: ${({ theme, $size, $selected }) => {
     switch ($size) {
-      case "large":
+      case "L":
         return $selected
           ? theme.font.selectedBold20
           : theme.font.availableMedium20;
-      case "medium":
+      case "M":
         return $selected
           ? theme.font.selectedBold16
           : theme.font.availableMedium16;
-      case "small":
+      case "S":
         return $selected
           ? theme.font.selectedBold12
           : theme.font.availableMedium12;
