@@ -16,15 +16,20 @@ const GlobalStyles = createGlobalStyle`
     padding: 0;
     border: 0;
     vertical-align: baseline;
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     }
     ol, ul{
         list-style: none;
     }
     button {
+        padding: 0;
         border: 0;
         background: transparent;
         cursor: pointer;
+    }
+    input {
+        padding: 0;
+        margin: 0;
+        border: 0;
     }
 `;
 
