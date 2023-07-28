@@ -2,6 +2,8 @@ package com.issuetracker.app.issue.application.dto;
 
 import java.util.List;
 
+import com.issuetracker.app.issue.domain.IssueSearch;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,4 +17,15 @@ public class IssueSearchData {
 	private Long milestoneId;
 	private Long authorId;
 	private Long commentAuthorId;
+
+	public IssueSearch toIssueSearch() {
+		return IssueSearch.builder()
+			.isOpen(isOpen)
+			.assigneeIds(assigneeIds)
+			.labelIds(labelIds)
+			.milestoneId(milestoneId)
+			.authorId(authorId)
+			.commentAuthorId(commentAuthorId)
+			.build();
+	}
 }

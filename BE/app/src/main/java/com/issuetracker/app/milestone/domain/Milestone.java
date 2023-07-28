@@ -7,8 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Milestone {
 
 	private Long id;
@@ -17,7 +17,7 @@ public class Milestone {
 	private LocalDate deadline;
 	private Boolean isOpen;
 
-	@Builder(builderClassName = "MilestoneBuilder", access = AccessLevel.PRIVATE)
+	@Builder(builderClassName = "MilestoneBuilder")
 	private Milestone(Long id, String title, String description, LocalDate deadline, Boolean isOpen) {
 		this.id = id;
 		this.title = title;
@@ -26,11 +26,9 @@ public class Milestone {
 		this.isOpen = isOpen;
 	}
 
-	@Builder(builderClassName = "MilestoneRequiredBuilder", access = AccessLevel.PRIVATE)
-	public static MilestoneBuilder milestoneBuilder(String title, LocalDate deadline, Boolean isOpen) {
-		return new MilestoneBuilder()
-			.title(title)
-			.deadline(deadline)
-			.isOpen(isOpen);
+	public static Milestone createInstanceById(Long id) {
+		return Milestone.builder()
+			.id(id)
+			.build();
 	}
 }

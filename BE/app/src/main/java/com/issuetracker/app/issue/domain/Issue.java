@@ -12,8 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Issue {
 
 	private Long id;
@@ -25,7 +25,7 @@ public class Issue {
 	private Milestone milestone;
 	private List<Label> labels;
 
-	@Builder(builderClassName = "IssueBuilder", access = AccessLevel.PRIVATE)
+	@Builder(builderClassName = "IssueBuilder")
 	private Issue(Long id, String title, String content, Boolean isOpen, LocalDateTime createAt, Member author,
 		Milestone milestone, List<Label> labels) {
 		this.id = id;
@@ -36,14 +36,5 @@ public class Issue {
 		this.author = author;
 		this.milestone = milestone;
 		this.labels = labels;
-	}
-
-	@Builder(builderClassName = "IssueRequiredBuilder", access = AccessLevel.PRIVATE)
-	public static IssueBuilder issueBuilder(String title, Boolean isOpen, LocalDateTime createAt, Member author) {
-		return new IssueBuilder()
-			.title(title)
-			.isOpen(isOpen)
-			.createAt(createAt)
-			.author(author);
 	}
 }

@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Member {
 
 	private Long id;
@@ -15,7 +15,7 @@ public class Member {
 	private String nickname;
 	private String proFileImageUrl;
 
-	@Builder(builderClassName = "MemberBuilder", access = AccessLevel.PRIVATE)
+	@Builder(builderClassName = "MemberBuilder")
 	private Member(Long id, String email, String password, String nickname, String proFileImageUrl) {
 		this.id = id;
 		this.email = email;
@@ -24,11 +24,9 @@ public class Member {
 		this.proFileImageUrl = proFileImageUrl;
 	}
 
-	@Builder(builderClassName = "MemberRequiredBuilder", access = AccessLevel.PRIVATE)
-	public static MemberBuilder memberBuilder(String email, String password, String nickname) {
-		return new MemberBuilder()
-			.email(email)
-			.password(password)
-			.nickname(nickname);
+	public static Member createInstanceById(Long id) {
+		return Member.builder()
+			.id(id)
+			.build();
 	}
 }

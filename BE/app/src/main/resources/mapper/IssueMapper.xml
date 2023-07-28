@@ -26,7 +26,7 @@
         </collection>
     </resultMap>
 
-    <select id="search" resultMap="issueResultMap" parameterType="com.issuetracker.app.issue.application.dto.IssueSearchData">
+    <select id="search" resultMap="issueResultMap" parameterType="IssueSearch">
         SELECT DISTINCT i.id as issue_id,
                i.title as issue_title,
                i.content as issue_content,
@@ -42,7 +42,7 @@
         LEFT OUTER JOIN milestone mi ON i.milestone_id = mi.id
         LEFT OUTER JOIN issue_label_mapping ilm ON i.id = ilm.issue_id
         LEFT OUTER JOIN label l ON ilm.label_id = l.id
-        LEFT OUTER JOIN assignees a ON i.id = a.issue_id
+        LEFT OUTER JOIN assignee a ON i.id = a.issue_id
         LEFT OUTER JOIN member m2 ON a.member_id = m2.id
         LEFT OUTER JOIN issue_comment ic ON i.id = ic.issue_id
         <where>
