@@ -1,45 +1,41 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-type TextInputProps = {
+interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
   variant: "tall" | "short";
-  placeholderText?: string;
   hasError?: boolean;
   helpText?: string;
-};
+}
 
-export default function TextInput(props: TextInputProps) {
-  const { name, variant, placeholderText, hasError, helpText } = props;
-
-  const [content, setContent] = useState("");
+export default function TextInput({
+  name,
+  value,
+  variant,
+  hasError,
+  helpText,
+  ...props
+}: TextInputProps) {
   const [isFocused, setIsFocused] = useState(false);
 
   const isTallType = variant === "tall";
   const textInputState = isFocused ? "active" : hasError ? "error" : "enabled";
   const typingState = isFocused ? "onTyping" : "typed";
 
-  const onInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setContent(e.target.value);
-  };
-
   return (
     <StyledTextInput>
       <InputContainer $variant={variant} $state={textInputState}>
-        {isTallType && content && <Label htmlFor={name}>{name}</Label>}
+        {isTallType && value && <Label htmlFor={name}>{name}</Label>}
         {!isTallType && <Label htmlFor={name}>{name}</Label>}
         <Input
           id={name}
-          type="text"
-          value={content}
           $typingState={typingState}
-          placeholder={placeholderText || name}
-          onChange={onInputChanged}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          {...props}
         />
       </InputContainer>
-      {helpText && (
+      {hasError && helpText && (
         <HelpTextArea $state={textInputState}>{helpText}</HelpTextArea>
       )}
     </StyledTextInput>
@@ -104,7 +100,7 @@ const Input = styled.input<{
   $typingState: "onTyping" | "typed";
 }>`
   display: flex;
-  width: 80%;
+  width: 100%;
   color: ${({ $typingState, theme: { neutral } }) => {
     const type = {
       onTyping: neutral.text.strong,
