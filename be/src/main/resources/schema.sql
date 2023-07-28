@@ -3,9 +3,10 @@ drop table if exists token;
 
 create table member (
                         id bigint NOT NULL auto_increment,
-                        email varchar(255),
+                        login_id varchar(255),
                         password varchar(255),
                         nick_name varchar(255),
+                        login_type varchar(255),
                         primary key (id)
 );
 

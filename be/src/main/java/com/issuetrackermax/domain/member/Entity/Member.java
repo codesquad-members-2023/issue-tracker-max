@@ -1,24 +1,25 @@
 package com.issuetrackermax.domain.member.Entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Member {
 	private Long id;
-	private String email;
+	private String loginId;
 	private String password;
 	private String nickName;
+	private LoginType loginType;
 
 	@Builder
-	public Member(String email, String password, String nickName) {
-		this.email = email;
+	public Member(Long id, String loginId, String password, String nickName, LoginType loginType) {
+		this.id = id;
+		this.loginId = loginId;
 		this.password = password;
 		this.nickName = nickName;
+		this.loginType = loginType;
 	}
 
 }
