@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 	private final JwtService jwtService;
 
-	@PostMapping("/login")
+	@PostMapping("/signin")
 	public ApiResponse<JwtResponse> login(@RequestBody LoginRequest request) throws Exception {
 		return ApiResponse.success(
 			JwtResponse.from(jwtService.login(request.getEmail(), request.getPassword()))
