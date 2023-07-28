@@ -1,3 +1,4 @@
+import { Outlet } from 'react-router-dom';
 type Props = {
   resetUserId?: () => void;
   resetAccessToken?: () => void;
@@ -5,5 +6,10 @@ type Props = {
 };
 
 export const Header: React.FC = ({}: Props) => {
-  return <></>;
+  return (
+    <>
+      <div>Header</div>
+      <Outlet />
+    </>
+  );
 };
