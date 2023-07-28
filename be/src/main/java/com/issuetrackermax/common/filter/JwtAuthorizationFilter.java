@@ -25,7 +25,7 @@ import io.jsonwebtoken.MalformedJwtException;
 
 public class JwtAuthorizationFilter implements Filter {
 	private final String[] whiteListUris = new String[] {"/h2-console/**", "/login", "/signup",
-		"/reissue-access-token"};
+		"/reissue-access-token", "/oauth/**", "/redirect/**"};
 	private final JwtProvider jwtProvider;
 	private final ObjectMapper objectMapper;
 	private final String TOKEN_PREFIX = "Bearer ";
