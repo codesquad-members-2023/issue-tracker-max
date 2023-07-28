@@ -1,7 +1,7 @@
 import alertIcon from "@assets/icon/alertCircle.svg";
 import archiveIcon from "@assets/icon/archive.svg";
 import DropdownIndicator from "@components/Dropdown/DropdownIndicator";
-import GhostButton from "@components/common/Button/GhostButton";
+import Button from "@components/common/Button";
 import InputCheckbox from "@components/common/Input/InputCheckbox";
 import { styled } from "styled-components";
 import TableHeader from "./TableHeader";
@@ -14,14 +14,14 @@ export default function TableHeaderIssues() {
           <InputCheckbox />
 
           {/* TODO: TabBar로 변경 */}
-          <GhostButton size="M" variant="ghost">
+          <Button size="M" variant="ghost">
             <img src={alertIcon} alt="열린 이슈" />
             열린 이슈 (2)
-          </GhostButton>
-          <GhostButton size="M" variant="ghost">
+          </Button>
+          <Button size="M" variant="ghost">
             <img src={archiveIcon} alt="닫힌 이슈" />
             닫힌 이슈 (0)
-          </GhostButton>
+          </Button>
         </div>
 
         <div className="right-wrapper">

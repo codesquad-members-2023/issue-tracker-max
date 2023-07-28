@@ -1,7 +1,7 @@
 import plusIcon from "@assets/icon/plus.svg";
 import FilterBar from "@components/FilterBar";
 import { Table, TableBodyIssues, TableHeaderIssues } from "@components/Table";
-import ContainerButton from "@components/common/Button/ContainerButton";
+import Button from "@components/common/Button";
 import TabBar from "@components/common/TabBar";
 import { styled } from "styled-components";
 
@@ -13,10 +13,10 @@ export default function IssuesPage() {
 
         <div className="right-wrapper">
           <TabBar labelCount={3} milestoneCount={2} />
-          <ContainerButton size="S" variant="container">
+          <Button size="S" variant="container">
             <img src={plusIcon} alt="이슈 작성" />
             이슈 작성
-          </ContainerButton>
+          </Button>
         </div>
       </IssuesNavBar>
 
