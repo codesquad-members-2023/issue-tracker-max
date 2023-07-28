@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { css } from '@emotion/react';
 import Header from './components/Header/Header';
 import SignIn from './components/Sign/SignIn';
 import SignUp from './components/Sign/SignUp';
@@ -14,7 +15,12 @@ export default function App() {
   const shouldShowHeader = !hiddenHeaderRoutes.includes(location.pathname);
 
   return (
-    <>
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+      `}
+    >
       {shouldShowHeader && <Header />}
       <Routes>
         <Route path="/" element={<SignIn />} />
@@ -26,6 +32,6 @@ export default function App() {
         <Route path="/label" element={<Label />} />
         <Route path="/milestone" element={<Milestone />} />
       </Routes>
-    </>
+    </div>
   );
 }

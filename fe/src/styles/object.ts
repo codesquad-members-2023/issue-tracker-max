@@ -5,9 +5,9 @@ export const radius = {
 };
 
 export const border = {
-  default: '1px solid #D9DBE9',
-  icon: '1.6px solid #D9DBE9',
-  dash: '1px dash #D9DBE9',
+  default: '1px solid',
+  icon: '1.6px solid',
+  dash: '1px dash',
 };
 
 export const opacity = {

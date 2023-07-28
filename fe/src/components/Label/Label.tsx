@@ -1,3 +1,10 @@
+import MainWrapper from '../common/MainWrapper';
+import MainWrapperHeader from '../common/MainWrapperHeader';
+
 export default function Label() {
-  return <div>Label</div>;
+  return (
+    <MainWrapper>
+      <MainWrapperHeader variant="label"></MainWrapperHeader>
+    </MainWrapper>
+  );
 }
