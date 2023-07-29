@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { Button } from "./components/Button";
+import { InformationTag } from "./components/InformationTag";
 import { TabButton } from "./components/TabButton";
 import { TextInput } from "./components/TextInput";
 import { DropdownContainer } from "./components/dropdown/DropdownContainer";
@@ -19,6 +20,7 @@ export default function App() {
       <ButtonTest onClick={onClick} />
       <TabButtonTest />
       <DropdownTest />
+      <InformationTagTest />
     </ThemeProvider>
   );
 }
@@ -128,27 +130,72 @@ function DropdownTest() {
   return (
     <>
       <DropdownContainer name="assignee" options={options} alignment="Left" />
-      <DropdownContainer name="milestones" options={options} alignment="Right" />
+      <DropdownContainer
+        name="milestones"
+        options={options}
+        alignment="Right"
+      />
     </>
   );
 }
 
 function TabButtonTest() {
-  const [tabs, setTabs] = useState([{name: "label(3)", icon: "label"}, {name: "milestone(2)", icon: "milestone"}]);
-  const [issueStates, setIssueStates] = useState([{name: "열린 이슈", icon: "alertCircle", selected: true}, {name: "닫힌 이슈", icon: "archive"}]);
+  const [tabs, setTabs] = useState([
+    { name: "label(3)", icon: "label" },
+    { name: "milestone(2)", icon: "milestone" },
+  ]);
+  const [issueStates, setIssueStates] = useState([
+    { name: "열린 이슈", icon: "alertCircle", selected: true },
+    { name: "닫힌 이슈", icon: "archive" },
+  ]);
 
   const onTabClick = (name: string) => {
-    setTabs(t => t.map(tab => tab.name === name ? {...tab, selected: true} : {...tab, selected: false}));
-  }
+    setTabs((t) =>
+      t.map((tab) =>
+        tab.name === name
+          ? { ...tab, selected: true }
+          : { ...tab, selected: false },
+      ),
+    );
+  };
 
   const onIssueStateClick = (name: string) => {
-    setIssueStates(t => t.map(issueState => issueState.name === name ? {...issueState, selected: true} : {...issueState, selected: false}));
-  }
+    setIssueStates((t) =>
+      t.map((issueState) =>
+        issueState.name === name
+          ? { ...issueState, selected: true }
+          : { ...issueState, selected: false },
+      ),
+    );
+  };
 
   return (
     <>
-      <TabButton tabs={tabs} onClick={onTabClick}/>
-      <TabButton tabs={issueStates} onClick={onIssueStateClick}/>
+      <TabButton tabs={tabs} onClick={onTabClick} />
+      <TabButton tabs={issueStates} onClick={onIssueStateClick} />
+    </>
+  );
+}
+
+function InformationTagTest() {
+  return (
+    <>
+      <InformationTag
+        value="열린 이슈"
+        toolTip="Status: Open 긴 이름이 들어가는 경우"
+        icon="alertCircle"
+        size="M"
+        fill="#7F4BFF"
+        fontColor="Light"
+      />
+      <InformationTag value="작성자" toolTip="해당 이슈의 작성자입니다." size="S" fill="#C5C" stroke="Default" />
+      <InformationTag
+        value="documentation"
+        toolTip="문서 작업입니다."
+        size="S"
+        fill="#000FFF"
+        fontColor="Light"
+      />
     </>
   );
 }
