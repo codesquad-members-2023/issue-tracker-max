@@ -33,7 +33,7 @@ function ButtonTest({ onClick }: { onClick: () => void }) {
         selected
         onClick={onClick}
       >
-        모드 변경
+        코멘트 작성
       </Button>
       <Button
         icon="alertCircle"
@@ -42,7 +42,7 @@ function ButtonTest({ onClick }: { onClick: () => void }) {
         selected
         onClick={onClick}
       >
-        모드 변경
+        이슈 작성
       </Button>
       <Button
         icon="alertCircle"
@@ -51,7 +51,7 @@ function ButtonTest({ onClick }: { onClick: () => void }) {
         selected
         onClick={onClick}
       >
-        모드 변경
+        마일스톤(2)
       </Button>
     </div>
   );
@@ -90,7 +90,7 @@ function TextInputTest() {
 function DropdownTest() {
   const options = [
     {
-      name: "옵션1",
+      name: "옵션1 - 긴 이름이 들어가는 경우",
       profile: "",
       onClick: () => {
         console.log("옵션1 선택");
@@ -127,14 +127,14 @@ function DropdownTest() {
   ];
   return (
     <>
-      <DropdownContainer name="필터" options={options} alignment="Left" />
-      <DropdownContainer name="필터" options={options} alignment="Right" />
+      <DropdownContainer name="assignee" options={options} alignment="Left" />
+      <DropdownContainer name="milestones" options={options} alignment="Right" />
     </>
   );
 }
 
 function TabButtonTest() {
-  const [tabs, setTabs] = useState([{name: "왼쪽"}, {name: "오른쪽"}]);
+  const [tabs, setTabs] = useState([{name: "label(3)", icon: "label"}, {name: "milestone(2)", icon: "milestone"}]);
   const [issueStates, setIssueStates] = useState([{name: "열린 이슈", icon: "alertCircle", selected: true}, {name: "닫힌 이슈", icon: "archive"}]);
 
   const onTabClick = (name: string) => {

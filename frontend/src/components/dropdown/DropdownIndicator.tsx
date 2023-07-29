@@ -22,7 +22,6 @@ const StyledButton = styled.button`
   justify-content: center;
   align-items: center;
   gap: 4px;
-  width: 80px;
   height: 32px;
   border-radius: 20px;
   font: ${({ theme }) => theme.font.availableMedium16};
@@ -38,9 +37,5 @@ const StyledButton = styled.button`
 
   &:disabled {
     opacity: ${({ theme }) => theme.opacity.disabled};
-  }
-
-  span {
-    width: 60px;
   }
 `;
