@@ -19,7 +19,7 @@ export function DropdownPanel({
   const onOptionClick = (index: number, callback: () => void) => {
     callback();
     setSelectedOptionIndex(index);
-  }
+  };
 
   return (
     <StyledPanel $alignment={alignment}>
@@ -63,7 +63,7 @@ function DropdownOption({
       {showProfile && (
         <img src={profile ? profile : "src/assets/userImageSmall.svg"} alt="" />
       )}
-      <span>{children}</span>
+      <span title={children}>{children}</span>
       <img
         src={`src/assets/check${selected ? "On" : "Off"}Circle.svg`}
         alt={selected ? "선택된 옵션" : "선택되지 않은 옵션"}
@@ -124,6 +124,9 @@ const StyledPanel = styled.div<{ $alignment: "Left" | "Right" }>`
 
     & span {
       flex-grow: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
   }
 `;
