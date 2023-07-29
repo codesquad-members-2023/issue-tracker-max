@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 export function InformationTag({
   value,
   size,
-  toolTip,
+  toolTip = "",
   icon,
   fill,
   stroke,
@@ -19,7 +19,7 @@ export function InformationTag({
 }) {
   return (
     <StyledInformationTag
-      data-title={toolTip}
+      data-title={/^\s*$/.test(toolTip) ? undefined : toolTip}
       $size={size}
       $fill={fill}
       $stroke={stroke}

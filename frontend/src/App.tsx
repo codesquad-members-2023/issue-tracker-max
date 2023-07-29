@@ -188,7 +188,7 @@ function InformationTagTest() {
         fill="#7F4BFF"
         fontColor="Light"
       />
-      <InformationTag value="작성자" toolTip="해당 이슈의 작성자입니다." size="S" fill="#C5C" stroke="Default" />
+      <InformationTag value="작성자" toolTip=" " size="S" fill="#C5C" stroke="Default" />
       <InformationTag
         value="documentation"
         toolTip="문서 작업입니다."
