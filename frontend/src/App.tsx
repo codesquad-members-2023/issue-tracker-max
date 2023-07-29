@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { Button } from "./components/Button";
+import { TabButton } from "./components/TabButton";
 import { TextInput } from "./components/TextInput";
 import { DropdownContainer } from "./components/dropdown/DropdownContainer";
 import { designSystem } from "./constants/designSystem";
@@ -14,9 +15,10 @@ export default function App() {
 
   return (
     <ThemeProvider theme={designSystem[themeMode]}>
-      <DropdownTest />
       <TextInputTest />
       <ButtonTest onClick={onClick} />
+      <TabButtonTest />
+      <DropdownTest />
     </ThemeProvider>
   );
 }
@@ -123,8 +125,30 @@ function DropdownTest() {
       },
     },
   ];
-  return (<>
-    <DropdownContainer name="필터" options={options} alignment="Left" />
-    <DropdownContainer name="필터" options={options} alignment="Right" />
-  </>);
+  return (
+    <>
+      <DropdownContainer name="필터" options={options} alignment="Left" />
+      <DropdownContainer name="필터" options={options} alignment="Right" />
+    </>
+  );
+}
+
+function TabButtonTest() {
+  const [tabs, setTabs] = useState([{name: "왼쪽"}, {name: "오른쪽"}]);
+  const [issueStates, setIssueStates] = useState([{name: "열린 이슈", icon: "alertCircle", selected: true}, {name: "닫힌 이슈", icon: "archive"}]);
+
+  const onTabClick = (name: string) => {
+    setTabs(t => t.map(tab => tab.name === name ? {...tab, selected: true} : {...tab, selected: false}));
+  }
+
+  const onIssueStateClick = (name: string) => {
+    setIssueStates(t => t.map(issueState => issueState.name === name ? {...issueState, selected: true} : {...issueState, selected: false}));
+  }
+
+  return (
+    <>
+      <TabButton tabs={tabs} onClick={onTabClick}/>
+      <TabButton tabs={issueStates} onClick={onIssueStateClick}/>
+    </>
+  );
 }

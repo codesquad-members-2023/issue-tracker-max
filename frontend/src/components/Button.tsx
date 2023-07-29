@@ -28,6 +28,7 @@ export function Button({
 
   return (
     <ButtonComponent
+      className={selected ? "selected" : ""}
       $size={size}
       $flexible={flexible === "Flexible"}
       $selected={selected}
