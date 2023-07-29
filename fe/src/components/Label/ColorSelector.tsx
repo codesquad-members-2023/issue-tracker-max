@@ -2,7 +2,8 @@
 import { useTheme } from "@emotion/react";
 import { ColorScheme } from "../../contexts/ThemeContext";
 import { Icon } from "../common/Icon";
-import { fonts } from "../util/Txt";
+import { fonts } from "../../constants/fonts";
+// import { fonts } from "../util/Txt";
 
 export function ColorSelector({
   onClickRefreshButton,

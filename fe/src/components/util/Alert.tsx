@@ -1,9 +1,10 @@
 import { useTheme } from "@emotion/react";
 import { ColorScheme } from "../../contexts/ThemeContext";
-import { fonts } from "./Txt";
+// import { fonts } from "./Txt";
 import { useContext } from "react";
 import { LabelContext } from "../../contexts/LabelContext";
 import { Button } from "../common/Button";
+import { fonts } from "../../constants/fonts";
 
 export function Alert({ text }: { text: string }) {
   const color = useTheme() as ColorScheme;

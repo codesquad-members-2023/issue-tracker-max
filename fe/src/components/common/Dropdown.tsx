@@ -1,8 +1,9 @@
 import { useTheme } from "@emotion/react";
 import { ColorScheme } from "../../contexts/ThemeContext";
-import { fonts } from "../util/Txt";
+// import { fonts } from "../util/Txt";
 
 import { DropdownItems } from "./DropdownItem";
+import { fonts } from "../../constants/fonts";
 
 export function Dropdown({
   isDropdownOpen,

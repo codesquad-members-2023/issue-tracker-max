@@ -1,8 +1,9 @@
 // import { color } from "../../constants/colors";
 import { useTheme } from "@emotion/react";
 import { ColorScheme } from "../../contexts/ThemeContext";
-import { fonts } from "../util/Txt";
+// import { fonts } from "../util/Txt";
 import { Icon } from "./Icon";
+import { fonts } from "../../constants/fonts";
 
 type Props = {
   onClick?: () => void;

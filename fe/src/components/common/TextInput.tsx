@@ -1,8 +1,9 @@
 import { useState } from "react";
 // import { color } from "../../constants/colors";
-import { fonts } from "../util/Txt";
+// import { fonts } from "../util/Txt";
 import { ColorScheme } from "../../contexts/ThemeContext";
 import { useTheme } from "@emotion/react";
+import { fonts } from "../../constants/fonts";
 
 export function TextInput({
   isPassword,

@@ -3,7 +3,8 @@ import { useTheme } from "@emotion/react";
 import { ColorScheme } from "../../contexts/ThemeContext";
 import { DarkModeButton } from "./DarkModeButton";
 import { useNavigate } from "react-router-dom";
-import { fonts } from "../util/Txt";
+import { fonts } from "../../constants/fonts";
+// import { fonts } from "../util/Txt";
 
 export function Background({ children }: { children: React.ReactNode }) {
   const color = useTheme() as ColorScheme;

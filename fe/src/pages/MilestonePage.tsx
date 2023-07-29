@@ -5,10 +5,11 @@ import { useState } from "react";
 import { TabButton } from "../components/common/TabButton";
 import { Button } from "../components/common/Button";
 // import { color } from "../constants/colors";
-import { fonts } from "../components/util/Txt";
+// import { fonts } from "../components/util/Txt";
 // import { LabelElement } from "../components/Label/LabelElement";
 import { ColorScheme } from "../contexts/ThemeContext";
 import { useTheme } from "@emotion/react";
+import { fonts } from "../constants/fonts";
 
 export function MilestonePage() {
   const color = useTheme() as ColorScheme;
