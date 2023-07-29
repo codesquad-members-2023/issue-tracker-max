@@ -3,14 +3,15 @@ import { Background } from "../components/common/Background";
 import { TabButton } from "../components/common/TabButton";
 import { useState } from "react";
 import { Button } from "../components/common/Button";
-// import { color } from "../constants/colors";
-import { fonts } from "../components/util/Txt";
 import { LabelDetail } from "../components/Label/LabelDetail";
 import { LabelElement } from "../components/Label/LabelElement";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 import { ColorScheme } from "../contexts/ThemeContext";
 import { Alert } from "../components/util/Alert";
+// import { fonts } from "../constants/fonts";
+import { tableHeaderStyle, tableStyle } from "../styles/commonStyles";
+import { MainArea } from "../components/common/MainArea";
 
 export type LabelType = {
   id: number;
@@ -21,10 +22,18 @@ export type LabelType = {
 };
 
 export function LabelPage() {
-  const color = useTheme() as ColorScheme;
-  const navigate = useNavigate();
   const [isLeftSelected, setIsLeftSelected] = useState(true);
   const [isAddLabelOpen, setIsAddLabelOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const color = useTheme() as ColorScheme;
+  const labelTable = tableStyle(color);
+  const labelTableHeader = tableHeaderStyle(color);
+
+  const leftText = "레이블";
+  const rightText = "마일스톤";
+  const labelCount = labelList.length;
+  const milestoneCount = 2;
   const AddLabelButtonStatus = isAddLabelOpen ? "disabled" : "enabled";
 
   const onClickAddLabelButton = () => {
@@ -50,11 +59,6 @@ export function LabelPage() {
     onClickMilestoneButton();
   };
 
-  const leftText = "레이블";
-  const rightText = "마일스톤";
-  const labelCount = labelList.length;
-  const milestoneCount = 2;
-
   const leftTabProps = {
     leftIcon: "label",
     leftText: `${leftText}` + `(${labelCount})`,
@@ -69,15 +73,7 @@ export function LabelPage() {
   return (
     <Background>
       <Header />
-      <div
-        css={{
-          display: "flex",
-          width: "100%",
-          height: "100%",
-          boxSizing: "border-box",
-          flexDirection: "column",
-          padding: "32px 80px",
-        }}>
+      <MainArea>
         <div css={{ display: "flex", justifyContent: "space-between" }}>
           <TabButton
             isLeftSelected={isLeftSelected}
@@ -109,35 +105,14 @@ export function LabelPage() {
               onClickCancelButton={onClickCancelButton}
             />
           ) : null}
-          <div
-            css={{
-              position: "relative",
-              // top: "24px",
-              display: "flex",
-              flexDirection: "column",
-              borderRadius: "16px",
-              border: `1px solid ${color.neutral.border.default}`,
-              overflow: "hidden",
-            }}>
-            <div
-              css={{
-                display: "flex",
-                alignItems: "center",
-                padding: "0 32px",
-                boxSizing: "border-box",
-                height: "64px",
-                color: color.neutral.text.default,
-                backgroundColor: color.neutral.surface.default,
-                ...fonts.bold16,
-              }}>
-              {labelCount}개의 레이블
-            </div>
-            {labelList.map((label) => {
-              return <LabelElement key={label.id} label={label} />;
-            })}
+          <div css={labelTable}>
+            <div css={labelTableHeader}>{labelCount}개의 레이블</div>
+            {labelList.map((label) => (
+              <LabelElement key={label.id} label={label} />
+            ))}
           </div>
         </div>
-      </div>
+      </MainArea>
       <Alert text="정말 이 레이블을 삭제하시겠습니까?" />
     </Background>
   );
