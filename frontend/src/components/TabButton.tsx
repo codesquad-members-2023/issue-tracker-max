@@ -12,21 +12,23 @@ export function TabButton({
   }[];
   onClick: (name: string) => void;
 }) {
-  const buttons = tabs.map(({ name, icon, selected }) => (
-    <Button
-      key={name}
-      icon={icon}
-      size="M"
-      buttonType="Ghost"
-      flexible="Flexible"
-      selected={selected}
-      onClick={() => onClick(name)}
-    >
-      {name}
-    </Button>
-  ));
-
-  return <StyledTabButton>{buttons}</StyledTabButton>;
+  return (
+    <StyledTabButton>
+      {tabs.map(({ name, icon, selected }) => (
+        <Button
+          key={name}
+          icon={icon}
+          size="M"
+          buttonType="Ghost"
+          flexible="Flexible"
+          selected={selected}
+          onClick={() => onClick(name)}
+        >
+          {name}
+        </Button>
+      ))}
+    </StyledTabButton>
+  );
 }
 
 const StyledTabButton = styled.div`
