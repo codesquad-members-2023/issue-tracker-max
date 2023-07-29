@@ -1,12 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { Button } from "../common/Button";
-import { fonts } from "../util/Txt";
+// import { fonts } from "../util/Txt";
 import { LabelDetail } from "./LabelDetail";
 import { LabelType } from "../../pages/LabelPage";
 import { Label } from "./Label";
 import { ColorScheme } from "../../contexts/ThemeContext";
 import { useTheme } from "@emotion/react";
 import { LabelContext } from "../../contexts/LabelContext";
+import { fonts } from "../../constants/fonts";
 
 export function LabelElement({ label }: { label: LabelType }) {
   const color = useTheme() as ColorScheme;

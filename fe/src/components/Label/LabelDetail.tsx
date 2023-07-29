@@ -4,12 +4,13 @@ import { LabelType } from "../../pages/LabelPage";
 import { DetailTextInput } from "../common/DetailTextInput";
 import { Button } from "../common/Button";
 import { Icon } from "../common/Icon";
-import { Txt, fonts } from "../util/Txt";
+import { Txt } from "../util/Txt";
 import { ColorSelector } from "./ColorSelector";
 import { Label } from "./Label";
 import { ColorScheme } from "../../contexts/ThemeContext";
 import { useTheme } from "@emotion/react";
 import { Dropdown } from "../common/Dropdown";
+import { fonts } from "../../constants/fonts";
 
 export function LabelDetail({
   mode,

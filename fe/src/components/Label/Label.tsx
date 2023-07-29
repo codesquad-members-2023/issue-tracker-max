@@ -2,7 +2,8 @@ import { useTheme } from "@emotion/react";
 // import { color } from "../../constants/colors";
 import { ColorScheme } from "../../contexts/ThemeContext";
 import { LabelType } from "../../pages/LabelPage";
-import { fonts } from "../util/Txt";
+import { fonts } from "../../constants/fonts";
+// import { fonts } from "../util/Txt";
 
 export function Label({
   label,
