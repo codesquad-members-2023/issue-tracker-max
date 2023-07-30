@@ -20,7 +20,6 @@ export function RegisterPage() {
   const [isWrongPassword, setIsWrongPassword] = useState(false);
 
   const onClickLogo = () => {
-    console.log("로고 클릭");
     navigate("/label");
   };
 
@@ -42,8 +41,7 @@ export function RegisterPage() {
 
   const onClickRegisterButton = () => {
     if (isFormValid) {
-      console.log("회원가입 버튼 클릭");
-      console.log("가입정보", email, id, password, checkPassword);
+      console.log("가입정보", email, id, password, checkPassword); //API 연결전 임사사용
       navigate("/");
     }
   };

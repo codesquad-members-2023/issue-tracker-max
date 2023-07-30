@@ -12,6 +12,30 @@ import { useTheme } from "@emotion/react";
 import { Dropdown } from "../common/Dropdown";
 import { fonts } from "../../constants/fonts";
 
+const getRandomColor = () => {
+  return colorList[Math.floor(Math.random() * colorList.length)];
+};
+
+const colorList = [
+  "#B60205",
+  "#D93F0B",
+  "#FBCA04",
+  "#0E8A16",
+  "#006B75",
+  "#1D76DB",
+  "#0052CC",
+  "#5319E7",
+  "#E99695",
+  "#F9D0C4",
+  "#FEF2C0",
+  "#C2E0C6",
+  "#BEDADC",
+  "#C4DEF6",
+  "#BED3F3",
+  "#D4C4FB",
+];
+const dropdownItems = ["밝은색", "어두운색"];
+
 export function LabelDetail({
   mode,
   label,
@@ -23,15 +47,16 @@ export function LabelDetail({
   onClickCancelButton?: () => void;
   onClickCompleteButton?: () => void;
 }) {
-  const color = useTheme() as ColorScheme;
-  const [selectedColor, setSelectedColor] = useState<string>(
-    label ? label?.backgroundColor : color.palette.offWhite
-  );
   const [isEditCompleted, setIsEditCompleted] = useState(false);
   const [inputTitle, setInputTitle] = useState(label ? label.title : "");
   const [inputDesc, setInputDesc] = useState(label ? label.description : "");
   const [isDark, setIsDark] = useState(label ? label.isDark : true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const color = useTheme() as ColorScheme;
+  const [selectedColor, setSelectedColor] = useState<string>(
+    label ? label?.backgroundColor : color.palette.offWhite
+  );
 
   const onClickDropdownOption = () => {
     setIsDark(!isDark);
@@ -40,6 +65,21 @@ export function LabelDetail({
   const onClickDropdownButton = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const eventTarget = e.target as HTMLElement;
+
+      if (isDropdownOpen && eventTarget.closest(".dropdown") === null) {
+        onClickDropdownButton();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen, onClickDropdownButton]);
 
   const onChangeTitleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputTitle(e.target.value);
@@ -62,7 +102,7 @@ export function LabelDetail({
   const handleClickCompleteButton = () => {
     if (isEditCompleted) {
       onClickCompleteButton && onClickCompleteButton();
-      console.log(
+      console.log( //API연결전까찌 임시사용
         `{
       "title": ${inputTitle},
       "description": ${inputDesc} ,
@@ -73,48 +113,10 @@ export function LabelDetail({
     }
   };
 
-  const getRandomColor = () => {
-    return colorList[Math.floor(Math.random() * colorList.length)];
-  };
-
   const onClickRefreshButton = () => {
     const selectedColor = getRandomColor();
     setSelectedColor(selectedColor);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const eventTarget = e.target as HTMLElement;
-
-      if (isDropdownOpen && eventTarget.closest(".dropdown") === null) {
-        onClickDropdownButton();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isDropdownOpen, onClickDropdownButton]);
-
-  const colorList = [
-    "#B60205",
-    "#D93F0B",
-    "#FBCA04",
-    "#0E8A16",
-    "#006B75",
-    "#1D76DB",
-    "#0052CC",
-    "#5319E7",
-    "#E99695",
-    "#F9D0C4",
-    "#FEF2C0",
-    "#C2E0C6",
-    "#BEDADC",
-    "#C4DEF6",
-    "#BED3F3",
-    "#D4C4FB",
-  ];
 
   return (
     <div
@@ -237,5 +239,3 @@ export function LabelDetail({
     </div>
   );
 }
-
-const dropdownItems = ["밝은색", "어두운색"];

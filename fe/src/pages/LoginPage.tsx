@@ -16,7 +16,6 @@ export function LoginPage() {
   const [isFormValid, setIsFormValid] = useState(false);
 
   const onClickLogo = () => {
-    console.log("로고 클릭");
     navigate("/label");
   };
 
@@ -29,7 +28,6 @@ export function LoginPage() {
   };
 
   const onClickRegisterButton = () => {
-    console.log("회원가입 버튼 클릭");
     navigate("/register");
   };
 

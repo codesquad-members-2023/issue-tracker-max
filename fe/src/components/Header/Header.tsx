@@ -9,7 +9,6 @@ export function Header() {
   const navigate = useNavigate();
 
   const onClickLogo = () => {
-    console.log("로고 클릭");
     navigate("/label");
     window.location.reload();
   };

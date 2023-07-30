@@ -17,7 +17,6 @@ export function LabelElement({ label }: { label: LabelType }) {
 
   const onClickEditButton = () => {
     setIsEditMode(true);
-    console.log("에딧모드니까 해당레이블 꺼져");
   };
 
   const onClickCancelButton = () => {
@@ -29,15 +28,13 @@ export function LabelElement({ label }: { label: LabelType }) {
   };
 
   const onClickDeleteButton = () => {
-    console.log("삭제버튼 눌렀으니까 확인해라");
-    console.log(label.id, "번 레이블 삭제");
+    console.log(label.id, "번 레이블 삭제"); // API 연결 전까지 임시사용
     setIsLabelAlertOpen(true);
     setDeleteElementId(label.id);
   };
 
   useEffect(() => {
     if (isEditMode === false) {
-      console.log("에딧됐으니 확인해라");
     }
   }, [isEditMode]);
 
@@ -87,9 +84,10 @@ export function LabelElement({ label }: { label: LabelType }) {
         className="buttonTab"
         css={{
           display: "flex",
+          gap: "24px",
           width: "106px",
           height: "32px",
-          justifyContent: "center",
+          justifyContent: "space-between",
           alignItems: "center",
         }}>
         <Button

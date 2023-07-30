@@ -18,7 +18,6 @@ export function Alert({ text }: { text: string }) {
   };
 
   const onClickOKbutton = () => {
-    console.log("삭제했음");
     setIsLabelAlertOpen(false);
   };
 
