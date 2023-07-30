@@ -22,32 +22,29 @@ import { ReactComponent as XSquare } from 'assets/icons/xSquare.svg';
 import { ReactComponent as Dark } from 'assets/icons/dark.svg';
 import { ReactComponent as Light } from 'assets/icons/light.svg';
 
-const withSVGProps = (
-  SvgComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>>,
-) => {
-  return (props: React.SVGProps<SVGSVGElement>) => <SvgComponent {...props} />;
+export {
+  AlertCircle,
+  Archive,
+  Calendar,
+  CheckBoxActive,
+  CheckBoxDisable,
+  CheckBoxInitial,
+  CheckOffCircle,
+  CheckOnCircle,
+  ChevronDown,
+  Edit,
+  Label,
+  Milestone,
+  Paperclip,
+  Plus,
+  RefreshCcw,
+  Search,
+  Smile,
+  Trash,
+  UserImageLarge,
+  UserImageSmall,
+  XSquare,
+  Dark,
+  Light,
+  //... other icons
 };
-
-export const AlertCircleIcon = withSVGProps(AlertCircle);
-export const ArchiveIcon = withSVGProps(Archive);
-export const CalendarIcon = withSVGProps(Calendar);
-export const CheckBoxActiveIcon = withSVGProps(CheckBoxActive);
-export const CheckBoxDisableIcon = withSVGProps(CheckBoxDisable);
-export const CheckBoxInitialIcon = withSVGProps(CheckBoxInitial);
-export const CheckOffCircleIcon = withSVGProps(CheckOffCircle);
-export const CheckOnCircleIcon = withSVGProps(CheckOnCircle);
-export const ChevronDownIcon = withSVGProps(ChevronDown);
-export const EditIcon = withSVGProps(Edit);
-export const LabelIcon = withSVGProps(Label);
-export const MilestoneIcon = withSVGProps(Milestone);
-export const PaperclipIcon = withSVGProps(Paperclip);
-export const PlusIcon = withSVGProps(Plus);
-export const RefreshCcwIcon = withSVGProps(RefreshCcw);
-export const SearchIcon = withSVGProps(Search);
-export const SmileIcon = withSVGProps(Smile);
-export const TrashIcon = withSVGProps(Trash);
-export const UserImageLargeIcon = withSVGProps(UserImageLarge);
-export const UserImageSmallIcon = withSVGProps(UserImageSmall);
-export const XSquareIcon = withSVGProps(XSquare);
-export const DarkIcon = withSVGProps(Dark);
-export const LightIcon = withSVGProps(Light);

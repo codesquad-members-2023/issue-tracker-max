@@ -4,50 +4,50 @@ export const ComponentTest = () => {
   return (
     <div>
       <div style={{ display: 'flex' }}>
-        <Icon icon="alertCircle" />
-        <Icon icon="alertCircle" stroke="paletteBlue" />
-        <Icon icon="archive" stroke="paletteBlue" />
-        <Icon icon="calendar" stroke="paletteBlue" />
-        <Icon icon="checkBoxActive" stroke="paletteBlue" />
-        <Icon icon="checkBoxDisable" stroke="paletteBlue" />
-        <Icon icon="checkBoxInitial" stroke="paletteBlue" />
-        <Icon icon="checkOffCircle" stroke="paletteBlue" />
-        <Icon icon="checkOnCircle" stroke="brandSurfaceDefault" />
-        <Icon icon="checkOnCircle" stroke="brandTextDefault" />
-        <Icon icon="chevronDown" />
-        <Icon icon="edit" stroke="brandTextWeak" />
-        <Icon icon="label" />
-        <Icon icon="paperclip" />
-        <Icon icon="label" />
-        <Icon icon="plus" size="L" />
-        <Icon icon="plus" size="L" stroke="nuetralTextStrong" />
-        <Icon icon="plus" size="L" stroke="brandTextDefault" />
+        <Icon icon="AlertCircle" />
+        <Icon icon="AlertCircle" stroke="paletteBlue" />
+        <Icon icon="Archive" stroke="paletteBlue" />
+        <Icon icon="Calendar" stroke="paletteBlue" />
+        <Icon icon="CheckBoxActive" stroke="paletteBlue" />
+        <Icon icon="CheckBoxDisable" stroke="paletteBlue" />
+        <Icon icon="CheckBoxInitial" stroke="paletteBlue" />
+        <Icon icon="CheckOffCircle" stroke="paletteBlue" />
+        <Icon icon="CheckOnCircle" stroke="brandSurfaceDefault" />
+        <Icon icon="CheckOnCircle" stroke="brandTextDefault" />
+        <Icon icon="ChevronDown" />
+        <Icon icon="Edit" stroke="brandTextWeak" />
+        <Icon icon="Label" />
+        <Icon icon="Paperclip" />
+        <Icon icon="Label" />
+        <Icon icon="Plus" size="L" />
+        <Icon icon="Plus" size="L" stroke="nuetralTextStrong" />
+        <Icon icon="Plus" size="L" stroke="brandTextDefault" />
         <Icon
-          icon="plus"
+          icon="Plus"
           size="S"
           stroke="brandTextWeak"
           fill="nuetralTextStrong"
         />
       </div>
       <div style={{ display: 'flex' }}>
-        <Icon icon="refreshCcw" />
-        <Icon icon="search" />
-        <Icon icon="smile" />
-        <Icon icon="trash" stroke="dangerTextDefault" />
+        <Icon icon="RefreshCcw" />
+        <Icon icon="Search" />
+        <Icon icon="Smile" />
+        <Icon icon="Trash" stroke="dangerTextDefault" />
         <Icon
-          icon="userImageLargeIcon"
+          icon="UserImageLarge"
           fill="nuetralSurfaceBold"
           stroke="nuetralSurfaceBold"
         />
         <Icon
-          icon="userImageSmallIcon"
+          icon="UserImageSmall"
           fill="nuetralSurfaceBold"
           stroke="nuetralSurfaceBold"
         />
-        <Icon icon="xSquare" stroke="brandTextWeak" />
-        <Icon icon="xSquare" />
-        <Icon icon="light" fill="nuetralTextDefault" />
-        <Icon icon="dark" fill="nuetralTextDefault" />
+        <Icon icon="XSquare" stroke="brandTextWeak" />
+        <Icon icon="XSquare" />
+        <Icon icon="Light" fill="nuetralTextDefault" />
+        <Icon icon="Dark" fill="nuetralTextDefault" />
       </div>
     </div>
   );
