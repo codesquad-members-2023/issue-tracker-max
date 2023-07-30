@@ -1,40 +1,58 @@
 import { useTheme } from "@emotion/react";
 import { ColorScheme, ThemeContext } from "../../contexts/ThemeContext";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+// import { Icon } from "./Icon";
+import moon from "../../assets/Icons/moon.svg";
+import sun from "../../assets/Icons/sun.svg";
 
 export function DarkModeButton() {
   const color = useTheme() as ColorScheme;
   const ThemeContextValue = useContext(ThemeContext)!;
-  const { toggleTheme } = ThemeContextValue!;
+  const { toggleTheme, isDarkMode } = ThemeContextValue!;
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    if (isDarkMode !== undefined) {
+      setAnimate(true);
+      const timer = setTimeout(() => setAnimate(false), 1200);
+      return () => clearTimeout(timer);
+    }
+  }, [isDarkMode]);
   return (
     <button
       onClick={toggleTheme}
       css={{
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        position: "relative",
-        bottom: "20px",
-        left: "50%",
+        position: "absolute",
+        bottom: "16px",
+        right: 0,
         width: "36px",
         height: "40px",
         backgroundColor: "transparent",
-        border: `2px solid ${color.neutral.text.weak}`,
+
         borderRadius: "8px",
-        transform: "translateX(-40px)",
+        transform: "translateX(-16px)",
         cursor: "pointer",
       }}>
-      <svg
-        width="30px"
-        height="30px"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg">
-        <g fill="none">
-          <g fill={color.neutral.text.weak}>
-            <path d="M12,22 C17.5228475,22 22,17.5228475 22,12 C22,6.4771525 17.5228475,2 12,2 C6.4771525,2 2,6.4771525 2,12 C2,17.5228475 6.4771525,22 12,22 Z M12,20.5 L12,3.5 C16.6944204,3.5 20.5,7.30557963 20.5,12 C20.5,16.6944204 16.6944204,20.5 12,20.5 Z" />
-          </g>
-        </g>
-      </svg>
+      <img
+        css={{
+          "fill": color.neutral.text.weak,
+          "animation": animate
+            ? "slideFromLeftBottomToRightTop 1.2s ease-out"
+            : "none", // animate 상태에 따라 애니메이션 적용
+          "@keyframes slideFromLeftBottomToRightTop": {
+            "0%": { opacity: 0, transform: "translate(-150%, 150%)" },
+            "100%": { opacity: 1, transform: "translate(0, 0)" },
+          },
+        }}
+        src={isDarkMode ? moon : sun}
+        alt={isDarkMode ? "moon" : "sun"}
+        width="24px"
+        height="24px"
+      />
     </button>
   );
 }
