@@ -11,17 +11,22 @@ type Props = {
   // listType: ListType;
   options: any;
   name: string;
-  selected?: boolean;
   onSelected?: () => void;
+  isSelected?: boolean;
 };
 
-export const DropDownList = ({ options, name }: Props) => {
+export const DropDownList = ({
+  options,
+  name,
+  onSelected,
+  isSelected,
+}: Props) => {
   const theme = useTheme() as any;
-  const [isSelected, setIsSelected] = useState(false);
+  // const [isSelected, setIsSelected] = useState(false);
 
-  const onSelected = () => {
-    setIsSelected((prev) => !prev);
-  };
+  // const onSelected = () => {
+  //   setIsSelected((prev) => !prev);
+  // };
 
   //셀렉티드 된 것만 모아서 요청 보내야함
   return (
@@ -49,74 +54,48 @@ export const DropDownList = ({ options, name }: Props) => {
         }
       `}
     >
-      {name === 'label' && (
-        <>
-          {options.backgroundColor && <UserImageSmall fill="#4E4B66" />}
-          <span
-            css={css`
-              flex: 1 0 0;
-            `}
-          >
-            {options.name}
-          </span>
-          {isSelected ? (
-            <CheckOnCircle stroke="#4E4B66" />
-          ) : (
-            <CheckOffCircle stroke="#4E4B66" />
-          )}
-        </>
-      )}
-      {name === 'milestone' && (
-        <>
-          <span
-            css={css`
-              flex: 1 0 0;
-            `}
-          >
-            {options.name}
-          </span>
-          {isSelected ? (
-            <CheckOnCircle stroke="#4E4B66" />
-          ) : (
-            <CheckOffCircle stroke="#4E4B66" />
-          )}
-        </>
-      )}
-      {(name === 'assignee' || name === 'author') && (
-        <>
-          {options.image && <UserImageSmall fill="#4E4B66" />}
-          <span
-            css={css`
-              flex: 1 0 0;
-            `}
-          >
-            {options.id}
-          </span>
-          {isSelected ? (
-            <CheckOnCircle stroke="#4E4B66" />
-          ) : (
-            <CheckOffCircle stroke="#4E4B66" />
-          )}
-        </>
-      )}
-      {(name === 'issueFilter' ||
-        name === 'issueState' ||
-        name === 'textColor') && (
-        <>
-          <span
-            css={css`
-              flex: 1 0 0;
-            `}
-          >
-            {options}
-          </span>
-          {isSelected ? (
-            <CheckOnCircle stroke="#4E4B66" />
-          ) : (
-            <CheckOffCircle stroke="#4E4B66" />
-          )}
-        </>
+      <ListItemContent name={name} options={options} />
+      {isSelected ? (
+        <CheckOnCircle stroke="#4E4B66" />
+      ) : (
+        <CheckOffCircle stroke="#4E4B66" />
       )}
     </li>
   );
+};
+
+const ListItemContent = ({ name, options }: Props) => {
+  const commonStyles = css`
+    flex: 1 0 0;
+  `;
+
+  switch (name) {
+    case 'label':
+      console.log(options.backgroundColor);
+
+      return (
+        <>
+          {options.backgroundColor && (
+            <UserImageSmall fill={options.backgroundColor} />
+          )}
+          <span css={commonStyles}>{options.name}</span>
+        </>
+      );
+    case 'milestone':
+      return <span css={commonStyles}>{options.name}</span>;
+    case 'assignee':
+    case 'author':
+      return (
+        <>
+          {options.image && <UserImageSmall fill="#EFF0F6" />}
+          <span css={commonStyles}>{options.id}</span>
+        </>
+      );
+    case 'issueFilter':
+    case 'issueState':
+    case 'textColor':
+      return <span css={commonStyles}>{options}</span>;
+    default:
+      return null;
+  }
 };

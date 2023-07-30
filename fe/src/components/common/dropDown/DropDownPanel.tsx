@@ -29,6 +29,19 @@ type Props = {
 
 export const DropDownPanel = ({ name, options, alignment }: Props) => {
   const theme = useTheme() as any;
+  const [selectedItems, setSelectedItems] = useState({});
+
+  console.log(selectedItems);
+
+  const canSelectUnassignedIssues = name !== 'author' && name !== 'issueFilter';
+
+  const onSelected = (index) => {
+    if (name === 'milestone' || name === 'issueState' || name === 'textColor') {
+      setSelectedItems({ [index]: true });
+    } else {
+      setSelectedItems((prev) => ({ ...prev, [index]: !prev[index] }));
+    }
+  };
 
   return (
     <div
@@ -54,28 +67,25 @@ export const DropDownPanel = ({ name, options, alignment }: Props) => {
         {DropDownIndicatorName[name]}
       </div>
       <ul>
+        {canSelectUnassignedIssues && (
+          <DropDownList
+            key={-1}
+            name={name}
+            options={'없는 이슈'}
+            onSelected={() => onSelected(-1)}
+            isSelected={selectedItems[-1]}
+          />
+        )}
         {options.map((item, index: number) => (
           <DropDownList
             key={index}
             name={name}
             options={item}
-            // onSelected={onSelected}
-            // selected={isSelected}
+            onSelected={() => onSelected(index)}
+            isSelected={selectedItems[index]}
           />
         ))}
       </ul>
     </div>
   );
 };
-
-const container = css`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  z-index: 50;
-  width: 200px;
-  height: 200px;
-
-  background-color: white;
-  border: 1px solid black;
-`;
