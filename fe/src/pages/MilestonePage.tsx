@@ -1,30 +1,107 @@
 import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header/Header";
 import { Background } from "../components/common/Background";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TabButton } from "../components/common/TabButton";
 import { Button } from "../components/common/Button";
-// import { color } from "../constants/colors";
-// import { fonts } from "../components/util/Txt";
-// import { LabelElement } from "../components/Label/LabelElement";
 import { ColorScheme } from "../contexts/ThemeContext";
-import { useTheme } from "@emotion/react";
-import { fonts } from "../constants/fonts";
+import { css, useTheme } from "@emotion/react";
+import { tableHeaderStyle, tableStyle } from "../styles/commonStyles";
+import { MilestoneElement } from "../components/Milestone/MilestoneElement";
+import { LoadingBar } from "../components/common/LoadingBar";
+import { MilestoneDetail } from "../components/Milestone/MilestoneDetail";
+import { MainArea } from "../components/common/MainArea";
+
+const TOTAL_COUNT_URL =
+  "http://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/common/navigation";
+const MILESTONE_URL =
+  "http://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/milestones?filter=open";
+
+type MilestonesData = {
+  milestoneOpenedCount: number;
+  milestoneClosedCount: number;
+  milestones: {
+    id: number;
+    title: string;
+    description: string;
+    dueDay: string;
+    issueClosedCount: number;
+    issueOpenedCount: number;
+  }[];
+};
+
+export type Milestone = MilestonesData["milestones"][0];
+
+export type TotalCount = {
+  labelsCount: number;
+  milestonesCount: number;
+};
+
+const tableContainer = css`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  top: 24px;
+`;
+
+const milestoneTabContainer = css`
+  display: flex;
+  height: 32px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+`;
 
 export function MilestonePage() {
-  const color = useTheme() as ColorScheme;
-  const navigate = useNavigate();
+  const [totalCount, setTotalCount] = useState<TotalCount | undefined>();
+  const [milestones, setMilestones] = useState<MilestonesData | undefined>();
+  const [loading, setLoading] = useState(true);
   const [isLeftSelected, setIsLeftSelected] = useState(false);
-  const [isAddLabelOpen, setIsAddLabelOpen] = useState(false);
-  const AddLabelButtonStatus = isAddLabelOpen ? "disabled" : "enabled";
+  const [isOpenSelected, setIsOpenSelected] = useState(true);
+  const [isAddMilestoneOpen, setIsAddMilestoneOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const color = useTheme() as ColorScheme;
+  const milestoneTable = tableStyle(color);
+  const milestoneTableHeader = tableHeaderStyle(color);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const totalCountResponse = await fetch(TOTAL_COUNT_URL);
+        const milestoneResponse = await fetch(MILESTONE_URL);
+        const totalCountData = await totalCountResponse.json();
+        const milestoneData = await milestoneResponse.json();
+
+        setTotalCount(totalCountData);
+        setMilestones(milestoneData);
+        setLoading(false);
+      } catch (error) {
+        console.error("API 요청 중 에러 발생:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const AddMilestoneButtonStatus = isAddMilestoneOpen ? "disabled" : "enabled";
 
   const onClickLabelButton = () => {
-    console.log("레이블 버튼 클릭");
     navigate("/label");
   };
 
-  const onClickAddLabelButton = () => {
-    setIsAddLabelOpen(true);
+  const onClickAddMilestoneButton = () => {
+    setIsAddMilestoneOpen(true);
+  };
+
+  const onClickCompleteButton = () => {
+    setIsAddMilestoneOpen(false);
+  };
+  const onClickCancelButton = () => {
+    setIsAddMilestoneOpen(false);
   };
 
   const onClickLeftTab = () => {
@@ -35,43 +112,47 @@ export function MilestonePage() {
     setIsLeftSelected(false);
   };
 
-  const leftText = "레이블";
-  const rightText = "마일스톤";
-  const labelCount = labelList.length;
-  const milestoneCount = 2;
+  const onClickOpenTab = () => {
+    setIsOpenSelected(true);
+  };
+  const onClickClosedTab = () => {
+    setIsOpenSelected(false);
+  };
 
   const leftTabProps = {
     leftIcon: "label",
-    leftText: `${leftText}` + `(${labelCount})`,
+    leftText: "레이블" + `(${totalCount ? totalCount.labelsCount : ""})`,
     onClickLeftTab: onClickLeftTab,
   };
   const rightTabProps = {
     rightIcon: "milestone",
-    rightText: `${rightText}` + `(${milestoneCount})`,
+    rightText:
+      "마일스톤" + `(${totalCount ? totalCount?.milestonesCount : ""})`,
     onClickRightTab: onClickRightTab,
   };
+
+  if (loading) {
+    return (
+      <Background>
+        <LoadingBar />
+        <Header />
+      </Background>
+    );
+  }
 
   return (
     <Background>
       <Header />
-      <div
-        css={{
-          display: "flex",
-          width: "100%",
-          height: "100%",
-          boxSizing: "border-box",
-          flexDirection: "column",
-          padding: "32px 80px",
-        }}>
+      <MainArea>
         <div css={{ display: "flex", justifyContent: "space-between" }}>
           <TabButton
             isLeftSelected={isLeftSelected}
             leftTabProps={leftTabProps}
             rightTabProps={rightTabProps}
           />
-          <div className="addLabelButton" onClick={onClickAddLabelButton}>
+          <div className="addLabelButton" onClick={onClickAddMilestoneButton}>
             <Button
-              status={AddLabelButtonStatus}
+              status={AddMilestoneButtonStatus}
               type="contained"
               size="S"
               text="마일스톤 추가"
@@ -79,73 +160,47 @@ export function MilestonePage() {
             />
           </div>
         </div>
-        <div
-          css={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "24px",
-            position: "relative",
-            top: "24px",
-          }}>
-          {/* {isAddLabelOpen ? (
-            <LabelDetail
+        <div css={tableContainer}>
+          {isAddMilestoneOpen ? (
+            <MilestoneDetail
               mode="add"
               onClickCompleteButton={onClickCompleteButton}
               onClickCancelButton={onClickCancelButton}
             />
-          ) : null} */}
-          <div
-            css={{
-              position: "relative",
-              // top: "24px",
-              display: "flex",
-              flexDirection: "column",
-              borderRadius: "16px",
-              border: `1px solid ${color.neutral.border.default}`,
-              overflow: "hidden",
-            }}>
-            <div
-              css={{
-                display: "flex",
-                alignItems: "center",
-                padding: "0 32px",
-                boxSizing: "border-box",
-                height: "64px",
-                backgroundColor: color.neutral.surface.default,
-                ...fonts.bold16,
-              }}>
-              {labelCount}개의 레이블
+          ) : null}
+          <div css={milestoneTable}>
+            <div css={milestoneTableHeader}>
+              <div css={{ display: "flex" }}>
+                <div css={milestoneTabContainer}>
+                  <Button
+                    onClick={onClickOpenTab}
+                    status={isOpenSelected ? "selected" : "enabled"}
+                    icon="alertCircle"
+                    type="ghost"
+                    size="M"
+                    text={`열린 마일스톤(${
+                      milestones ? milestones.milestoneOpenedCount : ""
+                    })`}
+                  />
+                  <Button
+                    onClick={onClickClosedTab}
+                    status={isOpenSelected ? "enabled" : "selected"}
+                    icon="archive"
+                    type="ghost"
+                    size="M"
+                    text={`닫힌 마일스톤(${
+                      milestones ? milestones.milestoneClosedCount : ""
+                    })`}
+                  />
+                </div>
+              </div>
             </div>
-            {/* {labelList.map((label) => {
-              return <LabelElement key={label.id} label={label} />;
-            })} */}
+            {milestones?.milestones.map((milestone) => (
+              <MilestoneElement key={milestone.id} milestones={milestone} />
+            ))}
           </div>
         </div>
-      </div>
+      </MainArea>
     </Background>
   );
 }
-
-const labelList = [
-  {
-    id: 1,
-    title: "Label",
-    description: "레이블1 설명",
-    backgroundColor: "#FEFEFE",
-    isDark: true,
-  },
-  {
-    id: 2,
-    title: "documentation",
-    description: "레이블2 설명",
-    backgroundColor: "#0025E6",
-    isDark: false,
-  },
-  {
-    id: 3,
-    title: "bug",
-    description: "레이블3 설명",
-    backgroundColor: "#FF3B30",
-    isDark: false,
-  },
-];
