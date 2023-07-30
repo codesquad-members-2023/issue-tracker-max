@@ -1,25 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { styled, ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
 import { darkTheme } from './theme';
-import Theme from './constant/Theme';
 import GlobalStyle from './style/Global';
-// import Button from './components/Button';
 import Button from './components/BaseButton';
 import ButtonLarge from './components/ButtonLarge';
 import ButtonSmall from './components/ButtonSmall';
 
-const { light, dark } = Theme;
-
 function App() {
-  const [theme, setTheme] = useState<Theme>(light);
+  const [isLight, setIsLight] = useState<boolean>(true);
 
   const changeTheme = () => {
-    setTheme((theme) => (theme === light ? dark : light));
+    setIsLight(!isLight);
   };
 
   return (
-    <ThemeProvider theme={theme === light ? lightTheme : darkTheme}>
+    <ThemeProvider theme={isLight ? lightTheme : darkTheme}>
       <GlobalStyle />
       <StyledApp>
         <ButtonLarge type="submit" iconName="plus">
