@@ -24,12 +24,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.MalformedJwtException;
 
 public class JwtAuthorizationFilter implements Filter {
+	private final String TOKEN_PREFIX = "Bearer ";
+	private final String HEADER_AUTHORIZATION = "Authorization";
+	private final String MEMBER_ID = "memberId";
 	private final String[] whiteListUris = new String[] {"/h2-console/**", "/signin", "/signup",
 		"/reissue-access-token", "/oauth/**", "/redirect/**"};
 	private final JwtProvider jwtProvider;
 	private final ObjectMapper objectMapper;
-	private final String TOKEN_PREFIX = "Bearer ";
-	private final String HEADER_AUTHORIZATION = "Authorization";
 
 	public JwtAuthorizationFilter(ObjectMapper objectMapper, JwtProvider jwtProvider) {
 		this.jwtProvider = jwtProvider;
@@ -55,8 +56,8 @@ public class JwtAuthorizationFilter implements Filter {
 		try {
 			String token = getToken(httpServletRequest);
 			Claims claims = jwtProvider.getClaims(token);
-			request.setAttribute("memberId",
-				claims.get("memberId")); // TODO: 닉네임을 사용한다면 nickname을 추가로 보내 주거나 멤버 response 객체를 하나 만들면 좋을 듯
+			request.setAttribute(MEMBER_ID,
+				claims.get(MEMBER_ID)); // TODO: 닉네임을 사용한다면 nickname을 추가로 보내 주거나 멤버 response 객체를 하나 만들면 좋을 듯
 			chain.doFilter(request, response);
 		} catch (RuntimeException e) {
 			sendErrorApiResponse(response, e);
