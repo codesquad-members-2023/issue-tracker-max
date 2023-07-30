@@ -1,71 +1,70 @@
-import { useTheme } from "@emotion/react";
-// import { color } from "../../constants/colors";
+import { css, useTheme } from "@emotion/react";
 import { ColorScheme } from "../../contexts/ThemeContext";
 import { LabelType } from "../../pages/LabelPage";
 import { fonts } from "../../constants/fonts";
-// import { fonts } from "../util/Txt";
 
-export function Label({
-  label,
-  isDark,
-  labelTitle,
-  randomColor,
-  isEditCompleted, // mode,
-}: {
+type Props = {
   label?: LabelType;
   isDark?: boolean;
   labelTitle?: string;
   randomColor?: string;
   isEditCompleted?: boolean;
   mode?: string;
-}) {
+};
+
+const getLabelName = (
+  label?: LabelType,
+  labelTitle?: string,
+  isEditCompleted?: boolean
+) => {
+  const defaultLabelTitle = labelTitle || "Label";
+  if (isEditCompleted) return labelTitle;
+  if (label) return label.title;
+  return defaultLabelTitle;
+};
+
+const labelStyle = (
+  color: ColorScheme,
+  label: any,
+  isDark?: boolean,
+  randomColor?: string
+) => css`
+  border: ${label
+    ? label.backgroundColor === "#FEFEFE"
+      ? `1px solid ${color.neutral.border.default}`
+      : "none"
+    : `1px solid ${color.neutral.border.default}`};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 16px;
+  padding: 0px 12px;
+  box-sizing: border-box;
+  background-color: ${randomColor
+    ? randomColor
+    : label
+    ? label.backgroundColor
+    : color.palette.offWhite};
+  width: max-content;
+  height: 24px;
+  white-space: nowrap;
+  ${fonts.medium12};
+  color: ${isDark ? color.neutral.text.weak : color.brand.text.default};
+`;
+
+export function Label({
+  label,
+  isDark,
+  labelTitle,
+  randomColor,
+  isEditCompleted,
+}: Props) {
   const color = useTheme() as ColorScheme;
 
-  const addModeLabelTitle = labelTitle ? labelTitle : "Label";
-
-  // const textColor = label
-  //   ? label.isDark
-  //     ? color.neutral.text.weak
-  //     : color.brand.text.default
-  //   : isDark
-  //   ? color.neutral.text.weak
-  //   : color.brand.text.default;
-
-  const labelName = isEditCompleted
-    ? labelTitle
-    : label
-    ? label.title
-    : addModeLabelTitle;
+  const labelName = getLabelName(label, labelTitle, isEditCompleted);
 
   return (
-    <div
-      className="label"
-      css={{
-        border: label
-          ? label.backgroundColor === "#FEFEFE"
-            ? `1px solid ${color.neutral.border.default}`
-            : "none"
-          : `1px solid ${color.neutral.border.default}`,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        borderRadius: "16px",
-        padding: "0px 12px",
-        boxSizing: "border-box",
-        backgroundColor: randomColor
-          ? randomColor
-          : label
-          ? label.backgroundColor
-          : color.palette.offWhite,
-        width: "max-content",
-        height: "24px",
-        whiteSpace: "nowrap",
-        ...fonts.medium12,
-        color: isDark ? color.neutral.text.weak : color.brand.text.default,
-      }}>
-      {/* {isEditCompleted ? labelTitle : label ? label.title : addModeLabelTitle} */}
-      {labelName}
-    </div>
+    <div css={labelStyle(color, label, isDark, randomColor)}>{labelName}</div>
   );
 }

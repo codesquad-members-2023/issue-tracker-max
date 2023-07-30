@@ -1,7 +1,5 @@
-// import { color } from "../../constants/colors";
 import { useTheme } from "@emotion/react";
 import { ColorScheme } from "../../contexts/ThemeContext";
-// import { fonts } from "../util/Txt";
 import { Icon } from "./Icon";
 import { fonts } from "../../constants/fonts";
 
@@ -29,6 +27,8 @@ export function Button({
 }: Props) {
   const color = useTheme() as ColorScheme;
 
+  const isGhost = type === "ghost";
+
   const ICON_COLOR_VARIANT = {
     contained: color.brand.text.default,
     outline: color.brand.text.weak,
@@ -44,8 +44,45 @@ export function Button({
       backgroundColor: "transparent",
     },
     ghost: {
-      color: color.neutral.text.default,
+      color:
+        status === "selected"
+          ? color.neutral.text.strong
+          : color.neutral.text.default,
       backgroundColor: "transparent",
+    },
+  };
+  const STATUS_VARIANT = {
+    enabled: "1",
+    hover: "0.8",
+    press: "0.64",
+    disabled: "0.32",
+    selected: "1",
+  };
+
+  const SIZE_VARIANT = {
+    L: {
+      width: isGhost ? "" : "240px",
+      height: isGhost ? "" : "56px",
+      ...(isGhost
+        ? status === "selected"
+          ? fonts.bold20
+          : fonts.medium20
+        : fonts.medium20),
+    },
+    M: {
+      width: isGhost ? "" : "184px",
+      height: isGhost ? "" : "48px",
+      ...(isGhost
+        ? status === "selected"
+          ? fonts.bold16
+          : fonts.medium16
+        : fonts.medium16),
+    },
+    S: {
+      width: isGhost ? "" : "128px",
+      minWidth: "41px",
+      height: isGhost ? "" : "40px",
+      ...fonts.medium12,
     },
   };
 
@@ -79,29 +116,3 @@ export function Button({
     </button>
   );
 }
-
-const STATUS_VARIANT = {
-  enabled: "1",
-  hover: "0.8",
-  press: "0.64",
-  disabled: "0.32",
-  selected: "1",
-};
-
-const SIZE_VARIANT = {
-  L: {
-    width: "240px",
-    height: "56px",
-    ...fonts.medium20,
-  },
-  M: {
-    width: "184px",
-    height: "48px",
-    ...fonts.medium16,
-  },
-  S: {
-    width: "128px",
-    height: "40px",
-    ...fonts.medium12,
-  },
-};

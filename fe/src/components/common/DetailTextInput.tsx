@@ -1,10 +1,9 @@
 import { useState } from "react";
-// import { color } from "../../constants/colors";
-// import { fonts } from "../util/Txt";
 import { Icon } from "./Icon";
 import { ColorScheme } from "../../contexts/ThemeContext";
-import { useTheme } from "@emotion/react";
+import { css, useTheme } from "@emotion/react";
 import { fonts } from "../../constants/fonts";
+import { textInputTitle } from "../../styles/commonStyles";
 
 type Props = {
   mode: string;
@@ -17,6 +16,42 @@ type Props = {
 
   placeholder?: string;
 };
+
+const detailTextInput = (
+  color: ColorScheme,
+  widthType?: string,
+  textColor?: string
+) => css`
+  display: flex;
+  align-items: center;
+  width: ${widthType === "auto" ? "max-content" : "100%"};
+  height: 40px;
+  gap: 8px;
+  color: ${textColor};
+  border-radius: 12px;
+  padding: 0px 16px;
+  box-sizing: border-box;
+  background-color: ${color.neutral.surface.bold};
+  ${fonts.medium16};
+`;
+
+const input = (color: ColorScheme) => css`
+  width: 100%;
+  color: ${color.neutral.text.default};
+  ${fonts.medium16};
+  background-color: transparent;
+  border: none;
+  outline: none;
+  &::placeholder {
+    color: ${color.neutral.text.weak};
+    opacity: 1;
+  }
+`;
+
+const contentWrapper = (widthType?: string) => css`
+  width: ${widthType === "auto" ? "max-content" : "100%"};
+  min-width: 112px;
+`;
 
 export function DetailTextInput({
   mode,
@@ -40,54 +75,14 @@ export function DetailTextInput({
   };
 
   return (
-    <div
-      css={{
-        display: "flex",
-        alignItems: "center",
-        width: widthType === "auto" ? "max-content" : "100%",
-        height: "40px",
-        gap: "8px",
-        color: textColor,
-        borderRadius: "12px",
-        padding: "0px 16px",
-        boxSizing: "border-box",
-        backgroundColor: color.neutral.surface.bold,
-        ...fonts.medium16,
-      }}>
-      <div
-        className="title"
-        css={{
-          color: color.neutral.text.weak,
-          display: "flex",
-          width: "64px",
-          gap: "8px",
-          ...fonts.medium12,
-        }}>
-        {title}
-      </div>
-
-      <div
-        className="contentWrapper"
-        css={{
-          width: widthType === "auto" ? "max-content" : "100%",
-          minWidth: "112px",
-        }}>
+    <div css={detailTextInput(color, widthType, textColor)}>
+      <div css={textInputTitle(color)}>{title}</div>
+      <div className="contentWrapper" css={contentWrapper(widthType)}>
         <input
+          css={input(color)}
           onChange={onChange}
           onFocus={onFocusInput}
           onBlur={onBlurInput}
-          css={{
-            "width": "100%",
-            "color": color.neutral.text.default,
-            ...fonts.medium16,
-            "backgroundColor": "transparent",
-            "border": "none",
-            "outline": "none",
-            "&::placeholder": {
-              color: "원하는 색깔",
-              opacity: 1,
-            },
-          }}
           type="text"
           placeholder={inputText ? inputText : isFocused ? "" : placeholder}
           value={mode === "edit" ? inputText : inputText}

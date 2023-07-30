@@ -21,3 +21,11 @@ export const tableHeaderStyle = (color: ColorScheme) => css`
   background-color: ${color.neutral.surface.default};
   ${fonts.bold16},
 `;
+
+export const textInputTitle = (color: ColorScheme) => css`
+  color: ${color.neutral.text.weak};
+  display: flex;
+  gap: 8px;
+  min-width: 64px;
+  ${fonts.medium12};
+`;
