@@ -57,7 +57,6 @@ const RealButton = styled.button<StyledButtonProps>`
   border-radius: ${({ theme }) => theme.objectStyles.radius.medium};
   background: ${({ theme }) => theme.color.brand.surface.default};
   color: ${({ theme }) => theme.color.brand.text.default};
-  font-family: Pretendard sans-serif;
   ${({ theme }) => theme.font.available.medium[16]}
   cursor: pointer;
 

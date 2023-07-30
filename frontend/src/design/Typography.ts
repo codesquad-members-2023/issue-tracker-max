@@ -65,6 +65,6 @@ const Typography = {
       line-height: 16px;
     `,
   },
-};
+} as const;
 
 export default Typography;

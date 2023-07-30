@@ -12,6 +12,6 @@ const Logo = {
     large: logoDarkLarge,
     medium: logoDarkMedium,
   },
-};
+} as const;
 
 export default Logo;

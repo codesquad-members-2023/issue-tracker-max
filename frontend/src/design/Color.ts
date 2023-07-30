@@ -20,6 +20,6 @@ export const Color = {
     [navy]: '#0025E6',
     [red]: '#FF3B30',
   },
-};
+} as const;
 
 export default Color;
