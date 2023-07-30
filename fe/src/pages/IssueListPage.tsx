@@ -1,6 +1,13 @@
+import { DropDownContainer } from '@components/common/dropDown/DropDownContainer';
+import {
+  issueFilterList,
+  issueStateList,
+  textColors,
+  contributors,
+  milestones,
+  labels,
+} from '@components/common/dropDown/types';
 import { useState } from 'react';
-
-type Props = {};
 
 type Issues = {
   openIssueCount: number;
@@ -16,8 +23,42 @@ type Issues = {
   }[];
 };
 
-export const IssueListPage: React.FC = ({}: Props) => {
+export const IssueListPage: React.FC = ({}) => {
   const [issues, setIssues] = useState<Issues>();
 
-  return <></>;
+  return (
+    <>
+      <DropDownContainer
+        name="issueFilter"
+        options={issueFilterList}
+        alignment="left"
+      />
+      <DropDownContainer
+        name="assignee"
+        options={contributors}
+        alignment="right"
+      />
+      <DropDownContainer
+        name="author"
+        options={contributors}
+        alignment="right"
+      />
+      <DropDownContainer name="label" options={labels} alignment="right" />
+      <DropDownContainer
+        name="milestone"
+        options={milestones}
+        alignment="right"
+      />
+      <DropDownContainer
+        name="textColor"
+        options={textColors}
+        alignment="left"
+      />
+      <DropDownContainer
+        name="issueState"
+        options={issueStateList}
+        alignment="right"
+      />
+    </>
+  );
 };
