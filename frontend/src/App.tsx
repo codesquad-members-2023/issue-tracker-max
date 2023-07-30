@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { ThemeProvider } from 'styled-components';
+import { styled, ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
 import { darkTheme } from './theme';
 import Theme from './constant/Theme';
-import Button from './components/Button';
 import GlobalStyle from './style/Global';
+// import Button from './components/Button';
+import Button from './components/BaseButton';
+import ButtonLarge from './components/ButtonLarge';
+import ButtonSmall from './components/ButtonSmall';
 
 const { light, dark } = Theme;
 
@@ -18,18 +21,29 @@ function App() {
   return (
     <ThemeProvider theme={theme === light ? lightTheme : darkTheme}>
       <GlobalStyle />
-      <Button
-        $Flexible="Fixed"
-        $Type="Ghost"
-        $ElementPattern="Icon+Text"
-        $State="Selected/Active"
-        $Size="L"
-        iconName="plus"
-        text="BUTTON"></Button>
-      <button onClick={changeTheme}>테마</button>
-      <h1>Helloooooo World!</h1>
+      <StyledApp>
+        <ButtonLarge type="submit" iconName="plus">
+          BUTTON
+        </ButtonLarge>
+        <Button type="submit" outline iconName="plus">
+          BUTTON
+        </Button>
+        <Button type="submit" ghost flexible iconName="plus">
+          This is Flexible BUTTON
+        </Button>
+        <ButtonSmall type="submit" ghost iconName="plus">
+          BUTTON
+        </ButtonSmall>
+        <ButtonSmall type="button" ghost flexible onClick={changeTheme}>
+          Change Theme
+        </ButtonSmall>
+      </StyledApp>
     </ThemeProvider>
   );
 }
+
+const StyledApp = styled.div`
+  background: ${({ theme }) => theme.color.neutral.surface.default};
+`;
 
 export default App;
