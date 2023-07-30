@@ -1,0 +1,35 @@
+package com.issuetrackermax.service.oauth;
+
+import com.issuetrackermax.domain.oauth.entity.OauthProperties;
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+public class OauthProvider {
+	private final String clientId;
+	private final String clientSecret;
+	private final String redirectUrl;
+	private final String tokenUrl;
+	private final String userInfoUrl;
+
+	@Builder
+	public OauthProvider(String clientId, String clientSecret, String redirectUrl, String tokenUrl,
+		String userInfoUrl) {
+		this.clientId = clientId;
+		this.clientSecret = clientSecret;
+		this.redirectUrl = redirectUrl;
+		this.tokenUrl = tokenUrl;
+		this.userInfoUrl = userInfoUrl;
+	}
+
+	public static OauthProvider createOauthProvider(OauthProperties.User user, OauthProperties.Provider provider) {
+		return OauthProvider.builder()
+			.clientId(user.getClientId())
+			.clientSecret(user.getClientSecret())
+			.redirectUrl(user.getRedirectUri())
+			.tokenUrl(provider.getTokenUri())
+			.userInfoUrl(provider.getUserInfoUri())
+			.build();
+	}
+}
