@@ -21,7 +21,7 @@ public class SignUpRequest {
 		this.nickName = nickName;
 	}
 
-	public Member toEntity() {
+	public Member toMember() {
 		return Member.builder()
 			.loginId(loginId)
 			.loginType(LoginType.LOCAL)

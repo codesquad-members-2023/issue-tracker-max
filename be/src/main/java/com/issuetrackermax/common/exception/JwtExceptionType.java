@@ -23,9 +23,11 @@ public enum JwtExceptionType {
 	public static JwtExceptionType from(Exception e) {
 		if (e.getClass().equals(ExpiredJwtException.class)) {
 			return JwtExceptionType.EXPIRED_JWT_EXCEPTION;
-		} else if (e.getClass().equals(MalformedJwtException.class)) {
+		}
+		if (e.getClass().equals(MalformedJwtException.class)) {
 			return JwtExceptionType.MALFORMED_JWT_EXCEPTION;
-		} else if (e.getClass().equals(SignatureException.class)) {
+		}
+		if (e.getClass().equals(SignatureException.class)) {
 			return JwtExceptionType.SIGNATURE_EXCEPTION;
 		}
 		return JwtExceptionType.ILLEGAL_ARGUMENT_EXCEPTION;

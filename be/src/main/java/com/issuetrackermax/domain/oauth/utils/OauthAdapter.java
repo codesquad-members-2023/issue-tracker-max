@@ -16,7 +16,7 @@ public class OauthAdapter {
 		Map<String, OauthProvider> oauthProvider = new HashMap<>();
 
 		properties.getUser().forEach((key, value) -> oauthProvider.put(key,
-			new OauthProvider(value, properties.getProvider().get(key))));
+			OauthProvider.createOauthProvider(value, properties.getProvider().get(key))));
 		return oauthProvider;
 	}
 }

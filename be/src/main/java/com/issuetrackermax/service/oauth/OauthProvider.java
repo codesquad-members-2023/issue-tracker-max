@@ -13,11 +13,6 @@ public class OauthProvider {
 	private final String tokenUrl;
 	private final String userInfoUrl;
 
-	public OauthProvider(OauthProperties.User user, OauthProperties.Provider provider) {
-		this(user.getClientId(), user.getClientSecret(), user.getRedirectUri(), provider.getTokenUri(),
-			provider.getUserInfoUri());
-	}
-
 	@Builder
 	public OauthProvider(String clientId, String clientSecret, String redirectUrl, String tokenUrl,
 		String userInfoUrl) {
@@ -26,5 +21,15 @@ public class OauthProvider {
 		this.redirectUrl = redirectUrl;
 		this.tokenUrl = tokenUrl;
 		this.userInfoUrl = userInfoUrl;
+	}
+
+	public static OauthProvider createOauthProvider(OauthProperties.User user, OauthProperties.Provider provider) {
+		return OauthProvider.builder()
+			.clientId(user.getClientId())
+			.clientSecret(user.getClientSecret())
+			.redirectUrl(user.getRedirectUri())
+			.tokenUrl(provider.getTokenUri())
+			.userInfoUrl(provider.getUserInfoUri())
+			.build();
 	}
 }

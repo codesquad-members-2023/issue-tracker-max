@@ -35,19 +35,14 @@ public class OauthService {
 	}
 
 	public JwtResponse login(String providerName, String code) {
-		// 프론트에서 넘어온 provider 이름을 통해 InMemoryProviderRepository에서 OauthProvider 가져오기
 		OauthProvider provider = inMemoryProviderRepository.findByProviderName(providerName);
 
-		// access token 가져오기
 		OauthTokenResponse tokenResponse = getToken(code, provider);
 
-		// 유저 정보 가져오기
 		MemberProfileResponse memberProfileResponse = getMemberProfileResponse(providerName, tokenResponse, provider);
 
-		// 유저 DB에 저장
 		Member member = saveOrUpdate(memberProfileResponse);
 
-		// 우리 애플리케이션의 JWT 토큰 만들기
 		return JwtResponse.from(jwtProvider.createJwt(Map.of("memberId", String.valueOf(member.getId()))));
 	}
 
@@ -63,11 +58,9 @@ public class OauthService {
 	private MemberProfileResponse getMemberProfileResponse(String providerName, OauthTokenResponse tokenResponse,
 		OauthProvider provider) {
 		Map<String, Object> memberAttributes = getMemberAttributes(provider, tokenResponse);
-		//유저 정보(map)를 통해 UserProfile 만들기
 		return OauthAttributes.extract(providerName, memberAttributes);
 	}
 
-	// OAuth 서버에서 유저 정보 map으로 가져오기
 	private Map<String, Object> getMemberAttributes(OauthProvider provider, OauthTokenResponse tokenResponse) {
 		return WebClient.create()
 			.get()

@@ -24,10 +24,6 @@ public class ApiResponse<T> {
 		return new ApiResponse<>(success, data);
 	}
 
-	public static <T> ApiResponse<T> ok(T data) {
-		return of(true, data);
-	}
-
 	public static <T> ApiResponse<T> success() {
 		return new ApiResponse<>(true);
 	}

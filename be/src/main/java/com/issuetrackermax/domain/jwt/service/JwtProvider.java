@@ -16,6 +16,8 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtProvider {
+	private final long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60;
+	private final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60;
 	private final JwtProperties jwtProperties;
 	private final Key key;
 
@@ -57,12 +59,10 @@ public class JwtProvider {
 	}
 
 	public Date getExpireDateAccessToken() {
-		long expireTimeMils = 1000L * 60 * 60;
-		return new Date(System.currentTimeMillis() + expireTimeMils);
+		return new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME);
 	}
 
 	public Date getExpireDateRefreshToken() {
-		long expireTimeMils = 1000L * 60 * 60 * 24 * 60;
-		return new Date(System.currentTimeMillis() + expireTimeMils);
+		return new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME);
 	}
 }

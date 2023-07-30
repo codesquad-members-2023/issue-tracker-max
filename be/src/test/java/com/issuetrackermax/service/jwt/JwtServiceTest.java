@@ -2,7 +2,7 @@ package com.issuetrackermax.service.jwt;
 
 import static org.assertj.core.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ class JwtServiceTest {
 	@Autowired
 	JwtProvider jwtProvider;
 
-	@BeforeEach
+	@AfterEach
 	void setUp() {
 		databaseCleaner.execute();
 	}
