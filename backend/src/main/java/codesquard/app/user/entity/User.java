@@ -1,19 +1,33 @@
 package codesquard.app.user.entity;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
-@Getter
-@Builder
-@EqualsAndHashCode(of = "id")
-@ToString
 public class User {
 
 	private Long id;
-	private String userId;
-	private String email;
-	private String password;
-	private String avatarUrl;
+	private final String userId;
+	private final String email;
+	private final String password;
+	private final String avatarUrl;
+
+	public User(String userId, String email, String password, String avatarUrl) {
+		this.userId = userId;
+		this.email = email;
+		this.password = password;
+		this.avatarUrl = avatarUrl;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getAvatarUrl() {
+		return avatarUrl;
+	}
 }
