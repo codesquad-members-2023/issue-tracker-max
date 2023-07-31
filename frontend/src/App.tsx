@@ -22,26 +22,35 @@ function App() {
     <ThemeProvider theme={isLight ? lightTheme : darkTheme}>
       <GlobalStyle />
       <StyledApp>
-        <ButtonLarge type="submit" iconName="plus">
-          BUTTON
-        </ButtonLarge>
-        <Button type="submit" outline iconName="plus">
-          BUTTON
-        </Button>
-        <Button type="submit" ghost flexible iconName="plus">
-          This is Flexible BUTTON
-        </Button>
-        <ButtonSmall type="submit" ghost iconName="plus">
-          BUTTON
-        </ButtonSmall>
-        <ButtonSmall type="button" ghost flexible onClick={changeTheme}>
-          Change Theme
-        </ButtonSmall>
-        <TextInput
-          labelName="label"
-          placeholder="placeholder"
-          helpText="Caption"
-        />
+        <Wrapper>
+          <ButtonLarge type="submit" iconName="plus">
+            BUTTON
+          </ButtonLarge>
+          <Button type="submit" outline iconName="plus">
+            BUTTON
+          </Button>
+          <Button type="submit" ghost flexible iconName="plus">
+            This is Flexible BUTTON
+          </Button>
+          <ButtonSmall type="submit" ghost iconName="plus">
+            BUTTON
+          </ButtonSmall>
+          <ButtonSmall type="button" ghost flexible onClick={changeTheme}>
+            Change Theme
+          </ButtonSmall>
+          <TextInput
+            size="tall"
+            labelName="label"
+            placeholder="placeholder"
+            helpText="Caption"
+          />
+          <TextInput
+            size="short"
+            labelName="label"
+            placeholder="placeholder"
+            helpText="Caption"
+          />
+        </Wrapper>
       </StyledApp>
       <ColorCodeInput label="배경색" />
       <TabButton />
@@ -53,7 +62,21 @@ function App() {
 }
 
 const StyledApp = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: ${({ theme }) => theme.color.neutral.surface.default};
+`;
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
 `;
 
 export default App;
