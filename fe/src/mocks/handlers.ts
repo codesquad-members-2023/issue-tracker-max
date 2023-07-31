@@ -51,8 +51,6 @@ export const handlers = [
       );
     }
 
-    // TODO: 만료된 토큰에 대한 응답 처리
-
     return res(
       ctx.status(200),
       ctx.json({
@@ -62,11 +60,12 @@ export const handlers = [
           expiresIn: 48000000,
         },
         user: {
-          username: "admin",
-          userProfileSrc:
-            "https://avatars.githubusercontent.com/u/48426991?v=4",
+          loginId: loginId,
+          profileUrl: "https://avatars.githubusercontent.com/u/48426991?v=4",
         },
       })
     );
   }),
 ];
+
+// TODO: 만료된 토큰에 대한 응답 처리

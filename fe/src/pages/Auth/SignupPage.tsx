@@ -1,14 +1,14 @@
 import Button from "@components/common/Button";
 import TextInput from "@components/common/TextInput";
 import useInput from "@hooks/useInput";
-import { postLogin } from "api";
+import { postSignup } from "api";
 import { AxiosError } from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthForm } from "./LoginPage";
 
-export default function LoginPage() {
-  const { isValid: isValidUsername, ...username } = useInput({
+export default function SignupPage() {
+  const { isValid: isValidloginId, ...loginId } = useInput({
     initialValue: "",
     maxLength: 16,
     minLength: 6,
@@ -19,13 +19,17 @@ export default function LoginPage() {
     minLength: 6,
   });
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const navigate = useNavigate();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      await postLogin(username.value, password.value);
-      // accessToken을 받아서 axios의 header에 넣어주는 로직이 필요함
+      const response = await postSignup(loginId.value, password.value);
+      if (response.status === 200) {
+        alert("회원가입이 완료되었습니다. 가입하신 계정으로 로그인해주세요 :)");
+        navigate("/auth");
+      }
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
         const { message } = error.response.data;
@@ -36,18 +40,14 @@ export default function LoginPage() {
 
   return (
     <>
-      <Button variant="outline" size="L" className="github-login-btn">
-        GitHub 계정으로 로그인
-      </Button>
-      <span className="or">or</span>
       <AuthForm onSubmit={onSubmit}>
         <TextInput
           name="아이디"
           variant="tall"
-          hasError={!isValidUsername}
+          hasError={!isValidloginId}
           placeholder="아이디"
           helpText="아이디는 최소 6자리여야 해요!"
-          {...username}
+          {...loginId}
         />
         <TextInput
           name="비밀번호"
@@ -63,27 +63,16 @@ export default function LoginPage() {
           variant="container"
           size="L"
           className="login-btn"
-          disabled={!isValidUsername || !isValidPassword}
+          disabled={!isValidloginId || !isValidPassword}
           type="submit">
-          아이디로 로그인
+          회원가입
         </Button>
       </AuthForm>
-      <Link to="/auth/signup">
+      <Link to="/auth">
         <Button variant="ghost" size="M" className="change-auth-btn">
-          아직 계정이 없으신가요? 회원가입
+          이미 계정이 있으신가요? 로그인
         </Button>
       </Link>
     </>
   );
 }
-
-export const AuthForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 12px;
-
-  .login-btn {
-    font: ${({ theme: { font } }) => font.availableMD20};
-  }
-`;

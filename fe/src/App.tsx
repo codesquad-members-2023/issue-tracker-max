@@ -1,8 +1,8 @@
-import AuthPage from "@pages/AuthPage";
-import LoginPage from "@pages/LoginPage";
+import AuthPage from "@pages/Auth/AuthPage";
+import LoginPage from "@pages/Auth/LoginPage";
+import SignupPage from "@pages/Auth/SignupPage";
 import IssuesPage from "@pages/MainPage/IssuesPage";
 import MainPage from "@pages/MainPage/MainPage";
-import SignupPage from "@pages/SignupPage";
 import GlobalStyle from "@styles/GlobalStyle";
 import { darkMode, lightMode } from "@styles/designSystem";
 import { useState } from "react";

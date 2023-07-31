@@ -16,7 +16,7 @@ export default function Button({ variant, size, ...props }: ButtonProps) {
   const buttonComponent = {
     container: <ContainerButton $size={size} {...props} />,
     outline: <OutlineButton $size={size} {...props} />,
-    ghost: <GhostButton $size={size} {...props} />,
+    ghost: <GhostButton {...props} />,
   };
 
   return buttonComponent[variant];
@@ -55,9 +55,6 @@ const OutlineButton = styled(BaseButton)<{
   }
 `;
 
-const GhostButton = styled(BaseButton)<{
-  $size: ButtonSize;
-}>`
-  width: ${({ $size }) => SIZE[$size].width};
-  height: ${({ $size }) => SIZE[$size].height};
+const GhostButton = styled(BaseButton)`
+  display: flex;
 `;
