@@ -7,21 +7,30 @@ type TextInputProps = React.HTMLAttributes<HTMLInputElement> & {
   disabled?: boolean;
   placeholder?: string;
   helpText?: string;
+  validationFunc?: (value: string) => boolean;
 };
 
 export default function TextInput(props: TextInputProps) {
-  const [focused, setFocused] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
 
-  const { size, labelName, disabled, placeholder, helpText } = props;
+  const { size, labelName, disabled, placeholder, helpText, validationFunc } =
+    props;
   const hasHelpText = !!helpText;
 
   const handleBlur = () => {
-    setFocused(false);
+    setIsFocused(false);
+
+    if (validationFunc && !validationFunc(inputValue) && inputValue) {
+      setIsError(true);
+    } else {
+      setIsError(false);
+    }
   };
 
   const handleFocus = () => {
-    setFocused(true);
+    setIsFocused(true);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,8 +38,8 @@ export default function TextInput(props: TextInputProps) {
   };
 
   return (
-    <InputContainer $size={size} $disabled={disabled}>
-      {(focused || inputValue) && <Label $size={size}>{labelName}</Label>}
+    <InputContainer $size={size} $disabled={disabled} $hasError={isError}>
+      {(isFocused || inputValue) && <Label $size={size}>{labelName}</Label>}
       <StyledTextInput
         type="text"
         placeholder={placeholder}
@@ -39,7 +48,7 @@ export default function TextInput(props: TextInputProps) {
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleChange}></StyledTextInput>
-      {hasHelpText && <Caption>{helpText}</Caption>}
+      {hasHelpText && <Caption $hasError={isError}>{helpText}</Caption>}
     </InputContainer>
   );
 }
@@ -48,6 +57,7 @@ type InputContainerProps = {
   $size: 'tall' | 'short';
   $focused?: boolean;
   $disabled?: boolean;
+  $hasError?: boolean;
 };
 
 const InputContainer = styled.fieldset<InputContainerProps>`
@@ -61,7 +71,11 @@ const InputContainer = styled.fieldset<InputContainerProps>`
   align-items: ${({ $size }) => ($size === 'short' ? 'center' : 'flex-start')};
   gap: 4px;
   position: relative;
-  border: 1px solid transparent;
+  border: 1px solid
+    ${({ theme, $hasError }) =>
+      $hasError
+        ? theme.color.danger.text.default
+        : theme.color.neutral.border.default};
   border-radius: ${({ theme, $size }) =>
     $size === 'short'
       ? theme.objectStyles.radius.medium
@@ -114,9 +128,13 @@ const StyledTextInput = styled.input<StyledTextInputProps>`
   }
 `;
 
-const Caption = styled.span`
+const Caption = styled.span<{ $hasError: boolean }>`
   position: absolute;
   bottom: -18px;
   left: 16px;
+  color: ${({ theme, $hasError }) =>
+    $hasError
+      ? theme.color.danger.text.default
+      : theme.color.neutral.text.weak};
   ${({ theme }) => theme.font.display.medium[12]}
 `;
