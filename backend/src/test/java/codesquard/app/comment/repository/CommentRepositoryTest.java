@@ -1,4 +1,4 @@
-package codesquard.app.issue.comment.repository;
+package codesquard.app.comment.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
