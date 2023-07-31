@@ -6,11 +6,11 @@ type Props = {
   size?: 'L' | 'M' | 'S' | 'defaultSize';
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function Button({
+export const Button: React.FC<Props> = ({
   typeVariant = 'contained',
   size = 'defaultSize',
   ...props
-}: Props) {
+}) => {
   const theme = useTheme() as any;
 
   const TYPE_VARIANT = {
@@ -82,4 +82,4 @@ export function Button({
       {props.children}
     </button>
   );
-}
+};
