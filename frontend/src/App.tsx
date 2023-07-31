@@ -13,6 +13,7 @@ import TextInput from './components/common/TextInput';
 import ProgressIndicator from './components/common/ProgressIndicator';
 import DropdownIndicator from './components/common/DropdownIndicator';
 import DropdownPanel from './components/common/DropdownPanel';
+import TextArea from './components/common/TextArea';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -63,7 +64,11 @@ function App() {
           />
           <ProgressIndicator openCount={0} closeCount={0} />
           <DropdownIndicator text="Button" />
-          <DropdownPanel label='label'/>
+          <DropdownPanel label="label" />
+          <TextArea
+            labelName="코멘트 작성"
+            placeholder="코멘트를 작성해주세요."
+          />
         </Wrapper>
       </StyledApp>
     </ThemeProvider>
