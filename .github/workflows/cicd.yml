@@ -83,12 +83,34 @@ jobs:
           docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_USERNAME }}/issue_tracker_app_dev .
           docker push ${{ secrets.DOCKER_USERNAME }}/issue_tracker_app_dev
       # docker build & push to release
-      - name: Docker build & push to dev
+      - name: Docker build & push to release
         if: contains(github.ref, 'release')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-release -t ${{ secrets.DOCKER_USERNAME }}/issue_tracker_app_release .
           docker push ${{ secrets.DOCKER_USERNAME }}/issue_tracker_app_release
+
+
+
+  build-react-image:
+    runs-on: ubuntu-latest
+    environment: dev
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./frontend
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Docker build
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/issue_tracker_web_dev .
+          docker push ${{ secrets.DOCKER_USERNAME }}/issue_tracker_web_dev
+
+
   cd-pipeline:
     needs:
       - build-image
