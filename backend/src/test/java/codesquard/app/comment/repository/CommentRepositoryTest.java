@@ -7,16 +7,17 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql;
 
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.comment.entity.Comment;
-import codesquard.app.comment.repository.CommentRepository;
 import codesquard.app.issue.entity.Issue;
 import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.user.entity.User;
 import codesquard.app.user.repository.UserRepository;
 
+@Sql({"/schema.sql"})
 class CommentRepositoryTest extends IntegrationTestSupport {
 
 	@Autowired
@@ -51,7 +52,8 @@ class CommentRepositoryTest extends IntegrationTestSupport {
 		userRepository.save(user);
 	}
 
-	private void createIssue(Long milestoneId, Long userId, String title, String content, IssueStatus status, LocalDateTime createdAt) {
+	private void createIssue(Long milestoneId, Long userId, String title, String content, IssueStatus status,
+		LocalDateTime createdAt) {
 		Issue issue = new Issue(milestoneId, userId, title, content, status, createdAt);
 		issueRepository.save(issue);
 	}
