@@ -6,6 +6,7 @@ import GlobalStyle from './style/Global';
 import Button from './components/common/button/BaseButton';
 import ButtonLarge from './components/common/button/ButtonLarge';
 import ButtonSmall from './components/common/button/ButtonSmall';
+import ColorCodeInput from './components/common/ColorCodeInput';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -34,6 +35,8 @@ function App() {
           Change Theme
         </ButtonSmall>
       </StyledApp>
+
+      <ColorCodeInput label="배경색" />
     </ThemeProvider>
   );
 }
