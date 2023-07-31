@@ -1,31 +1,9 @@
 import { styled } from "styled-components";
+import { getElapsedSince } from "../../utils/getElapsedSince";
 import { InformationTag } from "../InformationTag";
 import { IssueData } from "../main/Main";
 
 export function Issue({ issue }: { issue: IssueData }) {
-  const getTimeDifference = (dateObj: Date) => {
-    const MS = 1000;
-    const MINUTE = 60 * MS;
-    const HOUR = 60 * MINUTE;
-    const DAY = 24 * HOUR;
-    const MONTH = 31 * DAY;
-
-    const now = Date.now();
-    const diff = now - new Date(dateObj).getTime();
-
-    if (diff < MINUTE) {
-      return "방금";
-    } else if (diff < HOUR) {
-      return Math.floor(diff / MINUTE) + "분";
-    } else if (diff < DAY) {
-      return Math.floor(diff / HOUR) + "시간";
-    } else if (diff < MONTH) {
-      return Math.floor(diff / DAY) + "일";
-    } else {
-      return Math.floor(diff / MONTH) + "달";
-    }
-  };
-
   return (
     <Div>
       <div>
@@ -50,7 +28,7 @@ export function Issue({ issue }: { issue: IssueData }) {
         <IssueInfo>
           <span>#{issue.id}</span>
           <span>
-            {`이 이슈가 ${getTimeDifference(issue.createdAt)} 전 ${
+            {`이 이슈가 ${getElapsedSince(issue.createdAt)} 전 ${
               issue.writer.name
             }님에 의해 작성되었습니다.`}
           </span>
