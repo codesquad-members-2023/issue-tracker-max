@@ -6,6 +6,7 @@ import {
   contributors,
   milestones,
   labels,
+  DropDownOptionsType,
 } from '@components/common/dropDown/types';
 import { useState } from 'react';
 

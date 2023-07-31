@@ -10,6 +10,45 @@ export enum DropDownIndicatorName {
 
 export type DropDownIndicatorNameType = keyof typeof DropDownIndicatorName;
 
+export type IssueFilterType =
+  | '열린 이슈'
+  | '내가 작성한 이슈'
+  | '나에게 할당된 이슈'
+  | '내가 댓글을 남긴 이슈'
+  | '닫힌 이슈';
+
+export type IssueStateType = '열린 이슈' | '닫힌 이슈';
+
+export type ContributorType = {
+  id: string;
+  image: string;
+};
+
+export type LabelType = {
+  labelId: number;
+  name: string;
+  textColor: string;
+  backgroundColor: string;
+};
+
+export type MilestoneType = {
+  milestoneId: number;
+  name: string;
+  progress: number;
+};
+
+export type TextColorType = '밝은색' | '어두운 색';
+
+export type DropDownOptionsType =
+  | LabelType[]
+  | IssueFilterType[]
+  | IssueStateType[]
+  | ContributorType[]
+  | MilestoneType[]
+  | TextColorType[]
+  | string[];
+
+/* 더미데이터 */
 export const issueFilterList = [
   '열린 이슈',
   '내가 작성한 이슈',

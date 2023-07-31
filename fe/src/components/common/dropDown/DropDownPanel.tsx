@@ -1,30 +1,20 @@
 import { css, useTheme } from '@emotion/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { DropDownList } from './DropDownList';
-import { DropDownIndicatorName, DropDownIndicatorNameType } from './types';
-
-type AssigneeOption = {
-  id: string;
-  image: string;
-};
-
-type LabelOption = {
-  labelId: number;
-  name: string;
-  textColor: 'light' | 'dark';
-  backgroundColor: string;
-};
-
-type MilestoneOption = {
-  milestoneId: number;
-  name: string;
-  progress: number;
-};
+import {
+  DropDownIndicatorName,
+  DropDownIndicatorNameType,
+  DropDownOptionsType,
+} from './types';
 
 type Props = {
   name: DropDownIndicatorNameType;
   alignment: 'left' | 'right';
-  options: any;
+  options: DropDownOptionsType;
+};
+
+type SelectedItems = {
+  [key: number]: boolean;
 };
 
 export const DropDownPanel: React.FC<Props> = ({
@@ -33,7 +23,7 @@ export const DropDownPanel: React.FC<Props> = ({
   alignment,
 }) => {
   const theme = useTheme() as any;
-  const [selectedItems, setSelectedItems] = useState({});
+  const [selectedItems, setSelectedItems] = useState<SelectedItems>({});
 
   console.log(selectedItems);
 
@@ -41,7 +31,7 @@ export const DropDownPanel: React.FC<Props> = ({
     ? [{ id: `${name}이 없는 이슈`, name: `${name} 없는 이슈` }, ...options]
     : options;
 
-  const onSelected = (index) => {
+  const onSelected = (index: number) => {
     if (name === 'milestone' || name === 'issueState' || name === 'textColor') {
       setSelectedItems({ [index]: true });
     } else {
@@ -51,24 +41,24 @@ export const DropDownPanel: React.FC<Props> = ({
 
   return (
     <div
-      css={css`
-        position: absolute;
-        top: 100%;
-        ${alignment}: 0;
-        z-index: 50;
-        width: 240px;
-        border-radius: ${theme.radius.l};
-        border: ${theme.border.default} ${theme.neutral.border.default};
-        background: ${theme.neutral.surface.default};
-      `}
+      css={{
+        position: 'absolute',
+        top: '100%',
+        [alignment]: '0',
+        zIndex: 50,
+        width: '240px',
+        borderRadius: theme.radius.l,
+        border: `${theme.border.default} ${theme.neutral.border.default}`,
+        background: theme.neutral.surface.default,
+      }}
     >
       <div
-        css={css`
-          border-bottom: ${theme.border.default} ${theme.neutral.border.default};
-          padding: 8px 16px;
-          font: ${theme.fonts.displayMedium12};
-          color: ${theme.neutral.text.weak};
-        `}
+        css={{
+          borderBottom: `${theme.border.default} ${theme.neutral.border.default}`,
+          padding: '8px 16px',
+          font: theme.fonts.displayMedium12,
+          color: theme.neutral.text.weak,
+        }}
       >
         {DropDownIndicatorName[name]}
       </div>
@@ -77,7 +67,7 @@ export const DropDownPanel: React.FC<Props> = ({
           <DropDownList
             key={index}
             name={name}
-            options={item}
+            option={item}
             onSelected={() => onSelected(index)}
             isSelected={selectedItems[index]}
           />

@@ -2,29 +2,11 @@ import { css, useTheme } from '@emotion/react';
 import { useState } from 'react';
 import { DropDownPanel } from './DropDownPanel';
 import { DropDownIndicator } from './DropDownIndicator';
-
-type AssigneeOption = {
-  id: string;
-  image: string;
-};
-
-type LabelOption = {
-  labelId: number;
-  name: string;
-  textColor: 'light' | 'dark';
-  backgroundColor: string;
-};
-
-type MilestoneOption = {
-  milestoneId: number;
-  name: string;
-  progress: number;
-};
-type filterType = string[];
+import { DropDownIndicatorNameType, DropDownOptionsType } from './types';
 
 type Props = {
-  name: string;
-  options: any;
+  name: DropDownIndicatorNameType;
+  options: DropDownOptionsType;
   alignment: 'left' | 'right';
 };
 
@@ -34,8 +16,6 @@ export const DropDownContainer: React.FC<Props> = ({
   alignment,
 }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-  const theme: any = useTheme();
 
   const onPanelOpen = () => {
     setIsPanelOpen(true);
