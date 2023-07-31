@@ -10,6 +10,7 @@ import ColorCodeInput from './components/common/ColorCodeInput';
 import TabButton from './components/common/TabButton';
 import InformationTag from './components/common/InformationTag';
 import TextInput from './components/common/TextInput';
+import ProgressIndicator from './components/common/ProgressIndicator';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -58,6 +59,7 @@ function App() {
             placeholder="placeholder"
             helpText="Caption"
           />
+          <ProgressIndicator openCount={0} closeCount={0} />
         </Wrapper>
       </StyledApp>
     </ThemeProvider>

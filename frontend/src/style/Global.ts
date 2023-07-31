@@ -5,8 +5,13 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
-  * {
-    box-sizing: border-box;
+  .blind {
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    position: absolute;
+    overflow: hidden;
+    clip-path: polygon(0 0, 0 0, 0 0, 0 0);
   }
 `;
 
