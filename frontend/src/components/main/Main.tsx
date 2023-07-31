@@ -11,7 +11,7 @@ export type SingleFilterData = {
   selected: boolean;
 };
 
-type IssueDataData = {
+type IssueDataState = {
   closedIssueCount: number;
   openedIssueCount: number;
   issues: IssueData[];
@@ -52,7 +52,7 @@ export type IssueData = {
 };
 
 export function Main() {
-  const [issueData, setIssueData] = useState<IssueDataData>();
+  const [issueData, setIssueData] = useState<IssueDataState>();
 
   useEffect(() => {
     const fetchData = async () => {
