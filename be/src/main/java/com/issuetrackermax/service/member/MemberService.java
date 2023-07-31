@@ -21,6 +21,6 @@ public class MemberService {
 		// if(memberRepository.existEmail(memberRegisterDto.getEmail())){
 		// 	return;
 		// }
-		memberRepository.save(signUpRequest.toEntity());
+		memberRepository.save(signUpRequest.toMember());
 	}
 }
