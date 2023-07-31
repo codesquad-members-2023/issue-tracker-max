@@ -18,7 +18,7 @@ services:
     ports:
       - 81:81
     volumes:
-      - ./nginx/nginx-dev.conf:/etc/nginx/nginx.conf
+      - ./nginx/nginx-release.conf:/etc/nginx/nginx.conf
     depends_on:
       - web
       - app
