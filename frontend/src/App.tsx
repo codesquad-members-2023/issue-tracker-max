@@ -7,6 +7,7 @@ import Button from './components/common/button/BaseButton';
 import ButtonLarge from './components/common/button/ButtonLarge';
 import ButtonSmall from './components/common/button/ButtonSmall';
 import ColorCodeInput from './components/common/ColorCodeInput';
+import TabButton from './components/common/TabButton';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -37,6 +38,7 @@ function App() {
       </StyledApp>
 
       <ColorCodeInput label="배경색" />
+      <TabButton />
     </ThemeProvider>
   );
 }

@@ -6,7 +6,7 @@ export default function ColorCodeInput({ label }: { label: string }) {
   const [colorCode, setColorCode] = useState<string>(getRandomColor());
   const [key, setKey] = useState<number>(Date.now());
 
-  function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as typeof e.target & {
       'color-code': { value: string };
@@ -17,7 +17,7 @@ export default function ColorCodeInput({ label }: { label: string }) {
     }
   }
 
-  function refresh() {
+  const refresh = () => {
     setKey(Date.now());
   }
 

@@ -95,8 +95,9 @@ const RealButton = styled.button<StyledButtonProps>`
   ${({ theme, $ghost }) =>
     $ghost &&
     `
-    background: transparent;
+    background-color: transparent;
     border: none;
+    border-radius: 0;
     color: ${theme.color.neutral.text.default};
 
     svg {
