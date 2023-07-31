@@ -44,7 +44,7 @@ jobs:
         if: |
           contains(github.ref, 'dev') ||
           contains(github.ref, 'release') ||
-          contains(github.ref, 'be/infra/#9-cicd') ||
+          contains(github.ref, 'be/infra/#9-cicd')
         run: |
           mkdir ./src/main/resources 
           cd ./src/main/resources
