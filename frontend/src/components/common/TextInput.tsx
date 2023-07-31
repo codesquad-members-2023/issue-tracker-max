@@ -77,6 +77,7 @@ const InputContainer = styled.fieldset<InputContainerProps>`
 
   &:focus-within {
     border: 1px solid ${({ theme }) => theme.color.neutral.border.active};
+    background: ${({ theme }) => theme.color.neutral.surface.strong};
   }
 
   ${({ theme, $disabled }) =>
