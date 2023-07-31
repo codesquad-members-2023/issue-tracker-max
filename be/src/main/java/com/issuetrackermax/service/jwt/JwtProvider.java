@@ -1,4 +1,4 @@
-package com.issuetrackermax.domain.jwt.service;
+package com.issuetrackermax.service.jwt;
 
 import java.security.Key;
 import java.util.Date;

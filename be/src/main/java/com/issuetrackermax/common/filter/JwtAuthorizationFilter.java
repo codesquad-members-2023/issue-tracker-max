@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetrackermax.common.exception.ErrorCode;
 import com.issuetrackermax.common.exception.ErrorResponse;
 import com.issuetrackermax.common.exception.JwtExceptionType;
-import com.issuetrackermax.domain.jwt.service.JwtProvider;
+import com.issuetrackermax.service.jwt.JwtProvider;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.MalformedJwtException;

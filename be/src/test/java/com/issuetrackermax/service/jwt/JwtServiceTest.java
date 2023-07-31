@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
 import com.issuetrackermax.domain.jwt.entity.Jwt;
-import com.issuetrackermax.domain.jwt.service.JwtProvider;
 import com.issuetrackermax.service.member.MemberService;
 import com.issuetrackermax.util.DatabaseCleaner;
 
