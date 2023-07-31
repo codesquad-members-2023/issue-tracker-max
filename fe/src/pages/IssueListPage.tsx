@@ -7,6 +7,7 @@ import {
   milestones,
   labels,
   DropDownOptionsType,
+  DropDownIndicatorName,
 } from '@components/common/dropDown/types';
 import { useState } from 'react';
 
@@ -30,11 +31,11 @@ export const IssueListPage: React.FC = ({}) => {
   return (
     <>
       <DropDownContainer
-        name="issueFilter"
+        name={DropDownIndicatorName.issueFilter}
         options={issueFilterList}
         alignment="left"
       />
-      <DropDownContainer
+      {/* <DropDownContainer
         name="assignee"
         options={contributors}
         alignment="right"
@@ -59,7 +60,7 @@ export const IssueListPage: React.FC = ({}) => {
         name="issueState"
         options={issueStateList}
         alignment="right"
-      />
+      /> */}
     </>
   );
 };

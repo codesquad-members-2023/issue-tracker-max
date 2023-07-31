@@ -2,15 +2,26 @@ import { css, useTheme } from '@emotion/react';
 import React, { useState } from 'react';
 import { DropDownList } from './DropDownList';
 import {
+  ContributorType,
   DropDownIndicatorName,
   DropDownIndicatorNameType,
   DropDownOptionsType,
+  IssueStateType,
+  LabelType,
+  MilestoneType,
+  TextColorType,
 } from './types';
 
 type Props = {
   name: DropDownIndicatorNameType;
+  options:
+    | string[]
+    | ContributorType[]
+    | LabelType[]
+    | MilestoneType[]
+    | IssueStateType[]
+    | TextColorType[];
   alignment: 'left' | 'right';
-  options: DropDownOptionsType;
 };
 
 type SelectedItems = {
@@ -23,7 +34,7 @@ export const DropDownPanel: React.FC<Props> = ({
   alignment,
 }) => {
   const theme = useTheme() as any;
-  const [selectedItems, setSelectedItems] = useState<SelectedItems>({});
+  const [selectedItems, setSelectedItems] = useState<SelectedItems>({}); //페이지로
 
   console.log(selectedItems);
 
@@ -63,13 +74,22 @@ export const DropDownPanel: React.FC<Props> = ({
         {DropDownIndicatorName[name]}
       </div>
       <ul>
-        {newOptions.map((item, index: number) => (
+        {['assignee', 'label', 'milestone'].includes(name) && (
           <DropDownList
+            name={name}
+            option={`${name}이 없는 이슈`}
+            // onSelected={() => onSelected(index)}
+            // isSelected={selectedItems[index]}
+          />
+        )}
+
+        {options.map((item, index: number) => (
+          <DropDownList 
             key={index}
             name={name}
             option={item}
-            onSelected={() => onSelected(index)}
-            isSelected={selectedItems[index]}
+            // onSelected={() => onSelected(index)}
+            // isSelected={selectedItems[index]}
           />
         ))}
       </ul>
