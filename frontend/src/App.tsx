@@ -11,6 +11,7 @@ import TabButton from './components/common/TabButton';
 import InformationTag from './components/common/InformationTag';
 import TextInput from './components/common/TextInput';
 import ProgressIndicator from './components/common/ProgressIndicator';
+import DropdownIndicator from './components/common/DropdownIndicator';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -60,6 +61,7 @@ function App() {
             helpText="Caption"
           />
           <ProgressIndicator openCount={0} closeCount={0} />
+          <DropdownIndicator text="Button"/>
         </Wrapper>
       </StyledApp>
     </ThemeProvider>
