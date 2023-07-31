@@ -18,7 +18,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./nginx-dev.conf:/etc/nginx/conf.d/default.conf:ro
+      - nginx/nginx-dev.conf:/etc/nginx/conf.d/default.conf:ro
 
 volumes:
   issue_tracker_app_dev:

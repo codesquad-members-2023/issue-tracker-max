@@ -137,7 +137,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
-          source: "nginx/nginx-dev.conf"
+          source: "./nginx/nginx-dev.conf"
           target: "/home/ec2-user/"
       # nginx-release.conf 파일을 EC2에 업로드
       - name: copy nginx-release.conf file via ssh password
@@ -148,7 +148,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
-          source: "nginx/nginx-release.conf"
+          source: "./nginx/nginx-release.conf"
           target: "/home/ec2-user/"
       # docker-compose-dev.yml 파일을 EC2에 업로드
       - name: copy docker-compose-dev file via ssh password
