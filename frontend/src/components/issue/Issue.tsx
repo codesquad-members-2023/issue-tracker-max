@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
+import { IssueData } from "../../page/main/Main";
 import { getElapsedSince } from "../../utils/getElapsedSince";
 import { InformationTag } from "../InformationTag";
-import { IssueData } from "../main/Main";
 
 export function Issue({ issue }: { issue: IssueData }) {
   return (

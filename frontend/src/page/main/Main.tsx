@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { IssueTableBody } from "../issue/IssueTableBody";
-import { IssueTableHeader } from "../issue/IssueTableHeader";
+import { IssueTableBody } from "../../components/issue/IssueTableBody";
+import { IssueTableHeader } from "../../components/issue/IssueTableHeader";
 import { MainHeader } from "./MainHeader";
 
 export type SingleFilterData = {
