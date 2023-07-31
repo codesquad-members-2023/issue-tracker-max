@@ -1,6 +1,5 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactComponent as ChevronDown } from '@assets/icons/chevronDown.svg';
-// import { DropDownIndicatorName } from './types';
 
 type Props = {
   onPanelOpen: () => void;

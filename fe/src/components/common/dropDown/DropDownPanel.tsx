@@ -1,17 +1,7 @@
 import { css, useTheme } from '@emotion/react';
 import React, { useState } from 'react';
 import { DropDownList } from './DropDownList';
-// import {
-//   ContributorType,
-//   DropDownIndicatorName,
-//   DropDownIndicatorNameType,
-//   DropDownOptionsType,
-//   IssueFilterType,
-//   IssueStateType,
-//   LabelType,
-//   MilestoneType,
-//   TextColorType,
-// } from './types';
+
 type DropDownItem = {
   id?: string;
   image?: string;
@@ -22,76 +12,23 @@ type DropDownItem = {
   progress?: number;
   milestoneId?: number;
 };
-type Props = {
-  // name: string;
-  options: DropDownItem[];
 
+type Props = {
+  options: DropDownItem[];
   alignment: string;
   panelHeader: string;
-};
-
-// type Props = {
-//   name: DropDownIndicatorNameType;
-//   options: DropDownItem;
-//   alignment: 'left' | 'right';
-// };
-
-// type DropDownItem =
-//   | {
-//       name: 'issueFilter';
-//       value: IssueFilterType[];
-//     }
-//   | {
-//       name: 'assignee';
-//       value: ContributorType[];
-//     }
-//   | {
-//       name: 'author';
-//       value: ContributorType[];
-//     }
-//   | {
-//       name: 'label';
-//       value: LabelType[];
-//     }
-//   | {
-//       name: 'milestone';
-//       value: MilestoneType[];
-//     }
-//   | {
-//       name: 'issueState';
-//       value: IssueStateType[];
-//     }
-//   | {
-//       name: 'textColor';
-//       value: TextColorType[];
-//     };
-
-type SelectedItems = {
-  [key: number]: boolean;
+  onSelected: (index: number) => void;
+  selectedItems: { [key: number]: boolean };
 };
 
 export const DropDownPanel: React.FC<Props> = ({
-  // name,
   options,
   alignment,
   panelHeader,
+  onSelected,
+  selectedItems,
 }) => {
   const theme = useTheme() as any;
-  const [selectedItems, setSelectedItems] = useState<SelectedItems>({}); //페이지로
-
-  console.log(selectedItems);
-
-  // const newOptions = ['assignee', 'label', 'milestone'].includes(name)
-  //   ? [{ id: `${name}이 없는 이슈`, name: `${name} 없는 이슈` }, ...options]
-  //   : options;
-
-  // const onSelected = (index: number) => {
-  //   if (name === 'milestone' || name === 'issueState' || name === 'textColor') {
-  //     setSelectedItems({ [index]: true });
-  //   } else {
-  //     setSelectedItems((prev) => ({ ...prev, [index]: !prev[index] }));
-  //   }
-  // };
 
   return (
     <div
@@ -123,6 +60,7 @@ export const DropDownPanel: React.FC<Props> = ({
             item={item}
             onSelected={() => onSelected(index)}
             isSelected={selectedItems[index]}
+            index={index}
           />
         ))}
       </ul>

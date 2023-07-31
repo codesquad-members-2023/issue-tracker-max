@@ -1,16 +1,7 @@
 import { css, useTheme } from '@emotion/react';
-
 import { ReactComponent as UserImageSmall } from '@assets/icons/userImageSmall.svg';
 import { ReactComponent as CheckOnCircle } from '@assets/icons/checkOnCircle.svg';
 import { ReactComponent as CheckOffCircle } from '@assets/icons/checkOffCircle.svg';
-// import {
-//   DropDownIndicatorNameType,
-//   LabelType,
-//   ContributorType,
-//   MilestoneType,
-//   IssueStateType,
-//   TextColorType,
-// } from './types';
 
 type DropDownItem = {
   id?: string;
@@ -21,15 +12,16 @@ type DropDownItem = {
 
 type Props = {
   item: DropDownItem;
-  onSelected?: () => void;
   isSelected?: boolean;
-  children?: {};
+  onSelected: (index: number) => void;
+  index: number;
 };
 
 export const DropDownList: React.FC<Props> = ({
   item,
   onSelected,
   isSelected,
+  index,
 }) => {
   const theme = useTheme() as any;
   const commonStyles = css`
@@ -37,7 +29,9 @@ export const DropDownList: React.FC<Props> = ({
   `;
   return (
     <li
-      onClick={onSelected}
+      onClick={() => {
+        onSelected(index);
+      }}
       css={{
         display: 'flex',
         alignItems: 'center',
@@ -62,7 +56,11 @@ export const DropDownList: React.FC<Props> = ({
     >
       {item.backgroundColor && <UserImageSmall fill={item.backgroundColor} />}
       {item.image && (
-        <>
+        <div
+          css={{
+            position: 'relative',
+          }}
+        >
           <UserImageSmall fill="#EFF0F6" />
           <img
             alt="userImage"
@@ -75,9 +73,9 @@ export const DropDownList: React.FC<Props> = ({
               left: 0,
             }}
           />
-        </>
+        </div>
       )}
-      <span css={commonStyles}>{item.id ? item.id : item.name}</span>
+      <span css={commonStyles}>{item.id || item.name}</span>
       {isSelected ? (
         <CheckOnCircle stroke="#4E4B66" />
       ) : (

@@ -57,7 +57,10 @@ export const issueFilterList = [
   { filterId: 5, name: '닫힌 이슈' },
 ];
 
-export const issueStateList = ['열린 이슈', '닫힌 이슈'];
+export const issueStateList = [
+  { issueStateId: 1, name: '열린 이슈' },
+  { issueStateId: 2, name: '닫힌 이슈' },
+];
 
 export const contributors = [
   {
