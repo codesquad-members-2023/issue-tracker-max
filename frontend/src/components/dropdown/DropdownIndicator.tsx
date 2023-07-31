@@ -1,14 +1,16 @@
 import { styled } from "styled-components";
 
+type DropdownIndicatorProps = {
+  value: string;
+  disabled?: boolean;
+  onClick?: () => void;
+} & React.HTMLAttributes<HTMLButtonElement>;
+
 export function DropdownIndicator({
   value,
   disabled = false,
   onClick,
-}: {
-  value: string;
-  disabled?: boolean;
-  onClick?: () => void;
-} & React.HTMLAttributes<HTMLButtonElement>) {
+}: DropdownIndicatorProps) {
   return (
     <StyledButton onClick={onClick} disabled={disabled}>
       <span>{value}</span>
