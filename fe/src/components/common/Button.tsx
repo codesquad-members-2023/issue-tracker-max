@@ -19,7 +19,7 @@ export function Button({
       color: theme.brand.text.default,
     },
     outline: {
-      border: '1px solid #007AFF',
+      border: `${theme.border.default} ${theme.brand.border.default}`,
       color: theme.brand.text.weak,
     },
     ghost: {
