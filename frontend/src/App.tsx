@@ -8,6 +8,7 @@ import ButtonLarge from './components/common/button/ButtonLarge';
 import ButtonSmall from './components/common/button/ButtonSmall';
 import ColorCodeInput from './components/common/ColorCodeInput';
 import TabButton from './components/common/TabButton';
+import InformationTag from './components/common/InformationTag';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -39,6 +40,7 @@ function App() {
 
       <ColorCodeInput label="배경색" />
       <TabButton />
+      <InformationTag size='medium' iconName="alertCircle">Label</InformationTag>
     </ThemeProvider>
   );
 }
