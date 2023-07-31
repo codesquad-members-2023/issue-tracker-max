@@ -42,7 +42,10 @@ function App() {
             size="tall"
             labelName="label"
             placeholder="placeholder"
-            helpText="Caption"
+            helpText="5자리 이상 입력해주세요."
+            validationFunc={(value) => {
+              return value.length >= 5;
+            }}
           />
           <TextInput
             size="short"
