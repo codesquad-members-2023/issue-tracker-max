@@ -3,6 +3,9 @@
 
 <mapper namespace="org.presents.issuetracker.issue.mapper.IssueMapper">
     <select id="getIssueList" resultType="org.presents.issuetracker.issue.dto.IssueDto">
-        SELECT issue_id, author_id, title, contents, created_at, status FROM issuetracker.issue
+        SELECT
+            issue_id, author_id, title, contents, created_at, status
+        FROM
+            issuetracker.issue
     </select>
 </mapper>

@@ -12,11 +12,11 @@ import lombok.Setter;
 @Setter
 public class IssueDto {
 	// issue_id, author_id, title, contents, created_at, status
-	private Long issue_id;
-	private Long author_id;
+	private Long issueId;
+	private Long authorId;
 	private String title;
 	private String contents;
-	private LocalDateTime created_at;
+	private LocalDateTime createdAt;
 	private String status;
 
 }
