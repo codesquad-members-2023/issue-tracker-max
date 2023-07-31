@@ -164,19 +164,19 @@ function TabButtonTest() {
   const [tabs, setTabs] = useState([
     { name: "milestone(3)", icon: "label", selected: false },
     { name: "milestone(2)", icon: "milestone", selected: false },
+    { name: "milestone(4)", icon: "milestone", selected: false },
+    { name: "milestone(5)", icon: "milestone", selected: false },
   ]);
   const [issueStates, setIssueStates] = useState([
     { name: "열린 이슈 - 긴 문장의 경우", icon: "alertCircle", selected: true },
-    { name: "닫힌 이슈", icon: "archive", selected: false },
+    // { name: "닫힌 이슈", icon: "archive", selected: false },
   ]);
 
   const onTabClick = (name: string) => {
-    console.log(name);
     setTabs((t) => t.map((tab) => ({ ...tab, selected: tab.name === name })));
   };
 
   const onIssueStateClick = (name: string) => {
-    console.log(name);
     setIssueStates((t) =>
       t.map((issueState) => ({
         ...issueState,
@@ -188,9 +188,9 @@ function TabButtonTest() {
   return (
     <>
       <TabButton onClick={onTabClick}>
-        {tabs.map(({ name, icon, selected }) => (
+        {tabs.map(({ name, icon, selected }, index) => (
           <Button
-            key={name}
+            key={`tab-${index}`}
             icon={icon}
             size="M"
             buttonType="Ghost"
@@ -202,9 +202,9 @@ function TabButtonTest() {
         ))}
       </TabButton>
       <TabButton onClick={onIssueStateClick}>
-        {issueStates.map(({ name, icon, selected }) => (
+        {issueStates.map(({ name, icon, selected }, index) => (
           <Button
-            key={name}
+            key={`tab-${index}`}
             icon={icon}
             size="M"
             buttonType="Ghost"

@@ -38,10 +38,14 @@ const StyledTabButton = styled.div`
     height: 100%;
 
     &:first-child {
-      border-right: ${({ theme }) =>
-        `${theme.border.default} ${theme.color.neutralBorderDefault}`};
       border-radius: ${({ theme }) =>
         `${theme.radius.medium} 0 0 ${theme.radius.medium}`};
+    }
+
+    &:not(:last-child) {
+      border-right: ${({ theme }) =>
+        `${theme.border.default} ${theme.color.neutralBorderDefault}`};
+      border-radius: 0;
     }
 
     &:last-child {
