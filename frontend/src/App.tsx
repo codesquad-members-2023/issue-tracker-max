@@ -32,10 +32,11 @@ function ButtonTest({ onClick }: { onClick: () => void }) {
         icon="alertCircle"
         size="L"
         buttonType="Container"
+        flexible="Flexible"
         selected
         onClick={onClick}
       >
-        코멘트 작성
+        코멘트 작성 - 엄청 긴 문장이 들어갈 수도 있습니다.
       </Button>
       <Button
         icon="alertCircle"
@@ -141,11 +142,11 @@ function DropdownTest() {
 
 function TabButtonTest() {
   const [tabs, setTabs] = useState([
-    { name: "label(3)", icon: "label" },
+    { name: "milestone(3)", icon: "label" },
     { name: "milestone(2)", icon: "milestone" },
   ]);
   const [issueStates, setIssueStates] = useState([
-    { name: "열린 이슈", icon: "alertCircle", selected: true },
+    { name: "열린 이슈 - 긴 문장의 경우", icon: "alertCircle", selected: true },
     { name: "닫힌 이슈", icon: "archive" },
   ]);
 

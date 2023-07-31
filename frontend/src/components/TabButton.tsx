@@ -34,7 +34,7 @@ export function TabButton({
 const StyledTabButton = styled.div`
   display: flex;
   align-items: center;
-  width: 320px;
+  width: fit-content;
   height: 40px;
   border: ${({ theme }) =>
     `${theme.border.default} ${theme.color.neutralBorderDefault}`};
@@ -42,7 +42,6 @@ const StyledTabButton = styled.div`
   background-color: ${({ theme }) => theme.color.neutralSurfaceDefault};
 
   & button {
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
