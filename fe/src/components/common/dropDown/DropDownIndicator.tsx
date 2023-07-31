@@ -7,7 +7,7 @@ type Props = {
   name: DropDownIndicatorNameType;
 };
 
-export const DropDownIndicator = ({ onPanelOpen, name }: Props) => {
+export const DropDownIndicator: React.FC<Props> = ({ onPanelOpen, name }) => {
   return (
     <div css={container} onClick={onPanelOpen}>
       <button>{DropDownIndicatorName[name]}</button>

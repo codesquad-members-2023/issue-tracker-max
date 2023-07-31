@@ -27,13 +27,19 @@ type Props = {
   options: any;
 };
 
-export const DropDownPanel = ({ name, options, alignment }: Props) => {
+export const DropDownPanel: React.FC<Props> = ({
+  name,
+  options,
+  alignment,
+}) => {
   const theme = useTheme() as any;
   const [selectedItems, setSelectedItems] = useState({});
 
   console.log(selectedItems);
 
-  const canSelectUnassignedIssues = name !== 'author' && name !== 'issueFilter';
+  const newOptions = ['assignee', 'label', 'milestone'].includes(name)
+    ? [{ id: `${name}이 없는 이슈`, name: `${name} 없는 이슈` }, ...options]
+    : options;
 
   const onSelected = (index) => {
     if (name === 'milestone' || name === 'issueState' || name === 'textColor') {
@@ -67,16 +73,7 @@ export const DropDownPanel = ({ name, options, alignment }: Props) => {
         {DropDownIndicatorName[name]}
       </div>
       <ul>
-        {canSelectUnassignedIssues && (
-          <DropDownList
-            key={-1}
-            name={name}
-            options={'없는 이슈'}
-            onSelected={() => onSelected(-1)}
-            isSelected={selectedItems[-1]}
-          />
-        )}
-        {options.map((item, index: number) => (
+        {newOptions.map((item, index: number) => (
           <DropDownList
             key={index}
             name={name}

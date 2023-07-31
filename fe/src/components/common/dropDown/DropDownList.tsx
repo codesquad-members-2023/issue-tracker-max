@@ -15,12 +15,12 @@ type Props = {
   isSelected?: boolean;
 };
 
-export const DropDownList = ({
+export const DropDownList: React.FC<Props> = ({
   options,
   name,
   onSelected,
   isSelected,
-}: Props) => {
+}) => {
   const theme = useTheme() as any;
   // const [isSelected, setIsSelected] = useState(false);
 
@@ -71,8 +71,6 @@ const ListItemContent = ({ name, options }: Props) => {
 
   switch (name) {
     case 'label':
-      console.log(options.backgroundColor);
-
       return (
         <>
           {options.backgroundColor && (
@@ -86,16 +84,38 @@ const ListItemContent = ({ name, options }: Props) => {
     case 'assignee':
     case 'author':
       return (
-        <>
-          {options.image && <UserImageSmall fill="#EFF0F6" />}
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+          `}
+        >
+          {options.image && (
+            <>
+              <UserImageSmall fill="#EFF0F6" />
+              <img
+                width="20"
+                height="20"
+                src={options.image}
+                alt="userImage"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                }}
+              />
+            </>
+          )}
           <span css={commonStyles}>{options.id}</span>
-        </>
+        </div>
       );
     case 'issueFilter':
     case 'issueState':
     case 'textColor':
       return <span css={commonStyles}>{options}</span>;
     default:
-      return null;
+      return <span css={commonStyles}>{options}</span>;
   }
 };

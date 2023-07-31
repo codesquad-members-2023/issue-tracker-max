@@ -23,11 +23,13 @@ export const issueStateList = ['열린 이슈', '닫힌 이슈'];
 export const contributors = [
   {
     id: 'bono1234',
-    image: '이미지url',
+    image:
+      'https://item.kakaocdn.net/do/6554be44bf80540c7afa12cf4d9b9b7e9f5287469802eca457586a25a096fd31',
   },
   {
     id: 'ayaan1234',
-    image: '이미지url',
+    image:
+      'https://item.kakaocdn.net/do/6554be44bf80540c7afa12cf4d9b9b7e9f5287469802eca457586a25a096fd31',
   },
 ];
 
@@ -55,6 +57,11 @@ export const milestones = [
   {
     milestoneId: 2,
     name: '마일스톤2',
+    progress: 78,
+  },
+  {
+    milestoneId: 3,
+    name: '마일스톤이매우길어졌을때어쩌구저쩌구머;리ㅏㅓㄴㅇ리ㅏ머',
     progress: 78,
   },
 ];

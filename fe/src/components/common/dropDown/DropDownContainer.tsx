@@ -28,7 +28,11 @@ type Props = {
   alignment: 'left' | 'right';
 };
 
-export const DropDownContainer = ({ name, options, alignment }: Props) => {
+export const DropDownContainer: React.FC<Props> = ({
+  name,
+  options,
+  alignment,
+}) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const theme: any = useTheme();
