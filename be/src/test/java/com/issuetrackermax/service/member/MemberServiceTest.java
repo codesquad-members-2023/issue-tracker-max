@@ -11,8 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
-import com.issuetrackermax.domain.member.Entity.Member;
 import com.issuetrackermax.domain.member.MemberRepository;
+import com.issuetrackermax.domain.member.entity.Member;
 import com.issuetrackermax.util.DatabaseCleaner;
 
 @SpringBootTest

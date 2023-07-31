@@ -15,8 +15,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.issuetrackermax.domain.member.Entity.LoginType;
-import com.issuetrackermax.domain.member.Entity.Member;
+import com.issuetrackermax.domain.member.entity.LoginType;
+import com.issuetrackermax.domain.member.entity.Member;
 
 @Repository
 public class MemberRepository {

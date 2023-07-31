@@ -1,4 +1,4 @@
-package com.issuetrackermax.domain.member.Entity;
+package com.issuetrackermax.domain.member.entity;
 
 import lombok.Builder;
 import lombok.Getter;

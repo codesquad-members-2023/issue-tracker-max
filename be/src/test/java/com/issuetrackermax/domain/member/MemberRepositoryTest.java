@@ -11,8 +11,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.issuetrackermax.domain.member.Entity.LoginType;
-import com.issuetrackermax.domain.member.Entity.Member;
+import com.issuetrackermax.domain.member.entity.LoginType;
+import com.issuetrackermax.domain.member.entity.Member;
 
 @JdbcTest
 @ActiveProfiles("test")

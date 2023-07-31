@@ -7,9 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetrackermax.domain.jwt.JwtRepository;
 import com.issuetrackermax.domain.jwt.entity.Jwt;
-import com.issuetrackermax.domain.jwt.service.JwtProvider;
-import com.issuetrackermax.domain.member.Entity.Member;
 import com.issuetrackermax.domain.member.MemberRepository;
+import com.issuetrackermax.domain.member.entity.Member;
 
 import lombok.RequiredArgsConstructor;
 

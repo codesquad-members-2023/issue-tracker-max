@@ -5,8 +5,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.issuetrackermax.domain.member.Entity.LoginType;
-import com.issuetrackermax.domain.member.Entity.Member;
+import com.issuetrackermax.domain.member.entity.LoginType;
+import com.issuetrackermax.domain.member.entity.Member;
 
 class MemberProfileResponseTest {
 

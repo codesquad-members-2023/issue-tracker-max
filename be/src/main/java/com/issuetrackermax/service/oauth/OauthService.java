@@ -14,11 +14,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.issuetrackermax.controller.auth.dto.response.JwtResponse;
 import com.issuetrackermax.controller.auth.dto.response.MemberProfileResponse;
 import com.issuetrackermax.controller.auth.dto.response.OauthTokenResponse;
-import com.issuetrackermax.domain.jwt.service.JwtProvider;
-import com.issuetrackermax.domain.member.Entity.Member;
 import com.issuetrackermax.domain.member.MemberRepository;
+import com.issuetrackermax.domain.member.entity.Member;
 import com.issuetrackermax.domain.oauth.InMemoryProviderRepository;
 import com.issuetrackermax.domain.oauth.entity.OauthAttributes;
+import com.issuetrackermax.service.jwt.JwtProvider;
 
 @Service
 public class OauthService {

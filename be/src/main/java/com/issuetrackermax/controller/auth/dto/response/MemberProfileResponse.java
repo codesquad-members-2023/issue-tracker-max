@@ -1,7 +1,7 @@
 package com.issuetrackermax.controller.auth.dto.response;
 
-import com.issuetrackermax.domain.member.Entity.LoginType;
-import com.issuetrackermax.domain.member.Entity.Member;
+import com.issuetrackermax.domain.member.entity.LoginType;
+import com.issuetrackermax.domain.member.entity.Member;
 
 import lombok.Builder;
 import lombok.Getter;
