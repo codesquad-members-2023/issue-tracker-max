@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.issuetracker.issue.domain.IssueMapper">
+    <resultMap id="issueResultMap" type="Issue">
+        <id property="id" column="issue_id" />
+        <result property="title" column="issue_title" />
+        <result property="content" column="issue_content" />
+        <result property="isOpen" column="issue_is_open" />
+        <result property="createAt" column="issue_create_at" />
+
+        <association property="author" javaType="Member">
+            <result property="nickname" column="author_nickname" />
+            <result property="proFileImageUrl" column="author_profile_image_url" />
+        </association>
+
+        <association property="milestone" javaType="Milestone">
+            <result property="title" column="milestone_title" />
+        </association>
+
+        <collection property="labels" ofType="Label">
+            <result property="title" column="label_title" />
+            <result property="color" column="label_color" />
+        </collection>
+    </resultMap>
+
+    <select id="search" resultMap="issueResultMap" parameterType="IssueSearch">
+        SELECT DISTINCT i.id as issue_id,
+               i.title as issue_title,
+               i.content as issue_content,
+               i.is_open as issue_is_open,
+               i.create_at as issue_create_at,
+               m.nickname as author_nickname,
+               m.profile_image_url as author_profile_image_url,
+               mi.title as milestone_title,
+               l.title as label_title,
+               l.color as label_color
+        FROM issue i
+        INNER JOIN member m ON m.id = i.author_id
+        LEFT OUTER JOIN milestone mi ON i.milestone_id = mi.id
+        LEFT OUTER JOIN issue_label_mapping ilm ON i.id = ilm.issue_id
+        LEFT OUTER JOIN label l ON ilm.label_id = l.id
+        LEFT OUTER JOIN assignee a ON i.id = a.issue_id
+        LEFT OUTER JOIN member m2 ON a.member_id = m2.id
+        LEFT OUTER JOIN issue_comment ic ON i.id = ic.issue_id
+        <where>
+            <if test="isOpen != null">
+                <trim prefix="AND">
+                    i.is_open = #{isOpen}
+                </trim>
+            </if>
+            <if test="assigneeIds != null">
+                <trim prefix="AND">
+                    a.member_id IN
+                </trim>
+                <foreach collection="assigneeIds" item="assigneeId" separator="," open="(" close=")">
+                    #{assigneeId}
+                </foreach>
+            </if>
+            <if test="labelIds != null">
+                <trim prefix="AND">
+                    ilm.label_id IN
+                </trim>
+                <foreach collection="labelIds" item="labelId" separator="," open="(" close=")">
+                    #{labelId}
+                </foreach>
+            </if>
+            <if test="milestoneId != null">
+                <trim prefix="AND">
+                    i.milestone_id = #{milestoneId}
+                </trim>
+            </if>
+            <if test="authorId != null">
+                <trim prefix="AND">
+                    i.author_id = #{authorId}
+                </trim>
+            </if>
+            <if test="commentAuthorId != null">
+                <trim prefix="AND">
+                    ic.author_id = #{commentAuthorId}
+                </trim>
+            </if>
+        </where>
+    </select>
+</mapper>
