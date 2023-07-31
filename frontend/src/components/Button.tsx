@@ -7,7 +7,7 @@ type ButtonProps = {
   flexible?: "Flexible" | "Fixed";
   icon?: string;
   selected?: boolean;
-};
+}  & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
   size,
@@ -17,7 +17,7 @@ export function Button({
   selected,
   children,
   ...props
-}: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
+}: ButtonProps) {
   const buttonMap = {
     Container: ConatinerButton,
     Outline: OutlineButton,

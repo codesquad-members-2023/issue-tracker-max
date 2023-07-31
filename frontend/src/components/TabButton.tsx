@@ -1,32 +1,22 @@
+import { Children, ReactElement, cloneElement } from "react";
 import { styled } from "styled-components";
-import { Button } from "./Button";
 
 export function TabButton({
-  tabs,
+  children,
   onClick,
 }: {
-  tabs: {
-    name: string;
-    icon?: string;
-    selected?: boolean;
-  }[];
+  children: ReactElement[];
   onClick: (name: string) => void;
 }) {
   return (
     <StyledTabButton>
-      {tabs.map(({ name, icon, selected }) => (
-        <Button
-          key={name}
-          icon={icon}
-          size="M"
-          buttonType="Ghost"
-          flexible="Flexible"
-          selected={selected}
-          onClick={() => onClick(name)}
-        >
-          {name}
-        </Button>
-      ))}
+      {Children.map(children, (child) =>
+        cloneElement(child, {
+          onClick: () => {
+            onClick(child.props.children);
+          },
+        }),
+      )}
     </StyledTabButton>
   );
 }
@@ -34,7 +24,7 @@ export function TabButton({
 const StyledTabButton = styled.div`
   display: flex;
   align-items: center;
-  width: 320px;
+  width: fit-content;
   height: 40px;
   border: ${({ theme }) =>
     `${theme.border.default} ${theme.color.neutralBorderDefault}`};
@@ -42,17 +32,20 @@ const StyledTabButton = styled.div`
   background-color: ${({ theme }) => theme.color.neutralSurfaceDefault};
 
   & button {
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
 
     &:first-child {
-      border-right: ${({ theme }) =>
-        `${theme.border.default} ${theme.color.neutralBorderDefault}`};
       border-radius: ${({ theme }) =>
         `${theme.radius.medium} 0 0 ${theme.radius.medium}`};
+    }
+
+    &:not(:last-child) {
+      border-right: ${({ theme }) =>
+        `${theme.border.default} ${theme.color.neutralBorderDefault}`};
+      border-radius: 0;
     }
 
     &:last-child {

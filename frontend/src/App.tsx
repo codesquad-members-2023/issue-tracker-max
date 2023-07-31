@@ -19,8 +19,8 @@ export default function App() {
       <TextInputTest />
       <ButtonTest onClick={onClick} />
       <TabButtonTest />
-      <DropdownTest />
       <InformationTagTest />
+      <DropdownTest />
     </ThemeProvider>
   );
 }
@@ -32,10 +32,11 @@ function ButtonTest({ onClick }: { onClick: () => void }) {
         icon="alertCircle"
         size="L"
         buttonType="Container"
+        flexible="Flexible"
         selected
         onClick={onClick}
       >
-        코멘트 작성
+        코멘트 작성 - 엄청 긴 문장이 들어갈 수도 있습니다.
       </Button>
       <Button
         icon="alertCircle"
@@ -90,50 +91,74 @@ function TextInputTest() {
 }
 
 function DropdownTest() {
-  const options = [
+  const [options, setOptions] = useState([
     {
       name: "옵션1 - 긴 이름이 들어가는 경우",
       profile: "",
+      selected: false,
       onClick: () => {
-        console.log("옵션1 선택");
+        setOptions((o) =>
+          o.map((option) => ({
+            ...option,
+            selected: option.name === "옵션1 - 긴 이름이 들어가는 경우",
+          })),
+        );
       },
     },
     {
       name: "옵션2",
       profile: "",
+      selected: false,
       onClick: () => {
-        console.log("옵션2 선택");
+        setOptions((o) =>
+          o.map((option) => ({ ...option, selected: option.name === "옵션2" })),
+        );
       },
     },
     {
       name: "옵션3",
       profile: "",
+      selected: false,
       onClick: () => {
-        console.log("옵션3 선택");
+        setOptions((o) =>
+          o.map((option) => ({ ...option, selected: option.name === "옵션3" })),
+        );
       },
     },
     {
       name: "옵션4",
       profile: "",
+      selected: false,
       onClick: () => {
-        console.log("옵션4 선택");
+        setOptions((o) =>
+          o.map((option) => ({ ...option, selected: option.name === "옵션4" })),
+        );
       },
     },
     {
       name: "옵션5",
       profile: "",
+      selected: false,
       onClick: () => {
-        console.log("옵션5 선택");
+        setOptions((o) =>
+          o.map((option) => ({ ...option, selected: option.name === "옵션5" })),
+        );
       },
     },
-  ];
+  ]);
   return (
     <>
-      <DropdownContainer name="assignee" options={options} alignment="Left" />
+      <DropdownContainer
+        name="assignees"
+        optionTitle="assignees filter"
+        options={options}
+        alignment="Left"
+      />
       <DropdownContainer
         name="milestones"
+        optionTitle="milestones filter"
         options={options}
-        alignment="Right"
+        alignment="Left"
       />
     </>
   );
@@ -141,38 +166,59 @@ function DropdownTest() {
 
 function TabButtonTest() {
   const [tabs, setTabs] = useState([
-    { name: "label(3)", icon: "label" },
-    { name: "milestone(2)", icon: "milestone" },
+    { name: "milestone(3)", icon: "label", selected: false },
+    { name: "milestone(2)", icon: "milestone", selected: false },
+    { name: "milestone(4)", icon: "milestone", selected: false },
+    { name: "milestone(5)", icon: "milestone", selected: false },
   ]);
   const [issueStates, setIssueStates] = useState([
-    { name: "열린 이슈", icon: "alertCircle", selected: true },
-    { name: "닫힌 이슈", icon: "archive" },
+    { name: "열린 이슈 - 긴 문장의 경우", icon: "alertCircle", selected: true },
+    // { name: "닫힌 이슈", icon: "archive", selected: false },
   ]);
 
   const onTabClick = (name: string) => {
-    setTabs((t) =>
-      t.map((tab) =>
-        tab.name === name
-          ? { ...tab, selected: true }
-          : { ...tab, selected: false },
-      ),
-    );
+    setTabs((t) => t.map((tab) => ({ ...tab, selected: tab.name === name })));
   };
 
   const onIssueStateClick = (name: string) => {
     setIssueStates((t) =>
-      t.map((issueState) =>
-        issueState.name === name
-          ? { ...issueState, selected: true }
-          : { ...issueState, selected: false },
-      ),
+      t.map((issueState) => ({
+        ...issueState,
+        selected: issueState.name === name,
+      })),
     );
   };
 
   return (
     <>
-      <TabButton tabs={tabs} onClick={onTabClick} />
-      <TabButton tabs={issueStates} onClick={onIssueStateClick} />
+      <TabButton onClick={onTabClick}>
+        {tabs.map(({ name, icon, selected }, index) => (
+          <Button
+            key={`tab-${index}`}
+            icon={icon}
+            size="M"
+            buttonType="Ghost"
+            flexible="Flexible"
+            selected={selected}
+          >
+            {name}
+          </Button>
+        ))}
+      </TabButton>
+      <TabButton onClick={onIssueStateClick}>
+        {issueStates.map(({ name, icon, selected }, index) => (
+          <Button
+            key={`tab-${index}`}
+            icon={icon}
+            size="M"
+            buttonType="Ghost"
+            flexible="Flexible"
+            selected={selected}
+          >
+            {name}
+          </Button>
+        ))}
+      </TabButton>
     </>
   );
 }
@@ -188,7 +234,13 @@ function InformationTagTest() {
         fill="#7F4BFF"
         fontColor="Light"
       />
-      <InformationTag value="작성자" toolTip=" " size="S" fill="#C5C" stroke="Default" />
+      <InformationTag
+        value="작성자"
+        toolTip=" "
+        size="S"
+        fill="#C5C"
+        stroke="Default"
+      />
       <InformationTag
         value="documentation"
         toolTip="문서 작업입니다."
