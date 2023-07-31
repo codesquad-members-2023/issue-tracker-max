@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import ButtonSmall from './button/ButtonSmall';
 import React from 'react';
@@ -12,7 +12,17 @@ type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 export default function TextArea(props: TextAreaProps) {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [textValue, setTextValue] = useState<string>('');
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const { labelName, placeholder, disabled } = props;
+
+  useEffect(() => {
+    if (isFocused && !isTyping) {
+      setIsTyping(true);
+      setTimeout(() => {
+        setIsTyping(false);
+      }, 2000);
+    }
+  }, [textValue]);
 
   const handleBlur = () => {
     setIsFocused(false);
@@ -34,10 +44,13 @@ export default function TextArea(props: TextAreaProps) {
           placeholder={placeholder}
           value={textValue}
           disabled={disabled}
+          spellCheck="false"
           onChange={handleChange}></StyledTextArea>
       </Section>
       <Bottom>
-        <TextCounter>띄어쓰기 포함 {textValue.length}자</TextCounter>
+        {isTyping && (
+          <TextCounter>띄어쓰기 포함 {textValue.length}자</TextCounter>
+        )}
         <ButtonSmall type="submit" ghost flexible iconName="paperClip">
           파일 첨부하기
         </ButtonSmall>
@@ -74,6 +87,7 @@ const Label = styled.label`
 `;
 
 const StyledTextArea = styled.textarea`
+  margin-bottom: 16px;
   border: none;
   outline: none;
   caret-color: ${({ theme }) => theme.color.palette.blue};
@@ -81,6 +95,7 @@ const StyledTextArea = styled.textarea`
   color: ${({ theme }) => theme.color.neutral.text.weak};
   ${({ theme }) => theme.font.display.medium[16]};
   resize: none;
+  flex: 1;
 
   &:focus {
     background: ${({ theme }) => theme.color.neutral.surface.strong};
