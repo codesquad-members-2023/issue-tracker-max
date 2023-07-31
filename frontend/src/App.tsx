@@ -3,9 +3,9 @@ import { styled, ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
 import { darkTheme } from './theme';
 import GlobalStyle from './style/Global';
-import Button from './components/BaseButton';
-import ButtonLarge from './components/ButtonLarge';
-import ButtonSmall from './components/ButtonSmall';
+import Button from './components/common/button/BaseButton';
+import ButtonLarge from './components/common/button/ButtonLarge';
+import ButtonSmall from './components/common/button/ButtonSmall';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);

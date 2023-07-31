@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import Icons from '../design/Icons';
+import Icons from '../../../design/Icons';
 
 type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
   type: 'button' | 'submit' | 'reset';
@@ -61,6 +61,8 @@ const RealButton = styled.button<StyledButtonProps>`
   cursor: pointer;
 
   svg {
+    width: 16px;
+    height: 16px;
     fill: ${({ theme }) => theme.color.brand.text.default};
     stroke: ${({ theme }) => theme.color.brand.text.default};
   }
