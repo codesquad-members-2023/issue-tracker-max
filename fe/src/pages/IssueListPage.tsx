@@ -1,3 +1,4 @@
+import { TextArea } from '@components/common/TextArea';
 import { DropDownContainer } from '@components/common/dropDown/DropDownContainer';
 import {
   issueFilterList,
@@ -31,6 +32,12 @@ export const IssueListPage: React.FC = ({}) => {
   const [issues, setIssues] = useState<Issues>();
   const [selectedItems, setSelectedItems] = useState<SelectedItems>({});
 
+  const [isTyping, setIsTyping] = useState(false);
+
+  const onTyping = () => {
+    setIsTyping(true);
+  };
+
   const onSingleSelected = (index: number) => {
     setSelectedItems({ [index]: true });
   };
@@ -41,7 +48,34 @@ export const IssueListPage: React.FC = ({}) => {
 
   return (
     <>
-      
+      <TextArea
+        size="defaultSize"
+        letterCount={12}
+        isDisabled={true}
+        isTyping={isTyping}
+        onTyping={() => setIsTyping(true)}
+      />
+      <TextArea
+        size="defaultSize"
+        letterCount={12}
+        isDisabled={false}
+        isTyping={isTyping}
+        onTyping={() => setIsTyping(true)}
+      />
+      <TextArea
+        size="S"
+        letterCount={12}
+        isDisabled={false}
+        isTyping={isTyping}
+        onTyping={() => setIsTyping(true)}
+      />
+      <TextArea
+        size="S"
+        letterCount={12}
+        isDisabled={false}
+        isTyping={isTyping}
+        onTyping={() => setIsTyping(true)}
+      />
     </>
   );
 };
