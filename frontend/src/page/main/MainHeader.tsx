@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { styled } from "styled-components";
-import { Button } from "../Button";
-import { FilterBar } from "../FilterBar";
-import { TabButton } from "../TabButton";
+
+import { Button } from "../../components/Button";
+import { FilterBar } from "../../components/FilterBar";
+import { TabButton } from "../../components/TabButton";
 import { SingleFilterData } from "./Main";
 
 type MainHeaderProps = {

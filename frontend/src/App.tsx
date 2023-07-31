@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ThemeProvider, styled } from "styled-components";
 import { Header } from "./components/Header";
-import { Main } from "./components/main/Main";
 import { designSystem } from "./constants/designSystem";
+import { Error404 } from "./page/Error404";
+import { Main } from "./page/main/Main";
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
@@ -10,8 +12,13 @@ export default function App() {
   return (
     <Div>
       <ThemeProvider theme={designSystem[themeMode]}>
-        <Header />
-        <Main />
+        <Router>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="*" element={<Error404 />} />
+          </Routes>
+        </Router>
       </ThemeProvider>
     </Div>
   );

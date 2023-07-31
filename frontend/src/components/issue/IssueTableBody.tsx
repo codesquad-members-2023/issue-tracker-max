@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { IssueData } from "../main/Main";
+import { IssueData } from "../../page/main/Main";
 import { Issue } from "./Issue";
 
 type TableBodyProps = {
