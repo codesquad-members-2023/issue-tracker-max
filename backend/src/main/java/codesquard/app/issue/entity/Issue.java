@@ -6,23 +6,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
 
-@Getter
-@Builder
 @EqualsAndHashCode(of = "id")
 @ToString
 public class Issue {
 
-	private final Long id;
+	private Long id;
 	private final Long milestoneId;
 	private final Long userId;
 	private final String title;
 	private final String content;
-	private final Boolean status;
+	private Boolean status;
 	@JsonProperty("isDeleted")
-	private final Boolean isDeleted;
-	private final LocalDateTime createdAt;
-	private final LocalDateTime modifiedAt;
+	private Boolean isDeleted;
+	private LocalDateTime createdAt;
+	private LocalDateTime modifiedAt;
+
+	@Builder
+	public Issue(Long milestoneId, Long userId, String title, String content) {
+		this.milestoneId = milestoneId;
+		this.userId = userId;
+		this.title = title;
+		this.content = content;
+	}
 }

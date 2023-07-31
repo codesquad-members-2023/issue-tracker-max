@@ -1,5 +1,7 @@
 package codesquard.app.issue.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,19 +18,22 @@ public class IssueService {
 
 	@Transactional
 	public Long register(IssueRegisterRequest issueRegisterRequest, Long userId) {
-		Issue issue = Issue.builder()
-			.userId(userId)
-			.title(issueRegisterRequest.getTitle())
-			.content(issueRegisterRequest.getContent())
-			.milestoneId(issueRegisterRequest.getMilestone())
-			.build();
+		Issue issue = issueRegisterRequest.toEntity(issueRegisterRequest, userId);
 		Long id = issueRepository.save(issue);
-		for (Long labelId : issueRegisterRequest.getLabels()) {
-			issueRepository.saveIssueLabel(id, labelId);
-		}
-		for (Long assignee : issueRegisterRequest.getAssignees()) {
-			issueRepository.saveIssueAssignee(id, assignee);
-		}
+		registerIssueLabel(id, issueRegisterRequest.getLabels());
+		registerIssueAssignee(id, issueRegisterRequest.getAssignees());
 		return id;
+	}
+
+	private void registerIssueLabel(Long issueId, List<Long> labels) {
+		for (Long labelId : labels) {
+			issueRepository.saveIssueLabel(issueId, labelId);
+		}
+	}
+
+	private void registerIssueAssignee(Long issueId, List<Long> assignees) {
+		for (Long assignee : assignees) {
+			issueRepository.saveIssueAssignee(issueId, assignee);
+		}
 	}
 }
