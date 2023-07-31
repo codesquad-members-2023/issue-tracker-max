@@ -9,6 +9,7 @@ import ButtonSmall from './components/common/button/ButtonSmall';
 import ColorCodeInput from './components/common/ColorCodeInput';
 import TabButton from './components/common/TabButton';
 import InformationTag from './components/common/InformationTag';
+import TextInput from './components/common/TextInput';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -36,11 +37,17 @@ function App() {
         <ButtonSmall type="button" ghost flexible onClick={changeTheme}>
           Change Theme
         </ButtonSmall>
+        <TextInput
+          labelName="label"
+          placeholder="placeholder"
+          helpText="Caption"
+        />
       </StyledApp>
-
       <ColorCodeInput label="배경색" />
       <TabButton />
-      <InformationTag size='medium' iconName="alertCircle">Label</InformationTag>
+      <InformationTag size="medium" iconName="alertCircle">
+        Label
+      </InformationTag>
     </ThemeProvider>
   );
 }
