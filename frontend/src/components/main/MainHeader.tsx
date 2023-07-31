@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 import { Button } from "../Button";
+import { FilterBar } from "../FilterBar";
 import { TabButton } from "../TabButton";
-import { DropdownContainer } from "../dropdown/DropdownContainer";
 import { SingleFilterData } from "./Main";
 
 type MainHeaderProps = {
@@ -53,15 +53,12 @@ export function MainHeader({
   return (
     <Div>
       <div>
-        <div style={{ display: "flex" }}>
-          <DropdownContainer
-            name="필터"
-            optionTitle={`이슈 필터`}
-            options={setDropdownOptions(singleFilters)}
-            alignment="Left"
-          />
-          <input />
-        </div>
+        <FilterBar
+          name="필터"
+          optionTitle={`이슈 필터`}
+          options={setDropdownOptions(singleFilters)}
+          value="is:issue is:open"
+        />
       </div>
       <div style={{ display: "flex", gap: "16px" }}>
         <TabButton onClick={onTabClick}>

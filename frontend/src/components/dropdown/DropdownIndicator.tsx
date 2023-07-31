@@ -23,7 +23,7 @@ const StyledButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   height: 32px;
   border-radius: 20px;
   font: ${({ theme }) => theme.font.availableMedium16};

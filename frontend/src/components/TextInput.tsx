@@ -5,9 +5,10 @@ type TextInputProps = {
   width?: number;
   size: "L" | "S";
   value?: string;
-  label: string;
+  label?: string;
   caption?: string;
   disabled?: boolean;
+  icon?: string;
   validator?: (value: string) => boolean;
 };
 
@@ -30,6 +31,7 @@ export function TextInput({
   label,
   caption,
   disabled = false,
+  icon,
   validator,
 }: TextInputProps) {
   const [state, setState] = useState<TextInputState>(
@@ -62,7 +64,12 @@ export function TextInput({
   return (
     <Div $state={state}>
       <InputContainer $width={width} $size={size} $state={state}>
-        {inputValue && <StyledSpan>{label}</StyledSpan>}
+        {label && inputValue && <StyledSpan>{label}</StyledSpan>}
+        {icon && (
+          <IconWrapper>
+            <img src={`/src/assets/${icon}.svg`} />
+          </IconWrapper>
+        )}
         <Input
           placeholder={label}
           value={inputValue}
@@ -127,6 +134,13 @@ const StyledSpan = styled.span`
   width: 64px;
   color: ${({ theme }) => theme.color.neutralTextWeak};
   font: ${({ theme }) => theme.font.displayMedium12};
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
 `;
 
 const Input = styled.input<InputProps>`
