@@ -53,7 +53,8 @@ jobs:
         shell: bash
       # 환경별 yml 파일 생성(2) - dev
       - name: make application-dev.yml
-        if: contains(github.ref, 'dev')
+        if: contains(github.ref, 'dev') ||
+          contains(github.ref, 'be/infra/#9-cicd')
         run: |
           cd ./src/main/resources
           touch ./application-dev.yml
@@ -75,7 +76,8 @@ jobs:
         run: ./gradlew build -x test
       # docker build & push to develop
       - name: Docker build & push to dev
-        if: contains(github.ref, 'dev')
+        if: contains(github.ref, 'dev') ||
+          contains(github.ref, 'be/infra/#9-cicd')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_USERNAME }}/issue_tracker_app_dev .
@@ -121,6 +123,8 @@ jobs:
       # docker-compose-dev 실행
       - name: Deploy to dev
         uses: appleboy/ssh-action@master
+        if: contains(github.ref, 'dev') ||
+          contains(github.ref, 'be/infra/#9-cicd')
         with:
           host: ${{ secrets.HOST }} # EC2 인스턴스 퍼블릭 DNS
           username: ec2-user
@@ -135,6 +139,7 @@ jobs:
       # docker-compose-dev 실행
       - name: Deploy to release
         uses: appleboy/ssh-action@master
+        if: contains(github.ref, 'release')
         with:
           host: ${{ secrets.HOST }} # EC2 인스턴스 퍼블릭 DNS
           username: ec2-user
