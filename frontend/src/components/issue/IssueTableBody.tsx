@@ -1,12 +1,12 @@
 import { styled } from "styled-components";
-import { IssueType } from "../main/Main";
+import { IssueData } from "../main/Main";
 import { Issue } from "./Issue";
 
-type issuesType = {
-  issues: IssueType[];
+type TableBodyProps = {
+  issues: IssueData[];
 };
 
-export function IssueTableBody({ issues }: issuesType) {
+export function IssueTableBody({ issues }: TableBodyProps) {
   return (
     <Div>
       {issues.map((issue, index) => (

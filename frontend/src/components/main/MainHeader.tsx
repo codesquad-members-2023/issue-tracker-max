@@ -3,10 +3,10 @@ import { styled } from "styled-components";
 import { Button } from "../Button";
 import { TabButton } from "../TabButton";
 import { DropdownContainer } from "../dropdown/DropdownContainer";
-import { SingleFilter } from "./Main";
+import { SingleFilterData } from "./Main";
 
 type MainHeaderProps = {
-  singleFilters: SingleFilter[];
+  singleFilters: SingleFilterData[];
   milestoneCount: number;
   labelCount: number;
 };
@@ -25,7 +25,7 @@ export function MainHeader({
     },
   ]);
 
-  const setDropdownOptions = (singleFilters: SingleFilter[]) => {
+  const setDropdownOptions = (singleFilters: SingleFilterData[]) => {
     const options = singleFilters.map((filter) => {
       return {
         name: filter.name,

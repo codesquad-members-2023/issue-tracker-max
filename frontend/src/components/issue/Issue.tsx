@@ -1,8 +1,8 @@
 import { styled } from "styled-components";
 import { InformationTag } from "../InformationTag";
-import { IssueType } from "../main/Main";
+import { IssueData } from "../main/Main";
 
-export function Issue({ issue }: { issue: IssueType }) {
+export function Issue({ issue }: { issue: IssueData }) {
   const getTimeDifference = (dateObj: Date) => {
     const MS = 1000;
     const MINUTE = 60 * MS;

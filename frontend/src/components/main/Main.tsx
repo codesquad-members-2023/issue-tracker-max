@@ -4,55 +4,55 @@ import { IssueTableBody } from "../issue/IssueTableBody";
 import { IssueTableHeader } from "../issue/IssueTableHeader";
 import { MainHeader } from "./MainHeader";
 
-export type SingleFilter = {
+export type SingleFilterData = {
   id: number;
   name: string;
   conditions: String[];
   selected: boolean;
 };
 
-type IssueDataType = {
+type IssueDataData = {
   closedIssueCount: number;
   openedIssueCount: number;
-  issues: IssueType[];
+  issues: IssueData[];
   multiFilters: Object;
-  singleFilters: SingleFilter[];
+  singleFilters: SingleFilterData[];
 };
 
-type LabelType = {
+type LabelData = {
   name: string;
   background: string;
   color: string;
   description: string;
 };
 
-type MilestoneType = {
+type MilestoneData = {
   id: number;
   name: string;
 };
 
-type UserType = {
+type UserData = {
   id: number;
   name: string;
   avatarUrl: string;
 };
 
-export type IssueType = {
+export type IssueData = {
   id: number;
   title: string;
   status: boolean;
   createdAt: Date;
   modifiedAt: Date | null;
   statusModifiedAt: Date;
-  labels: LabelType[];
-  milestone: MilestoneType;
-  writer: UserType;
-  assignees: UserType[];
+  labels: LabelData[];
+  milestone: MilestoneData;
+  writer: UserData;
+  assignees: UserData;
   commentCount: number;
 };
 
 export function Main() {
-  const [issueData, setIssueData] = useState<IssueDataType>();
+  const [issueData, setIssueData] = useState<IssueDataData>();
 
   useEffect(() => {
     const fetchData = async () => {
