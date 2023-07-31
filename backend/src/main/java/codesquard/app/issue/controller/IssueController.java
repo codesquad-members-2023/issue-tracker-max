@@ -1,5 +1,7 @@
 package codesquard.app.issue.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +20,8 @@ public class IssueController {
 	private final IssueService issueService;
 
 	@PostMapping("api/issues")
-	public ResponseEntity<IssueRegisterResponse> register(@RequestBody IssueRegisterRequest issueRegisterRequest) {
+	public ResponseEntity<IssueRegisterResponse> register(
+		@Valid @RequestBody IssueRegisterRequest issueRegisterRequest) {
 		Long userId = 1L;
 		Long id = issueService.register(issueRegisterRequest, userId);
 		return ResponseEntity.status(HttpStatus.CREATED).body(new IssueRegisterResponse(true, id));
