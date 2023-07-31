@@ -101,7 +101,6 @@ const RealButton = styled.button<StyledButtonProps>`
     color: ${theme.color.neutral.text.default};
 
     svg {
-      fill: ${theme.color.neutral.text.default};
       stroke: ${theme.color.neutral.text.default};
     }
     `}
