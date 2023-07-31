@@ -1,14 +1,9 @@
-import axios from "axios";
-
-const instance = axios.create({
-  baseURL: "/api",
-  headers: { "Content-Type": "application/json" },
-});
+import { fetcher } from "./fetcher";
 
 export const postSignup = async (loginId: string, password: string) => {
-  await instance.post("/auth/signup", { loginId, password });
+  await fetcher.post("/auth/signup", { loginId, password });
 };
 
 export const postLogin = async (loginId: string, password: string) => {
-  return await instance.post("/auth/login", { loginId, password });
+  return await fetcher.post("/auth/login", { loginId, password });
 };
