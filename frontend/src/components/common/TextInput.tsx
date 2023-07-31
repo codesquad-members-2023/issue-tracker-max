@@ -101,20 +101,12 @@ const InputContainer = styled.fieldset<InputContainerProps>`
     `}
 `;
 
-type LabelProps = {
-  $size: 'tall' | 'short';
-};
-
-const Label = styled.label<LabelProps>`
+const Label = styled.label<{ $size: 'tall' | 'short' }>`
   width: ${({ $size }) => ($size === 'short' ? '64px' : 'auto')};
   ${({ theme }) => theme.font.display.medium[12]}
 `;
 
-type StyledTextInputProps = {
-  $focused?: boolean;
-};
-
-const StyledTextInput = styled.input<StyledTextInputProps>`
+const StyledTextInput = styled.input<{ $focused?: boolean }>`
   padding: 0;
   border: none;
   outline: none;

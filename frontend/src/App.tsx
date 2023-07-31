@@ -38,6 +38,11 @@ function App() {
           <ButtonSmall type="button" ghost flexible onClick={changeTheme}>
             Change Theme
           </ButtonSmall>
+          <ColorCodeInput label="배경색" />
+          <TabButton />
+          <InformationTag size="medium" iconName="alertCircle">
+            Label
+          </InformationTag>
           <TextInput
             size="tall"
             labelName="label"
@@ -55,11 +60,6 @@ function App() {
           />
         </Wrapper>
       </StyledApp>
-      <ColorCodeInput label="배경색" />
-      <TabButton />
-      <InformationTag size="medium" iconName="alertCircle">
-        Label
-      </InformationTag>
     </ThemeProvider>
   );
 }
