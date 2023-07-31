@@ -1,4 +1,4 @@
-import { css, useTheme } from '@emotion/react';
+import { useTheme } from '@emotion/react';
 import React, { useState } from 'react';
 import { DropDownList } from './DropDownList';
 
