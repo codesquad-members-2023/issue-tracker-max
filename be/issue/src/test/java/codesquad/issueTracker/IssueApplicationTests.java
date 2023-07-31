@@ -1,4 +1,4 @@
-package codesquad.issue;
+package codesquad.issueTracker;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
