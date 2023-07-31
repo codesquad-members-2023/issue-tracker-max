@@ -1,25 +1,7 @@
-import { useState } from "react";
+import { Children, ReactNode, useState } from "react";
 import { styled } from "styled-components";
-import { DropdownIndicator } from "./DropdownIndicator";
-import { DropdownPanel } from "./DropdownPanel";
 
-export function DropdownContainer({
-  name,
-  options,
-  showProfile = true,
-  alignment,
-  disabled = false
-}: {
-  name: string;
-  options: {
-    name: string;
-    profile?: string;
-    onClick: () => void;
-  }[];
-  showProfile?: boolean;
-  alignment: "Left" | "Right";
-  disabled?: boolean;
-}) {
+export function DropdownContainer({ children }: { children: ReactNode }) {
   const [isPanelOpened, setIsPanelOpened] = useState(false);
 
   const openPanel = () => {
@@ -32,17 +14,20 @@ export function DropdownContainer({
 
   return (
     <StyledContainer>
-      <DropdownIndicator value={name} onClick={openPanel} disabled={disabled} />
-      {isPanelOpened && (
-        <>
-          <div className="dropdown__dim" onClick={closePanel}></div>
-          <DropdownPanel
-            showProfile={showProfile}
-            alignment={alignment}
-            options={options}
-          />
-        </>
-      )}
+      {isPanelOpened && <div className="dropdown__dim" onClick={closePanel} />}
+      {Children.map(children, (child, index) => {
+        if (index === 0) {
+          return (
+            <div key={index} onClick={openPanel}>
+              {child}
+            </div>
+          );
+        }
+        if (isPanelOpened) {
+          return child;
+        }
+        return null;
+      })}
     </StyledContainer>
   );
 }

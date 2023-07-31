@@ -5,6 +5,9 @@ import { InformationTag } from "./components/InformationTag";
 import { TabButton } from "./components/TabButton";
 import { TextInput } from "./components/TextInput";
 import { DropdownContainer } from "./components/dropdown/DropdownContainer";
+import { DropdownIndicator } from "./components/dropdown/DropdownIndicator";
+import { DropdownOptionList } from "./components/dropdown/DropdownOptionList";
+import { DropdownPanel } from "./components/dropdown/DropdownPanel";
 import { designSystem } from "./constants/designSystem";
 
 export default function App() {
@@ -19,8 +22,8 @@ export default function App() {
       <TextInputTest />
       <ButtonTest onClick={onClick} />
       <TabButtonTest />
-      <DropdownTest />
       <InformationTagTest />
+      <DropdownTest />
     </ThemeProvider>
   );
 }
@@ -95,6 +98,7 @@ function DropdownTest() {
     {
       name: "옵션1 - 긴 이름이 들어가는 경우",
       profile: "",
+      selected: false,
       onClick: () => {
         console.log("옵션1 선택");
       },
@@ -102,6 +106,7 @@ function DropdownTest() {
     {
       name: "옵션2",
       profile: "",
+      selected: false,
       onClick: () => {
         console.log("옵션2 선택");
       },
@@ -109,6 +114,7 @@ function DropdownTest() {
     {
       name: "옵션3",
       profile: "",
+      selected: false,
       onClick: () => {
         console.log("옵션3 선택");
       },
@@ -116,6 +122,7 @@ function DropdownTest() {
     {
       name: "옵션4",
       profile: "",
+      selected: false,
       onClick: () => {
         console.log("옵션4 선택");
       },
@@ -123,6 +130,7 @@ function DropdownTest() {
     {
       name: "옵션5",
       profile: "",
+      selected: false,
       onClick: () => {
         console.log("옵션5 선택");
       },
@@ -130,50 +138,83 @@ function DropdownTest() {
   ];
   return (
     <>
-      <DropdownContainer name="assignee" options={options} alignment="Left" />
-      <DropdownContainer
-        name="milestones"
-        options={options}
-        alignment="Right"
-      />
+      <DropdownContainer>
+        <DropdownIndicator value="assignee" />
+        <DropdownPanel alignment="Left">
+          <DropdownOptionList options={options} />
+        </DropdownPanel>
+      </DropdownContainer>
+      <DropdownContainer>
+        <DropdownIndicator value="milestones" />
+        <DropdownPanel alignment="Right">
+          <DropdownOptionList options={options} />
+        </DropdownPanel>
+      </DropdownContainer>
+      <DropdownContainer>
+        <DropdownIndicator value="긴 내용이 들어가는 경우에 대한 테스트" />
+        <DropdownPanel alignment="Left">
+          <DropdownOptionList options={options} />
+        </DropdownPanel>
+      </DropdownContainer>
     </>
   );
 }
 
 function TabButtonTest() {
   const [tabs, setTabs] = useState([
-    { name: "milestone(3)", icon: "label" },
-    { name: "milestone(2)", icon: "milestone" },
+    { name: "milestone(3)", icon: "label", selected: false },
+    { name: "milestone(2)", icon: "milestone", selected: false },
   ]);
   const [issueStates, setIssueStates] = useState([
     { name: "열린 이슈 - 긴 문장의 경우", icon: "alertCircle", selected: true },
-    { name: "닫힌 이슈", icon: "archive" },
+    { name: "닫힌 이슈", icon: "archive", selected: false },
   ]);
 
   const onTabClick = (name: string) => {
-    setTabs((t) =>
-      t.map((tab) =>
-        tab.name === name
-          ? { ...tab, selected: true }
-          : { ...tab, selected: false },
-      ),
-    );
+    console.log(name);
+    setTabs((t) => t.map((tab) => ({ ...tab, selected: tab.name === name })));
   };
 
   const onIssueStateClick = (name: string) => {
+    console.log(name);
     setIssueStates((t) =>
-      t.map((issueState) =>
-        issueState.name === name
-          ? { ...issueState, selected: true }
-          : { ...issueState, selected: false },
-      ),
+      t.map((issueState) => ({
+        ...issueState,
+        selected: issueState.name === name,
+      })),
     );
   };
 
   return (
     <>
-      <TabButton tabs={tabs} onClick={onTabClick} />
-      <TabButton tabs={issueStates} onClick={onIssueStateClick} />
+      <TabButton onClick={onTabClick}>
+        {tabs.map(({ name, icon, selected }) => (
+          <Button
+            key={name}
+            icon={icon}
+            size="M"
+            buttonType="Ghost"
+            flexible="Flexible"
+            selected={selected}
+          >
+            {name}
+          </Button>
+        ))}
+      </TabButton>
+      <TabButton onClick={onIssueStateClick}>
+        {issueStates.map(({ name, icon, selected }) => (
+          <Button
+            key={name}
+            icon={icon}
+            size="M"
+            buttonType="Ghost"
+            flexible="Flexible"
+            selected={selected}
+          >
+            {name}
+          </Button>
+        ))}
+      </TabButton>
     </>
   );
 }
@@ -189,7 +230,13 @@ function InformationTagTest() {
         fill="#7F4BFF"
         fontColor="Light"
       />
-      <InformationTag value="작성자" toolTip=" " size="S" fill="#C5C" stroke="Default" />
+      <InformationTag
+        value="작성자"
+        toolTip=" "
+        size="S"
+        fill="#C5C"
+        stroke="Default"
+      />
       <InformationTag
         value="documentation"
         toolTip="문서 작업입니다."

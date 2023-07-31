@@ -1,32 +1,22 @@
+import { Children, ReactElement, cloneElement } from "react";
 import { styled } from "styled-components";
-import { Button } from "./Button";
 
 export function TabButton({
-  tabs,
+  children,
   onClick,
 }: {
-  tabs: {
-    name: string;
-    icon?: string;
-    selected?: boolean;
-  }[];
+  children: ReactElement[];
   onClick: (name: string) => void;
 }) {
   return (
     <StyledTabButton>
-      {tabs.map(({ name, icon, selected }) => (
-        <Button
-          key={name}
-          icon={icon}
-          size="M"
-          buttonType="Ghost"
-          flexible="Flexible"
-          selected={selected}
-          onClick={() => onClick(name)}
-        >
-          {name}
-        </Button>
-      ))}
+      {Children.map(children, (child) =>
+        cloneElement(child, {
+          onClick: () => {
+            onClick(child.props.children);
+          },
+        }),
+      )}
     </StyledTabButton>
   );
 }
