@@ -5,9 +5,6 @@ import { InformationTag } from "./components/InformationTag";
 import { TabButton } from "./components/TabButton";
 import { TextInput } from "./components/TextInput";
 import { DropdownContainer } from "./components/dropdown/DropdownContainer";
-import { DropdownIndicator } from "./components/dropdown/DropdownIndicator";
-import { DropdownOptionList } from "./components/dropdown/DropdownOptionList";
-import { DropdownPanel } from "./components/dropdown/DropdownPanel";
 import { designSystem } from "./constants/designSystem";
 
 export default function App() {
@@ -94,13 +91,18 @@ function TextInputTest() {
 }
 
 function DropdownTest() {
-  const options = [
+  const [options, setOptions] = useState([
     {
       name: "옵션1 - 긴 이름이 들어가는 경우",
       profile: "",
       selected: false,
       onClick: () => {
-        console.log("옵션1 선택");
+        setOptions((o) =>
+          o.map((option) => ({
+            ...option,
+            selected: option.name === "옵션1 - 긴 이름이 들어가는 경우",
+          })),
+        );
       },
     },
     {
@@ -108,7 +110,9 @@ function DropdownTest() {
       profile: "",
       selected: false,
       onClick: () => {
-        console.log("옵션2 선택");
+        setOptions((o) =>
+          o.map((option) => ({ ...option, selected: option.name === "옵션2" })),
+        );
       },
     },
     {
@@ -116,7 +120,9 @@ function DropdownTest() {
       profile: "",
       selected: false,
       onClick: () => {
-        console.log("옵션3 선택");
+        setOptions((o) =>
+          o.map((option) => ({ ...option, selected: option.name === "옵션3" })),
+        );
       },
     },
     {
@@ -124,7 +130,9 @@ function DropdownTest() {
       profile: "",
       selected: false,
       onClick: () => {
-        console.log("옵션4 선택");
+        setOptions((o) =>
+          o.map((option) => ({ ...option, selected: option.name === "옵션4" })),
+        );
       },
     },
     {
@@ -132,30 +140,26 @@ function DropdownTest() {
       profile: "",
       selected: false,
       onClick: () => {
-        console.log("옵션5 선택");
+        setOptions((o) =>
+          o.map((option) => ({ ...option, selected: option.name === "옵션5" })),
+        );
       },
     },
-  ];
+  ]);
   return (
     <>
-      <DropdownContainer>
-        <DropdownIndicator value="assignee" />
-        <DropdownPanel alignment="Left">
-          <DropdownOptionList options={options} />
-        </DropdownPanel>
-      </DropdownContainer>
-      <DropdownContainer>
-        <DropdownIndicator value="milestones" />
-        <DropdownPanel alignment="Right">
-          <DropdownOptionList options={options} />
-        </DropdownPanel>
-      </DropdownContainer>
-      <DropdownContainer>
-        <DropdownIndicator value="긴 내용이 들어가는 경우에 대한 테스트" />
-        <DropdownPanel alignment="Left">
-          <DropdownOptionList options={options} />
-        </DropdownPanel>
-      </DropdownContainer>
+      <DropdownContainer
+        name="assignees"
+        optionTitle="assignees filter"
+        options={options}
+        alignment="Left"
+      />
+      <DropdownContainer
+        name="milestones"
+        optionTitle="milestones filter"
+        options={options}
+        alignment="Left"
+      />
     </>
   );
 }

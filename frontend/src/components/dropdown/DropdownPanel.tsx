@@ -1,24 +1,38 @@
-import { ReactElement, cloneElement, useState } from "react";
 import { styled } from "styled-components";
+import { DropdownOption } from "./DropdownOption";
 
 export function DropdownPanel({
+  showProfile = true,
   alignment,
-  children,
+  optionTitle,
+  options,
 }: {
+  showProfile?: boolean;
   alignment: "Left" | "Right";
-  children: ReactElement;
+  optionTitle: string;
+  options: {
+    name: string;
+    profile?: string;
+    selected: boolean;
+    onClick: () => void;
+  }[];
 }) {
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(-1);
-
-  const onOptionClick = (index: number, callback: () => void) => {
-    callback();
-    setSelectedOptionIndex(index);
-  };
-
   return (
     <StyledPanel $alignment={alignment}>
-      <div className="dropdown__header">헤더</div>
-      {cloneElement(children, { onOptionClick, selectedOptionIndex })}
+      <div className="dropdown__header">{optionTitle}</div>
+      <ul>
+        {options.map(({ name, profile, selected, onClick }, index) => (
+          <DropdownOption
+            key={`dropdown-option-${index}`}
+            showProfile={showProfile}
+            profile={profile}
+            selected={selected}
+            onClick={onClick}
+          >
+            {name}
+          </DropdownOption>
+        ))}
+      </ul>
     </StyledPanel>
   );
 }
