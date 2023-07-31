@@ -4,10 +4,11 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDateTime;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.comment.entity.Comment;
@@ -17,7 +18,6 @@ import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.user.entity.User;
 import codesquard.app.user.repository.UserRepository;
 
-@Sql({"/schema.sql"})
 class CommentRepositoryTest extends IntegrationTestSupport {
 
 	@Autowired
@@ -28,6 +28,19 @@ class CommentRepositoryTest extends IntegrationTestSupport {
 
 	@Autowired
 	private IssueRepository issueRepository;
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
+	@BeforeEach
+	void setUp() {
+		jdbcTemplate.update("SET FOREIGN_KEY_CHECKS = 0");
+		jdbcTemplate.update("TRUNCATE TABLE comment");
+		jdbcTemplate.update("TRUNCATE TABLE issue");
+		jdbcTemplate.update("TRUNCATE TABLE milestone");
+		jdbcTemplate.update("TRUNCATE TABLE user");
+		jdbcTemplate.update("SET FOREIGN_KEY_CHECKS = 1");
+	}
 
 	@DisplayName("새로운 댓글을 등록한다.")
 	@Test
