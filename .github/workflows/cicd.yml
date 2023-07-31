@@ -127,8 +127,8 @@ jobs:
     environment: dev
     steps:
       - uses: actions/checkout@master
-      # .nginx-dev.conf 파일을 EC2에 업로드
-      - name: copy .nginx-dev.conf file via ssh password
+      # nginx-dev.conf 파일을 EC2에 업로드
+      - name: copy nginx-dev.conf file via ssh password
         uses: appleboy/scp-action@master
         if: contains(github.ref, 'dev') ||
           contains(github.ref, 'be/infra/#9-cicd')
@@ -137,10 +137,10 @@ jobs:
           username: ec2-user
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
-          source: ".nginx-dev.conf"
+          source: "nginx-dev.conf"
           target: "/home/ec2-user/"
-      # .nginx-release.conf 파일을 EC2에 업로드
-      - name: copy .nginx-release.conf file via ssh password
+      # nginx-release.conf 파일을 EC2에 업로드
+      - name: copy nginx-release.conf file via ssh password
         uses: appleboy/scp-action@master
         if: contains(github.ref, 'release')
         with:
@@ -148,7 +148,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
-          source: ".nginx-release.conf"
+          source: "nginx-release.conf"
           target: "/home/ec2-user/"
       # docker-compose-dev.yml 파일을 EC2에 업로드
       - name: copy docker-compose-dev file via ssh password
