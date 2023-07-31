@@ -1,16 +1,16 @@
 version: "3.8"
 services:
   app:
-    container_name: issue_tracker_app
-    image: yhkim951107/issue_tracker_app:latest
+    container_name: issue_tracker_release_app
+    image: yhkim951107/issue_tracker_app_release:latest
     ports:
-      - 8080:8080
+      - 8081:8081
     volumes:
-      - issue_tracker_app:/app
+      - issue_tracker_release_app:/app
 #  web:
 #    container_name: issue_tracker_web
 #    image: yhkim951107/issue_tracker_web:latest
 #    ports:
 #      - 3000:3000
 volumes:
-  issue_tracker_app:
+  issue_tracker_release_app:
