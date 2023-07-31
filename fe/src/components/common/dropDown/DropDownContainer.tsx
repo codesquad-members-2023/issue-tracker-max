@@ -2,64 +2,92 @@ import { css, useTheme } from '@emotion/react';
 import { useState } from 'react';
 import { DropDownPanel } from './DropDownPanel';
 import { DropDownIndicator } from './DropDownIndicator';
-import {
-  ContributorType,
-  DropDownIndicatorName,
-  DropDownIndicatorNameType,
-  DropDownOptionsType,
-  IssueFilterType,
-  IssueStateType,
-  LabelType,
-  MilestoneType,
-  TextColorType,
-} from './types';
+// import {
+//   ContributorType,
+//   DropDownIndicatorName,
+//   DropDownIndicatorNameType,
+//   DropDownOptionsType,
+//   IssueFilterType,
+//   IssueStateType,
+//   LabelType,
+//   MilestoneType,
+//   TextColorType,
+// } from './types';
 
-type Props =
-  // | {
-  // name: DropDownIndicatorNameType;
-  //     options: DropDownOptionsType;
-  //     alignment: 'left' | 'right';
-  //   }
-  | {
-      name: DropDownIndicatorName.issueFilter;
-      options: string[];
-      alignment: 'left';
-    }
-  | {
-      name: DropDownIndicatorName.assignee;
-      options: ContributorType[];
-      alignment: 'right';
-    }
-  | {
-      name: DropDownIndicatorName.author;
-      options: ContributorType[];
-      alignment: 'right';
-    }
-  | {
-      name: DropDownIndicatorName.label;
-      options: LabelType[];
-      alignment: 'right';
-    }
-  | {
-      name: DropDownIndicatorName.milestone;
-      options: MilestoneType[];
-      alignment: 'right';
-    }
-  | {
-      name: DropDownIndicatorName.issueState;
-      options: IssueStateType[];
-      alignment: 'right';
-    }
-  | {
-      name: DropDownIndicatorName.textColor;
-      options: TextColorType[];
-      alignment: 'left';
-    };
+type DropDownItem = {
+  id?: string;
+  image?: string;
+  name?: string;
+  backgroundColor?: string;
+  filterId?: number;
+  textColor?: string;
+  progress?: number;
+  milestoneId?: number;
+};
+type Props = {
+  // name: string;
+  options: DropDownItem[];
+  alignment: string;
+  indicator: string;
+  panelHeader: string;
+};
+// type Props =
+//   | {
+//       name: DropDownIndicatorName.issueFilter;
+//       options: string[];
+//       alignment: 'left';
+//       panelHeader: string;
+//       indicator: string;
+//     }
+//   | {
+//       name: DropDownIndicatorName.assignee;
+//       options: ContributorType[];
+//       alignment: 'right';
+//       panelHeader: string;
+//       indicator: string;
+//     }
+//   | {
+//       name: DropDownIndicatorName.author;
+//       options: ContributorType[];
+//       alignment: 'right';
+//       panelHeader: string;
+//       indicator: string;
+//     }
+//   | {
+//       name: DropDownIndicatorName.label;
+//       options: LabelType[];
+//       alignment: 'right';
+//       panelHeader: string;
+//       indicator: string;
+//     }
+//   | {
+//       name: DropDownIndicatorName.milestone;
+//       options: MilestoneType[];
+//       alignment: 'right';
+//       panelHeader: string;
+//       indicator: string;
+//     }
+//   | {
+//       name: DropDownIndicatorName.issueState;
+//       options: IssueStateType[];
+//       alignment: 'right';
+//       panelHeader: string;
+//       indicator: string;
+//     }
+//   | {
+//       name: DropDownIndicatorName.textColor;
+//       options: TextColorType[];
+//       alignment: 'left';
+//       panelHeader: string;
+//       indicator: string;
+//     };
 
 export const DropDownContainer: React.FC<Props> = ({
-  name,
+  // name,
   options,
   alignment,
+  indicator,
+  panelHeader,
 }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
@@ -73,11 +101,16 @@ export const DropDownContainer: React.FC<Props> = ({
 
   return (
     <div css={container}>
-      <DropDownIndicator onPanelOpen={onPanelOpen} name={name} />
+      <DropDownIndicator onPanelOpen={onPanelOpen} indicator={indicator} />
       {isPanelOpen && (
         <>
           <div css={dim} onClick={onPanelClose}></div>
-          <DropDownPanel name={name} options={options} alignment={alignment} />
+          <DropDownPanel
+            // name={name}
+            panelHeader={panelHeader}
+            alignment={alignment}
+            options={options}
+          />
         </>
       )}
     </div>

@@ -6,8 +6,8 @@ import {
   contributors,
   milestones,
   labels,
-  DropDownOptionsType,
-  DropDownIndicatorName,
+  // DropDownOptionsType,
+  // DropDownIndicatorName,
 } from '@components/common/dropDown/types';
 import { useState } from 'react';
 
@@ -31,9 +31,35 @@ export const IssueListPage: React.FC = ({}) => {
   return (
     <>
       <DropDownContainer
-        name={DropDownIndicatorName.issueFilter}
         options={issueFilterList}
+        indicator="필터"
+        panelHeader="이슈 필터"
         alignment="left"
+      />
+
+      <DropDownContainer
+        options={contributors}
+        indicator="작성자"
+        panelHeader="작성자 필터"
+        alignment="right"
+      />
+      <DropDownContainer
+        options={contributors}
+        indicator="담당자"
+        panelHeader="담당자 필터"
+        alignment="right"
+      />
+      <DropDownContainer
+        options={labels}
+        indicator="레이블"
+        panelHeader="레이블 필터"
+        alignment="right"
+      />
+      <DropDownContainer
+        options={milestones}
+        indicator="마일스톤"
+        panelHeader="마일스톤 필터"
+        alignment="right"
       />
       {/* <DropDownContainer
         name="assignee"
