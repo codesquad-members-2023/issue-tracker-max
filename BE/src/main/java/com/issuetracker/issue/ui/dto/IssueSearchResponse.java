@@ -45,4 +45,8 @@ public class IssueSearchResponse {
 			.map(IssueSearchResponse::from)
 			.collect(Collectors.toUnmodifiableList());
 	}
+
+	public boolean getIsOpen() {
+		return isOpen;
+	}
 }
