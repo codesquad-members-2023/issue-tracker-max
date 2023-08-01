@@ -3,10 +3,11 @@ package codesquard.app.comment.controller.request;
 import javax.validation.constraints.NotBlank;
 
 import codesquard.app.comment.service.request.CommentModifyServiceRequest;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CommentModifyRequest {
 

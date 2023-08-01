@@ -4,10 +4,11 @@ import java.time.LocalDateTime;
 
 import codesquard.app.comment.entity.Comment;
 import codesquard.app.errors.exception.CommentMaxLengthExceededException;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CommentSaveServiceRequest {
 
