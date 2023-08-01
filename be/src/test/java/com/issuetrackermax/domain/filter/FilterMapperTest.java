@@ -205,6 +205,83 @@ class FilterMapperTest extends IntegrationTestSupport {
 			"label_title1,label_title2", "1,2", "June,Movie", "milestone_title");
 	}
 
+	@DisplayName("레이블의 id가 1인필터링된 결과를 FilterResultVO로 반환한다.")
+	@Test
+	void getFilteredListWithLabelFirstId() {
+		// given
+		Map<String, Object> issueIsOpen = Map.of("label", 1);
+		// when
+		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
+		// then
+		assertExtractingWithParameter(filteredList, "issue_title", "Movie", "June", true, "1,2",
+			"label_title1,label_title2", "1,2", "June,Movie", "milestone_title");
+	}
+
+	@DisplayName("레이블의 id가 2인필터링된 결과를 FilterResultVO로 반환한다.")
+	@Test
+	void getFilteredListWithLabelSecondId() {
+		// given
+		Map<String, Object> issueIsOpen = Map.of("label", 2, "issueIsOpen", 0);
+		// when
+		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
+		// then
+		assertExtractingWithParameter(filteredList, "issue_title2", "Movie", "June", false, "2",
+			"label_title2", "1", "June", "milestone_title");
+	}
+
+	@DisplayName("마일스톤 id가 1이며 닫힌 이슈를 필터링된 결과를 FilterResultVO로 반환한다.")
+	@Test
+	void getFilteredListWithMileStoneFirstIdWithClosedIssue() {
+		// given
+		Map<String, Object> issueIsOpen = Map.of("milestone", 1, "issueIsOpen", 0);
+		// when
+		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
+		// then
+
+		assertExtractingWithParameter(filteredList, "issue_title2", "Movie", "June", false, "2",
+			"label_title2", "1", "June", "milestone_title");
+	}
+
+	@DisplayName("마일스톤 id가 1이며 열린 이슈를 필터링된 결과를 FilterResultVO로 반환한다.")
+	@Test
+	void getFilteredListWithMileStoneFirstIdWithOpenIssue() {
+		// given
+		Map<String, Object> issueIsOpen = Map.of("milestone", 1, "issueIsOpen", 1);
+		// when
+		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
+		// then
+
+		assertExtractingWithParameter(filteredList, "issue_title", "Movie", "June", true, "1,2",
+			"label_title1,label_title2", "1,2", "June,Movie", "milestone_title");
+	}
+
+	@DisplayName("작성자가 June이며 열린 이슈를 필터링된 결과를 FilterResultVO로 반환한다.")
+	@Test
+	void getFilteredListWithWriterJuneWithOpenIssue() {
+		// given
+		Issue issue3 = Issue.builder()
+			.isOpen(true)
+			.title("issue_title3")
+			.milestoneId(1L)
+			.writerId(1L)
+			.build();
+		Long issueId2 = issueRepository.save(issue3);
+		Map<String, Object> issueIsOpen = Map.of("writer", 1, "issueIsOpen", 1);
+		// when
+		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
+		// then
+
+		assertThat(filteredList).hasSize(2)
+			.extracting("title", "editor", "writer", "isOpen", "labelIds", "labelTitles",
+				"assigneeIds", "assigneeNames", "milestoneTitle")
+			.containsExactlyInAnyOrder(
+				tuple("issue_title", "Movie", "June", true, "1,2",
+					"label_title1,label_title2", "1,2", "June,Movie", "milestone_title"),
+				tuple("issue_title3", null, "June", true, null,
+					null, null, null, "milestone_title")
+			);
+	}
+
 	private void assertExtractingWithParameter(List<FilterResultVO> filteredList, String title, String editor,
 		String writer, Boolean isOpen, String labelIds, String labelTitles,
 		String assigneeIds, String assigneeNames, String milestoneTitle) {
@@ -215,6 +292,7 @@ class FilterMapperTest extends IntegrationTestSupport {
 				tuple(title, editor, writer, isOpen, labelIds, labelTitles, assigneeIds,
 					assigneeNames, milestoneTitle)
 			);
+
 	}
 
 }

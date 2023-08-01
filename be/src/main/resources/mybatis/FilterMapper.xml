@@ -71,7 +71,7 @@
                 SELECT 1
                 FROM issue_label il2
                 WHERE il2.issue_id = i.id
-                AND il2.label_id = {#label}
+                AND il2.label_id = #{label}
                 )
 
             </when>
@@ -88,6 +88,7 @@
                 )
             </when>
         </choose>
-        ;
+        GROUP BY
+        i.id, i.is_open, i.title, latest_editor.editor, latest_editor.issue_id, m.nick_name, ms.title;
     </select>
 </mapper>
