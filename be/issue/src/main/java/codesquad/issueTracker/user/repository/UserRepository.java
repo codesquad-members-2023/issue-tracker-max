@@ -36,10 +36,10 @@ public class UserRepository {
         return keyHolder.getKey().longValue();
     }
 
-    public Optional<User> findById(Long id) {
-        String sql = "SELECT id,token_id,email,password,profile_img,name,login_type FROM USERS WHERE id = :id";
+    public Optional<User> findByEmail(String email) {
+        String sql = "SELECT id,token_id,email,password,profile_img,name,login_type FROM USERS WHERE email = :email";
         return Optional.ofNullable(
-                DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), userRowMapper)));
+                DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("email", email), userRowMapper)));
     }
 
     private final RowMapper<User> userRowMapper = (((rs, rowNum) -> User.builder()
