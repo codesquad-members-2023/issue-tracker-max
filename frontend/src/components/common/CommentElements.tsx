@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import InformationTag from './InformationTag';
 import ButtonSmall from './button/ButtonSmall';
@@ -7,6 +7,7 @@ import DefaultUserImg from '../../asset/icons/userImageLarge.svg';
 type CommentProps = {
   userInfo: userInfoType;
   timeStamp: string;
+  comment: string;
 };
 
 type userInfoType = {
@@ -16,8 +17,30 @@ type userInfoType = {
 
 export default function Comment(props: CommentProps) {
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [textValue, setTextValue] = useState<string>(props.comment);
+
+  useEffect(() => {
+    if (isEdit && !isTyping) {
+      setIsTyping(true);
+      setTimeout(() => {
+        setIsTyping(false);
+      }, 2000);
+    }
+  }, [textValue]);
 
   const { userInfo, timeStamp } = props;
+
+  const handleEdit = () => {
+    isEdit ? setIsEdit(false) : setIsEdit(true);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (isEdit) {
+      setTextValue(e.target.value);
+    }
+    return;
+  };
 
   return (
     <Wrapper>
@@ -33,7 +56,14 @@ export default function Comment(props: CommentProps) {
         </InfoLeft>
         <InfoRight>
           <InformationTag size="small">작성자</InformationTag>
-          <ButtonSmall type="button" ghost flexible iconName="edit">
+          <ButtonSmall
+            type="button"
+            ghost
+            flexible
+            iconName="edit"
+            onClick={() => {
+              handleEdit();
+            }}>
             편집
           </ButtonSmall>
           <ButtonSmall type="button" ghost flexible iconName="smile">
@@ -42,22 +72,30 @@ export default function Comment(props: CommentProps) {
         </InfoRight>
       </Header>
       <Body>
-        <TextArea></TextArea>
+        {!isEdit && <TextBox>{textValue}</TextBox>}
+        {isEdit && (
+          <TextArea
+            $isEdit={isEdit}
+            value={textValue}
+            onChange={handleChange}></TextArea>
+        )}
       </Body>
       {isEdit && (
-        <Footer>
+        <Bottom>
+          {isTyping && (
+            <TextCounter>띄어쓰기 포함 {textValue.length}자</TextCounter>
+          )}
           <ButtonSmall type="button" ghost flexible iconName="paperClip">
             파일 첨부하기
           </ButtonSmall>
-        </Footer>
+        </Bottom>
       )}
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
-  width: 640px;
-  min-height: 184px;
+  min-width: 640px;
   display: flex;
   flex-direction: column;
   border: ${({ theme }) => theme.objectStyles.border.default};
@@ -83,7 +121,11 @@ const InfoLeft = styled.div`
   gap: 8px;
 `;
 
-const UserImg = styled.img``;
+const UserImg = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: ${({ theme }) => theme.objectStyles.radius.half};
+`;
 const UserName = styled.span`
   color: ${({ theme }) => theme.color.neutral.text.default};
   ${({ theme }) => theme.font.display.medium[16]}
@@ -98,6 +140,47 @@ const InfoRight = styled.div`
   align-items: center;
   gap: 16px;
 `;
-const Body = styled.div``;
-const TextArea = styled.textarea``;
-const Footer = styled.footer``;
+const Body = styled.div`
+  padding: 16px 24px 24px 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+`;
+const TextBox = styled.div`
+  color: ${({ theme }) => theme.color.neutral.text.default};
+  ${({ theme }) => theme.font.display.medium[16]}
+`;
+
+const TextArea = styled.textarea<{ $isEdit: boolean }>`
+  margin-bottom: 16px;
+  border: none;
+  outline: none;
+  caret-color: ${({ theme }) => theme.color.palette.blue};
+  background: ${({ theme, $isEdit }) =>
+    $isEdit
+      ? theme.color.neutral.surface.strong
+      : theme.color.neutral.surface.bold};
+  color: ${({ theme, $isEdit }) =>
+    $isEdit ? theme.color.neutral.text.strong : theme.color.neutral.text.weak};
+  ${({ theme }) => theme.font.display.medium[16]};
+  resize: none;
+  flex: 1;
+`;
+
+const Bottom = styled.footer`
+  padding: 0 16px;
+  height: 52px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-top: ${({ theme }) => theme.objectStyles.border.dash};
+  ${({ theme }) => theme.color.neutral.border.default};
+`;
+
+const TextCounter = styled.span`
+  color: ${({ theme }) => theme.color.neutral.text.weak};
+  ${({ theme }) => theme.font.display.medium[12]};
+  position: absolute;
+  top: -32px;
+  right: 30px;
+`;
