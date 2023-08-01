@@ -1,9 +1,11 @@
 package codesquard.app.milestone.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -45,8 +47,19 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public Long modify(Milestone milestone) {
-		return null;
+	public void updateBy(Long milestoneId, Milestone milestone) {
+		String sql = "UPDATE `milestone` " +
+			"SET `name` = :name, `deadline` = :deadline, `description` = :description, `modified_at` = :modifiedAt " +
+			"WHERE id = :id";
+
+		SqlParameterSource param = new MapSqlParameterSource()
+			.addValue("name", milestone.getName())
+			.addValue("deadline", milestone.getDeadline())
+			.addValue("description", milestone.getDescription())
+			.addValue("modifiedAt", LocalDateTime.now())
+			.addValue("id", milestoneId);
+
+		template.update(sql, param);
 	}
 
 	@Override

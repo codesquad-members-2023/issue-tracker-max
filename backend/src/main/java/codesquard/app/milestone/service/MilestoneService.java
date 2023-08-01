@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
+import codesquard.app.milestone.dto.request.MilestoneUpdateRequest;
 import codesquard.app.milestone.entity.Milestone;
 import codesquard.app.milestone.repository.MilestoneRepository;
 
@@ -19,5 +20,10 @@ public class MilestoneService {
 	public Long saveMilestone(MilestoneSaveRequest milestoneSaveRequest) {
 		Milestone milestone = MilestoneSaveRequest.toEntity(milestoneSaveRequest);
 		return milestoneRepository.save(milestone).orElseThrow(() -> new RuntimeException("임시"));
+	}
+
+	@Transactional
+	public void updateMilestone(Long milestoneId, MilestoneUpdateRequest milestoneUpdateRequest) {
+		milestoneRepository.updateBy(milestoneId, MilestoneUpdateRequest.toEntity(milestoneUpdateRequest));
 	}
 }
