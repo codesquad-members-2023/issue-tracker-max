@@ -8,9 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
-import codesquard.app.ControllerTestSupport;
+import codesquard.app.label_milestone.ControllerTestSupport;
 import codesquard.app.label.dto.LabelSavedRequest;
-import codesquard.app.label.entity.LabelColor;
 
 class LabelControllerTest extends ControllerTestSupport {
 

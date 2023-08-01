@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
-import codesquard.app.ControllerTestSupport;
+import codesquard.app.label_milestone.ControllerTestSupport;
 import codesquard.app.milestone.dto.request.MilestoneSavedRequest;
 
 class MilestoneControllerTest extends ControllerTestSupport {
