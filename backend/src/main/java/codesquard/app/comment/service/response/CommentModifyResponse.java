@@ -1,13 +1,22 @@
 package codesquard.app.comment.service.response;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class CommentModifyResponse {
 
-	private final boolean success;
-	private final Long commentId;
+	private boolean success;
+	private Long commentId;
 
-	public CommentModifyResponse(boolean success, Long commentId) {
-		this.success = success;
-		this.commentId = commentId;
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public Long getCommentId() {
+		return commentId;
 	}
 
 }
