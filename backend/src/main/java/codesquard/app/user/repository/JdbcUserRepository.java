@@ -21,7 +21,7 @@ public class JdbcUserRepository implements UserRepository {
 		this.template = template;
 		this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
 			.withTableName("user")
-			.usingColumns("user_id", "email", "password", "avatar_url")
+			.usingColumns("login_id", "email", "password", "avatar_url")
 			.usingGeneratedKeyColumns("id");
 	}
 

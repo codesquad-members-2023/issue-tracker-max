@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.issue.dto.request.IssueRegisterRequest;
+import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.repository.IssueRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -16,10 +16,10 @@ public class IssueService {
 	private final IssueRepository issueRepository;
 
 	@Transactional
-	public Long register(IssueRegisterRequest issueRegisterRequest, Long userId) {
-		Long id = issueRepository.save(issueRegisterRequest.toEntity(userId));
-		registerIssueLabel(id, issueRegisterRequest.getLabels());
-		registerIssueAssignee(id, issueRegisterRequest.getAssignees());
+	public Long save(IssueSaveRequest issueSaveRequest, Long userId) {
+		Long id = issueRepository.save(issueSaveRequest.toEntity(userId));
+		registerIssueLabel(id, issueSaveRequest.getLabels());
+		registerIssueAssignee(id, issueSaveRequest.getAssignees());
 		return id;
 	}
 

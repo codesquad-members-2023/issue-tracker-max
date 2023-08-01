@@ -1,14 +1,12 @@
 package codesquard.app.issue.dto.response;
 
-public class IssueRegisterResponse {
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class IssueSaveResponse {
 
 	private final boolean success;
 	private final Long id;
-
-	public IssueRegisterResponse(boolean success, Long id) {
-		this.success = success;
-		this.id = id;
-	}
 
 	public boolean isSuccess() {
 		return success;

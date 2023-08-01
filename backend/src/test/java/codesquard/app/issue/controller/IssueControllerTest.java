@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import codesquard.app.ControllerTestSupport;
-import codesquard.app.issue.dto.request.IssueRegisterRequest;
+import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.fixture.FixtureFactory;
 
 class IssueControllerTest extends ControllerTestSupport {
@@ -18,11 +18,11 @@ class IssueControllerTest extends ControllerTestSupport {
 	@Test
 	void create() throws Exception {
 		// given
-		IssueRegisterRequest issueRegisterRequest = FixtureFactory.createIssueRegisterRequest("Controller");
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Controller", 1L);
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
-				.content(objectMapper.writeValueAsString(issueRegisterRequest))
+				.content(objectMapper.writeValueAsString(issueSaveRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.success").value(true))
@@ -34,7 +34,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void create_InputZeroTitle_Response400() throws Exception {
 		// given
 		String zeroTitle = "";
-		IssueRegisterRequest zero = FixtureFactory.createIssueRegisterRequest(zeroTitle);
+		IssueSaveRequest zero = FixtureFactory.createIssueRegisterRequest(zeroTitle, 1L);
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
@@ -50,11 +50,26 @@ class IssueControllerTest extends ControllerTestSupport {
 		// given
 		String title51 = "123456789101112131415161718192021222324252627282930";
 
-		IssueRegisterRequest over50 = FixtureFactory.createIssueRegisterRequest(title51);
+		IssueSaveRequest over50 = FixtureFactory.createIssueRegisterRequest(title51, 1L);
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
 				.content(objectMapper.writeValueAsString(over50))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isBadRequest())
+			.andDo(print());
+	}
+
+	@DisplayName("제목이 공백이라면 400 에러를 반환한다.")
+	@Test
+	void create_InputBlankTitle_Response400() throws Exception {
+		// given
+		String blankTitle = " ";
+		IssueSaveRequest blank = FixtureFactory.createIssueRegisterRequest(blankTitle, 1L);
+
+		// when & then
+		mockMvc.perform(post("/api/issues")
+				.content(objectMapper.writeValueAsString(blank))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isBadRequest())
 			.andDo(print());

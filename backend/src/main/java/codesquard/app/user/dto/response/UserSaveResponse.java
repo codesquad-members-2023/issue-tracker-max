@@ -1,14 +1,12 @@
 package codesquard.app.user.dto.response;
 
-public class UserSignUpResponse {
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class UserSaveResponse {
 
 	private final boolean success;
 	private final Long id;
-
-	public UserSignUpResponse(boolean success, Long id) {
-		this.success = success;
-		this.id = id;
-	}
 
 	public boolean isSuccess() {
 		return success;

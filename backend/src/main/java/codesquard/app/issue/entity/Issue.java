@@ -2,6 +2,9 @@ package codesquard.app.issue.entity;
 
 import java.time.LocalDateTime;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class Issue {
 
 	private Long id;
@@ -9,17 +12,10 @@ public class Issue {
 	private final Long userId;
 	private final String title;
 	private final String content;
-	private Boolean status;
+	private IssueStatus status;
 	private Boolean isDeleted;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
-
-	public Issue(Long milestoneId, Long userId, String title, String content) {
-		this.milestoneId = milestoneId;
-		this.userId = userId;
-		this.title = title;
-		this.content = content;
-	}
 
 	public Long getMilestoneId() {
 		return milestoneId;

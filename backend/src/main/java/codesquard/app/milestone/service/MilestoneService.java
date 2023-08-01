@@ -2,7 +2,7 @@ package codesquard.app.milestone.service;
 
 import org.springframework.stereotype.Service;
 
-import codesquard.app.milestone.dto.request.MilestoneCreateRequest;
+import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
 import codesquard.app.milestone.repository.MilestoneRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 public class MilestoneService {
 	private final MilestoneRepository milestoneRepository;
 
-	public Long create(MilestoneCreateRequest milestoneCreateRequest) {
-		return milestoneRepository.save(milestoneCreateRequest.toEntity());
+	public Long save(MilestoneSaveRequest milestoneSaveRequest) {
+		return milestoneRepository.save(milestoneSaveRequest.toEntity());
 	}
 }

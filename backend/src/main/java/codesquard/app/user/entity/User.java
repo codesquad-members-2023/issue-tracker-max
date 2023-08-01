@@ -1,22 +1,18 @@
 package codesquard.app.user.entity;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class User {
 
 	private Long id;
-	private final String userId;
+	private final String loginId;
 	private final String email;
 	private final String password;
 	private final String avatarUrl;
 
-	public User(String userId, String email, String password, String avatarUrl) {
-		this.userId = userId;
-		this.email = email;
-		this.password = password;
-		this.avatarUrl = avatarUrl;
-	}
-
-	public String getUserId() {
-		return userId;
+	public String getLoginId() {
+		return loginId;
 	}
 
 	public String getEmail() {

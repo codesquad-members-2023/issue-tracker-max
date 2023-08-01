@@ -9,15 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquard.app.issue.controller.IssueController;
 import codesquard.app.issue.service.IssueService;
-import codesquard.app.milestone.controller.MilestoneRestController;
-import codesquard.app.milestone.service.MilestoneService;
-import codesquard.app.user.controller.UserRestController;
-import codesquard.app.user.service.UserService;
 
 @WebMvcTest(controllers = {
-	IssueController.class,
-	UserRestController.class,
-	MilestoneRestController.class
+	IssueController.class
 })
 public abstract class ControllerTestSupport {
 
@@ -29,8 +23,4 @@ public abstract class ControllerTestSupport {
 
 	@MockBean
 	protected IssueService issueService;
-	@MockBean
-	protected UserService userService;
-	@MockBean
-	protected MilestoneService milestoneService;
 }
