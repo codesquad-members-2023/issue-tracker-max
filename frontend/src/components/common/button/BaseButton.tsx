@@ -49,7 +49,7 @@ type StyledButtonProps = {
 const RealButton = styled.button<StyledButtonProps>`
   width: ${({ $flexible }) => ($flexible ? 'auto' : '184px')};
   height: 48px;
-  padding: 0 24px;
+  padding: 0 16px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -92,9 +92,10 @@ const RealButton = styled.button<StyledButtonProps>`
     }
     `}
 
-  ${({ theme, $ghost }) =>
+  ${({ theme, $ghost, $flexible }) =>
     $ghost &&
     `
+    padding: ${$flexible ? '0' : '0 16px'};
     background-color: transparent;
     border: none;
     border-radius: 0;
