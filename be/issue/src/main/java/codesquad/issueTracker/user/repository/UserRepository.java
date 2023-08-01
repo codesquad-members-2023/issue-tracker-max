@@ -3,6 +3,7 @@ package codesquad.issueTracker.user.repository;
 import codesquad.issueTracker.user.domain.LoginType;
 import codesquad.issueTracker.user.domain.User;
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -17,8 +18,8 @@ import java.util.Optional;
 public class UserRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public UserRepository(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public UserRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public Long insert(User user) {
