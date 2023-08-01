@@ -1,12 +1,13 @@
 package codesquard.app.milestone.repository;
 
 import java.util.List;
-
-import javax.sql.DataSource;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import codesquard.app.milestone.entity.Milestone;
@@ -15,19 +16,22 @@ import codesquard.app.milestone.entity.Milestone;
 public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	private final NamedParameterJdbcTemplate template;
-	private final SimpleJdbcInsert simpleJdbcInsert;
 
-	public JdbcMilestoneRepository(NamedParameterJdbcTemplate template, DataSource dataSource) {
+	public JdbcMilestoneRepository(NamedParameterJdbcTemplate template) {
 		this.template = template;
-		this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-			.withTableName("milestone")
-			.usingColumns("name", "description", "deadline")
-			.usingGeneratedKeyColumns("id");
 	}
 
 	@Override
-	public Long save(Milestone milestone) {
-		return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(milestone)).longValue();
+	public Optional<Long> save(Milestone milestone) {
+		String sql = "INSERT INTO `milestone` (`name`, `deadline`, `description`) "
+			+ "VALUES (:name, :deadline, :description)";
+
+		SqlParameterSource param = new BeanPropertySqlParameterSource(milestone);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+
+		template.update(sql, param, keyHolder);
+
+		return Optional.ofNullable(keyHolder.getKey()).map(Number::longValue);
 	}
 
 	@Override

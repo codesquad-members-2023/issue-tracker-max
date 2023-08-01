@@ -44,7 +44,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	void create() {
 		// given
 		Long loginId = userService.save(FixtureFactory.createUserSaveRequest());
-		Long milestoneId = milestoneService.save(FixtureFactory.createMilestoneCreateRequest("서비스"));
+		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", milestoneId);
 
 		// when

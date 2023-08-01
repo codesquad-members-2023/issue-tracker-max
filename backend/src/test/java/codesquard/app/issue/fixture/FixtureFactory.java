@@ -28,6 +28,6 @@ public class FixtureFactory {
 	public static MilestoneSaveRequest createMilestoneCreateRequest(String name) {
 		String description = "테스트 코드용";
 		LocalDate localDate = LocalDate.now();
-		return new MilestoneSaveRequest(name, description, localDate);
+		return new MilestoneSaveRequest(name, localDate, description);
 	}
 }

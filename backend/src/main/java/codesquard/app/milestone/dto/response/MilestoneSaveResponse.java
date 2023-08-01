@@ -1,12 +1,17 @@
 package codesquard.app.milestone.dto.response;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class MilestoneSaveResponse {
-
 	private final boolean success;
 	private final Long id;
+
+	private MilestoneSaveResponse(boolean success, Long id) {
+		this.success = success;
+		this.id = id;
+	}
+
+	public static MilestoneSaveResponse success(boolean success, Long id) {
+		return new MilestoneSaveResponse(success, id);
+	}
 
 	public boolean isSuccess() {
 		return success;
