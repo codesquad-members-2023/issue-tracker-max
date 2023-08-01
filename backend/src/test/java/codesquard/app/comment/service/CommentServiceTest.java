@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import codesquard.app.IntegrationTestSupport;
-import codesquard.app.comment.repository.CommentRepository;
 import codesquard.app.comment.service.request.CommentModifyServiceRequest;
 import codesquard.app.comment.service.request.CommentSaveServiceRequest;
 import codesquard.app.comment.service.response.CommentDeleteResponse;
@@ -28,9 +27,6 @@ class CommentServiceTest extends IntegrationTestSupport {
 
 	@Autowired
 	private CommentService commentService;
-
-	@Autowired
-	private CommentRepository commentRepository;
 
 	@Autowired
 	private UserRepository userRepository;
