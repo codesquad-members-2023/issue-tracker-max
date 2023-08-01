@@ -7,7 +7,6 @@ import { Button } from './Button';
 type Props = {
   size?: 'defaultSize' | 'S';
   isDisabled?: boolean;
-  inputType?: React.HTMLInputTypeAttribute;
   letterCount?: number;
   isTyping?: boolean;
   textAreaValue?: string;
@@ -19,7 +18,6 @@ type Props = {
 export const TextArea: React.FC<Props> = ({
   size = 'defaultSize',
   isDisabled,
-  inputType,
   letterCount,
   isTyping,
   textAreaValue,
@@ -121,7 +119,6 @@ export const TextArea: React.FC<Props> = ({
         css={{
           display: 'flex',
           alignItems: 'center',
-
           padding: '8px 16px',
           boxSizing: 'border-box',
           width: '100%',
@@ -129,7 +126,7 @@ export const TextArea: React.FC<Props> = ({
         }}
       >
         <label
-          htmlFor={inputType}
+          htmlFor="file"
           css={{
             marginLeft: '-16px',
             background: 'transparent',
@@ -155,9 +152,8 @@ export const TextArea: React.FC<Props> = ({
         </label>
         <input
           onChange={onFileChange}
-          type={inputType}
-          name={inputType}
-          id={inputType}
+          type="file"
+          id="file"
           css={{ display: 'none' }}
         />
       </div>
