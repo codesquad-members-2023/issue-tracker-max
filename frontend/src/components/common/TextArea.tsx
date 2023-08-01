@@ -37,7 +37,7 @@ export default function TextArea(props: TextAreaProps) {
   };
 
   return (
-    <Wrapper isFocused={isFocused} onFocus={handleFocus} onBlur={handleBlur}>
+    <Wrapper $isFocused={isFocused} onFocus={handleFocus} onBlur={handleBlur}>
       <Section>
         {(isFocused || textValue) && <Label>{labelName}</Label>}
         <StyledTextArea
@@ -45,7 +45,7 @@ export default function TextArea(props: TextAreaProps) {
           value={textValue}
           disabled={disabled}
           spellCheck="false"
-          isFocused={isFocused}
+          $isFocused={isFocused}
           onChange={handleChange}></StyledTextArea>
       </Section>
       <Bottom>
@@ -60,18 +60,18 @@ export default function TextArea(props: TextAreaProps) {
   );
 }
 
-const Wrapper = styled.div<{ isFocused: boolean }>`
+const Wrapper = styled.div<{ $isFocused: boolean }>`
   width: 340px;
   min-height: 184px;
   display: flex;
   flex-direction: column;
-  background: ${({ theme, isFocused }) =>
-    isFocused
+  background: ${({ theme, $isFocused }) =>
+    $isFocused
       ? theme.color.neutral.surface.strong
       : theme.color.neutral.surface.bold};
   border: ${({ theme }) => theme.objectStyles.border.default};
-  border-color: ${({ theme, isFocused }) =>
-    isFocused ? theme.color.neutral.border.active : 'transparent'};
+  border-color: ${({ theme, $isFocused }) =>
+    $isFocused ? theme.color.neutral.border.active : 'transparent'};
   border-radius: ${({ theme }) => theme.objectStyles.radius.large};
   color: ${({ theme }) => theme.color.neutral.text.weak};
 `;
@@ -87,17 +87,17 @@ const Label = styled.label`
   ${({ theme }) => theme.font.display.medium[12]}
 `;
 
-const StyledTextArea = styled.textarea<{ isFocused: boolean }>`
+const StyledTextArea = styled.textarea<{ $isFocused: boolean }>`
   margin-bottom: 16px;
   border: none;
   outline: none;
   caret-color: ${({ theme }) => theme.color.palette.blue};
-  background: ${({ theme, isFocused }) =>
-    isFocused
+  background: ${({ theme, $isFocused }) =>
+    $isFocused
       ? theme.color.neutral.surface.strong
       : theme.color.neutral.surface.bold};
-  color: ${({ theme, isFocused }) =>
-    isFocused
+  color: ${({ theme, $isFocused }) =>
+    $isFocused
       ? theme.color.neutral.text.strong
       : theme.color.neutral.text.weak};
   ${({ theme }) => theme.font.display.medium[16]};
@@ -106,6 +106,7 @@ const StyledTextArea = styled.textarea<{ isFocused: boolean }>`
 `;
 
 const Bottom = styled.div`
+  padding: 0 16px;
   height: 52px;
   position: relative;
   display: flex;
