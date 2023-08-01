@@ -9,9 +9,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquard.app.comment.controller.CommentController;
 import codesquard.app.comment.service.CommentService;
+import codesquard.app.issue.controller.IssueController;
+import codesquard.app.issue.service.IssueService;
+import codesquard.app.label.controller.LabelController;
+import codesquard.app.label.service.LabelService;
 
 @WebMvcTest(controllers = {
-	CommentController.class
+	IssueController.class,
+	CommentController.class,
+	LabelController.class
 })
 public abstract class ControllerTestSupport {
 
@@ -22,6 +28,9 @@ public abstract class ControllerTestSupport {
 	protected ObjectMapper objectMapper;
 
 	@MockBean
+	protected IssueService issueService;
+	@MockBean
 	protected CommentService commentService;
-
+	@MockBean
+	protected LabelService labelService;
 }

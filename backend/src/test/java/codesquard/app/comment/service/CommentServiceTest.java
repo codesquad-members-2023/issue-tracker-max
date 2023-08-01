@@ -92,7 +92,7 @@ class CommentServiceTest extends IntegrationTestSupport {
 
 	private void createIssue(Long milestoneId, Long userId, String title, String content, IssueStatus status,
 		LocalDateTime createdAt) {
-		Issue issue = new Issue(milestoneId, userId, title, content, status, createdAt);
+		Issue issue = new Issue(milestoneId, userId, title, content);
 		issueRepository.save(issue);
 	}
 

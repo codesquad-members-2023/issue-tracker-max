@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import codesquard.app.milestone.dto.request.MilestoneSavedRequest;
-import codesquard.app.milestone.dto.response.MilestoneSavedResponse;
+import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
+import codesquard.app.milestone.dto.response.MilestoneSaveResponse;
 import codesquard.app.milestone.service.MilestoneService;
 
 @RestController
@@ -21,9 +21,9 @@ public class MilestoneController {
 	}
 
 	@PostMapping("/api/milestones")
-	public ResponseEntity<MilestoneSavedResponse> save(@Valid @RequestBody MilestoneSavedRequest milestoneSavedRequest) {
-		Long milestoneId = milestoneService.saveMilestone(milestoneSavedRequest);
+	public ResponseEntity<MilestoneSaveResponse> save(@Valid @RequestBody MilestoneSaveRequest milestoneSaveRequest) {
+		Long milestoneId = milestoneService.saveMilestone(milestoneSaveRequest);
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(MilestoneSavedResponse.success(true, milestoneId));
+			.body(MilestoneSaveResponse.success(true, milestoneId));
 	}
 }
