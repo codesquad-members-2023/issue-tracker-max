@@ -16,9 +16,10 @@
         LEFT JOIN
         (
         SELECT
-        issue_id, MAX(id) as id
+        issue_id , MAX(id) as id
         FROM
         history
+        GROUP BY issue_id
         ) AS latest_history ON i.id = latest_history.issue_id
         LEFT JOIN
         history latest_editor ON latest_editor.id=latest_history.id
@@ -87,8 +88,6 @@
                 )
             </when>
         </choose>
-        GROUP BY
-        i.id, i.is_open, i.title, latest_editor.editor, latest_editor.issue_id, m.nick_name, ms.title;
-
+        ;
     </select>
 </mapper>
