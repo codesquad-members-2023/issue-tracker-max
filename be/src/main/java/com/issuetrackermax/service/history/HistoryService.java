@@ -1,4 +1,4 @@
-package com.issuetrackermax.service.hitsory;
+package com.issuetrackermax.service.history;
 
 import org.springframework.stereotype.Service;
 

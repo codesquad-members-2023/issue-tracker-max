@@ -8,15 +8,15 @@ import lombok.Getter;
 @Getter
 public class History {
 	private Long id;
-	private Long modifier;
+	private Long editor;
 	private Long issueId;
 	private Boolean issueIsOpen;
 	private LocalDateTime modifiedAt;
 
 	@Builder
-	public History(Long id, Long modifier, Long issueId, Boolean issueIsOpen, LocalDateTime modifiedAt) {
+	public History(Long id, Long editor, Long issueId, Boolean issueIsOpen, LocalDateTime modifiedAt) {
 		this.id = id;
-		this.modifier = modifier;
+		this.editor = editor;
 		this.issueId = issueId;
 		this.issueIsOpen = issueIsOpen;
 		this.modifiedAt = modifiedAt;
