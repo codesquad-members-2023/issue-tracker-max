@@ -1,6 +1,8 @@
 package codesquard.app.comment.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -42,8 +44,10 @@ public class CommentRepository {
 		return null;
 	}
 
-	public Long modifyById(Comment comment) {
-		return null;
+	public Long modify(Long id, String content, LocalDateTime modifiedAt) {
+		String sql = "UPDATE comment SET content = :content, modified_at = :modifiedAt WHERE id = :id";
+		template.update(sql, Map.of("id", id, "content", content, "modifiedAt", modifiedAt));
+		return id;
 	}
 
 	public Long deleteById(Long id) {
