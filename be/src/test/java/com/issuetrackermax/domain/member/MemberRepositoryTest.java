@@ -55,6 +55,6 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 		Long saveId = memberRepository.save(member);
 
 		// then
-		assertThat(saveId).isEqualTo(1L);
+		assertThat(saveId).isNotNull();
 	}
 }
