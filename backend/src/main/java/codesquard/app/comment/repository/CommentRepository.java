@@ -51,7 +51,9 @@ public class CommentRepository {
 	}
 
 	public Long deleteById(Long id) {
-		return null;
+		String sql = "UPDATE comment SET is_deleted = 1 WHERE id = :id";
+		template.update(sql, Map.of("id", id));
+		return id;
 	}
 
 }
