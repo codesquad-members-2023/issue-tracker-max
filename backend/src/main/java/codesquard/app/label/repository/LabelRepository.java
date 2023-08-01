@@ -15,5 +15,5 @@ public interface LabelRepository {
 
 	void updateBy(final Long labelId, final Label label);
 
-	Long deleteById(Long id);
+	void deleteBy(final Long labelId);
 }
