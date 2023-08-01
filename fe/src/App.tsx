@@ -1,11 +1,11 @@
-import { ReactNode } from 'react';
-import { RouterProvider } from 'react-router-dom';
-import router from './routes/router';
+import { ReactNode } from "react";
+import { RouterProvider } from "react-router-dom";
+import router from "./routes/router";
 
-import { ThemeProvider } from 'styled-components';
-import { GlobalStyles } from 'styles/GlobalStyles';
-import { theme } from 'styles/Theme';
-import { ThemeModeProvider, useThemeMode } from 'contexts/ThemeModeContext.tsx';
+import { ThemeProvider } from "styled-components";
+import { GlobalStyles } from "styles/GlobalStyles";
+import { theme } from "styles/Theme";
+import { ThemeModeProvider, useThemeMode } from "contexts/ThemeModeContext.tsx";
 
 // import { ComponentTest } from './ComponentTest';
 

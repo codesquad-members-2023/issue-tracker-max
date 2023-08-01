@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-import { useThemeMode } from 'contexts/ThemeModeContext';
+import { useThemeMode } from "contexts/ThemeModeContext";
 
 export const Header = () => {
   const { toggleTheme } = useThemeMode();

@@ -1,35 +1,35 @@
-import { theme } from 'styles/Theme.tsx';
-import { useThemeMode } from 'contexts/ThemeModeContext';
+import { theme } from "styles/Theme.tsx";
+import { useThemeMode } from "contexts/ThemeModeContext";
 
-import * as icons from './SvgIcons';
+import * as icons from "./SvgIcons";
 
 import {
   DEFAULT_SIZE,
   DEFAULT_STROKE,
   DEFAULT_FILL,
   sizes,
-} from 'constants/icons';
+} from "constants/icons";
 
 type LightThemeColorKeys = keyof typeof theme.light.color;
 type DarkThemeColorKeys = keyof typeof theme.dark.color;
-type ThemeColorKeys = LightThemeColorKeys | DarkThemeColorKeys;
+export type ThemeColorKeys = LightThemeColorKeys | DarkThemeColorKeys;
 
-type IconType = {
+export type IconType = {
   [K in keyof typeof icons]: React.FC<React.SVGProps<SVGSVGElement>>;
 };
 
 type IconProps = {
   icon: keyof IconType;
-  fill?: ThemeColorKeys | 'none';
+  fill?: ThemeColorKeys | "none";
   stroke?: ThemeColorKeys;
-  size?: 'S' | 'M' | 'L';
+  size?: "S" | "M" | "L";
 };
 
 const getThemeColor = (
-  mode: 'light' | 'dark',
-  colorKey: ThemeColorKeys | 'none',
+  mode: "light" | "dark",
+  colorKey: ThemeColorKeys | "none",
 ) => {
-  return colorKey === 'none' ? colorKey : theme[mode].color[colorKey];
+  return colorKey === "none" ? colorKey : theme[mode].color[colorKey];
 };
 
 export const Icon: React.FC<IconProps> = ({

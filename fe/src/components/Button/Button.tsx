@@ -1,5 +1,5 @@
 // import { ReactNode } from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css } from "styled-components";
 
 const CommonStyledButton = styled.button`
   padding: 12px 0;
@@ -22,9 +22,9 @@ const CommonStyledButton = styled.button`
   transition: opacity 0.3s ease;
 `;
 
-export type ButtonVariant = 'contained' | 'outline' | 'ghost';
-export type ButtonSize = 'S' | 'M' | 'L';
-export type ghostFontColor = 'default' | 'selected' | 'danger';
+export type ButtonVariant = "contained" | "outline" | "ghost";
+export type ButtonSize = "S" | "M" | "L";
+export type ghostFontColor = "default" | "selected" | "danger";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -36,7 +36,7 @@ export interface ButtonProps
 export const Button = ({
   variant,
   size,
-  states = 'default',
+  states = "default",
   ...props
 }: ButtonProps) => {
   const buttonComponent = {
@@ -72,7 +72,7 @@ const ContainedButton = styled(CommonStyledButton)<{
   ${({ $size }) => STYLES[$size]}
 
   border-radius: ${({ theme: { radius }, $size }) =>
-    $size === 'L' ? radius.large : radius.medium};
+    $size === "L" ? radius.large : radius.medium};
 
   color: ${({ theme: { color } }) => color.brandTextDefault};
   background-color: ${({ theme: { color } }) => color.brandSurfaceDefault};
@@ -84,7 +84,7 @@ const OutlineButton = styled(CommonStyledButton)<{
   ${({ $size }) => STYLES[$size]}
 
   border-radius: ${({ theme: { radius }, $size }) =>
-    $size === 'L' ? radius.large : radius.medium};
+    $size === "L" ? radius.large : radius.medium};
 
   border: ${({ theme: { border } }) => border.default};
   color: ${({ theme: { color } }) => color.brandTextWeak};
@@ -98,12 +98,12 @@ const GhostButton = styled(CommonStyledButton)<{
   width: unset;
   gap: 4px;
   ${({ theme: { font }, $states }) =>
-    $states === 'selected' && `font: ${font.selectedB16}`};
+    $states === "selected" && `font: ${font.selectedB16}`};
   color: ${({ theme: { color }, $states }) => {
     switch ($states) {
-      case 'selected':
+      case "selected":
         return color.nuetralTextStrong;
-      case 'danger':
+      case "danger":
         return color.dangerTextDefault;
       default:
         return color.nuetralTextDefault;

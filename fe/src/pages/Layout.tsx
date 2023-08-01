@@ -1,6 +1,6 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import { Header } from 'components/Header';
-import styled from 'styled-components';
+import { Outlet, useLocation } from "react-router-dom";
+import { Header } from "components/Header";
+import styled from "styled-components";
 
 export const Layout = () => {
   const location = useLocation();
@@ -8,7 +8,7 @@ export const Layout = () => {
   return (
     <BodyLayout>
       <PageLayout>
-        {location.pathname !== '/login' && <Header />}
+        {location.pathname !== "/login" && <Header />}
         <Outlet />
       </PageLayout>
     </BodyLayout>
