@@ -6,6 +6,8 @@ import { ReactComponent as UserImageSmall } from '../asset/icons/user_image_smal
 import { ReactComponent as CheckOnCircle } from '../asset/icons/check_on_circle.svg';
 import { ReactComponent as CheckOffCircle } from '../asset/icons/check_off_circle.svg';
 import { ReactComponent as PaperClip } from '../asset/icons/paperclip.svg';
+import { ReactComponent as Edit } from '../asset/icons/edit.svg';
+import { ReactComponent as Smile } from '../asset/icons/smile.svg';
 
 const Icons = {
   plus: Plus,
@@ -16,6 +18,8 @@ const Icons = {
   checkOnCircle: CheckOnCircle,
   checkOffCircle: CheckOffCircle,
   paperClip: PaperClip,
+  edit: Edit,
+  smile: Smile,
   default: Plus,
 } as const;
 
