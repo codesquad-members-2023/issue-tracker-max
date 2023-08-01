@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.comment.repository.CommentRepository;
 import codesquard.app.comment.service.request.CommentSaveServiceRequest;
-import codesquard.app.comment.service.response.CommentResponse;
+import codesquard.app.comment.service.response.CommentSaveResponse;
 import codesquard.app.errors.exception.CommentMaxLengthExceededException;
 import codesquard.app.issue.entity.Issue;
 import codesquard.app.issue.entity.IssueStatus;
@@ -60,10 +60,10 @@ class CommentServiceTest extends IntegrationTestSupport {
 		CommentSaveServiceRequest request = new CommentSaveServiceRequest(1L, 1L, "comment save service request");
 
 		// when
-		CommentResponse savedComment = commentService.save(request, createdAt);
+		CommentSaveResponse savedComment = commentService.save(request, createdAt);
 
 		// then
-		assertThat(savedComment).extracting("id")
+		assertThat(savedComment).extracting("commentId")
 			.isEqualTo(1L);
 	}
 

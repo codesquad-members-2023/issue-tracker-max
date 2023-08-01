@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquard.app.comment.entity.Comment;
 import codesquard.app.comment.repository.CommentRepository;
 import codesquard.app.comment.service.request.CommentSaveServiceRequest;
-import codesquard.app.comment.service.response.CommentResponse;
+import codesquard.app.comment.service.response.CommentSaveResponse;
 import lombok.RequiredArgsConstructor;
 
 @Transactional(readOnly = true)
@@ -19,11 +19,11 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 
 	@Transactional
-	public CommentResponse save(CommentSaveServiceRequest serviceRequest, LocalDateTime createdAt) {
+	public CommentSaveResponse save(CommentSaveServiceRequest serviceRequest, LocalDateTime createdAt) {
 		Comment comment = serviceRequest.toEntity(createdAt);
 		Long savedCommentId = commentRepository.save(comment);
 
-		return CommentResponse.toSaveResponse(savedCommentId);
+		return new CommentSaveResponse(true, savedCommentId);
 	}
 
 }

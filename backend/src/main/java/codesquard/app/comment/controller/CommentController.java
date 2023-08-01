@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.comment.controller.request.CommentSaveRequest;
 import codesquard.app.comment.service.CommentService;
-import codesquard.app.comment.service.response.CommentResponse;
+import codesquard.app.comment.service.response.CommentSaveResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class CommentController {
 	private final CommentService commentService;
 
 	@PostMapping("/api/comments")
-	public ResponseEntity<CommentResponse> saveComment(@Valid @RequestBody CommentSaveRequest request) {
+	public ResponseEntity<CommentSaveResponse> saveComment(@Valid @RequestBody CommentSaveRequest request) {
 		LocalDateTime createdAt = LocalDateTime.now();
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(commentService.save(request.toServiceRequest(), createdAt));
