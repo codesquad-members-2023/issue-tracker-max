@@ -44,7 +44,7 @@ CREATE TABLE `label` (
 CREATE TABLE `issue` (
     `issue_id` bigint  NOT NULL AUTO_INCREMENT ,
     `author_id` bigint  NOT NULL ,
-    `milestone_id` bigint NOT NULL ,
+    `milestone_id` bigint ,
     `title` varchar(50)  NOT NULL ,
     `contents` text ,
     `created_at` datetime  NOT NULL DEFAULT NOW() ,
