@@ -1,0 +1,49 @@
+import { useTheme } from '@emotion/react';
+
+type Props = {
+  label?: string;
+  height?: 56 | 40;
+  disabled?: boolean;
+  isError?: boolean;
+  children?: React.ReactNode;
+};
+
+export const InputContainer: React.FC<Props> = ({
+  label,
+  height,
+  disabled,
+  isError,
+  children,
+}) => {
+  const theme = useTheme() as any;
+
+  return (
+    <label
+      htmlFor={label}
+      css={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: height === 56 ? 'column' : 'row',
+        alignItems: height === 56 ? '' : 'center',
+        justifyContent: 'center',
+        height: `${height}px`,
+        padding: '0px 16px',
+        borderRadius: theme.radius.l,
+        cursor: disabled ? 'default' : 'text',
+        backgroundColor: theme.neutral.surface.bold,
+        gap: '8px',
+
+        border: isError
+          ? `${theme.border.default} ${theme.danger.border.default}`
+          : `${theme.border.default} ${theme.neutral.surface.bold}`,
+
+        '&:focus-within': {
+          backgroundColor: theme.neutral.surface.strong,
+          border: `${theme.border.default} ${theme.neutral.border.defaultActive}`,
+        },
+      }}
+    >
+      {children}
+    </label>
+  );
+};
