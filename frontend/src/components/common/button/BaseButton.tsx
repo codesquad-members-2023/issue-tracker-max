@@ -63,8 +63,13 @@ const RealButton = styled.button<StyledButtonProps>`
   svg {
     width: 16px;
     height: 16px;
-    fill: ${({ theme }) => theme.color.brand.text.default};
-    stroke: ${({ theme }) => theme.color.brand.text.default};
+    path {
+      stroke: ${({ theme }) => theme.color.brand.text.default};
+    }
+
+    rect {
+      fill: ${({ theme }) => theme.color.brand.text.default};
+    }
   }
 
   &:hover {
@@ -87,8 +92,13 @@ const RealButton = styled.button<StyledButtonProps>`
     color: ${theme.color.brand.text.weak};
 
     svg {
-      fill: ${theme.color.brand.text.weak};
-      stroke: ${theme.color.brand.text.weak};
+      path {
+        stroke: ${theme.color.brand.text.weak};
+      }
+
+      rect {
+        fill: ${theme.color.brand.text.weak};
+      }
     }
     `}
 
@@ -102,8 +112,13 @@ const RealButton = styled.button<StyledButtonProps>`
     color: ${theme.color.neutral.text.default};
 
     svg {
-      fill: ${theme.color.neutral.text.default};
-      stroke: ${theme.color.neutral.text.default};
+      path {
+        stroke: ${theme.color.neutral.text.default};
+      }
+
+      rect {
+        fill: ${theme.color.neutral.text.default};
+      }
     }
     `}
 `;
