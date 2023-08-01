@@ -20,11 +20,9 @@ import java.util.stream.Collectors;
 @Repository
 public class IssueRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
-//    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public IssueRepository(DataSource dataSource) {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-//        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
     }
 
     public Long save(Issue issue) {
@@ -41,12 +39,6 @@ public class IssueRepository {
         jdbcTemplate.update(SQL, params, keyHolder);
 
         return keyHolder.getKey().longValue();
-
-//        simpleJdbcInsert.withTableName("issue")
-//                .usingColumns("author_id", "title", "contents")
-//                .usingGeneratedKeyColumns("issue_id");
-//
-//        return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(issue)).longValue();
     }
 
     public List<Long> addAssignee(List<Assignee> assignees) {
@@ -59,18 +51,6 @@ public class IssueRepository {
                 .mapToLong(Long::valueOf)
                 .boxed()
                 .collect(Collectors.toUnmodifiableList());
-
-//        SqlParameterSource params = new MapSqlParameterSource()
-//                .addValue("issueId",)
-//                .addValue("title", issue.getTitle())
-//                .addValue("contents", issue.getContents());
-//
-//        KeyHolder keyHolder = new GeneratedKeyHolder();
-//        jdbcTemplate.update(SQL, params, keyHolder);
-//        simpleJdbcInsert.withTableName("assignee")
-//                .usingColumns("issue_id", "user_id");
-//
-//        simpleJdbcInsert.executeBatch()
     }
 
     public void deleteAllAssignee(Long issueId) {
