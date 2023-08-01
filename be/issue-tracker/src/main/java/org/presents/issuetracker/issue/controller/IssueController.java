@@ -30,8 +30,8 @@ public class IssueController {
         return ResponseEntity.status(HttpStatus.OK).body(issueCreateResponse);
     }
 
-    @GetMapping("/")
-    public List<IssueDto> issue(){
-        return issueService.getIssueList();
-    }
+	@GetMapping("/issues") // query가 없을 시 null
+	public IssueListResponseDto issue(@RequestParam(required = false) String query) {
+		return issueService.getIssueList();
+	}
 }
