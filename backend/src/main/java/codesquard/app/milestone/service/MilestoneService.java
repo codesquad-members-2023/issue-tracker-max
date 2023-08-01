@@ -3,7 +3,7 @@ package codesquard.app.milestone.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.milestone.dto.request.MilestoneRequestDto;
+import codesquard.app.milestone.dto.request.MilestoneRequest;
 import codesquard.app.milestone.entity.Milestone;
 import codesquard.app.milestone.repository.MilestoneRepository;
 
@@ -16,8 +16,8 @@ public class MilestoneService {
 		this.milestoneRepository = milestoneRepository;
 	}
 
-	public Long saveMilestone(MilestoneRequestDto milestoneRequestDto) {
-		Milestone milestone = MilestoneRequestDto.toEntity(milestoneRequestDto);
+	public Long saveMilestone(MilestoneRequest milestoneRequest) {
+		Milestone milestone = MilestoneRequest.toEntity(milestoneRequest);
 		return milestoneRepository.save(milestone).orElseThrow(() -> new RuntimeException("임시"));
 	}
 }

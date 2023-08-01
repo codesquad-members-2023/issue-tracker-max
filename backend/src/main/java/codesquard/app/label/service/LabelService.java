@@ -3,7 +3,7 @@ package codesquard.app.label.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.label.dto.LabelRequestDto;
+import codesquard.app.label.dto.LabelRequest;
 import codesquard.app.label.entity.Label;
 import codesquard.app.label.repository.LabelRepository;
 
@@ -16,8 +16,8 @@ public class LabelService {
 		this.labelRepository = labelRepository;
 	}
 
-	public Long saveLabel(LabelRequestDto labelRequestDto) {
-		Label label = LabelRequestDto.toEntity(labelRequestDto);
+	public Long saveLabel(LabelRequest labelRequest) {
+		Label label = LabelRequest.toEntity(labelRequest);
 		return labelRepository.save(label).orElseThrow(() -> new RuntimeException("임시"));
 	}
 }
