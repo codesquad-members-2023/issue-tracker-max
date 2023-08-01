@@ -60,6 +60,28 @@ class CommentRepositoryTest extends IntegrationTestSupport {
 		assertThat(savedCommentId).isEqualTo(1L);
 	}
 
+	@DisplayName("등록된 댓글을 수정한다.")
+	@Test
+	void modify() {
+		// given
+		LocalDateTime createdAt = LocalDateTime.of(2023, 8, 1, 16, 0);
+		LocalDateTime modifiedAt = LocalDateTime.of(2023, 8, 1, 17, 0);
+
+		createUser("yeon", "yeon@email.com", "password1000", "url path");
+		createIssue(null, 1L, "test issue", "hello", IssueStatus.OPENED, createdAt);
+
+		Comment comment = new Comment(1L, 1L, "Create New Comment", createdAt);
+		Long savedCommentId = commentRepository.save(comment);
+
+		Comment commentForModify = new Comment(savedCommentId, "modified repository content", modifiedAt);
+
+		// when
+		Long modifiedCommentId = commentRepository.modify(commentForModify);
+
+		// then
+		assertThat(modifiedCommentId).isEqualTo(savedCommentId);
+	}
+
 	private void createUser(String loginId, String email, String password, String avatarUrl) {
 		User user = new User(loginId, email, password, avatarUrl);
 		userRepository.save(user);

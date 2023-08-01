@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.MediaType;
 
 import codesquard.app.ControllerTestSupport;
+import codesquard.app.comment.controller.request.CommentModifyRequest;
 import codesquard.app.comment.controller.request.CommentSaveRequest;
 
 class CommentControllerTest extends ControllerTestSupport {
@@ -49,6 +50,36 @@ class CommentControllerTest extends ControllerTestSupport {
 
 		// when // then
 		mockMvc.perform(post("/api/comments")
+				.content(objectMapper.writeValueAsString(request))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.content").value("내용은 필수입니다."));
+	}
+
+	@DisplayName("등록된 댓글을 수정한다.")
+	@Test
+	void modify() throws Exception {
+		// given
+		CommentModifyRequest request = new CommentModifyRequest("controller comment");
+
+		// when // then
+		mockMvc.perform(patch("/api/comments/1")
+				.content(objectMapper.writeValueAsString(request))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isOk());
+	}
+
+	@DisplayName("댓글 수정 시 내용이 비어있는 경우 예외가 발생한다.")
+	@MethodSource("provideInvalidContent")
+	@ParameterizedTest
+	void modifyInvalidComment(String content) throws Exception {
+		// given
+		CommentModifyRequest request = new CommentModifyRequest(content);
+
+		// when // then
+		mockMvc.perform(patch("/api/comments/1")
 				.content(objectMapper.writeValueAsString(request))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())

@@ -10,23 +10,28 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class CommentSaveServiceRequest {
+public class CommentModifyServiceRequest {
 
-	private Long issueId;
-
-	private Long userId;
-
+	private Long id;
 	private String content;
-
-	public Comment toEntity(LocalDateTime createdAt) {
-		validateContentLength(this.content);
-		return new Comment(issueId, userId, content, createdAt);
-	}
 
 	private void validateContentLength(String content) {
 		if (content.length() > 10000) {
 			throw new CommentMaxLengthExceededException();
 		}
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public Comment toEntity(LocalDateTime modifiedAt) {
+		validateContentLength(this.content);
+		return new Comment(id, content, modifiedAt);
 	}
 
 }

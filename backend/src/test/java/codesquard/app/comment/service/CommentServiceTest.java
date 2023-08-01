@@ -12,7 +12,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.comment.repository.CommentRepository;
+import codesquard.app.comment.service.request.CommentModifyServiceRequest;
 import codesquard.app.comment.service.request.CommentSaveServiceRequest;
+import codesquard.app.comment.service.response.CommentModifyResponse;
 import codesquard.app.comment.service.response.CommentSaveResponse;
 import codesquard.app.errors.exception.CommentMaxLengthExceededException;
 import codesquard.app.issue.entity.Issue;
@@ -85,6 +87,51 @@ class CommentServiceTest extends IntegrationTestSupport {
 			.hasMessage("댓글은 1자 이상 10000자 이하여야 합니다.");
 	}
 
+	@DisplayName("등록된 댓글을 수정한다.")
+	@Test
+	void modify() {
+		// given
+		LocalDateTime createdAt = LocalDateTime.of(2023, 8, 1, 16, 0);
+		LocalDateTime modifiedAt = LocalDateTime.of(2023, 8, 1, 17, 0);
+
+		createUser("yeon", "yeon@email.com", "password1000", "url path");
+		createIssue(null, 1L, "test issue", "hello", IssueStatus.OPENED, createdAt);
+
+		CommentSaveServiceRequest saveRequest = new CommentSaveServiceRequest(1L, 1L, "comment save service request");
+		CommentSaveResponse savedComment = commentService.save(saveRequest, createdAt);
+
+		CommentModifyServiceRequest modifyRequest = new CommentModifyServiceRequest(savedComment.getCommentId(),
+			"modified service content");
+
+		// when
+		CommentModifyResponse modifiedComment = commentService.modify(modifyRequest, modifiedAt);
+
+		// then
+		assertThat(modifiedComment).extracting("commentId").isEqualTo(savedComment.getCommentId());
+	}
+
+	@DisplayName("댓글 수정 시 10000자를 초과하는 경우 예외가 발생한다.")
+	@Test
+	void modifyExceedingMaxLengthContent() {
+		// given
+		LocalDateTime createdAt = LocalDateTime.of(2023, 8, 1, 16, 0);
+		LocalDateTime modifiedAt = LocalDateTime.of(2023, 8, 1, 17, 0);
+
+		createUser("yeon", "yeon@email.com", "password1000", "url path");
+		createIssue(null, 1L, "test issue", "hello", IssueStatus.OPENED, createdAt);
+
+		CommentSaveServiceRequest saveRequest = new CommentSaveServiceRequest(1L, 1L, "comment save service request");
+		CommentSaveResponse savedComment = commentService.save(saveRequest, createdAt);
+
+		CommentModifyServiceRequest modifyRequest = new CommentModifyServiceRequest(savedComment.getCommentId(),
+			generateExceedingMaxLengthContent(10000));
+
+		// when // then
+		assertThatThrownBy(() -> commentService.modify(modifyRequest, modifiedAt))
+			.isInstanceOf(CommentMaxLengthExceededException.class)
+			.hasMessage("댓글은 1자 이상 10000자 이하여야 합니다.");
+	}
+
 	private void createUser(String loginId, String email, String password, String avatarUrl) {
 		User user = new User(loginId, email, password, avatarUrl);
 		userRepository.save(user);
@@ -98,7 +145,7 @@ class CommentServiceTest extends IntegrationTestSupport {
 
 	private String generateExceedingMaxLengthContent(int maxLength) {
 		StringBuilder builder = new StringBuilder();
-		while (builder.length() < maxLength) {
+		while (builder.length() <= maxLength) {
 			builder.append("The only way to do great work is to love what you do. ");
 		}
 
