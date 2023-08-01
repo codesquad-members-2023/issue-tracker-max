@@ -58,7 +58,7 @@ const Container = styled.form`
   text-align: left;
   border-radius: ${({ theme }) => theme.objectStyles.radius.medium};
   background-color: ${({ theme }) => theme.color.neutral.surface.bold};
-  &:active {
+  &:focus-within {
     background-color: ${({ theme }) => theme.color.neutral.surface.strong};
     border: ${({ theme }) => theme.objectStyles.border.default};
     border-color: ${({ theme }) => theme.color.neutral.border.active};
