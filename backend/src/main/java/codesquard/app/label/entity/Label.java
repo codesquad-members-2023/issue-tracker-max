@@ -3,22 +3,31 @@ package codesquard.app.label.entity;
 public class Label {
 	private Long id; // 등록번호
 	private String name; // 이름
-	private String color; // 글자색
+	private LabelColor color; // 글자색
 	private String background; // 배경색
 	private String description; // 설명
 
 	public Label(String name, String color, String background, String description) {
 		this.name = name;
-		this.color = color;
+		chooseColor(color);
 		this.background = background;
 		this.description = description;
+	}
+
+	private void chooseColor(String color) {
+		if (color.equalsIgnoreCase(LabelColor.DARK_STRING)) {
+			this.color = LabelColor.DARK;
+			return;
+		}
+
+		this.color = LabelColor.LIGHT;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public String getColor() {
+	public LabelColor getColor() {
 		return color;
 	}
 

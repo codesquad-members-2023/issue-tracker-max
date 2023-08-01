@@ -5,6 +5,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import codesquard.app.label.entity.Label;
+import codesquard.app.label.entity.LabelColor;
 
 public class LabelSavedRequest {
 	@NotNull(message = "제목 입력은 필수입니다.")
@@ -23,9 +24,17 @@ public class LabelSavedRequest {
 
 	public LabelSavedRequest(String name, String color, String background, String description) {
 		this.name = name;
-		this.color = color;
+		validateColor(color);
 		this.background = background;
 		this.description = description;
+	}
+
+	private void validateColor(String color) {
+		if (!color.equalsIgnoreCase(LabelColor.DARK_STRING) && !color.equalsIgnoreCase(LabelColor.LIGHT_STRING)) {
+			throw new RuntimeException("임시");
+		}
+
+		this.color = color;
 	}
 
 	public static Label toEntity(LabelSavedRequest labelSavedRequest) {

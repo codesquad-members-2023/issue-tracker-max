@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 
 import codesquard.app.ControllerTestSupport;
 import codesquard.app.label.dto.LabelSavedRequest;
+import codesquard.app.label.entity.LabelColor;
 
 class LabelControllerTest extends ControllerTestSupport {
 
@@ -17,7 +18,7 @@ class LabelControllerTest extends ControllerTestSupport {
 	@Test
 	void save() throws Exception {
 		// given
-		LabelSavedRequest labelSavedRequest = new LabelSavedRequest("라벨명", "#000000", "#ffffff", "라벨 설명");
+		LabelSavedRequest labelSavedRequest = new LabelSavedRequest("라벨명", "dark", "#ffffff", "라벨 설명");
 
 		// when // then
 		mockMvc.perform(post("/api/labels")
