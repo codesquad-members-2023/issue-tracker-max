@@ -40,7 +40,7 @@ jobs:
       - name: Create application-prodDB.yml file
         run: touch '${{ env.PROFILE_RESOURCE_PATH }}'
       - name: Set application-prodDB.yml file
-        run: echo '${{ secrets.APPLICATION_PROPERTIES }}'
+        run: echo '${{ secrets.APPLICATION_PROPERTIES }}' > '${{ env.PROFILE_RESOURCE_PATH }}'
 
       # 4. gradle 빌드
       - name: Grant execute permission for gradlew
