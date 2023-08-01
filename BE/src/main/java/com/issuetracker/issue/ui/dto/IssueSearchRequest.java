@@ -2,7 +2,7 @@ package com.issuetracker.issue.ui.dto;
 
 import java.util.List;
 
-import com.issuetracker.issue.application.dto.IssueSearchData;
+import com.issuetracker.issue.application.dto.IssueSearchInputData;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +18,8 @@ public class IssueSearchRequest {
 	private Long authorId;
 	private Boolean isCommentedByMe;
 
-	public IssueSearchData toIssueSearchData(Long loginMemberId) { // 여기서 로그인한 유저 아이디 받기
-		return new IssueSearchData(
+	public IssueSearchInputData toIssueSearchData(Long loginMemberId) { // 여기서 로그인한 유저 아이디 받기
+		return new IssueSearchInputData(
 			isOpen,
 			assigneeIds,
 			labelIds,

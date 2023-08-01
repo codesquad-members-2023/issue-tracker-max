@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.issuetracker.issue.application.dto.IssueSearchData;
+import com.issuetracker.issue.application.dto.IssueSearchInputData;
 import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.domain.IssueMapper;
 import com.issuetracker.util.DatabaseInitialization;
@@ -43,7 +43,7 @@ public class IssueMapperTest {
 	@Test
 	void 이슈_목록_조회() {
 		// given
-		IssueSearchData issueSearchData = new IssueSearchData(
+		IssueSearchInputData issueSearchData = new IssueSearchInputData(
 			true,
 			null,
 			List.of(LABEL5.getId()),
@@ -62,7 +62,7 @@ public class IssueMapperTest {
 	@Test
 	void 조건에_맞지_않는_이슈_목록_조회() {
 		// given
-		IssueSearchData issueSearchData = new IssueSearchData(
+		IssueSearchInputData issueSearchData = new IssueSearchInputData(
 			false,
 			null,
 			List.of(LABEL1.getId()),

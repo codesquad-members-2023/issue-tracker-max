@@ -15,7 +15,7 @@ public class Member {
 	private String nickname;
 	private String proFileImageUrl;
 
-	@Builder(builderClassName = "MemberBuilder")
+	@Builder
 	private Member(Long id, String email, String password, String nickname, String proFileImageUrl) {
 		this.id = id;
 		this.email = email;

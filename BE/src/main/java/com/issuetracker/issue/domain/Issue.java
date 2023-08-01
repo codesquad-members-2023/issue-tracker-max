@@ -25,7 +25,7 @@ public class Issue {
 	private Milestone milestone;
 	private List<Label> labels;
 
-	@Builder(builderClassName = "IssueBuilder")
+	@Builder
 	private Issue(Long id, String title, String content, Boolean isOpen, LocalDateTime createAt, Member author,
 		Milestone milestone, List<Label> labels) {
 		this.id = id;

@@ -17,7 +17,7 @@ public class Milestone {
 	private LocalDate deadline;
 	private Boolean isOpen;
 
-	@Builder(builderClassName = "MilestoneBuilder")
+	@Builder
 	private Milestone(Long id, String title, String description, LocalDate deadline, Boolean isOpen) {
 		this.id = id;
 		this.title = title;

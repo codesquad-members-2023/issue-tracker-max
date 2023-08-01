@@ -17,4 +17,10 @@ public class Assignee {
 		this.issueId = issueId;
 		this.memberId = memberId;
 	}
+
+	public static Assignee createInstanceById(Long id) {
+		return Assignee.builder()
+			.memberId(id)
+			.build();
+	}
 }

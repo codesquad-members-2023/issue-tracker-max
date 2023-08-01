@@ -2,6 +2,8 @@ package com.issuetracker.issue.ui;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,7 +34,7 @@ public class IssueController {
 	}
 
 	@PostMapping("/issues")
-	public ResponseEntity<IssueCreateResponse> createIssue(@RequestBody IssueCreateRequest issueCreateRequest) {
+	public ResponseEntity<IssueCreateResponse> createIssue(@RequestBody @Valid IssueCreateRequest issueCreateRequest) {
 		IssueCreateResponse issueCreateResponse = IssueCreateResponse.from(issueService.create(issueCreateRequest.toIssueCreateData()));
 		return ResponseEntity.created(URI.create("/issues/" + issueCreateResponse.getId()))
 			.body(issueCreateResponse);

@@ -12,7 +12,7 @@ public class IssueLabelMapping {
 	private Long issueId;
 	private Long labelId;
 
-	@Builder(builderClassName = "IssueLabelMappingBuilder")
+	@Builder
 	private IssueLabelMapping(Long issueId, Long labelId) {
 		this.issueId = issueId;
 		this.labelId = labelId;

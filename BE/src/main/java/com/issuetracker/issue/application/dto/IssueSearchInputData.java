@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class IssueSearchData {
+public class IssueSearchInputData {
 
 	private Boolean isOpen;
 	private List<Long> assigneeIds;
