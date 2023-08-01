@@ -8,7 +8,6 @@ import codesquard.app.milestone.entity.Milestone;
 import codesquard.app.milestone.repository.MilestoneRepository;
 
 @Service
-@Transactional
 public class MilestoneService {
 	private final MilestoneRepository milestoneRepository;
 
@@ -16,6 +15,7 @@ public class MilestoneService {
 		this.milestoneRepository = milestoneRepository;
 	}
 
+	@Transactional
 	public Long saveMilestone(MilestoneRequest milestoneRequest) {
 		Milestone milestone = MilestoneRequest.toEntity(milestoneRequest);
 		return milestoneRepository.save(milestone).orElseThrow(() -> new RuntimeException("임시"));

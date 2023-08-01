@@ -1,8 +1,5 @@
 package codesquard.app.label.dto;
 
-import lombok.Getter;
-
-@Getter
 public class LabelResponse {
 	private final boolean success;
 	private final Long id;
@@ -14,5 +11,13 @@ public class LabelResponse {
 
 	public static LabelResponse success(boolean success, Long id) {
 		return new LabelResponse(success, id);
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public Long getId() {
+		return id;
 	}
 }

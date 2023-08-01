@@ -1,9 +1,7 @@
 package codesquard.app.label.dto;
 
 import codesquard.app.label.entity.Label;
-import lombok.Getter;
 
-@Getter
 public class LabelRequest {
 	private String name;
 	private String color;
@@ -23,5 +21,21 @@ public class LabelRequest {
 	public static Label toEntity(LabelRequest labelRequest) {
 		return new Label(labelRequest.name, labelRequest.color, labelRequest.background,
 			labelRequest.description);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public String getBackground() {
+		return background;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 }

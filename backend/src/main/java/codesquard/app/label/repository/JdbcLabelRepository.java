@@ -11,13 +11,15 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import codesquard.app.label.entity.Label;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Repository
 public class JdbcLabelRepository implements LabelRepository {
 
 	private final NamedParameterJdbcTemplate template;
+
+	public JdbcLabelRepository(NamedParameterJdbcTemplate template) {
+		this.template = template;
+	}
 
 	@Override
 	public Optional<Long> save(Label label) {

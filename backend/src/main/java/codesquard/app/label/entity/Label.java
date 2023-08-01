@@ -1,14 +1,5 @@
 package codesquard.app.label.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
-@EqualsAndHashCode(of = "id")
-@ToString
-@Getter
-@AllArgsConstructor
 public class Label {
 	private Long id; // 등록번호
 	private String name; // 이름
@@ -21,5 +12,21 @@ public class Label {
 		this.color = color;
 		this.background = background;
 		this.description = description;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public String getBackground() {
+		return background;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 }

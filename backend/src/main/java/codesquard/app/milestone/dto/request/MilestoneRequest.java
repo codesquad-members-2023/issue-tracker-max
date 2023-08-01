@@ -3,9 +3,7 @@ package codesquard.app.milestone.dto.request;
 import java.time.LocalDate;
 
 import codesquard.app.milestone.entity.Milestone;
-import lombok.Getter;
 
-@Getter
 public class MilestoneRequest {
 	private String name;
 	private LocalDate deadline;
@@ -22,5 +20,17 @@ public class MilestoneRequest {
 
 	public static Milestone toEntity(MilestoneRequest milestoneRequest) {
 		return new Milestone(milestoneRequest.name, milestoneRequest.description, milestoneRequest.deadline);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public LocalDate getDeadline() {
+		return deadline;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 }

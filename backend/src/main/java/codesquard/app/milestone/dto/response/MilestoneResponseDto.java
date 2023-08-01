@@ -1,8 +1,5 @@
 package codesquard.app.milestone.dto.response;
 
-import lombok.Getter;
-
-@Getter
 public class MilestoneResponseDto {
 	private final boolean success;
 	private final Long id;
@@ -14,5 +11,13 @@ public class MilestoneResponseDto {
 
 	public static MilestoneResponseDto success(boolean success, Long id) {
 		return new MilestoneResponseDto(success, id);
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public Long getId() {
+		return id;
 	}
 }

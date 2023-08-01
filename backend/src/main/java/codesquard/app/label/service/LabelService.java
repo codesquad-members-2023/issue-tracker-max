@@ -8,7 +8,6 @@ import codesquard.app.label.entity.Label;
 import codesquard.app.label.repository.LabelRepository;
 
 @Service
-@Transactional
 public class LabelService {
 	private final LabelRepository labelRepository;
 
@@ -16,6 +15,7 @@ public class LabelService {
 		this.labelRepository = labelRepository;
 	}
 
+	@Transactional
 	public Long saveLabel(LabelRequest labelRequest) {
 		Label label = LabelRequest.toEntity(labelRequest);
 		return labelRepository.save(label).orElseThrow(() -> new RuntimeException("임시"));
