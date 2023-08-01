@@ -3,15 +3,6 @@ package codesquard.app.milestone.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
-@Getter
-@Builder
-@EqualsAndHashCode(of = "id")
-@ToString
 public class Milestone {
 	private Long id; // 등록번호
 	private boolean status; // true: open, false: close
@@ -21,4 +12,22 @@ public class Milestone {
 	private LocalDateTime createdAt; // 생성시간
 	private LocalDateTime modifiedAt; // 수정시간
 	private LocalDate deadline; // 완료일
+
+	public Milestone(String name, String description, LocalDate deadline) {
+		this.name = name;
+		this.description = description;
+		this.deadline = deadline;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public LocalDate getDeadline() {
+		return deadline;
+	}
 }

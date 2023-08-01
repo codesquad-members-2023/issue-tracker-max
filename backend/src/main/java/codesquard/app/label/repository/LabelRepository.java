@@ -1,12 +1,13 @@
 package codesquard.app.label.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import codesquard.app.label.entity.Label;
 
 public interface LabelRepository {
 
-	Long save(Label label);
+	Optional<Long> save(Label label);
 
 	List<Label> findAll();
 
