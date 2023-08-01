@@ -5,6 +5,7 @@ import { Header } from "./components/Header";
 import { designSystem } from "./constants/designSystem";
 import { Error404 } from "./page/Error404";
 import { Main } from "./page/main/Main";
+import { NewIssue } from "./page/NewIssue";
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
@@ -16,6 +17,7 @@ export default function App() {
           <Header />
           <Routes>
             <Route path="/" element={<Main />} />
+            <Route path="/issues/new" element={<NewIssue />} />
             <Route path="*" element={<Error404 />} />
           </Routes>
         </Router>
