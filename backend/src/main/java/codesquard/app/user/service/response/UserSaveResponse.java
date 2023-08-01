@@ -5,4 +5,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserSaveResponse {
 	private boolean success;
+
+	public boolean isSuccess() {
+		return success;
+	}
 }

@@ -8,6 +8,7 @@ public class UserSaveServiceRequest {
 	private final String loginId;
 	private final String email;
 	private final String password;
+	private final String passwordConfirm;
 	private final String avatarUrl;
 
 	public User toEntity() {
