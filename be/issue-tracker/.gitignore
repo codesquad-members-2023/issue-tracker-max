@@ -38,4 +38,5 @@ out/
 
 .DS_Store
 be/issue-tracker/src/main/resources/application-testDB.yml
+be/issue-tracker/src/main/resources/application-prodDB.yml
 be/issue-tracker/docker-compose.yml
