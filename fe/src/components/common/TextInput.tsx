@@ -1,6 +1,5 @@
 import { useTheme } from '@emotion/react';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
-import { ReactComponent as RefreshCcw } from '@assets/icons/refreshCcw.svg';
 import { InputContainer } from './TextInput/InputContainer';
 import { Input } from './TextInput/Input';
 
@@ -15,7 +14,6 @@ type Props = {
   disabled?: boolean;
   onChange: ({ target }: { target: HTMLInputElement }) => void;
   onClearInput?: () => void;
-  onRandomButtonClick?: () => void;
 };
 
 export const TextInput: React.FC<Props> = ({
@@ -29,7 +27,6 @@ export const TextInput: React.FC<Props> = ({
   disabled,
   onChange,
   onClearInput,
-  onRandomButtonClick,
 }) => {
   const theme = useTheme() as any;
   const isInputEmpty = Boolean(value);
@@ -73,13 +70,6 @@ export const TextInput: React.FC<Props> = ({
               <XSquare
                 stroke={theme.neutral.text.default}
                 onClick={onClearInput}
-                css={{ cursor: 'pointer' }}
-              />
-            )}
-            {onRandomButtonClick && (
-              <RefreshCcw
-                stroke={theme.neutral.text.default}
-                onClick={onRandomButtonClick}
                 css={{ cursor: 'pointer' }}
               />
             )}
