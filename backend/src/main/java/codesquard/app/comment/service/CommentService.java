@@ -9,6 +9,7 @@ import codesquard.app.comment.entity.Comment;
 import codesquard.app.comment.repository.CommentRepository;
 import codesquard.app.comment.service.request.CommentModifyServiceRequest;
 import codesquard.app.comment.service.request.CommentSaveServiceRequest;
+import codesquard.app.comment.service.response.CommentDeleteResponse;
 import codesquard.app.comment.service.response.CommentModifyResponse;
 import codesquard.app.comment.service.response.CommentSaveResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,13 @@ public class CommentService {
 		Long modifiedCommentId = commentRepository.modify(comment);
 
 		return new CommentModifyResponse(true, modifiedCommentId);
+	}
+
+	@Transactional
+	public CommentDeleteResponse delete(Long id) {
+		commentRepository.deleteById(id);
+
+		return new CommentDeleteResponse(true);
 	}
 
 }
