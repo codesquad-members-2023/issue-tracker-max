@@ -15,4 +15,8 @@ public interface IssueRepository {
 	Long modify(Issue issue);
 
 	Long deleteById(Long id);
+
+	void saveIssueLabel(Long issueId, Long labelId);
+
+	void saveIssueAssignee(Long issueId, Long userId);
 }

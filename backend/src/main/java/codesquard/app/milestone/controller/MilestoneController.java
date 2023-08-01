@@ -14,6 +14,7 @@ import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
 import codesquard.app.milestone.dto.request.MilestoneUpdateRequest;
 import codesquard.app.milestone.dto.response.MilestoneSaveResponse;
 import codesquard.app.milestone.dto.response.MilestoneUpdateResponse;
+import codesquard.app.milestone.dto.response.MilestoneSaveResponse;
 import codesquard.app.milestone.service.MilestoneService;
 
 @RestController

@@ -25,7 +25,8 @@ public class MilestoneSaveRequest {
 	}
 
 	public static Milestone toEntity(MilestoneSaveRequest milestoneSaveRequest) {
-		return new Milestone(milestoneSaveRequest.name, milestoneSaveRequest.description, milestoneSaveRequest.deadline);
+		return new Milestone(milestoneSaveRequest.name, milestoneSaveRequest.description,
+			milestoneSaveRequest.deadline);
 	}
 
 	public String getName() {
