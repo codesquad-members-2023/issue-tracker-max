@@ -3,6 +3,7 @@ import { ReactComponent as ReFresh } from '../asset/icons/refresh.svg';
 import { ReactComponent as AlertCircle } from '../asset/icons/alert_circle.svg';
 import { ReactComponent as ChevronDown } from '../asset/icons/chevron_down.svg';
 import { ReactComponent as UserImageSmall } from '../asset/icons/user_image_small.svg';
+import { ReactComponent as userImageLarge } from '../asset/icons/userImageLarge.svg';
 import { ReactComponent as CheckOnCircle } from '../asset/icons/check_on_circle.svg';
 import { ReactComponent as CheckOffCircle } from '../asset/icons/check_off_circle.svg';
 import { ReactComponent as PaperClip } from '../asset/icons/paperclip.svg';
@@ -15,6 +16,7 @@ const Icons = {
   alertCircle: AlertCircle,
   chevronDown: ChevronDown,
   userImageSmall: UserImageSmall,
+  userImageLarge: userImageLarge,
   checkOnCircle: CheckOnCircle,
   checkOffCircle: CheckOffCircle,
   paperClip: PaperClip,
