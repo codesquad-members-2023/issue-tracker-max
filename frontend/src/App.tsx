@@ -16,6 +16,7 @@ import DropdownPanel from './components/common/DropdownPanel';
 import TextArea from './components/common/TextArea';
 import Comment from './components/common/CommentElements';
 import SideBar from './components/common/SideBar';
+import FilterBar from './components/common/FilterBar';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -77,6 +78,7 @@ function App() {
             comment="오늘 점심 뭐 먹죠?"
           />
           <SideBar />
+          <FilterBar />
         </Wrapper>
       </StyledApp>
     </ThemeProvider>

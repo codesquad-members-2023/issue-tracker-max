@@ -1,10 +1,10 @@
 import { styled } from 'styled-components';
 import Icons from '../../design/Icons';
 
-export default function DropdownIndicator({ text }: { text: string }) {
+export default function DropdownIndicator({ text, ...rest }: { text: string }) {
   const Icon = Icons['chevronDown'];
   return (
-    <Container>
+    <Container {...rest}>
       <Text>{text}</Text>
       <Icon />
     </Container>
@@ -12,7 +12,6 @@ export default function DropdownIndicator({ text }: { text: string }) {
 }
 
 const Container = styled.button`
-  width: 80px;
   height: 32px;
   display: inline-flex;
   align-items: center;
@@ -32,6 +31,6 @@ const Container = styled.button`
 `;
 
 const Text = styled.span`
-  ${({ theme }) => theme.font.available.medium[16]}
-  ${({ theme }) => theme.color.neutral.text.weak}
+  ${({ theme }) => theme.font.available.medium[16]};
+  color: ${({ theme }) => theme.color.neutral.text.default};
 `;
