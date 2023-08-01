@@ -16,6 +16,10 @@ public class User {
 		this.avatarUrl = avatarUrl;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
 	public String getLoginId() {
 		return loginId;
 	}
