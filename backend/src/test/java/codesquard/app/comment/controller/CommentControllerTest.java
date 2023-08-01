@@ -87,4 +87,13 @@ class CommentControllerTest extends ControllerTestSupport {
 			.andExpect(jsonPath("$.content").value("내용은 필수입니다."));
 	}
 
+	@DisplayName("등록된 댓글을 삭제한다.")
+	@Test
+	void test() throws Exception {
+		// when // then
+		mockMvc.perform(delete("/api/comments/1"))
+			.andDo(print())
+			.andExpect(status().isOk());
+	}
+
 }
