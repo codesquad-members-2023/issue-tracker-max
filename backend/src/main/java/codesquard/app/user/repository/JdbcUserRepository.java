@@ -3,19 +3,15 @@ package codesquard.app.user.repository;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import codesquard.app.errors.errorcode.UserErrorCode;
 import codesquard.app.errors.exception.RestApiException;
-import codesquard.app.issue.entity.Issue;
 import codesquard.app.user.entity.User;
 import lombok.RequiredArgsConstructor;
 
@@ -49,7 +45,7 @@ public class JdbcUserRepository implements UserRepository {
 
 	@Override
 	public User findById(Long id) {
-		String sql = "SELECT id, user_id, email, avatar_url FROM user WHERE id = :id";
+		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE id = :id";
 		return template.query(sql, new MapSqlParameterSource("id", id), getUserRowMapper())
 			.stream().findAny().orElseThrow(() -> new RestApiException(UserErrorCode.NOT_FOUND_USER));
 	}
@@ -57,7 +53,7 @@ public class JdbcUserRepository implements UserRepository {
 	private RowMapper<User> getUserRowMapper() {
 		return (rs, rowNum) -> new User(
 			rs.getLong("id"),
-			rs.getString("user_id"),
+			rs.getString("login_id"),
 			rs.getString("email"),
 			null,
 			rs.getString("avatar_url")

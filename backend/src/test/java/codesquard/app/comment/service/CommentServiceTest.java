@@ -86,7 +86,7 @@ class CommentServiceTest extends IntegrationTestSupport {
 	}
 
 	private void createUser(String loginId, String email, String password, String avatarUrl) {
-		User user = new User(loginId, email, password, avatarUrl);
+		User user = new User(null, loginId, email, password, avatarUrl);
 		userRepository.save(user);
 	}
 
