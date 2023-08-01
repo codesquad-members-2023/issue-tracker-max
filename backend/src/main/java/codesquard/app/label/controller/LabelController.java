@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import codesquard.app.label.dto.LabelRequest;
-import codesquard.app.label.dto.LabelResponse;
+import codesquard.app.label.dto.LabelSavedRequest;
+import codesquard.app.label.dto.LabelSavedResponse;
 import codesquard.app.label.service.LabelService;
 
 @RestController
@@ -19,9 +19,9 @@ public class LabelController {
 	}
 
 	@PostMapping("/api/labels")
-	public ResponseEntity<LabelResponse> save(@RequestBody LabelRequest labelRequest) {
-		Long labelId = labelService.saveLabel(labelRequest);
+	public ResponseEntity<LabelSavedResponse> save(@RequestBody LabelSavedRequest labelSavedRequest) {
+		Long labelId = labelService.saveLabel(labelSavedRequest);
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(LabelResponse.success(true, labelId));
+			.body(LabelSavedResponse.success(true, labelId));
 	}
 }

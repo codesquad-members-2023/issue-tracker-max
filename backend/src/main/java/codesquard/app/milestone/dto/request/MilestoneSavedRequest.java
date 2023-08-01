@@ -4,22 +4,22 @@ import java.time.LocalDate;
 
 import codesquard.app.milestone.entity.Milestone;
 
-public class MilestoneRequest {
+public class MilestoneSavedRequest {
 	private String name;
 	private LocalDate deadline;
 	private String description;
 
-	private MilestoneRequest() {
+	private MilestoneSavedRequest() {
 	}
 
-	public MilestoneRequest(String name, LocalDate deadline, String description) {
+	public MilestoneSavedRequest(String name, LocalDate deadline, String description) {
 		this.name = name;
 		this.deadline = deadline;
 		this.description = description;
 	}
 
-	public static Milestone toEntity(MilestoneRequest milestoneRequest) {
-		return new Milestone(milestoneRequest.name, milestoneRequest.description, milestoneRequest.deadline);
+	public static Milestone toEntity(MilestoneSavedRequest milestoneSavedRequest) {
+		return new Milestone(milestoneSavedRequest.name, milestoneSavedRequest.description, milestoneSavedRequest.deadline);
 	}
 
 	public String getName() {

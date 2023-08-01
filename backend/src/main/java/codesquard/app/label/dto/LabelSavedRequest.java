@@ -2,25 +2,25 @@ package codesquard.app.label.dto;
 
 import codesquard.app.label.entity.Label;
 
-public class LabelRequest {
+public class LabelSavedRequest {
 	private String name;
 	private String color;
 	private String background;
 	private String description;
 
-	private LabelRequest() {
+	private LabelSavedRequest() {
 	}
 
-	public LabelRequest(String name, String color, String background, String description) {
+	public LabelSavedRequest(String name, String color, String background, String description) {
 		this.name = name;
 		this.color = color;
 		this.background = background;
 		this.description = description;
 	}
 
-	public static Label toEntity(LabelRequest labelRequest) {
-		return new Label(labelRequest.name, labelRequest.color, labelRequest.background,
-			labelRequest.description);
+	public static Label toEntity(LabelSavedRequest labelSavedRequest) {
+		return new Label(labelSavedRequest.name, labelSavedRequest.color, labelSavedRequest.background,
+			labelSavedRequest.description);
 	}
 
 	public String getName() {

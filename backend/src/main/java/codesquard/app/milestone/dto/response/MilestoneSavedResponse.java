@@ -1,16 +1,16 @@
 package codesquard.app.milestone.dto.response;
 
-public class MilestoneResponseDto {
+public class MilestoneSavedResponse {
 	private final boolean success;
 	private final Long id;
 
-	private MilestoneResponseDto(boolean success, Long id) {
+	private MilestoneSavedResponse(boolean success, Long id) {
 		this.success = success;
 		this.id = id;
 	}
 
-	public static MilestoneResponseDto success(boolean success, Long id) {
-		return new MilestoneResponseDto(success, id);
+	public static MilestoneSavedResponse success(boolean success, Long id) {
+		return new MilestoneSavedResponse(success, id);
 	}
 
 	public boolean isSuccess() {
