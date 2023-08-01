@@ -1,3 +1,4 @@
+import { TextArea } from '@components/common/TextArea';
 import { DropDownContainer } from '@components/common/dropDown/DropDownContainer';
 import {
   issueFilterList,
@@ -39,9 +40,5 @@ export const IssueListPage: React.FC = ({}) => {
     setSelectedItems((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
-  return (
-    <>
-      
-    </>
-  );
+  return <></>;
 };
