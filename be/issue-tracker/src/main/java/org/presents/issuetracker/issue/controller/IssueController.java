@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 import org.presents.issuetracker.issue.dto.IssueDto;
+import org.presents.issuetracker.issue.dto.response.IssueListResponseDto;
+import org.presents.issuetracker.issue.service.IssueService;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,15 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class IssueController {
     private final IssueService issueService;
 
+	@GetMapping("/") // query가 없을 시 null
+	public IssueListResponseDto issue(@RequestParam(required = false) String query) {
+		return issueService.getIssueList();
+	}
+    
     @PostMapping("/new")
     public ResponseEntity<IdResponseDto> create(@RequestBody IssueCreateRequestDto issueCreateRequestDto) {
         IdResponseDto issueCreateResponse = IdResponseDto.builder().id(issueService.create(issueCreateRequestDto)).build();
 
         return ResponseEntity.status(HttpStatus.OK).body(issueCreateResponse);
-    }
-
-    @GetMapping("/")
-    public List<IssueDto> issue(){
-        return issueService.getIssueList();
     }
 }
