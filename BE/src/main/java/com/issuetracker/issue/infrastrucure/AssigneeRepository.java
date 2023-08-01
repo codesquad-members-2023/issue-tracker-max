@@ -15,23 +15,18 @@ import com.issuetracker.issue.domain.Assignee;
 @Repository
 public class AssigneeRepository {
 
+	private static final String SAVE_ALL_SQL = "INSERT INTO assignee(issue_id, member_id) VALUES(:issueId, :memberId)";
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public AssigneeRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
-	public Long save(Assignee assignee) {
-		String sql = "INSERT INTO assignee(issue_id, member_id) "
-			+ "VALUES(:issueId, :memberId)";
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(assignee), keyHolder);
-		return keyHolder.getKey().longValue();
-	}
-
-	public List<Long> saveAll(List<Assignee> assignees) {
-		return assignees.stream()
-			.map(this::save)
-			.collect(Collectors.toUnmodifiableList());
+	public int[] saveAll(List<Assignee> assignees) {
+		BeanPropertySqlParameterSource[] params = assignees.stream()
+			.map(BeanPropertySqlParameterSource::new)
+			.toArray(BeanPropertySqlParameterSource[]::new);
+		return jdbcTemplate.batchUpdate(SAVE_ALL_SQL, params);
 	}
 }

@@ -1,4 +1,4 @@
-package com.issuetracker.unit;
+package com.issuetracker.unit.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +38,7 @@ class IssueRepositoryTest {
 
 	@Test
 	void 이슈를_생성할_수_있다() {
-
+		// given
 		Issue issue = Issue.builder()
 			.title("제목")
 			.content("내용")
@@ -49,8 +49,10 @@ class IssueRepositoryTest {
 			.labels(List.of(Label.createInstanceById(1L)))
 			.build();
 
+		// when
 		Long issueId = issueRepository.save(issue);
 
+		// then
 		assertThat(issueId).isNotNull();
 	}
 }

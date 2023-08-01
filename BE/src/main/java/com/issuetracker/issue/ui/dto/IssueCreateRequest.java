@@ -31,13 +31,14 @@ public class IssueCreateRequest {
 
 	private Long milestoneId;
 
-	public IssueCreateInputData toIssueCreateData() {
+	public IssueCreateInputData toIssueCreateData(Long authorId) {
 		return new IssueCreateInputData(
 			title,
 			content,
 			assigneeIds,
 			labelIds,
-			milestoneId
+			milestoneId,
+			authorId
 		);
 	}
 }

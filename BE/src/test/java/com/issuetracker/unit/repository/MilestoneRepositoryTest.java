@@ -1,4 +1,4 @@
-package com.issuetracker.unit;
+package com.issuetracker.unit.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,10 +31,13 @@ class MilestoneRepositoryTest {
 
 	@Test
 	void 마일스톤_아이디를_입력하면_존재하는_마일스톤인지_확일할_수_있다() {
+		// given
 		Long id = 1L;
 
+		// when
 		boolean result = milestoneRepository.existById(id);
 
+		// then
 		assertThat(result).isTrue();
 	}
 }

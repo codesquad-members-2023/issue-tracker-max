@@ -43,16 +43,17 @@ public class IssueCreator {
 	}
 
 	private IssueVerifiedCreator verify(IssueCreateInputData issueCreateData) {
-		Milestone milestone = Milestone.createInstanceById(null);
+		milestoneValidator.verifyMilestone(issueCreateData.getMilestoneId());
+		memberValidator.verifyMember(1L);
+		memberValidator.verifyMembers(issueCreateData.getAssigneeIds());
+		labelValidator.verifyLabels(issueCreateData.getLabelIds());
 
-		if (issueCreateData.getMilestoneId() != null) {
-			milestone = milestoneValidator.getVerifyMilestone(issueCreateData.getMilestoneId());
-		}
-
-		List<Member> assignees =  memberValidator.getVerifiedMembers(issueCreateData.getAssigneeIds());
-		Member author = memberValidator.getVerifiedMember(1L);
-		List<Label> labels = labelValidator.getVerifyLabels(issueCreateData.getLabelIds());
-		return new IssueVerifiedCreator(author, assignees, labels, milestone);
+		return new IssueVerifiedCreator(
+			1L,
+			issueCreateData.getAssigneeIds(),
+			issueCreateData.getLabelIds(),
+			issueCreateData.getMilestoneId()
+		);
 	}
 
 	static class IssueVerifiedCreator {
@@ -61,11 +62,15 @@ public class IssueCreator {
 		private final List<Label> labels;
 		private final Milestone milestone;
 
-		public IssueVerifiedCreator(Member author, List<Member> assignees, List<Label> labels, Milestone milestone) {
-			this.author = author;
-			this.assignees = assignees;
-			this.labels = labels;
-			this.milestone = milestone;
+		public IssueVerifiedCreator(Long authorId, List<Long> assigneeIds, List<Long> labelIds, Long milestoneId) {
+			this.author = Member.createInstanceById(authorId);
+			this.assignees = assigneeIds.stream()
+				.map(Member::createInstanceById)
+				.collect(Collectors.toUnmodifiableList());
+			this.labels = labelIds.stream()
+				.map(Label::createInstanceById)
+				.collect(Collectors.toUnmodifiableList());
+			this.milestone = Milestone.createInstanceById(milestoneId);
 		}
 
 		public List<Assignee> getAssignees(Long issueId) {

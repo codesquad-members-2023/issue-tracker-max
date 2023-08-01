@@ -1,4 +1,4 @@
-package com.issuetracker.unit;
+package com.issuetracker.unit.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,10 +33,13 @@ class LabelRepositoryTest {
 
 	@Test
 	void 라벨_아이디_목록을_입력하면_존재하는_라벨인지_확인한다() {
+		// given
 		List<Long> labelIds = List.of(1L, 2L, 3L, 4L);
 
+		// when
 		boolean result = labelRepository.existByIds(labelIds);
 
+		// then
 		assertThat(result).isTrue();
 	}
 

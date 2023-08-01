@@ -1,4 +1,4 @@
-package com.issuetracker.unit;
+package com.issuetracker.unit.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,19 +34,25 @@ class MemberRepositoryTest {
 
 	@Test
 	void 멤버_아이디를_입력하면_존재하는_멤버인지_확일할_수_있다() {
+		// given
 		Long id = 1L;
 
+		// when
 		boolean result = memberRepository.existById(id);
 
+		// then
 		assertThat(result).isTrue();
 	}
 
 	@Test
 	void 멤버_아이디_목록을_입력하면_존재하는_멤버인지_확일할_수_있다() {
+		// given
 		List<Long> memberIds = List.of(1L, 2L, 3L, 4L);
 
+		// when
 		boolean result = memberRepository.existByIds(memberIds);
 
+		// then
 		assertThat(result).isTrue();
 	}
 }

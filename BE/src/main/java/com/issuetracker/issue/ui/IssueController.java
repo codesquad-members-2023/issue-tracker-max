@@ -21,21 +21,21 @@ import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/issues")
 @RequiredArgsConstructor
 public class IssueController {
 
 	private final IssueService issueService;
 
-	@GetMapping("/issues")
+	@GetMapping
 	public ResponseEntity<IssuesSearchResponse> showIssues(@ModelAttribute IssueSearchRequest issueSearchRequest) {
 		IssuesSearchResponse issuesSearchResponse = IssuesSearchResponse.from(issueService.search(issueSearchRequest.toIssueSearchData(1L)));
 		return ResponseEntity.ok().body(issuesSearchResponse);
 	}
 
-	@PostMapping("/issues")
+	@PostMapping
 	public ResponseEntity<IssueCreateResponse> createIssue(@RequestBody @Valid IssueCreateRequest issueCreateRequest) {
-		IssueCreateResponse issueCreateResponse = IssueCreateResponse.from(issueService.create(issueCreateRequest.toIssueCreateData()));
+		IssueCreateResponse issueCreateResponse = IssueCreateResponse.from(issueService.create(issueCreateRequest.toIssueCreateData(1L)));
 		return ResponseEntity.created(URI.create("/issues/" + issueCreateResponse.getId()))
 			.body(issueCreateResponse);
 	}

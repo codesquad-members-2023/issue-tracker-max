@@ -15,26 +15,17 @@ import com.issuetracker.issue.domain.IssueLabelMapping;
 @Repository
 public class IssueLabelMappingRepository {
 
+	private static final String SAVE_ALL_SQL = "INSERT INTO issue_label_mapping(issue_id, label_id) VALUES(:issueId, :labelId)";
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public IssueLabelMappingRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
-	public Long save(IssueLabelMapping issueLabelMapping) {
-		String sql = "INSERT INTO issue_label_mapping(issue_id, label_id) "
-			+ "VALUES(:issueId, :labelId)";
-
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-
-		jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(issueLabelMapping), keyHolder);
-
-		return keyHolder.getKey().longValue();
-	}
-
-	public List<Long> saveAll(List<IssueLabelMapping> issueLabelMappings) {
-		return issueLabelMappings.stream()
-			.map(this::save)
-			.collect(Collectors.toUnmodifiableList());
+	public int[] saveAll(List<IssueLabelMapping> issueLabelMappings) {
+		BeanPropertySqlParameterSource[] params = issueLabelMappings.stream()
+			.map(BeanPropertySqlParameterSource::new)
+			.toArray(BeanPropertySqlParameterSource[]::new);
+		return jdbcTemplate.batchUpdate(SAVE_ALL_SQL, params);
 	}
 }

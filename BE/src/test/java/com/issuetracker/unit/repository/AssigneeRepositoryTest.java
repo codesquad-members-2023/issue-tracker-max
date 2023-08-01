@@ -1,4 +1,4 @@
-package com.issuetracker.unit;
+package com.issuetracker.unit.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,29 +33,18 @@ class AssigneeRepositoryTest {
 	}
 
 	@Test
-	void 작업자를_생성할_수_있다() {
-
-		Assignee assignee = Assignee.builder()
-			.issueId(1L)
-			.memberId(1L)
-			.build();
-
-		Long assigneeId = assigneeRepository.save(assignee);
-
-		assertThat(assigneeId).isNotNull();
-	}
-
-	@Test
 	void 여러명의_작업자를_생성할_수_있다() {
-
+		// given
 		List<Assignee> assignees = List.of(
 			Assignee.builder().issueId(1L).memberId(1L).build(),
 			Assignee.builder().issueId(1L).memberId(2L).build(),
 			Assignee.builder().issueId(1L).memberId(3L).build()
 		);
 
-		List<Long> assigneeIds = assigneeRepository.saveAll(assignees);
+		// when
+		int[] actual = assigneeRepository.saveAll(assignees);
 
-		assertThat(assigneeIds).isNotEmpty();
+		// then
+		assertThat(actual).containsExactly(1, 1, 1);
 	}
 }
