@@ -70,7 +70,11 @@ function App() {
             labelName="코멘트 작성"
             placeholder="코멘트를 작성해주세요."
           />
-          <Comment userInfo={{ userName: '@fuse' }} timeStamp="5분 전" />
+          <Comment
+            userInfo={{ userName: '@fuse' }}
+            timeStamp="5분 전"
+            comment="오늘 점심 뭐 먹죠?"
+          />
         </Wrapper>
       </StyledApp>
     </ThemeProvider>
