@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Getter
 public class Label {
-    private Long id;
+    private Long labelId;
     private String name;
     private String description;
     private String backgroundColor;
@@ -64,4 +64,5 @@ public class Label {
 
         return this;
     }
+	private Long labelId;
 }
