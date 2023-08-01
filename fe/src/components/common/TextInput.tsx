@@ -12,7 +12,7 @@ type Props = {
   isError?: boolean;
   captionString?: string;
   disabled?: boolean;
-  onChange: ({ target }: { target: HTMLInputElement }) => void;
+  onChange: (value: string) => void;
   onClearInput?: () => void;
 };
 

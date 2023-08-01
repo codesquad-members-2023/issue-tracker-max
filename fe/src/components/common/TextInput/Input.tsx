@@ -6,7 +6,7 @@ type Props = {
   inputType?: React.HTMLInputTypeAttribute;
   placeholder?: string;
   disabled?: boolean;
-  onChange: ({ target }: { target: HTMLInputElement }) => void;
+  onChange: (value: string) => void;
 };
 
 export const Input: React.FC<Props> = ({
@@ -28,7 +28,7 @@ export const Input: React.FC<Props> = ({
       max={inputType === 'date' ? '9999-12-31' : undefined}
       placeholder={placeholder}
       disabled={disabled}
-      onChange={onChange}
+      onChange={({ target }) => onChange(target.value)}
       css={{
         width: '100%',
         border: '0',

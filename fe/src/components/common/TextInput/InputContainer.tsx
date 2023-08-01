@@ -5,6 +5,8 @@ type Props = {
   height?: 56 | 40;
   disabled?: boolean;
   isError?: boolean;
+  radius?: 'm' | 'l';
+  hasborderColor?: boolean;
   children?: React.ReactNode;
 };
 
@@ -13,6 +15,8 @@ export const InputContainer: React.FC<Props> = ({
   height,
   disabled,
   isError,
+  radius = 'l',
+  hasborderColor = false,
   children,
 }) => {
   const theme = useTheme() as any;
@@ -21,6 +25,7 @@ export const InputContainer: React.FC<Props> = ({
     <label
       htmlFor={label}
       css={{
+        boxSizing: 'border-box',
         width: '100%',
         display: 'flex',
         flexDirection: height === 56 ? 'column' : 'row',
@@ -28,13 +33,15 @@ export const InputContainer: React.FC<Props> = ({
         justifyContent: 'center',
         height: `${height}px`,
         padding: '0px 16px',
-        borderRadius: theme.radius.l,
+        borderRadius: theme.radius[radius],
         cursor: disabled ? 'default' : 'text',
         backgroundColor: theme.neutral.surface.bold,
         gap: '8px',
 
         border: isError
           ? `${theme.border.default} ${theme.danger.border.default}`
+          : hasborderColor
+          ? `${theme.border.default} ${theme.neutral.border.default}`
           : `${theme.border.default} ${theme.neutral.surface.bold}`,
 
         '&:focus-within': {

@@ -5,7 +5,7 @@ import { ReactComponent as RefreshCcw } from '@assets/icons/refreshCcw.svg';
 
 type Props = {
   value: string;
-  onChange: ({ target }: { target: HTMLInputElement }) => void;
+  onChange: (value: string) => void;
   onRandomButtonClick: () => void;
 };
 
