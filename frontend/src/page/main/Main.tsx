@@ -7,7 +7,7 @@ import { MainHeader } from "./MainHeader";
 export type SingleFilterData = {
   id: number;
   name: string;
-  conditions: String[];
+  conditions: string[];
   selected: boolean;
 };
 

@@ -1,31 +1,37 @@
-import { styled } from "styled-components";
+import { styled, useTheme } from "styled-components";
+import { Icon } from "../Icon";
 
 export function DropdownOption({
   showProfile = true,
   profile,
+  background,
+  color = "Light",
   selected,
   children,
   onClick,
 }: {
   showProfile?: boolean;
   profile?: string;
+  background?: string;
+  color?: "Light" | "Dark";
   selected: boolean;
   children: string;
   onClick: () => void;
 }) {
+  const theme = useTheme();
+
   return (
     <StyledDropdownOptionList
       className={selected ? "selected" : ""}
       onClick={onClick}
     >
-      {showProfile && (
-        <img src={profile ? profile : "src/assets/userImageSmall.svg"} alt="" />
+      {showProfile && profile ? (
+        <img style={{ width: "20px" }} src={profile} alt="프로필 이미지" />
+      ) : (
+        <Icon name="userImageSmall" fill={background ?? theme.color.neutralSurfaceBold}/>
       )}
       <span title={children}>{children}</span>
-      <img
-        src={`src/assets/check${selected ? "On" : "Off"}Circle.svg`}
-        alt={selected ? "선택된 옵션" : "선택되지 않은 옵션"}
-      />
+      <Icon name={`check${selected ? "On" : "Off"}Circle`} />
     </StyledDropdownOptionList>
   );
 }
@@ -47,7 +53,7 @@ const StyledDropdownOptionList = styled.li`
     color: ${({ theme }) => theme.color.neutralTextStrong};
   }
 
-  &:last-child div {
+  &:last-child {
     border-radius: ${({ theme }) =>
       `0px 0px ${theme.radius.large} ${theme.radius.large}`};
   }
