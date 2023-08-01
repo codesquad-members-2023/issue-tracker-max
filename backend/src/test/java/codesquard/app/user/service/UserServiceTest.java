@@ -35,7 +35,7 @@ class UserServiceTest extends IntegrationTestSupport {
 	public void signUp() {
 		// given
 		UserSaveServiceRequest userSaveServiceRequest = new UserSaveServiceRequest("hong1234", "hong1234@gmail.com",
-			"hong1234", null);
+			"hong1234", "hong1234", null);
 		// when
 		UserSaveResponse userSaveResponse = userService.signUp(userSaveServiceRequest);
 		// then
