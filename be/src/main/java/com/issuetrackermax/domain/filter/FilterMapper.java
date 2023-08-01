@@ -3,9 +3,9 @@ package com.issuetrackermax.domain.filter;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
-@Repository
+@Mapper
 public interface FilterMapper {
 
 	List<FilterResultVO> getFilteredList(Map<String, Object> param);
