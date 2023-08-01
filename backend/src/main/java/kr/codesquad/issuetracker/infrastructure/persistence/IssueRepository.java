@@ -2,6 +2,7 @@ package kr.codesquad.issuetracker.infrastructure.persistence;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -62,5 +63,11 @@ public class IssueRepository {
 
 	public Integer save(Issue issue) {
 		return jdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(issue)).intValue();
+	}
+
+	public boolean existsById(Integer issueId) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = : issueId";
+
+		return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Map.of("issueId", issueId), Boolean.class));
 	}
 }

@@ -28,4 +28,10 @@ public class IssueAssigneeRepository {
 	public void saveAll(List<IssueAssignee> assignees) {
 		jdbcInsert.executeBatch(SqlParameterSourceUtils.createBatch(assignees));
 	}
+
+	public void deleteAll(List<IssueAssignee> assignees) {
+		String sql = "DELETE FROM issue_assignee WHERE issue_id = :issueId, user_account_id = :userAccountId";
+
+		jdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(assignees));
+	}
 }
