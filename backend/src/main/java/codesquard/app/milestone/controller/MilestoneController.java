@@ -1,5 +1,7 @@
 package codesquard.app.milestone.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +21,7 @@ public class MilestoneController {
 	}
 
 	@PostMapping("/api/milestones")
-	public ResponseEntity<MilestoneSavedResponse> save(@RequestBody MilestoneSavedRequest milestoneSavedRequest) {
+	public ResponseEntity<MilestoneSavedResponse> save(@Valid @RequestBody MilestoneSavedRequest milestoneSavedRequest) {
 		Long milestoneId = milestoneService.saveMilestone(milestoneSavedRequest);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(MilestoneSavedResponse.success(true, milestoneId));

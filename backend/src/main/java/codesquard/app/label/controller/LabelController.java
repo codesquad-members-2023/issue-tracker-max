@@ -1,5 +1,7 @@
 package codesquard.app.label.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +21,7 @@ public class LabelController {
 	}
 
 	@PostMapping("/api/labels")
-	public ResponseEntity<LabelSavedResponse> save(@RequestBody LabelSavedRequest labelSavedRequest) {
+	public ResponseEntity<LabelSavedResponse> save(@Valid @RequestBody LabelSavedRequest labelSavedRequest) {
 		Long labelId = labelService.saveLabel(labelSavedRequest);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(LabelSavedResponse.success(true, labelId));
