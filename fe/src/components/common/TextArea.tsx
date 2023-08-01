@@ -1,23 +1,35 @@
 import { css, useTheme } from '@emotion/react';
+import React, { useState } from 'react';
 import { ReactComponent as Grip } from '@assets/icons/grip.svg';
+import { ReactComponent as PaperClip } from '@assets/icons/paperclip.svg';
+import { Button } from './Button';
 
 type Props = {
-  isDisabled?: boolean;
   size?: 'defaultSize' | 'S';
+  isDisabled?: boolean;
+  inputType?: React.HTMLInputTypeAttribute;
   letterCount?: number;
   isTyping?: boolean;
-  onTyping?: () => void;
+  textAreaValue?: string;
+  isDisplayingCount?: boolean;
+  onTyping: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const TextArea: React.FC<Props> = ({
-  isDisabled,
   size = 'defaultSize',
+  isDisabled,
+  inputType,
   letterCount,
   isTyping,
+  textAreaValue,
+  isDisplayingCount,
   onTyping,
+  onFileChange,
 }) => {
   const theme = useTheme() as any;
 
+  //코멘트 영역때문에 사이즈를 더 추가할 수도 있을 것 같습니다
   const SIZE = {
     S: {
       height: '184px',
@@ -59,6 +71,7 @@ export const TextArea: React.FC<Props> = ({
         </div>
       )}
       <textarea
+        value={textAreaValue}
         onChange={onTyping}
         disabled={isDisabled}
         css={{
@@ -91,14 +104,16 @@ export const TextArea: React.FC<Props> = ({
           height: '52px',
         }}
       >
-        <span
-          css={{
-            color: theme.neutral.text.weak,
-            font: theme.fonts.availableMedium12,
-          }}
-        >
-          띄어쓰기 포함 {letterCount}자
-        </span>
+        {isDisplayingCount && letterCount && (
+          <span
+            css={{
+              color: theme.neutral.text.weak,
+              font: theme.fonts.availableMedium12,
+            }}
+          >
+            띄어쓰기 포함 {letterCount}자
+          </span>
+        )}
         <Grip stroke={theme.neutral.text.weak} />
       </div>
 
@@ -113,10 +128,38 @@ export const TextArea: React.FC<Props> = ({
           height: '52px',
         }}
       >
-        <label htmlFor="file" css={{ border: '1px solid  black' }}>
-          <button>파일 첨부하기</button>
+        <label
+          htmlFor={inputType}
+          css={{
+            marginLeft: '-16px',
+            background: 'transparent',
+            cursor: 'pointer',
+            '&:hover': {
+              opacity: theme.opacity.hover,
+            },
+            '&:active': {
+              opacity: theme.opacity.press,
+            },
+          }}
+        >
+          <Button
+            typeVariant="ghost"
+            size="S"
+            css={{
+              pointerEvents: 'none',
+            }}
+          >
+            <PaperClip stroke={theme.neutral.text.weak} />
+            파일 첨부하기
+          </Button>
         </label>
-        <input type="file" name="file" id="file" css={{ display: 'none' }} />
+        <input
+          onChange={onFileChange}
+          type={inputType}
+          name={inputType}
+          id={inputType}
+          css={{ display: 'none' }}
+        />
       </div>
     </div>
   );
