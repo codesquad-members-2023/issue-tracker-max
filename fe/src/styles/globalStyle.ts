@@ -145,4 +145,11 @@ export const globalStyle = css`
     overflow: visible;
     cursor: pointer;
   }
+  textarea {
+    border: 0;
+    margin: 0;
+    box-sizing: border-box;
+    resize: none;
+    outline: none;
+  }
 `;

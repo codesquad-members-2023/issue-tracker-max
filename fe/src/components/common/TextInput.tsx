@@ -53,7 +53,7 @@ export const TextInput: React.FC<Props> = ({
           flexDirection: height === 56 ? 'column' : 'row',
           alignItems: height === 56 ? '' : 'center',
           justifyContent: 'center',
-          height,
+          height: `${height}px`,
           padding: '0px 16px',
           borderRadius: theme.radius.l,
           cursor: disabled ? 'default' : 'text',
