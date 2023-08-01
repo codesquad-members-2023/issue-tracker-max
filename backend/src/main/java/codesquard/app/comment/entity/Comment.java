@@ -19,6 +19,16 @@ public class Comment {
 		this.createdAt = createdAt;
 	}
 
+	public Comment(Long id, String content, LocalDateTime modifiedAt) {
+		this.id = id;
+		this.content = content;
+		this.modifiedAt = modifiedAt;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
 	public Long getIssueId() {
 		return issueId;
 	}
@@ -33,6 +43,10 @@ public class Comment {
 
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
+	}
+
+	public LocalDateTime getModifiedAt() {
+		return modifiedAt;
 	}
 
 }

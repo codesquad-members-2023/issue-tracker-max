@@ -1,6 +1,5 @@
 package codesquard.app.comment.repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,10 +43,11 @@ public class CommentRepository {
 		return null;
 	}
 
-	public Long modify(Long id, String content, LocalDateTime modifiedAt) {
+	public Long modify(Comment comment) {
 		String sql = "UPDATE comment SET content = :content, modified_at = :modifiedAt WHERE id = :id";
-		template.update(sql, Map.of("id", id, "content", content, "modifiedAt", modifiedAt));
-		return id;
+		template.update(sql,
+			Map.of("id", comment.getId(), "content", comment.getContent(), "modifiedAt", comment.getModifiedAt()));
+		return comment.getId();
 	}
 
 	public Long deleteById(Long id) {

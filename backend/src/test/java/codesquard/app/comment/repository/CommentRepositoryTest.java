@@ -73,8 +73,10 @@ class CommentRepositoryTest extends IntegrationTestSupport {
 		Comment comment = new Comment(1L, 1L, "Create New Comment", createdAt);
 		Long savedCommentId = commentRepository.save(comment);
 
+		Comment commentForModify = new Comment(savedCommentId, "modified repository content", modifiedAt);
+
 		// when
-		Long modifiedCommentId = commentRepository.modify(savedCommentId, "modified repository content", modifiedAt);
+		Long modifiedCommentId = commentRepository.modify(commentForModify);
 
 		// then
 		assertThat(modifiedCommentId).isEqualTo(savedCommentId);
