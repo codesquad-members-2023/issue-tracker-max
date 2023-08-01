@@ -117,12 +117,12 @@ const IconWrapper = styled.div<{ $fillType: boolean }>`
   ${({ $fillType }) =>
     $fillType
       ? css`
-          & > svg:first-child {
+          & > svg {
             stroke: transparent;
           }
         `
       : css`
-          & > svg:first-child {
+          & > svg {
             fill: transparent;
           }
         `};
