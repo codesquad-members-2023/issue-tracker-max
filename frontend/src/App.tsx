@@ -15,6 +15,7 @@ import DropdownIndicator from './components/common/DropdownIndicator';
 import DropdownPanel from './components/common/DropdownPanel';
 import TextArea from './components/common/TextArea';
 import Comment from './components/common/CommentElements';
+import SideBar from './components/common/SideBar';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -75,6 +76,7 @@ function App() {
             timeStamp="5분 전"
             comment="오늘 점심 뭐 먹죠?"
           />
+          <SideBar />
         </Wrapper>
       </StyledApp>
     </ThemeProvider>

@@ -20,9 +20,14 @@ export default function DropdownPanel({ label }: { label: string }) {
           const Icon = Icons.userImageSmall;
           return (
             <li key={text}>
-              <Element $option={option}>
+              <Element htmlFor={text} $option={option}>
                 <Icon />
                 <Text>{text}</Text>
+                <input
+                  type="checkbox"
+                  id={text}
+                  checked={option ? true : false}
+                />
                 {option ? <Icons.checkOnCircle /> : <Icons.checkOffCircle />}
               </Element>
             </li>
