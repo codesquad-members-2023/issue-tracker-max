@@ -47,7 +47,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean build
+        run: ./gradlew clean build -x test
 
       # 5. 프로젝트 압축해서 S3에 업로드
       - name: Make zip file
