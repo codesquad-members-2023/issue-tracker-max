@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { Icon } from "./Icon";
 
 type TextInputProps = {
@@ -80,6 +80,9 @@ export function TextInput({
     onBlur && onBlur();
   };
 
+  const theme = useTheme();
+  const iconColor = theme.color.neutralTextDefault;
+
   return (
     <Div $state={state}>
       <InputContainer
@@ -91,7 +94,7 @@ export function TextInput({
         {(fixLabel || inputValue) && label && <StyledSpan>{label}</StyledSpan>}
         {icon && (
           <IconWrapper>
-            <Icon name={icon} />
+            <Icon name={icon} fill={iconColor} stroke={iconColor} />
           </IconWrapper>
         )}
         <Input
