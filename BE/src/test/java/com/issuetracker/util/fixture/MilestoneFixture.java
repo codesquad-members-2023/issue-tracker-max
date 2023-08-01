@@ -1,4 +1,4 @@
-package com.issuetracker.util;
+package com.issuetracker.util.fixture;
 
 import java.time.LocalDate;
 import java.time.Month;

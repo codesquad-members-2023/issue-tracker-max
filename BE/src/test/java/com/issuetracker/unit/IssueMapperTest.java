@@ -1,11 +1,11 @@
 package com.issuetracker.unit;
 
-import static com.issuetracker.util.LabelFixture.LABEL1;
-import static com.issuetracker.util.LabelFixture.LABEL5;
-import static com.issuetracker.util.MemberFixture.USER1;
-import static com.issuetracker.util.MemberFixture.USER4;
-import static com.issuetracker.util.MilestoneFixture.MILESTONR1;
-import static com.issuetracker.util.MilestoneFixture.MILESTONR3;
+import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
+import static com.issuetracker.util.fixture.LabelFixture.LABEL5;
+import static com.issuetracker.util.fixture.MemberFixture.USER1;
+import static com.issuetracker.util.fixture.MemberFixture.USER4;
+import static com.issuetracker.util.fixture.MilestoneFixture.MILESTONR1;
+import static com.issuetracker.util.fixture.MilestoneFixture.MILESTONR3;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
