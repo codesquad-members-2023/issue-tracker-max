@@ -5,11 +5,17 @@ type TextInputProps = {
   width?: number;
   size: "L" | "S";
   value?: string;
+  placeholder?: string;
   label?: string;
   caption?: string;
-  disabled?: boolean;
   icon?: string;
-  validator?: (value: string) => boolean;
+  fixLabel?: boolean;
+  borderNone?: boolean;
+  disabled?: boolean;
+  isError?: boolean;
+  onChange?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 };
 
 type TextInputState = "Enabled" | "Active" | "Disabled" | "Error";
@@ -21,6 +27,7 @@ type InputProps = {
 type InputContainerProps = {
   $width: number;
   $size: "L" | "S";
+  $borderNone?: boolean;
   $state: TextInputState;
 };
 
@@ -29,10 +36,16 @@ export function TextInput({
   size,
   value: initialValue = "",
   label,
+  placeholder,
   caption,
-  disabled = false,
   icon,
-  validator,
+  fixLabel = false,
+  borderNone = false,
+  disabled = false,
+  isError = false,
+  onChange,
+  onFocus,
+  onBlur,
 }: TextInputProps) {
   const [state, setState] = useState<TextInputState>(
     disabled ? "Disabled" : "Enabled",
@@ -40,38 +53,48 @@ export function TextInput({
   const [inputValue, setInputValue] = useState(initialValue);
 
   useEffect(() => {
-    if (validator) {
-      setState(validator(inputValue) ? "Enabled" : "Error");
-    }
-  }, [inputValue, validator]);
+    setState(isError ? "Error" : "Enabled");
+  }, [inputValue, isError]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+    const value = event.target.value;
+
+    setInputValue(value);
+    onChange && onChange();
   };
 
   const handleInputFocus = () => {
     if (state !== "Error") {
       setState("Active");
     }
+
+    onFocus && onFocus();
   };
 
   const handleInputBlur = () => {
     if (state !== "Error") {
       setState(disabled ? "Disabled" : "Enabled");
     }
+
+    onBlur && onBlur();
   };
 
   return (
     <Div $state={state}>
-      <InputContainer $width={width} $size={size} $state={state}>
-        {label && inputValue && <StyledSpan>{label}</StyledSpan>}
+      <InputContainer
+        $width={width}
+        $size={size}
+        $state={state}
+        $borderNone={borderNone}
+      >
+        {(fixLabel || inputValue) && label && <StyledSpan>{label}</StyledSpan>}
         {icon && (
           <IconWrapper>
             <img src={`/src/assets/${icon}.svg`} />
           </IconWrapper>
         )}
         <Input
-          placeholder={label}
+          placeholder={placeholder}
           value={inputValue}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
@@ -118,14 +141,17 @@ const InputContainer = styled.div<InputContainerProps>`
         return theme.color.neutralSurfaceBold;
     }
   }};
-  border: ${({ theme, $state }) => {
+  border: ${({ theme, $state, $borderNone }) => {
+    if ($borderNone) {
+      return "none";
+    }
     switch ($state) {
       case "Active":
         return `1px solid ${theme.color.neutralBorderDefaultActive}`;
       case "Error":
         return `1px solid ${theme.color.dangerBorderDefault}`;
       default:
-        return "";
+        return "none";
     }
   }};
 `;
