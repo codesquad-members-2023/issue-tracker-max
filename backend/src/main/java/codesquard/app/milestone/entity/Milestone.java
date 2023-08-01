@@ -13,21 +13,10 @@ public class Milestone {
 	private LocalDateTime modifiedAt; // 수정시간
 	private LocalDate deadline; // 완료일
 
-	public Milestone(Long id, String name, String description, LocalDate deadline) {
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.deadline = deadline;
-	}
-
 	public Milestone(String name, String description, LocalDate deadline) {
 		this.name = name;
 		this.description = description;
 		this.deadline = deadline;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public String getName() {
