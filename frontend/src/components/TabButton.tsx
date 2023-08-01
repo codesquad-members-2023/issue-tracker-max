@@ -37,16 +37,6 @@ const BaseTabButtonDiv = styled.div`
     justify-content: center;
     align-items: center;
     height: 100%;
-
-    &:first-child {
-      border-radius: ${({ theme }) =>
-        `${theme.radius.medium} 0 0 ${theme.radius.medium}`};
-    }
-
-    &:last-child {
-      border-radius: ${({ theme }) =>
-        `0 ${theme.radius.medium} ${theme.radius.medium} 0`};
-    }
   }
 `;
 
@@ -71,6 +61,16 @@ const OutlineTabButtonDiv = styled(BaseTabButtonDiv)`
       border-right: ${({ theme }) =>
         `${theme.border.default} ${theme.color.neutralBorderDefault}`};
       border-radius: 0;
+    }
+
+    &:first-child {
+      border-radius: ${({ theme }) =>
+        `${theme.radius.medium} 0 0 ${theme.radius.medium}`};
+    }
+
+    &:last-child {
+      border-radius: ${({ theme }) =>
+        `0 ${theme.radius.medium} ${theme.radius.medium} 0`};
     }
 
     &.selected {

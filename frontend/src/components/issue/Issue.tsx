@@ -1,9 +1,16 @@
-import { styled } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { IssueData } from "../../page/main/Main";
 import { getElapsedSince } from "../../utils/getElapsedSince";
 import { InformationTag } from "../InformationTag";
+import { Icon } from "../Icon";
 
 export function Issue({ issue }: { issue: IssueData }) {
+  const theme = useTheme();
+  const iconColors = {
+    issueTitle: theme.color.paletteBlue,
+    issueInfo: theme.color.neutralTextWeak,
+  }
+
   return (
     <Div>
       <div>
@@ -13,7 +20,7 @@ export function Issue({ issue }: { issue: IssueData }) {
       </div>
       <IssueContent>
         <IssueTitle>
-          <img src={`/src/assets/alertCircle.svg`} alt="alertCircle 아이콘" />
+          <Icon name="alertCircle" fill={iconColors.issueTitle} stroke={iconColors.issueTitle} />
           <TitleAnchor>{issue.title}</TitleAnchor>
           {issue.labels.map((label, index) => (
             <InformationTag
@@ -34,7 +41,7 @@ export function Issue({ issue }: { issue: IssueData }) {
           </span>
           {issue.milestone && (
             <span>
-              <img src={`/src/assets/milestone.svg`} alt="milestone 아이콘" />
+              <Icon name="milestone" fill={iconColors.issueInfo} stroke={iconColors.issueInfo} />
               {issue.milestone.name}
             </span>
           )}
@@ -49,7 +56,7 @@ export function Issue({ issue }: { issue: IssueData }) {
       <CommentDiv>
         {issue.commentCount !== 0 && (
           <>
-            <img src={`/src/assets/comment.svg`} />
+            <Icon name="comment" />
             <span>{issue.commentCount}</span>
           </>
         )}
@@ -93,11 +100,6 @@ const IssueTitle = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-
-  img {
-    filter: invert(39%) sepia(67%) saturate(5865%) hue-rotate(201deg)
-      brightness(103%) contrast(106%);
-  }
 `;
 
 const IssueInfo = styled.div`
@@ -107,14 +109,10 @@ const IssueInfo = styled.div`
 
   span {
     display: flex;
+    align-items: center;
     gap: 8px;
     font: ${({ theme }) => theme.font.displayMedium16};
     color: ${({ theme }) => theme.color.neutralTextWeak};
-
-    img {
-      filter: invert(50%) sepia(8%) saturate(1261%) hue-rotate(197deg)
-        brightness(87%) contrast(89%);
-    }
   }
 `;
 

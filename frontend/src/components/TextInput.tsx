@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Icon } from "./Icon";
 
 type TextInputProps = {
   width?: number;
@@ -90,7 +91,7 @@ export function TextInput({
         {(fixLabel || inputValue) && label && <StyledSpan>{label}</StyledSpan>}
         {icon && (
           <IconWrapper>
-            <img src={`/src/assets/${icon}.svg`} />
+            <Icon name={icon} />
           </IconWrapper>
         )}
         <Input

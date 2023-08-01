@@ -1,4 +1,5 @@
-import { styled } from "styled-components";
+import { styled, useTheme } from "styled-components";
+import { Icon } from "./Icon";
 
 export function InformationTag({
   value,
@@ -17,6 +18,11 @@ export function InformationTag({
   stroke?: "Default" | "DefaultActive";
   fontColor?: "Light" | "Dark";
 }) {
+  const theme = useTheme();
+  const iconColor = fontColor === "Dark"
+  ? theme.color.neutralTextWeak
+  : theme.color.brandTextDefault;
+
   return (
     <StyledInformationTag
       data-title={/^\s*$/.test(toolTip) ? undefined : toolTip}
@@ -25,7 +31,7 @@ export function InformationTag({
       $stroke={stroke}
       $darkFont={fontColor === "Dark"}
     >
-      {icon && <img src={`/src/assets/${icon}.svg`} alt={icon} />}
+      {icon && <Icon name={icon} fill={iconColor} stroke={iconColor}/>}
       <span>{value}</span>
     </StyledInformationTag>
   );
@@ -80,13 +86,6 @@ const StyledInformationTag = styled.div<{
     opacity: 1;
     visibility: visible;
     transition: all 0.1s ease 0.5s;
-  }
-
-  img {
-    filter: ${({ theme, $darkFont }) =>
-      $darkFont
-        ? theme.iconFilter.neutralTextWeak
-        : theme.iconFilter.brandTextDefault};
   }
 
   span {

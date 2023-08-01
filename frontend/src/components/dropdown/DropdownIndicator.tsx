@@ -1,4 +1,5 @@
-import { styled } from "styled-components";
+import { styled, useTheme } from "styled-components";
+import { Icon } from "../Icon";
 
 type DropdownIndicatorProps = {
   value: string;
@@ -11,10 +12,13 @@ export function DropdownIndicator({
   disabled = false,
   onClick,
 }: DropdownIndicatorProps) {
+  const theme = useTheme();
+  const iconColor = theme.color.neutralTextDefault;
+
   return (
     <StyledButton onClick={onClick} disabled={disabled}>
       <span>{value}</span>
-      <img src="src/assets/chevronDown.svg" alt="드롭다운 열기" />
+      <Icon name="chevronDown" fill={iconColor} stroke={iconColor} />
     </StyledButton>
   );
 }
