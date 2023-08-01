@@ -32,7 +32,6 @@ export const InputContainer: React.FC<Props> = ({
         alignItems: height === 56 ? '' : 'center',
         justifyContent: 'center',
         height: `${height}px`,
-        padding: '0px 16px',
         borderRadius: theme.radius[radius],
         cursor: disabled ? 'default' : 'text',
         backgroundColor: theme.neutral.surface.bold,

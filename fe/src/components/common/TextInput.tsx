@@ -50,12 +50,20 @@ export const TextInput: React.FC<Props> = ({
                 minWidth: '64px',
                 font: theme.fonts.displayMedium12,
                 color: theme.neutral.text.weak,
+                padding: '0px 16px',
               }}
             >
               {label}
             </div>
           )}
-          <div css={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+          <div
+            css={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              padding: '0px 16px',
+            }}
+          >
             <Input
               {...{
                 value,
