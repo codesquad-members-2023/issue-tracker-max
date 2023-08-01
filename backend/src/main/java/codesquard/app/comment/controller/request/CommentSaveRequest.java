@@ -4,10 +4,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import codesquard.app.comment.service.request.CommentSaveServiceRequest;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
 public class CommentSaveRequest {
 
@@ -24,4 +22,15 @@ public class CommentSaveRequest {
 		return new CommentSaveServiceRequest(issueId, userId, content);
 	}
 
+	public Long getIssueId() {
+		return issueId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public String getContent() {
+		return content;
+	}
 }
