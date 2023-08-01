@@ -33,4 +33,5 @@ public class CommentSaveRequest {
 	public String getContent() {
 		return content;
 	}
+
 }
