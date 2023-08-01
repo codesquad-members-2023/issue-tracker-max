@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { styled } from 'styled-components';
 import DropdownIndicator from './DropdownIndicator';
 import Icons from '../../design/Icons';
@@ -13,14 +14,21 @@ const StyledDropdownIndicator = styled(DropdownIndicator)`
 `;
 
 export default function FilterBar() {
+  const [filterValue, setFilterValue] = useState<string>(
+    'default filter option'
+  );
   const SearchIcon = Icons['search'];
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterValue(e.target.value);
+  };
 
   return (
     <Bar>
       <StyledDropdownIndicator text="Button" />
       <TextFilter>
         <SearchIcon />
-        <TextInput></TextInput>
+        <TextInput value={filterValue} onChange={handleChange}></TextInput>
       </TextFilter>
     </Bar>
   );
