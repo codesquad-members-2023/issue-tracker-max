@@ -36,4 +36,9 @@ public class IssueController {
 
         return ResponseEntity.status(HttpStatus.OK).body(issueCreateResponse);
     }
+
+	@GetMapping("/issues") // query가 없을 시 null
+	public IssueListResponseDto issue(@RequestParam(required = false) String query) {
+		return issueService.getIssueList();
+	}
 }
