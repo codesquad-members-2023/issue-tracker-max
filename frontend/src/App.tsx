@@ -14,6 +14,7 @@ import ProgressIndicator from './components/common/ProgressIndicator';
 import DropdownIndicator from './components/common/DropdownIndicator';
 import DropdownPanel from './components/common/DropdownPanel';
 import TextArea from './components/common/TextArea';
+import Comment from './components/common/CommentElements';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -69,6 +70,7 @@ function App() {
             labelName="코멘트 작성"
             placeholder="코멘트를 작성해주세요."
           />
+          <Comment userInfo={{ userName: '@fuse' }} timeStamp="5분 전" />
         </Wrapper>
       </StyledApp>
     </ThemeProvider>
