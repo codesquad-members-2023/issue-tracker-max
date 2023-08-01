@@ -7,7 +7,7 @@ import { GlobalStyles } from 'styles/GlobalStyles';
 import { theme } from 'styles/Theme';
 import { ThemeModeProvider, useThemeMode } from 'contexts/ThemeModeContext.tsx';
 
-import { ComponentTest } from './ComponentTest';
+// import { ComponentTest } from './ComponentTest';
 
 interface ThemedAppProps {
   children: ReactNode;
@@ -24,7 +24,7 @@ export const App = () => {
       <ThemedApp>
         <GlobalStyles />
         <RouterProvider router={router} />
-        <ComponentTest></ComponentTest>
+        {/* <ComponentTest></ComponentTest> */}
       </ThemedApp>
     </ThemeModeProvider>
   );

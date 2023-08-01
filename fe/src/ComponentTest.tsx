@@ -1,4 +1,5 @@
-import { Icon } from 'components/Icon';
+import { Icon } from 'components/Icon/Icon';
+import { Button } from 'components/Button/Button';
 
 export const ComponentTest = () => {
   return (
@@ -49,6 +50,209 @@ export const ComponentTest = () => {
         <Icon icon="Light" fill="nuetralTextDefault" />
         <Icon icon="Dark" fill="nuetralTextDefault" />
       </div>
+      <div>
+        <div style={{ display: 'flex' }}>
+          <Button size="M" variant="ghost">
+            <Icon icon="Plus" size="M" />
+            닫힌 이슈
+          </Button>
+          <Button size="M" variant="contained">
+            <Icon icon="Plus" size="M" />
+            닫힌 이슈
+          </Button>
+          <Button size="M" variant="contained" disabled>
+            <Icon icon="Plus" size="M" />
+            닫힌 이슈
+          </Button>
+          <Button size="M" variant="outline">
+            <Icon icon="Plus" size="M" />
+            닫힌 이슈
+          </Button>
+        </div>
+
+        <div style={{ display: 'flex' }}>
+          <Button size="M" variant="outline" disabled>
+            <Icon icon="Plus" size="M" />
+            닫힌 이슈
+          </Button>
+          <Button size="M" variant="ghost" disabled>
+            <Icon icon="Plus" size="M" />
+            닫힌 이슈
+          </Button>
+          <Button size="M" variant="ghost">
+            <Icon icon="Plus" size="M" />
+            닫힌 이슈
+          </Button>
+          <Button size="M" variant="ghost" states="selected">
+            <Icon icon="Plus" size="M" />
+            닫힌 이슈
+          </Button>
+          <Button size="M" variant="ghost" states="danger">
+            <Icon icon="Plus" size="M" />
+            닫힌 이슈
+          </Button>
+          <Button size="M" variant="ghost" states="selected">
+            <Icon icon="Plus" size="M" />
+            닫힌 이슈
+          </Button>
+        </div>
+        {/* <div style={{ display: 'flex' }}>
+          <Button buttonType="contained" size="L">
+            <Icon icon="Plus" size="L" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="outline" size="L">
+            <Icon icon="Plus" size="L" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="ghost" size="L">
+            <Icon icon="Plus" size="L" />
+            <p>버튼1</p>
+          </Button>
+        </div>
+        <div style={{ display: 'flex' }}>
+          <Button buttonType="contained" size="L">
+            <Icon icon="Plus" size="L" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="outline" size="L">
+            <Icon icon="Plus" size="L" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="ghost" size="L">
+            <Icon icon="Plus" size="L" />
+            <p>버튼1</p>
+          </Button>
+        </div>
+        <div style={{ display: 'flex' }}>
+          <Button buttonType="contained" size="L">
+            <Icon icon="Plus" size="L" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="outline" size="L">
+            <Icon icon="Plus" size="L" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="ghost" size="L">
+            <Icon icon="Plus" size="L" />
+            <p>버튼1</p>
+          </Button>
+        </div> */}
+      </div>
+      {/* <div>
+        <div style={{ display: 'flex' }}>
+          <Button buttonType="contained" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="outline" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="ghost" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+        </div>
+        <div style={{ display: 'flex' }}>
+          <Button buttonType="contained" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="outline" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="ghost" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+        </div>
+        <div style={{ display: 'flex' }}>
+          <Button buttonType="contained" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="outline" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="ghost" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+        </div>
+        <div style={{ display: 'flex' }}>
+          <Button buttonType="contained" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="outline" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+          <Button buttonType="ghost" size="M">
+            <Icon icon="Plus" size="M" />
+            <p>버튼1</p>
+          </Button>
+        </div>
+      </div>
+      <div style={{ display: 'flex' }}>
+        <Button buttonType="contained" size="S">
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+        <Button buttonType="outline" size="S">
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+        <Button buttonType="ghost" size="S">
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+      </div>
+      <div style={{ display: 'flex' }}>
+        <Button buttonType="contained" size="S">
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+        <Button buttonType="outline" size="S">
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+        <Button buttonType="ghost" size="S">
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+      </div>
+      <div style={{ display: 'flex' }}>
+        <Button buttonType="contained" size="S">
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+        <Button buttonType="outline" size="S">
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+        <Button buttonType="ghost" size="S">
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+      </div>
+      <div style={{ display: 'flex' }}>
+        <Button buttonType="contained" size="S" disabled>
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+        <Button buttonType="outline" size="S" disabled>
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+        <Button buttonType="ghost" size="S" disabled>
+          <Icon icon="Plus" size="S" />
+          <p>버튼1</p>
+        </Button>
+      </div> */}
     </div>
   );
 };
