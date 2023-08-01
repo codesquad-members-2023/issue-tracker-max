@@ -12,6 +12,7 @@ import InformationTag from './components/common/InformationTag';
 import TextInput from './components/common/TextInput';
 import ProgressIndicator from './components/common/ProgressIndicator';
 import DropdownIndicator from './components/common/DropdownIndicator';
+import DropdownPanel from './components/common/DropdownPanel';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -61,7 +62,8 @@ function App() {
             helpText="Caption"
           />
           <ProgressIndicator openCount={0} closeCount={0} />
-          <DropdownIndicator text="Button"/>
+          <DropdownIndicator text="Button" />
+          <DropdownPanel label='label'/>
         </Wrapper>
       </StyledApp>
     </ThemeProvider>
@@ -74,7 +76,6 @@ const StyledApp = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${({ theme }) => theme.color.neutral.surface.default};
 `;
 
 const Wrapper = styled.div`
