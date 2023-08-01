@@ -26,4 +26,9 @@ public class MilestoneService {
 	public void updateMilestone(Long milestoneId, MilestoneUpdateRequest milestoneUpdateRequest) {
 		milestoneRepository.updateBy(milestoneId, MilestoneUpdateRequest.toEntity(milestoneUpdateRequest));
 	}
+
+	@Transactional
+	public void deleteMilestone(Long milestoneId) {
+		milestoneRepository.deleteBy(milestoneId);
+	}
 }
