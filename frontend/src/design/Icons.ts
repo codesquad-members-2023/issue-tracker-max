@@ -9,6 +9,7 @@ import { ReactComponent as CheckOffCircle } from '../asset/icons/check_off_circl
 import { ReactComponent as PaperClip } from '../asset/icons/paperclip.svg';
 import { ReactComponent as Edit } from '../asset/icons/edit.svg';
 import { ReactComponent as Smile } from '../asset/icons/smile.svg';
+import { ReactComponent as Search } from '../asset/icons/search.svg';
 
 const Icons = {
   plus: Plus,
@@ -22,6 +23,7 @@ const Icons = {
   paperClip: PaperClip,
   edit: Edit,
   smile: Smile,
+  search: Search,
   default: Plus,
 } as const;
 
