@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 
 type Props = {
-  progress?: number;
+  progress: number;
 };
 
 export const ProgressBar: React.FC<Props> = ({ progress }) => {
