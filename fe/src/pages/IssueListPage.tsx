@@ -32,12 +32,6 @@ export const IssueListPage: React.FC = ({}) => {
   const [issues, setIssues] = useState<Issues>();
   const [selectedItems, setSelectedItems] = useState<SelectedItems>({});
 
-  const [isTyping, setIsTyping] = useState(false);
-
-  const onTyping = () => {
-    setIsTyping(true);
-  };
-
   const onSingleSelected = (index: number) => {
     setSelectedItems({ [index]: true });
   };
@@ -46,36 +40,5 @@ export const IssueListPage: React.FC = ({}) => {
     setSelectedItems((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
-  return (
-    <>
-      <TextArea
-        size="defaultSize"
-        letterCount={12}
-        isDisabled={true}
-        isTyping={isTyping}
-        onTyping={() => setIsTyping(true)}
-      />
-      <TextArea
-        size="defaultSize"
-        letterCount={12}
-        isDisabled={false}
-        isTyping={isTyping}
-        onTyping={() => setIsTyping(true)}
-      />
-      <TextArea
-        size="S"
-        letterCount={12}
-        isDisabled={false}
-        isTyping={isTyping}
-        onTyping={() => setIsTyping(true)}
-      />
-      <TextArea
-        size="S"
-        letterCount={12}
-        isDisabled={false}
-        isTyping={isTyping}
-        onTyping={() => setIsTyping(true)}
-      />
-    </>
-  );
+  return <></>;
 };
