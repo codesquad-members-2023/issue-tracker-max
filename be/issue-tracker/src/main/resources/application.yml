@@ -12,6 +12,12 @@ spring:
   mvc:
     path match:
       matching-strategy: ant_path_matcher
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+#      schema.sql, data.sql 경로 지정해주지 않아도 자동으로 주입.
+
 ---
 mybatis:
   configuration:
