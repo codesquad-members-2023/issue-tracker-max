@@ -1,6 +1,7 @@
 import { useTheme } from '@emotion/react';
 import React, { useState } from 'react';
 import { DropDownList } from './DropDownList';
+import { DropDownHeader } from './DropDownHeader';
 
 type DropDownItem = {
   id?: string;
@@ -36,6 +37,7 @@ export const DropDownPanel: React.FC<Props> = ({
         position: 'absolute',
         top: '100%',
         [alignment]: '0',
+        marginLeft: alignment === 'center' ? '-8px' : '0',
         zIndex: 50,
         width: '240px',
         borderRadius: theme.radius.l,
@@ -43,16 +45,7 @@ export const DropDownPanel: React.FC<Props> = ({
         background: theme.neutral.surface.default,
       }}
     >
-      <div
-        css={{
-          borderBottom: `${theme.border.default} ${theme.neutral.border.default}`,
-          padding: '8px 16px',
-          font: theme.fonts.displayMedium12,
-          color: theme.neutral.text.weak,
-        }}
-      >
-        {panelHeader}
-      </div>
+      <DropDownHeader panelHeader={panelHeader} />
       <ul>
         {options.map((item, index: number) => (
           <DropDownList
