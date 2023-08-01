@@ -13,7 +13,7 @@ public interface LabelRepository {
 
 	Label findById(Long id);
 
-	Long modify(Label label);
+	void updateBy(final Long labelId, final Label label);
 
 	Long deleteById(Long id);
 }

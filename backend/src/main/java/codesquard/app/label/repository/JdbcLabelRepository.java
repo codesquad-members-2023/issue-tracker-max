@@ -50,8 +50,19 @@ public class JdbcLabelRepository implements LabelRepository {
 	}
 
 	@Override
-	public Long modify(Label label) {
-		return null;
+	public void updateBy(Long labelId, Label label) {
+		String sql = "UPDATE `label` " +
+			"SET `name` = :name, `color` = :color, `background` = :background, `description` = :description " +
+			"WHERE id = :id";
+
+		SqlParameterSource param = new MapSqlParameterSource()
+			.addValue("name", label.getName())
+			.addValue("color", label.getColor().getNameToLowerCase())
+			.addValue("background", label.getBackground())
+			.addValue("description", label.getDescription())
+			.addValue("id", labelId);
+
+		template.update(sql, param);
 	}
 
 	@Override
