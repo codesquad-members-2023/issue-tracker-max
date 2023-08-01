@@ -27,7 +27,7 @@ jobs:
     steps:
       # 1. 워크플로우 실행 전 체크아웃
       - name: Checkout
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       # 2. JDK 11 설치
       - name: Set up JDK 11
