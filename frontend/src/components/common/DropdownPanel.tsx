@@ -77,6 +77,10 @@ const Element = styled.label<{ $option: Option }>`
     $option
       ? theme.color.neutral.text.strong
       : theme.color.neutral.text.default};
+
+  & > input {
+    display: none;
+  }
 `;
 
 const Text = styled.span`
