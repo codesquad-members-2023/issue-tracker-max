@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import codesquard.app.label_milestone.ControllerTestSupport;
-import codesquard.app.milestone.dto.request.MilestoneSavedRequest;
+import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
 
 class MilestoneControllerTest extends ControllerTestSupport {
 
@@ -19,11 +19,11 @@ class MilestoneControllerTest extends ControllerTestSupport {
 	@Test
 	void save() throws Exception {
 		// given
-		MilestoneSavedRequest milestoneSavedRequest = new MilestoneSavedRequest("제목", LocalDate.now(), "내용");
+		MilestoneSaveRequest milestoneSaveRequest = new MilestoneSaveRequest("제목", LocalDate.now(), "내용");
 
 		// when // then
 		mockMvc.perform(post("/api/milestones")
-				.content(objectMapper.writeValueAsString(milestoneSavedRequest))
+				.content(objectMapper.writeValueAsString(milestoneSaveRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isCreated())

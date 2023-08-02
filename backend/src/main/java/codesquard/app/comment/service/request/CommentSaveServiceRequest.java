@@ -4,16 +4,19 @@ import java.time.LocalDateTime;
 
 import codesquard.app.comment.entity.Comment;
 import codesquard.app.errors.exception.CommentMaxLengthExceededException;
-import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class CommentSaveServiceRequest {
 
-	private final Long issueId;
+	private Long issueId;
 
-	private final Long userId;
+	private Long userId;
 
-	private final String content;
+	private String content;
 
 	public Comment toEntity(LocalDateTime createdAt) {
 		validateContentLength(this.content);

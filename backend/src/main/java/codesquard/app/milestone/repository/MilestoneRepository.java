@@ -12,7 +12,7 @@ public interface MilestoneRepository {
 
 	Milestone findById(final Long id);
 
-	Long modify(final Milestone milestone);
+	void updateBy(final Long milestoneId, final Milestone milestone);
 
 	Long deleteById(final Long id);
 }

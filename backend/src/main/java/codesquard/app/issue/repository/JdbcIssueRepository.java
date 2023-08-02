@@ -1,41 +1,34 @@
 package codesquard.app.issue.repository;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import codesquard.app.comment.entity.Comment;
 import codesquard.app.issue.entity.Issue;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Repository
 public class JdbcIssueRepository implements IssueRepository {
 
 	private final NamedParameterJdbcTemplate template;
+	private final SimpleJdbcInsert simpleJdbcInsert;
+
+	public JdbcIssueRepository(NamedParameterJdbcTemplate template, DataSource dataSource) {
+		this.template = template;
+		this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+			.withTableName("issue")
+			.usingColumns("title", "content", "milestone_id", "user_id")
+			.usingGeneratedKeyColumns("id");
+	}
 
 	@Override
 	public Long save(Issue issue) {
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		String sql = "INSERT INTO issue(milestone_id, user_id, title, content, status, created_at) VALUES(:milestoneId, :userId, :title, :content, :status, :createdAt)";
-		template.update(sql, getSaveRequestParamSource(issue), keyHolder);
-		return Objects.requireNonNull(keyHolder.getKey()).longValue();
-	}
-
-	private MapSqlParameterSource getSaveRequestParamSource(Issue issue) {
-		MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-		parameterSource.addValue("milestoneId", issue.getMilestoneId());
-		parameterSource.addValue("userId", issue.getUserId());
-		parameterSource.addValue("title", issue.getTitle());
-		parameterSource.addValue("content", issue.getContent());
-		parameterSource.addValue("status", issue.getStatus().name());
-		parameterSource.addValue("createdAt", issue.getCreatedAt());
-		return parameterSource;
+		return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(issue)).longValue();
 	}
 
 	@Override
@@ -58,4 +51,15 @@ public class JdbcIssueRepository implements IssueRepository {
 		return null;
 	}
 
+	@Override
+	public void saveIssueLabel(Long issueId, Long labelId) {
+		String sql = "INSERT INTO issue_label(issue_id, label_id) VALUES(:issueId, :labelId)";
+		template.update(sql, Map.of("issueId", issueId, "labelId", labelId));
+	}
+
+	@Override
+	public void saveIssueAssignee(Long issueId, Long userId) {
+		String sql = "INSERT INTO issue_assignee(issue_id, user_id) VALUES(:issueId, :userId)";
+		template.update(sql, Map.of("issueId", issueId, "userId", userId));
+	}
 }
