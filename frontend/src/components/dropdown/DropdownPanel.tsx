@@ -14,7 +14,7 @@ export function DropdownPanel({
     name: string;
     profile?: string;
     background?: string;
-    color?: "Light" | "Dark";
+    color?: "LIGHT" | "DARK";
     selected: boolean;
     onClick: () => void;
   }[];
@@ -23,19 +23,21 @@ export function DropdownPanel({
     <StyledPanel $alignment={alignment}>
       <div className="dropdown__header">{optionTitle}</div>
       <ul>
-        {options.map(({ name, profile, background, color, selected, onClick }, index) => (
-          <DropdownOption
-            key={`dropdown-option-${index}`}
-            showProfile={showProfile}
-            profile={profile}
-            background={background}
-            color={color}
-            selected={selected}
-            onClick={onClick}
-          >
-            {name}
-          </DropdownOption>
-        ))}
+        {options.map(
+          ({ name, profile, background, color, selected, onClick }, index) => (
+            <DropdownOption
+              key={`dropdown-option-${index}`}
+              showProfile={showProfile}
+              profile={profile}
+              background={background}
+              color={color}
+              selected={selected}
+              onClick={onClick}
+            >
+              {name}
+            </DropdownOption>
+          ),
+        )}
       </ul>
     </StyledPanel>
   );

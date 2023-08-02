@@ -5,7 +5,7 @@ export function DropdownOption({
   showProfile = true,
   profile,
   background,
-  color = "Light",
+  color = "LIGHT",
   selected,
   children,
   onClick,
@@ -13,7 +13,7 @@ export function DropdownOption({
   showProfile?: boolean;
   profile?: string;
   background?: string;
-  color?: "Light" | "Dark";
+  color?: "LIGHT" | "DARK";
   selected: boolean;
   children: string;
   onClick: () => void;
@@ -28,7 +28,10 @@ export function DropdownOption({
       {showProfile && profile ? (
         <img style={{ width: "20px" }} src={profile} alt="프로필 이미지" />
       ) : (
-        <Icon name="userImageSmall" fill={background ?? theme.color.neutralSurfaceBold}/>
+        <Icon
+          name="userImageSmall"
+          fill={background ?? theme.color.neutralSurfaceBold}
+        />
       )}
       <span title={children}>{children}</span>
       <Icon name={`check${selected ? "On" : "Off"}Circle`} />

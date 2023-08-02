@@ -4,10 +4,11 @@ import { ThemeProvider, styled } from "styled-components";
 import { Header } from "./components/Header";
 import { designSystem } from "./constants/designSystem";
 import { Error404 } from "./page/Error404";
+import { Label } from "./page/label/Label";
 import { Main } from "./page/main/Main";
 
 export default function App() {
-  const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
+  const [themeMode, setThemeMode] = useState<"LIGHT" | "DARK">("LIGHT");
 
   return (
     <Div>
@@ -16,6 +17,7 @@ export default function App() {
           <Header />
           <Routes>
             <Route path="/" element={<Main />} />
+            <Route path="/label" element={<Label />} />
             <Route path="*" element={<Error404 />} />
           </Routes>
         </Router>

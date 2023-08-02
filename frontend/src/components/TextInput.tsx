@@ -14,7 +14,7 @@ type TextInputProps = {
   borderNone?: boolean;
   disabled?: boolean;
   isError?: boolean;
-  onChange?: () => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: () => void;
   onBlur?: () => void;
 };
@@ -55,13 +55,17 @@ export function TextInput({
 
   useEffect(() => {
     setState(isError ? "Error" : "Enabled");
-  }, [inputValue, isError]);
+  }, [isError]);
+
+  useEffect(() => {
+    setInputValue(initialValue);
+  }, [initialValue]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
 
     setInputValue(value);
-    onChange && onChange();
+    onChange && onChange(event);
   };
 
   const handleInputFocus = () => {
@@ -84,7 +88,7 @@ export function TextInput({
   const iconColor = theme.color.neutralTextDefault;
 
   return (
-    <Div $state={state}>
+    <Div $state={state} $width={width}>
       <InputContainer
         $width={width}
         $size={size}
@@ -112,9 +116,9 @@ export function TextInput({
   );
 }
 
-const Div = styled.div<{ $state: TextInputState }>`
+const Div = styled.div<{ $state: TextInputState; $width: number }>`
   display: flex;
-  width: 288px;
+  width: ${({ $width }) => $width}px;
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
@@ -128,7 +132,6 @@ const InputContainer = styled.div<InputContainerProps>`
   width: ${({ $width }) => $width}px;
   height: ${({ $size }) => ($size === "L" ? "56px" : "40px")};
   padding: 0px 16px;
-  justify-content: center;
   align-self: stretch;
   flex-direction: ${({ $size }) => ($size === "L" ? "column" : "")};
   align-items: ${({ $size }) => ($size === "L" ? "flex-start" : "center")};
@@ -174,6 +177,7 @@ const IconWrapper = styled.div`
 `;
 
 const Input = styled.input<InputProps>`
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   border: none;
