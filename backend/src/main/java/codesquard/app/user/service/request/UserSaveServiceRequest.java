@@ -1,5 +1,7 @@
 package codesquard.app.user.service.request;
 
+import java.util.Objects;
+
 import codesquard.app.user.entity.User;
 
 public class UserSaveServiceRequest {
@@ -20,5 +22,9 @@ public class UserSaveServiceRequest {
 
 	public User toEntity() {
 		return new User(null, loginId, email, password, avatarUrl);
+	}
+
+	public boolean matchPasswordAndPasswordConfirm() {
+		return Objects.equals(password, passwordConfirm);
 	}
 }

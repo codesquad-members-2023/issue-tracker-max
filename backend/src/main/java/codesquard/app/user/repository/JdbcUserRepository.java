@@ -39,11 +39,11 @@ public class JdbcUserRepository implements UserRepository {
 	@Override
 	public User findById(Long id) {
 		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE id = :id";
-		return template.query(sql, new MapSqlParameterSource("id", id), getUserRowMapper())
+		return template.query(sql, new MapSqlParameterSource("id", id), createUserRowMapper())
 			.stream().findAny().orElseThrow(() -> new RestApiException(UserErrorCode.NOT_FOUND_USER));
 	}
 
-	private RowMapper<User> getUserRowMapper() {
+	private RowMapper<User> createUserRowMapper() {
 		return (rs, rowNum) -> new User(
 			rs.getLong("id"),
 			rs.getString("login_id"),
@@ -61,5 +61,21 @@ public class JdbcUserRepository implements UserRepository {
 	@Override
 	public Long deleteById(Long id) {
 		return null;
+	}
+
+	@Override
+	public boolean existLoginId(User user) {
+		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE login_id = :loginId";
+		return template.query(sql, user.createSaveParamSource(), createUserRowMapper()).stream()
+			.findAny()
+			.isPresent();
+	}
+
+	@Override
+	public boolean existEmail(User user) {
+		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE email = :email";
+		return template.query(sql, user.createSaveParamSource(), createUserRowMapper()).stream()
+			.findAny()
+			.isPresent();
 	}
 }

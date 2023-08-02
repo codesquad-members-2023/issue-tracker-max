@@ -110,4 +110,36 @@ class UserRestControllerTest extends ControllerTestSupport {
 		);
 	}
 
+	@DisplayName("유효하지 않은 비밀번호가 주어지고 회원가입을 요청할때 에러를 응답합니다.")
+	@ParameterizedTest
+	@MethodSource("provideInvalidPassword")
+	public void givenInvalidPassword_whenCreateUser_thenResponse400(String password) throws Exception {
+		// given
+		UserSaveRequest userSaveRequest = new UserSaveRequest("hong1234", "hong1234@gmail.com", password, "hong1234");
+		UserSaveResponse userSaveResponse = UserSaveResponse.success();
+		// mocking
+		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class))).thenReturn(userSaveResponse);
+		// when then
+		mockMvc.perform(post("/api/users")
+				.content(objectMapper.writeValueAsString(userSaveRequest))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("success").value(equalTo(false)))
+			.andExpect(jsonPath("errorCode.name").value(equalTo("INVALID_INPUT_FORMAT")))
+			.andExpect(jsonPath("errorCode.code").value(equalTo(400)))
+			.andExpect(jsonPath("errorCode.httpStatus").value(equalTo("BAD_REQUEST")))
+			.andExpect(jsonPath("errorCode.errorMessage").value(equalTo("유효하지 않은 입력 형식입니다.")))
+			.andExpect(jsonPath("errorCode.errors[0].field").value(equalTo("password")))
+			.andExpect(jsonPath("errorCode.errors[0].message").value(equalTo("8~16자 영문 대 소문자, 숫자, 특수문자만 사용 가능합니다.")));
+	}
+
+	private static Stream<Arguments> provideInvalidPassword() {
+		return Stream.of(
+			Arguments.of(""),
+			Arguments.of(" "),
+			Arguments.of("hong"),
+			Arguments.of("honghonghonghonghonghonghonghong")
+		);
+	}
 }
