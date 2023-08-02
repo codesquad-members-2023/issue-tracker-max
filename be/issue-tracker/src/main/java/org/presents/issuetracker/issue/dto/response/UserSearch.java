@@ -1,21 +1,19 @@
-package org.presents.issuetracker.issue.entity;
+package org.presents.issuetracker.issue.dto.response;
 
 import org.presents.issuetracker.user.entity.User;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
-public class Author {
+public class UserSearch {
 	private Long userId;
 	private String loginId;
 	private String image;
 
-	public static Author fromEntity(User user) {
-		return Author.builder()
+	public static UserSearch fromEntity(User user) {
+		return UserSearch.builder()
 			.userId(user.getUserId())
 			.loginId(user.getLoginId())
 			.image(user.getImage())

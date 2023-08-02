@@ -30,7 +30,7 @@ public class IssueController {
 		return ResponseEntity.status(HttpStatus.OK).body(issueCreateResponse);
 	}
 
-	@GetMapping("/") // query가 없을 시 null
+	@GetMapping() // query가 없을 시 null
 	public ResponseEntity<IssueSearchResponse> showIssues(@RequestParam(required = false) String query) {
 		return ResponseEntity.ok().body(issueService.getIssues());
 	}

@@ -5,11 +5,12 @@ import java.util.Objects;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequestDto;
 
 import lombok.Getter;
-import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 @Getter
+@NoArgsConstructor
 public class Label {
     private Long labelId;
     private String name;

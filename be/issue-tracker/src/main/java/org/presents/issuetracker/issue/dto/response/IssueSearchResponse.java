@@ -2,8 +2,6 @@ package org.presents.issuetracker.issue.dto.response;
 
 import java.util.List;
 
-import org.presents.issuetracker.issue.dto.vo.IssueVo;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +12,9 @@ import lombok.Setter;
 public class IssueSearchResponse {
 	private Long openIssueCount;
 	private Long closedIssueCount;
-	private List<IssueVo> issues;
+	private List<IssueSearch> issues;
 
-	public static IssueSearchResponse from(List<IssueVo> issues) {
+	public static IssueSearchResponse from(List<IssueSearch> issues) {
 		return IssueSearchResponse.builder()
 			.openIssueCount(issues.stream()
 				.filter(i -> "open".equals(i.getStatus()))

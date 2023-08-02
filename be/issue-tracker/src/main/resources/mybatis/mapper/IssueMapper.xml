@@ -2,21 +2,94 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.presents.issuetracker.issue.mapper.IssueMapper">
-    <select id="getIssueList" resultType="org.presents.issuetracker.issue.entity.Issue">
-        SELECT issue_id,
-               author_id,
-               milestone_id,
-               title,
-               contents,
-               created_at,
-               status
-        FROM issuetracker.issue
-        WHERE NOT status IN ('deleted')
+
+    <resultMap id="issueResultMap" type="IssueVo">
+        <id property="issueId" column="issue_id"/>
+        <result property="title" column="issue_title"/>
+        <result property="status" column="issue_status"/>
+        <result property="createdAt" column="issue_created_at"/>
+
+        <association property="author" javaType="User">
+            <id property="userId" column="author_id"/>
+            <result property="loginId" column="author_login_id"/>
+            <result property="image" column="author_image"/>
+        </association>
+
+        <association property="milestone" javaType="Milestone">
+            <id property="milestoneId" column="milestone_id"/>
+            <result property="name" column="milestone_name"/>
+        </association>
+
+        <collection property="labels" ofType="Label">
+            <id property="labelId" column="label_id"/>
+            <result property="name" column="label_name"/>
+            <result property="textColor" column="label_text_color"/>
+            <result property="backgroundColor" column="label_background_color"/>
+        </collection>
+    </resultMap>
+
+    <select id="getIssues" resultMap="issueResultMap">
+        # parameterType="org.presents.issuetracker.issue.dto.request.IssueSearchParam"
+        SELECT DISTINCT i.issue_id as issue_id,
+        i.title as issue_title,
+        i.status as issue_status,
+        i.created_at as issue_created_at,
+        u.user_id as author_id,
+        u.login_id as author_login_id,
+        u.image as author_image,
+        l.label_id as label_id,
+        l.name as label_name,
+        l.text_color as label_text_color,
+        l.background_color as label_background_color,
+        m.milestone_id as milestone_id,
+        m.name as milestone_name
+        FROM issue i
+        INNER JOIN user u ON u.user_id = i.author_id
+        LEFT OUTER JOIN milestone m ON i.milestone_id = m.milestone_id
+        LEFT OUTER JOIN issue_label il ON i.issue_id = il.issue_id
+        LEFT OUTER JOIN label l ON il.label_id = l.label_id
+        LEFT OUTER JOIN assignee a ON i.issue_id = a.issue_id
+        # LEFT OUTER JOIN user u2 ON a.user_id = u2.user_id
+        # LEFT OUTER JOIN comment c ON i.issue_id = c.issue_id;
+        # TODO: 삭제되지 않은 - 레이블(is_deleted), 마일스톤(status), 코멘트(is_deleted) 조건 추가
+        <!--        <where>-->
+        <!--            <if test="isOpen != null">-->
+        <!--                <trim prefix="AND">-->
+        <!--                    i.is_open = #{isOpen}-->
+        <!--                </trim>-->
+        <!--            </if>-->
+        <!--            <if test="assigneeIds != null">-->
+        <!--                <trim prefix="AND">-->
+        <!--                    a.member_id IN-->
+        <!--                </trim>-->
+        <!--                <foreach collection="assigneeIds" item="assigneeId" separator="," open="(" close=")">-->
+        <!--                    #{assigneeId}-->
+        <!--                </foreach>-->
+        <!--            </if>-->
+        <!--            <if test="labelIds != null">-->
+        <!--                <trim prefix="AND">-->
+        <!--                    ilm.label_id IN-->
+        <!--                </trim>-->
+        <!--                <foreach collection="labelIds" item="labelId" separator="," open="(" close=")">-->
+        <!--                    #{labelId}-->
+        <!--                </foreach>-->
+        <!--            </if>-->
+        <!--            <if test="milestoneId != null">-->
+        <!--                <trim prefix="AND">-->
+        <!--                    i.milestone_id = #{milestoneId}-->
+        <!--                </trim>-->
+        <!--            </if>-->
+        <!--            <if test="authorId != null">-->
+        <!--                <trim prefix="AND">-->
+        <!--                    i.author_id = #{authorId}-->
+        <!--                </trim>-->
+        <!--            </if>-->
+        <!--            <if test="commentAuthorId != null">-->
+        <!--                <trim prefix="AND">-->
+        <!--                    ic.author_id = #{commentAuthorId}-->
+        <!--                </trim>-->
+        <!--            </if>-->
+        <!--        </where>-->
     </select>
 
-    <!--    TODO: issue에 해당되는 user, labels, milestone 가져오기-->
-    <!--    키워드-->
-    <!--    spring boot mybatis-->
-    <!--    mybatis mapper-->
-    <!--    mybatis collection-->
 </mapper>
