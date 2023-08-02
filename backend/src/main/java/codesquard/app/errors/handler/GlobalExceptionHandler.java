@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import codesquard.app.errors.errorcode.CommonErrorCode;
 import codesquard.app.errors.errorcode.ErrorCode;
+import codesquard.app.errors.exception.IllegalIssueStatusException;
+import codesquard.app.errors.exception.NoSuchIssueException;
 import codesquard.app.errors.exception.RestApiException;
 import codesquard.app.errors.response.ErrorResponse;
 
@@ -64,4 +66,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(e, errorCode);
 	}
 
+	@ExceptionHandler(IllegalIssueStatusException.class)
+	public ResponseEntity<Object> handleIllegalIssueStatusException(IllegalIssueStatusException e) {
+		logger.info("IllegalIssueStatusException handling : {}", e.toString());
+		return handleExceptionInternal(e.getErrorCode());
+	}
+
+	@ExceptionHandler(NoSuchIssueException.class)
+	public ResponseEntity<Object> handleNoSuchIssueException(NoSuchIssueException e) {
+		logger.info("NoSuchIssueException handling : {}", e.toString());
+		return handleExceptionInternal(e.getErrorCode());
+	}
 }
