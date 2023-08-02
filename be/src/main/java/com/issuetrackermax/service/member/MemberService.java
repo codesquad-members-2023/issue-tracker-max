@@ -27,12 +27,10 @@ public class MemberService {
 	}
 
 	@Transactional
-	public Member saveOrUpdate(MemberProfileResponse memberProfileResponse) {
-		try {
-			return memberRepository.findByMemberLoginId(memberProfileResponse.getLoginId()).get();
-		} catch (Exception e) {
+	public Member registerOauthMember(MemberProfileResponse memberProfileResponse) {
+		if (memberRepository.findByMemberLoginId(memberProfileResponse.getLoginId()).isEmpty()) {
 			memberRepository.save(memberProfileResponse.toMember());
-			return memberRepository.findByMemberLoginId(memberProfileResponse.getLoginId()).get();
 		}
+		return memberRepository.findByMemberLoginId(memberProfileResponse.getLoginId()).get();
 	}
 }

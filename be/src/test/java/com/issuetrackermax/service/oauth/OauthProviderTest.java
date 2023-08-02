@@ -1,6 +1,7 @@
 package com.issuetrackermax.service.oauth;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,12 @@ public class OauthProviderTest extends IntegrationTestSupport {
 		oauthProvider = OauthProvider.createOauthProvider(user, provider);
 
 		// then
-		assertThat(clientId).isEqualTo(oauthProvider.getClientId());
-		assertThat(clientSecret).isEqualTo(oauthProvider.getClientSecret());
-		assertThat(redirectUrl).isEqualTo(oauthProvider.getRedirectUrl());
-		assertThat(tokenUrl).isEqualTo(oauthProvider.getTokenUrl());
-		assertThat(userInfoUrl).isEqualTo(oauthProvider.getUserInfoUrl());
+		assertAll(
+			() -> assertThat(clientId).isEqualTo(oauthProvider.getClientId()),
+			() -> assertThat(clientSecret).isEqualTo(oauthProvider.getClientSecret()),
+			() -> assertThat(redirectUrl).isEqualTo(oauthProvider.getRedirectUrl()),
+			() -> assertThat(tokenUrl).isEqualTo(oauthProvider.getTokenUrl()),
+			() -> assertThat(userInfoUrl).isEqualTo(oauthProvider.getUserInfoUrl()));
 	}
 
 }
