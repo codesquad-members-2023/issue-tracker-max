@@ -49,7 +49,7 @@ const opacity = {
   disabled: "0.32",
 };
 
-const light = {
+const LIGHT = {
   color: {
     neutralTextWeak: color.grayScale600,
     neutralTextDefault: color.grayScale700,
@@ -84,10 +84,10 @@ const light = {
       "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
     brandTextDefault:
       "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
-  }
+  },
 };
 
-const dark = {
+const DARK = {
   color: {
     neutralTextWeak: color.grayScale500,
     neutralTextDefault: color.grayScale400,
@@ -122,22 +122,22 @@ const dark = {
       "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
     brandTextDefault:
       "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
-  }
+  },
 };
 
 export const designSystem = {
-  light: {
+  LIGHT: {
     font,
     radius,
     border,
     opacity,
-    ...light
+    ...LIGHT,
   },
-  dark: {
+  DARK: {
     font,
     radius,
     border,
     opacity,
-    ...dark
+    ...DARK,
   },
 };

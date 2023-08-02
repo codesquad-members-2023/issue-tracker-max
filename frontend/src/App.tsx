@@ -8,7 +8,7 @@ import { Label } from "./page/label/Label";
 import { Main } from "./page/main/Main";
 
 export default function App() {
-  const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
+  const [themeMode, setThemeMode] = useState<"LIGHT" | "DARK">("LIGHT");
 
   return (
     <Div>

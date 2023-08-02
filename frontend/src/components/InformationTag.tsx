@@ -8,7 +8,7 @@ export function InformationTag({
   icon,
   fill,
   stroke,
-  fontColor = "Dark",
+  fontColor = "DARK",
 }: {
   value: string;
   size: "M" | "S";
@@ -16,12 +16,13 @@ export function InformationTag({
   icon?: string;
   fill?: string;
   stroke?: "Default" | "DefaultActive";
-  fontColor?: "Light" | "Dark";
+  fontColor?: "LIGHT" | "DARK";
 }) {
   const theme = useTheme();
-  const iconColor = fontColor === "Dark"
-  ? theme.color.neutralTextWeak
-  : theme.color.brandTextDefault;
+  const iconColor =
+    fontColor === "DARK"
+      ? theme.color.neutralTextWeak
+      : theme.color.brandTextDefault;
 
   return (
     <StyledInformationTag
@@ -29,9 +30,9 @@ export function InformationTag({
       $size={size}
       $fill={fill}
       $stroke={stroke}
-      $darkFont={fontColor === "Dark"}
+      $darkFont={fontColor === "DARK"}
     >
-      {icon && <Icon name={icon} fill={iconColor} stroke={iconColor}/>}
+      {icon && <Icon name={icon} fill={iconColor} stroke={iconColor} />}
       <span>{value}</span>
     </StyledInformationTag>
   );

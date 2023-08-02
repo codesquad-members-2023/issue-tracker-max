@@ -8,10 +8,10 @@ import { DropdownContainer } from "../../components/dropdown/DropdownContainer";
 import { LabelData } from "./Label";
 
 const colorDictionary = {
-  Light: "밝은 색",
-  Dark: "어두운 색",
-  "밝은 색": "Light",
-  "어두운 색": "Dark",
+  LIGHT: "밝은 색",
+  DARK: "어두운 색",
+  "밝은 색": "LIGHT",
+  "어두운 색": "DARK",
 };
 
 type LabelEditorProps = {
@@ -27,8 +27,8 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
   const [background, setBackground] = useState(
     isEditMode ? label.background : "#000000",
   );
-  const [color, setColor] = useState<"Light" | "Dark">(
-    isEditMode ? label.color : "Light",
+  const [color, setColor] = useState<"LIGHT" | "DARK">(
+    isEditMode ? label.color : "LIGHT",
   );
   const [labelName, setLabelName] = useState(isEditMode ? label.name : "");
   const [labelDescription, setLabelDescription] = useState(
@@ -66,7 +66,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
     : !isColorValid || labelName === "";
 
   const updateOptions = (selectedName: string) => {
-    const fontColor = selectedName === "밝은 색" ? "Light" : "Dark";
+    const fontColor = selectedName === "밝은 색" ? "LIGHT" : "DARK";
 
     setColor(fontColor);
     setDropDownName(selectedName);

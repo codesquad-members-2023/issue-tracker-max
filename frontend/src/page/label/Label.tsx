@@ -7,7 +7,7 @@ import { LabelTable } from "./LabelTable";
 export type LabelData = {
   id: number;
   name: string;
-  color: "Light" | "Dark";
+  color: "LIGHT" | "DARK";
   background: string;
   description: string | null;
 };
