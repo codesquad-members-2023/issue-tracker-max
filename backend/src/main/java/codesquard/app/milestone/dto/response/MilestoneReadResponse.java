@@ -2,10 +2,16 @@ package codesquard.app.milestone.dto.response;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MilestoneReadResponse {
+	@JsonProperty("openedMilestoneCount")
 	private Long openedMilestoneCount;
+	@JsonProperty("closedMilestoneCount")
 	private Long closedMilestoneCount;
+	@JsonProperty("labelCount")
 	private Long labelCount;
+	@JsonProperty("milestones")
 	private List<MilestonesResponse> milestones;
 
 	public MilestoneReadResponse(Long openedMilestoneCount, Long closedMilestoneCount, Long labelCount,
@@ -18,21 +24,5 @@ public class MilestoneReadResponse {
 
 	public MilestoneReadResponse success() {
 		return new MilestoneReadResponse(openedMilestoneCount, closedMilestoneCount, labelCount, milestones);
-	}
-
-	public Long getOpenedMilestoneCount() {
-		return openedMilestoneCount;
-	}
-
-	public Long getClosedMilestoneCount() {
-		return closedMilestoneCount;
-	}
-
-	public Long getLabelCount() {
-		return labelCount;
-	}
-
-	public List<MilestonesResponse> getMilestones() {
-		return milestones;
 	}
 }

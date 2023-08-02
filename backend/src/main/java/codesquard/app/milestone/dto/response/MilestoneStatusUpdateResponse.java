@@ -1,6 +1,9 @@
 package codesquard.app.milestone.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MilestoneStatusUpdateResponse {
+	@JsonProperty("success")
 	private final boolean success;
 
 	private MilestoneStatusUpdateResponse(boolean success) {
@@ -9,9 +12,5 @@ public class MilestoneStatusUpdateResponse {
 
 	public static MilestoneStatusUpdateResponse success() {
 		return new MilestoneStatusUpdateResponse(true);
-	}
-
-	public boolean isSuccess() {
-		return success;
 	}
 }

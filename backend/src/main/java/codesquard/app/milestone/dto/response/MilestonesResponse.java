@@ -4,17 +4,27 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import codesquard.app.milestone.entity.Milestone;
 import codesquard.app.milestone.entity.MilestoneStatus;
 
 public class MilestonesResponse {
+	@JsonProperty("id")
 	private Long id; // 등록번호
+	@JsonProperty("status")
 	private MilestoneStatus status; // OPEN, CLOSE
+	@JsonProperty("name")
 	private String name; // 이름
+	@JsonProperty("description")
 	private String description; // 설명
+	@JsonProperty("createdAt")
 	private LocalDateTime createdAt; // 생성 시간
+	@JsonProperty("modifiedAt")
 	private LocalDateTime modifiedAt; // 수정 시간
+	@JsonProperty("deadline")
 	private LocalDate deadline; // 완료일
+	@JsonProperty("issues")
 	private Map<String, Long> issues; // 이슈 카운트
 
 	private MilestonesResponse(Long id, MilestoneStatus status, String name, String description,
@@ -33,37 +43,5 @@ public class MilestonesResponse {
 		return new MilestonesResponse(milestone.getId(), milestone.getStatus(), milestone.getName(),
 			milestone.getDescription(), milestone.getCreatedAt(), milestone.getModifiedAt(), milestone.getDeadline(),
 			issues);
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public MilestoneStatus getStatus() {
-		return status;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public LocalDateTime getModifiedAt() {
-		return modifiedAt;
-	}
-
-	public LocalDate getDeadline() {
-		return deadline;
-	}
-
-	public Map<String, Long> getIssues() {
-		return issues;
 	}
 }
