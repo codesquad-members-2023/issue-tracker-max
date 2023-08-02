@@ -28,7 +28,10 @@ export function DropdownOption({
       {showProfile && profile ? (
         <img style={{ width: "20px" }} src={profile} alt="프로필 이미지" />
       ) : (
-        <Icon name="userImageSmall" fill={background ?? theme.color.neutralSurfaceBold}/>
+        <Icon
+          name="userImageSmall"
+          fill={background ?? theme.color.neutralSurfaceBold}
+        />
       )}
       <span title={children}>{children}</span>
       <Icon name={`check${selected ? "On" : "Off"}Circle`} />

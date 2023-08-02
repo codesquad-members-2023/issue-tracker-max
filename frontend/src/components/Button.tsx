@@ -24,13 +24,15 @@ export function Button({
     Outline: OutlineButton,
     Ghost: GhostButton,
   };
-  
+
   const theme = useTheme();
   const iconColorMap = {
     Container: theme.color.brandTextDefault,
     Outline: theme.color.brandTextWeak,
-    Ghost: selected ? theme.color.neutralTextStrong : theme.color.neutralTextDefault,
-  }
+    Ghost: selected
+      ? theme.color.neutralTextStrong
+      : theme.color.neutralTextDefault,
+  };
 
   const ButtonComponent = buttonMap[buttonType];
   const iconColor = iconColorMap[buttonType];
@@ -44,7 +46,7 @@ export function Button({
       {...props}
     >
       <div>
-        {icon && <Icon name={icon} fill={iconColor} stroke={iconColor}/>}
+        {icon && <Icon name={icon} fill={iconColor} stroke={iconColor} />}
         <span>{children}</span>
       </div>
     </ButtonComponent>

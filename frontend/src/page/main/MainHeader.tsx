@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 
+import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button";
 import { FilterBar } from "../../components/FilterBar";
 import { TabButton } from "../../components/TabButton";
@@ -25,6 +26,7 @@ export function MainHeader({
       selected: false,
     },
   ]);
+  const navigate = useNavigate();
 
   const setDropdownOptions = (singleFilters: SingleFilterData[]) => {
     const options = singleFilters.map((filter) => {
@@ -81,7 +83,7 @@ export function MainHeader({
           size="S"
           buttonType="Container"
           selected
-          onClick={() => {}}
+          onClick={() => navigate("/issues/new")}
         >
           이슈 작성
         </Button>

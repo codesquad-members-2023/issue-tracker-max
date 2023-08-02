@@ -8,6 +8,7 @@ export function DropdownContainer({
   optionTitle,
   options,
   showProfile = true,
+  type = "Default",
   alignment,
   disabled = false,
 }: {
@@ -22,6 +23,7 @@ export function DropdownContainer({
     onClick: () => void;
   }[];
   showProfile?: boolean;
+  type?: "Default" | "Long";
   alignment: "Left" | "Right";
   disabled?: boolean;
 }) {
@@ -36,12 +38,18 @@ export function DropdownContainer({
   };
 
   return (
-    <StyledContainer>
-      <DropdownIndicator value={name} onClick={openPanel} disabled={disabled} />
+    <StyledContainer $type={type}>
+      <DropdownIndicator
+        value={name}
+        onClick={openPanel}
+        disabled={disabled}
+        type={type}
+      />
       {isPanelOpened && (
         <>
           <div className="dropdown__dim" onClick={closePanel}></div>
           <DropdownPanel
+            type={type}
             optionTitle={optionTitle}
             showProfile={showProfile}
             alignment={alignment}
@@ -53,8 +61,8 @@ export function DropdownContainer({
   );
 }
 
-const StyledContainer = styled.div`
-  width: fit-content;
+const StyledContainer = styled.div<{ $type: "Default" | "Long" }>`
+  width: ${({ $type }) => ($type === "Default" ? "fit-content" : "100%")};
   position: relative;
 
   & .dropdown__dim {
