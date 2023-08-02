@@ -53,7 +53,7 @@
         </collection>
     </resultMap>
 
-    <select id="getIssueDetail" parameterType="Long" resultType="issueDetailResultMap">
+    <select id="getIssueDetail" parameterType="Long" resultMap="issueDetailResultMap">
         SELECT i.issue_id, i.title, i.contents, i.created_at, i.status
         , i.author_id, u.login_id, u.image AS author_image
         , mis.milestone_id, mis.name AS milestone_name
