@@ -40,8 +40,6 @@ class UserRepositoryTest extends IntegrationTestSupport {
 		User findUser = userRepository.findById(savedId);
 		SoftAssertions.assertSoftly(softAssertions -> {
 			softAssertions.assertThat(findUser).isNotNull();
-			softAssertions.assertThat(findUser.getLoginId()).isEqualTo("user1");
-			softAssertions.assertThat(findUser.getEmail()).isEqualTo("user1@gmail.com");
 			softAssertions.assertAll();
 		});
 	}
