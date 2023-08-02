@@ -18,7 +18,7 @@ public class FilterController {
 
 	@GetMapping()
 	public ApiResponse<FilterResponse> getFilteredIssues(@ModelAttribute FilterRequest filterRequest) {
-		FilterResponse maintPageIssue = filterService.getMainPageIssue(filterRequest);
-		return ApiResponse.success(maintPageIssue);
+		FilterResponse mainPageIssue = filterService.getMainPageIssue(filterRequest);
+		return ApiResponse.success(mainPageIssue);
 	}
 }
