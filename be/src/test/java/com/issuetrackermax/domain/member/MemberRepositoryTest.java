@@ -7,16 +7,15 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.member.entity.LoginType;
 import com.issuetrackermax.domain.member.entity.Member;
 
-@JdbcTest
-@ActiveProfiles("test")
-class MemberRepositoryTest {
+@Transactional
+class MemberRepositoryTest extends IntegrationTestSupport {
 
 	private MemberRepository memberRepository;
 
@@ -56,6 +55,6 @@ class MemberRepositoryTest {
 		Long saveId = memberRepository.save(member);
 
 		// then
-		assertThat(saveId).isEqualTo(1L);
+		assertThat(saveId).isNotNull();
 	}
 }

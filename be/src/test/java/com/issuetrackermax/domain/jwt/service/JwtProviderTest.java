@@ -8,17 +8,14 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
+import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.jwt.entity.Jwt;
 import com.issuetrackermax.service.jwt.JwtProvider;
 
 import io.jsonwebtoken.Claims;
 
-@SpringBootTest
-@ActiveProfiles("test")
-class JwtProviderTest {
+class JwtProviderTest extends IntegrationTestSupport {
 
 	@Autowired
 	private JwtProvider jwtProvider;

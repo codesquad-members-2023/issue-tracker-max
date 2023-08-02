@@ -7,17 +7,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
+import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.member.MemberRepository;
 import com.issuetrackermax.domain.member.entity.Member;
 import com.issuetrackermax.util.DatabaseCleaner;
 
-@SpringBootTest
-@ActiveProfiles("test")
-class MemberServiceTest {
+class MemberServiceTest extends IntegrationTestSupport {
 
 	@Autowired
 	MemberService memberService;

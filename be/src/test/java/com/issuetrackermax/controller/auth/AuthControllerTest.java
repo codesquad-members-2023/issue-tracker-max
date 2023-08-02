@@ -7,29 +7,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.issuetrackermax.controller.ControllerTestSupport;
 import com.issuetrackermax.controller.auth.dto.request.JwtRefreshTokenRequest;
 import com.issuetrackermax.controller.auth.dto.request.LoginRequest;
 import com.issuetrackermax.domain.jwt.entity.Jwt;
-import com.issuetrackermax.service.jwt.JwtService;
 
-@WebMvcTest(controllers = AuthController.class)
-class AuthControllerTest {
-
-	@Autowired
-	private MockMvc mockMvc;
-
-	@Autowired
-	private ObjectMapper objectMapper;
-
-	@MockBean
-	private JwtService jwtService;
+class AuthControllerTest extends ControllerTestSupport {
 
 	@DisplayName("email, password를 입력하여 로그인을 성공한다.")
 	@Test
