@@ -10,5 +10,5 @@ import org.presents.issuetracker.issue.dto.vo.IssueDetailVo;
 public interface IssueMapper {
 	List<IssueDto> getIssueList();
 
-	IssueDetailVo getIssueDetail();
+	IssueDetailVo getIssueDetail(Long issueId);
 }

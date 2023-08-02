@@ -74,7 +74,7 @@ public class IssueService {
 		return issueMapper.getIssueList();
 	}
 
-	public IssueDetailResponse getIssueDetail() {
-		return IssueDetailResponse.fromVo(issueMapper.getIssueDetail());
+	public IssueDetailResponse getIssueDetail(Long issueId) {
+		return IssueDetailResponse.fromVo(issueMapper.getIssueDetail(issueId));
 	}
 }

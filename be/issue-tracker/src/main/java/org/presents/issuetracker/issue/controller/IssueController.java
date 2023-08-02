@@ -5,10 +5,12 @@ import java.util.List;
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
 import org.presents.issuetracker.issue.dto.IssueDto;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequestDto;
+import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 import org.presents.issuetracker.issue.service.IssueService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +36,10 @@ public class IssueController {
 	@GetMapping("/")
 	public List<IssueDto> issue() {
 		return issueService.getIssueList();
+	}
+
+	@GetMapping("/{issueId}")
+	public IssueDetailResponse getIssueDetail(@PathVariable Long issueId) {
+		return issueService.getIssueDetail(issueId);
 	}
 }
