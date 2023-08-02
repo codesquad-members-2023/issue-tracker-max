@@ -52,7 +52,8 @@ export const ListSideBar: React.FC<Props> = ({
   const selectedMilestonesData = milestoneOptions.filter((milestone) =>
     selectedMilestoneIds.includes(milestone.milestoneId),
   );
-  // 기능 붙이면서 문제 없으면 배열로 만들어서 렌더링하는 방식으로 바꿔보기
+
+  // 페이지에서 기능 붙이면서 문제 없으면 배열로 만들어서 렌더링하는 방식으로 바꿔보기
   return (
     <>
       <div
