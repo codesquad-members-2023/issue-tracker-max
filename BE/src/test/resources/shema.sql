@@ -1,11 +1,19 @@
-CREATE TABLE IF EXISTS assignee (
+DROP TABLE IF EXISTS assignee;
+DROP TABLE IF EXISTS issue;
+DROP TABLE IF EXISTS issue_comment;
+DROP TABLE IF EXISTS issue_label_mapping;
+DROP TABLE IF EXISTS label;
+DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS milestone;
+
+CREATE TABLE assignee (
     id         bigint NOT NULL AUTO_INCREMENT,
     issue_id   bigint NOT NULL,
     member_id  bigint NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF EXISTS issue (
+CREATE TABLE issue (
    id             bigint NOT      NULL AUTO_INCREMENT,
    title          varchar(100)    NOT NULL,
    content        varchar(3000),
@@ -16,7 +24,7 @@ CREATE TABLE IF EXISTS issue (
    PRIMARY KEY (id)
 );
 
-CREATE TABLE IF EXISTS issue_comment (
+CREATE TABLE issue_comment (
    id             bigint          NOT NULL AUTO_INCREMENT,
    content        varchar(3000)   NOT NULL,
    create_at      datetime        NOT NULL,
@@ -25,14 +33,14 @@ CREATE TABLE IF EXISTS issue_comment (
    PRIMARY KEY (id)
 );
 
-CREATE TABLE IF EXISTS issue_label_mapping (
+CREATE TABLE issue_label_mapping (
     id           bigint    NOT NULL AUTO_INCREMENT,
     issue_id     bigint    NOT NULL,
     label_id     bigint    NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF EXISTS label (
+CREATE TABLE label (
    id           bigint        NOT NULL AUTO_INCREMENT,
    title        varchar(50)   NOT NULL,
    description  varchar(100)  DEFAULT NULL,
@@ -40,7 +48,7 @@ CREATE TABLE IF EXISTS label (
    PRIMARY KEY (id)
 );
 
-CREATE TABLE IF EXISTS member (
+CREATE TABLE member (
     id                bigint           NOT NULL AUTO_INCREMENT,
     email             varchar(200)     NOT NULL,
     password          varchar(12)      NOT NULL,
@@ -49,7 +57,7 @@ CREATE TABLE IF EXISTS member (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF EXISTS milestone (
+CREATE TABLE milestone (
    id             bigint          NOT NULL AUTO_INCREMENT,
    title          varchar(50)     NOT NULL,
    description    varchar(100),

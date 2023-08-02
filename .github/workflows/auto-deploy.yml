@@ -1,0 +1,90 @@
+name: issue
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  APPLICATION_PROD_DB_FILE_PATH: ./BE/src/main/resources/application-prodDB.yml
+  APPLICATION_TEST_DB_FILE_PATH: ./BE/src/main/resources/application-testDB.yml
+  DEPLOYMENT_APPLICATION_NAME: issue
+  DEPLOYMENT_GROUP_NAME: issue-group
+  S3_BUCKET_NAME: issue-mandu
+  AWS_REGION: ap-northeast-2
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'corretto'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Create application-prodDB.yml
+        run: touch ${{ env.APPLICATION_PROD_DB_FILE_PATH }}
+        shell: bash
+      - run: echo "${{ secrets.APPLICATION_PROD_DB }}" > ${{ env.APPLICATION_PROD_DB_FILE_PATH }}
+        shell: bash
+
+      - name: Create application-testDB.yml
+        run: touch ${{ env.APPLICATION_TEST_DB_FILE_PATH }}
+        shell: bash
+      - run: echo "${{ secrets.APPLICATION_TEST_DB }}" > ${{ env.APPLICATION_TEST_DB_FILE_PATH }}
+        shell: bash
+
+      - name: Grant execute gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+        working-directory: ./BE
+
+      - name: Build gradle
+        run: ./gradlew clean build
+        shell: bash
+        working-directory: ./BE
+
+      - name: Install npm
+        run: npm install
+        shell: bash
+        working-directory: ./FE
+
+      - name: Build npm
+        run: npm run build
+        shell: bash
+        working-directory: ./FE
+
+      - name: Create Zip File
+        run: zip -r ./$GITHUB_SHA.zip .
+        shell: bash
+
+      - name: Configure aws
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Send zip file s3
+        run: aws s3 cp --region ${{ env.AWS_REGION }} ./$GITHUB_SHA.zip s3://${{ env.S3_BUCKET_NAME }}/$GITHUB_SHA.zip
+        shell: bash
+
+      - name: Deploy CodeDeploy
+        run: aws deploy create-deployment
+          --application-name ${{ env.DEPLOYMENT_APPLICATION_NAME }}
+          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --deployment-group-name ${{ env.DEPLOYMENT_GROUP_NAME }}
+          --s3-location bucket=${{ env.S3_BUCKET_NAME }},bundleType=zip,key=$GITHUB_SHA.zip
+        shell: bash
