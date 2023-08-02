@@ -1,17 +1,18 @@
 package codesquard.app.milestone.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import codesquard.app.milestone.entity.Milestone;
 
 public interface MilestoneRepository {
-	Long save(Milestone milestone);
+	Optional<Long> save(final Milestone milestone);
 
 	List<Milestone> findAll();
 
-	Milestone findById(Long id);
+	Milestone findById(final Long id);
 
-	Long modify(Milestone milestone);
+	void updateBy(final Long milestoneId, final Milestone milestone);
 
-	Long deleteById(Long id);
+	Long deleteById(final Long id);
 }
