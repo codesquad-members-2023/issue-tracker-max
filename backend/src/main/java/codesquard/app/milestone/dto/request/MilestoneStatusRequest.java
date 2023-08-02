@@ -1,14 +1,14 @@
 package codesquard.app.milestone.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import codesquard.app.milestone.entity.MilestoneStatus;
 
 public class MilestoneStatusRequest {
+	@JsonProperty("status")
 	private String status;
 
-	private MilestoneStatusRequest() {
-	}
-
-	public MilestoneStatusRequest(String status) {
+	private MilestoneStatusRequest(String status) {
 		this.status = status;
 	}
 
@@ -18,9 +18,5 @@ public class MilestoneStatusRequest {
 		}
 
 		return MilestoneStatus.CLOSED;
-	}
-
-	public String getStatus() {
-		return status;
 	}
 }

@@ -38,17 +38,17 @@ public class MilestoneController {
 		@RequestParam(name = "state", defaultValue = "opened") String openedString,
 		@RequestParam(name = "state", defaultValue = "closed") String closedString) {
 		MilestoneReadResponse milestoneReadResponse = milestoneService.makeMilestoneResponse(
-			chooseStatus(closedString));
+			chooseStatus(openedString, closedString));
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(milestoneReadResponse.success());
 	}
 
-	/**
-	 * closed로 받아온 값이 closed가 아니라면 무조건 opened라는 의미이므로
-	 * 사실상 매개변수에 opened를 추가할 필요는 없음
-	 */
-	private MilestoneStatus chooseStatus(String closedString) {
+	private MilestoneStatus chooseStatus(String openedString, String closedString) {
+		if (openedString.equalsIgnoreCase("opened")) {
+			return MilestoneStatus.OPENED;
+		}
+
 		if (closedString.equalsIgnoreCase("closed")) {
 			return MilestoneStatus.CLOSED;
 		}
