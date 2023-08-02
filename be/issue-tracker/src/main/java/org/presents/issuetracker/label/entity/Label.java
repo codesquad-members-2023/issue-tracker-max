@@ -1,5 +1,9 @@
 package org.presents.issuetracker.label.entity;
 
+import java.util.Objects;
+
+import org.presents.issuetracker.label.dto.request.LabelUpdateRequestDto;
+
 import lombok.Getter;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
 
@@ -15,7 +19,7 @@ public class Label {
     private boolean isDeleted;
 
     private Label(Long id, String name, String description, String backgroundColor, String textColor) {
-        this.id = id;
+        this.labelId = id;
         this.name = name;
         this.description = description;
         this.backgroundColor = backgroundColor;
@@ -23,7 +27,7 @@ public class Label {
     }
 
     private Label(Long id, String name, String backgroundColor, String textColor) {
-        this.id = id;
+        this.labelId = id;
         this.name = name;
         this.backgroundColor = backgroundColor;
         this.textColor = textColor;
@@ -64,5 +68,4 @@ public class Label {
 
         return this;
     }
-	private Long labelId;
 }

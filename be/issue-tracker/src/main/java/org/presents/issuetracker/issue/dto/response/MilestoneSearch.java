@@ -9,12 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class MilestoneResponseDto {
+public class MilestoneSearch {
 	private Long id;
 	private String name;
 
-	public static MilestoneResponseDto fromEntity(Milestone milestone) {
-		return MilestoneResponseDto.builder()
+	public static MilestoneSearch fromEntity(Milestone milestone) {
+		return MilestoneSearch.builder()
 			.id(milestone.getMilestoneId())
 			.name(milestone.getName()).build();
 	}
