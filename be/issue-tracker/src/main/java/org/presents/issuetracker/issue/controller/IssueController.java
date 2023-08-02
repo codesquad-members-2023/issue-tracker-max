@@ -9,6 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
+
+import org.presents.issuetracker.issue.dto.IssueDto;
+import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,5 +28,10 @@ public class IssueController {
         IdResponseDto issueCreateResponse = IdResponseDto.builder().id(issueService.create(issueCreateRequestDto)).build();
 
         return ResponseEntity.status(HttpStatus.OK).body(issueCreateResponse);
+    }
+
+    @GetMapping("/")
+    public List<IssueDto> issue(){
+        return issueService.getIssueList();
     }
 }

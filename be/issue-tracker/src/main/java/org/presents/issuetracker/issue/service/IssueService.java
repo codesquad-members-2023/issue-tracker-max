@@ -6,6 +6,10 @@ import org.presents.issuetracker.issue.entity.Assignee;
 import org.presents.issuetracker.issue.entity.Issue;
 import org.presents.issuetracker.issue.entity.IssueLabel;
 import org.presents.issuetracker.issue.repository.IssueRepository;
+import java.util.List;
+
+import org.presents.issuetracker.issue.mapper.IssueMapper;
+import org.presents.issuetracker.issue.dto.IssueDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +18,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class IssueService {
-
     private final IssueRepository issueRepository;
+    private final IssueMapper issueMapper;
 
     @Transactional(rollbackFor = Exception.class)
     public Long create(IssueCreateRequestDto issueCreateRequestDto) {
@@ -65,4 +69,7 @@ public class IssueService {
         return savedIssueId;
     }
 
+    public List<IssueDto> getIssueList() {
+        return issueMapper.getIssueList();
+    }
 }

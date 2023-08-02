@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.presents.issuetracker.issue.mapper.IssueMapper">
+    <select id="getIssueList" resultType="org.presents.issuetracker.issue.dto.IssueDto">
+        SELECT
+            issue_id, author_id, title, contents, created_at, status
+        FROM
+            issuetracker.issue
+    </select>
+</mapper>
