@@ -8,6 +8,7 @@ type ButtonProps = {
   flexible?: "Flexible" | "Fixed";
   icon?: string;
   selected?: boolean;
+  color?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
@@ -17,23 +18,26 @@ export function Button({
   icon,
   selected,
   children,
+  color,
   ...props
 }: ButtonProps) {
   const buttonMap = {
-    Container: ConatinerButton,
+    Container: ContainerButton,
     Outline: OutlineButton,
     Ghost: GhostButton,
   };
-  
+
   const theme = useTheme();
   const iconColorMap = {
     Container: theme.color.brandTextDefault,
     Outline: theme.color.brandTextWeak,
-    Ghost: selected ? theme.color.neutralTextStrong : theme.color.neutralTextDefault,
-  }
+    Ghost: selected
+      ? theme.color.neutralTextStrong
+      : theme.color.neutralTextDefault,
+  };
 
   const ButtonComponent = buttonMap[buttonType];
-  const iconColor = iconColorMap[buttonType];
+  const iconColor = color || iconColorMap[buttonType];
 
   return (
     <ButtonComponent
@@ -41,10 +45,11 @@ export function Button({
       $size={size}
       $flexible={flexible === "Flexible"}
       $selected={selected}
+      $color={color}
       {...props}
     >
       <div>
-        {icon && <Icon name={icon} fill={iconColor} stroke={iconColor}/>}
+        {icon && <Icon name={icon} fill={iconColor} stroke={iconColor} />}
         <span>{children}</span>
       </div>
     </ButtonComponent>
@@ -54,6 +59,7 @@ export function Button({
 const StyledButton = styled.button<{
   $size: "S" | "M" | "L";
   $flexible?: boolean;
+  $color?: string;
 }>`
   width: ${({ $size, $flexible }) => {
     if ($flexible) {
@@ -122,15 +128,15 @@ const StyledButton = styled.button<{
   }
 `;
 
-const ConatinerButton = styled(StyledButton)`
+const ContainerButton = styled(StyledButton)`
   background-color: ${({ theme }) => theme.color.brandSurfaceDefault};
-  color: ${({ theme }) => theme.color.brandTextDefault};
+  color: ${({ theme, $color }) => $color || theme.color.brandTextDefault};
 `;
 
 const OutlineButton = styled(StyledButton)`
   border: ${({ theme }) =>
     theme.border.default + theme.color.brandBorderDefault};
-  color: ${({ theme }) => theme.color.brandTextWeak};
+  color: ${({ theme, $color }) => $color || theme.color.brandTextWeak};
 `;
 
 const GhostButton = styled(StyledButton)<{ $selected?: boolean }>`
@@ -152,6 +158,9 @@ const GhostButton = styled(StyledButton)<{ $selected?: boolean }>`
         return "";
     }
   }};
-  color: ${({ theme, $selected }) =>
-    $selected ? theme.color.neutralTextStrong : theme.color.neutralTextDefault};
+  color: ${({ theme, $selected, $color }) =>
+    $color ||
+    ($selected
+      ? theme.color.neutralTextStrong
+      : theme.color.neutralTextDefault)};
 `;

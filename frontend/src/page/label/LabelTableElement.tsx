@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { styled } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { Button } from "../../components/Button";
 import { InformationTag } from "../../components/InformationTag";
 import { LabelData } from "./Label";
@@ -15,6 +15,8 @@ export function LabelTableElement({ label }: { label: LabelData }) {
   const closeEditor = () => {
     setIsEditing(false);
   };
+
+  const theme = useTheme();
 
   return isEditing ? (
     <LabelEditor type="edit" label={label} onClickClose={closeEditor} />
@@ -33,13 +35,23 @@ export function LabelTableElement({ label }: { label: LabelData }) {
         <Button size="S" buttonType="Ghost" icon="edit" onClick={onClickEdit}>
           편집
         </Button>
-        <Button size="S" buttonType="Ghost" icon="trash">
+        <Button
+          size="S"
+          buttonType="Ghost"
+          icon="trash"
+          color={theme.color.dangerSurfaceDefault}
+        >
           삭제
         </Button>
       </Buttons>
     </Div>
   );
 }
+
+const Test = styled.div`
+  filter: invert(41%) sepia(88%) saturate(3066%) hue-rotate(337deg)
+    brightness(94%) contrast(116%);
+`;
 
 const Div = styled.div`
   width: 100%;
@@ -55,7 +67,7 @@ const Div = styled.div`
 
 const Buttons = styled.div`
   display: flex;
-  width: 106px;
+  width: 130px;
   align-items: flex-start;
   gap: 24px;
 `;
