@@ -19,6 +19,7 @@ import codesquard.app.errors.errorcode.CommonErrorCode;
 import codesquard.app.errors.errorcode.ErrorCode;
 import codesquard.app.errors.exception.RestApiException;
 import codesquard.app.errors.response.ErrorResponse;
+import codesquard.app.errors.response.ErrorResultResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -45,14 +46,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			.body(makeErrorResponse(e, errorCode));
 	}
 
-	private ErrorResponse makeErrorResponse(BindException e, ErrorCode errorCode) {
+	private ErrorResultResponse makeErrorResponse(BindException e, ErrorCode errorCode) {
 		List<ErrorResponse.ValidationError> validationErrorList =
 			e.getBindingResult()
 				.getFieldErrors()
 				.stream()
 				.map(ErrorResponse.ValidationError::of)
 				.collect(Collectors.toUnmodifiableList());
-		return new ErrorResponse(errorCode, validationErrorList);
+		return new ErrorResultResponse(new ErrorResponse(errorCode, validationErrorList));
 	}
 
 	@Override
