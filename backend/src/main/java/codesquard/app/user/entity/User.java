@@ -11,6 +11,14 @@ public class User {
 	private final String password;
 	private final String avatarUrl;
 
+	public User(Long id, String loginId, String avatarUrl) {
+		this.id = id;
+		this.loginId = loginId;
+		this.avatarUrl = avatarUrl;
+		this.email = null;
+		this.password = null;
+	}
+
 	public String getLoginId() {
 		return loginId;
 	}

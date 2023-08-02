@@ -14,6 +14,13 @@ public class Label {
 		this.description = description;
 	}
 
+	public Label(Long id, String name, String color, String background) {
+		this.id = id;
+		this.name = name;
+		chooseColor(color);
+		this.background = background;
+	}
+
 	private void chooseColor(String color) {
 		if (color.equalsIgnoreCase(LabelColor.DARK_STRING)) {
 			this.color = LabelColor.DARK;

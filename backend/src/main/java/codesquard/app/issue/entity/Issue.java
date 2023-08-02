@@ -2,8 +2,10 @@ package codesquard.app.issue.entity;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class Issue {
 
@@ -31,5 +33,9 @@ public class Issue {
 
 	public String getContent() {
 		return content;
+	}
+
+	public IssueStatus getStatus() {
+		return status;
 	}
 }
