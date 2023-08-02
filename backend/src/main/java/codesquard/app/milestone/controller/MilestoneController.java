@@ -34,7 +34,7 @@ public class MilestoneController {
 	}
 
 	@GetMapping("/api/milestones")
-	public ResponseEntity<MilestoneReadResponse> getOpened(
+	public ResponseEntity<MilestoneReadResponse> get(
 		@RequestParam(name = "state", defaultValue = "opened") String openedString,
 		@RequestParam(name = "state", defaultValue = "closed") String closedString) {
 		MilestoneReadResponse milestoneReadResponse = milestoneService.makeMilestoneResponse(
