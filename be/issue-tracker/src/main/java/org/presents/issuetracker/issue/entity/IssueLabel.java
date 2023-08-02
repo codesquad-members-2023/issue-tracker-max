@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class IssueLabel {
-    private Long issueId;
-    private Long labelId;
+	private Long issueId;
+	private Long labelId;
 }
