@@ -9,7 +9,7 @@
 | 3    |  |  |
 | 4    |  |  |
 | 5    |  |  |
-| 6    |  |  |
+| 6    | Fia, Sully, 위즈, 네모네모, Jello, Jay  |  https://github.com/masters2023-3rd-project-bugbusters/issue-tracker-max |
 | 7    |  |  |
 | 8    |  |  |
 
