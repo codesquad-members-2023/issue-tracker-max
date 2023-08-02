@@ -16,7 +16,7 @@ public interface IssueRepository {
 
 	Long modify(Issue issue);
 
-	Long deleteById(Long id);
+	void deleteById(Long id);
 
 	void saveIssueLabel(Long issueId, Long labelId);
 
@@ -30,9 +30,9 @@ public interface IssueRepository {
 
 	void modifyMilestone(Long milestoneId, Long issueId);
 
-	void deleteAssigneesById(Long issueId);
+	void deleteIssueAssigneesById(Long issueId);
 
-	void deleteLabelsById(Long issueId);
+	void deleteIssueLabelsById(Long issueId);
 
 	List<User> findAssigneesById(Long issueId);
 

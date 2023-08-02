@@ -65,7 +65,7 @@ public class JdbcIssueRepository implements IssueRepository {
 	@Override
 	public Issue findById(Long id) {
 		String sql = "SELECT id, title, content, status, status_modified_at, created_at, modified_at, milestone_id, "
-			+ "user_id, is_deleted FROM issue WHERE id = :id";
+			+ "user_id, is_deleted FROM issue WHERE id = :id AND is_deleted = false";
 		return template.query(sql, Map.of("id", id), issueRowMapper).get(0);
 	}
 
@@ -75,8 +75,9 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public Long deleteById(Long id) {
-		return null;
+	public void deleteById(Long id) {
+		String sql = "UPDATE issue SET is_deleted = true WHERE id = :id";
+		template.update(sql, Map.of("id", id));
 	}
 
 	@Override
@@ -119,13 +120,13 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public void deleteAssigneesById(Long issueId) {
+	public void deleteIssueAssigneesById(Long issueId) {
 		String sql = "DELETE FROM issue_assignee WHERE issue_id = :issueId";
 		template.update(sql, Map.of("issueId", issueId));
 	}
 
 	@Override
-	public void deleteLabelsById(Long issueId) {
+	public void deleteIssueLabelsById(Long issueId) {
 		String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
 		template.update(sql, Map.of("issueId", issueId));
 	}
@@ -148,7 +149,7 @@ public class JdbcIssueRepository implements IssueRepository {
 
 	@Override
 	public boolean exist(Long issueId) {
-		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id)";
+		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id AND is_deleted = false)";
 		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", issueId), Boolean.class));
 	}
 }
