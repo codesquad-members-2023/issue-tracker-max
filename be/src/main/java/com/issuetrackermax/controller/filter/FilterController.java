@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.issuetrackermax.controller.ApiResponse;
 import com.issuetrackermax.controller.filter.dto.FilterResponse;
-import com.issuetrackermax.controller.issue.dto.response.IssueResponse;
+import com.issuetrackermax.controller.filter.dto.IssueResponse;
 import com.issuetrackermax.domain.filter.FilterMapper;
 import com.issuetrackermax.domain.filter.FilterResultVO;
 import com.issuetrackermax.service.filter.FilterService;

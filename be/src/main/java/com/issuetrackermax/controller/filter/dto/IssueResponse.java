@@ -1,4 +1,4 @@
-package com.issuetrackermax.controller.issue.dto.response;
+package com.issuetrackermax.controller.filter.dto;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ public class IssueResponse {
 	private HistoryResponse history;
 	private List<LabelResponse> labels;
 	private List<AssigneeResponse> assignees;
-	private String writer;
-	private String milestoneTitle;
+	private WriterResponse writer;
+	private MilestoneResponse milestone;
 
 	@Builder
 	public IssueResponse(FilterResultVO resultVO) {
@@ -31,10 +31,16 @@ public class IssueResponse {
 			.modifiedAt(resultVO.getModifiedAt())
 			.build();
 		this.labels = LabelResponse.convertToLabelResponseList(resultVO.getLabelIds(), resultVO.getLabelTitles());
-		this.writer = resultVO.getWriter();
+		this.writer = WriterResponse.builder()
+			.id(resultVO.getWriterId())
+			.name(resultVO.getWriter())
+			.build();
 		this.assignees = AssigneeResponse.convertToAssigneeResponseList(resultVO.getAssigneeIds(),
 			resultVO.getAssigneeNames());
-		this.milestoneTitle = resultVO.getMilestoneTitle();
+		this.milestone = MilestoneResponse.builder()
+			.id(resultVO.getMilestoneId())
+			.title(resultVO.getMilestoneTitle())
+			.build();
 	}
 
 }

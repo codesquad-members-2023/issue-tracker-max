@@ -1,4 +1,4 @@
-package com.issuetrackermax.controller.issue.dto.response;
+package com.issuetrackermax.controller.filter.dto;
 
 import java.time.LocalDateTime;
 

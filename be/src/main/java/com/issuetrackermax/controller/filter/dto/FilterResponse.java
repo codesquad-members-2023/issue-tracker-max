@@ -2,8 +2,6 @@ package com.issuetrackermax.controller.filter.dto;
 
 import java.util.List;
 
-import com.issuetrackermax.controller.issue.dto.response.IssueResponse;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
