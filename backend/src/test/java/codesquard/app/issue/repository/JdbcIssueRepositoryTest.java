@@ -122,8 +122,21 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		assertThat(issueRepository.findById(id).getMilestoneId()).isEqualTo(0L);
 	}
 
+	@DisplayName("이슈를 등록하고 삭제한다.")
+	@Test
+	void deleteIssue() {
+		// given
+		Long id = createIssue();
+
+		// when
+		issueRepository.deleteById(id);
+
+		// then
+		assertThat(issueRepository.exist(id)).isFalse();
+	}
+
 	private Long createIssue() {
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveRequest().toEntity());
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		MilestoneSaveRequest milestoneSaveRequest = FixtureFactory.createMilestoneCreateRequest("레포지토리");
 		Long milestoneId = milestoneRepository.save(MilestoneSaveRequest.toEntity(milestoneSaveRequest)).orElseThrow();
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Repository", "내용", milestoneId);

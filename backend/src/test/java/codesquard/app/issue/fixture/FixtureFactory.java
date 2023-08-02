@@ -6,7 +6,7 @@ import java.util.List;
 
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
-import codesquard.app.user.controller.request.UserSaveRequest;
+import codesquard.app.user.service.request.UserSaveServiceRequest;
 
 public class FixtureFactory {
 
@@ -16,12 +16,12 @@ public class FixtureFactory {
 		return new IssueSaveRequest(title, content, milestone, labels, assignees);
 	}
 
-	public static UserSaveRequest createUserSaveRequest() {
+	public static UserSaveServiceRequest createUserSaveServiceRequest() {
 		String userId = "wis";
 		String email = "wis@abcd.com";
 		String password = "code1234";
 		String avatarUrl = "url";
-		return new UserSaveRequest(userId, email, password, avatarUrl);
+		return new UserSaveServiceRequest(userId, email, password, password, avatarUrl);
 	}
 
 	public static MilestoneSaveRequest createMilestoneCreateRequest(String name) {
