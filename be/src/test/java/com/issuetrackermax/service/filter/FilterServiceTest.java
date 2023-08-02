@@ -1,6 +1,7 @@
 package com.issuetrackermax.service.filter;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
@@ -9,7 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.issuetrackermax.controller.filter.dto.FilterRequest;
+import com.issuetrackermax.controller.filter.dto.FilterResponse;
+import com.issuetrackermax.controller.filter.dto.IssueResponse;
 import com.issuetrackermax.domain.IntegrationTestSupport;
+import com.issuetrackermax.domain.filter.FilterResultVO;
 import com.issuetrackermax.domain.issue.IssueRepository;
 import com.issuetrackermax.domain.issue.entity.Issue;
 import com.issuetrackermax.domain.label.LabelRepository;
@@ -34,6 +39,95 @@ class FilterServiceTest extends IntegrationTestSupport {
 	@AfterEach
 	void cleaner() {
 		databaseCleaner.execute();
+	}
+
+	@DisplayName("FilterRequest가 인자로 돌아오면 FilterResultVO를 filtterMapper에서 반환한다.")
+	@Test
+	void getFilterVO() {
+		// given
+		Issue issue = makeIssue(true, "title", 1L, 1L);
+		Long saveId = issueRepository.save(issue);
+		FilterRequest filterRequest = FilterRequest
+			.builder().build();
+
+		// when
+		List<FilterResultVO> filterVO = filterService.getFilterVO(filterRequest);
+
+		// then
+		assertThat(filterVO).hasSize(1)
+			.extracting("id", "isOpen", "title")
+			.containsExactlyInAnyOrder(
+				tuple(1L, true, "title")
+			);
+
+	}
+
+	@DisplayName("FilterResultVO를 IssueResponse로 반환한다.")
+	@Test
+	void getIssueResponse() {
+		// given
+		FilterResultVO filterResultVO = FilterResultVO.builder()
+			.id(1L)
+			.isOpen(true)
+			.writerId(1L)
+			.writer("June")
+			.title("issue_title")
+			.editor("June")
+			.labelIds("1,2")
+			.labelTitles("label1,label2")
+			.assigneeIds("1,2")
+			.assigneeNames("June,Movie")
+			.milestoneId(1L)
+			.milestoneTitle("milestone_title").build();
+
+		// when
+		List<IssueResponse> issues = filterService.getIssues(List.of(filterResultVO));
+
+		// then
+		assertThat(issues).hasSize(1);
+		assertAll(
+			() -> assertThat(issues.get(0).getId()).isEqualTo(1L),
+			() -> assertThat(issues.get(0).getIsOpen()).isTrue(),
+			() -> assertThat(issues.get(0).getTitle()).isEqualTo("issue_title"),
+			() -> assertThat(issues.get(0).getHistory().getEditor()).isEqualTo("June"),
+			() -> assertThat(issues.get(0).getLabels().get(0).getId()).isEqualTo(1L),
+			() -> assertThat(issues.get(0).getLabels().get(0).getTitle()).isEqualTo("label1"),
+			() -> assertThat(issues.get(0).getLabels().get(1).getId()).isEqualTo(2L),
+			() -> assertThat(issues.get(0).getLabels().get(1).getTitle()).isEqualTo("label2"),
+			() -> assertThat(issues.get(0).getAssignees().get(0).getId()).isEqualTo(1L),
+			() -> assertThat(issues.get(0).getAssignees().get(0).getName()).isEqualTo("June"),
+			() -> assertThat(issues.get(0).getAssignees().get(1).getId()).isEqualTo(2L),
+			() -> assertThat(issues.get(0).getAssignees().get(1).getName()).isEqualTo("Movie"),
+			() -> assertThat(issues.get(0).getMilestone().getId()).isEqualTo(1L),
+			() -> assertThat(issues.get(0).getMilestone().getTitle()).isEqualTo("milestone_title"));
+
+	}
+
+	@DisplayName("FilterRequest를 받은 후 FilterResponse로 반환한다.")
+	@Test
+	void getMainPageIssueTest() {
+		// given
+		FilterRequest filterRequest = FilterRequest.builder()
+			.issueIsOpen(true)
+			.build();
+		Issue issue = makeIssue(true, "issue_title", 1L, 1L);
+		Long save = issueRepository.save(issue);
+
+		// when
+		FilterResponse mainPageIssue = filterService.getMainPageIssue(filterRequest);
+		List<IssueResponse> issues = mainPageIssue.getIssues();
+
+		// then
+		assertAll(
+			() -> assertThat(mainPageIssue.getLabelCount()).isEqualTo(0L),
+			() -> assertThat(mainPageIssue.getMileStoneCount()).isEqualTo(0L),
+			() -> assertThat(mainPageIssue.getOpenIssueCount()).isEqualTo(1L),
+			() -> assertThat(mainPageIssue.getClosedIssueCount()).isEqualTo(0L),
+			() -> assertThat(issues.get(0).getId()).isEqualTo(1L),
+			() -> assertThat(issues.get(0).getIsOpen()).isTrue(),
+			() -> assertThat(issues.get(0).getTitle()).isEqualTo("issue_title")
+		);
+
 	}
 
 	@DisplayName("Repository에 저장된 Milestone의 총 개수를 가져온다.")
@@ -133,7 +227,7 @@ class FilterServiceTest extends IntegrationTestSupport {
 	private Issue makeIssue(Boolean isOpen, String title, Long milestoneId, Long writerId) {
 		return Issue.builder()
 			.isOpen(isOpen)
-			.title("issue_title")
+			.title(title)
 			.milestoneId(milestoneId)
 			.writerId(writerId)
 			.build();
