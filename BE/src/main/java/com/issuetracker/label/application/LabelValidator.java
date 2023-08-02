@@ -18,7 +18,7 @@ public class LabelValidator {
 	private final LabelRepository labelRepository;
 
 	public void verifyLabels(List<Long> ids) {
-		if (ids.isEmpty()) {
+		if (Objects.isNull(ids) || ids.isEmpty()) {
 			return;
 		}
 

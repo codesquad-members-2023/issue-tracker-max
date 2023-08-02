@@ -12,6 +12,8 @@ import com.issuetracker.issue.domain.Issue;
 @Repository
 public class IssueRepository {
 
+	private static final String SAVE_SQL = "INSERT INTO issue(title, content, is_open, create_at, milestone_id, author_id) VALUES(:title, :content, :isOpen, :createAt, :milestoneId, :authorId)";
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public IssueRepository(JdbcTemplate jdbcTemplate) {
@@ -19,9 +21,6 @@ public class IssueRepository {
 	}
 
 	public Long save(Issue issue) {
-		String sql = "INSERT INTO issue(title, content, is_open, create_at, milestone_id, author_id) "
-			+ "VALUES(:title, :content, :isOpen, :createAt, :milestoneId, :authorId)";
-
 		MapSqlParameterSource param = new MapSqlParameterSource()
 			.addValue("title", issue.getTitle())
 			.addValue("content", issue.getContent())
@@ -29,11 +28,9 @@ public class IssueRepository {
 			.addValue("createAt", issue.getCreateAt())
 			.addValue("milestoneId", issue.getMilestone().getId())
 			.addValue("authorId", issue.getAuthor().getId());
-
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
-		jdbcTemplate.update(sql, param, keyHolder);
-
+		jdbcTemplate.update(SAVE_SQL, param, keyHolder);
 		return keyHolder.getKey().longValue();
 	}
 }

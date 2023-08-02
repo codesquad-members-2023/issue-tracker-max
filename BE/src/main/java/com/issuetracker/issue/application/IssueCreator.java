@@ -44,7 +44,7 @@ public class IssueCreator {
 
 	private IssueVerifiedCreator verify(IssueCreateInputData issueCreateData) {
 		milestoneValidator.verifyMilestone(issueCreateData.getMilestoneId());
-		memberValidator.verifyMember(1L);
+		memberValidator.verifyMember(issueCreateData.getAuthor());
 		memberValidator.verifyMembers(issueCreateData.getAssigneeIds());
 		labelValidator.verifyLabels(issueCreateData.getLabelIds());
 

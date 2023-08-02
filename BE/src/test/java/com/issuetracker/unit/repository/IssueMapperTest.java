@@ -14,10 +14,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import com.issuetracker.issue.application.dto.IssueSearchInputData;
 import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.domain.IssueMapper;
+import com.issuetracker.issue.domain.IssueSearch;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.MyBatisMapperTest;
 
@@ -43,17 +42,17 @@ public class IssueMapperTest {
 	@Test
 	void 이슈_목록_조회() {
 		// given
-		IssueSearchInputData issueSearchData = new IssueSearchInputData(
-			true,
-			null,
-			List.of(LABEL5.getId()),
-			MILESTONR1.getId(),
-			USER1.getId(),
-			null
-		);
+		IssueSearch issueSearch = IssueSearch.builder()
+			.isOpen(true)
+			.assigneeIds(null)
+			.labelIds(List.of(LABEL5.getId()))
+			.milestoneId(MILESTONR1.getId())
+			.authorId(USER1.getId())
+			.commentAuthorId(null)
+			.build();
 
 		// when
-		List<Issue> issues = issueMapper.search(issueSearchData);
+		List<Issue> issues = issueMapper.search(issueSearch);
 
 		// then
 		assertThat(issues).hasSize(2);
@@ -62,17 +61,17 @@ public class IssueMapperTest {
 	@Test
 	void 조건에_맞지_않는_이슈_목록_조회() {
 		// given
-		IssueSearchInputData issueSearchData = new IssueSearchInputData(
-			false,
-			null,
-			List.of(LABEL1.getId()),
-			MILESTONR3.getId(),
-			USER4.getId(),
-			null
-		);
+		IssueSearch issueSearch = IssueSearch.builder()
+			.isOpen(false)
+			.assigneeIds(null)
+			.labelIds(List.of(LABEL1.getId()))
+			.milestoneId(MILESTONR3.getId())
+			.authorId(USER4.getId())
+			.commentAuthorId(null)
+			.build();
 
 		// when
-		List<Issue> issues = issueMapper.search(issueSearchData);
+		List<Issue> issues = issueMapper.search(issueSearch);
 
 		// then
 		assertThat(issues).isEmpty();

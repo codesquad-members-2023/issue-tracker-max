@@ -14,6 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -45,10 +48,11 @@ public class LabelValidatorTest {
 		Assertions.assertDoesNotThrow(() -> labelValidator.verifyLabels(ids));
 	}
 
-	@Test
-	void 라벨들이_존재하는지_검증시_아이디들이_비어있는_경우_동작되지_않는다() {
+	@ParameterizedTest
+	@NullAndEmptySource
+	void 라벨들이_존재하는지_검증시_아이디들이_비어있는_경우_동작되지_않는다(List<Long> ids) {
 		// then
-		Assertions.assertDoesNotThrow(() -> labelValidator.verifyLabels(Collections.emptyList()));
+		Assertions.assertDoesNotThrow(() -> labelValidator.verifyLabels(ids));
 		then(labelRepository).should(Mockito.never()).existByIds(null);
 	}
 

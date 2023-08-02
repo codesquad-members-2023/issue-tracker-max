@@ -23,7 +23,7 @@ public class IssueService {
 
 	@Transactional(readOnly = true)
 	public List<IssueSearchInformation> search(IssueSearchInputData issueSearchData) {
-		return IssueSearchInformation.from(issueMapper.search(issueSearchData));
+		return IssueSearchInformation.from(issueMapper.search(issueSearchData.toIssueSearch()));
 	}
 
 	public IssueCreateInformation create(IssueCreateInputData issueCreateData) {

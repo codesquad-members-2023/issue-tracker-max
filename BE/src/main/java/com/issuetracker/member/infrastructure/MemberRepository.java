@@ -12,6 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MemberRepository {
 
+	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM member WHERE id = :id)";
+	private static final String EXIST_BY_IDS_SQL = "SELECT IF(COUNT(id) = :size, TRUE, FALSE) FROM member WHERE id IN(:memberIds)";
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public MemberRepository(JdbcTemplate jdbcTemplate) {
@@ -19,19 +22,13 @@ public class MemberRepository {
 	}
 
 	public boolean existById(Long id) {
-		String sql = "SELECT IF(COUNT(id) = 1, TRUE, FALSE) FROM member WHERE id = :id";
-
-		return jdbcTemplate.queryForObject(sql, Map.of("id", id), Boolean.class);
+		return jdbcTemplate.queryForObject(EXIST_BY_ID_SQL, Map.of("id", id), Boolean.class);
 	}
 
 	public boolean existByIds(List<Long> Ids) {
-		String sql = "SELECT IF(COUNT(id) = :size, TRUE, FALSE) "
-			+ "FROM member "
-			+ " WHERE id IN(:memberIds)";
-
 		SqlParameterSource params = new MapSqlParameterSource()
 			.addValue("memberIds", Ids)
 			.addValue("size", Ids.size());
-		return jdbcTemplate.queryForObject(sql, params, Boolean.class);
+		return jdbcTemplate.queryForObject(EXIST_BY_IDS_SQL, params, Boolean.class);
 	}
 }

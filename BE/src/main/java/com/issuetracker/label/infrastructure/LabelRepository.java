@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class LabelRepository {
 
+	private static final String EXIST_BY_IDS_SQL = "SELECT IF(COUNT(id) = :size, TRUE, FALSE) FROM label WHERE id IN(:labelIds)";
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public LabelRepository(JdbcTemplate jdbcTemplate) {
@@ -18,13 +20,9 @@ public class LabelRepository {
 	}
 
 	public boolean existByIds(List<Long> labelIds) {
-		String sql = "SELECT IF(COUNT(id) = :size, TRUE, FALSE) "
-								 + "FROM label "
-							 + " WHERE id IN(:labelIds)";
-
 		SqlParameterSource params = new MapSqlParameterSource()
 			.addValue("labelIds", labelIds)
 			.addValue("size", labelIds.size());
-		return jdbcTemplate.queryForObject(sql, params, Boolean.class);
+		return jdbcTemplate.queryForObject(EXIST_BY_IDS_SQL, params, Boolean.class);
 	}
 }

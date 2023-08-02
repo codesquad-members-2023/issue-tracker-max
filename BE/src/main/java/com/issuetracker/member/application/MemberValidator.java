@@ -24,7 +24,7 @@ public class MemberValidator {
 	}
 
 	public void verifyMembers(List<Long> ids) {
-		if (ids.isEmpty()) {
+		if (Objects.isNull(ids) || ids.isEmpty()) {
 			return;
 		}
 

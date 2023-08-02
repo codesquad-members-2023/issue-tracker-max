@@ -9,5 +9,5 @@ import com.issuetracker.issue.application.dto.IssueSearchInputData;
 @Mapper
 public interface IssueMapper {
 
-	List<Issue> search(IssueSearchInputData issueSearchData);
+	List<Issue> search(IssueSearch issueSearch);
 }
