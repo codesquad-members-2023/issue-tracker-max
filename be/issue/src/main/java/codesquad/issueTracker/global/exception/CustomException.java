@@ -1,4 +1,4 @@
-package codesquad.issueTracker.global;
+package codesquad.issueTracker.global.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

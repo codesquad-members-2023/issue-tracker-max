@@ -1,4 +1,4 @@
-package codesquad.issueTracker.global;
+package codesquad.issueTracker.global.exception;
 
 import java.util.List;
 
@@ -7,6 +7,9 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import codesquad.issueTracker.global.ApiResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,6 +37,14 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.status(statusCode.getStatus())
 			.body(ApiResponse.fail(statusCode.getStatus(), errorMessage.toString()));
+	}
+
+	@ExceptionHandler(ExpiredJwtException.class)
+	public ResponseEntity<ApiResponse<String>> handleExpiredJwtException(ExpiredJwtException e) {
+		StatusCode statusCode = ErrorCode.from(e);
+
+		return ResponseEntity.status(statusCode.getStatus())
+			.body(ApiResponse.fail(statusCode.getStatus(), statusCode.getMessage()));
 	}
 
 }
