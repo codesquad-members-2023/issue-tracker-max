@@ -1,6 +1,7 @@
 package codesquard.app.label.repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -66,7 +67,10 @@ public class JdbcLabelRepository implements LabelRepository {
 	}
 
 	@Override
-	public Long deleteById(Long id) {
-		return null;
+	public void deleteBy(Long labelId) {
+		String sql = "DELETE FROM `label` " +
+			"WHERE id = :id";
+
+		template.update(sql, Map.of("id", labelId));
 	}
 }

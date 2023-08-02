@@ -4,12 +4,14 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquard.app.label.dto.LabelDeleteResponse;
 import codesquard.app.label.dto.LabelSaveRequest;
 import codesquard.app.label.dto.LabelSaveResponse;
 import codesquard.app.label.dto.LabelUpdateRequest;
@@ -39,5 +41,13 @@ public class LabelController {
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(LabelUpdateResponse.success(true));
+	}
+
+	@DeleteMapping("/api/labels/{labelId}")
+	public ResponseEntity<LabelDeleteResponse> delete(@PathVariable final Long labelId) {
+		labelService.deleteLabel(labelId);
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(LabelDeleteResponse.success(true));
 	}
 }

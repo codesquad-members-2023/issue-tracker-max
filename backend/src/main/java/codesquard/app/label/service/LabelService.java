@@ -26,4 +26,9 @@ public class LabelService {
 	public void updateLabel(Long labelId, LabelUpdateRequest labelUpdateRequest) {
 		labelRepository.updateBy(labelId, LabelUpdateRequest.toEntity(labelUpdateRequest));
 	}
+
+	@Transactional
+	public void deleteLabel(Long labelId) {
+		labelRepository.deleteBy(labelId);
+	}
 }
