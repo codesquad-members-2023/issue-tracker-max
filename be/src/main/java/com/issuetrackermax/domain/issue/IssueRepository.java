@@ -35,10 +35,10 @@ public class IssueRepository {
 			.labelTitles(rs.getString("label_titles"))
 			.writerId(rs.getLong("writer_id"))
 			.writer(rs.getString("writer"))
-			.assigneeIds("assignee_ids")
-			.assigneeNames("assignee_names")
+			.assigneeIds(rs.getString("assignee_ids"))
+			.assigneeNames(rs.getString("assignee_names"))
 			.milestoneId(rs.getLong("milestone_id"))
-			.milestoneTitle("milestone_title")
+			.milestoneTitle(rs.getString("milestone_title"))
 			.build()));
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
