@@ -9,8 +9,6 @@ public class Milestone {
 	private LocalDateTime statusModifiedAt; // 상태(open/close)변경시간
 	private String name; // 이름
 	private String description; // 설명
-	private LocalDateTime createdAt; // 생성시간
-	private LocalDateTime modifiedAt; // 수정시간
 	private LocalDate deadline; // 완료일
 
 	public Milestone(String name, String description, LocalDate deadline) {

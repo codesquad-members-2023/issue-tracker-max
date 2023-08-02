@@ -39,3 +39,4 @@ public class Issue {
 		return status;
 	}
 }
+

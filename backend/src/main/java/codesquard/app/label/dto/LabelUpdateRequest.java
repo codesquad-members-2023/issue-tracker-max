@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 import codesquard.app.label.entity.Label;
 import codesquard.app.label.entity.LabelColor;
 
-public class LabelSavedRequest {
+public class LabelUpdateRequest {
 	@NotNull(message = "제목 입력은 필수입니다.")
 	@Size(min = 1, max = 20, message = "제목은 1글자 이상, 20글자 이하여야 합니다.")
 	private String name;
@@ -19,10 +19,10 @@ public class LabelSavedRequest {
 	@Size(min = 1, max = 10000, message = "내용은 1글자 이상, 10000글자 이하여야 합니다.")
 	private String description;
 
-	private LabelSavedRequest() {
+	private LabelUpdateRequest() {
 	}
 
-	public LabelSavedRequest(String name, String color, String background, String description) {
+	public LabelUpdateRequest(String name, String color, String background, String description) {
 		this.name = name;
 		validateColor(color);
 		this.background = background;
@@ -37,9 +37,9 @@ public class LabelSavedRequest {
 		this.color = color;
 	}
 
-	public static Label toEntity(LabelSavedRequest labelSavedRequest) {
-		return new Label(labelSavedRequest.name, labelSavedRequest.color, labelSavedRequest.background,
-			labelSavedRequest.description);
+	public static Label toEntity(LabelUpdateRequest labelUpdateRequest) {
+		return new Label(labelUpdateRequest.name, labelUpdateRequest.color, labelUpdateRequest.background,
+			labelUpdateRequest.description);
 	}
 
 	public String getName() {

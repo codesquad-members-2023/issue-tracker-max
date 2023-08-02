@@ -26,7 +26,9 @@ import codesquard.app.label.dto.LabelSavedRequest;
 import codesquard.app.label.entity.Label;
 import codesquard.app.label.service.LabelService;
 import codesquard.app.milestone.service.MilestoneService;
+import codesquard.app.user.repository.UserRepository;
 import codesquard.app.user.service.UserService;
+import codesquard.app.user.service.request.UserSaveServiceRequest;
 
 class IssueServiceTest extends IntegrationTestSupport {
 
@@ -36,6 +38,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 	private IssueService issueService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserRepository userRepository;
 	@Autowired
 	private MilestoneService milestoneService;
 	@Autowired
@@ -58,7 +62,9 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void create() {
 		// given
-		Long loginId = userService.save(FixtureFactory.createUserSaveRequest());
+		UserSaveServiceRequest userSaveServiceRequest = new UserSaveServiceRequest("wis", "wis@abcd.com", "code1234",
+			"code1234", null);
+		Long loginId = userRepository.save(userSaveServiceRequest.toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
 

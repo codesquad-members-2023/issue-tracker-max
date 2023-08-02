@@ -1,10 +1,12 @@
 package codesquard.app.label.repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -25,13 +27,12 @@ public class JdbcLabelRepository implements LabelRepository {
 		String sql = "INSERT INTO `label` (`name`, `color`, `background`, `description`) "
 			+ "VALUES (:name, :color, :background, :description)";
 
-		// TODO: enum 타입은 자동으로 못 가져오니 하나씩 내가 직접 넣어줘야 할 듯
-		// SqlParameterSource param = new BeanPropertySqlParameterSource(label);
-		MapSqlParameterSource param = new MapSqlParameterSource();
-		param.addValue("name", label.getName());
-		param.addValue("color", label.getColor().getNameToLowerCase());
-		param.addValue("background", label.getBackground());
-		param.addValue("description", label.getDescription());
+		SqlParameterSource param = new MapSqlParameterSource()
+			.addValue("name", label.getName())
+			.addValue("color", label.getColor().getNameToLowerCase())
+			.addValue("background", label.getBackground())
+			.addValue("description", label.getDescription());
+
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
 		template.update(sql, param, keyHolder);
@@ -50,12 +51,26 @@ public class JdbcLabelRepository implements LabelRepository {
 	}
 
 	@Override
-	public Long modify(Label label) {
-		return null;
+	public void updateBy(Long labelId, Label label) {
+		String sql = "UPDATE `label` " +
+			"SET `name` = :name, `color` = :color, `background` = :background, `description` = :description " +
+			"WHERE id = :id";
+
+		SqlParameterSource param = new MapSqlParameterSource()
+			.addValue("name", label.getName())
+			.addValue("color", label.getColor().getNameToLowerCase())
+			.addValue("background", label.getBackground())
+			.addValue("description", label.getDescription())
+			.addValue("id", labelId);
+
+		template.update(sql, param);
 	}
 
 	@Override
-	public Long deleteById(Long id) {
-		return null;
+	public void deleteBy(Long labelId) {
+		String sql = "DELETE FROM `label` " +
+			"WHERE id = :id";
+
+		template.update(sql, Map.of("id", labelId));
 	}
 }
