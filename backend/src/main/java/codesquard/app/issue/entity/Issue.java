@@ -33,3 +33,4 @@ public class Issue {
 		return content;
 	}
 }
+

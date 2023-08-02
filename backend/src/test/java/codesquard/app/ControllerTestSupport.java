@@ -18,7 +18,7 @@ import codesquard.app.user.service.UserService;
 
 @WebMvcTest(controllers = {
 	CommentController.class,
-	UserRestController.class
+	UserRestController.class,
 	IssueController.class,
 	LabelController.class
 })
