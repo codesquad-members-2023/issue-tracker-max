@@ -61,7 +61,7 @@ export const DropDownList: React.FC<Props> = ({
             position: 'relative',
           }}
         >
-          <UserImageSmall fill="#EFF0F6" />
+          <UserImageSmall fill={theme.neutral.surface.bold} />
           <img
             alt="userImage"
             src={item.image}
@@ -77,9 +77,9 @@ export const DropDownList: React.FC<Props> = ({
       )}
       <span css={commonStyles}>{item.id || item.name}</span>
       {isSelected ? (
-        <CheckOnCircle stroke="#4E4B66" />
+        <CheckOnCircle stroke={theme.neutral.text.default} />
       ) : (
-        <CheckOffCircle stroke="#4E4B66" />
+        <CheckOffCircle stroke={theme.neutral.text.default} />
       )}
     </li>
   );
