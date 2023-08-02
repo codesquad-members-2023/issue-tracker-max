@@ -32,7 +32,7 @@ public class HistoryRepository {
 
 	// todo : 예외처리
 	public History findLatestByIssueId(Long issueId) {
-		String sql = "SELECT h.editor, h.issue_is_open, h.modified_at FROM history h "
+		String sql = "SELECT h.id, h.issue_id, h.editor, h.issue_is_open, h.modified_at FROM history h "
 			+ "WHERE h.id = ("
 			+ "SELECT MAX(id) "
 			+ "FROM history "
