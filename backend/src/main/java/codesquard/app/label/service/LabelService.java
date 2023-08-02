@@ -49,11 +49,10 @@ public class LabelService {
 		// 2. labelCount 가져오기
 		Long labelCount = milestoneRepository.countLabels();
 
-		// 3. openedMilestoneCount, closedMilestoneCount 가져오기 (List로 묶는 거 아님)
+		// 3. openedMilestoneCount 가져오기 (closed는 필요 없음)
 		Long openedMilestoneCount = milestoneRepository.countMilestonesBy(MilestoneStatus.OPENED);
-		Long closedMilestoneCount = milestoneRepository.countMilestonesBy(MilestoneStatus.CLOSED);
 
-		return new LabelReadResponse(openedMilestoneCount, closedMilestoneCount, labelCount, labels);
+		return new LabelReadResponse(openedMilestoneCount, labelCount, labels);
 	}
 
 	private List<LabelsResponse> toDto() {
