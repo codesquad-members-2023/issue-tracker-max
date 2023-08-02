@@ -1,10 +1,11 @@
 import { useTheme } from '@emotion/react';
+type TextColor = string;
 
 type Props = {
   size: 'L' | 'S';
   typeVariant: 'default' | 'filled';
   fillColor?: string;
-  textColor?: 'light' | 'dark';
+  textColor?: 'light' | 'dark' | TextColor;
   children: React.ReactNode;
 };
 

@@ -14,18 +14,37 @@ export const issueStateList = [
 
 export const contributors = [
   {
-    id: 'bono1234',
+    userId: 0,
+    loginId: 'none',
+    image: '',
+  },
+  {
+    userId: 1,
+    loginId: 'bono1234',
     image:
       'https://item.kakaocdn.net/do/6554be44bf80540c7afa12cf4d9b9b7e9f5287469802eca457586a25a096fd31',
   },
   {
-    id: 'ayaan1234',
+    userId: 2,
+    loginId: 'ayaan1234',
+    image:
+      'https://item.kakaocdn.net/do/6554be44bf80540c7afa12cf4d9b9b7e9f5287469802eca457586a25a096fd31',
+  },
+  {
+    userId: 3,
+    loginId: 'gunoc',
     image:
       'https://item.kakaocdn.net/do/6554be44bf80540c7afa12cf4d9b9b7e9f5287469802eca457586a25a096fd31',
   },
 ];
 
 export const labels = [
+  {
+    labelId: 0,
+    name: 'none',
+    textColor: '',
+    backgroundColor: '',
+  },
   {
     labelId: 1,
     name: 'feat',
@@ -35,12 +54,47 @@ export const labels = [
   {
     labelId: 2,
     name: 'fix',
-    textColor: 'dark',
+    textColor: 'light',
     backgroundColor: '#800000',
+  },
+  {
+    labelId: 3,
+    name: 'refactor',
+    textColor: 'dark',
+    backgroundColor: '#fff6a6',
+  },
+  {
+    labelId: 4,
+    name: 'style',
+    textColor: 'dark',
+    backgroundColor: '#cbf5c1',
+  },
+  {
+    labelId: 5,
+    name: 'document',
+    textColor: 'dark',
+    backgroundColor: '#e5f55b',
+  },
+  {
+    labelId: 6,
+    name: 'style',
+    textColor: 'dark',
+    backgroundColor: '#8d97f2',
+  },
+  {
+    labelId: 7,
+    name: 'frontend',
+    textColor: 'dark',
+    backgroundColor: '#d1a7d0',
   },
 ];
 
 export const milestones = [
+  {
+    milestoneId: 0,
+    name: 'none',
+    progress: 0,
+  },
   {
     milestoneId: 1,
     name: '마일스톤1',
@@ -53,8 +107,13 @@ export const milestones = [
   },
   {
     milestoneId: 3,
-    name: '마일스톤이매우길어졌을때어쩌구저쩌구머;리ㅏㅓㄴㅇ리ㅏ머',
-    progress: 78,
+    name: '마일스톤3',
+    progress: 14,
+  },
+  {
+    milestoneId: 4,
+    name: '마일스톤4',
+    progress: 58,
   },
 ];
 
