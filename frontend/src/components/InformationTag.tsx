@@ -38,24 +38,24 @@ export function InformationTag({
   );
 }
 
-const getBorderColor = (hexColor: string | undefined): string => {
-  const theme = useTheme();
-
+function getBorderColor(hexColor: string | undefined): string {
   if (!hexColor || hexColor.length !== 7 || !hexColor.startsWith("#")) {
     return "transparent";
   }
 
-  hexColor = hexColor.substr(1); // Remove the # sign
+  hexColor = hexColor.replace("#", "");
 
-  const r = parseInt(hexColor.substr(0, 2), 16);
-  const g = parseInt(hexColor.substr(2, 2), 16);
-  const b = parseInt(hexColor.substr(4, 2), 16);
+  const r = parseInt(hexColor.substring(0, 2), 16);
+  const g = parseInt(hexColor.substring(2, 2), 16);
+  const b = parseInt(hexColor.substring(4, 2), 16);
   const brightness = Math.round((r * 299 + g * 587 + b * 114) / 1000);
+
+  const theme = useTheme();
 
   return brightness > 200 && brightness <= 255
     ? theme.color.neutralBorderDefault
     : "transparent";
-};
+}
 
 const StyledInformationTag = styled.div<{
   $size: "M" | "S";
