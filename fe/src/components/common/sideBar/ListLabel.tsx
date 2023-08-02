@@ -19,6 +19,7 @@ export const ListLabel: React.FC<Props> = ({ selectedLabelsData }) => {
         display: 'flex',
         gap: '4px',
         flexWrap: 'wrap',
+        marginTop: '-16px',
       }}
     >
       {selectedLabelsData.map((label) => (

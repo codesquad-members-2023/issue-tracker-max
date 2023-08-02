@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { SideBar } from '@components/common/sideBar/SideBar';
+import { ListSideBar } from '@components/common/sideBar/ListSideBar';
 
 type SelectedItems = {
   [key: number]: boolean;
@@ -19,6 +20,7 @@ export const AddIssuePage: React.FC = ({}) => {
   const onMultipleSelectedAssignee = (index: number) => {
     setSelectedAssignees((prev) => ({ ...prev, [index]: !prev[index] }));
   };
+
   const onMultipleSelectedLabel = (index: number) => {
     setSelectedLabels((prev) => ({ ...prev, [index]: !prev[index] }));
   };
@@ -27,31 +29,18 @@ export const AddIssuePage: React.FC = ({}) => {
     setSelectedMilestones({ [index]: true });
   };
 
-  const dropdownList = [
-    {
-      id: 0,
-      panelHeader: '담당자 필터',
-      indicator: '담당자',
-    },
-    { id: 1, panelHeader: '레이블 필터', indicator: '레이블' },
-    {
-      id: 2,
-      panelHeader: '마일스톤 필터',
-      indicator: '마일스톤',
-    },
-  ];
-
   return (
     <>
-      <SideBar
-        // dropdownList={dropdownList}
-        onSingleSelectedMilestone={onSingleSelectedMilestone}
-        onMultipleSelectedAssignee={onMultipleSelectedAssignee}
-        onMultipleSelectedLabel={onMultipleSelectedLabel}
-        selectedAssignees={selectedAssignees}
-        selectedLabels={selectedLabels}
-        selectedMilestones={selectedMilestones}
-      ></SideBar>
+      <SideBar>
+        <ListSideBar
+          onSingleSelectedMilestone={onSingleSelectedMilestone}
+          onMultipleSelectedAssignee={onMultipleSelectedAssignee}
+          onMultipleSelectedLabel={onMultipleSelectedLabel}
+          selectedAssignees={selectedAssignees}
+          selectedLabels={selectedLabels}
+          selectedMilestones={selectedMilestones}
+        />
+      </SideBar>
     </>
   );
 };
