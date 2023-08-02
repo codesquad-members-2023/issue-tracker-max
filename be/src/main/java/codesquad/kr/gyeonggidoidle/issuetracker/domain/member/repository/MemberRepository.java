@@ -1,6 +1,9 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository;
 
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.vo.MemberDetailsVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +37,20 @@ public class MemberRepository {
                     "WHERE ia.issue_id = :issueId";
 
         return template.queryForList(sql, Map.of("issueId", issueId), String.class);
+    }
+
+    public List<MemberDetailsVO> findAllFilters() {
+        String sql = "SELECT id, name, profile " +
+                "FROM member " +
+                "ORDER BY name";
+        return template.query(sql, new MapSqlParameterSource(), memberDetailsVORowMapper());
+    }
+
+    private final RowMapper<MemberDetailsVO> memberDetailsVORowMapper() {
+        return ((rs, rowNum) -> MemberDetailsVO.builder()
+                .id(rs.getLong("id"))
+                .name(rs.getString("name"))
+                .profile(rs.getString("profile"))
+                .build());
     }
 }
