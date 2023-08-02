@@ -7,6 +7,14 @@ public class Label {
 	private String background; // 배경색
 	private String description; // 설명
 
+	public Label(Long id, String name, String color, String background, String description) {
+		this.id = id;
+		this.name = name;
+		chooseColor(color);
+		this.background = background;
+		this.description = description;
+	}
+
 	public Label(String name, String color, String background, String description) {
 		this.name = name;
 		chooseColor(color);
@@ -21,6 +29,10 @@ public class Label {
 		}
 
 		this.color = LabelColor.LIGHT;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public String getName() {
