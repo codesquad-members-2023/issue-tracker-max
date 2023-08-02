@@ -73,6 +73,6 @@
         LEFT JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
         LEFT JOIN comment c ON i.issue_id = c.issue_id AND c.is_deleted = false
         LEFT JOIN user u3 ON c.author_id = u3.user_id
-        WHERE i.issue_id = 1
+        WHERE i.issue_id = #{issueId}
     </select>
 </mapper>
