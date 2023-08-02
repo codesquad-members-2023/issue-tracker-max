@@ -21,7 +21,7 @@ type LabelEditorProps = {
 export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
   const isEditMode = type === "edit" && label;
 
-  const [dropDownName, setDropDownName] = useState<string>(
+  const [selectedFontColor, setSelectedFontColor] = useState<string>(
     isEditMode ? colorDictionary[label.color] : "밝은 색",
   );
   const [background, setBackground] = useState(
@@ -36,7 +36,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
   );
   const [isColorValid, setIsColorValid] = useState(true);
   const [isFocus, setIsFocus] = useState(false);
-  const [options, setOptions] = useState([
+  const [fontColorOptions, setFontColorOptions] = useState([
     {
       name: "밝은 색",
       profile: "",
@@ -69,9 +69,9 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
     const fontColor = selectedName === "밝은 색" ? "LIGHT" : "DARK";
 
     setColor(fontColor);
-    setDropDownName(selectedName);
-    setOptions(
-      options.map((option) => {
+    setSelectedFontColor(selectedName);
+    setFontColorOptions(
+      fontColorOptions.map((option) => {
         return { ...option, selected: option.name === selectedName };
       }),
     );
@@ -104,7 +104,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
   const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.value;
 
-    setLabelName(name);
+    setLabelName(name.trim());
   };
 
   const onChangeDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,9 +171,9 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
               </button>
             </BackgroundSelector>
             <DropdownContainer
-              name={dropDownName}
+              name={selectedFontColor}
               optionTitle={"텍스트 색상"}
-              options={options}
+              options={fontColorOptions}
               alignment="Left"
             />
           </ColorSelector>
