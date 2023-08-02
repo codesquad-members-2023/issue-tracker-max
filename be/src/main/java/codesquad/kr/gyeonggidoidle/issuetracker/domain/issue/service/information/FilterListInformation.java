@@ -4,7 +4,6 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.Label
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.vo.MemberDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 

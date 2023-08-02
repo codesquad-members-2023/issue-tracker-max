@@ -4,7 +4,11 @@ import codesquad.kr.gyeonggidoidle.issuetracker.annotation.ControllerTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.IssueController;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterListInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.LabelFilterInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.MemberFilterInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.MilestoneFilterInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.information.LabelInformation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,6 +68,59 @@ public class IssueControllerTest {
                 .andExpect(jsonPath("$.issues.[0].author").value("작성자 1"))
                 .andExpect(jsonPath("$.issues.[1].assigneeProfiles.[0]").value("담당자 3"))
                 .andDo(print());
+    }
+
+    @DisplayName("필터 내용을 담은 FilterListInformation을 FilterListResponse으로 변환한다.")
+    @Test
+    void testReadFilters() throws Exception {
+        given(issueService.readFilters()).willReturn(createDummyFilterListInformation());
+
+        ResultActions resultActions = mockMvc.perform(get("/api/filters"));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.assignees.length()").value(2))
+                .andExpect(jsonPath("$.authors.[0].name").value("a"))
+                .andExpect(jsonPath("$.labels.length()").value(1))
+                .andExpect(jsonPath("$.milestones.length()").value(0))
+                .andDo(print());
+    }
+
+    private FilterListInformation createDummyFilterListInformation() {
+        return FilterListInformation.builder()
+                .assigneeFilterInformations(createDummyMemberFilterInformations())
+                .authorFilterInformations(createDummyMemberFilterInformations())
+                .labelFilterInformations(createDummyLabelFilterInformations())
+                .milestoneFilterInformations(createDummyMilestoneFilterInformations())
+                .build();
+    }
+
+    private List<MemberFilterInformation> createDummyMemberFilterInformations(){
+        MemberFilterInformation tmp1 = MemberFilterInformation.builder()
+                .id(1L)
+                .name("a")
+                .profile("aa")
+                .build();
+        MemberFilterInformation tmp2 = MemberFilterInformation.builder()
+                .id(2L)
+                .name("b")
+                .profile("bb")
+                .build();
+        return List.of(tmp1, tmp2);
+    }
+
+    private List<LabelFilterInformation> createDummyLabelFilterInformations() {
+        LabelFilterInformation tmp1 = LabelFilterInformation.builder()
+                .id(1L)
+                .name("label")
+                .backgroundColor("#FF")
+                .textColor("color")
+                .build();
+        return List.of(tmp1);
+    }
+
+    private List<MilestoneFilterInformation> createDummyMilestoneFilterInformations() {
+        return List.of();
     }
 
     private FilterInformation createDummyFilterInformation() {
