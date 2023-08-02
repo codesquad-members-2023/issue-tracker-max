@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    group:
+      prod: prodDB, common
+      test: testDB, common
+    active: prod
+---
+spring:
+  config:
+    activate:
+      on-profile: common
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
