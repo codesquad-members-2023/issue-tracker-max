@@ -8,25 +8,20 @@ import org.presents.issuetracker.label.entity.Label;
 import org.presents.issuetracker.milestone.entity.Milestone;
 import org.presents.issuetracker.user.entity.User;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 public class IssueDetailVo {
-	private Long issueId;
-	private String title;
-	private String contents;
-	private LocalDateTime createdAt;
-	private String status;
-	private User author;
-	private Milestone milestone;
-	private List<User> assignees;
-	private List<Label> labels;
-	private List<Comment> comments;
+	private final Long issueId;
+	private final String title;
+	private final String contents;
+	private final LocalDateTime createdAt;
+	private final String status;
+	private final User author;
+	private final Milestone milestone;
+	private final List<User> assignees;
+	private final List<Label> labels;
+	private final List<Comment> comments;
 }

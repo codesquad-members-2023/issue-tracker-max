@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 
 import org.presents.issuetracker.user.entity.User;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
+@AllArgsConstructor
 public class Comment {
 	private Long commentId;
 	private String contents;
