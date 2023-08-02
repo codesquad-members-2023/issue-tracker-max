@@ -6,7 +6,7 @@ import java.util.List;
 
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
-import codesquard.app.user.dto.request.UserSaveRequest;
+import codesquard.app.user.controller.request.UserSaveRequest;
 
 public class FixtureFactory {
 

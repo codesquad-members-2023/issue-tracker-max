@@ -13,10 +13,13 @@ import codesquard.app.issue.controller.IssueController;
 import codesquard.app.issue.service.IssueService;
 import codesquard.app.label.controller.LabelController;
 import codesquard.app.label.service.LabelService;
+import codesquard.app.user.controller.UserRestController;
+import codesquard.app.user.service.UserService;
 
 @WebMvcTest(controllers = {
-	IssueController.class,
 	CommentController.class,
+	UserRestController.class,
+	IssueController.class,
 	LabelController.class
 })
 public abstract class ControllerTestSupport {
@@ -33,4 +36,7 @@ public abstract class ControllerTestSupport {
 	protected CommentService commentService;
 	@MockBean
 	protected LabelService labelService;
+
+	@MockBean
+	protected UserService userService;
 }
