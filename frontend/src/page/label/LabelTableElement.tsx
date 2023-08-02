@@ -48,11 +48,6 @@ export function LabelTableElement({ label }: { label: LabelData }) {
   );
 }
 
-const Test = styled.div`
-  filter: invert(41%) sepia(88%) saturate(3066%) hue-rotate(337deg)
-    brightness(94%) contrast(116%);
-`;
-
 const Div = styled.div`
   width: 100%;
   min-height: 96px;
