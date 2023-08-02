@@ -91,4 +91,3 @@ CREATE TABLE `issue_label` (
     FOREIGN KEY (`issue_id`) REFERENCES `issue` (`issue_id`) ,
     FOREIGN KEY (`label_id`) REFERENCES `label` (`label_id`)
 );
-
