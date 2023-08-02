@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.presents.issuetracker.issue.dto.IssueDto;
+import org.presents.issuetracker.issue.dto.vo.IssueDetailVo;
 
 @Mapper
 public interface IssueMapper {
 	List<IssueDto> getIssueList();
+
+	IssueDetailVo getIssueDetail();
 }

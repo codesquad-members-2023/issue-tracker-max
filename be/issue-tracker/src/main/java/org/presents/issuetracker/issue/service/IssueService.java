@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.presents.issuetracker.issue.dto.IssueDto;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequestDto;
+import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 import org.presents.issuetracker.issue.entity.Assignee;
 import org.presents.issuetracker.issue.entity.Issue;
 import org.presents.issuetracker.issue.entity.IssueLabel;
@@ -71,5 +72,9 @@ public class IssueService {
 
 	public List<IssueDto> getIssueList() {
 		return issueMapper.getIssueList();
+	}
+
+	public IssueDetailResponse getIssueDetail() {
+		return IssueDetailResponse.fromVo(issueMapper.getIssueDetail());
 	}
 }
