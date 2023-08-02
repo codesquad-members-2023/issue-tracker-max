@@ -49,4 +49,19 @@ public class IssueIntegrationTest {
                 .andExpect(jsonPath("$.issues.[1].labels.[0].name").value("라벨 1"))
                 .andDo(print());
     }
+
+    @DisplayName("필터 목록을 가지고 온다.")
+    @Test
+    void testReadFilters() throws Exception {
+        ResultActions resultActions = mockMvc.perform(get("/api/filters"));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.assignees.length()").value(3))
+                .andExpect(jsonPath("$.authors.length()").value(3))
+                .andExpect(jsonPath("$.labels.length()").value(4))
+                .andExpect(jsonPath("$.milestones.length()").value(4))
+                .andExpect(jsonPath("$.assignees.[0].name").value("ati"))
+                .andDo(print());
+    }
 }
