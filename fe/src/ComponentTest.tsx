@@ -1,6 +1,7 @@
 import { Icon } from "components/Icon/Icon";
 import { Button } from "components/Button/Button";
 import { Tag } from "components/Tag/Tag";
+import { Input } from "components/Input/Input";
 
 export const ComponentTest = () => {
   return (
@@ -119,6 +120,12 @@ export const ComponentTest = () => {
           $backgroundColor="#323232"
           size="S"
         />
+        <div style={{ width: "300px" }}>
+          <Input />
+          <Input $labelText="아이디" />
+          <Input placeholder="asfasdasd" />
+          <Input placeholder="asfasdasd" type="S" />
+        </div>
       </div>
     </div>
   );
