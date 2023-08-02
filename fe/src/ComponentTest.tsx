@@ -2,6 +2,7 @@ import { Icon } from "components/Icon/Icon";
 import { Button } from "components/Button/Button";
 import { Tag } from "components/Tag/Tag";
 import { Input } from "components/Input/Input";
+import { TabButton, Tab } from "components/Button/TabButton";
 
 export const ComponentTest = () => {
   return (
@@ -58,7 +59,7 @@ export const ComponentTest = () => {
             <Icon icon="Plus" size="M" />
             닫힌 이슈
           </Button>
-          <Button size="M" variant="contained">
+          <Button size="S" variant="contained">
             <Icon icon="Plus" size="M" />
             닫힌 이슈
           </Button>
@@ -126,6 +127,10 @@ export const ComponentTest = () => {
           <Input placeholder="asfasdasd" />
           <Input placeholder="asfasdasd" type="S" />
         </div>
+        <Tab>
+          <TabButton icon="Label" text="레이블" count={3} />
+          <TabButton icon="Milestone" text="마일스톤" count={2} />
+        </Tab>
       </div>
     </div>
   );

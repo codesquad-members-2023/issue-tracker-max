@@ -53,16 +53,19 @@ const STYLES = {
     font: ${({ theme: { font } }) => font.availableM20};
     gap: 8px;
     width: 240px;
+    height: 56px;
   `,
   M: css`
     font: ${({ theme: { font } }) => font.availableM16};
     gap: 8px;
     width: 184px;
+    height: 48px;
   `,
   S: css`
     font: ${({ theme: { font } }) => font.availableM12};
     gap: 4px;
     width: 128px;
+    height: 40px;
   `,
 };
 
