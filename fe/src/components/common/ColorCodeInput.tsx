@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react';
-import { Input } from './TextInput/Input';
-import { InputContainer } from './TextInput/InputContainer';
+import { Input } from './textInput/Input';
+import { InputContainer } from './textInput/InputContainer';
 import { ReactComponent as RefreshCcw } from '@assets/icons/refreshCcw.svg';
 
 type Props = {

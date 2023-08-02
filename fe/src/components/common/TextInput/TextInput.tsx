@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
-import { InputContainer } from './TextInput/InputContainer';
-import { Input } from './TextInput/Input';
+import { InputContainer } from './InputContainer';
+import { Input } from './Input';
 
 type Props = {
   value: string;

@@ -23,6 +23,7 @@ export const Button: React.FC<Props> = ({
       color: theme.brand.text.weak,
     },
     ghost: {
+      borderRadius: 0,
       color: theme.neutral.text.default,
     },
   };

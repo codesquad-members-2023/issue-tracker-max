@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { Button } from './Button';
-import { Input } from './TextInput/Input';
-import { InputContainer } from './TextInput/InputContainer';
+import { Input } from './textInput/Input';
+import { InputContainer } from './textInput/InputContainer';
 import { ReactComponent as Search } from '@assets/icons/search.svg';
 import { ReactComponent as ChevronDown } from '@assets/icons/chevronDown.svg';
 
