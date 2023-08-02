@@ -1,12 +1,20 @@
 package codesquard.app.user.service.response;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@AllArgsConstructor
 public class UserSaveResponse {
+	@JsonProperty("success")
 	private boolean success;
 
-	public boolean isSuccess() {
-		return success;
+	private UserSaveResponse(boolean success) {
+		this.success = success;
+	}
+
+	public static UserSaveResponse success() {
+		return new UserSaveResponse(true);
+	}
+
+	public static UserSaveResponse fail() {
+		return new UserSaveResponse(false);
 	}
 }

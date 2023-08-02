@@ -13,29 +13,22 @@ import org.springframework.stereotype.Repository;
 import codesquard.app.errors.errorcode.UserErrorCode;
 import codesquard.app.errors.exception.RestApiException;
 import codesquard.app.user.entity.User;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Repository
 public class JdbcUserRepository implements UserRepository {
 
 	private final NamedParameterJdbcTemplate template;
 
+	public JdbcUserRepository(NamedParameterJdbcTemplate template) {
+		this.template = template;
+	}
+
 	@Override
 	public Long save(User user) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		String sql = "INSERT INTO user(login_id, email, password, avatar_url) VALUES(:loginId, :email, :password, :avatarUrl)";
-		template.update(sql, getSaveRequestParamSource(user), keyHolder);
+		template.update(sql, user.createSaveParamSource(), keyHolder);
 		return Objects.requireNonNull(keyHolder.getKey()).longValue();
-	}
-
-	private MapSqlParameterSource getSaveRequestParamSource(User user) {
-		MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-		parameterSource.addValue("loginId", user.getLoginId());
-		parameterSource.addValue("email", user.getEmail());
-		parameterSource.addValue("password", user.getPassword());
-		parameterSource.addValue("avatarUrl", user.getAvatarUrl());
-		return parameterSource;
 	}
 
 	@Override

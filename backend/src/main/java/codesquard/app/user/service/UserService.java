@@ -17,6 +17,6 @@ public class UserService {
 	@Transactional
 	public UserSaveResponse signUp(UserSaveServiceRequest userSaveServiceRequest) {
 		userRepository.save(userSaveServiceRequest.toEntity());
-		return new UserSaveResponse(true);
+		return UserSaveResponse.success();
 	}
 }
