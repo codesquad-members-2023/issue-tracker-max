@@ -14,23 +14,23 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.issuetrackermax.controller.auth.dto.response.JwtResponse;
 import com.issuetrackermax.controller.auth.dto.response.MemberProfileResponse;
 import com.issuetrackermax.controller.auth.dto.response.OauthTokenResponse;
-import com.issuetrackermax.domain.member.MemberRepository;
 import com.issuetrackermax.domain.member.entity.Member;
 import com.issuetrackermax.domain.oauth.InMemoryProviderRepository;
 import com.issuetrackermax.domain.oauth.entity.OauthAttributes;
 import com.issuetrackermax.service.jwt.JwtProvider;
+import com.issuetrackermax.service.member.MemberService;
 
 @Service
 public class OauthService {
 
 	private final InMemoryProviderRepository inMemoryProviderRepository;
-	private final MemberRepository memberRepository;
+	private final MemberService memberService;
 	private final JwtProvider jwtProvider;
 
-	public OauthService(InMemoryProviderRepository inMemoryProviderRepository, MemberRepository memberRepository,
+	public OauthService(InMemoryProviderRepository inMemoryProviderRepository, MemberService memberService,
 		JwtProvider jwtProvider) {
 		this.inMemoryProviderRepository = inMemoryProviderRepository;
-		this.memberRepository = memberRepository;
+		this.memberService = memberService;
 		this.jwtProvider = jwtProvider;
 	}
 
@@ -41,18 +41,9 @@ public class OauthService {
 
 		MemberProfileResponse memberProfileResponse = getMemberProfileResponse(providerName, tokenResponse, provider);
 
-		Member member = saveOrUpdate(memberProfileResponse);
+		Member member = memberService.registerOauthMember(memberProfileResponse);
 
 		return JwtResponse.from(jwtProvider.createJwt(Map.of("memberId", String.valueOf(member.getId()))));
-	}
-
-	private Member saveOrUpdate(MemberProfileResponse memberProfileResponse) {
-		try {
-			return memberRepository.findByMemberLoginId(memberProfileResponse.getLoginId()).get();
-		} catch (Exception e) {
-			memberRepository.save(memberProfileResponse.toMember());
-			return memberRepository.findByMemberLoginId(memberProfileResponse.getLoginId()).get();
-		}
 	}
 
 	private MemberProfileResponse getMemberProfileResponse(String providerName, OauthTokenResponse tokenResponse,
