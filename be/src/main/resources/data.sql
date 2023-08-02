@@ -6,12 +6,14 @@ values ('nag@codesquad.kr', 'nag', '1q2w3e4r!', 'https://e7.pngegg.com/pngimages
 INSERT INTO milestone (name, due_date, is_open)
 values ('마일스톤 1', current_date, 1),
        ('마일스톤 2', current_date, 0),
-       ('마일스톤 3', current_date, 1);
+       ('마일스톤 3', current_date, 1),
+       ('마일스톤 0', current_date, 1);
 
 INSERT INTO label (name, background_color, text_color)
 values ('라벨 1', '#F08080', '#000000'),
        ('라벨 2', '#98FB98', '#000000'),
-       ('라벨 3', '#6495ED', '#000000');
+       ('라벨 3', '#6495ED', '#000000'),
+       ('라벨 0', '#98FB98', '#000000');
 
 INSERT INTO issue (author_id, milestone_id, title, is_open)
 values (1, 1, '제목 1', 1),

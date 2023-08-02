@@ -1,8 +1,10 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository;
 
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -40,9 +42,27 @@ public class LabelRepository {
         return template.query(sql, Map.of("issueId", issueId), labelRowMapper());
     }
 
+    public List<LabelDetailsVO> findAll() {
+        String sql = "SELECT id, name, description, background_color, text_color " +
+                "FROM label " +
+                "WHERE is_deleted = FALSE " +
+                "ORDER BY name";
+        return template.query(sql, new MapSqlParameterSource(), labelDetailsVORowMapper());
+    }
+
     private final RowMapper<LabelVO> labelRowMapper() {
         return ((rs, rowNum) -> LabelVO.builder()
                 .name(rs.getString("name"))
+                .backgroundColor(rs.getString("background_color"))
+                .textColor(rs.getString("text_color"))
+                .build());
+    }
+
+    private final RowMapper<LabelDetailsVO> labelDetailsVORowMapper() {
+        return ((rs, rowNum) -> LabelDetailsVO.builder()
+                .id(rs.getLong("id"))
+                .name(rs.getString("name"))
+                .description(rs.getString("description"))
                 .backgroundColor(rs.getString("background_color"))
                 .textColor(rs.getString("text_color"))
                 .build());

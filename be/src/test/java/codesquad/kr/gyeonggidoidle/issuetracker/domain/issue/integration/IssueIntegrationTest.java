@@ -26,7 +26,7 @@ public class IssueIntegrationTest {
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.openIssueCount").value(2))
-                .andExpect(jsonPath("$.milestoneCount").value(3))
+                .andExpect(jsonPath("$.milestoneCount").value(4))
                 .andExpect(jsonPath("$.issues.length()").value(2))
                 .andExpect(jsonPath("$.issues.[0].labels.[0].backgroundColor").value("#F08080"))
                 .andExpect(jsonPath("$.issues.[1].title").value("제목 1"))
@@ -42,7 +42,7 @@ public class IssueIntegrationTest {
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.closedIssueCount").value(3))
-                .andExpect(jsonPath("$.labelCount").value(3))
+                .andExpect(jsonPath("$.labelCount").value(4))
                 .andExpect(jsonPath("$.issues.length()").value(3))
                 .andExpect(jsonPath("$.issues.[0].labels.length()").value(0))
                 .andExpect(jsonPath("$.issues.[0].assigneeProfiles.length()").value(0))

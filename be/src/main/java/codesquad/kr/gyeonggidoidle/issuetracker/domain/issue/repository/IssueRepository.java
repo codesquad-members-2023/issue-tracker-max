@@ -19,7 +19,6 @@ public class IssueRepository {
     public IssueRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
     }
-    // 필요한 것 : openIssueCount, closedIssueCount
 
     public List<IssueVO> findOpenIssues() {
         String sql = "SELECT i.id, " +
