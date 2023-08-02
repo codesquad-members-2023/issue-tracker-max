@@ -17,7 +17,6 @@ import codesquard.app.label.dto.LabelSaveResponse;
 import codesquard.app.label.dto.LabelUpdateRequest;
 import codesquard.app.label.dto.LabelUpdateResponse;
 import codesquard.app.label.service.LabelService;
-import codesquard.app.milestone.dto.request.MilestoneUpdateRequest;
 
 @RestController
 public class LabelController {

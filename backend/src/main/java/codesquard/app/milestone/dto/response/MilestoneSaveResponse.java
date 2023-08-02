@@ -9,8 +9,8 @@ public class MilestoneSaveResponse {
 		this.id = id;
 	}
 
-	public static MilestoneSaveResponse success(boolean success, Long id) {
-		return new MilestoneSaveResponse(success, id);
+	public static MilestoneSaveResponse success(Long id) {
+		return new MilestoneSaveResponse(true, id);
 	}
 
 	public boolean isSuccess() {

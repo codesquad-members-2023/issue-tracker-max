@@ -7,8 +7,8 @@ public class MilestoneUpdateResponse {
 		this.success = success;
 	}
 
-	public static MilestoneUpdateResponse success(boolean success) {
-		return new MilestoneUpdateResponse(success);
+	public static MilestoneUpdateResponse success() {
+		return new MilestoneUpdateResponse(true);
 	}
 
 	public boolean isSuccess() {

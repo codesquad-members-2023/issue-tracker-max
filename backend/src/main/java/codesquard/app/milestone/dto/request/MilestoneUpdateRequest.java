@@ -18,14 +18,15 @@ public class MilestoneUpdateRequest {
 	private MilestoneUpdateRequest() {
 	}
 
-	public MilestoneUpdateRequest(String name, LocalDate deadline, String description) {
+	private MilestoneUpdateRequest(String name, LocalDate deadline, String description) {
 		this.name = name;
 		this.deadline = deadline;
 		this.description = description;
 	}
 
 	public static Milestone toEntity(MilestoneUpdateRequest milestoneUpdateRequest) {
-		return new Milestone(milestoneUpdateRequest.name, milestoneUpdateRequest.description, milestoneUpdateRequest.deadline);
+		return new Milestone(milestoneUpdateRequest.name, milestoneUpdateRequest.description,
+			milestoneUpdateRequest.deadline);
 	}
 
 	public String getName() {
