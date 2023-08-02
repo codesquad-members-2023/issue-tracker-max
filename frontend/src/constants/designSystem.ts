@@ -39,7 +39,7 @@ const radius = {
 const border = {
   default: "1px solid",
   icon: "1.6px solid",
-  dash: "1px dash",
+  dash: "1px dashed",
 };
 
 const opacity = {
@@ -84,7 +84,7 @@ const light = {
       "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
     brandTextDefault:
       "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
-  }
+  },
 };
 
 const dark = {
@@ -122,7 +122,7 @@ const dark = {
       "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
     brandTextDefault:
       "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
-  }
+  },
 };
 
 export const designSystem = {
@@ -131,13 +131,13 @@ export const designSystem = {
     radius,
     border,
     opacity,
-    ...light
+    ...light,
   },
   dark: {
     font,
     radius,
     border,
     opacity,
-    ...dark
+    ...dark,
   },
 };
