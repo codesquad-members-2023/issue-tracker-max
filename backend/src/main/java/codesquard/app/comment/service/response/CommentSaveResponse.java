@@ -11,12 +11,12 @@ public class CommentSaveResponse {
 	private boolean success;
 	private Long commentId;
 
-	public Long getCommentId() {
-		return commentId;
-	}
-
 	public boolean isSuccess() {
 		return success;
+	}
+
+	public Long getCommentId() {
+		return commentId;
 	}
 
 }
