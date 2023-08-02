@@ -70,6 +70,13 @@ public class UserRepository {
 		return jdbcTemplate.update(sql, params);
 	}
 
+	public Optional<Token> findTokenByUserToken(String refreshToken) {
+		String sql = "SELECT id, user_id, refresh_token FROM tokens WHERE refresh_token = :refreshToken";
+		return Optional.ofNullable(
+			DataAccessUtils.singleResult(
+				jdbcTemplate.query(sql, Map.of("refreshToken", refreshToken), tokenRowMapper)));
+	}
+
 	private final RowMapper<User> userRowMapper = (((rs, rowNum) -> User.builder()
 		.id(rs.getLong("id"))
 		.email(rs.getString("email"))

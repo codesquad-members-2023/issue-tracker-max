@@ -1,10 +1,16 @@
 package codesquad.issueTracker.user.service;
 
+import java.util.Map;
+
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import codesquad.issueTracker.global.CustomException;
-import codesquad.issueTracker.global.ErrorCode;
+import codesquad.issueTracker.global.exception.CustomException;
+import codesquad.issueTracker.global.exception.ErrorCode;
+import codesquad.issueTracker.jwt.domain.Jwt;
+import codesquad.issueTracker.jwt.domain.Token;
+import codesquad.issueTracker.jwt.dto.RequestRefreshTokenDto;
+import codesquad.issueTracker.jwt.service.JwtProvider;
 import codesquad.issueTracker.user.domain.User;
 import codesquad.issueTracker.user.dto.LoginRequestDto;
 import codesquad.issueTracker.user.dto.LoginResponseDto;
@@ -16,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserService {
 	private final UserRepository userRepository;
+	private final JwtProvider jwtProvider;
 
 	public Long save(SignUpRequestDto userSignUpRequestDto) {
 		validateDuplicatedEmail(userSignUpRequestDto);
@@ -62,4 +69,19 @@ public class UserService {
 			throw new CustomException(ErrorCode.ALREADY_EXIST_USER);
 		}
 	}
+
+	/**
+	 * 1. 만료된 리프레시 토큰이면 예외처리
+	 * 2. DB에 없는 리프레시 토큰이면 예
+	 */
+	public String reissueAccessToken(RequestRefreshTokenDto refreshTokenDto) {
+		// 만료된 리프레시 토큰이면 예외처리
+		jwtProvider.getClaims(refreshTokenDto.getRefreshToken());
+
+		// db에 없는 리프레시 토큰이면 예외처리
+		Token token = userRepository.findTokenByUserToken(refreshTokenDto.getRefreshToken())
+			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REFRESH_TOKEN));
+		return jwtProvider.reissueAccessToken(Map.of("userId", token.getUserId()));
+	}
+
 }
