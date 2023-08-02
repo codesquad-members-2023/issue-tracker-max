@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.entity.Issue;
+import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.issue.fixture.FixtureFactory;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
 import codesquard.app.milestone.repository.MilestoneRepository;
@@ -49,8 +50,8 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		Long loginId = userRepository.save(user);
 		MilestoneSaveRequest milestoneSaveRequest = FixtureFactory.createMilestoneCreateRequest("레포지토리");
 		Long milestoneId = milestoneRepository.save(MilestoneSaveRequest.toEntity(milestoneSaveRequest)).orElseThrow();
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Repository", milestoneId);
 
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Repository", "내용", milestoneId);
 		Issue issue = issueSaveRequest.toEntity(loginId);
 
 		// when
@@ -64,5 +65,77 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 
 		// then
 		assertThat(id).isNotNull();
+	}
+
+	@DisplayName("이슈를 등록하고 그 등록 번호의 이슈 상태를 수정한다.")
+	@Test
+	void modifyStatus() {
+		// given
+		Long id = createIssue();
+
+		// when
+		IssueStatus issueStatus = IssueStatus.CLOSED;
+		issueRepository.modifyStatus(issueStatus.name(), id);
+
+		// then
+		assertThat(issueRepository.findById(id).getStatus()).isEqualTo(issueStatus);
+	}
+
+	@DisplayName("이슈를 등록하고 그 등록 번호의 이슈 제목을 수정한다.")
+	@Test
+	void modifyTitle() {
+		// given
+		Long id = createIssue();
+
+		// when
+		String title = "Modified Repository Title";
+		issueRepository.modifyTitle(title, id);
+
+		// then
+		assertThat(issueRepository.findById(id).getTitle()).isEqualTo(title);
+	}
+
+	@DisplayName("이슈를 등록하고 그 등록 번호의 이슈 내용을 수정한다.")
+	@Test
+	void modifyContent() {
+		// given
+		Long id = createIssue();
+
+		// when
+		String content = "Modified Repository Content";
+		issueRepository.modifyContent(content, id);
+
+		// then
+		assertThat(issueRepository.findById(id).getContent()).isEqualTo(content);
+	}
+
+	@DisplayName("이슈를 등록하고 그 등록 번호의 마일스톤을 수정한다.")
+	@Test
+	void modifyMilestone() {
+		// given
+		Long id = createIssue();
+
+		// when
+		issueRepository.modifyMilestone(null, id);
+
+		// then
+		assertThat(issueRepository.findById(id).getMilestoneId()).isEqualTo(0L);
+	}
+
+	private Long createIssue() {
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveRequest().toEntity());
+		MilestoneSaveRequest milestoneSaveRequest = FixtureFactory.createMilestoneCreateRequest("레포지토리");
+		Long milestoneId = milestoneRepository.save(MilestoneSaveRequest.toEntity(milestoneSaveRequest)).orElseThrow();
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Repository", "내용", milestoneId);
+		Issue issue = issueSaveRequest.toEntity(loginId);
+
+		Long id = issueRepository.save(issue);
+		for (Long labelId : issueSaveRequest.getLabels()) {
+			issueRepository.saveIssueLabel(id, labelId);
+		}
+		for (Long assigneeId : issueSaveRequest.getAssignees()) {
+			issueRepository.saveIssueAssignee(id, assigneeId);
+		}
+		return id;
 	}
 }
