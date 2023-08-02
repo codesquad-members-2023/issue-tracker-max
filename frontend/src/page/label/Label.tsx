@@ -12,8 +12,14 @@ export type LabelData = {
   description: string | null;
 };
 
+type LabelsResData = {
+  openedMilestoneCount: Number;
+  labelCount: Number;
+  labels: LabelData[];
+};
+
 export function Label() {
-  const [labelsRes, setLabelsRes] = useState<{ labels: LabelData[] }>();
+  const [labelsRes, setLabelsRes] = useState<LabelsResData>();
   const [isAdding, setIsAdding] = useState(false);
 
   const openAddLabel = () => {
@@ -38,7 +44,14 @@ export function Label() {
 
   return (
     <Div>
-      <LabelHeader onClick={openAddLabel} isAdding={isAdding} />
+      {labelsRes && (
+        <LabelHeader
+          onClick={openAddLabel}
+          openedMilestoneCount={labelsRes.openedMilestoneCount}
+          labelCount={labelsRes.labelCount}
+          isAdding={isAdding}
+        />
+      )}
       {isAdding && (
         <EditorWrapper>
           <LabelEditor onClickClose={closeAddLabel} type="add" />

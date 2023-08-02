@@ -2,17 +2,23 @@ import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TabButton } from "../../components/TabButton";
 
+type LabelHeaderProps = {
+  onClick: () => void;
+  isAdding: boolean;
+  openedMilestoneCount: Number;
+  labelCount: Number;
+};
+
 export function LabelHeader({
   onClick,
   isAdding,
-}: {
-  onClick: () => void;
-  isAdding: boolean;
-}) {
+  openedMilestoneCount,
+  labelCount,
+}: LabelHeaderProps) {
   const tabs = [
-    { name: `label(5)`, icon: "label", selected: true },
+    { name: `label(${labelCount})`, icon: "label", selected: true },
     {
-      name: `milestone(2)`,
+      name: `milestone(${openedMilestoneCount})`,
       icon: "milestone",
       selected: false,
     },
