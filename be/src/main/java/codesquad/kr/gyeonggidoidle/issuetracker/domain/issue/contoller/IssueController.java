@@ -1,5 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller;
 
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response.FilterListResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response.FilterResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,10 @@ public class IssueController {
     @GetMapping("/api/issues/closed")
     public FilterResponse readCloseIssues() {
         return FilterResponse.from(issueService.readClosedIssues());
+    }
+
+    @GetMapping("/api/filters")
+    public FilterListResponse readFilters() {
+        return FilterListResponse.from(issueService.readFilters());
     }
 }
