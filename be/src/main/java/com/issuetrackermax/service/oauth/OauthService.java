@@ -41,7 +41,7 @@ public class OauthService {
 
 		MemberProfileResponse memberProfileResponse = getMemberProfileResponse(providerName, tokenResponse, provider);
 
-		Member member = memberService.saveOrUpdate(memberProfileResponse);
+		Member member = memberService.registerOauthMember(memberProfileResponse);
 
 		return JwtResponse.from(jwtProvider.createJwt(Map.of("memberId", String.valueOf(member.getId()))));
 	}
