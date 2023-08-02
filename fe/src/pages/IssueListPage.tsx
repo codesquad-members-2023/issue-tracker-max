@@ -15,7 +15,7 @@ import {
 } from '@components/common/dropDown/types';
 import { useState } from 'react';
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
-import { SideBar } from '@components/common/SideBar';
+import { SideBar } from '@components/common/sideBar/SideBar';
 
 type Issues = {
   openIssueCount: number;

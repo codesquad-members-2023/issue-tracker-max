@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { SideBar } from '@components/common/SideBar';
+import { SideBar } from '@components/common/sideBar/SideBar';
 
 type SelectedItems = {
   [key: number]: boolean;
 };
 
 export const AddIssuePage: React.FC = ({}) => {
-  const [assigneesData, setAssigneesData] = useState<any[]>([]);
-  const [labelsData, setLabelsData] = useState<any[]>([]);
-  const [milestonesData, setMilestonesData] = useState<any[]>([]);
+  // const [assigneesData, setAssigneesData] = useState<any[]>([]);
+  // const [labelsData, setLabelsData] = useState<any[]>([]);
+  // const [milestonesData, setMilestonesData] = useState<any[]>([]);
 
   const [selectedAssignees, setSelectedAssignees] = useState<SelectedItems>({});
   const [selectedLabels, setSelectedLabels] = useState<SelectedItems>({});

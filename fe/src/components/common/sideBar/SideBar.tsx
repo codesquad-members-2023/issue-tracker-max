@@ -1,15 +1,12 @@
 import { css, useTheme } from '@emotion/react';
 import { useState } from 'react';
-import { Button } from './Button';
+import { DropDownIndicator } from '../dropDown/DropDownIndicator';
+import { DropDownPanel } from '../dropDown/DropDownPanel';
+import { contributors, labels, milestones } from '../dropDown/types';
+import { ListAssignee } from './ListAssignee';
+import { ListLabel } from './ListLabel';
+import { ListMilstone } from './ListMilestone';
 
-import { ReactComponent as UserImageSmall } from '@assets/icons/userImageSmall.svg';
-import { DropDownIndicator } from './dropDown/DropDownIndicator';
-import { DropDownPanel } from './dropDown/DropDownPanel';
-import { contributors, labels, milestones } from './dropDown/types';
-import { ReactComponent as Milestone } from '@assets/icons/milestone.svg';
-import { InformationTag } from './InformationTag';
-import { ProgressLabel } from './ProgressLabel';
-import { ProgressBar } from './ProgressBar';
 type Props = {
   dropdownList?: any[];
   onSingleSelectedMilestone: (index: number) => void;
@@ -91,40 +88,7 @@ export const SideBar: React.FC<Props> = ({
             selectedItems={selectedAssignees}
           />
         </DropDownIndicator>
-        {selectedAssigneesData &&
-          selectedAssigneesData.map((assignee) => (
-            <>
-              <div
-                css={{
-                  position: 'relative',
-                  display: 'flex',
-                  gap: '8px',
-                }}
-              >
-                <UserImageSmall fill={theme.neutral.surface.bold} />
-                <img
-                  alt="userImage"
-                  src={assignee.image}
-                  css={{
-                    width: '20px',
-                    height: '20px',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                  }}
-                />
-                <span
-                  css={{
-                    flex: '1 0 0',
-                    font: theme.fonts.displayMedium12,
-                    color: theme.neutral.text.strong,
-                  }}
-                >
-                  {assignee.loginId}
-                </span>
-              </div>
-            </>
-          ))}
+        <ListAssignee selectedAssigneesData={selectedAssigneesData} />
       </div>
       <div
         css={{
@@ -147,24 +111,7 @@ export const SideBar: React.FC<Props> = ({
             selectedItems={selectedLabels}
           />
         </DropDownIndicator>
-        <div
-          css={{
-            display: 'flex',
-            gap: '4px',
-            flexWrap: 'wrap',
-          }}
-        >
-          {selectedLabelsData.map((label) => (
-            <InformationTag
-              size="S"
-              fillColor={label.backgroundColor}
-              textColor={label.textColor}
-              typeVariant="filled"
-            >
-              {label.name}
-            </InformationTag>
-          ))}
-        </div>
+        <ListLabel selectedLabelsData={selectedLabelsData} />
       </div>
       <div
         css={{
@@ -187,12 +134,7 @@ export const SideBar: React.FC<Props> = ({
             selectedItems={selectedMilestones}
           />
         </DropDownIndicator>
-        {selectedMilestonesData.map((milestone) => (
-          <div>
-            <ProgressBar progress={milestone.progress} />
-            <ProgressLabel name={milestone.name} />
-          </div>
-        ))}
+        <ListMilstone selectedMilestonesData={selectedMilestonesData} />
       </div>
     </div>
   );
