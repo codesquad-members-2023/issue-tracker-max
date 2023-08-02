@@ -1,6 +1,7 @@
 package com.codesquad.issuetracker.api.milestone.controller;
 
 import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneRequest;
+import com.codesquad.issuetracker.api.milestone.dto.request.MilestoneStatusRequest;
 import com.codesquad.issuetracker.api.milestone.dto.response.MileStoneResponse;
 import com.codesquad.issuetracker.api.milestone.service.MileStonesResponse;
 import com.codesquad.issuetracker.api.milestone.service.MilestoneService;
@@ -42,15 +43,22 @@ public class MilestoneController {
     }
 
     @PatchMapping("/api/{organizationTitle}/milestones/{milestoneId}")
-    public ResponseEntity<Void> update(@PathVariable Long milestoneId,
+    public ResponseEntity<Map<String, Long>> update(@PathVariable Long milestoneId,
             @RequestBody MilestoneRequest mileStoneRequest) {
-        milestoneService.update(milestoneId, mileStoneRequest);
-        return ResponseEntity.ok().build();
+        long id = milestoneService.update(milestoneId, mileStoneRequest);
+        return ResponseEntity.ok(Map.of("id",id));
     }
 
     @DeleteMapping("/api/{organizationTitle}/milestones/{milestoneId}")
     public ResponseEntity<Void> delete(@PathVariable Long milestoneId) {
         milestoneService.delete(milestoneId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/api/{organizationTitle}/milestones/{milestoneId}/status")
+    public ResponseEntity<Void> updateStatus(@PathVariable Long milestoneId,
+            @RequestBody MilestoneStatusRequest milestoneStatusRequest) {
+        milestoneService.updateStatus(milestoneId, milestoneStatusRequest.isClosed());
+        return ResponseEntity.ok().build();
     }
 }

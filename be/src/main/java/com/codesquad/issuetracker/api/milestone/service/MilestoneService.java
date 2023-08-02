@@ -29,13 +29,14 @@ public class MilestoneService {
     @Transactional(readOnly = true)
     public MileStoneResponse read(Long milestoneId) {
         Milestone milestone = milestoneRepository.findById(milestoneId).orElseThrow();
-        return MileStoneResponse.toEntity(milestone);
+        return MileStoneResponse.from(milestone);
     }
 
     @Transactional
-    public void update(Long milestoneId, MilestoneRequest mileStoneRequest) {
+    public long update(Long milestoneId, MilestoneRequest mileStoneRequest) {
         Milestone milestone = MilestoneRequest.toEntity(milestoneId,mileStoneRequest);
         milestoneRepository.update(milestone);
+        return milestoneId;
     }
 
     @Transactional
@@ -48,5 +49,10 @@ public class MilestoneService {
                 .orElseThrow();
         List<Milestone> milestones = milestoneRepository.readAllByOrganizationId(organizationId);
         return MileStonesResponse.from(milestones);
+    }
+
+    @Transactional
+    public void updateStatus(Long milestoneId, boolean isClosed) {
+        milestoneRepository.updateStatus(milestoneId, isClosed);
     }
 }
