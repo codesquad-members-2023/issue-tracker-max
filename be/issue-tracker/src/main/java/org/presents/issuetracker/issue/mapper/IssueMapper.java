@@ -8,11 +8,4 @@ import org.presents.issuetracker.issue.dto.vo.IssueVo;
 @Mapper
 public interface IssueMapper {
 	List<IssueVo> getIssues();
-
-	// User getUser(Long userId);
-	//
-	// List<Label> getLabelsByIssueId(Long issueId);
-	//
-	// Milestone getMilestoneByIssueId(Long issueId);
-
 }

@@ -3,7 +3,7 @@ spring:
     group:
       prod: prodDB, common
       test: testDB, common
-    active: prod
+    active: test
 ---
 spring:
   config:
@@ -22,4 +22,5 @@ spring:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+  type-aliases-package: org.presents.issuetracker.issue.dto.vo,  org.presents.issuetracker.issue.entity,  org.presents.issuetracker.user.entity, org.presents.issuetracker.label.entity, org.presents.issuetracker.milestone.entity
   mapper-locations: classpath:/mybatis/mapper/**.xml

@@ -5,9 +5,10 @@ import java.util.Objects;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequestDto;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class Label {
 	private Long labelId;
 	private String name;
