@@ -1,7 +1,6 @@
 package org.presents.issuetracker.label.service;
 
 import org.presents.issuetracker.label.dto.request.LabelRequestDto;
-import org.presents.issuetracker.label.dto.request.LabelUpdateRequestDto;
 import org.presents.issuetracker.label.entity.Label;
 import org.presents.issuetracker.label.repository.LabelRepository;
 import org.springframework.stereotype.Service;
@@ -22,14 +21,5 @@ public class LabelService {
                         labelRequestDto.getDescription(),
                         labelRequestDto.getBackgroundColor(),
                         labelRequestDto.getTextColor()));
-    }
-
-    public Long update(LabelUpdateRequestDto dto) {
-        Long id = dto.getId();
-        Label label = labelRepository.findById(id);
-
-        label = label.updateFrom(dto);
-
-        return labelRepository.update(label).getId();
     }
 }
