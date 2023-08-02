@@ -1,5 +1,7 @@
 package codesquard.app.comment.service.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -8,15 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentModifyResponse {
 
+	@JsonProperty("success")
 	private boolean success;
+
+	@JsonProperty("commentId")
 	private Long commentId;
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public Long getCommentId() {
-		return commentId;
-	}
 
 }

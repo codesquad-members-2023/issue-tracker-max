@@ -14,5 +14,5 @@ public interface MilestoneRepository {
 
 	void updateBy(final Long milestoneId, final Milestone milestone);
 
-	Long deleteById(final Long id);
+	void deleteBy(final Long milestoneId);
 }

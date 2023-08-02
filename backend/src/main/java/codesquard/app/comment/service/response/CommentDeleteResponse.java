@@ -6,17 +6,12 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class CommentSaveResponse {
+public class CommentDeleteResponse {
 
 	private boolean success;
-	private Long commentId;
 
 	public boolean isSuccess() {
 		return success;
-	}
-
-	public Long getCommentId() {
-		return commentId;
 	}
 
 }

@@ -2,6 +2,7 @@ package codesquard.app.milestone.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -63,7 +64,10 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public Long deleteById(Long id) {
-		return null;
+	public void deleteBy(Long milestoneId) {
+		String sql = "DELETE FROM `milestone` "
+			+ "WHERE id = :id";
+
+		template.update(sql, Map.of("id", milestoneId));
 	}
 }
