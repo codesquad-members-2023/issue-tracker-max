@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { styled } from "styled-components";
 
+import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button";
 import { FilterBar } from "../../components/FilterBar";
 import { TabButton } from "../../components/TabButton";
@@ -17,14 +17,22 @@ export function MainHeader({
   milestoneCount,
   labelCount,
 }: MainHeaderProps) {
-  const [tabs, setTabs] = useState([
-    { name: `label(${labelCount})`, icon: "label", selected: false },
+  const navigate = useNavigate();
+
+  const tabs = [
+    {
+      name: `label(${labelCount})`,
+      icon: "label",
+      selected: false,
+      onClick: () => navigate("/label"),
+    },
     {
       name: `milestone(${milestoneCount})`,
       icon: "milestone",
       selected: false,
+      onClick: () => navigate("/milestone"),
     },
-  ]);
+  ];
 
   const setDropdownOptions = (singleFilters: SingleFilterData[]) => {
     const options = singleFilters.map((filter) => {
@@ -42,13 +50,9 @@ export function MainHeader({
   };
 
   const onTabClick = (name: string) => {
-    setTabs((t) =>
-      t.map((tab) =>
-        tab.name === name
-          ? { ...tab, selected: true }
-          : { ...tab, selected: false },
-      ),
-    );
+    const matchingTab = tabs.find((tab) => tab.name === name);
+
+    matchingTab && matchingTab.onClick();
   };
 
   return (
