@@ -24,15 +24,31 @@ public class UserService {
 		return userRepository.insert(user);
 	}
 
+	/**
+	 * 1. 이미 등록된 유저인지 확인
+	 * 2. 로그인 성공 여부 체크
+	 * 3. 재로그인 하는 유저라면 access token 재발급
+	 * 4. 처음 로그인 하는 유저라면 jwt 생성 후 db 저장
+	 * 5. user 정보와 토큰 두 개 응답
+	 */
 	public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-		// 1. 이미 등록된 유저인지 확인
 		User user = userRepository.findByEmail(loginRequestDto.getEmail())
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
-		// 2. 로그인 성공 여부 체크
 		validateLoginUser(loginRequestDto, user);
-		// 3. jwt 생성
+		Token token = userRepository.findTokenByUserId(user.getId()).orElse(null);
+		Jwt jwt = jwtProvider.createJwt(Map.of("userId", user.getId()));
+		if (token == null) {
+			userRepository.insertRefreshToken(user.getId(), jwt.getRefreshToken());
+		} else {
+			userRepository.updateRefreshToken(user.getId(), jwt.getRefreshToken());
+		}
+		return LoginResponseDto.builder()
+			.userId(user.getId())
+			.profileImgUrl(user.getProfileImg())
+			.accessToken(jwt.getAccessToken())
+			.refreshToken(jwt.getRefreshToken())
+			.build();
 
-		return null;
 	}
 
 	public void validateLoginUser(LoginRequestDto loginRequestDto, User user) {
