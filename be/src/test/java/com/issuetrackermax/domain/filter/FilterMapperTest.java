@@ -3,7 +3,6 @@ package com.issuetrackermax.domain.filter;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetrackermax.controller.filter.dto.FilterRequest;
 import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.assignee.AssigneeRepository;
 import com.issuetrackermax.domain.assignee.entity.Assignee;
@@ -109,7 +109,7 @@ class FilterMapperTest extends IntegrationTestSupport {
 	@Test
 	void getFilteredListWithIssueOpen() {
 		// given
-		Map<String, Object> issueIsOpen = Map.of("issueIsOpen", 1);
+		FilterRequest issueIsOpen = FilterRequest.builder().issueIsOpen(true).build();
 
 		// when
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
@@ -122,7 +122,7 @@ class FilterMapperTest extends IntegrationTestSupport {
 	@Test
 	void getFilteredListWithIssueClosed() {
 		// given
-		Map<String, Object> issueIsOpen = Map.of("issueIsOpen", 0);
+		FilterRequest issueIsOpen = FilterRequest.builder().issueIsOpen(false).build();
 		// when
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
 		// then
@@ -142,8 +142,7 @@ class FilterMapperTest extends IntegrationTestSupport {
 		Long issueId = issueRepository.save(issue);
 		Assignee assignee = makeAssignee(issueId, memberId);
 		Long issigneeId = assigneeRepository.save(assignee);
-
-		Map<String, Object> issueIsOpen = Map.of("assignee", memberId);
+		FilterRequest issueIsOpen = FilterRequest.builder().assignee(memberId).build();
 		// when
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
 		// then
@@ -155,6 +154,7 @@ class FilterMapperTest extends IntegrationTestSupport {
 	@Test
 	void getFilteredListWithLabelNewId() {
 
+		// given
 		Label label = makeLabel("label_title_test", "label_description3", "0#9999", "0#8888");
 		Long labelId = labelRepository.save(label);
 
@@ -166,9 +166,7 @@ class FilterMapperTest extends IntegrationTestSupport {
 			.labelId(labelId)
 			.build();
 		Long issueLabelId2 = issueLabelRepository.save(issueWithLabel);
-
-		// given
-		Map<String, Object> issueIsOpen = Map.of("label", labelId, "issueIsOpen", 0);
+		FilterRequest issueIsOpen = FilterRequest.builder().label(labelId).issueIsOpen(false).build();
 		// when
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
 		// then
@@ -183,9 +181,8 @@ class FilterMapperTest extends IntegrationTestSupport {
 		Milestone milestone = makeMilestone(true, "milestone_title3", "milestone_description");
 		Long milestoneId = milestoneRepository.save(milestone);
 		Issue issue = makeIssue(false, "issue_title_test", milestoneId, 1L);
-
 		Long issueId2 = issueRepository.save(issue);
-		Map<String, Object> issueIsOpen = Map.of("milestone", milestoneId, "issueIsOpen", 0);
+		FilterRequest issueIsOpen = FilterRequest.builder().milestone(milestoneId).issueIsOpen(false).build();
 		// when
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
 		// then
@@ -202,9 +199,11 @@ class FilterMapperTest extends IntegrationTestSupport {
 		Long milestoneId = milestoneRepository.save(milestone);
 		Issue issue3 = makeIssue(true, "issue_title_test", milestoneId, 1L);
 		Long issueId2 = issueRepository.save(issue3);
-		Map<String, Object> issueIsOpen = Map.of("milestone", milestoneId, "issueIsOpen", 1);
+		FilterRequest issueIsOpen = FilterRequest.builder().milestone(milestoneId).issueIsOpen(true).build();
+
 		// when
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
+
 		// then
 		assertExtractingWithParameter(filteredList, "issue_title_test", null, "June", true, null,
 			null, null, null, "milestone_title_test");
@@ -216,8 +215,8 @@ class FilterMapperTest extends IntegrationTestSupport {
 		// given
 
 		Issue issue3 = makeIssue(true, "issue_title_test", 1L, 1L);
-		Long issueId2 = issueRepository.save(issue3);
-		Map<String, Object> issueIsOpen = Map.of("writer", 1, "issueIsOpen", 1);
+		issueRepository.save(issue3);
+		FilterRequest issueIsOpen = FilterRequest.builder().writer(1L).issueIsOpen(true).build();
 		// when
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
 		// then

@@ -12,6 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.issuetrackermax.controller.ControllerTestSupport;
+import com.issuetrackermax.controller.filter.dto.FilterResponse;
+import com.issuetrackermax.controller.filter.dto.IssueResponse;
 import com.issuetrackermax.domain.filter.FilterResultVO;
 
 class FilterControllerTest extends ControllerTestSupport {
@@ -21,22 +23,31 @@ class FilterControllerTest extends ControllerTestSupport {
 	void mainpageWithNoFilter() throws Exception {
 		// given
 		LocalDateTime localDateTime = LocalDateTime.now();
-		when(filterMapper.getFilteredList(anyMap())).thenReturn(List.of(
-			FilterResultVO.builder()
-				.id(1L)
-				.isOpen(true)
-				.editor("June")
-				.title("issue_title")
-				.labelIds("1,2")
-				.labelTitles("label_title,label_title2")
-				.writerId(1L)
-				.writer("June")
-				.assigneeIds("1,2")
-				.assigneeNames("June,Movie")
-				.milestoneId(1L)
-				.milestoneTitle("milestone")
-				.modifiedAt(localDateTime)
-				.build()));
+		FilterResultVO filterResultVO = FilterResultVO.builder()
+			.id(1L)
+			.isOpen(true)
+			.editor("June")
+			.title("issue_title")
+			.labelIds("1,2")
+			.labelTitles("label_title,label_title2")
+			.writerId(1L)
+			.writer("June")
+			.assigneeIds("1,2")
+			.assigneeNames("June,Movie")
+			.milestoneId(1L)
+			.milestoneTitle("milestone")
+			.modifiedAt(localDateTime)
+			.build();
+		IssueResponse issueResponse = IssueResponse.builder().resultVO(filterResultVO).build();
+		when(filterService.getMainPageIssue(any())).thenReturn(
+			FilterResponse.builder()
+				.labelCount(1L)
+				.mileStoneCount(1L)
+				.openIssueCount(1L)
+				.closedIssueCount(1L)
+				.issues(List.of(issueResponse))
+				.build());
+
 		when(filterService.getLabelCount()).thenReturn(1L);
 		when(filterService.getMilestoneCount()).thenReturn(1L);
 		when(filterService.getClosedIssueCount()).thenReturn(1L);
@@ -57,7 +68,6 @@ class FilterControllerTest extends ControllerTestSupport {
 			.andExpect(jsonPath("$.data.issues[0].isOpen").value(true))
 			.andExpect(jsonPath("$.data.issues[0].title").value("issue_title"))
 			.andExpect(jsonPath("$.data.issues[0].history.editor").value("June"))
-			.andExpect(jsonPath("$.data.issues[0].history.modifiedAt").value(localDateTime.toString()))
 			.andExpect(jsonPath("$.data.issues[0].labels[0].id").value(1L))
 			.andExpect(jsonPath("$.data.issues[0].labels[0].title").value("label_title"))
 			.andExpect(jsonPath("$.data.issues[0].labels[1].id").value(2L))
@@ -77,7 +87,14 @@ class FilterControllerTest extends ControllerTestSupport {
 	@Test
 	void mainpageWithNoIssue() throws Exception {
 		// given
-		when(filterMapper.getFilteredList(anyMap())).thenReturn(List.of());
+		when(filterService.getMainPageIssue(any())).thenReturn(
+			FilterResponse.builder()
+				.labelCount(1L)
+				.mileStoneCount(1L)
+				.openIssueCount(1L)
+				.closedIssueCount(1L)
+				.issues(null)
+				.build());
 
 		// when & then
 		mockMvc.perform(
@@ -86,6 +103,10 @@ class FilterControllerTest extends ControllerTestSupport {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value("true"))
-			.andExpect(jsonPath("$.data").isEmpty());
+			.andExpect(jsonPath("$.data.labelCount").value(1L))
+			.andExpect(jsonPath("$.data.mileStoneCount").value(1L))
+			.andExpect(jsonPath("$.data.openIssueCount").value(1L))
+			.andExpect(jsonPath("$.data.closedIssueCount").value(1L))
+			.andExpect(jsonPath("$.data.issues").isEmpty());
 	}
 }

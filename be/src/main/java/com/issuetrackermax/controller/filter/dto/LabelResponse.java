@@ -20,6 +20,9 @@ public class LabelResponse {
 	}
 
 	public static List<LabelResponse> convertToLabelResponseList(String labelIds, String labelTitles) {
+		if (labelIds == null) {
+			return null;
+		}
 		List<String> ids = List.of(labelIds.split(","));
 		List<String> titles = List.of(labelTitles.split(","));
 		return IntStream.range(0, ids.size())

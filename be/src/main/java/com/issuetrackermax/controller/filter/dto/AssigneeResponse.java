@@ -19,8 +19,11 @@ public class AssigneeResponse {
 		this.name = name;
 	}
 
-	public static List<AssigneeResponse> convertToAssigneeResponseList(String laassigneeIds, String assigneeNames) {
-		List<String> ids = List.of(laassigneeIds.split(","));
+	public static List<AssigneeResponse> convertToAssigneeResponseList(String assigneeIds, String assigneeNames) {
+		if (assigneeIds == null) {
+			return null;
+		}
+		List<String> ids = List.of(assigneeIds.split(","));
 		List<String> names = List.of(assigneeNames.split(","));
 		return IntStream.range(0, ids.size())
 			.mapToObj(i -> AssigneeResponse.builder()

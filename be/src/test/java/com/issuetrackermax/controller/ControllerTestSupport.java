@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetrackermax.controller.auth.AuthController;
 import com.issuetrackermax.controller.filter.FilterController;
 import com.issuetrackermax.controller.member.MemberController;
-import com.issuetrackermax.domain.filter.FilterMapper;
 import com.issuetrackermax.service.filter.FilterService;
 import com.issuetrackermax.service.jwt.JwtService;
 import com.issuetrackermax.service.member.MemberService;
@@ -35,6 +34,4 @@ public abstract class ControllerTestSupport {
 	@MockBean
 	protected FilterService filterService;
 
-	@MockBean
-	protected FilterMapper filterMapper;
 }
