@@ -41,7 +41,7 @@ public class UserRepository {
 	public Optional<User> findByEmail(String email) {
 		String sql = "SELECT id, email, password, profile_img, name, login_type FROM users WHERE email = :email";
 		return Optional.ofNullable(
-			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("email", email), userRowMapper)));
+				DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("email", email), userRowMapper)));
 	}
 
 	public Long insertRefreshToken(Long userId, String refreshToken) {
@@ -59,7 +59,7 @@ public class UserRepository {
 	public Optional<Token> findTokenByUserId(Long userId) {
 		String sql = "SELECT id, user_id, refresh_token FROM tokens WHERE user_id = :userId";
 		return Optional.ofNullable(
-			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("userId", userId), tokenRowMapper)));
+				DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("userId", userId), tokenRowMapper)));
 	}
 
 	public int updateRefreshToken(Long userId, String refreshToken) {
@@ -73,25 +73,32 @@ public class UserRepository {
 	public Optional<Token> findTokenByUserToken(String refreshToken) {
 		String sql = "SELECT id, user_id, refresh_token FROM tokens WHERE refresh_token = :refreshToken";
 		return Optional.ofNullable(
-			DataAccessUtils.singleResult(
-				jdbcTemplate.query(sql, Map.of("refreshToken", refreshToken), tokenRowMapper)));
+				DataAccessUtils.singleResult(
+						jdbcTemplate.query(sql, Map.of("refreshToken", refreshToken), tokenRowMapper)));
+	}
+
+	public Optional<Integer> deleteTokenByUserId(Long userId) {
+		String sql = "DELETE FROM tokens WHERE user_id = :userId";
+		int result = jdbcTemplate.update(sql, Map.of("userId", userId));
+
+		return result > 0 ? Optional.of(result) : Optional.of(null);
 	}
 
 	private final RowMapper<User> userRowMapper = (((rs, rowNum) -> User.builder()
-		.id(rs.getLong("id"))
-		.email(rs.getString("email"))
-		.password(rs.getString("password"))
-		.profileImg(rs.getString("profile_img"))
-		.name(rs.getString("name"))
-		.loginType(LoginType.findByTypeString(rs.getString("login_type")))
-		.build()
+			.id(rs.getLong("id"))
+			.email(rs.getString("email"))
+			.password(rs.getString("password"))
+			.profileImg(rs.getString("profile_img"))
+			.name(rs.getString("name"))
+			.loginType(LoginType.findByTypeString(rs.getString("login_type")))
+			.build()
 	));
 
 	private final RowMapper<Token> tokenRowMapper = (((rs, rowNum) -> Token.builder()
-		.id(rs.getLong("id"))
-		.userId(rs.getLong("user_id"))
-		.refreshToken(rs.getString("refresh_token"))
-		.build()
+			.id(rs.getLong("id"))
+			.userId(rs.getLong("user_id"))
+			.refreshToken(rs.getString("refresh_token"))
+			.build()
 	));
 }
 

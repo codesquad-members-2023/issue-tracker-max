@@ -2,6 +2,7 @@ package codesquad.issueTracker.user.controller;
 
 import static codesquad.issueTracker.global.exception.SuccessCode.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,5 +42,11 @@ public class UserController {
 	public ApiResponse<String> reissueToken(@RequestBody RequestRefreshTokenDto requestRefreshTokenDto) {
 		String accessToken = userService.reissueAccessToken(requestRefreshTokenDto);
 		return ApiResponse.success(SUCCESS.getStatus(), accessToken);
+	}
+
+	@PostMapping("/logout")
+	public ApiResponse<String> logout(HttpServletRequest request) {
+		userService.logout(request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 }

@@ -58,7 +58,7 @@ public class AuthFilter implements Filter {
 		try {
 			String token = getToken(httpServletRequest);
 			Claims claims = jwtProvider.getClaims(token);
-			request.setAttribute("userId", claims.get("id"));
+			request.setAttribute("userId", claims.get("userId"));
 			chain.doFilter(request, response);
 		} catch (RuntimeException e) {
 			log.info(e.getClass().getName());

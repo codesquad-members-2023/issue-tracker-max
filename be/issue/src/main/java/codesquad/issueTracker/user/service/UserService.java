@@ -2,6 +2,7 @@ package codesquad.issueTracker.user.service;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -34,13 +35,14 @@ public class UserService {
 	/**
 	 * 1. 이미 등록된 유저인지 확인
 	 * 2. 로그인 성공 여부 체크
-	 * 3. 재로그인 하는 유저라면 access token 재발급
-	 * 4. 처음 로그인 하는 유저라면 jwt 생성 후 db 저장
-	 * 5. user 정보와 토큰 두 개 응답
+	 * 3. access token, refresh token 발급
+	 * 4. 처음 로그인 하는 유저라면 refresh token db insert
+	 * 5. 재로그인하는 유저라면 refresh token db update
+	 * 5. user 정보와 access token, refresh token 응답
 	 */
 	public LoginResponseDto login(LoginRequestDto loginRequestDto) {
 		User user = userRepository.findByEmail(loginRequestDto.getEmail())
-			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+				.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
 		validateLoginUser(loginRequestDto, user);
 		Token token = userRepository.findTokenByUserId(user.getId()).orElse(null);
 		Jwt jwt = jwtProvider.createJwt(Map.of("userId", user.getId()));
@@ -50,17 +52,16 @@ public class UserService {
 			userRepository.updateRefreshToken(user.getId(), jwt.getRefreshToken());
 		}
 		return LoginResponseDto.builder()
-			.userId(user.getId())
-			.profileImgUrl(user.getProfileImg())
-			.accessToken(jwt.getAccessToken())
-			.refreshToken(jwt.getRefreshToken())
-			.build();
-
+				.userId(user.getId())
+				.profileImgUrl(user.getProfileImg())
+				.accessToken(jwt.getAccessToken())
+				.refreshToken(jwt.getRefreshToken())
+				.build();
 	}
 
 	public void validateLoginUser(LoginRequestDto loginRequestDto, User user) {
 		if (!loginRequestDto.getEmail().equals(user.getEmail())
-			|| !BCrypt.checkpw(loginRequestDto.getPassword(), user.getPassword()))
+				|| !BCrypt.checkpw(loginRequestDto.getPassword(), user.getPassword()))
 			throw new CustomException(ErrorCode.FAILED_LOGIN_USER);
 	}
 
@@ -75,13 +76,16 @@ public class UserService {
 	 * 2. DB에 없는 리프레시 토큰이면 예
 	 */
 	public String reissueAccessToken(RequestRefreshTokenDto refreshTokenDto) {
-		// 만료된 리프레시 토큰이면 예외처리
 		jwtProvider.getClaims(refreshTokenDto.getRefreshToken());
 
-		// db에 없는 리프레시 토큰이면 예외처리
 		Token token = userRepository.findTokenByUserToken(refreshTokenDto.getRefreshToken())
-			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REFRESH_TOKEN));
+				.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REFRESH_TOKEN));
 		return jwtProvider.reissueAccessToken(Map.of("userId", token.getUserId()));
 	}
 
+	public void logout(HttpServletRequest request) {
+		Long userId = Long.parseLong(String.valueOf(request.getAttribute("userId")));
+		userRepository.deleteTokenByUserId(userId)
+				.orElseThrow(() -> new CustomException(ErrorCode.DELETE_FAIL));
+	}
 }
