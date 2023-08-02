@@ -9,14 +9,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class LabelResponseDto {
+public class LabelSearch {
 	private Long id;
 	private String name;
 	private String textColor;
 	private String backgroundColor;
 
-	public static LabelResponseDto fromEntity(Label label) {
-		return LabelResponseDto.builder()
+	public static LabelSearch fromEntity(Label label) {
+		return LabelSearch.builder()
 			.id(label.getLabelId())
 			.name(label.getName())
 			.backgroundColor(label.getBackgroundColor())

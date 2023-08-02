@@ -15,5 +15,8 @@
     </select>
 
     <!--    TODO: issue에 해당되는 user, labels, milestone 가져오기-->
-    
+    <!--    키워드-->
+    <!--    spring boot mybatis-->
+    <!--    mybatis mapper-->
+    <!--    mybatis collection-->
 </mapper>
