@@ -14,7 +14,7 @@ CREATE TABLE `user` (
     `password` varchar(50)  NOT NULL ,
     `image` varchar(200)  NOT NULL ,
     PRIMARY KEY (
-         `user_id`
+                 `user_id`
         )
 );
 
@@ -25,7 +25,7 @@ CREATE TABLE `milestone` (
     `description` varchar(200) ,
     `status` varchar(10)  NOT NULL DEFAULT 'open' ,
     PRIMARY KEY (
-        `milestone_id`
+              `milestone_id`
      )
 );
 
