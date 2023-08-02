@@ -33,7 +33,7 @@ public abstract class ControllerTestSupport {
 	protected JwtService jwtService;
 
 	@MockBean
-	protected FilterService FilterService;
+	protected FilterService filterService;
 
 	@MockBean
 	protected FilterMapper filterMapper;

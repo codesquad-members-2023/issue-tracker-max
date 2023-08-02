@@ -55,115 +55,52 @@ class FilterMapperTest extends IntegrationTestSupport {
 	void before() {
 		databaseCleaner.execute();
 
-		Member member = Member.builder()
-			.loginId("june@codesquad.kr")
-			.password("1234")
-			.nickName("June")
-			.loginType(LoginType.LOCAL)
-			.build();
+		Member member = makeMember("june@codesquad.kr", "1234", "June", LoginType.LOCAL);
 		Long memberId = memberRepository.save(member);
 
-		Member member2 = Member.builder()
-			.loginId("movie@codesquad.kr")
-			.password("1234")
-			.nickName("Movie")
-			.loginType(LoginType.LOCAL)
-			.build();
+		Member member2 = makeMember("movie@codesquad.kr", "1234", "Movie", LoginType.LOCAL);
 		Long memberId2 = memberRepository.save(member2);
 
-		Label label = Label.builder()
-			.title("label_title1")
-			.description("label_description1")
-			.textColor("0#9999")
-			.backgroundColor("0#8888")
-			.build();
+		Label label = makeLabel("label_title1", "label_description1", "0#9999", "0#8888");
 		Long labelId = labelRepository.save(label);
 
-		Label label2 = Label.builder()
-			.title("label_title2")
-			.description("label_description2")
-			.textColor("0#9999")
-			.backgroundColor("0#8888")
-			.build();
+		Label label2 = makeLabel("label_title2", "label_description2", "0#9999", "0#8888");
 		Long labelId2 = labelRepository.save(label2);
 
-		Milestone milestone = Milestone.builder()
-			.title("milestone_title")
-			.description("milestone_description_title")
-			.isOpen(true)
-			.build();
+		Milestone milestone = makeMilestone(true, "milestone_title", "milestone_description_title");
 		Long milestoneId = milestoneRepository.save(milestone);
-		Issue issue = Issue.builder()
-			.isOpen(true)
-			.title("issue_title")
-			.milestoneId(milestoneId)
-			.writerId(memberId)
-			.build();
+
+		Issue issue = makeIssue(true, "issue_title", milestoneId, memberId);
 		Long issueId = issueRepository.save(issue);
 
-		Issue issue2 = Issue.builder()
-			.isOpen(false)
-			.title("issue_title2")
-			.milestoneId(milestoneId)
-			.writerId(memberId)
-			.build();
+		Issue issue2 = makeIssue(false, "issue_title2", milestoneId, memberId);
 		Long issueId2 = issueRepository.save(issue2);
 
-		IssueWithLabel issueWithLabel = IssueWithLabel.builder()
-			.issueId(issueId)
-			.labelId(labelId)
-			.build();
+		IssueWithLabel issueWithLabel = makeIssueWithLabel(labelId, issueId);
 		Long issueLabelId = issueLabelRepository.save(issueWithLabel);
 
-		IssueWithLabel issueWithLabel2 = IssueWithLabel.builder()
-			.issueId(issueId)
-			.labelId(labelId2)
-			.build();
+		IssueWithLabel issueWithLabel2 = makeIssueWithLabel(labelId2, issueId);
 		Long issueLabelId2 = issueLabelRepository.save(issueWithLabel2);
 
-		IssueWithLabel issueWithLabel3 = IssueWithLabel.builder()
-			.issueId(issueId2)
-			.labelId(labelId2)
-			.build();
+		IssueWithLabel issueWithLabel3 = makeIssueWithLabel(labelId2, issueId2);
 		Long issueLabelId3 = issueLabelRepository.save(issueWithLabel3);
 
-		History history = History.builder()
-			.editor(memberId)
-			.issueId(issueId)
-			.issueIsOpen(true)
-			.build();
+		History history = makeHistory(memberId, issueId, true);
 		Long historyId = historyRepository.save(history);
 
-		History history2 = History.builder()
-			.editor(memberId2)
-			.issueId(issueId)
-			.issueIsOpen(false)
-			.build();
+		History history2 = makeHistory(memberId2, issueId, false);
 		Long historyId2 = historyRepository.save(history2);
 
-		History history3 = History.builder()
-			.editor(memberId2)
-			.issueId(issueId2)
-			.issueIsOpen(false)
-			.build();
+		History history3 = makeHistory(memberId2, issueId2, false);
 		Long historyId3 = historyRepository.save(history3);
 
-		Assignee assignee = Assignee.builder()
-			.issueId(issueId)
-			.memberid(memberId)
-			.build();
+		Assignee assignee = makeAssignee(issueId, memberId);
 		Long issigneeId = assigneeRepository.save(assignee);
 
-		Assignee assignee2 = Assignee.builder()
-			.issueId(issueId)
-			.memberid(memberId2)
-			.build();
+		Assignee assignee2 = makeAssignee(issueId, memberId2);
 		Long issigneeId2 = assigneeRepository.save(assignee2);
 
-		Assignee assignee3 = Assignee.builder()
-			.issueId(issueId2)
-			.memberid(memberId)
-			.build();
+		Assignee assignee3 = makeAssignee(issueId2, memberId);
 		Long issigneeId3 = assigneeRepository.save(assignee3);
 
 	}
@@ -193,78 +130,92 @@ class FilterMapperTest extends IntegrationTestSupport {
 			"label_title2", "1", "June", "milestone_title");
 	}
 
-	@DisplayName("담당자가 Movie인 이슈가 필터링된 결과를 FilterResultVO로 반환한다.")
+	@DisplayName("담당자가 earth인 이슈가 필터링된 결과를 FilterResultVO로 반환한다.")
 	@Test
 	void getFilteredListWithAssigneeMovie() {
 		// given
-		Map<String, Object> issueIsOpen = Map.of("assignee", 2);
+
+		Member member = makeMember("june@codesquad.kr", "1234", "earth", LoginType.LOCAL);
+		Long memberId = memberRepository.save(member);
+
+		Issue issue = makeIssue(true, "issue_title_test", 1L, memberId);
+		Long issueId = issueRepository.save(issue);
+		Assignee assignee = makeAssignee(issueId, memberId);
+		Long issigneeId = assigneeRepository.save(assignee);
+
+		Map<String, Object> issueIsOpen = Map.of("assignee", memberId);
 		// when
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
 		// then
-		assertExtractingWithParameter(filteredList, "issue_title", "Movie", "June", true, "1,2",
-			"label_title1,label_title2", "1,2", "June,Movie", "milestone_title");
+		assertExtractingWithParameter(filteredList, "issue_title_test", null, "earth", true, null,
+			null, memberId.toString(), "earth", "milestone_title");
 	}
 
-	@DisplayName("레이블의 id가 1인필터링된 결과를 FilterResultVO로 반환한다.")
+	@DisplayName("새로운 레이블을 등록하고 해당 레이블의 id 필터링된 결과를 FilterResultVO로 반환한다.")
 	@Test
-	void getFilteredListWithLabelFirstId() {
+	void getFilteredListWithLabelNewId() {
+
+		Label label = makeLabel("label_title_test", "label_description3", "0#9999", "0#8888");
+		Long labelId = labelRepository.save(label);
+
+		Issue issue = makeIssue(false, "issue_title_test", 1L, 1L);
+		Long issueId = issueRepository.save(issue);
+
+		IssueWithLabel issueWithLabel = IssueWithLabel.builder()
+			.issueId(issueId)
+			.labelId(labelId)
+			.build();
+		Long issueLabelId2 = issueLabelRepository.save(issueWithLabel);
+
 		// given
-		Map<String, Object> issueIsOpen = Map.of("label", 1);
+		Map<String, Object> issueIsOpen = Map.of("label", labelId, "issueIsOpen", 0);
 		// when
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
 		// then
-		assertExtractingWithParameter(filteredList, "issue_title", "Movie", "June", true, "1,2",
-			"label_title1,label_title2", "1,2", "June,Movie", "milestone_title");
+		assertExtractingWithParameter(filteredList, "issue_title_test", null, "June", false, labelId.toString(),
+			"label_title_test", null, null, "milestone_title");
 	}
 
-	@DisplayName("레이블의 id가 2인필터링된 결과를 FilterResultVO로 반환한다.")
-	@Test
-	void getFilteredListWithLabelSecondId() {
-		// given
-		Map<String, Object> issueIsOpen = Map.of("label", 2, "issueIsOpen", 0);
-		// when
-		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
-		// then
-		assertExtractingWithParameter(filteredList, "issue_title2", "Movie", "June", false, "2",
-			"label_title2", "1", "June", "milestone_title");
-	}
-
-	@DisplayName("마일스톤 id가 1이며 닫힌 이슈를 필터링된 결과를 FilterResultVO로 반환한다.")
+	@DisplayName("마일스톤 id가 3이며 닫힌 이슈를 필터링된 결과를 FilterResultVO로 반환한다.")
 	@Test
 	void getFilteredListWithMileStoneFirstIdWithClosedIssue() {
 		// given
-		Map<String, Object> issueIsOpen = Map.of("milestone", 1, "issueIsOpen", 0);
+		Milestone milestone = makeMilestone(true, "milestone_title3", "milestone_description");
+		Long milestoneId = milestoneRepository.save(milestone);
+		Issue issue = makeIssue(false, "issue_title_test", milestoneId, 1L);
+
+		Long issueId2 = issueRepository.save(issue);
+		Map<String, Object> issueIsOpen = Map.of("milestone", milestoneId, "issueIsOpen", 0);
 		// when
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
 		// then
 
-		assertExtractingWithParameter(filteredList, "issue_title2", "Movie", "June", false, "2",
-			"label_title2", "1", "June", "milestone_title");
+		assertExtractingWithParameter(filteredList, "issue_title_test", null, "June", false, null,
+			null, null, null, "milestone_title3");
 	}
 
-	@DisplayName("마일스톤 id가 1이며 열린 이슈를 필터링된 결과를 FilterResultVO로 반환한다.")
+	@DisplayName("마일스톤 id가 3이며 열린 이슈를 필터링된 결과를 FilterResultVO로 반환한다.")
 	@Test
 	void getFilteredListWithMileStoneFirstIdWithOpenIssue() {
 		// given
-		Map<String, Object> issueIsOpen = Map.of("milestone", 1, "issueIsOpen", 1);
+		Milestone milestone = makeMilestone(true, "milestone_title_test", "milestone_description");
+		Long milestoneId = milestoneRepository.save(milestone);
+		Issue issue3 = makeIssue(true, "issue_title_test", milestoneId, 1L);
+		Long issueId2 = issueRepository.save(issue3);
+		Map<String, Object> issueIsOpen = Map.of("milestone", milestoneId, "issueIsOpen", 1);
 		// when
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(issueIsOpen);
 		// then
-
-		assertExtractingWithParameter(filteredList, "issue_title", "Movie", "June", true, "1,2",
-			"label_title1,label_title2", "1,2", "June,Movie", "milestone_title");
+		assertExtractingWithParameter(filteredList, "issue_title_test", null, "June", true, null,
+			null, null, null, "milestone_title_test");
 	}
 
 	@DisplayName("작성자가 June이며 열린 이슈를 필터링된 결과를 FilterResultVO로 반환한다.")
 	@Test
 	void getFilteredListWithWriterJuneWithOpenIssue() {
 		// given
-		Issue issue3 = Issue.builder()
-			.isOpen(true)
-			.title("issue_title3")
-			.milestoneId(1L)
-			.writerId(1L)
-			.build();
+
+		Issue issue3 = makeIssue(true, "issue_title_test", 1L, 1L);
 		Long issueId2 = issueRepository.save(issue3);
 		Map<String, Object> issueIsOpen = Map.of("writer", 1, "issueIsOpen", 1);
 		// when
@@ -277,9 +228,66 @@ class FilterMapperTest extends IntegrationTestSupport {
 			.containsExactlyInAnyOrder(
 				tuple("issue_title", "Movie", "June", true, "1,2",
 					"label_title1,label_title2", "1,2", "June,Movie", "milestone_title"),
-				tuple("issue_title3", null, "June", true, null,
+				tuple("issue_title_test", null, "June", true, null,
 					null, null, null, "milestone_title")
 			);
+	}
+
+	private Milestone makeMilestone(Boolean isOpen, String title, String description) {
+		return Milestone.builder()
+			.isOpen(isOpen)
+			.title(title)
+			.description(description)
+			.build();
+	}
+
+	private Label makeLabel(String title, String description, String textColor, String backgroundColor) {
+		return Label.builder()
+			.title(title)
+			.description(description)
+			.textColor(textColor)
+			.backgroundColor(backgroundColor)
+			.build();
+	}
+
+	private Issue makeIssue(Boolean isOpen, String title, Long milestoneId, Long writerId) {
+		return Issue.builder()
+			.isOpen(isOpen)
+			.title(title)
+			.milestoneId(milestoneId)
+			.writerId(writerId)
+			.build();
+	}
+
+	private Assignee makeAssignee(Long issueId, Long memberId) {
+		return Assignee.builder()
+			.issueId(issueId)
+			.memberid(memberId)
+			.build();
+	}
+
+	private History makeHistory(Long memberId, Long issueId, boolean issueIsOpen) {
+		return History.builder()
+			.editor(memberId)
+			.issueId(issueId)
+			.issueIsOpen(issueIsOpen)
+			.build();
+	}
+
+	private IssueWithLabel makeIssueWithLabel(Long labelId, Long issueId) {
+		return IssueWithLabel.builder()
+			.issueId(issueId)
+			.labelId(labelId)
+			.build();
+	}
+
+	private Member makeMember(String loginId, String password, String nickName, LoginType loginType) {
+		return Member.builder()
+			.loginId(loginId)
+			.password(password)
+			.nickName(nickName)
+			.loginType(loginType)
+			.build();
 	}
 
 	private void assertExtractingWithParameter(List<FilterResultVO> filteredList, String title, String editor,
@@ -294,5 +302,4 @@ class FilterMapperTest extends IntegrationTestSupport {
 			);
 
 	}
-
 }
