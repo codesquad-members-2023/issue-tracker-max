@@ -3,7 +3,7 @@ package org.presents.issuetracker.label.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.presents.issuetracker.global.dto.response.IdResponseDto;
+import org.presents.issuetracker.global.dto.response.LabelResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
 import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
@@ -32,7 +32,7 @@ public class LabelService {
 			.collect(Collectors.toList());
 	}
 
-	public IdResponseDto create(LabelCreateRequest labelCreateRequest) {
+	public LabelResponse create(LabelCreateRequest labelCreateRequest) {
 		Long createdId = labelRepository.save(
 			Label.of(
 				labelCreateRequest.getName(),
@@ -40,16 +40,16 @@ public class LabelService {
 				labelCreateRequest.getBackgroundColor(),
 				labelCreateRequest.getTextColor()));
 
-		return IdResponseDto.builder().id(createdId).build();
+		return LabelResponse.builder().id(createdId).build();
 	}
 
-	public IdResponseDto update(LabelUpdateRequest labelUpdateRequest) {
+	public LabelResponse update(LabelUpdateRequest labelUpdateRequest) {
 		Long id = labelUpdateRequest.getId();
 		Label label = labelRepository.findById(id);
 
 		label = label.updateFrom(labelUpdateRequest);
 		labelRepository.update(label);
 
-		return IdResponseDto.builder().id(label.getLabelId()).build();
+		return LabelResponse.builder().id(label.getLabelId()).build();
 	}
 }
