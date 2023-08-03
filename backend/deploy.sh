@@ -6,7 +6,7 @@ DEPLOY_LOG=/home/ubuntu/app/deploy.log
 
 echo "> Build 파일 복사" >> $DEPLOY_LOG
 
-cp $PROJECT_ROOT/build/libs/*.jar $PROJECT_ROOT/
+cp -f $PROJECT_ROOT/build/libs/*.jar $PROJECT_ROOT/
 
 echo "> 현재 구동 중인 PID 확인" >> $DEPLOY_LOG
 CURRENT_PID=$(pgrep -f backend)
