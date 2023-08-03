@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Outlet, useLocation } from "react-router-dom";
 import { MainHeader } from "components/Header/MainHeader";
-import { Icon } from "components/Icon/Icon";
+import { Icon } from "components/Common/Icon/Icon";
 
 import { useThemeMode } from "contexts/ThemeModeContext";
 

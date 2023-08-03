@@ -1,6 +1,6 @@
 import React, { InputHTMLAttributes, useState } from "react";
 import styled from "styled-components";
-import { Icon, IconType } from "components/Icon/Icon";
+import { Icon, IconType } from "components/Common/Icon/Icon";
 
 type IconName = keyof IconType;
 
@@ -58,11 +58,11 @@ export const Input: React.FC<InputProps> = ({
       >
         <InputWrapper>
           {$labelText && (
-            <StyledLabel $active={isActive} $value={value}>
+            <LabelText $active={isActive} $value={value}>
               {$labelText}
-            </StyledLabel>
+            </LabelText>
           )}
-          <StyledInput
+          <InputBox
             value={value}
             placeholder={placeholder}
             onChange={handleChange}
@@ -154,7 +154,7 @@ const InputWrapper = styled.div<InputProps & { $active?: boolean }>`
   }
 `;
 
-const StyledLabel = styled.label<LabelProps>`
+const LabelText = styled.label<LabelProps>`
   position: absolute;
   pointer-events: none;
   transform: ${({ $active, $value }) =>
@@ -173,7 +173,7 @@ const StyledLabel = styled.label<LabelProps>`
   z-index: 10;
 `;
 
-const StyledInput = styled.input<InputProps & { $active?: boolean }>`
+const InputBox = styled.input<InputProps & { $active?: boolean }>`
   width: 100%;
   padding: 0px 16px;
   border: none;

@@ -1,7 +1,7 @@
 import React, { useState, ReactNode } from "react";
 import styled from "styled-components";
-import { Button } from "components/Button/Button";
-import { Icon, IconType } from "components/Icon/Icon";
+import { Button } from "components/Common/Button/Button";
+import { Icon, IconType } from "components/Common/Icon/Icon";
 
 type IconName = keyof IconType;
 

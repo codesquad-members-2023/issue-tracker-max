@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { DropdownIndicator } from "components/Dropdown/DropdownIndicator";
-import { Input } from "components/Input/Input";
+import { Input } from "components/Common/Input/Input";
 
 /* Indicator 수정해야함~~ */
 interface FilterBarProps {
@@ -10,19 +10,19 @@ interface FilterBarProps {
 export const FilterBar: React.FC<FilterBarProps> = ({ onIndicatorClick }) => {
   return (
     <FilterBarLayout>
-      <IndicatorLayout>
+      <IndicatorBox>
         <DropdownIndicator
           title="필터"
           onLabelClick={onIndicatorClick}
           id="1"
         />
-      </IndicatorLayout>
+      </IndicatorBox>
       <Input type="S" icon="Search" $radiusType="RoundRight" />
     </FilterBarLayout>
   );
 };
 
-const IndicatorLayout = styled.div`
+const IndicatorBox = styled.div`
   padding: 0px 24px;
   cursor: pointer;
   height: 42px;

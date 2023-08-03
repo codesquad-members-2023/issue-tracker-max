@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Icon, IconType, ThemeColorKeys } from "components/Icon/Icon";
+import { Icon, IconType, ThemeColorKeys } from "components/Common/Icon/Icon";
 
 type IconName = keyof IconType;
 
@@ -28,7 +28,7 @@ export const Tag: React.FC<TagProps> = ({
   size,
   $border,
 }) => (
-  <StyledTag
+  <TagLayout
     color={color}
     $backgroundColor={$backgroundColor}
     $border={$border}
@@ -36,15 +36,10 @@ export const Tag: React.FC<TagProps> = ({
   >
     {icon && <Icon icon={icon} fill={fill} stroke={stroke} />}
     <p>{text}</p>
-  </StyledTag>
+  </TagLayout>
 );
 
-const StyledTag = styled.div<{
-  color: ThemeColorKeys;
-  $backgroundColor: string;
-  $border?: boolean;
-  size?: "S" | "M";
-}>`
+const TagLayout = styled.div<StyledTagProps>`
   color: ${(props) => props.color};
   background-color: ${(props) => props.$backgroundColor};
   border: ${({ theme, $border }) => ($border ? theme.border.default : "none")};

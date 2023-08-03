@@ -1,9 +1,9 @@
-import { Icon } from "components/Icon/Icon";
-import { Button } from "components/Button/Button";
-import { Tag } from "components/Tag/Tag";
-import { Input } from "components/Input/Input";
-import { TabButton, Tab } from "components/Button/TabButton";
-import { FilterBar } from "components/FilterBar/FilterBar";
+import { Icon } from "components/Common/Icon/Icon";
+import { Button } from "components/Common/Button/Button";
+import { Tag } from "components/Common/Tag/Tag";
+import { Input } from "components/Common/Input/Input";
+import { TabButton, Tab } from "components/Common/Button/TabButton";
+import { FilterBar } from "components/Common/FilterBar/FilterBar";
 
 export const ComponentTest = () => {
   const handleIndecatorClick = () => {};

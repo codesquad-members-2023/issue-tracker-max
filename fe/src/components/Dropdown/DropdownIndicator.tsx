@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Icon } from "components/Icon/Icon";
+import { Icon } from "components/Common/Icon/Icon";
 
 interface IndicatorProps {
   id: string;

@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { FilterBar } from "components/FilterBar/FilterBar";
-import { TabButton, Tab } from "components/Button/TabButton";
-import { Button } from "components/Button/Button";
-import { Icon } from "components/Icon/Icon";
+import { FilterBar } from "components/Common/FilterBar/FilterBar";
+import { TabButton, Tab } from "components/Common/Button/TabButton";
+import { Button } from "components/Common/Button/Button";
+import { Icon } from "components/Common/Icon/Icon";
 
 export const IssueListHeader = () => {
   const handleIndecatorClick = () => {};

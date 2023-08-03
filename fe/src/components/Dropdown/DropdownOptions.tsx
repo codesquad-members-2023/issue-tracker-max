@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { Icon } from "components/Icon/Icon";
+import { Icon } from "components/Common/Icon/Icon";
 
 interface SubFilterItem {
   id: number;

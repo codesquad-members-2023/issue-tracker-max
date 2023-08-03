@@ -9,17 +9,17 @@ export const MainHeader = () => {
   const { mode } = useThemeMode();
 
   return (
-    <StyledHeaderLayout>
+    <HeaderLayout>
       <img
         src={mode === "light" ? logoLight : logoDark}
         alt="Issue Tracker 로고"
       />
       <img src={UserTestProfile} alt="내 프로필 이미지" width={32} />
-    </StyledHeaderLayout>
+    </HeaderLayout>
   );
 };
 
-const StyledHeaderLayout = styled.div`
+const HeaderLayout = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { Icon } from "components/Icon/Icon";
-import { Button } from "components/Button/Button";
+import { Icon } from "components/Common/Icon/Icon";
+import { Button } from "components/Common/Button/Button";
 import { useState, useEffect, useCallback } from "react";
 
 import { DropdownTap } from "components/Dropdown/DropdownTap";
@@ -39,7 +39,15 @@ interface MyIndicatorItem {
   items?: SubFilterItem[];
 }
 
-export const IssueTableHeader = () => {
+interface IssueTableProps {
+  isChecked: boolean;
+  onClickCheckBox: () => void;
+}
+
+export const IssueTableHeader: React.FC<IssueTableProps> = ({
+  isChecked,
+  onClickCheckBox,
+}) => {
   const [indicatorList, setIndicatorList] =
     useState<MyIndicatorItem[]>(initialData);
 
@@ -62,11 +70,29 @@ export const IssueTableHeader = () => {
     setIndicatorList(updatedIndicatorList);
   };
 
+  if (isChecked) {
+    return (
+      <ChangeIssueStateHeader>
+        <CheckBox onClick={onClickCheckBox}>
+          <Icon icon="CheckBoxDisable" stroke="paletteBlue" />
+          <p className="select">1개 이슈 선택</p>
+        </CheckBox>
+        <DropdownTap
+          indicatorlList={changeIssueStateIndicator}
+          dropdownPosition="right"
+          dropdownTitle={() => "상태 변경"}
+        />
+      </ChangeIssueStateHeader>
+    );
+  }
+
   return (
-    <StyledIssueDefaultHeader>
+    <DefaultHeader>
       <div>
-        <Icon icon="CheckBoxInitial" stroke="paletteBlue" />
-        <Tap>
+        <CheckBox onClick={onClickCheckBox}>
+          <Icon icon="CheckBoxInitial" stroke="paletteBlue" />
+        </CheckBox>
+        <TapBox>
           <Button size="M" variant="ghost" states="selected">
             <Icon icon="AlertCircle" stroke="paletteBlue" />
             <p>열린 이슈(2)</p>
@@ -75,7 +101,7 @@ export const IssueTableHeader = () => {
             <Icon icon="Archive" stroke="paletteBlue" />
             <p>닫힌 이슈(0)</p>
           </Button>
-        </Tap>
+        </TapBox>
       </div>
       <DropdownTap
         indicatorlList={indicatorList}
@@ -83,28 +109,11 @@ export const IssueTableHeader = () => {
         dropdownTitle={(title) => `${title} 필터`}
         onTabClick={handleClick}
       />
-    </StyledIssueDefaultHeader>
+    </DefaultHeader>
   );
 };
 
-export const ChangeStateHeader = () => {
-  return (
-    <StyledChangeIssueStateHeader>
-      <div>
-        <Icon icon="CheckBoxDisable" stroke="paletteBlue" />
-        <p className="select">1개 이슈 선택</p>
-      </div>
-
-      <DropdownTap
-        indicatorlList={changeIssueStateIndicator}
-        dropdownPosition="right"
-        dropdownTitle={() => "상태 변경"}
-      />
-    </StyledChangeIssueStateHeader>
-  );
-};
-
-const StyledCommonHeader = styled.div`
+const CommonStyle = styled.div`
   display: flex;
   height: 64px;
   align-items: center;
@@ -123,16 +132,20 @@ const StyledCommonHeader = styled.div`
   }
 `;
 
-const StyledIssueDefaultHeader = styled(StyledCommonHeader)``;
+const DefaultHeader = styled(CommonStyle)``;
 
-const StyledChangeIssueStateHeader = styled(StyledCommonHeader)`
+const CheckBox = styled.div`
+  cursor: pointer;
+`;
+
+const ChangeIssueStateHeader = styled(CommonStyle)`
   .select {
     font: ${({ theme: { font } }) => font.displayB16};
     color: ${({ theme: { color } }) => color.nuetralTextDefault};
   }
 `;
 
-const Tap = styled.div`
+const TapBox = styled.div`
   display: flex;
   align-items: center;
   gap: 32px;
