@@ -199,6 +199,10 @@ export function NewIssue() {
   const navigate = useNavigate();
 
   const invalidToSubmit = title.trim().length === 0;
+  const titleCaption =
+    title.trim().length === 0
+      ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
+      : "";
 
   const toggleOptionSelection = <T extends OptionData>(
     options: T[],
@@ -289,14 +293,20 @@ export function NewIssue() {
         },
       );
       const data = await response.json();
-      
+      if (!data.success) {
+        throw new Error(data.message);
+      }
     } catch (error) {
       throw new Error(
-        `${error} : 이슈를 등록하는 과정에서 통신 오류가 발생했습니다.`,
+        `${error} : 이슈를 등록하는 과정에서 오류가 발생했습니다.`,
       );
     } finally {
       navigate("/");
     }
+  };
+
+  const onCancelButtonClick = () => {
+    navigate("/");
   };
 
   return (
@@ -315,6 +325,8 @@ export function NewIssue() {
             label="제목"
             value={title}
             maxLength={50}
+            caption={titleCaption}
+            isError={title.trim().length === 0}
             onChange={onTitleChange}
           />
           <TextArea
@@ -333,7 +345,12 @@ export function NewIssue() {
       </NewIssueBody>
       <Line />
       <NewIssueFooter>
-        <Button size="M" buttonType="Ghost" icon="xSquare">
+        <Button
+          size="M"
+          buttonType="Ghost"
+          icon="xSquare"
+          onClick={onCancelButtonClick}
+        >
           작성 취소
         </Button>
         <Button
@@ -381,7 +398,6 @@ const NewIssueFooter = styled.div`
 const NewIssueContent = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 8px;
   flex: 1 0 0;
   align-self: stretch;

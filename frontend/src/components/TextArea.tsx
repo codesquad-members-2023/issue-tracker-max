@@ -28,6 +28,7 @@ export function TextArea({
   );
   const [inputValue, setInputValue] = useState(value);
   const [countHidden, setCountHidden] = useState(true);
+  const [uploadErrorMessage, setUploadErrorMessage] = useState("");
   const textArea = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -41,6 +42,18 @@ export function TextArea({
 
     return () => clearTimeout(timer);
   }, [countHidden]);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    if (uploadErrorMessage) {
+      timer = setTimeout(() => {
+        setUploadErrorMessage("");
+      }, 3000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [uploadErrorMessage]);
 
   const onFocus = () => {
     setState("Active");
@@ -59,9 +72,7 @@ export function TextArea({
   const onFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
-    if (file) {
-      // TODO: 이미지 확장자 검증
-
+    if (file && isImageTypeFile(file)) {
       const data = await fetchImageText(file);
 
       setInputValue((i) => {
@@ -77,23 +88,47 @@ export function TextArea({
 
         return `${textBefore}![image](${data})${textAfter}`;
       });
+    } else {
+      setUploadErrorMessage("이미지 파일만 업로드 가능합니다.");
     }
+  };
+
+  const isImageTypeFile = (file: File) => {
+    const imageTypes = [
+      "image/apng",
+      "image/avif",
+      "image/gif",
+      "image/jpeg",
+      "image/png",
+      "image/svg+xml",
+      "image/webp",
+      "image/bmp",
+      "image/x-icon",
+      "image/tiff",
+    ];
+
+    return imageTypes.includes(file.type);
   };
 
   const fetchImageText = async (file: File) => {
     const formData = new FormData();
     formData.append("image", file as File);
 
-    const response = await fetch(
-      "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/images",
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
-    const data = await response.text();
+    try {
+      const response = await fetch(
+        "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/images",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+      const data = await response.text();
 
-    return data;
+      return data;
+    } catch (error) {
+      setUploadErrorMessage("이미지 업로드에 실패했습니다.");
+      throw new Error("이미지 업로드에 실패했습니다.");
+    }
   };
 
   const theme = useTheme();
@@ -101,46 +136,53 @@ export function TextArea({
   const gripColor = theme.color.neutralTextWeak;
 
   return (
-    <Div $state={state} onFocus={onFocus} onBlur={onBlur}>
-      <InputContainer>
-        {inputValue && label && <Label>{label}</Label>}
-        <ResizableDiv>
-          <Input
-            placeholder={placeholder}
-            value={inputValue}
-            maxLength={maxLength}
-            onChange={onTextChange}
-            disabled={disabled}
-            ref={textArea}
-          />
-          <TextCount $hidden={countHidden}>
-            띄어쓰기 포함 {inputValue.length}글자
-          </TextCount>
-          <Icon name="grip" fill={gripColor} stroke={gripColor} />
-        </ResizableDiv>
-      </InputContainer>
-      <Footer>
-        <UploadButton htmlFor="imageUpload">
-          <Icon name="paperclip" fill={iconColor} stroke={iconColor} />
-          <span>파일 첨부하기</span>
-          <input
-            id="imageUpload"
-            type="file"
-            accept="image/*"
-            onChange={onFileInputChange}
-          />
-        </UploadButton>
-      </Footer>
-    </Div>
+    <Wrapper>
+      <Div $state={state} onFocus={onFocus} onBlur={onBlur}>
+        <InputContainer>
+          {inputValue && label && <Label>{label}</Label>}
+          <ResizableDiv>
+            <Input
+              placeholder={placeholder}
+              value={inputValue}
+              maxLength={maxLength}
+              onChange={onTextChange}
+              disabled={disabled}
+              ref={textArea}
+            />
+            <TextCount $hidden={countHidden}>
+              띄어쓰기 포함 {inputValue.length}글자
+            </TextCount>
+            <Icon name="grip" fill={gripColor} stroke={gripColor} />
+          </ResizableDiv>
+        </InputContainer>
+        <Footer>
+          <UploadButton htmlFor="imageUpload">
+            <Icon name="paperclip" fill={iconColor} stroke={iconColor} />
+            <span>파일 첨부하기</span>
+            <input
+              id="imageUpload"
+              type="file"
+              accept="image/*"
+              onChange={onFileInputChange}
+            />
+          </UploadButton>
+        </Footer>
+      </Div>
+      {uploadErrorMessage && <ErrorMessage>{uploadErrorMessage}</ErrorMessage>}
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const Div = styled.div<{ $state: TextAreaState }>`
   display: flex;
   min-width: 340px;
   min-height: 184px;
   flex-direction: column;
-  align-items: flex-start;
   border: ${({ theme, $state }) =>
     `${theme.border.default} ${
       $state === "Active"
@@ -191,7 +233,6 @@ const ResizableDiv = styled.div`
     position: absolute;
     bottom: 0;
     right: 0;
-    cursor: grab;
   }
 `;
 
@@ -266,4 +307,14 @@ const UploadButton = styled.label`
   & input {
     display: none;
   }
+`;
+
+const ErrorMessage = styled.span`
+  display: flex;
+  padding-left: 0px;
+  align-items: flex-start;
+  align-self: stretch;
+  padding-left: 16px;
+  color: ${({ theme }) => theme.color.dangerTextDefault};
+  font: ${({ theme }) => theme.font.displayMedium12};
 `;
