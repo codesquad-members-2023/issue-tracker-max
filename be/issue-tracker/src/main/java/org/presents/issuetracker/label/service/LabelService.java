@@ -3,6 +3,7 @@ package org.presents.issuetracker.label.service;
 import org.presents.issuetracker.global.dto.response.LabelResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
+import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
 import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.label.entity.Label;
 import org.presents.issuetracker.label.repository.LabelRepository;
@@ -20,10 +21,23 @@ public class LabelService {
         this.labelRepository = labelRepository;
     }
 
-    public List<LabelPreviewResponse> getLabels() {
+    public List<LabelDetailResponse> getLabelDetails() {
         List<Label> labels = labelRepository.findAll();
 
-        return labels.stream().map(label -> LabelPreviewResponse.builder()
+        return labels.stream().map(label -> LabelDetailResponse.builder()
+                        .id(label.getId())
+                        .name(label.getName())
+                        .description(label.getDescription())
+                        .backgroundColor(label.getBackgroundColor())
+                        .textColor(label.getTextColor())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<LabelPreviewResponse> getLabelPreviews() {
+        List<Label> labelPreviews = labelRepository.findPreviews();
+
+        return labelPreviews.stream().map(label -> LabelPreviewResponse.builder()
                         .id(label.getId())
                         .name(label.getName())
                         .backgroundColor(label.getBackgroundColor())

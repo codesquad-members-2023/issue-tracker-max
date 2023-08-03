@@ -16,6 +16,7 @@ public class LabelRepository {
 
     private static final int OPEN_FLAG = 0;
     private static final int DELETED_FLAG = 1;
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -76,6 +77,24 @@ public class LabelRepository {
     }
 
     public List<Label> findAll() {
+        String sql = "SELECT label_id, name, description, background_color, text_color " +
+                "FROM label " +
+                "WHERE is_deleted = :openFlag " +
+                "ORDER BY label_id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource("openFlag", OPEN_FLAG);
+
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            long id = rs.getLong("label_id");
+            String name = rs.getString("name");
+            String description = rs.getString("description");
+            String backgroundColor = rs.getString("background_color");
+            String textColor = rs.getString("text_color");
+            return Label.of(id, name, description, backgroundColor, textColor);
+        });
+    }
+
+    public List<Label> findPreviews() {
         String sql = "SELECT label_id, name, background_color, text_color " +
                 "FROM label " +
                 "WHERE is_deleted = :openFlag " +
