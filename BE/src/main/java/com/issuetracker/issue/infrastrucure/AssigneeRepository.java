@@ -1,21 +1,21 @@
 package com.issuetracker.issue.infrastrucure;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.issuetracker.issue.domain.Assignee;
+import com.issuetracker.member.domain.Member;
 
 @Repository
 public class AssigneeRepository {
 
 	private static final String SAVE_ALL_SQL = "INSERT INTO assignee(issue_id, member_id) VALUES(:issueId, :memberId)";
+	private static final String FIND_ALL_SQL = "SELECT DISTINCT member.id, member.nickname, member.profile_image_url FROM member INNER JOIN assignee ON member.id = assignee.member_id";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -29,4 +29,15 @@ public class AssigneeRepository {
 			.toArray(BeanPropertySqlParameterSource[]::new);
 		return jdbcTemplate.batchUpdate(SAVE_ALL_SQL, params);
 	}
+
+	public List<Member> findAll() {
+		return jdbcTemplate.query(FIND_ALL_SQL, MEMBER_ROW_MAPPER);
+	}
+
+	private static final RowMapper<Member> MEMBER_ROW_MAPPER = (rs, rowNum) ->
+		Member.builder()
+			.id(rs.getLong("id"))
+			.nickname(rs.getString("nickname"))
+			.proFileImageUrl(rs.getString("profile_image_url"))
+			.build();
 }

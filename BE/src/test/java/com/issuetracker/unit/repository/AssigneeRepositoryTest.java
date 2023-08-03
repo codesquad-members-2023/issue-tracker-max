@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.issuetracker.issue.domain.Assignee;
 import com.issuetracker.issue.infrastrucure.AssigneeRepository;
+import com.issuetracker.member.domain.Member;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
 
@@ -46,5 +47,14 @@ class AssigneeRepositoryTest {
 
 		// then
 		assertThat(actual).containsExactly(1, 1, 1);
+	}
+
+	@Test
+	void 이슈에_등록_되어있는_담담자_목록을_조회한다() {
+		// when
+		List<Member> actual = assigneeRepository.findAll();
+
+		// then
+		assertThat(actual).hasSize(4);
 	}
 }
