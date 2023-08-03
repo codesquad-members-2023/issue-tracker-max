@@ -59,7 +59,7 @@ export function IssueTableHeader({
             name={key}
             optionTitle={`${key} 필터`}
             options={value}
-            alignment="Left"
+            alignment="Right"
           />
         ))}
       </MultiFiltersDiv>

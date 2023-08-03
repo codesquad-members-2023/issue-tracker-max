@@ -134,10 +134,11 @@ const InputContainer = styled.div<InputContainerProps>`
   display: flex;
   width: ${({ $width }) => $width}px;
   height: ${({ $size }) => ($size === "L" ? "56px" : "40px")};
-  padding: 0px 16px;
+  padding: 5px 16px;
   align-self: stretch;
   flex-direction: ${({ $size }) => ($size === "L" ? "column" : "")};
   align-items: ${({ $size }) => ($size === "L" ? "flex-start" : "center")};
+  justify-content: center;
   border-radius: ${({ theme }) => theme.radius.large};
   box-sizing: border-box;
   background: ${({ $state, theme }) => {
@@ -180,7 +181,7 @@ const IconWrapper = styled.div`
 `;
 
 const Input = styled.input<InputProps>`
-  width: 100%;
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   border: none;
