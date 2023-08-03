@@ -1,6 +1,7 @@
 package com.issuetrackermax.domain.milestone;
 
 import java.sql.Types;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,6 +37,12 @@ public class MilestoneRepository {
 	public Long getMilestoneCount() {
 		String sql = "SELECT COUNT(*) FROM milestone";
 		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Long.class);
+	}
+
+	public Boolean existById(Long id) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM milestone WHERE id = :id)";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("id", id), Boolean.class);
 	}
 
 }

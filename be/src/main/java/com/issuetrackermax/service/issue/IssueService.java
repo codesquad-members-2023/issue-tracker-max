@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.issuetrackermax.common.exception.InvalidIssueStatusException;
 import com.issuetrackermax.common.exception.NotFoundIssueException;
 import com.issuetrackermax.common.exception.NotFoundLabelException;
+import com.issuetrackermax.common.exception.NotFoundMilestoneException;
 import com.issuetrackermax.controller.issue.dto.request.IssueApplyRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuePostRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssueTitleRequest;
@@ -99,9 +100,6 @@ public class IssueService {
 		}
 	}
 
-	/*
-	 *  todo : label 있는지 검증
-	 */
 	@Transactional
 	public void applyLabels(Long issueId, IssueApplyRequest request) {
 		if (!issueRepository.existById(issueId)) {
@@ -118,14 +116,13 @@ public class IssueService {
 		}
 	}
 
-	/*
-	 *  todo : assignee 있는지 검증
-	 */
 	@Transactional
 	public void applyAssignees(Long issueId, IssueApplyRequest request) {
 		if (!issueRepository.existById(issueId)) {
 			throw new NotFoundIssueException();
 		}
+
+
 
 		issueRepository.deleteAppliedAssignees(issueId);
 		for (Long memberId : request.getIds()) {
@@ -133,11 +130,14 @@ public class IssueService {
 		}
 	}
 
-	// todo : milestone 있는지 검증
 	@Transactional
 	public void applyMilestone(Long issueId, Long milestoneId) {
 		if (!issueRepository.existById(issueId)) {
 			throw new NotFoundIssueException();
+		}
+
+		if (!milestoneRepository.existById(milestoneId)) {
+			throw new NotFoundMilestoneException();
 		}
 
 		issueRepository.applyMilestone(issueId, milestoneId);
