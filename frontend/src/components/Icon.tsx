@@ -50,7 +50,7 @@ export function Icon({
   );
 }
 
-const fillTypes = ["milestone", "userImageLarge", "userImageSmall"];
+const fillTypes = ["milestone", "userImageLarge", "userImageSmall", "comment"];
 
 const getIcon = (name: string) => {
   switch (name) {
