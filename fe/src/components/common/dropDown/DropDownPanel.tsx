@@ -1,5 +1,4 @@
 import { useTheme } from '@emotion/react';
-import React, { useState } from 'react';
 import { DropDownList } from './DropDownList';
 import { DropDownHeader } from './DropDownHeader';
 
@@ -28,8 +27,6 @@ export const DropDownPanel: React.FC<Props> = ({
   onSelected,
 }) => {
   const theme = useTheme() as any;
-
-  // todo 페치중일때 보여줄 요소
 
   return (
     <div
