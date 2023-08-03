@@ -22,7 +22,7 @@ import codesquard.app.issue.dto.request.IssueModifyTitleRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.fixture.FixtureFactory;
 import codesquard.app.issue.repository.IssueRepository;
-import codesquard.app.label.dto.LabelSavedRequest;
+import codesquard.app.label.dto.LabelSaveRequest;
 import codesquard.app.label.entity.Label;
 import codesquard.app.label.service.LabelService;
 import codesquard.app.milestone.service.MilestoneService;
@@ -79,7 +79,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyStatus() {
 		// given
-		Long loginId = userService.save(FixtureFactory.createUserSaveRequest());
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
 		Long id = issueService.save(issueSaveRequest, loginId);
@@ -112,7 +112,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyInvalidStatus_Response400() {
 		// given
-		Long loginId = userService.save(FixtureFactory.createUserSaveRequest());
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
 		Long id = issueService.save(issueSaveRequest, loginId);
@@ -129,7 +129,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyTitle() {
 		// given
-		Long loginId = userService.save(FixtureFactory.createUserSaveRequest());
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
 		Long id = issueService.save(issueSaveRequest, loginId);
@@ -148,7 +148,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyContent() {
 		// given
-		Long loginId = userService.save(FixtureFactory.createUserSaveRequest());
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
 		Long id = issueService.save(issueSaveRequest, loginId);
@@ -167,7 +167,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyMilestone() {
 		// given
-		Long loginId = userService.save(FixtureFactory.createUserSaveRequest());
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId1 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		Long milestoneId2 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("수정된 마일스톤"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId1);
@@ -186,7 +186,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyAssignees() {
 		// given
-		Long loginId = userService.save(FixtureFactory.createUserSaveRequest());
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId1 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId1);
 		Long id = issueService.save(issueSaveRequest, loginId);
@@ -204,12 +204,12 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyLabels() {
 		// given
-		Long loginId = userService.save(FixtureFactory.createUserSaveRequest());
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		String name = "feat";
 		String color = "light";
 		String background = "#111111";
-		Long labelId = labelService.saveLabel(new LabelSavedRequest(name, color, background, "기능 구현"));
+		Long labelId = labelService.saveLabel(new LabelSaveRequest(name, color, background, "기능 구현"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
 		Long id = issueService.save(issueSaveRequest, loginId);
 
@@ -229,7 +229,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyLabels_Null() {
 		// given
-		Long loginId = userService.save(FixtureFactory.createUserSaveRequest());
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
 		Long id = issueService.save(issueSaveRequest, loginId);
@@ -242,5 +242,21 @@ class IssueServiceTest extends IntegrationTestSupport {
 		// then
 		List<Label> label = issueService.findLabelsById(id);
 		assertThat(label).isEmpty();
+	}
+
+	@DisplayName("이슈를 삭제하고 같은 이슈를 삭제하면 NoSuchIssueException 발생한다.")
+	@Test
+	void delete() {
+		// given
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
+		Long id = issueService.save(issueSaveRequest, loginId);
+
+		// when
+		issueService.delete(id);
+
+		// then
+		assertThatThrownBy(() -> issueService.delete(id)).isInstanceOf(NoSuchIssueException.class);
 	}
 }

@@ -12,11 +12,11 @@ public interface IssueRepository {
 
 	List<Issue> findAll();
 
-	Issue findById(Long id);
+	Issue findBy(Long id);
 
 	Long modify(Issue issue);
 
-	Long deleteById(Long id);
+	void deleteBy(Long id);
 
 	void saveIssueLabel(Long issueId, Long labelId);
 
@@ -30,13 +30,13 @@ public interface IssueRepository {
 
 	void modifyMilestone(Long milestoneId, Long issueId);
 
-	void deleteAssigneesById(Long issueId);
+	void deleteIssueAssigneesBy(Long issueId);
 
-	void deleteLabelsById(Long issueId);
+	void deleteIssueLabelsBy(Long issueId);
 
-	List<User> findAssigneesById(Long issueId);
+	List<User> findAssigneesBy(Long issueId);
 
-	List<Label> findLabelsById(Long issueId);
+	List<Label> findLabelsBy(Long issueId);
 
 	boolean exist(Long issueId);
 }

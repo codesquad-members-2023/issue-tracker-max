@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquard.app.comment.repository.CommentRepository;
 import codesquard.app.errors.errorcode.IssueErrorCode;
 import codesquard.app.errors.exception.IllegalIssueStatusException;
 import codesquard.app.errors.exception.NoSuchIssueException;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class IssueService {
 
 	private final IssueRepository issueRepository;
+	private final CommentRepository commentRepository;
 
 	@Transactional
 	public Long save(IssueSaveRequest issueSaveRequest, Long userId) {
@@ -75,7 +77,7 @@ public class IssueService {
 	@Transactional
 	public void modifyAssignees(IssueModifyAssigneesRequest issueModifyAssigneesRequest, Long issueId) {
 		existIssue(issueId);
-		issueRepository.deleteAssigneesById(issueId);
+		issueRepository.deleteIssueAssigneesBy(issueId);
 		registerIssueAssignee(issueId, issueModifyAssigneesRequest.getAssignees());
 	}
 
@@ -88,23 +90,23 @@ public class IssueService {
 	@Transactional
 	public void modifyLabels(IssueModifyLabelsRequest issueModifyLabelsRequest, Long issueId) {
 		existIssue(issueId);
-		issueRepository.deleteLabelsById(issueId);
+		issueRepository.deleteIssueLabelsBy(issueId);
 		registerIssueLabel(issueId, issueModifyLabelsRequest.getLabels());
 	}
 
 	@Transactional(readOnly = true)
 	public Issue findById(Long issueId) {
-		return issueRepository.findById(issueId);
+		return issueRepository.findBy(issueId);
 	}
 
 	@Transactional(readOnly = true)
 	public List<User> findAssigneesById(Long issueId) {
-		return issueRepository.findAssigneesById(issueId);
+		return issueRepository.findAssigneesBy(issueId);
 	}
 
 	@Transactional(readOnly = true)
 	public List<Label> findLabelsById(Long issueId) {
-		return issueRepository.findLabelsById(issueId);
+		return issueRepository.findLabelsBy(issueId);
 	}
 
 	@Transactional
@@ -112,5 +114,12 @@ public class IssueService {
 		if (!issueRepository.exist(issueId)) {
 			throw new NoSuchIssueException(IssueErrorCode.NOT_FOUND_ISSUE);
 		}
+	}
+
+	@Transactional
+	public void delete(Long issueId) {
+		existIssue(issueId);
+		issueRepository.deleteBy(issueId);
+		commentRepository.deleteByIssueId(issueId);
 	}
 }

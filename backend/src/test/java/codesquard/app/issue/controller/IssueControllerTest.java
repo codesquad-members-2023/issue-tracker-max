@@ -279,6 +279,19 @@ class IssueControllerTest extends ControllerTestSupport {
 			.andDo(print());
 	}
 
+	@DisplayName("이슈를 삭제한다.")
+	@Test
+	void deleteIssue() throws Exception {
+		// given
+		int issueId = 1;
+
+		// when & then
+		mockMvc.perform(delete("/api/issues/" + issueId))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.success").value(true))
+			.andDo(print());
+	}
+
 	private String generateExceedingMaxLengthContent(int maxLength) {
 		StringBuilder builder = new StringBuilder();
 		while (builder.length() < maxLength) {

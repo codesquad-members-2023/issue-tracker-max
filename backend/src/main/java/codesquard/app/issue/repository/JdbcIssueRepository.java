@@ -63,9 +63,9 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public Issue findById(Long id) {
+	public Issue findBy(Long id) {
 		String sql = "SELECT id, title, content, status, status_modified_at, created_at, modified_at, milestone_id, "
-			+ "user_id, is_deleted FROM issue WHERE id = :id";
+			+ "user_id, is_deleted FROM issue WHERE id = :id AND is_deleted = false";
 		return template.query(sql, Map.of("id", id), issueRowMapper).get(0);
 	}
 
@@ -75,8 +75,9 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public Long deleteById(Long id) {
-		return null;
+	public void deleteBy(Long id) {
+		String sql = "UPDATE issue SET is_deleted = true WHERE id = :id";
+		template.update(sql, Map.of("id", id));
 	}
 
 	@Override
@@ -119,19 +120,19 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public void deleteAssigneesById(Long issueId) {
+	public void deleteIssueAssigneesBy(Long issueId) {
 		String sql = "DELETE FROM issue_assignee WHERE issue_id = :issueId";
 		template.update(sql, Map.of("issueId", issueId));
 	}
 
 	@Override
-	public void deleteLabelsById(Long issueId) {
+	public void deleteIssueLabelsBy(Long issueId) {
 		String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
 		template.update(sql, Map.of("issueId", issueId));
 	}
 
 	@Override
-	public List<User> findAssigneesById(Long issueId) {
+	public List<User> findAssigneesBy(Long issueId) {
 		String sql = "SELECT u.id, u.login_id, u.avatar_url FROM user as u "
 			+ "JOIN issue_assignee as ia ON ia.user_id = u.id "
 			+ "WHERE ia.issue_id = :issueId";
@@ -139,7 +140,7 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public List<Label> findLabelsById(Long issueId) {
+	public List<Label> findLabelsBy(Long issueId) {
 		String sql = "SELECT l.id, l.name, l.color, l.background FROM label as l "
 			+ "JOIN issue_label as il ON il.label_id = l.id "
 			+ "WHERE il.issue_id = :issueId";
@@ -148,7 +149,7 @@ public class JdbcIssueRepository implements IssueRepository {
 
 	@Override
 	public boolean exist(Long issueId) {
-		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id)";
+		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id AND is_deleted = false)";
 		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", issueId), Boolean.class));
 	}
 }

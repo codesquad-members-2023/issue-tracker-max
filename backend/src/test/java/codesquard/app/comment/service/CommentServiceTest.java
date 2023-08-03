@@ -125,7 +125,6 @@ class CommentServiceTest extends IntegrationTestSupport {
 			.hasMessage("댓글은 1자 이상 10000자 이하여야 합니다.");
 	}
 
-
 	@DisplayName("등록된 댓글을 삭제한다.")
 	@Test
 	void delete() {
@@ -142,7 +141,7 @@ class CommentServiceTest extends IntegrationTestSupport {
 	}
 
 	private void createUserFixture() {
-		User user = new User("yeon", "yeon@email.com", "password1000", "url path");
+		User user = new User(null, "yeon", "yeon@email.com", "password1000", "url path");
 		userRepository.save(user);
 	}
 
