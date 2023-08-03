@@ -12,8 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.issuetrackermax.controller.ControllerTestSupport;
-import com.issuetrackermax.controller.filter.dto.FilterResponse;
-import com.issuetrackermax.controller.filter.dto.IssueResponse;
+import com.issuetrackermax.controller.filter.dto.response.FilterResponse;
+import com.issuetrackermax.controller.filter.dto.response.IssueResponse;
 import com.issuetrackermax.domain.filter.FilterResultVO;
 
 class FilterControllerTest extends ControllerTestSupport {
@@ -47,15 +47,14 @@ class FilterControllerTest extends ControllerTestSupport {
 			FilterResponse.builder()
 				.labelCount(1L)
 				.mileStoneCount(1L)
-				.openIssueCount(1L)
 				.closedIssueCount(1L)
-				.issues(List.of(issueResponse))
-				.build());
-
-		when(filterService.getLabelCount()).thenReturn(1L);
-		when(filterService.getMilestoneCount()).thenReturn(1L);
-		when(filterService.getClosedIssueCount()).thenReturn(1L);
-		when(filterService.getOpenIssueCount()).thenReturn(1L);
+				.openIssueCount(1L)
+				.issues(
+					List.of(
+						issueResponse
+					))
+				.build()
+		);
 
 		// when&then
 		mockMvc.perform(

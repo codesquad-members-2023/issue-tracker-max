@@ -2,11 +2,11 @@ package com.issuetrackermax.controller.issue.dto.response;
 
 import java.util.List;
 
-import com.issuetrackermax.controller.filter.dto.AssigneeResponse;
-import com.issuetrackermax.controller.filter.dto.HistoryResponse;
-import com.issuetrackermax.controller.filter.dto.LabelResponse;
-import com.issuetrackermax.controller.filter.dto.MilestoneResponse;
-import com.issuetrackermax.controller.filter.dto.WriterResponse;
+import com.issuetrackermax.controller.filter.dto.response.AssigneeResponse;
+import com.issuetrackermax.controller.filter.dto.response.HistoryResponse;
+import com.issuetrackermax.controller.filter.dto.response.LabelResponse;
+import com.issuetrackermax.controller.filter.dto.response.MilestoneResponse;
+import com.issuetrackermax.controller.filter.dto.response.WriterResponse;
 import com.issuetrackermax.domain.comment.entity.Comment;
 import com.issuetrackermax.domain.history.entity.History;
 import com.issuetrackermax.domain.issue.entity.IssueResultVO;

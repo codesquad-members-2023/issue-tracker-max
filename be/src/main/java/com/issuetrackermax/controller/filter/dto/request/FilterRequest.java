@@ -1,4 +1,4 @@
-package com.issuetrackermax.controller.filter.dto;
+package com.issuetrackermax.controller.filter.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
