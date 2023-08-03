@@ -49,7 +49,7 @@ const opacity = {
   disabled: "0.32",
 };
 
-const light = {
+const LIGHT = {
   color: {
     neutralTextWeak: color.grayScale600,
     neutralTextDefault: color.grayScale700,
@@ -87,7 +87,7 @@ const light = {
   },
 };
 
-const dark = {
+const DARK = {
   color: {
     neutralTextWeak: color.grayScale500,
     neutralTextDefault: color.grayScale400,
@@ -126,18 +126,18 @@ const dark = {
 };
 
 export const designSystem = {
-  light: {
+  LIGHT: {
     font,
     radius,
     border,
     opacity,
-    ...light,
+    ...LIGHT,
   },
-  dark: {
+  DARK: {
     font,
     radius,
     border,
     opacity,
-    ...dark,
+    ...DARK,
   },
 };

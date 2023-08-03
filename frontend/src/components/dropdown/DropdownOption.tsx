@@ -5,7 +5,7 @@ export function DropdownOption({
   showProfile = true,
   profile,
   background,
-  color = "Light",
+  color = "LIGHT",
   selected,
   children,
   onClick,

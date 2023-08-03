@@ -39,7 +39,7 @@ const StyledButton = styled.button<{ $type: "Default" | "Long" }>`
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 32px;
+  height: 100%;
   border-radius: 20px;
   font: ${({ theme }) => theme.font.availableMedium16};
   color: ${({ theme }) => theme.color.neutralTextDefault};

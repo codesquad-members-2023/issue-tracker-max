@@ -1,15 +1,15 @@
 import { styled, useTheme } from "styled-components";
 import { IssueData } from "../../page/main/Main";
 import { getElapsedSince } from "../../utils/getElapsedSince";
-import { InformationTag } from "../InformationTag";
 import { Icon } from "../Icon";
+import { InformationTag } from "../InformationTag";
 
 export function Issue({ issue }: { issue: IssueData }) {
   const theme = useTheme();
   const iconColors = {
     issueTitle: theme.color.paletteBlue,
     issueInfo: theme.color.neutralTextWeak,
-  }
+  };
 
   return (
     <Div>
@@ -20,7 +20,11 @@ export function Issue({ issue }: { issue: IssueData }) {
       </div>
       <IssueContent>
         <IssueTitle>
-          <Icon name="alertCircle" fill={iconColors.issueTitle} stroke={iconColors.issueTitle} />
+          <Icon
+            name="alertCircle"
+            fill={iconColors.issueTitle}
+            stroke={iconColors.issueTitle}
+          />
           <TitleAnchor>{issue.title}</TitleAnchor>
           {issue.labels.map((label, index) => (
             <InformationTag
@@ -28,7 +32,7 @@ export function Issue({ issue }: { issue: IssueData }) {
               value={label.name}
               size="S"
               fill={label.background}
-              fontColor="Light"
+              fontColor="LIGHT"
             />
           ))}
         </IssueTitle>
@@ -41,7 +45,11 @@ export function Issue({ issue }: { issue: IssueData }) {
           </span>
           {issue.milestone && (
             <span>
-              <Icon name="milestone" fill={iconColors.issueInfo} stroke={iconColors.issueInfo} />
+              <Icon
+                name="milestone"
+                fill={iconColors.issueInfo}
+                stroke={iconColors.issueInfo}
+              />
               {issue.milestone.name}
             </span>
           )}
