@@ -2,11 +2,11 @@ package org.presents.issuetracker.issue.entity;
 
 import java.time.LocalDateTime;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
+@Builder
 public class Issue {
 	private Long issueId;
 	private Long authorId;
