@@ -5,15 +5,20 @@ import { DropdownPanel } from "./DropdownPanel";
 
 export function DropdownContainer({
   name,
+  optionTitle,
   options,
   showProfile = true,
   alignment,
-  disabled = false
+  disabled = false,
 }: {
   name: string;
+  optionTitle: string;
   options: {
     name: string;
     profile?: string;
+    background?: string;
+    color?: "LIGHT" | "DARK";
+    selected: boolean;
     onClick: () => void;
   }[];
   showProfile?: boolean;
@@ -37,6 +42,7 @@ export function DropdownContainer({
         <>
           <div className="dropdown__dim" onClick={closePanel}></div>
           <DropdownPanel
+            optionTitle={optionTitle}
             showProfile={showProfile}
             alignment={alignment}
             options={options}

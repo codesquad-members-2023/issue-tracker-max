@@ -1,56 +1,69 @@
+import { Children, ReactElement, cloneElement } from "react";
 import { styled } from "styled-components";
-import { Button } from "./Button";
 
 export function TabButton({
-  tabs,
+  type = "Outline",
+  children,
   onClick,
 }: {
-  tabs: {
-    name: string;
-    icon?: string;
-    selected?: boolean;
-  }[];
+  type?: "Ghost" | "Outline";
+  children: ReactElement[];
   onClick: (name: string) => void;
 }) {
+  const TabButtonDiv =
+    type === "Ghost" ? GhostTabButtonDiv : OutlineTabButtonDiv;
+
   return (
-    <StyledTabButton>
-      {tabs.map(({ name, icon, selected }) => (
-        <Button
-          key={name}
-          icon={icon}
-          size="M"
-          buttonType="Ghost"
-          flexible="Flexible"
-          selected={selected}
-          onClick={() => onClick(name)}
-        >
-          {name}
-        </Button>
-      ))}
-    </StyledTabButton>
+    <TabButtonDiv>
+      {Children.map(children, (child) =>
+        cloneElement(child, {
+          onClick: () => {
+            onClick(child.props.children);
+          },
+        }),
+      )}
+    </TabButtonDiv>
   );
 }
 
-const StyledTabButton = styled.div`
+const BaseTabButtonDiv = styled.div`
   display: flex;
   align-items: center;
-  width: 320px;
+  width: fit-content;
   height: 40px;
+
+  & button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+`;
+
+const GhostTabButtonDiv = styled(BaseTabButtonDiv)`
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+
+  & button {
+    padding: 0 4px;
+  }
+`;
+
+const OutlineTabButtonDiv = styled(BaseTabButtonDiv)`
   border: ${({ theme }) =>
     `${theme.border.default} ${theme.color.neutralBorderDefault}`};
   border-radius: ${({ theme }) => theme.radius.medium};
   background-color: ${({ theme }) => theme.color.neutralSurfaceDefault};
 
   & button {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-
-    &:first-child {
+    &:not(:last-child) {
       border-right: ${({ theme }) =>
         `${theme.border.default} ${theme.color.neutralBorderDefault}`};
+      border-radius: 0;
+    }
+
+    &:first-child {
       border-radius: ${({ theme }) =>
         `${theme.radius.medium} 0 0 ${theme.radius.medium}`};
     }

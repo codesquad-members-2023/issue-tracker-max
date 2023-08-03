@@ -1,14 +1,22 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
+import { Icon } from "./Icon";
 
 type TextInputProps = {
   width?: number;
   size: "L" | "S";
   value?: string;
-  label: string;
+  placeholder?: string;
+  label?: string;
   caption?: string;
+  icon?: string;
+  fixLabel?: boolean;
+  borderNone?: boolean;
   disabled?: boolean;
-  validator?: (value: string) => boolean;
+  isError?: boolean;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 };
 
 type TextInputState = "Enabled" | "Active" | "Disabled" | "Error";
@@ -20,6 +28,7 @@ type InputProps = {
 type InputContainerProps = {
   $width: number;
   $size: "L" | "S";
+  $borderNone?: boolean;
   $state: TextInputState;
 };
 
@@ -28,9 +37,16 @@ export function TextInput({
   size,
   value: initialValue = "",
   label,
+  placeholder,
   caption,
+  icon,
+  fixLabel = false,
+  borderNone = false,
   disabled = false,
-  validator,
+  isError = false,
+  onChange,
+  onFocus,
+  onBlur,
 }: TextInputProps) {
   const [state, setState] = useState<TextInputState>(
     disabled ? "Disabled" : "Enabled",
@@ -38,33 +54,55 @@ export function TextInput({
   const [inputValue, setInputValue] = useState(initialValue);
 
   useEffect(() => {
-    if (validator) {
-      setState(validator(inputValue) ? "Enabled" : "Error");
-    }
-  }, [inputValue, validator]);
+    setState(isError ? "Error" : "Enabled");
+  }, [isError]);
+
+  useEffect(() => {
+    setInputValue(initialValue);
+  }, [initialValue]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+    const value = event.target.value;
+
+    setInputValue(value);
+    onChange && onChange(event);
   };
 
   const handleInputFocus = () => {
     if (state !== "Error") {
       setState("Active");
     }
+
+    onFocus && onFocus();
   };
 
   const handleInputBlur = () => {
     if (state !== "Error") {
       setState(disabled ? "Disabled" : "Enabled");
     }
+
+    onBlur && onBlur();
   };
 
+  const theme = useTheme();
+  const iconColor = theme.color.neutralTextDefault;
+
   return (
-    <Div $state={state}>
-      <InputContainer $width={width} $size={size} $state={state}>
-        {inputValue && <StyledSpan>{label}</StyledSpan>}
+    <Div $state={state} $width={width}>
+      <InputContainer
+        $width={width}
+        $size={size}
+        $state={state}
+        $borderNone={borderNone}
+      >
+        {(fixLabel || inputValue) && label && <StyledSpan>{label}</StyledSpan>}
+        {icon && (
+          <IconWrapper>
+            <Icon name={icon} fill={iconColor} stroke={iconColor} />
+          </IconWrapper>
+        )}
         <Input
-          placeholder={label}
+          placeholder={placeholder}
           value={inputValue}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
@@ -78,9 +116,9 @@ export function TextInput({
   );
 }
 
-const Div = styled.div<{ $state: TextInputState }>`
+const Div = styled.div<{ $state: TextInputState; $width: number }>`
   display: flex;
-  width: 288px;
+  width: ${({ $width }) => $width}px;
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
@@ -94,7 +132,6 @@ const InputContainer = styled.div<InputContainerProps>`
   width: ${({ $width }) => $width}px;
   height: ${({ $size }) => ($size === "L" ? "56px" : "40px")};
   padding: 0px 16px;
-  justify-content: center;
   align-self: stretch;
   flex-direction: ${({ $size }) => ($size === "L" ? "column" : "")};
   align-items: ${({ $size }) => ($size === "L" ? "flex-start" : "center")};
@@ -111,14 +148,17 @@ const InputContainer = styled.div<InputContainerProps>`
         return theme.color.neutralSurfaceBold;
     }
   }};
-  border: ${({ theme, $state }) => {
+  border: ${({ theme, $state, $borderNone }) => {
+    if ($borderNone) {
+      return "none";
+    }
     switch ($state) {
       case "Active":
         return `1px solid ${theme.color.neutralBorderDefaultActive}`;
       case "Error":
         return `1px solid ${theme.color.dangerBorderDefault}`;
       default:
-        return "";
+        return "none";
     }
   }};
 `;
@@ -129,7 +169,15 @@ const StyledSpan = styled.span`
   font: ${({ theme }) => theme.font.displayMedium12};
 `;
 
+const IconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+`;
+
 const Input = styled.input<InputProps>`
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   border: none;

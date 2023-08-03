@@ -1,4 +1,5 @@
-import { styled } from "styled-components";
+import { styled, useTheme } from "styled-components";
+import { Icon } from "./Icon";
 
 export function InformationTag({
   value,
@@ -7,7 +8,7 @@ export function InformationTag({
   icon,
   fill,
   stroke,
-  fontColor = "Dark",
+  fontColor = "DARK",
 }: {
   value: string;
   size: "M" | "S";
@@ -15,21 +16,46 @@ export function InformationTag({
   icon?: string;
   fill?: string;
   stroke?: "Default" | "DefaultActive";
-  fontColor?: "Light" | "Dark";
+  fontColor?: "LIGHT" | "DARK";
 }) {
+  const theme = useTheme();
+  const iconColor =
+    fontColor === "DARK"
+      ? theme.color.neutralTextWeak
+      : theme.color.brandTextDefault;
+
   return (
     <StyledInformationTag
       data-title={/^\s*$/.test(toolTip) ? undefined : toolTip}
       $size={size}
       $fill={fill}
       $stroke={stroke}
-      $darkFont={fontColor === "Dark"}
+      $darkFont={fontColor === "DARK"}
     >
-      {icon && <img src={`/src/assets/${icon}.svg`} alt={icon} />}
+      {icon && <Icon name={icon} fill={iconColor} stroke={iconColor} />}
       <span>{value}</span>
     </StyledInformationTag>
   );
 }
+
+const getBorderColor = (hexColor: string | undefined): string => {
+  if (!hexColor || hexColor.length !== 7 || !hexColor.startsWith("#")) {
+    return "transparent";
+  }
+
+  hexColor = hexColor.replace("#", "");
+
+  const r = parseInt(hexColor.substring(0, 2), 16);
+  const g = parseInt(hexColor.substring(2, 4), 16);
+  const b = parseInt(hexColor.substring(4, 6), 16);
+  const brightness = Math.round((r * 299 + g * 587 + b * 114) / 1000);
+
+  const theme = useTheme();
+
+  return brightness > 200 && brightness <= 255
+    ? theme.color.neutralBorderDefault
+    : "transparent";
+};
 
 const StyledInformationTag = styled.div<{
   $size: "M" | "S";
@@ -44,10 +70,10 @@ const StyledInformationTag = styled.div<{
   height: ${({ $size }) => ($size === "M" ? "32px" : "24px")};
   padding: ${({ $size }) => ($size === "M" ? "0 16px" : "0 8px")};
   border: 1px solid
-    ${({ theme, $stroke }) =>
+    ${({ theme, $stroke, $fill }) =>
       $stroke && theme.color[`neutralBorder${$stroke}`]
         ? theme.color[`neutralBorder${$stroke}`]
-        : "transparent"};
+        : getBorderColor($fill)};
   border-radius: ${({ theme }) => theme.radius.large};
   background-color: ${({ theme, $fill }) =>
     $fill && /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/g.test($fill)
@@ -80,13 +106,6 @@ const StyledInformationTag = styled.div<{
     opacity: 1;
     visibility: visible;
     transition: all 0.1s ease 0.5s;
-  }
-
-  img {
-    filter: ${({ theme, $darkFont }) =>
-      $darkFont
-        ? theme.iconFilter.neutralTextWeak
-        : theme.iconFilter.brandTextDefault};
   }
 
   span {
