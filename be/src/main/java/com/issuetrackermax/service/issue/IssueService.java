@@ -1,8 +1,6 @@
 package com.issuetrackermax.service.issue;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,30 +22,26 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class IssueService {
-	private static final Map<String, Function<IssueRepository, Function<List<Long>, Integer>>> STATUS_UPDATE_OPTIONS
-		= Map.of("open", repo -> repo::openByIds, "closed", repo -> repo::closeByIds);
 	private final IssueRepository issueRepository;
 	private final CommentRepository commentRepository;
 	private final HistoryRepository historyRepository;
+	private final String OPEN_ISSUE = "open";
+	private final String CLOSED_ISSUE = "closed";
 
 	// todo : 전체 예외 처리
 	// todo : 이슈 등록 시 label, assignee 한 번에 등록하는 방법
 	@Transactional
 	public Long post(IssuePostRequest request) {
-		// 이슈 등록
 		Long issueId = issueRepository.save(request.toIssue());
 
-		// assignee 있으면 assignee 등록
 		if (request.getAssigneeIds() != null) {
 			applyAssignees(issueId, request.toAssignee());
 		}
 
-		// label 있으면 label 등록
 		if (request.getLabelIds() != null) {
 			applyLabels(issueId, request.toLabel());
 		}
 
-		// 코멘트 내용 또는 파일 첨부 있으면 코멘트 등록
 		if (request.getContent() != null || request.getImageUrl() != null) {
 			commentRepository.save(request.toComment());
 		}
@@ -72,15 +66,18 @@ public class IssueService {
 
 	@Transactional
 	public void updateStatus(IssuesStatusRequest request) {
-		Function<IssueRepository, Function<List<Long>, Integer>> option = STATUS_UPDATE_OPTIONS.get(
-			request.getIssueStatus());
-		if (option == null) {
+		int count;
+		String status = request.getIssueStatus();
+		List<Long> ids = request.getIssueIds();
+		if (status.equals(OPEN_ISSUE)) {
+			count = issueRepository.openByIds(ids);
+		} else if (status.equals(CLOSED_ISSUE)) {
+			count = issueRepository.closeByIds(ids);
+		} else {
 			throw new IllegalArgumentException();
 		}
 
-		int count = option.apply(issueRepository).apply(request.getIssueIds());
-
-		if (count != request.getIssueIds().size()) {
+		if (count != ids.size()) {
 			throw new IllegalArgumentException();
 		}
 	}
@@ -119,7 +116,6 @@ public class IssueService {
 	}
 
 	// todo : milestone 있는지 검증
-	// todo : int 활용? 비활용?
 	@Transactional
 	public void applyMilestone(Long issueId, Long milestoneId) {
 		issueRepository.applyMilestone(issueId, milestoneId);
