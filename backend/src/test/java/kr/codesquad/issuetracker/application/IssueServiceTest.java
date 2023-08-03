@@ -60,7 +60,7 @@ class IssueServiceTest {
 	class IssueListTest {
 		@DisplayName("최근에 생성된 순서대로 조회가 된다.")
 		@Test
-		public void sortedIssueNumbers() {
+		void sortedIssueNumbers() {
 			var issueNumbers = issueService.findAll().stream()
 				.mapToInt(IssueSimpleMapper::getIssueNumber)
 				.toArray();
@@ -70,7 +70,7 @@ class IssueServiceTest {
 
 		@DisplayName("이슈별 담당자, 레이블의 중복이 제거가 된다.")
 		@Test
-		public void matchIssueLabelAndAssigneeCount() {
+		void matchIssueLabelAndAssigneeCount() {
 			var issueSimpleMappers = issueService.findAll();
 			var firstIssue = issueSimpleMappers.get(0);
 			var lastIssue = issueSimpleMappers.get(2);
@@ -121,11 +121,38 @@ class IssueServiceTest {
 
 	@DisplayName("존재하지 않는 이슈의 담당자를 수정하면 ISSUE_NOT_FOUND 예외가 발생한다.")
 	@Test
-	public void failedToUpdateAssignee_IfNoExistsIssue() {
+	void failedToUpdateAssignee_IfNoExistsIssue() {
 		var invalidIssueId = -1;
 
 		assertThatThrownBy(() -> issueService.updateAssignees(invalidIssueId, new AssigneeRequest()))
 			.isInstanceOf(ApplicationException.class)
 			.extracting("errorCode").isEqualTo(ErrorCode.ISSUE_NOT_FOUND);
+	}
+
+	@DisplayName("특정 이슈의 마일스톤을 수정할 수 있다.")
+	@Test
+	void updateIssueMilestone() {
+		//given
+		Integer issueId = 1;
+		Integer updateMilestoneId = 2;
+
+		//when
+		issueService.updateIssueMilestone(issueId, updateMilestoneId);
+
+		//then
+		assertThat(issueService.getIssueDetails(issueId).getMilestone().getMilestoneId()).isEqualTo(updateMilestoneId);
+	}
+
+	@DisplayName("특정 이슈의 등록된 마일스톤을 제거할 수 있다.")
+	@Test
+	void deleteIssueMilestone() {
+		//given
+		Integer issueId = 1;
+
+		//when
+		issueService.updateIssueMilestone(1, null);
+
+		//then
+		assertThat(issueService.getIssueDetails(issueId).getMilestone()).isNull();
 	}
 }
