@@ -25,7 +25,7 @@ public class UserRepository {
 	}
 
 	public Long insert(User user) {
-		String sql = "INSERT INTO users (email,password,name, login_type) VALUES (:email,:password,:name,:loginType)";
+		String sql = "INSERT INTO users (email,password,name, login_type, profile_img) VALUES (:email,:password,:name,:loginType,:profileImg)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
 		MapSqlParameterSource params = new MapSqlParameterSource();
@@ -33,6 +33,7 @@ public class UserRepository {
 		params.addValue("password", user.getPassword());
 		params.addValue("name", user.getName());
 		params.addValue("loginType", user.getLoginType().getType());
+		params.addValue("profileImg", user.getProfileImg());
 
 		jdbcTemplate.update(sql, params, keyHolder);
 		return keyHolder.getKey().longValue();
