@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.presents.issuetracker.issue.dto.vo.IssueVo;
+import org.presents.issuetracker.issue.entity.vo.IssueSearchVo;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class IssueSearch {
 	private LocalDateTime createdAt;
 	private String status;
 
-	public static IssueSearch from(IssueVo issue) {
+	public static IssueSearch from(IssueSearchVo issue) {
 		return IssueSearch.builder()
 			.id(issue.getIssueId())
 			.title(issue.getTitle())
@@ -31,7 +31,10 @@ public class IssueSearch {
 			.status(issue.getStatus()).build();
 	}
 
-	public static List<IssueSearch> from(List<IssueVo> issues) {
+	public static List<IssueSearch> from(List<IssueSearchVo> issues) {
+		if (issues == null) {
+			return null;
+		}
 		return issues.stream()
 			.map(IssueSearch::from)
 			.collect(Collectors.toUnmodifiableList());
