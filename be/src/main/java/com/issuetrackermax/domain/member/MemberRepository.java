@@ -46,6 +46,11 @@ public class MemberRepository {
 		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
 
+	public Boolean existsLoginId(String loginId) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM member WHERE login_id = :loginId)";
+		return jdbcTemplate.queryForObject(sql, Map.of("loginId", loginId), Boolean.class);
+	}
+
 	private static final RowMapper<Member> MEMBER_ROW_MAPPER = (rs, rowNum) ->
 		new Member(rs.getLong("id"), rs.getString("login_id"), rs.getString("password"), rs.getString("nick_name"),
 			LoginType.valueOf(rs.getString("login_type")));
