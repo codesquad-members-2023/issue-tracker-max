@@ -2,6 +2,7 @@ package org.presents.issuetracker.issue.controller;
 
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequestDto;
+import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
 import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
 import org.presents.issuetracker.issue.service.IssueService;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,9 @@ public class IssueController {
 		return ResponseEntity.status(HttpStatus.OK).body(issueCreateResponse);
 	}
 
-	@GetMapping() // query가 없을 시 null
+	@GetMapping()
 	public ResponseEntity<IssueSearchResponse> showIssues(@RequestParam(required = false) String query) {
-		return ResponseEntity.ok().body(issueService.getIssues());
+		IssueSearchParam issueSearchParam = IssueSearchParam.from(query);
+		return ResponseEntity.ok().body(issueService.getIssues(issueSearchParam));
 	}
 }

@@ -14,6 +14,9 @@ public class MilestoneSearch {
 	private String name;
 
 	public static MilestoneSearch fromEntity(Milestone milestone) {
+		if (milestone == null) {
+			return null;
+		}
 		return MilestoneSearch.builder()
 			.id(milestone.getMilestoneId())
 			.name(milestone.getName()).build();
