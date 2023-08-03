@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetrackermax.common.exception.InvalidIssueStatusException;
+import com.issuetrackermax.common.exception.NotFoundAssigneeException;
 import com.issuetrackermax.common.exception.NotFoundIssueException;
 import com.issuetrackermax.common.exception.NotFoundLabelException;
 import com.issuetrackermax.common.exception.NotFoundMilestoneException;
@@ -122,7 +123,9 @@ public class IssueService {
 			throw new NotFoundIssueException();
 		}
 
-
+		if (!assigneeRepository.existByIds(request.getIds())) {
+			throw new NotFoundAssigneeException();
+		}
 
 		issueRepository.deleteAppliedAssignees(issueId);
 		for (Long memberId : request.getIds()) {
