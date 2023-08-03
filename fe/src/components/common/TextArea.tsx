@@ -8,21 +8,27 @@ type Props = {
   size?: 'defaultSize' | 'S';
   isDisabled?: boolean;
   letterCount?: number;
-  isTyping?: boolean;
-  textAreaValue?: string;
+  textAreaValue: string;
   isDisplayingCount?: boolean;
-  onTyping: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  isFileUploading?: boolean;
+  isFileTypeError?: boolean;
+  isFileSizeError?: boolean;
+  isFileUploadFailed?: boolean;
+  onChangeTextArea: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const TextArea: React.FC<Props> = ({
   size = 'defaultSize',
-  isDisabled,
+  isDisabled = false,
   letterCount,
-  isTyping,
   textAreaValue,
   isDisplayingCount,
-  onTyping,
+  isFileUploading,
+  isFileTypeError,
+  isFileSizeError,
+  isFileUploadFailed,
+  onChangeTextArea,
   onFileChange,
 }) => {
   const theme = useTheme() as any;
@@ -36,6 +42,7 @@ export const TextArea: React.FC<Props> = ({
       height: '552px',
     },
   };
+  const isTyping = textAreaValue.length > 0;
 
   return (
     <div
@@ -70,7 +77,7 @@ export const TextArea: React.FC<Props> = ({
       )}
       <textarea
         value={textAreaValue}
-        onChange={onTyping}
+        onChange={onChangeTextArea}
         disabled={isDisabled}
         css={{
           flex: '1 0 0',
@@ -102,7 +109,7 @@ export const TextArea: React.FC<Props> = ({
           height: '52px',
         }}
       >
-        {isDisplayingCount && letterCount && (
+        {isDisplayingCount && (
           <span
             css={{
               color: theme.neutral.text.weak,
@@ -156,6 +163,46 @@ export const TextArea: React.FC<Props> = ({
           id="file"
           css={{ display: 'none' }}
         />
+        {isFileUploading && (
+          <span
+            css={{
+              color: theme.neutral.text.weak,
+              font: theme.fonts.availableMedium12,
+            }}
+          >
+            이미지 업로드 중입니다요..
+          </span>
+        )}
+        {isFileTypeError && (
+          <span
+            css={{
+              color: theme.danger.text.default,
+              font: theme.fonts.availableMedium12,
+            }}
+          >
+            이미지 형식만 업로드 할 수 있습니다.
+          </span>
+        )}
+        {isFileSizeError && (
+          <span
+            css={{
+              color: theme.danger.text.default,
+              font: theme.fonts.availableMedium12,
+            }}
+          >
+            1MB 이하의 이미지만 업로드 할 수 있습니다.
+          </span>
+        )}
+        {isFileUploadFailed && (
+          <span
+            css={{
+              color: theme.danger.text.default,
+              font: theme.fonts.availableMedium12,
+            }}
+          >
+            이미지 업로드에 실패했습니다. 다시 시도해 주세요.
+          </span>
+        )}
       </div>
     </div>
   );
