@@ -89,7 +89,6 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	private RowMapper<Milestone> milestoneRowMapper() {
 		return (rs, rowNum) -> {
 			Long id = rs.getLong("id");
-			String status = rs.getString("status");
 			Optional<LocalDateTime> createdAt = Optional.ofNullable(rs.getTimestamp("created_at"))
 				.map(Timestamp::toLocalDateTime);
 			Optional<LocalDateTime> modifiedAt = Optional.ofNullable(rs.getTimestamp("modified_at"))
@@ -98,7 +97,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 			String description = rs.getString("description");
 			Optional<LocalDate> deadline = Optional.ofNullable(rs.getDate("deadline")).map(Date::toLocalDate);
 
-			return new Milestone(id, status, createdAt.orElse(null), modifiedAt.orElse(null), name, description,
+			return new Milestone(id, createdAt.orElse(null), modifiedAt.orElse(null), name, description,
 				deadline.orElse(null));
 		};
 	}
