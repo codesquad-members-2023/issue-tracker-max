@@ -1,17 +1,16 @@
 package codesquard.app.milestone.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MilestoneDeleteResponse {
+	@JsonProperty("success")
 	private final boolean success;
 
 	private MilestoneDeleteResponse(boolean success) {
 		this.success = success;
 	}
 
-	public static MilestoneDeleteResponse success(boolean success) {
-		return new MilestoneDeleteResponse(success);
-	}
-
-	public boolean isSuccess() {
-		return success;
+	public static MilestoneDeleteResponse success() {
+		return new MilestoneDeleteResponse(true);
 	}
 }
