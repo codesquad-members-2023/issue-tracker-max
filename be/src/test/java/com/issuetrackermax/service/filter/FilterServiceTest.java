@@ -1,5 +1,6 @@
 package com.issuetrackermax.service.filter;
 
+import static com.issuetrackermax.fixture.entityFixture.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -207,29 +208,4 @@ class FilterServiceTest extends IntegrationTestSupport {
 		assertThat(openIssue.size()).isEqualTo(3L);
 	}
 
-	private Milestone makeMilestone(Boolean isOpen, String title, String description) {
-		return Milestone.builder()
-			.isOpen(isOpen)
-			.title(title)
-			.description(description)
-			.build();
-	}
-
-	private Label makeLabel(String title, String description, String textColor, String backgroundColor) {
-		return Label.builder()
-			.title(title)
-			.description(description)
-			.textColor(textColor)
-			.backgroundColor(backgroundColor)
-			.build();
-	}
-
-	private Issue makeIssue(Boolean isOpen, String title, Long milestoneId, Long writerId) {
-		return Issue.builder()
-			.isOpen(isOpen)
-			.title(title)
-			.milestoneId(milestoneId)
-			.writerId(writerId)
-			.build();
-	}
 }
