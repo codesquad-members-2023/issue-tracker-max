@@ -6,7 +6,7 @@ import {ReactComponent as CheckBoxDisable} from "../assets/checkBoxDisable.svg";
 import {ReactComponent as CheckBoxInitial} from "../assets/checkBoxInitial.svg";
 import {ReactComponent as CheckOffCircle} from "../assets/checkOffCircle.svg";
 import {ReactComponent as CheckOnCircle} from "../assets/checkOnCircle.svg";
-import {ReactComponent as CheckBoxActive} from "/src/assets/checkboxActive.svg";
+import {ReactComponent as CheckBoxActive} from "../assets/checkboxActive.svg";
 import {ReactComponent as ChevronDown} from "../assets/chevronDown.svg";
 import {ReactComponent as Comment} from "../assets/comment.svg";
 import {ReactComponent as Edit} from "../assets/edit.svg";
