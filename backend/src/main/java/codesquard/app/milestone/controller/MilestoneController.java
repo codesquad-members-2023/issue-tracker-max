@@ -38,22 +38,10 @@ public class MilestoneController {
 		@RequestParam(name = "state", defaultValue = "opened") String openedString,
 		@RequestParam(name = "state", defaultValue = "closed") String closedString) {
 		MilestoneReadResponse milestoneReadResponse = milestoneService.makeMilestoneResponse(
-			chooseStatus(openedString, closedString));
+			MilestoneStatus.chooseStatus(openedString, closedString));
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(milestoneReadResponse.success());
-	}
-
-	private MilestoneStatus chooseStatus(String openedString, String closedString) {
-		if (openedString.equalsIgnoreCase("opened")) {
-			return MilestoneStatus.OPENED;
-		}
-
-		if (closedString.equalsIgnoreCase("closed")) {
-			return MilestoneStatus.CLOSED;
-		}
-
-		return MilestoneStatus.OPENED;
 	}
 
 	@PostMapping("/api/milestones")
