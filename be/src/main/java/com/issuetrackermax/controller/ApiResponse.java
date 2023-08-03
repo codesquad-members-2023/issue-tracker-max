@@ -32,7 +32,4 @@ public class ApiResponse<T> {
 		return new ApiResponse<>(true, data);
 	}
 
-	public static <ErrorResponse> ApiResponse<ErrorResponse> exception(ErrorResponse errorResponse) {
-		return new ApiResponse<>(false, errorResponse);
-	}
 }
