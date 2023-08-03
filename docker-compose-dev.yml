@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  app:
+    container_name: issue_tracker_app_dev
+    image: yhkim951107/issue_tracker_app_dev:latest
+    ports:
+      - 8080:8080
+    volumes:
+      - issue_tracker_app_dev:/app
+  web:
+    container_name: issue_tracker_web_dev
+    image: yhkim951107/issue_tracker_web_dev:latest
+    ports:
+      - 5173:5173
+  nginx:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx-dev.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
+      - app
+volumes:
+  issue_tracker_app_dev:

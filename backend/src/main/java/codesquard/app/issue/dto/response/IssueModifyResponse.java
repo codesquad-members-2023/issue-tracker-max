@@ -1,18 +1,13 @@
-package codesquard.app.user.dto.response;
+package codesquard.app.issue.dto.response;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class UserSaveResponse {
+public class IssueModifyResponse {
 
 	private final boolean success;
-	private final Long id;
 
 	public boolean isSuccess() {
 		return success;
-	}
-
-	public Long getId() {
-		return id;
 	}
 }

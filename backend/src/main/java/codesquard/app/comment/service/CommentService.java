@@ -7,7 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.comment.entity.Comment;
 import codesquard.app.comment.repository.CommentRepository;
+import codesquard.app.comment.service.request.CommentModifyServiceRequest;
 import codesquard.app.comment.service.request.CommentSaveServiceRequest;
+import codesquard.app.comment.service.response.CommentDeleteResponse;
+import codesquard.app.comment.service.response.CommentModifyResponse;
 import codesquard.app.comment.service.response.CommentSaveResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +27,21 @@ public class CommentService {
 		Long savedCommentId = commentRepository.save(comment);
 
 		return new CommentSaveResponse(true, savedCommentId);
+	}
+
+	@Transactional
+	public CommentModifyResponse modify(CommentModifyServiceRequest serviceRequest, LocalDateTime modifiedAt) {
+		Comment comment = serviceRequest.toEntity(modifiedAt);
+		Long modifiedCommentId = commentRepository.modify(comment);
+
+		return new CommentModifyResponse(true, modifiedCommentId);
+	}
+
+	@Transactional
+	public CommentDeleteResponse delete(Long id) {
+		commentRepository.deleteById(id);
+
+		return new CommentDeleteResponse(true);
 	}
 
 }

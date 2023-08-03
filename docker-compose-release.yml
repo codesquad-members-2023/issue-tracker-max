@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  app:
+    container_name: issue_tracker_app_release
+    image: yhkim951107/issue_tracker_app_release:latest
+    ports:
+      - 8081:8081
+    volumes:
+      - issue_tracker_app_release:/app
+  web:
+    container_name: issue_tracker_web_release
+    image: yhkim951107/issue_tracker_web_release:latest
+    ports:
+      - 5174:5174
+  nginx:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - 81:81
+    volumes:
+      - ./nginx/nginx-release.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
+      - app
+volumes:
+  issue_tracker_app_release:
