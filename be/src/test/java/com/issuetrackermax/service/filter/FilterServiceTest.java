@@ -1,6 +1,6 @@
 package com.issuetrackermax.service.filter;
 
-import static com.issuetrackermax.fixture.entityFixture.*;
+import static com.issuetrackermax.fixture.EntityFixture.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.issuetrackermax.controller.filter.dto.FilterRequest;
 import com.issuetrackermax.controller.filter.dto.FilterResponse;
 import com.issuetrackermax.controller.filter.dto.IssueResponse;
 import com.issuetrackermax.domain.IntegrationTestSupport;
@@ -22,10 +21,13 @@ import com.issuetrackermax.domain.label.LabelRepository;
 import com.issuetrackermax.domain.label.entity.Label;
 import com.issuetrackermax.domain.milestone.MilestoneRepository;
 import com.issuetrackermax.domain.milestone.entity.Milestone;
+import com.issuetrackermax.service.filter.dto.FilterInformation;
 import com.issuetrackermax.util.DatabaseCleaner;
 
 class FilterServiceTest extends IntegrationTestSupport {
 
+	@Autowired
+	DatabaseCleaner databaseCleaner;
 	@Autowired
 	private FilterService filterService;
 	@Autowired
@@ -34,8 +36,6 @@ class FilterServiceTest extends IntegrationTestSupport {
 	private IssueRepository issueRepository;
 	@Autowired
 	private LabelRepository labelRepository;
-	@Autowired
-	DatabaseCleaner databaseCleaner;
 
 	@AfterEach
 	void cleaner() {
@@ -48,11 +48,10 @@ class FilterServiceTest extends IntegrationTestSupport {
 		// given
 		Issue issue = makeIssue(true, "title", 1L, 1L);
 		Long saveId = issueRepository.save(issue);
-		FilterRequest filterRequest = FilterRequest
-			.builder().build();
+		FilterInformation information = FilterInformation.builder().build();
 
 		// when
-		List<FilterResultVO> filterVO = filterService.getFilterVO(filterRequest);
+		List<FilterResultVO> filterVO = filterService.getFilterVO(information);
 
 		// then
 		assertThat(filterVO).hasSize(1)
@@ -108,14 +107,14 @@ class FilterServiceTest extends IntegrationTestSupport {
 	@Test
 	void getMainPageIssueTest() {
 		// given
-		FilterRequest filterRequest = FilterRequest.builder()
+		FilterInformation information = FilterInformation.builder()
 			.issueIsOpen(true)
 			.build();
 		Issue issue = makeIssue(true, "issue_title", 1L, 1L);
 		Long save = issueRepository.save(issue);
 
 		// when
-		FilterResponse mainPageIssue = filterService.getMainPageIssue(filterRequest);
+		FilterResponse mainPageIssue = filterService.getMainPageIssue(information);
 		List<IssueResponse> issues = mainPageIssue.getIssues();
 
 		// then

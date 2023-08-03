@@ -1,15 +1,16 @@
 package com.issuetrackermax.fixture;
 
 import com.issuetrackermax.domain.assignee.entity.Assignee;
-import com.issuetrackermax.domain.history.entity.History;
+import com.issuetrackermax.domain.comment.entity.Comment;
 import com.issuetrackermax.domain.issue.entity.Issue;
+import com.issuetrackermax.domain.issue.entity.IssueWithComment;
 import com.issuetrackermax.domain.issue.entity.IssueWithLabel;
 import com.issuetrackermax.domain.label.entity.Label;
 import com.issuetrackermax.domain.member.entity.LoginType;
 import com.issuetrackermax.domain.member.entity.Member;
 import com.issuetrackermax.domain.milestone.entity.Milestone;
 
-public class entityFixture {
+public class EntityFixture {
 	public static Milestone makeMilestone(Boolean isOpen, String title, String description) {
 		return Milestone.builder()
 			.isOpen(isOpen)
@@ -43,14 +44,6 @@ public class entityFixture {
 			.build();
 	}
 
-	public static History makeHistory(Long memberId, Long issueId, boolean issueIsOpen) {
-		return History.builder()
-			.editor(memberId)
-			.issueId(issueId)
-			.issueIsOpen(issueIsOpen)
-			.build();
-	}
-
 	public static IssueWithLabel makeIssueWithLabel(Long labelId, Long issueId) {
 		return IssueWithLabel.builder()
 			.issueId(issueId)
@@ -64,6 +57,21 @@ public class entityFixture {
 			.password(password)
 			.nickName(nickName)
 			.loginType(loginType)
+			.build();
+	}
+
+	public static Comment makeComment(String content, String imageUrl, Long writerId) {
+		return Comment.builder()
+			.content(content)
+			.imageUrl(imageUrl)
+			.writerId(writerId)
+			.build();
+	}
+
+	public static IssueWithComment makeIssueWithComment(Long issueId, Long commentId) {
+		return IssueWithComment.builder()
+			.issueId(issueId)
+			.commentId(commentId)
 			.build();
 	}
 }

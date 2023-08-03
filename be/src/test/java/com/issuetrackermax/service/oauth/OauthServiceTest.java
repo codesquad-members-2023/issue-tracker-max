@@ -4,13 +4,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
 
 import com.issuetrackermax.controller.auth.dto.response.JwtResponse;
 import com.issuetrackermax.domain.IntegrationTestSupport;
 
 public class OauthServiceTest extends IntegrationTestSupport {
-	@Autowired
+	@Mock
 	OauthService oauthService;
 
 	@Test
@@ -24,6 +24,6 @@ public class OauthServiceTest extends IntegrationTestSupport {
 
 		//then
 		assertThat(jwtResponse.getAccessToken()).isEqualTo("accessToken");
-		assertThat(jwtResponse.getAccessToken()).isEqualTo("refreshToken");
+		assertThat(jwtResponse.getRefreshToken()).isEqualTo("refreshToken");
 	}
 }

@@ -4,14 +4,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.oauth.entity.OauthProperties;
 
 public class OauthProviderTest extends IntegrationTestSupport {
-	@Autowired
-	OauthProvider oauthProvider;
 
 	@Test
 	public void testCreateOauthProvider() {
@@ -31,7 +28,7 @@ public class OauthProviderTest extends IntegrationTestSupport {
 		provider.setUserInfoUri(userInfoUrl);
 
 		// when
-		oauthProvider = OauthProvider.createOauthProvider(user, provider);
+		OauthProvider oauthProvider = OauthProvider.createOauthProvider(user, provider);
 
 		// then
 		assertAll(

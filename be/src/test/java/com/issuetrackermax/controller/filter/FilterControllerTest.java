@@ -21,7 +21,10 @@ class FilterControllerTest extends ControllerTestSupport {
 	@DisplayName("필터가 없으면 열린 이슈를 담은 메인 페이지를 반환한다.")
 	@Test
 	void mainpageWithNoFilter() throws Exception {
+
 		// given
+
+		// mock the returned value of request.getParameterMap()
 		LocalDateTime localDateTime = LocalDateTime.now();
 		FilterResultVO filterResultVO = FilterResultVO.builder()
 			.id(1L)
@@ -39,6 +42,7 @@ class FilterControllerTest extends ControllerTestSupport {
 			.modifiedAt(localDateTime)
 			.build();
 		IssueResponse issueResponse = IssueResponse.builder().resultVO(filterResultVO).build();
+
 		when(filterService.getMainPageIssue(any())).thenReturn(
 			FilterResponse.builder()
 				.labelCount(1L)
@@ -55,7 +59,7 @@ class FilterControllerTest extends ControllerTestSupport {
 
 		// when&then
 		mockMvc.perform(
-				get("/")
+				get("/").requestAttr("memberId", 1)
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
@@ -98,7 +102,7 @@ class FilterControllerTest extends ControllerTestSupport {
 
 		// when & then
 		mockMvc.perform(
-				get("/")
+				get("/").requestAttr("memberId", 1)
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
