@@ -20,18 +20,11 @@ export const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <Global styles={globalStyle} />
-      <div
-        css={{
-          width: '100vw',
-          height: '100vh',
-          backgroundColor: theme.neutral.surface.default,
-        }}
-      >
-        <div css={{ width: '1280px', margin: 'auto' }}>
-          <BrowserRouter>
-            <AppRoutes {...{ currentTheme, toggleTheme }} />
-          </BrowserRouter>
-        </div>
+
+      <div css={{ width: '1280px', margin: 'auto' }}>
+        <BrowserRouter>
+          <AppRoutes {...{ currentTheme, toggleTheme }} />
+        </BrowserRouter>
       </div>
     </ThemeProvider>
   );
