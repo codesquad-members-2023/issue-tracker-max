@@ -1,76 +1,95 @@
-import { useTheme } from "@emotion/react";
+import { css, useTheme } from "@emotion/react";
 import { ColorScheme } from "../../contexts/ThemeContext";
-// import { fonts } from "../util/Txt";
-
 import { DropdownItems } from "./DropdownItem";
 import { fonts } from "../../constants/fonts";
+import React from "react";
 
-export function Dropdown({
-  isDropdownOpen,
-  title,
-  items = [],
-  // multiSelect = false,
-  isDark,
-  onClick,
-}: {
+type Props = {
   isDropdownOpen: boolean;
   title: string;
-  items: string[];
+  items: { title: string; icon: string | null; color: string | null }[];
   multiSelect: boolean;
-  isDark?: boolean | "";
-  onClick: () => void;
-}) {
-  const color = useTheme() as ColorScheme;
-  if (!isDropdownOpen) return;
+  onClick?: (item: {
+    title: string;
+    icon: string | null;
+    color: string | null;
+  }) => void;
+  filterSelected: string;
+};
+const dropdownStyle = (color: ColorScheme) => css`
+  position: absolute;
+  width: 240px;
+  height: max-content;
+  max-height: 472px;
+  left: 50%;
+  border: 1px solid ${color.neutral.border.default};
+  border-radius: 16px;
+  overflow: scroll;
 
-  return (
-    <div
-      className="dropdown"
-      css={{
-        position: "absolute",
-        width: "240px",
-        height: "max-content",
-        left: "50%",
-        border: `1px solid ${color.neutral.border.default}`,
-        borderRadius: "16px",
-        overflow: "hidden",
-        transform: "translate(-17%, 0)",
-      }}>
-      <div
-        className="ddHeader"
-        css={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          width: "100%",
-          height: "32px",
-          color: color.neutral.text.weak,
-          padding: "8px 16px",
-          boxSizing: "border-box",
-          ...fonts.medium12,
-          backgroundColor: color.neutral.surface.default,
-        }}>
-        <div className="ddHeaderTitle">{title}</div>
+  animation: fadeIn 0.3s ease forwards; // 애니메이션 적용
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+
+const DropdownHeader = (color: ColorScheme) => css`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  color: ${color.neutral.text.weak};
+  padding: 8px 16px;
+  box-sizing: border-box;
+  ${fonts.medium12};
+  background-color: ${color.neutral.surface.default};
+`;
+
+export const Dropdown = React.forwardRef<HTMLDivElement, Props>(
+  (
+    {
+      isDropdownOpen,
+      title,
+      items = [],
+      multiSelect = false,
+      onClick,
+      filterSelected,
+    },
+    ref
+  ) => {
+    const color = useTheme() as ColorScheme;
+    if (!isDropdownOpen) return null;
+
+    return (
+      <div ref={ref} className="dropdown" css={dropdownStyle(color)}>
+        <div css={DropdownHeader(color)}>
+          <div>{title}</div>
+        </div>
+        <ul>
+          {items.map((item, idx) => {
+            const isSelected = item.title === filterSelected;
+            return (
+              <DropdownItems
+                multiSelect={multiSelect}
+                key={idx}
+                onClick={onClick}
+                isSelected={isSelected}
+                item={item}
+              />
+            );
+          })}
+        </ul>
       </div>
-      <ul className="ddList">
-        {items.map((item) => {
-          const isSelected = isDark
-            ? item === "밝은색"
-              ? false
-              : true
-            : item === "어두운색"
-            ? false
-            : true;
-          return (
-            <DropdownItems
-              key={item}
-              onClick={onClick}
-              isSelected={isSelected}
-              item={item}
-            />
-          );
-        })}
-      </ul>
-    </div>
-  );
-}
+    );
+  }
+);

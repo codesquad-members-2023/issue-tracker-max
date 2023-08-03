@@ -2,6 +2,14 @@ import { ColorScheme } from "../contexts/ThemeContext";
 import { fonts } from "../constants/fonts";
 import { css } from "@emotion/react";
 
+export const tableContainer = css`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  top: 24px;
+`;
+
 export const tableStyle = (color: ColorScheme) => css`
   position: relative;
   display: flex;
@@ -13,6 +21,7 @@ export const tableStyle = (color: ColorScheme) => css`
 
 export const tableHeaderStyle = (color: ColorScheme) => css`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 0 32px;
   box-sizing: border-box;
@@ -28,4 +37,12 @@ export const textInputTitle = (color: ColorScheme) => css`
   gap: 8px;
   min-width: 64px;
   ${fonts.medium12};
+`;
+
+export const openTabContainer = css`
+  display: flex;
+  height: 32px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
 `;

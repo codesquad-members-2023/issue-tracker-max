@@ -1,16 +1,45 @@
-import { useTheme } from "@emotion/react";
+import { css, useTheme } from "@emotion/react";
 
 import { ColorScheme } from "../../contexts/ThemeContext";
 import { Milestone } from "../../pages/MilestonePage";
 import { DetailTextInput } from "../common/DetailTextInput";
 import { Txt } from "../util/Txt";
 import { Button } from "../common/Button";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { MILESTONE_URL, SERVER } from "../../constants/url";
+import { AlertContext } from "../../contexts/AlertContext";
 
-const ADD_MILESTONE_URL =
-  "http://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/milestones";
-const EDIT_MILESTONE_URL =
-  "http://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/milestones/:milestoneId";
+const milestoneDetailStyle = (color: ColorScheme, milestone?: Milestone) => css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 337px;
+  border-top: ${milestone
+    ? `1px solid ${color.neutral.border.default}`
+    : "none"};
+  border: ${milestone ? "" : `1px solid ${color.neutral.border.default}`};
+  border-radius: ${milestone ? "0" : "16px"};
+  background-color: ${color.neutral.surface.strong};
+  padding: 32px;
+  gap: 24px;
+  box-sizing: border-box;
+`;
+
+const inputContainer = css`
+  display: flex;
+  flex-direction: column;
+  width: 1216px;
+  gap: 16px;
+`;
+
+const buttonContainer = css`
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  background-color: transparent;
+`;
 
 export function MilestoneDetail({
   mode,
@@ -33,6 +62,9 @@ export function MilestoneDetail({
   const [inputDueDay, setInputDueDay] = useState(
     milestone ? milestone.dueDay : ""
   );
+
+  const AlertContextValue = useContext(AlertContext)!;
+  const { editElementId } = AlertContextValue;
 
   const color = useTheme() as ColorScheme;
 
@@ -58,21 +90,23 @@ export function MilestoneDetail({
     setInputDueDay(e.target.value);
   };
 
-  const isAdd = mode === "add";
+  const isAddMode = mode === "add";
 
   const handleClickCompleteButton = async () => {
     if (isEditCompleted) {
       const milestoneToSend = {
         title: inputTitle,
         description: inputDesc,
-        dueDay: inputDueDay,
+        dueDate: inputDueDay,
       };
 
       try {
         const response = await fetch(
-          isAdd ? ADD_MILESTONE_URL : EDIT_MILESTONE_URL,
+          isAddMode
+            ? `${SERVER}${MILESTONE_URL}`
+            : `${SERVER}${MILESTONE_URL}/${editElementId}`,
           {
-            method: isAdd ? "POST" : "PATCH",
+            method: isAddMode ? "POST" : "PATCH",
             headers: {
               "Content-Type": "application/json",
             },
@@ -91,36 +125,12 @@ export function MilestoneDetail({
   };
 
   return (
-    <div
-      css={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        position: "relative",
-        width: "100%",
-        height: "337px",
-        borderTop: milestone
-          ? `1px solid ${color.neutral.border.default}`
-          : "none",
-        border: milestone ? "" : `1px solid ${color.neutral.border.default}`,
-        borderRadius: milestone ? "0" : "16px",
-        backgroundColor: color.neutral.surface.strong,
-        padding: "32px",
-        gap: "24px",
-        boxSizing: "border-box",
-      }}>
+    <div css={milestoneDetailStyle(color, milestone)}>
       <Txt typography="bold20" color={color.neutral.text.strong}>
         {milestone ? "마일스톤 편집" : "새로운 마일스톤 추가"}
       </Txt>
       <div className="contentContainer" css={{ display: "flex", gap: "24px" }}>
-        <div
-          className="inputContainer"
-          css={{
-            display: "flex",
-            flexDirection: "column",
-            width: "1216px",
-            gap: "16px",
-          }}>
+        <div css={inputContainer}>
           <div css={{ display: "flex", gap: "16px" }}>
             <DetailTextInput
               onChange={onChangeTitleInput}
@@ -146,14 +156,7 @@ export function MilestoneDetail({
           />
         </div>
       </div>
-      <div
-        className="buttonContainer"
-        css={{
-          display: "flex",
-          justifyContent: "flex-end",
-          gap: "16px",
-          backgroundColor: "transparent",
-        }}>
+      <div className="buttonContainer" css={buttonContainer}>
         <div className="cancelButton" onClick={onClickCancelButton}>
           <Button type="outline" size="S" icon="xSquare" text="취소" />
         </div>

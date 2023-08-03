@@ -1,26 +1,3 @@
-// export type IconType =
-//   | "alertCircle"
-//   | "archive"
-//   | "calendar"
-//   | "checkBoxActive"
-//   | "checkBoxDisable"
-//   | "checkBoxInitial"
-//   | "checkOffCircle"
-//   | "checkOnCircle"
-//   | "chevronDown"
-//   | "edit"
-//   | "label"
-//   | "milestone"
-//   | "paperclip"
-//   | "plus"
-//   | "refreshCcw"
-//   | "search"
-//   | "smile"
-//   | "trash"
-//   | "userImageLarge"
-//   | "userImageSmall"
-//   | "xSquare";
-
 export function Icon({ type, color }: { type: string; color?: string }) {
   switch (type) {
     case "alertCircle":
@@ -178,10 +155,10 @@ export function Icon({ type, color }: { type: string; color?: string }) {
             height="15"
             rx="1.5"
             fill="#007AFF"
-            stroke={color}
+            stroke="#007AFF"
           />
           <path
-            d="M10.6667 6L7 9.67333L5 7.67333"
+            d="M6 8H10"
             stroke={color}
             strokeWidth="1.6"
             strokeLinecap="round"
