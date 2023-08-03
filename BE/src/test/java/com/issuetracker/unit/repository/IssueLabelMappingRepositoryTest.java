@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.issuetracker.issue.domain.IssueLabelMapping;
 import com.issuetracker.issue.infrastrucure.IssueLabelMappingRepository;
+import com.issuetracker.label.domain.Label;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
 
@@ -46,5 +47,14 @@ class IssueLabelMappingRepositoryTest {
 
 		// then
 		assertThat(actual).containsExactly(1, 1, 1);
+	}
+
+	@Test
+	void 이슈에_등록되어_있는_라벨_목록을_조회한다() {
+		// when
+		List<Label> actual = issueLabelMappingRepository.findAll();
+
+		// then
+		assertThat(actual).hasSize(4);
 	}
 }

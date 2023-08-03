@@ -38,10 +38,17 @@ public class IssueSteps {
 			.then().log().all().extract();
 	}
 
-	public static ExtractableResponse<Response> 담당자_목록_조회_요청() {
+	public static ExtractableResponse<Response> 이슈에_등록_되어있는_담당자_목록_조회_요청() {
 		return RestAssured.given().log().all()
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().get("/api/issues/assignees")
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 이슈에_등록_되어있는_라벨_목록_조회_요청() {
+		return RestAssured.given().log().all()
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().get("/api/issues/labels")
 			.then().log().all().extract();
 	}
 }

@@ -15,7 +15,7 @@ import com.issuetracker.member.domain.Member;
 public class AssigneeRepository {
 
 	private static final String SAVE_ALL_SQL = "INSERT INTO assignee(issue_id, member_id) VALUES(:issueId, :memberId)";
-	private static final String FIND_ALL_SQL = "SELECT DISTINCT member.id, member.nickname, member.profile_image_url FROM member INNER JOIN assignee ON member.id = assignee.member_id";
+	private static final String FIND_ALL_SQL = "SELECT DISTINCT member.id, member.nickname, member.profile_image_url FROM member INNER JOIN assignee ON member.id = assignee.member_id ORDER BY member.id";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 

@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.issuetracker.issue.application.IssueService;
-import com.issuetracker.issue.ui.dto.AssigneesResponse;
+import com.issuetracker.issue.ui.dto.IssueAssigneesResponse;
 import com.issuetracker.issue.ui.dto.IssueCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateResponse;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
+import com.issuetracker.issue.ui.dto.IssueLabelMappingsResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,8 +43,14 @@ public class IssueController {
 	}
 
 	@GetMapping("/assignees")
-	public ResponseEntity<AssigneesResponse> showAssignees() {
-		AssigneesResponse assigneesResponse = AssigneesResponse.from(issueService.findAllAssignee());
-		return ResponseEntity.ok().body(assigneesResponse);
+	public ResponseEntity<IssueAssigneesResponse> showAssignees() {
+		IssueAssigneesResponse issueAssigneesResponse = IssueAssigneesResponse.from(issueService.findAllAssignee());
+		return ResponseEntity.ok().body(issueAssigneesResponse);
+	}
+
+	@GetMapping("/labels")
+	public ResponseEntity<IssueLabelMappingsResponse> showLabels() {
+		IssueLabelMappingsResponse issueLabelMappingsResponse = IssueLabelMappingsResponse.from(issueService.findAllLabelMappings());
+		return ResponseEntity.ok().body(issueLabelMappingsResponse);
 	}
 }

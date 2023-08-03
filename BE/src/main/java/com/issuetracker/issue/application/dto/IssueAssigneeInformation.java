@@ -10,23 +10,23 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class AssigneeInformation {
+public class IssueAssigneeInformation {
 
 	private Long id;
 	private String nickname;
 	private String profileImageUrl;
 
-	public static AssigneeInformation from(Member assignee) {
-		return new AssigneeInformation(
+	public static IssueAssigneeInformation from(Member assignee) {
+		return new IssueAssigneeInformation(
 			assignee.getId(),
 			assignee.getNickname(),
 			assignee.getProFileImageUrl()
 		);
 	}
 
-	public static List<AssigneeInformation> from(List<Member> assignees) {
+	public static List<IssueAssigneeInformation> from(List<Member> assignees) {
 		return assignees.stream()
-			.map(AssigneeInformation::from)
+			.map(IssueAssigneeInformation::from)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }
