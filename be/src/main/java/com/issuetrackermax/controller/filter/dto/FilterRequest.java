@@ -10,17 +10,20 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FilterRequest {
 	private Boolean issueIsOpen;
-	private Long writer;
+	private String writer;
 	private Long milestone;
 	private Long label;
-	private Long assignee;
+	private String assignee;
+	private String commentWriter;
 
 	@Builder
-	public FilterRequest(Boolean issueIsOpen, Long writer, Long milestone, Long label, Long assignee) {
+	public FilterRequest(Boolean issueIsOpen, String writer, Long milestone, Long label, String assignee,
+		String commentWriter) {
 		this.issueIsOpen = issueIsOpen;
 		this.writer = writer;
 		this.milestone = milestone;
 		this.label = label;
 		this.assignee = assignee;
+		this.commentWriter = commentWriter;
 	}
 }
