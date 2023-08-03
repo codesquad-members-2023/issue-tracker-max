@@ -11,8 +11,6 @@ public interface LabelRepository {
 
 	List<Label> findAll();
 
-	Label findById(Long id);
-
 	void updateBy(final Long labelId, final Label label);
 
 	void deleteBy(final Long labelId);

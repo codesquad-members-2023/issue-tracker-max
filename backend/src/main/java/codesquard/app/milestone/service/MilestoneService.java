@@ -60,7 +60,6 @@ public class MilestoneService {
 		Long openedMilestoneCount = milestoneRepository.countMilestonesBy(MilestoneStatus.OPENED);
 		Long closedMilestoneCount = milestoneRepository.countMilestonesBy(MilestoneStatus.CLOSED);
 
-		// 4. 3개의 단일 객체와, 나머지 1개의 2차원 배열로 이루어진 것을 MilestoneReadResponse에 담으면 됨
 		return new MilestoneReadResponse(openedMilestoneCount, closedMilestoneCount, labelCount, milestones);
 	}
 
