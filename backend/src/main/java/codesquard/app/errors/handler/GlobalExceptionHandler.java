@@ -37,8 +37,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			.body(makeErrorResponse(errorCode));
 	}
 
-	private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
-		return new ErrorResponse(errorCode, null);
+	private ErrorResultResponse makeErrorResponse(ErrorCode errorCode) {
+		return new ErrorResultResponse(new ErrorResponse(errorCode, null));
 	}
 
 	private ResponseEntity<Object> handleExceptionInternal(BindException e, ErrorCode errorCode) {
