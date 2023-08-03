@@ -50,7 +50,9 @@ const getChosenColor = ({
 const labelStyle = (
   color: ColorScheme,
   label: any,
-  chosenColor?: string
+  chosenColor?: string,
+
+  isDark?: boolean
 ) => css`
   border: ${label
     ? label.backgroundColor === "#FEFEFE"
@@ -68,11 +70,14 @@ const labelStyle = (
   width: max-content;
   height: 24px;
   white-space: nowrap;
-  ${fonts.medium12};
-  color: ${label.isDark ? color.neutral.text.weak : color.brand.text.default};
+  font-size: ${fonts.medium12.fontSize};
+  font-weight: ${fonts.medium12.fontWeight};
+
+  color: ${isDark ? color.neutral.text.weak : color.brand.text.default};
 `;
 
 export function Label({
+  isDark,
   label,
   labelTitle,
   randomColor,
@@ -88,5 +93,7 @@ export function Label({
     color,
   });
 
-  return <div css={labelStyle(color, label, chosenColor)}>{labelName}</div>;
+  return (
+    <div css={labelStyle(color, label, chosenColor, isDark)}>{labelName}</div>
+  );
 }
