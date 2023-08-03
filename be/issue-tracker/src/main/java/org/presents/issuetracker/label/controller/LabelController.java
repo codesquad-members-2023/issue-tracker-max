@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.presents.issuetracker.global.dto.response.LabelResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
+import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
 import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.label.service.LabelService;
 import org.springframework.http.HttpStatus;
@@ -23,9 +24,15 @@ public class LabelController {
         this.labelService = labelService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<LabelDetailResponse>> getLabelDetails() {
+        List<LabelDetailResponse> labelDetails = labelService.getLabelDetails();
+        return ResponseEntity.ok().body(labelDetails);
+    }
+
     @GetMapping("/previews")
     public ResponseEntity<List<LabelPreviewResponse>> getLabelPreviews() {
-        List<LabelPreviewResponse> labelPreviews = labelService.getLabels();
+        List<LabelPreviewResponse> labelPreviews = labelService.getLabelPreviews();
         return ResponseEntity.ok().body(labelPreviews);
     }
 
