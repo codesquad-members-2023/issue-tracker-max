@@ -7,17 +7,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetrackermax.common.exception.InvalidIssueStatusException;
 import com.issuetrackermax.common.exception.NotFoundIssueException;
+import com.issuetrackermax.common.exception.NotFoundLabelException;
 import com.issuetrackermax.controller.issue.dto.request.IssueApplyRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuePostRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssueTitleRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuesStatusRequest;
 import com.issuetrackermax.controller.issue.dto.response.IssueDetailsResponse;
+import com.issuetrackermax.domain.assignee.AssigneeRepository;
 import com.issuetrackermax.domain.comment.CommentRepository;
 import com.issuetrackermax.domain.comment.entity.Comment;
 import com.issuetrackermax.domain.history.HistoryRepository;
 import com.issuetrackermax.domain.history.entity.History;
 import com.issuetrackermax.domain.issue.IssueRepository;
 import com.issuetrackermax.domain.issue.entity.IssueResultVO;
+import com.issuetrackermax.domain.label.LabelRepository;
+import com.issuetrackermax.domain.milestone.MilestoneRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +31,9 @@ public class IssueService {
 	private final IssueRepository issueRepository;
 	private final CommentRepository commentRepository;
 	private final HistoryRepository historyRepository;
+	private final LabelRepository labelRepository;
+	private final AssigneeRepository assigneeRepository;
+	private final MilestoneRepository milestoneRepository;
 	private final String OPEN_ISSUE = "open";
 	private final String CLOSED_ISSUE = "closed";
 
@@ -97,14 +104,15 @@ public class IssueService {
 	 */
 	@Transactional
 	public void applyLabels(Long issueId, IssueApplyRequest request) {
-		if(!issueRepository.existById(issueId)) {
+		if (!issueRepository.existById(issueId)) {
 			throw new NotFoundIssueException();
 		}
 
-		// 기존에 적용된 라벨 정보 삭제
-		issueRepository.deleteAppliedLabels(issueId);
+		if (!labelRepository.existByIds(request.getIds())) {
+			throw new NotFoundLabelException();
+		}
 
-		// 새로운 라벨 정보 업데이트
+		issueRepository.deleteAppliedLabels(issueId);
 		for (Long labelId : request.getIds()) {
 			issueRepository.applyLabels(issueId, labelId);
 		}
@@ -115,9 +123,10 @@ public class IssueService {
 	 */
 	@Transactional
 	public void applyAssignees(Long issueId, IssueApplyRequest request) {
-		if(!issueRepository.existById(issueId)) {
+		if (!issueRepository.existById(issueId)) {
 			throw new NotFoundIssueException();
 		}
+
 		issueRepository.deleteAppliedAssignees(issueId);
 		for (Long memberId : request.getIds()) {
 			issueRepository.applyAssignees(issueId, memberId);
@@ -127,9 +136,10 @@ public class IssueService {
 	// todo : milestone 있는지 검증
 	@Transactional
 	public void applyMilestone(Long issueId, Long milestoneId) {
-		if(!issueRepository.existById(issueId)) {
+		if (!issueRepository.existById(issueId)) {
 			throw new NotFoundIssueException();
 		}
+
 		issueRepository.applyMilestone(issueId, milestoneId);
 	}
 }
