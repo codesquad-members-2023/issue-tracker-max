@@ -2,10 +2,8 @@ package org.presents.issuetracker.label.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 public class LabelCreateRequest {
     private String name;
     private String description;
