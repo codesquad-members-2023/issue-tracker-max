@@ -1,18 +1,18 @@
 import { useTheme } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { Title } from '@components/addIssuePage/Title';
 import { Body } from '@components/addIssuePage/Body';
-import { InputContainer } from '@components/addIssuePage/InputContainer';
 import { UserImage } from '@components/addIssuePage/UserImage';
 import { UserImageContainer } from '@components/addIssuePage/UserImageContainer';
+import { InputContainer } from '@components/addIssuePage/InputContainer';
 import { TextInput } from '@components/common/textInput/TextInput';
 import { TextArea } from '@components/common/TextArea';
 import { SideBar } from '@components/common/sideBar/SideBar';
 import { ListSideBar } from '@components/common/sideBar/ListSideBar';
 import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { Button } from '@components/common/Button';
+import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 
 type SelectedItems = {
   [key: number]: boolean;
