@@ -18,13 +18,6 @@ import com.issuetrackermax.domain.history.entity.History;
 @Repository
 public class HistoryRepository {
 	private final NamedParameterJdbcTemplate jdbcTemplate;
-	private final RowMapper<History> historyRowMapper = ((rs, rowNum) -> History.builder()
-		.id(rs.getLong("id"))
-		.editor(rs.getString("editor"))
-		.issueId(rs.getLong("issue_id"))
-		.issueIsOpen(rs.getBoolean("issue_is_open"))
-		.modifiedAt(rs.getTimestamp("modified_at").toLocalDateTime())
-		.build());
 
 	public HistoryRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
@@ -37,7 +30,7 @@ public class HistoryRepository {
 			+ "SELECT MAX(id) "
 			+ "FROM history "
 			+ "WHERE issue_id = :issueId)";
-		return jdbcTemplate.query(sql, Map.of("issueId", issueId), historyRowMapper).stream()
+		return jdbcTemplate.query(sql, Map.of("issueId", issueId), HISTORY_ROW_MAPPER).stream()
 			.findAny()
 			.orElseThrow(() -> new RuntimeException());
 	}
@@ -52,4 +45,12 @@ public class HistoryRepository {
 		jdbcTemplate.update(sql, parameters, keyHolder);
 		return (Long)Objects.requireNonNull(keyHolder.getKeys().get("ID"));
 	}
+
+	private static final RowMapper<History> HISTORY_ROW_MAPPER = ((rs, rowNum) -> History.builder()
+		.id(rs.getLong("id"))
+		.editor(rs.getString("editor"))
+		.issueId(rs.getLong("issue_id"))
+		.issueIsOpen(rs.getBoolean("issue_is_open"))
+		.modifiedAt(rs.getTimestamp("modified_at").toLocalDateTime())
+		.build());
 }

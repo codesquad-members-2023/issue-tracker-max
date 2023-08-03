@@ -16,30 +16,6 @@ import com.issuetrackermax.domain.issue.entity.IssueResultVO;
 
 @Repository
 public class IssueRepository {
-
-	private static final RowMapper<Issue> ISSUE_ROW_MAPPER = (rs, rowNum) ->
-		Issue.builder()
-			.id(rs.getLong("id"))
-			.title(rs.getString("title"))
-			.isOpen(rs.getBoolean("is_open"))
-			.writerId(rs.getLong("writer_id"))
-			.milestoneId(rs.getLong("milestone_id"))
-			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-			.build();
-	private static final RowMapper<IssueResultVO> ISSUE_RESULT_VO_ROW_MAPPER = (((rs, rowNum) ->
-		IssueResultVO.builder()
-			.id(rs.getLong("id"))
-			.isOpen(rs.getBoolean("is_open"))
-			.title(rs.getString("title"))
-			.labelIds(rs.getString("label_ids"))
-			.labelTitles(rs.getString("label_titles"))
-			.writerId(rs.getLong("writer_id"))
-			.writer(rs.getString("writer"))
-			.assigneeIds(rs.getString("assignee_ids"))
-			.assigneeNames(rs.getString("assignee_names"))
-			.milestoneId(rs.getLong("milestone_id"))
-			.milestoneTitle(rs.getString("milestone_title"))
-			.build()));
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public IssueRepository(JdbcTemplate jdbcTemplate) {
@@ -145,4 +121,29 @@ public class IssueRepository {
 		String sql = "SELECT id, title, is_open, writer_id, milestone_id,created_at FROM issue WHERE is_open = :isOpen";
 		return jdbcTemplate.query(sql, Map.of("isOpen", 0), ISSUE_ROW_MAPPER);
 	}
+
+	private static final RowMapper<Issue> ISSUE_ROW_MAPPER = (rs, rowNum) ->
+		Issue.builder()
+			.id(rs.getLong("id"))
+			.title(rs.getString("title"))
+			.isOpen(rs.getBoolean("is_open"))
+			.writerId(rs.getLong("writer_id"))
+			.milestoneId(rs.getLong("milestone_id"))
+			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+			.build();
+
+	private static final RowMapper<IssueResultVO> ISSUE_RESULT_VO_ROW_MAPPER = (((rs, rowNum) ->
+		IssueResultVO.builder()
+			.id(rs.getLong("id"))
+			.isOpen(rs.getBoolean("is_open"))
+			.title(rs.getString("title"))
+			.labelIds(rs.getString("label_ids"))
+			.labelTitles(rs.getString("label_titles"))
+			.writerId(rs.getLong("writer_id"))
+			.writer(rs.getString("writer"))
+			.assigneeIds(rs.getString("assignee_ids"))
+			.assigneeNames(rs.getString("assignee_names"))
+			.milestoneId(rs.getLong("milestone_id"))
+			.milestoneTitle(rs.getString("milestone_title"))
+			.build()));
 }
