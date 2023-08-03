@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.issuetrackermax.controller.filter.dto.FilterRequest;
+import com.issuetrackermax.service.filter.dto.FilterInformation;
 
 @Mapper
 public interface FilterMapper {
 
-	List<FilterResultVO> getFilteredList(FilterRequest param);
+	List<FilterResultVO> getFilteredList(FilterInformation param);
 
 }

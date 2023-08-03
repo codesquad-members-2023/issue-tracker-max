@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.issuetrackermax.controller.filter.dto.FilterRequest;
 import com.issuetrackermax.controller.filter.dto.FilterResponse;
 import com.issuetrackermax.controller.filter.dto.IssueResponse;
 import com.issuetrackermax.domain.filter.FilterMapper;
@@ -13,6 +12,7 @@ import com.issuetrackermax.domain.filter.FilterResultVO;
 import com.issuetrackermax.domain.issue.IssueRepository;
 import com.issuetrackermax.domain.label.LabelRepository;
 import com.issuetrackermax.domain.milestone.MilestoneRepository;
+import com.issuetrackermax.service.filter.dto.FilterInformation;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +24,8 @@ public class FilterService {
 	private final IssueRepository issueRepository;
 	private final LabelRepository labelRepository;
 
-	public FilterResponse getMainPageIssue(FilterRequest filterRequest) {
-		List<FilterResultVO> filterResultVOS = getFilterVO(filterRequest);
+	public FilterResponse getMainPageIssue(FilterInformation filterInformation) {
+		List<FilterResultVO> filterResultVOS = getFilterVO(filterInformation);
 		return FilterResponse.builder()
 			.labelCount(getLabelCount())
 			.mileStoneCount(getMilestoneCount())
@@ -44,8 +44,8 @@ public class FilterService {
 			.collect(Collectors.toList());
 	}
 
-	public List<FilterResultVO> getFilterVO(FilterRequest filterRequest) {
-		return filterMapper.getFilteredList(filterRequest);
+	public List<FilterResultVO> getFilterVO(FilterInformation filterInformation) {
+		return filterMapper.getFilteredList(filterInformation);
 	}
 
 	public Long getMilestoneCount() {

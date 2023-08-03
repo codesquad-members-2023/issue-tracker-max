@@ -11,6 +11,7 @@
         GROUP_CONCAT(DISTINCT m2.id ORDER BY a.id SEPARATOR ',') AS assignee_ids,
         GROUP_CONCAT(DISTINCT m2.nick_name ORDER BY a.id SEPARATOR ',') AS assignee_names,
         ms.id AS milestone_id, ms.title AS milestone_title
+
         FROM
         issue as i
         LEFT JOIN
@@ -37,7 +38,14 @@
         member m3 ON latest_editor.editor = m3.id
         LEFT JOIN
         milestone ms ON i.milestone_id = ms.id
-
+        <choose>
+            <when test="commentWriter != null">
+                LEFT JOIN
+                issue_comment icmts ON icmts.issue_id = i.id
+                LEFT JOIN
+                comments cmts ON icmts.comment_id = cmts.id
+            </when>
+        </choose>
         WHERE
         <choose>
             <when test="issueIsOpen == false">
@@ -86,6 +94,11 @@
                 WHERE ms2.id = i.milestone_Id
                 AND ms2.id = #{milestone}
                 )
+            </when>
+        </choose>
+        <choose>
+            <when test="commentWriter != null">
+                AND cmts.writer_id = #{commentWriter}
             </when>
         </choose>
         GROUP BY
