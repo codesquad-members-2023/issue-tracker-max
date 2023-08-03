@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.member.vo;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo;
 
 import lombok.Builder;
 import lombok.Getter;

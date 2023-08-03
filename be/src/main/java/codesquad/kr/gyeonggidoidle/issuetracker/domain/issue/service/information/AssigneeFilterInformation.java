@@ -1,6 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.vo.MemberDetailsVO;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

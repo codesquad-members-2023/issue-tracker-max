@@ -2,7 +2,7 @@ package codesquad.kr.gyeonggidoidle.issuetracker.member.repository;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.RepositoryTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.MemberRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.vo.MemberDetailsVO;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

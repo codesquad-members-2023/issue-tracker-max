@@ -1,9 +1,12 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.vo.MemberDetailsVO;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -35,5 +38,15 @@ public class FilterListInformation {
                 .milestoneFilterInformations(MilestoneFilterInformation.from(milestones))
                 .build();
 
+    }
+
+    public static FilterListInformation from(List<MemberDetailsVO> assignees, List<LabelDetailsVO> labels,
+                                             List<MilestoneDetailsVO> milestones, Map<Long, IssueByMilestoneVO> issuesCountByMilestoneIds) {
+        return FilterListInformation.builder()
+                .assigneeFilterInformations(AssigneeFilterInformation.from(assignees))
+                .authorFilterInformations(Collections.emptyList())
+                .labelFilterInformations(LabelFilterInformation.from(labels))
+                .milestoneFilterInformations(MilestoneFilterInformation.from(milestones, issuesCountByMilestoneIds))
+                .build();
     }
 }
