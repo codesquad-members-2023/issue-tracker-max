@@ -5,7 +5,7 @@ import { ReactComponent as CheckOffCircle } from '@assets/icons/checkOffCircle.s
 
 type DropDownItem = {
   loginId?: string;
-  id?: string;
+  id?: number;
   image?: string;
   name?: string;
   backgroundColor?: string;
@@ -13,16 +13,16 @@ type DropDownItem = {
 
 type Props = {
   item: DropDownItem;
+  index: number;
   isSelected?: boolean;
   onSelected: (index: number) => void;
-  index: number;
 };
 
 export const DropDownList: React.FC<Props> = ({
   item,
-  onSelected,
-  isSelected,
   index,
+  isSelected,
+  onSelected,
 }) => {
   const theme = useTheme() as any;
   const commonStyles = css`
@@ -77,7 +77,7 @@ export const DropDownList: React.FC<Props> = ({
           />
         </div>
       )}
-      <span css={commonStyles}>{item.id || item.name || item.loginId}</span>
+      <span css={commonStyles}>{item.loginId || item.name}</span>
       {isSelected ? (
         <CheckOnCircle stroke={theme.neutral.text.default} />
       ) : (

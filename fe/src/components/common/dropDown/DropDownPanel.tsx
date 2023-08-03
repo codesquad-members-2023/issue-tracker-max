@@ -4,14 +4,12 @@ import { DropDownList } from './DropDownList';
 import { DropDownHeader } from './DropDownHeader';
 
 type DropDownItem = {
-  id?: string;
+  id?: number;
   image?: string;
   name?: string;
   backgroundColor?: string;
-  filterId?: number;
   textColor?: string;
   progress?: number;
-  milestoneId?: number;
 };
 
 type Props = {

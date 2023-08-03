@@ -2,7 +2,6 @@ import { useTheme } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
-
 import { Title } from '@components/addIssuePage/Title';
 import { Body } from '@components/addIssuePage/Body';
 import { InputContainer } from '@components/addIssuePage/InputContainer';
@@ -42,12 +41,6 @@ export const AddIssuePage: React.FC<Props> = ({ authorId = 1 }) => {
     isUploading: false,
     uploadFailed: false,
   };
-
-  const [selectedAssignees, setSelectedAssignees] = useState<SelectedItems>({});
-  const [selectedLabels, setSelectedLabels] = useState<SelectedItems>({});
-  const [selectedMilestones, setSelectedMilestones] = useState<SelectedItems>(
-    {},
-  );
 
   const [selections, setSelections] = useState<SelectionState>({
     assignees: {},
@@ -164,10 +157,6 @@ export const AddIssuePage: React.FC<Props> = ({ authorId = 1 }) => {
     return data;
   };
 
-  // const [assigneesData, setAssigneesData] = useState<any[]>([]);
-  // const [labelsData, setLabelsData] = useState<any[]>([]);
-  // const [milestonesData, setMilestonesData] = useState<any[]>([]);
-
   useEffect(() => {
     if (textAreaValue) {
       setIsDisplayingCount(true);
@@ -244,9 +233,6 @@ export const AddIssuePage: React.FC<Props> = ({ authorId = 1 }) => {
             onSingleSelectedMilestone={onSingleSelectedMilestone}
             onMultipleSelectedAssignee={onMultipleSelectedAssignee}
             onMultipleSelectedLabel={onMultipleSelectedLabel}
-            // selectedAssignees={selectedAssignees}
-            // selectedLabels={selectedLabels}
-            // selectedMilestones={selectedMilestones}
             selectedAssignees={selections.assignees}
             selectedLabels={selections.labels}
             selectedMilestones={selections.milestones}
