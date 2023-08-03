@@ -4,7 +4,7 @@ import { DropDownPanel } from '../dropDown/DropDownPanel';
 import { contributors, labels, milestones } from '../dropDown/types';
 import { ListAssignee } from './ListAssignee';
 import { ListLabel } from './ListLabel';
-import { ListMilstone } from './ListMilestone';
+import { ListMilestone } from './ListMilestone';
 
 type Props = {
   onSingleSelectedMilestone: (index: number) => void;
@@ -30,7 +30,7 @@ export const ListSideBar: React.FC<Props> = ({
   const milestoneOptions = milestones.slice(1);
 
   const selectedAssigneeIds = Object.keys(selectedAssignees)
-    .filter((id) => selectedAssignees[id])
+    .filter((id) => selectedAssignees[parseInt(id)])
     .map((id) => parseInt(id) + 1);
 
   const selectedAssigneesData = assigneeOptions.filter((assignee) =>
@@ -38,7 +38,7 @@ export const ListSideBar: React.FC<Props> = ({
   );
 
   const selectedLabelIds = Object.keys(selectedLabels)
-    .filter((id) => selectedLabels[id])
+    .filter((id) => selectedLabels[parseInt(id)])
     .map((id) => parseInt(id) + 1);
 
   const selectedLabelsData = labelOptions.filter((label) =>
@@ -46,7 +46,7 @@ export const ListSideBar: React.FC<Props> = ({
   );
 
   const selectedMilestoneIds = Object.keys(selectedMilestones)
-    .filter((id) => selectedMilestones[id])
+    .filter((id) => selectedMilestones[parseInt(id)])
     .map((id) => parseInt(id) + 1);
 
   const selectedMilestonesData = milestoneOptions.filter((milestone) =>
@@ -123,7 +123,7 @@ export const ListSideBar: React.FC<Props> = ({
             selectedItems={selectedMilestones}
           />
         </DropDownIndicator>
-        <ListMilstone selectedMilestonesData={selectedMilestonesData} />
+        <ListMilestone selectedMilestonesData={selectedMilestonesData} />
       </div>
     </>
   );

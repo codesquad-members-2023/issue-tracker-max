@@ -11,7 +11,7 @@ type Props = {
   selectedMilestonesData: selectedMilestonesData[];
 };
 
-export const ListMilstone: React.FC<Props> = ({ selectedMilestonesData }) => {
+export const ListMilestone: React.FC<Props> = ({ selectedMilestonesData }) => {
   return (
     <>
       {selectedMilestonesData.map((milestone) => (
