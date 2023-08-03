@@ -12,6 +12,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
+import codesquard.app.errors.exception.EmptyFileException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -24,12 +25,20 @@ public class S3Uploader {
 	private String bucket;
 
 	public String upload(MultipartFile multipartFile) throws IOException {
+		validateFileExists(multipartFile);
+
 		String fileName = multipartFile.getOriginalFilename() + "-" + UUID.randomUUID();
 		ObjectMetadata objectMetadata = generateObjectMetadata(multipartFile);
 		amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, multipartFile.getInputStream(), objectMetadata)
 			.withCannedAcl(CannedAccessControlList.PublicRead));
 
 		return amazonS3Client.getUrl(bucket, fileName).toString();
+	}
+
+	private void validateFileExists(MultipartFile multipartFile) {
+		if (multipartFile.isEmpty()) {
+			throw new EmptyFileException();
+		}
 	}
 
 	private static ObjectMetadata generateObjectMetadata(MultipartFile multipartFile) throws IOException {
