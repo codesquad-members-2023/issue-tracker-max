@@ -8,12 +8,15 @@ public class MilestoneStatusRequest {
 	@JsonProperty("status")
 	private String status;
 
+	private MilestoneStatusRequest() {
+	}
+
 	private MilestoneStatusRequest(String status) {
 		this.status = status;
 	}
 
 	public static MilestoneStatus toStatus(MilestoneStatusRequest milestoneStatusRequest) {
-		if (milestoneStatusRequest.status.equalsIgnoreCase("OPENED")) {
+		if (milestoneStatusRequest.status.equalsIgnoreCase(MilestoneStatus.OPENED_STRING)) {
 			return MilestoneStatus.OPENED;
 		}
 
