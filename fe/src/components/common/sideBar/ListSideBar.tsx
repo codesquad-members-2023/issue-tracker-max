@@ -43,7 +43,6 @@ export const ListSideBar: React.FC<Props> = ({
   onMultipleSelectedLabel,
 }) => {
   const theme = useTheme() as any;
-  // 비슷한 자료 형태라 묶어주는 작업이 필요할듯
 
   const [listData, setListData] = useState<{
     users: UserData[];
@@ -110,21 +109,20 @@ export const ListSideBar: React.FC<Props> = ({
     selectedMilestoneIds.includes(milestone.id),
   );
 
-  // 페이지에서 기능 붙이면서 문제 없으면 배열로 만들어서 렌더링하는 방식으로 바꿔보기
+  const commonStyles = css`
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px;
+    borderbottom: ${theme.border.default} ${theme.neutral.border.default};
+    &:last-child {
+      borderbottom: none;
+    }
+  `;
+
   return (
     <>
-      <div
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-          padding: '32px',
-          borderBottom: `${theme.border.default} ${theme.neutral.border.default}`,
-          '&:last-child': {
-            borderBottom: 'none',
-          },
-        }}
-      >
+      <div css={commonStyles}>
         <DropDownIndicator
           indicator="담당자"
           size="L"
@@ -141,18 +139,7 @@ export const ListSideBar: React.FC<Props> = ({
         </DropDownIndicator>
         <ListAssignee selectedAssigneesData={selectedAssigneesData} />
       </div>
-      <div
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-          padding: '32px',
-          borderBottom: `${theme.border.default} ${theme.neutral.border.default}`,
-          '&:last-child': {
-            borderBottom: 'none',
-          },
-        }}
-      >
+      <div css={commonStyles}>
         <DropDownIndicator
           indicator="레이블"
           size="L"
@@ -169,18 +156,7 @@ export const ListSideBar: React.FC<Props> = ({
         </DropDownIndicator>
         <ListLabel selectedLabelsData={selectedLabelsData} />
       </div>
-      <div
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-          padding: '32px',
-          borderBottom: `${theme.border.default} ${theme.neutral.border.default}`,
-          '&:last-child': {
-            borderBottom: 'none',
-          },
-        }}
-      >
+      <div css={commonStyles}>
         <DropDownIndicator
           indicator="마일스톤"
           size="L"
