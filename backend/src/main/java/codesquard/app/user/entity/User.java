@@ -19,12 +19,15 @@ public class User {
 	}
 
 	public MapSqlParameterSource createSaveParamSource() {
-		MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-		parameterSource.addValue("id", id);
-		parameterSource.addValue("loginId", loginId);
-		parameterSource.addValue("email", email);
-		parameterSource.addValue("password", password);
-		parameterSource.addValue("avatarUrl", avatarUrl);
-		return parameterSource;
+		return new MapSqlParameterSource()
+			.addValue("id", id)
+			.addValue("loginId", loginId)
+			.addValue("email", email)
+			.addValue("password", password)
+			.addValue("avatarUrl", avatarUrl);
+	}
+
+	public AuthenticateUser toAuthenticateUser() {
+		return new AuthenticateUser(id, loginId, email, avatarUrl);
 	}
 }
