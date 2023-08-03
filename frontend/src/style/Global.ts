@@ -1,10 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
-  * {
-    box-sizing: border-box;
-  }
-
   .blind {
     width: 1px;
     height: 1px;
