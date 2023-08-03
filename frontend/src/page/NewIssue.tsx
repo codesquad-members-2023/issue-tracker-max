@@ -66,7 +66,10 @@ export function NewIssue() {
       })),
     );
     setLabels(
-      dataList[1].labels.map((label: LabelData) => ({ ...label, selected: false })),
+      dataList[1].labels.map((label: LabelData) => ({
+        ...label,
+        selected: false,
+      })),
     );
     setMilestones(
       dataList[2].milestones.map((milestone: MilestoneData) => ({
@@ -81,28 +84,19 @@ export function NewIssue() {
     ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
     : "";
 
-  const toggleOptionSelection = <T extends OptionData>(
+  const changeOptionSelection = <T extends OptionData>(
     options: T[],
     id: number,
+    multiple: boolean,
   ) =>
-    options.map((option) => {
-      return {
-        ...option,
-        selected: option.id === id ? !option.selected : option.selected,
-      };
-    }) as T[];
-
-  const switchOptionSelection = <T extends OptionData>(
-    options: T[],
-    id: number,
-  ) => {
-    return options.map((option) => {
-      return {
-        ...option,
-        selected: option.id === id ? true : false,
-      };
-    }) as T[];
-  };
+    options.map((option) => ({
+      ...option,
+      selected: multiple
+        ? option.id === id
+          ? !option.selected
+          : option.selected
+        : option.id === id,
+    }));
 
   const createOptionsForSideBar = <T extends OptionData>(options: T[]) => {
     return options.map((option) => {
@@ -113,7 +107,7 @@ export function NewIssue() {
           profile: option.avatarUrl,
           selected: option.selected,
           onClick: () => {
-            setAssignees((a) => toggleOptionSelection(a, option.id));
+            setAssignees((a) => changeOptionSelection(a, option.id, true));
           },
         };
       } else if ("background" in option) {
@@ -121,9 +115,10 @@ export function NewIssue() {
           id: option.id,
           name: option.name,
           background: option.background,
+          color: option.color,
           selected: option.selected,
           onClick: () => {
-            setLabels((a) => toggleOptionSelection(a, option.id));
+            setLabels((a) => changeOptionSelection(a, option.id, true));
           },
         };
       } else if ("issues" in option) {
@@ -133,7 +128,7 @@ export function NewIssue() {
           selected: option.selected,
           issues: option.issues,
           onClick: () => {
-            setMilestones((a) => switchOptionSelection(a, option.id));
+            setMilestones((a) => changeOptionSelection(a, option.id, false));
           },
         };
       }

@@ -53,20 +53,12 @@ export function TextInput({
   const [state, setState] = useState<TextInputState>(
     disabled ? "Disabled" : "Enabled",
   );
-  const [inputValue, setInputValue] = useState(initialValue);
 
   useEffect(() => {
     setState(isError ? "Error" : "Enabled");
   }, [isError]);
 
-  useEffect(() => {
-    setInputValue(initialValue);
-  }, [initialValue]);
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-
-    setInputValue(value);
     onChange && onChange(event);
   };
 
@@ -97,7 +89,9 @@ export function TextInput({
         $state={state}
         $borderNone={borderNone}
       >
-        {(fixLabel || inputValue) && label && <StyledSpan>{label}</StyledSpan>}
+        {(fixLabel || initialValue) && label && (
+          <StyledSpan>{label}</StyledSpan>
+        )}
         {icon && (
           <IconWrapper>
             <Icon name={icon} fill={iconColor} stroke={iconColor} />
@@ -105,7 +99,7 @@ export function TextInput({
         )}
         <Input
           placeholder={placeholder}
-          value={inputValue}
+          value={initialValue}
           maxLength={maxLength}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
