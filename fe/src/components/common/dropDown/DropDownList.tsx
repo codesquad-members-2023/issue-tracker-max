@@ -70,6 +70,7 @@ export const DropDownList: React.FC<Props> = ({
               width: '20px',
               height: '20px',
               position: 'absolute',
+              borderRadius: theme.radius.half,
               top: 0,
               left: 0,
             }}
