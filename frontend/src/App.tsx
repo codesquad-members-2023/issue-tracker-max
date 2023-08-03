@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
 import { darkTheme } from './theme';
@@ -7,8 +7,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
-  useLocation,
 } from 'react-router-dom';
 import Components from './pages/Components';
 import Login from './pages/Login';
@@ -19,18 +17,9 @@ import LogoDarkMedium from './asset/logo/logo_dark_medium.svg';
 import LogoLightLarge from './asset/logo/logo_light_large.svg';
 import LogoLightMedium from './asset/logo/logo_light_medium.svg';
 import { AppContext } from './main';
+import AuthenticatedRoute from './routes/AuthenticatedRoute';
 
-const AuthenticatedRoute = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const location = useLocation();
 
-  useEffect(() => {
-    const session = localStorage.getItem('session');
-    setIsAuthenticated(!!session);
-  }, [location]); // location이 바뀔 때마다 로그인 상태를 확인합니다.
-
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
-};
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);

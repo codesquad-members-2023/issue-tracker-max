@@ -2,7 +2,15 @@ import { useContext } from 'react';
 import { styled } from 'styled-components';
 import { AppContext } from '../main';
 import ContextLogo from '../types/ContextLogo';
-
+import TextInput from '../components/common/TextInput';
+// type TextInputProps = React.HTMLAttributes<HTMLInputElement> & {
+//   size: 'tall' | 'short';
+//   labelName: string;
+//   disabled?: boolean;
+//   placeholder?: string;
+//   helpText?: string;
+//   validationFunc?: (value: string) => boolean;
+// };
 export default function Login() {
   const appContext = useContext(AppContext);
   const logo = (appContext.util.getLogoByTheme() as ContextLogo)
@@ -15,7 +23,7 @@ export default function Login() {
         <figcaption className="blind">이슈트래커</figcaption>
       </figure>
       <form>
-        <TextInput></TextInput>
+        <TextInput size='tall' labelName='아이디'></TextInput>
       </form>
     </Container>
   );
