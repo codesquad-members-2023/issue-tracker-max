@@ -1,4 +1,4 @@
-package codesquard.app.label.dto;
+package codesquard.app.label.dto.response;
 
 import java.util.List;
 

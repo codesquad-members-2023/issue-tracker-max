@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.label.dto.LabelReadResponse;
-import codesquard.app.label.dto.LabelSaveRequest;
-import codesquard.app.label.dto.LabelUpdateRequest;
-import codesquard.app.label.dto.LabelsResponse;
+import codesquard.app.label.dto.response.LabelReadResponse;
+import codesquard.app.label.dto.request.LabelSaveRequest;
+import codesquard.app.label.dto.request.LabelUpdateRequest;
+import codesquard.app.label.dto.response.LabelsResponse;
 import codesquard.app.label.entity.Label;
 import codesquard.app.label.repository.LabelRepository;
 import codesquard.app.milestone.entity.MilestoneStatus;

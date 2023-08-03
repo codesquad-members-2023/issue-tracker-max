@@ -1,4 +1,4 @@
-package codesquard.app.label.dto;
+package codesquard.app.label.dto.request;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

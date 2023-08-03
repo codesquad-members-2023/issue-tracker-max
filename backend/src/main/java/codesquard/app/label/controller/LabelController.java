@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import codesquard.app.label.dto.LabelDeleteResponse;
-import codesquard.app.label.dto.LabelReadResponse;
-import codesquard.app.label.dto.LabelSaveRequest;
-import codesquard.app.label.dto.LabelSaveResponse;
-import codesquard.app.label.dto.LabelUpdateRequest;
-import codesquard.app.label.dto.LabelUpdateResponse;
+import codesquard.app.label.dto.response.LabelDeleteResponse;
+import codesquard.app.label.dto.response.LabelReadResponse;
+import codesquard.app.label.dto.request.LabelSaveRequest;
+import codesquard.app.label.dto.response.LabelSaveResponse;
+import codesquard.app.label.dto.request.LabelUpdateRequest;
+import codesquard.app.label.dto.response.LabelUpdateResponse;
 import codesquard.app.label.service.LabelService;
 
 @RestController
