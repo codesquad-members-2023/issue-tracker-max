@@ -19,6 +19,7 @@ import kr.codesquad.issuetracker.infrastructure.persistence.mapper.IssueSimpleMa
 import kr.codesquad.issuetracker.presentation.request.AssigneeRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueLabelRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueRegisterRequest;
+import kr.codesquad.issuetracker.presentation.response.IssueDetailResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -49,6 +50,14 @@ public class IssueService {
 		return ids.stream()
 			.map(mapper)
 			.collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public IssueDetailResponse getIssueDetails(Integer issueId) {
+		if (!issueRepository.existsById(issueId)) {
+			throw new ApplicationException(ErrorCode.ISSUE_NOT_FOUND);
+		}
+		return issueRepository.findIssueDetailResponseById(issueId);
 	}
 
 	@Transactional(readOnly = true)

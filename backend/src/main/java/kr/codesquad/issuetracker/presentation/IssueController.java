@@ -20,6 +20,7 @@ import kr.codesquad.issuetracker.presentation.auth.AuthPrincipal;
 import kr.codesquad.issuetracker.presentation.request.AssigneeRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueLabelRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueRegisterRequest;
+import kr.codesquad.issuetracker.presentation.response.IssueDetailResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/api/issues")
@@ -42,6 +43,12 @@ public class IssueController {
 			.header(HttpHeaders.LOCATION, "/api/issues/" + issueId)
 			.build();
 	}
+
+	@GetMapping("/{issueId}")
+	public ResponseEntity<IssueDetailResponse> getIssueDetails(@PathVariable Integer issueId) {
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(issueService.getIssueDetails(issueId));
+  }
 
 	@PostMapping("/{issueId}/assignees")
 	public void updateAssignees(@PathVariable Integer issueId, @RequestBody AssigneeRequest assigneeRequest) {
