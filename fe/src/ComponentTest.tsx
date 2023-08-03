@@ -3,8 +3,10 @@ import { Button } from "components/Button/Button";
 import { Tag } from "components/Tag/Tag";
 import { Input } from "components/Input/Input";
 import { TabButton, Tab } from "components/Button/TabButton";
+import { FilterBar } from "components/FilterBar/FilterBar";
 
 export const ComponentTest = () => {
+  const handleIndecatorClick = () => {};
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -131,6 +133,7 @@ export const ComponentTest = () => {
           <TabButton icon="Label" text="레이블" count={3} />
           <TabButton icon="Milestone" text="마일스톤" count={2} />
         </Tab>
+        <FilterBar onIndicatorClick={handleIndecatorClick}></FilterBar>
       </div>
     </div>
   );

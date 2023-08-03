@@ -32,7 +32,7 @@ export const DropdownOptions: React.FC<DropdownOptionsProps> = ({
         <OptionItem
           key={item.id}
           onClick={() => handleOptionClick(item)}
-          isSelected={selectedId === item.id}
+          $isSelected={selectedId === item.id}
         >
           <div>
             {item.profile && (
@@ -62,7 +62,7 @@ const OptionLists = styled.ul`
   border-radius: ${({ theme: { radius } }) => radius.large};
 `;
 
-const OptionItem = styled.li<{ isSelected: boolean }>`
+const OptionItem = styled.li<{ $isSelected: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -72,10 +72,10 @@ const OptionItem = styled.li<{ isSelected: boolean }>`
   border-color: ${({ theme: { color } }) => color.nuetralBorderDefault};
   transition: all 0.3s;
   color: ${({ theme: { color } }) => color.nuetralTextDefault};
-  font: ${({ theme: { font }, isSelected }) =>
-    isSelected ? font.selectedB16 : font.availableM16};
-  color: ${({ theme: { color }, isSelected }) =>
-    isSelected ? color.nuetralTextStrong : color.nuetralTextDefault};
+  font: ${({ theme: { font }, $isSelected }) =>
+    $isSelected ? font.selectedB16 : font.availableM16};
+  color: ${({ theme: { color }, $isSelected }) =>
+    $isSelected ? color.nuetralTextStrong : color.nuetralTextDefault};
 
   > div {
     display: flex;

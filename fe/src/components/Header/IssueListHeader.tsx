@@ -58,8 +58,6 @@ export const IssueListHeader = () => {
   }, [fetchFilterData]);
 
   const handleClick = async () => {
-    console.log("?");
-
     const updatedIndicatorList = await fetchFilterData();
     setIndicatorList(updatedIndicatorList);
   };
