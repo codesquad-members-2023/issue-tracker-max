@@ -18,7 +18,7 @@ import com.issuetracker.issue.infrastrucure.IssueLabelMappingRepository;
 import com.issuetracker.issue.infrastrucure.IssueRepository;
 import com.issuetracker.label.application.LabelValidator;
 import com.issuetracker.member.application.MemberValidator;
-import com.issuetracker.milestone.application.MilestoneValidator;
+import com.issuetracker.issue.application.MilestoneValidator;
 import com.issuetracker.util.MockTest;
 
 @MockTest

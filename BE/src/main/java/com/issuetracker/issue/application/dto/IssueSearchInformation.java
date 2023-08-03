@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.label.application.dto.LabelSearchInformation;
-import com.issuetracker.milestone.application.dto.MilestoneSearchInformation;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -16,8 +16,7 @@ import com.issuetracker.label.application.LabelValidator;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.member.application.MemberValidator;
 import com.issuetracker.member.domain.Member;
-import com.issuetracker.milestone.application.MilestoneValidator;
-import com.issuetracker.milestone.domain.Milestone;
+import com.issuetracker.issue.domain.Milestone;
 
 import lombok.RequiredArgsConstructor;
 

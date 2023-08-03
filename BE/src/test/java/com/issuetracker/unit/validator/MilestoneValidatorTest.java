@@ -6,14 +6,13 @@ import static org.mockito.BDDMockito.then;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import com.issuetracker.config.exception.MilestoneNotFoundException;
-import com.issuetracker.milestone.application.MilestoneValidator;
-import com.issuetracker.milestone.infrastructure.MilestoneRepository;
+import com.issuetracker.issue.application.MilestoneValidator;
+import com.issuetracker.issue.infrastrucure.MilestoneRepository;
 import com.issuetracker.util.MockTest;
 
 @MockTest

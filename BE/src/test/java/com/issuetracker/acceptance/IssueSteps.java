@@ -38,6 +38,12 @@ public class IssueSteps {
 			.then().log().all().extract();
 	}
 
+	public static ExtractableResponse<Response> 마일스톤_목록_조회_요청() {
+		return RestAssured.given().log().all()
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().get("/api/issues/milestones")
+  }
+  
 	public static ExtractableResponse<Response> 작성자_목록_조회_요청() {
 		return RestAssured.given().log().all()
 			.accept(MediaType.APPLICATION_JSON_VALUE)

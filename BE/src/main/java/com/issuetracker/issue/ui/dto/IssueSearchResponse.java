@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import com.issuetracker.issue.application.dto.IssueSearchInformation;
 import com.issuetracker.label.ui.dto.LabelSearchResponse;
-import com.issuetracker.milestone.ui.dto.MilestoneSearchResponse;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

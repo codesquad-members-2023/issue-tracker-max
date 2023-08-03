@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.member.domain.Member;
-import com.issuetracker.milestone.domain.Milestone;
+import com.issuetracker.issue.domain.Milestone;
 
 import lombok.Getter;
 

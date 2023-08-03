@@ -2,12 +2,15 @@ package com.issuetracker.unit.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.issuetracker.milestone.infrastructure.MilestoneRepository;
+import com.issuetracker.issue.domain.Milestone;
+import com.issuetracker.issue.infrastrucure.MilestoneRepository;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
 
@@ -39,5 +42,14 @@ class MilestoneRepositoryTest {
 
 		// then
 		assertThat(result).isTrue();
+	}
+
+	@Test
+	void 필터용_마일스톤_목록을_조회할_수_있다() {
+		// when
+		List<Milestone> milestones = milestoneRepository.findAllForFilter();
+
+		// then
+		assertThat(milestones).isNotEmpty();
 	}
 }

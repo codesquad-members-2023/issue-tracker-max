@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.member.domain.Member;
-import com.issuetracker.milestone.domain.Milestone;
 
 import lombok.AccessLevel;
 import lombok.Builder;
