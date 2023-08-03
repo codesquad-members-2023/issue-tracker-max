@@ -107,7 +107,7 @@ export const AddIssuePage: React.FC<Props> = ({ authorId = 1 }) => {
         return;
       }
 
-      const fileUrl = await uploadImage(file); //파일 업로드
+      const fileUrl = await uploadImage(file);
       setTextAreaValue(
         (prevValue) => `${prevValue}![${fileName}](${fileUrl.fileUrl})`,
       );
@@ -132,29 +132,30 @@ export const AddIssuePage: React.FC<Props> = ({ authorId = 1 }) => {
           ),
         ) + 1,
     };
-    console.log(bodyData);
 
-    const response = await fetch(
-      'https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/issues/new',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+    try {
+      const response = await fetch(
+        'https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/issues/new',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(bodyData),
         },
-        body: JSON.stringify(bodyData),
-      },
-    );
+      );
 
-    if (!response.ok) {
-      throw new Error('HTTP error ' + response.status);
+      if (!response.ok) {
+        throw new Error('HTTP error ' + response.status);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('이슈가 정상적으로 등록되지 않았습니다.');
+    } finally {
+      navigate('/');
     }
-
-    const data = await response.json();
-    console.log(data);
-
-    navigate('/');
-
-    return data;
   };
 
   useEffect(() => {

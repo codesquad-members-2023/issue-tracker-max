@@ -45,15 +45,27 @@ export const DropDownPanel: React.FC<Props> = ({
     >
       <DropDownHeader panelHeader={panelHeader} />
       <ul>
-        {options.map((item, index: number) => (
-          <DropDownList
-            key={index}
-            item={item}
-            onSelected={() => onSelected(index)}
-            isSelected={selectedItems[index]}
-            index={index}
-          />
-        ))}
+        {options.length > 0 ? (
+          options.map((item, index: number) => (
+            <DropDownList
+              key={index}
+              item={item}
+              onSelected={() => onSelected(index)}
+              isSelected={selectedItems[index]}
+              index={index}
+            />
+          ))
+        ) : (
+          <span
+            css={{
+              marginLeft: '16px',
+              font: theme.fonts.displayMedium12,
+              color: theme.neutral.text.strong,
+            }}
+          >
+            데이터가 없습니다
+          </span>
+        )}
       </ul>
     </div>
   );

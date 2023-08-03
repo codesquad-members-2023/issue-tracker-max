@@ -28,6 +28,7 @@ export const DropDownList: React.FC<Props> = ({
   const commonStyles = css`
     flex: 1 0 0;
   `;
+
   return (
     <li
       onClick={() => {
