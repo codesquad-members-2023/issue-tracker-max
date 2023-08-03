@@ -14,7 +14,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class IssueDetailResponse {
 	private Long issueId;
 	private String title;
@@ -26,6 +25,23 @@ public class IssueDetailResponse {
 	private List<UserResponse> assignees;
 	private List<LabelResponse> labels;
 	private List<CommentResponse> comments;
+
+	@Builder
+	private IssueDetailResponse(Long issueId, String title, String contents, LocalDateTime createdAt, String status,
+		UserResponse author, MilestonePreviewResponse milestone, List<UserResponse> assignees,
+		List<LabelResponse> labels,
+		List<CommentResponse> comments) {
+		this.issueId = issueId;
+		this.title = title;
+		this.contents = contents;
+		this.createdAt = createdAt;
+		this.status = status;
+		this.author = author;
+		this.milestone = milestone;
+		this.assignees = assignees;
+		this.labels = labels;
+		this.comments = comments;
+	}
 
 	public static IssueDetailResponse fromVo(IssueDetailVo issueDetailVo) {
 		return IssueDetailResponse.builder()
@@ -40,7 +56,7 @@ public class IssueDetailResponse {
 				.map(UserResponse::fromEntity)
 				.collect(Collectors.toList()))
 			.labels(issueDetailVo.getLabels().stream()
-				.map(LabelResponse::fromEntity)
+				.map(LabelResponse::fromVo)
 				.collect(Collectors.toList()))
 			.comments(issueDetailVo.getComments().stream()
 				.map(CommentResponse::fromVo)
