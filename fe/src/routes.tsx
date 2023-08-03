@@ -7,11 +7,16 @@ import { LabelListPage } from '@pages/LabelListPage';
 import { MileStoneListPage } from '@pages/MileStoneListPage';
 import { SignPage } from '@pages/SignPage';
 
-export const AppRoutes: React.FC = () => {
+type Props = {
+  currentTheme: ThemeType;
+  toggleTheme: () => void;
+};
+
+export const AppRoutes: React.FC<Props> = ({ currentTheme, toggleTheme }) => {
   return (
     <Routes>
       <Route path="/sign" element={<SignPage />} />
-      <Route path="/" element={<Header />}>
+      <Route path="/" element={<Header {...{ currentTheme, toggleTheme }} />}>
         <Route index element={<IssueListPage />} />
         <Route path="add" element={<AddIssuePage />} />
         <Route path="issue/:id" element={<IssueDetailPage />} />

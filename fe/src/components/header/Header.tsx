@@ -3,15 +3,21 @@ import { ReactComponent as MediumLogo } from '@assets/logos/mediumLogo.svg';
 import { ReactComponent as UserImageLarge } from '@assets/icons/userImageLarge.svg';
 import { useTheme } from '@emotion/react';
 import { Button } from '@components/common/Button';
+import { ThemeToggle } from './ThemeToggle';
 
 type Props = {
-  image: string;
+  image?: string;
+  currentTheme: ThemeType;
+  toggleTheme: () => void;
   resetUserId?: () => void;
   resetAccessToken?: () => void;
-  toggleTheme?: () => void;
 };
 
-export const Header: React.FC<Props> = ({ image }) => {
+export const Header: React.FC<Props> = ({
+  image,
+  currentTheme,
+  toggleTheme,
+}) => {
   const navigate = useNavigate();
   const theme = useTheme() as any;
 
@@ -32,6 +38,8 @@ export const Header: React.FC<Props> = ({ image }) => {
         />
 
         <div css={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ThemeToggle {...{ currentTheme, toggleTheme }} />
+
           <Button typeVariant="ghost" size="S">
             로그아웃
           </Button>
