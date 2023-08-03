@@ -10,25 +10,16 @@ public class Label {
 	public Label(Long id, String name, String color, String background, String description) {
 		this.id = id;
 		this.name = name;
-		chooseColor(color);
+		this.color = LabelColor.chooseColor(color);
 		this.background = background;
 		this.description = description;
 	}
 
 	public Label(String name, String color, String background, String description) {
 		this.name = name;
-		chooseColor(color);
+		this.color = LabelColor.chooseColor(color);
 		this.background = background;
 		this.description = description;
-	}
-
-	private void chooseColor(String color) {
-		if (color.equalsIgnoreCase(LabelColor.DARK_STRING)) {
-			this.color = LabelColor.DARK;
-			return;
-		}
-
-		this.color = LabelColor.LIGHT;
 	}
 
 	public Long getId() {

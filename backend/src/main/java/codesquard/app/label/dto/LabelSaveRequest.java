@@ -30,17 +30,11 @@ public class LabelSaveRequest {
 
 	public LabelSaveRequest(String name, String color, String background, String description) {
 		this.name = name;
-		validateColor(color);
+		if (LabelColor.validateColor(color)) {
+			this.color = color;
+		}
 		this.background = background;
 		this.description = description;
-	}
-
-	private void validateColor(String color) {
-		if (!color.equalsIgnoreCase(LabelColor.DARK_STRING) && !color.equalsIgnoreCase(LabelColor.LIGHT_STRING)) {
-			throw new RuntimeException("임시");
-		}
-
-		this.color = color;
 	}
 
 	public static Label toEntity(LabelSaveRequest labelSaveRequest) {

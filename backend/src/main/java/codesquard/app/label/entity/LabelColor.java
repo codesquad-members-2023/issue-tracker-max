@@ -9,4 +9,20 @@ public enum LabelColor {
 	public String getNameToLowerCase() {
 		return this.name().toLowerCase();
 	}
+
+	public static LabelColor chooseColor(String color) {
+		if (color.equalsIgnoreCase(DARK_STRING)) {
+			return DARK;
+		}
+
+		return LIGHT;
+	}
+
+	public static boolean validateColor(String color) {
+		if (!color.equalsIgnoreCase(LabelColor.DARK_STRING) && !color.equalsIgnoreCase(LabelColor.LIGHT_STRING)) {
+			throw new RuntimeException("임시");
+		}
+
+		return true;
+	}
 }
