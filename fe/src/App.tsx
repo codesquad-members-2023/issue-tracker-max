@@ -5,6 +5,7 @@ import IssuesPage from "@pages/MainPage/IssuesPage";
 import LabelPage from "@pages/MainPage/LabelPage";
 import MainPage from "@pages/MainPage/MainPage";
 import MilestonePage from "@pages/MainPage/MilestonePage";
+import NewIssuePage from "@pages/MainPage/NewIssuePage";
 import GlobalStyle from "@styles/GlobalStyle";
 import { darkMode, lightMode } from "@styles/designSystem";
 import { ThemeModeContext } from "context/themeModeContext";
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
         <Route path="issues" element={<IssuesPage />} />
         <Route path="labels" element={<LabelPage />} />
         <Route path="milestones" element={<MilestonePage />} />
+        <Route path="issues/new" element={<NewIssuePage />} />
       </Route>
     </>
   )
