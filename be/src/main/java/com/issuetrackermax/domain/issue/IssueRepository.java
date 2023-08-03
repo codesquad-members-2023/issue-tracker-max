@@ -124,7 +124,7 @@ public class IssueRepository {
 	}
 
 	public Boolean existById(Long id) {
-		String sql = "SELECT EXISTS (SELECT 1 FROM label WHERE id = :id)";
+		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id)";
 		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
 			.addValue("id", id), Boolean.class);
 	}
