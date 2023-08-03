@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.issuetrackermax.common.exception.NotFoundHistoryException;
 import com.issuetrackermax.domain.history.entity.History;
 
 @Repository
@@ -32,7 +33,7 @@ public class HistoryRepository {
 			+ "WHERE issue_id = :issueId)";
 		return jdbcTemplate.query(sql, Map.of("issueId", issueId), HISTORY_ROW_MAPPER).stream()
 			.findAny()
-			.orElseThrow(() -> new RuntimeException());
+			.orElseThrow(() -> new NotFoundHistoryException());
 	}
 
 	public Long save(History history) {

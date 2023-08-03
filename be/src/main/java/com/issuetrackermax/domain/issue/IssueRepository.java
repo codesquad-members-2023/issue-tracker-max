@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.issuetrackermax.common.exception.NotFoundIssueException;
 import com.issuetrackermax.domain.issue.entity.Issue;
 import com.issuetrackermax.domain.issue.entity.IssueResultVO;
 
@@ -38,10 +39,11 @@ public class IssueRepository {
 			+ "LEFT JOIN member m ON i.writer_id = m.id "
 			+ "LEFT JOIN member m2 ON a.member_id = m2.id "
 			+ "LEFT JOIN milestone ms ON i.milestone_id = ms.id "
-			+ "WHERE i.id = :id";
+			+ "WHERE i.id = :id "
+			+ "GROUP BY i.id, i.is_open, i.title, m.id, m.nick_name, ms.id, ms.title";
 		return jdbcTemplate.query(sql, Map.of("id", id), ISSUE_RESULT_VO_ROW_MAPPER).stream()
 			.findAny()
-			.orElseThrow(() -> new RuntimeException());
+			.orElseThrow(() -> new NotFoundIssueException());
 	}
 
 	public Long save(Issue issue) {
@@ -120,6 +122,12 @@ public class IssueRepository {
 	public List<Issue> getClosedIssue() {
 		String sql = "SELECT id, title, is_open, writer_id, milestone_id,created_at FROM issue WHERE is_open = :isOpen";
 		return jdbcTemplate.query(sql, Map.of("isOpen", 0), ISSUE_ROW_MAPPER);
+	}
+
+	public Boolean existById(Long id) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id)";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("id", id), Boolean.class);
 	}
 
 	private static final RowMapper<Issue> ISSUE_ROW_MAPPER = (rs, rowNum) ->

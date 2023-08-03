@@ -5,17 +5,25 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetrackermax.common.exception.InvalidIssueStatusException;
+import com.issuetrackermax.common.exception.NotFoundAssigneeException;
+import com.issuetrackermax.common.exception.NotFoundIssueException;
+import com.issuetrackermax.common.exception.NotFoundLabelException;
+import com.issuetrackermax.common.exception.NotFoundMilestoneException;
 import com.issuetrackermax.controller.issue.dto.request.IssueApplyRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuePostRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssueTitleRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuesStatusRequest;
 import com.issuetrackermax.controller.issue.dto.response.IssueDetailsResponse;
+import com.issuetrackermax.domain.assignee.AssigneeRepository;
 import com.issuetrackermax.domain.comment.CommentRepository;
 import com.issuetrackermax.domain.comment.entity.Comment;
 import com.issuetrackermax.domain.history.HistoryRepository;
 import com.issuetrackermax.domain.history.entity.History;
 import com.issuetrackermax.domain.issue.IssueRepository;
 import com.issuetrackermax.domain.issue.entity.IssueResultVO;
+import com.issuetrackermax.domain.label.LabelRepository;
+import com.issuetrackermax.domain.milestone.MilestoneRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,11 +33,13 @@ public class IssueService {
 	private final IssueRepository issueRepository;
 	private final CommentRepository commentRepository;
 	private final HistoryRepository historyRepository;
+	private final LabelRepository labelRepository;
+	private final AssigneeRepository assigneeRepository;
+	private final MilestoneRepository milestoneRepository;
 	private final String OPEN_ISSUE = "open";
 	private final String CLOSED_ISSUE = "closed";
 
 	// todo : 전체 예외 처리
-	// todo : 이슈 등록 시 label, assignee 한 번에 등록하는 방법
 	@Transactional
 	public Long post(IssuePostRequest request) {
 		Long issueId = issueRepository.save(request.toIssue());
@@ -52,7 +62,7 @@ public class IssueService {
 	public void delete(Long id) {
 		int count = issueRepository.deleteById(id);
 		if (count == 0) {
-			throw new IllegalArgumentException();
+			throw new NotFoundIssueException();
 		}
 	}
 
@@ -74,11 +84,12 @@ public class IssueService {
 		} else if (status.equals(CLOSED_ISSUE)) {
 			count = issueRepository.closeByIds(ids);
 		} else {
-			throw new IllegalArgumentException();
+			throw new InvalidIssueStatusException();
 		}
 
+		// todo : 예외처리 Not Found 괜찮은지?
 		if (count != ids.size()) {
-			throw new IllegalArgumentException();
+			throw new NotFoundIssueException();
 		}
 	}
 
@@ -86,38 +97,52 @@ public class IssueService {
 	public void modifyTitle(Long issueId, IssueTitleRequest request) {
 		int count = issueRepository.modifyTitle(issueId, request.getTitle());
 		if (count != 1) {
-			throw new IllegalArgumentException();
+			throw new NotFoundIssueException();
 		}
 	}
 
-	/*
-	 *  todo : label 있는지 검증
-	 */
 	@Transactional
 	public void applyLabels(Long issueId, IssueApplyRequest request) {
-		// 기존에 적용된 라벨 정보 삭제
-		issueRepository.deleteAppliedLabels(issueId);
+		if (!issueRepository.existById(issueId)) {
+			throw new NotFoundIssueException();
+		}
 
-		// 새로운 라벨 정보 업데이트
+		if (!labelRepository.existByIds(request.getIds())) {
+			throw new NotFoundLabelException();
+		}
+
+		issueRepository.deleteAppliedLabels(issueId);
 		for (Long labelId : request.getIds()) {
 			issueRepository.applyLabels(issueId, labelId);
 		}
 	}
 
-	/*
-	 *  todo : assignee 있는지 검증
-	 */
 	@Transactional
 	public void applyAssignees(Long issueId, IssueApplyRequest request) {
+		if (!issueRepository.existById(issueId)) {
+			throw new NotFoundIssueException();
+		}
+
+		if (!assigneeRepository.existByIds(request.getIds())) {
+			throw new NotFoundAssigneeException();
+		}
+
 		issueRepository.deleteAppliedAssignees(issueId);
 		for (Long memberId : request.getIds()) {
 			issueRepository.applyAssignees(issueId, memberId);
 		}
 	}
 
-	// todo : milestone 있는지 검증
 	@Transactional
 	public void applyMilestone(Long issueId, Long milestoneId) {
+		if (!issueRepository.existById(issueId)) {
+			throw new NotFoundIssueException();
+		}
+
+		if (!milestoneRepository.existById(milestoneId)) {
+			throw new NotFoundMilestoneException();
+		}
+
 		issueRepository.applyMilestone(issueId, milestoneId);
 	}
 }

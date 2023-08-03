@@ -2,6 +2,8 @@ package com.issuetrackermax.controller.issue.dto.request;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import com.issuetrackermax.domain.comment.entity.Comment;
 import com.issuetrackermax.domain.issue.entity.Issue;
 
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class IssuePostRequest {
+	@NotBlank(message = "이슈 제목을 입력해주세요.")
 	private String title;
 	private String content;
 	private String imageUrl;

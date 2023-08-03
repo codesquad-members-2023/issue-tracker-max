@@ -1,6 +1,7 @@
 package com.issuetrackermax.domain.assignee;
 
 import java.sql.Types;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,6 +18,10 @@ import com.issuetrackermax.domain.assignee.entity.Assignee;
 public class AssigneeRepository {
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
+	public AssigneeRepository(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+	}
+
 	public Long save(Assignee assignee) {
 		String sql = "INSERT INTO assignee(issue_id ,member_id) VALUES (:issueId,:memberId)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -27,8 +32,11 @@ public class AssigneeRepository {
 		return (Long)Objects.requireNonNull(keyHolder.getKey());
 	}
 
-	public AssigneeRepository(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+	public Boolean existByIds(List<Long> ids) {
+		String sql = "SELECT COUNT(*) FROM member WHERE id IN (:ids)";
+		Integer count = jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("ids", ids), Integer.class);
+		return count != null && count.equals(ids.size());
 	}
 
 }
