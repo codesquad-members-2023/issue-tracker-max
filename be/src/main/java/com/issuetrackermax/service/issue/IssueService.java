@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetrackermax.common.exception.InvalidIssueStatusException;
+import com.issuetrackermax.common.exception.NotFoundIssueException;
 import com.issuetrackermax.controller.issue.dto.request.IssueApplyRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuePostRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssueTitleRequest;
@@ -29,7 +31,6 @@ public class IssueService {
 	private final String CLOSED_ISSUE = "closed";
 
 	// todo : 전체 예외 처리
-	// todo : 이슈 등록 시 label, assignee 한 번에 등록하는 방법
 	@Transactional
 	public Long post(IssuePostRequest request) {
 		Long issueId = issueRepository.save(request.toIssue());
@@ -52,7 +53,7 @@ public class IssueService {
 	public void delete(Long id) {
 		int count = issueRepository.deleteById(id);
 		if (count == 0) {
-			throw new IllegalArgumentException();
+			throw new NotFoundIssueException();
 		}
 	}
 
@@ -74,11 +75,12 @@ public class IssueService {
 		} else if (status.equals(CLOSED_ISSUE)) {
 			count = issueRepository.closeByIds(ids);
 		} else {
-			throw new IllegalArgumentException();
+			throw new InvalidIssueStatusException();
 		}
 
+		// todo : 예외처리 Not Found 괜찮은지?
 		if (count != ids.size()) {
-			throw new IllegalArgumentException();
+			throw new NotFoundIssueException();
 		}
 	}
 
@@ -86,7 +88,7 @@ public class IssueService {
 	public void modifyTitle(Long issueId, IssueTitleRequest request) {
 		int count = issueRepository.modifyTitle(issueId, request.getTitle());
 		if (count != 1) {
-			throw new IllegalArgumentException();
+			throw new NotFoundIssueException();
 		}
 	}
 

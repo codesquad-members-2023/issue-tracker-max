@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.issuetrackermax.common.exception.NotFoundIssueException;
 import com.issuetrackermax.domain.issue.entity.Issue;
 import com.issuetrackermax.domain.issue.entity.IssueResultVO;
 
@@ -41,7 +42,7 @@ public class IssueRepository {
 			+ "WHERE i.id = :id";
 		return jdbcTemplate.query(sql, Map.of("id", id), ISSUE_RESULT_VO_ROW_MAPPER).stream()
 			.findAny()
-			.orElseThrow(() -> new RuntimeException());
+			.orElseThrow(() -> new NotFoundIssueException());
 	}
 
 	public Long save(Issue issue) {
