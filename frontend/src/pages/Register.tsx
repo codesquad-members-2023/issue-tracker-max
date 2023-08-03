@@ -7,7 +7,7 @@ import TextInput from '../components/common/TextInput';
 import ButtonLarge from '../components/common/button/ButtonLarge';
 import Button from '../components/common/button/BaseButton';
 
-export default function Login() {
+export default function Register() {
   const appContext = useContext(AppContext);
   const logo = (appContext.util.getLogoByTheme() as ContextLogo)
     .large as string;
@@ -15,23 +15,19 @@ export default function Login() {
 
   return (
     <Container>
-      <h1 className="blind">로그인 페이지</h1>
+      <h1 className="blind">회원가입 페이지</h1>
       <Logo>
         <img src={logo} alt="" />
         <figcaption className="blind">이슈트래커</figcaption>
       </Logo>
-      <GitHubOAuthButton type="button" outline>
-        GitHub 계정으로 로그인
-      </GitHubOAuthButton>
-      <span>or</span>
-      <LoginForm>
+      <RegisterForm>
         <TextInput size="tall" labelName="아이디" placeholder="아이디" />
         <TextInput size="tall" labelName="비밀번호" placeholder="비밀번호" />
-        <LoginButton type="submit">아이디로 로그인</LoginButton>
-      </LoginForm>
-      <RegisterButton type="button" ghost onClick={() => navigate('/register')}>
-        회원가입
-      </RegisterButton>
+        <RegisterButton type="submit">회원가입</RegisterButton>
+      </RegisterForm>
+      <LoginLink type="button" ghost onClick={() => navigate('/login')}>
+        로그인으로 이동하기
+      </LoginLink>
     </Container>
   );
 }
@@ -59,18 +55,13 @@ const Logo = styled.figure`
   margin-bottom: 64px;
 `;
 
-const GitHubOAuthButton = styled(ButtonLarge)`
-  width: 320px;
-  margin-bottom: 14px;
-`;
-
-const LoginForm = styled.form`
+const RegisterForm = styled.form`
   width: 320px;
 `;
 
-const LoginButton = styled(ButtonLarge)`
+const RegisterButton = styled(ButtonLarge)`
   width: 100%;
   margin-bottom: 16px;
 `;
 
-const RegisterButton = styled(Button)``;
+const LoginLink = styled(Button)``;

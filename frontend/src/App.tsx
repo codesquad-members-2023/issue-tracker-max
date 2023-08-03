@@ -3,13 +3,10 @@ import { ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
 import { darkTheme } from './theme';
 import GlobalStyle from './style/Global';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Components from './pages/Components';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Main from './pages/Main';
 
 import LogoDarkLarge from './asset/logo/logo_dark_large.svg';
@@ -53,6 +50,7 @@ function App() {
             }
           />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/component" element={<Components />} />
         </Routes>
       </Router>
