@@ -60,10 +60,12 @@ const StyledTabLayout = styled.div`
   width: 320px;
   & > *:first-child {
     border-right: 1px solid;
+    border-color: ${({ theme: { color } }) => color.nuetralBorderDefault};
   }
   > button {
     width: 50%;
   }
+  border-color: ${({ theme: { color } }) => color.nuetralBorderDefault};
 `;
 
 const StyledTitle = styled.span<{ $isActive?: boolean }>`

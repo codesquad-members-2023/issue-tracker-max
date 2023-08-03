@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 import { Layout } from "pages/Layout";
 import { LoginPage } from "pages/Login";
-import { MainPage } from "pages/Main";
+import { IssuesPage } from "pages/Issues";
 import { NewIssuePage } from "pages/NewIssue";
 import { LabelsPage } from "pages/Labels";
 import { MilestonesPage } from "pages/Milestones";
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <MainPage />,
+        element: <IssuesPage />,
       },
       {
         path: "login",

@@ -9,7 +9,7 @@ interface FilterBarProps {
 
 export const FilterBar: React.FC<FilterBarProps> = ({ onIndicatorClick }) => {
   return (
-    <FilterBarLayout style={{ margin: "20px" }}>
+    <FilterBarLayout>
       <IndicatorLayout>
         <DropdownIndicator
           title="필터"

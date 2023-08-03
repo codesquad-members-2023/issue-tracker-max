@@ -1,4 +1,4 @@
-import { ReactNode, useEffect} from "react";
+import { ReactNode } from "react";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes/router";
 
@@ -19,14 +19,6 @@ const ThemedApp: React.FC<ThemedAppProps> = ({ children }) => {
 };
 
 export const App = () => {
-  useEffect(() => {
-    fetch("http://localhost:8080/api/issues/closed")
-    .then((response) => response.json())
-    .then((data) => console.log(data))
-    .catch((error) => {
-    console.error("Error:", error);
-    });
-    }, []);
   return (
     <ThemeModeProvider>
       <ThemedApp>
