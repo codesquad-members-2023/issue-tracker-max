@@ -1,5 +1,8 @@
 package codesquard.app.authenticate_user.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +29,15 @@ public class AuthenticateUserRestController {
 	}
 
 	@PostMapping("/api/auth/refresh/token")
-	public ResponseEntity<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+	public ResponseEntity<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest,
+		HttpServletRequest request, HttpServletResponse response) {
 		logger.info("refreshTokenRequest : {}", refreshTokenRequest);
 		Jwt jwt = authenticateUserService.refreshToken(refreshTokenRequest.toRefreshTokenServiceRequest());
 		if (jwt == null) {
-			throw new RestApiException(LoginErrorCode.UNAUTHORIZED);
+			throw new RestApiException(LoginErrorCode.FAIL_REFRESHTOKEN);
 		}
+		response.addHeader("Authorization", jwt.createAccessTokenHeaderValue());
+		response.addCookie(jwt.createRefreshTokenCookie());
 		return ResponseEntity.ok(new RefreshTokenResponse(jwt));
 	}
 }
