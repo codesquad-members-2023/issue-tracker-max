@@ -1,7 +1,13 @@
 import { styled } from "styled-components";
-import Button from "../Button/Button";
+import Button from "../common/Button/Button";
+import { IssueListProps } from "../../type";
+import LabelItem from "../SideBar/LabelItem";
 
-export default function IssueList() {
+type Props = {
+  issue: IssueListProps;
+};
+
+export default function IssueList({ issue }: Props) {
   return (
     <Wrapper>
       <CheckboxWrapper>
@@ -12,19 +18,30 @@ export default function IssueList() {
           <InfoContents>
             <Title>
               <IssueIcon src={"/icons/alertCircle.svg"} alt="" />
-              <IssueTitle>FE 이슈 트래커 개발</IssueTitle>
-              <div></div>
+              <IssueTitle>{issue.title}</IssueTitle>
+              {issue.labels &&
+                issue.labels.map((label, key) => (
+                  <LabelItem
+                    key={key}
+                    label={label.title}
+                    color={label.color}
+                  />
+                ))}
             </Title>
             <Caption>
-              <span>#1</span>
-              <span>이 이슈가 8분 전, sam님에 의해 작성되었습니다</span>
-              <Button
-                icon={"milestone"}
-                label={"그룹프로젝트:이슈트래커"}
-                type={"ghost"}
-                size={"medium"}
-                onClick={() => {}}
-              />
+              <span>#{issue.id}</span>
+              <span>
+                이 이슈가 8분 전, {issue.author}님에 의해 작성되었습니다
+              </span>
+              {issue.milestone !== null && (
+                <Button
+                  icon={"milestone"}
+                  label={issue.milestone.title}
+                  type={"ghost"}
+                  size={"medium"}
+                  onClick={() => {}}
+                />
+              )}
             </Caption>
           </InfoContents>
         </IssueInfo>

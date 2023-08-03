@@ -1,22 +1,18 @@
 import { styled } from "styled-components";
 import DropdownIndicator from "../DropdownIndicator/DropdownIndicator";
-import Input from "../Input/Input";
+import Input from "../common/Input/Input";
 
 export default function FilterBar() {
   return (
     <Wrapper>
       <FilterButtonField>
-        <DropdownIndicator
-          text={"필터"}
-          padding={"7px 24px"}
-          onClick={() => {}}
-        />
+        <DropdownIndicator label={"필터"} onClick={() => {}} />
       </FilterButtonField>
       <FilterInputField>
         <FilterInputLabel htmlFor="filterInput">
           <FilterInputImg src={"/icons/search.svg"} alt={"search"} />
         </FilterInputLabel>
-        <Input id={"filterInput"} inputLabel={"Search all issues"} />
+        <Input id={"filterInput"} placeholder={"Search all issues"} />
       </FilterInputField>
     </Wrapper>
   );

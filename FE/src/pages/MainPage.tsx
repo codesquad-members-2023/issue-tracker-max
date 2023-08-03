@@ -1,100 +1,120 @@
 import { styled } from "styled-components";
-import Header from "../components/Header/Header";
 import FilterBar from "../components/FilterBar/FilterBar";
-import Button from "../components/Button/Button";
+import Button from "../components/common/Button/Button";
 import DropdownIndicator from "../components/DropdownIndicator/DropdownIndicator";
 import IssueList from "../components/IssueList/IssueList";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { ListDataProps } from "../type";
 
-type Props = {
-  toggleTheme(): void;
-};
+export default function MainPage() {
+  const navigate = useNavigate();
+  const goAddNewIssuePage = () => {
+    navigate("/new");
+  };
 
-export default function MainPage({ toggleTheme }: Props) {
+  const [data, setData] = useState<ListDataProps | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://3.34.141.196/api/issues");
+        if (!response.ok) {
+          throw new Error("데이터를 가져오는 데 실패했습니다.");
+        }
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (error) {
+        console.log("error");
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <Page>
-      <Header toggleTheme={toggleTheme} />
-      <Main>
-        <FilterSection>
-          <FilterBar />
-          <Taps>
-            <TapButtonWrapper>
+    <Main>
+      <FilterSection>
+        <FilterBar />
+        <Taps>
+          <TapButtonWrapper>
+            <Button
+              icon={"label"}
+              label={"레이블"}
+              type={"ghost"}
+              size={"medium"}
+              width={"50%"}
+              onClick={() => {}}
+            />
+            <Button
+              icon={"milestone"}
+              label={"마일스톤"}
+              type={"ghost"}
+              size={"medium"}
+              width={"50%"}
+              onClick={() => {}}
+            />
+          </TapButtonWrapper>
+          <Button
+            icon={"plus"}
+            label={"이슈 작성"}
+            onClick={goAddNewIssuePage}
+          />
+        </Taps>
+      </FilterSection>
+      <IssueTable>
+        <TableHeader>
+          <CheckboxWrapper>
+            <CheckboxLabel htmlFor={"tableCheckbox"}></CheckboxLabel>
+            <Checkbox id={"tableCheckbox"} type="checkbox" />
+          </CheckboxWrapper>
+          <TapWrapper>
+            <IssueTap>
               <Button
-                icon={"label"}
-                label={"레이블"}
+                icon={"alertCircle"}
+                label={"열린 이슈"}
                 type={"ghost"}
                 size={"medium"}
                 width={"50%"}
                 onClick={() => {}}
               />
               <Button
-                icon={"milestone"}
-                label={"마일스톤"}
+                icon={"archive"}
+                label={"닫힌 이슈"}
                 type={"ghost"}
                 size={"medium"}
                 width={"50%"}
                 onClick={() => {}}
               />
-            </TapButtonWrapper>
-            <Button icon={"plus"} label={"이슈 작성"} onClick={() => {}} />
-          </Taps>
-        </FilterSection>
-        <IssueTable>
-          <TableHeader>
-            <CheckboxWrapper>
-              <CheckboxLabel htmlFor={"tableCheckbox"}></CheckboxLabel>
-              <Checkbox id={"tableCheckbox"} type="checkbox" />
-            </CheckboxWrapper>
-            <TapWrapper>
-              <IssueTap>
-                <Button
-                  icon={"alertCircle"}
-                  label={"열린 이슈"}
-                  type={"ghost"}
-                  size={"medium"}
-                  width={"50%"}
-                  onClick={() => {}}
-                />
-                <Button
-                  icon={"archive"}
-                  label={"닫힌 이슈"}
-                  type={"ghost"}
-                  size={"medium"}
-                  width={"50%"}
-                  onClick={() => {}}
-                />
-              </IssueTap>
-              <FilterTap>
-                <DropdownIndicator text={"담당자"} onClick={() => {}} />
-                <DropdownIndicator text={"레이블"} onClick={() => {}} />
-                <DropdownIndicator text={"마일스톤"} onClick={() => {}} />
-                <DropdownIndicator text={"작성자"} onClick={() => {}} />
-              </FilterTap>
-            </TapWrapper>
-          </TableHeader>
-          <IssueContents>
-            <IssueList />
-            <IssueList />
-            <IssueList />
-            <IssueList />
-            <IssueList />
-          </IssueContents>
-        </IssueTable>
-      </Main>
-    </Page>
+            </IssueTap>
+            <FilterTap>
+              <DropdownIndicator label={"담당자"} onClick={() => {}} />
+              <DropdownIndicator label={"레이블"} onClick={() => {}} />
+              <DropdownIndicator label={"마일스톤"} onClick={() => {}} />
+              <DropdownIndicator label={"작성자"} onClick={() => {}} />
+            </FilterTap>
+          </TapWrapper>
+        </TableHeader>
+        <IssueContents>
+          {data &&
+            data.issues.map((issue, key) => (
+              <IssueList key={key} issue={issue} />
+            ))}
+        </IssueContents>
+      </IssueTable>
+    </Main>
   );
 }
 
-const Page = styled.div`
+const Main = styled.div`
+  padding-top: 32px;
   display: flex;
-  gap: 32px;
   flex-direction: column;
   align-items: center;
   min-width: 100vw;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.colorSystem.neutral.surface.default};
 `;
-
-const Main = styled.div``;
 
 const FilterSection = styled.section`
   width: 1280px;
