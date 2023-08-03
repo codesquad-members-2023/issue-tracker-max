@@ -16,6 +16,25 @@ const navy = "#0025E6";
 const blue = "#007AFF";
 const offWhite = "#FEFEFE";
 
+export const colorList = [
+  "#B60205",
+  "#D93F0B",
+  "#FBCA04",
+  "#0E8A16",
+  "#006B75",
+  "#1D76DB",
+  "#0052CC",
+  "#5319E7",
+  "#E99695",
+  "#F9D0C4",
+  "#FEF2C0",
+  "#C2E0C6",
+  "#BEDADC",
+  "#C4DEF6",
+  "#BED3F3",
+  "#D4C4FB",
+];
+
 export const lightColors: ColorScheme = {
   neutral: {
     text: {

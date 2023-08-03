@@ -5,17 +5,18 @@ import { useEffect, useState } from "react";
 import { TabButton } from "../components/common/TabButton";
 import { Button } from "../components/common/Button";
 import { ColorScheme } from "../contexts/ThemeContext";
-import { css, useTheme } from "@emotion/react";
-import { tableHeaderStyle, tableStyle } from "../styles/commonStyles";
+import { useTheme } from "@emotion/react";
+import {
+  openTabContainer,
+  tableContainer,
+  tableHeaderStyle,
+  tableStyle,
+} from "../styles/commonStyles";
 import { MilestoneElement } from "../components/Milestone/MilestoneElement";
 import { LoadingBar } from "../components/common/LoadingBar";
 import { MilestoneDetail } from "../components/Milestone/MilestoneDetail";
 import { MainArea } from "../components/common/MainArea";
-
-const TOTAL_COUNT_URL =
-  "http://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/common/navigation";
-const MILESTONE_URL =
-  "http://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/milestones?filter=open";
+import { COMMON_URL, MILESTONE_URL, SERVER } from "../constants/url";
 
 type MilestonesData = {
   milestoneOpenedCount: number;
@@ -37,22 +38,6 @@ export type TotalCount = {
   milestonesCount: number;
 };
 
-const tableContainer = css`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  position: relative;
-  top: 24px;
-`;
-
-const milestoneTabContainer = css`
-  display: flex;
-  height: 32px;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-`;
-
 export function MilestonePage() {
   const [totalCount, setTotalCount] = useState<TotalCount | undefined>();
   const [milestones, setMilestones] = useState<MilestonesData | undefined>();
@@ -63,15 +48,16 @@ export function MilestonePage() {
 
   const navigate = useNavigate();
   const color = useTheme() as ColorScheme;
-  const milestoneTable = tableStyle(color);
-  const milestoneTableHeader = tableHeaderStyle(color);
+  // const milestoneTable = tableStyle(color);
+  // const milestoneTableHeader = tableHeaderStyle(color);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const totalCountResponse = await fetch(TOTAL_COUNT_URL);
-        const milestoneResponse = await fetch(MILESTONE_URL);
+        const totalCountResponse = await fetch(`${SERVER}${COMMON_URL}`);
+
+        const milestoneResponse = await fetch(`${SERVER}${MILESTONE_URL}`);
         const totalCountData = await totalCountResponse.json();
         const milestoneData = await milestoneResponse.json();
 
@@ -98,6 +84,7 @@ export function MilestonePage() {
   };
 
   const onClickCompleteButton = () => {
+    window.location.reload();
     setIsAddMilestoneOpen(false);
   };
   const onClickCancelButton = () => {
@@ -168,10 +155,10 @@ export function MilestonePage() {
               onClickCancelButton={onClickCancelButton}
             />
           ) : null}
-          <div css={milestoneTable}>
-            <div css={milestoneTableHeader}>
+          <div css={tableStyle(color)}>
+            <div css={tableHeaderStyle(color)}>
               <div css={{ display: "flex" }}>
-                <div css={milestoneTabContainer}>
+                <div css={openTabContainer}>
                   <Button
                     onClick={onClickOpenTab}
                     status={isOpenSelected ? "selected" : "enabled"}

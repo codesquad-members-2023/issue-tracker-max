@@ -3,6 +3,7 @@ import { ColorScheme } from "../../contexts/ThemeContext";
 import { DarkModeButton } from "./DarkModeButton";
 import { useNavigate } from "react-router-dom";
 import { fonts } from "../../constants/fonts";
+import { Alert } from "../util/Alert";
 
 const background = (color: ColorScheme) => css`
   display: flex;
@@ -61,6 +62,7 @@ export function Background({ children }: { children: React.ReactNode }) {
           레이블
         </div>
       </div>
+      <Alert />
     </div>
   );
 }
