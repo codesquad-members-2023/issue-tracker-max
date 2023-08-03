@@ -2,11 +2,11 @@ package org.presents.issuetracker.comment.entity;
 
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@Builder
 public class Comment {
 	private Long id;
 	private Long issueId;

@@ -6,17 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class UserResponse {
 	private Long userId;
 	private String loginId;
 	private String image;
-
-	@Builder
-	private UserResponse(Long userId, String loginId, String image) {
-		this.userId = userId;
-		this.loginId = loginId;
-		this.image = image;
-	}
 
 	public static UserResponse fromEntity(User user) {
 		return UserResponse.builder()

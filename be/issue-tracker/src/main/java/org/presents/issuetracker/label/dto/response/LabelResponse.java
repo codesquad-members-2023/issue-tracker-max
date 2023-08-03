@@ -6,19 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class LabelResponse {
 	private Long labelId;
 	private String name;
 	private String textColor;
 	private String backgroundColor;
-
-	@Builder
-	private LabelResponse(Long labelId, String name, String textColor, String backgroundColor) {
-		this.labelId = labelId;
-		this.name = name;
-		this.textColor = textColor;
-		this.backgroundColor = backgroundColor;
-	}
 
 	public static LabelResponse fromVo(LabelVo labelVo) {
 		return LabelResponse.builder()

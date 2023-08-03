@@ -6,17 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class MilestonePreviewResponse {
 	private Long id;
 	private String name;
 	private int progress;
-
-	@Builder
-	private MilestonePreviewResponse(Long id, String name, int progress) {
-		this.id = id;
-		this.name = name;
-		this.progress = progress;
-	}
 
 	public static MilestonePreviewResponse fromVo(MilestonePreviewVo milestonePreviewVo) {
 		if (milestonePreviewVo == null) {
