@@ -23,7 +23,6 @@ public class AssigneeResponse {
 		if (assigneeIds == null) {
 			return null;
 		}
-		System.out.println(assigneeIds);
 		List<String> ids = List.of(assigneeIds.split(","));
 		List<String> names = List.of(assigneeNames.split(","));
 		return IntStream.range(0, ids.size())
