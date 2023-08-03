@@ -19,10 +19,20 @@ type SelectedItems = {
   [key: number]: boolean;
 };
 
+type SelectionState = {
+  assignees: SelectedItems;
+  labels: SelectedItems;
+  milestones: SelectedItems;
+};
+
+type Props = {
+  authorId: number;
+};
+
 const userImage = 'https://avatars.githubusercontent.com/u/57523197?v=4'; //임시 이미지
 const availableFileSize = 1048576; //1MB
 
-export const AddIssuePage: React.FC = ({}) => {
+export const AddIssuePage: React.FC<Props> = ({ authorId = 1 }) => {
   const theme = useTheme() as any;
   const navigate = useNavigate();
 
@@ -32,6 +42,18 @@ export const AddIssuePage: React.FC = ({}) => {
     isUploading: false,
     uploadFailed: false,
   };
+
+  const [selectedAssignees, setSelectedAssignees] = useState<SelectedItems>({});
+  const [selectedLabels, setSelectedLabels] = useState<SelectedItems>({});
+  const [selectedMilestones, setSelectedMilestones] = useState<SelectedItems>(
+    {},
+  );
+
+  const [selections, setSelections] = useState<SelectionState>({
+    assignees: {},
+    labels: {},
+    milestones: {},
+  });
 
   const [titleInput, setTitleInput] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
@@ -46,10 +68,13 @@ export const AddIssuePage: React.FC = ({}) => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('/server-endpoint', {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        'https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/file-upload',
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
 
       if (!response.ok) {
         throw new Error('File upload failed');
@@ -64,13 +89,19 @@ export const AddIssuePage: React.FC = ({}) => {
     }
   };
 
-  const onFileChange = (e) => {
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setFileStatus((prev) => ({ ...prev, sizeError: false }));
     setFileStatus((prev) => ({ ...prev, typeError: false }));
     setFileStatus((prev) => ({ ...prev, uploadFailed: false }));
 
-    if (e.target.files.length > 0) {
+    if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+
+      if (!file) {
+        setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
+        return;
+      }
+
       const fileName = file.name;
 
       if (file.size > availableFileSize) {
@@ -83,29 +114,59 @@ export const AddIssuePage: React.FC = ({}) => {
         return;
       }
 
-      setFileStatus((prev) => ({ ...prev, sizeError: false }));
-      setFileStatus((prev) => ({ ...prev, typeError: false }));
-
-      uploadImage(file); //파일 서버 업로드 로직
-
-      setFileStatus((prev) => ({ ...prev, uploadFailed: false }));
-      setTextAreaValue((prevValue) => `${prevValue}![${fileName}](file path)`);
+      const fileUrl = await uploadImage(file); //파일 업로드
+      setTextAreaValue(
+        (prevValue) => `${prevValue}![${fileName}](${fileUrl.fileUrl})`,
+      );
     }
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    const bodyData = {
+      title: titleInput,
+      contents: textAreaValue,
+      authorId: authorId,
+      assigneeIds: Object.keys(selections.assignees)
+        .filter((key) => selections.assignees[parseInt(key)])
+        .map((key) => Number(key) + 1),
+      labelIds: Object.keys(selections.labels)
+        .filter((key) => selections.labels[parseInt(key)])
+        .map((key) => Number(key) + 1),
+      milestoneId:
+        Number(
+          Object.keys(selections.milestones).find(
+            (key) => selections.milestones[parseInt(key)],
+          ),
+        ) + 1,
+    };
+    console.log(bodyData);
+
+    const response = await fetch(
+      'https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/issues/new',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyData),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error('HTTP error ' + response.status);
+    }
+
+    const data = await response.json();
+    console.log(data);
+
     navigate('/');
+
+    return data;
   };
 
   // const [assigneesData, setAssigneesData] = useState<any[]>([]);
   // const [labelsData, setLabelsData] = useState<any[]>([]);
   // const [milestonesData, setMilestonesData] = useState<any[]>([]);
-
-  const [selectedAssignees, setSelectedAssignees] = useState<SelectedItems>({});
-  const [selectedLabels, setSelectedLabels] = useState<SelectedItems>({});
-  const [selectedMilestones, setSelectedMilestones] = useState<SelectedItems>(
-    {},
-  );
 
   useEffect(() => {
     if (textAreaValue) {
@@ -116,15 +177,24 @@ export const AddIssuePage: React.FC = ({}) => {
   }, [textAreaValue]);
 
   const onMultipleSelectedAssignee = (index: number) => {
-    setSelectedAssignees((prev) => ({ ...prev, [index]: !prev[index] }));
+    setSelections((prev) => ({
+      ...prev,
+      assignees: { ...prev.assignees, [index]: !prev.assignees[index] },
+    }));
   };
 
   const onMultipleSelectedLabel = (index: number) => {
-    setSelectedLabels((prev) => ({ ...prev, [index]: !prev[index] }));
+    setSelections((prev) => ({
+      ...prev,
+      labels: { ...prev.labels, [index]: !prev.labels[index] },
+    }));
   };
 
   const onSingleSelectedMilestone = (index: number) => {
-    setSelectedMilestones({ [index]: true });
+    setSelections((prev) => ({
+      ...prev,
+      milestones: { [index]: true },
+    }));
   };
 
   const onChange = (value: string) => {
@@ -174,9 +244,12 @@ export const AddIssuePage: React.FC = ({}) => {
             onSingleSelectedMilestone={onSingleSelectedMilestone}
             onMultipleSelectedAssignee={onMultipleSelectedAssignee}
             onMultipleSelectedLabel={onMultipleSelectedLabel}
-            selectedAssignees={selectedAssignees}
-            selectedLabels={selectedLabels}
-            selectedMilestones={selectedMilestones}
+            // selectedAssignees={selectedAssignees}
+            // selectedLabels={selectedLabels}
+            // selectedMilestones={selectedMilestones}
+            selectedAssignees={selections.assignees}
+            selectedLabels={selections.labels}
+            selectedMilestones={selections.milestones}
           />
         </SideBar>
       </Body>

@@ -7,21 +7,21 @@ import { ListLabel } from './ListLabel';
 import { ListMilestone } from './ListMilestone';
 
 type Props = {
-  onSingleSelectedMilestone: (index: number) => void;
-  onMultipleSelectedAssignee: (index: number) => void;
-  onMultipleSelectedLabel: (index: number) => void;
   selectedAssignees: { [key: number]: boolean };
   selectedLabels: { [key: number]: boolean };
   selectedMilestones: { [key: number]: boolean };
+  onSingleSelectedMilestone: (index: number) => void;
+  onMultipleSelectedAssignee: (index: number) => void;
+  onMultipleSelectedLabel: (index: number) => void;
 };
 
 export const ListSideBar: React.FC<Props> = ({
-  onSingleSelectedMilestone,
-  onMultipleSelectedAssignee,
-  onMultipleSelectedLabel,
   selectedAssignees,
   selectedLabels,
   selectedMilestones,
+  onSingleSelectedMilestone,
+  onMultipleSelectedAssignee,
+  onMultipleSelectedLabel,
 }) => {
   const theme = useTheme() as any;
   // 비슷한 자료 형태라 묶어주는 작업이 필요할듯

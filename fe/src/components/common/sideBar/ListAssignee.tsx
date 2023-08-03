@@ -17,6 +17,7 @@ export const ListAssignee: React.FC<Props> = ({ selectedAssigneesData }) => {
     <>
       {selectedAssigneesData.map((assignee) => (
         <div
+          key={assignee.userId}
           css={{
             position: 'relative',
             display: 'flex',

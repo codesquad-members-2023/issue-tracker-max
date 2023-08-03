@@ -24,6 +24,7 @@ export const ListLabel: React.FC<Props> = ({ selectedLabelsData }) => {
     >
       {selectedLabelsData.map((label) => (
         <InformationTag
+          key={label.labelId}
           size="S"
           fillColor={label.backgroundColor}
           textColor={label.textColor}

@@ -15,7 +15,7 @@ export const ListMilestone: React.FC<Props> = ({ selectedMilestonesData }) => {
   return (
     <>
       {selectedMilestonesData.map((milestone) => (
-        <div>
+        <div key={milestone.milestoneId}>
           <ProgressBar progress={milestone.progress} />
           <ProgressLabel name={milestone.name} />
         </div>
