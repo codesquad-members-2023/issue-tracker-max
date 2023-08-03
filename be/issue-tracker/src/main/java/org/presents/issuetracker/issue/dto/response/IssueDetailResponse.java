@@ -16,7 +16,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class IssueDetailResponse {
-	private Long issueId;
+	private Long id;
 	private String title;
 	private String contents;
 	private LocalDateTime createdAt;
@@ -29,7 +29,7 @@ public class IssueDetailResponse {
 
 	public static IssueDetailResponse fromVo(IssueDetailVo issueDetailVo) {
 		return IssueDetailResponse.builder()
-			.issueId(issueDetailVo.getId())
+			.id(issueDetailVo.getId())
 			.title(issueDetailVo.getTitle())
 			.contents(issueDetailVo.getContents())
 			.createdAt(issueDetailVo.getCreatedAt())
