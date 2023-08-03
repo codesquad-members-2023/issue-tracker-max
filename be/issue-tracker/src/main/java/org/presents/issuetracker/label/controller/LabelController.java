@@ -5,8 +5,10 @@ import java.util.List;
 import org.presents.issuetracker.global.dto.response.LabelResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
+import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
 import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.label.service.LabelService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,27 +24,39 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/labels")
 public class LabelController {
 
-	private final LabelService labelService;
+    private final LabelService labelService;
 
-	public LabelController(LabelService labelService) {
-		this.labelService = labelService;
-	}
+    public LabelController(LabelService labelService) {
+        this.labelService = labelService;
+    }
 
-	@GetMapping("/previews")
-	public ResponseEntity<List<LabelPreviewResponse>> getLabelPreviews() {
-		List<LabelPreviewResponse> labelPreviews = labelService.getLabels();
-		return ResponseEntity.ok().body(labelPreviews);
-	}
+    @GetMapping
+    public ResponseEntity<List<LabelDetailResponse>> getLabelDetails() {
+        List<LabelDetailResponse> labelDetails = labelService.getLabelDetails();
+        return ResponseEntity.ok().body(labelDetails);
+    }
 
-	@PostMapping
-	public ResponseEntity<LabelResponse> create(@RequestBody LabelCreateRequest labelCreateRequest) {
-		LabelResponse labelResponse = labelService.create(labelCreateRequest);
-		return ResponseEntity.ok().body(labelResponse);
-	}
+    @GetMapping("/previews")
+    public ResponseEntity<List<LabelPreviewResponse>> getLabelPreviews() {
+        List<LabelPreviewResponse> labelPreviews = labelService.getLabelPreviews();
+        return ResponseEntity.ok().body(labelPreviews);
+    }
 
-	@PatchMapping
-	public ResponseEntity<LabelResponse> update(@RequestBody LabelUpdateRequest dto) {
-		LabelResponse labelResponse = labelService.update(dto);
-		return ResponseEntity.ok().body(labelResponse);
-	}
+    @PostMapping
+    public ResponseEntity<LabelResponse> create(@RequestBody LabelCreateRequest labelCreateRequest) {
+        LabelResponse labelResponse = labelService.create(labelCreateRequest);
+        return ResponseEntity.ok().body(labelResponse);
+    }
+
+    @PatchMapping
+    public ResponseEntity<LabelResponse> update(@RequestBody LabelUpdateRequest dto) {
+        LabelResponse labelResponse = labelService.update(dto);
+        return ResponseEntity.ok().body(labelResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        labelService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
