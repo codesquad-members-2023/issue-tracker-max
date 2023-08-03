@@ -1,10 +1,12 @@
 package org.presents.issuetracker.label.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class Label {
-	private Long labelId;
+	private Long id;
 	private String name;
 	private String description;
 	private String backgroundColor;
@@ -18,8 +20,8 @@ public class Label {
 		this.textColor = textColor;
 	}
 
-	public Label(Long labelId, String name, String description, String backgroundColor, String textColor) {
-		this.labelId = labelId;
+	public Label(Long id, String name, String description, String backgroundColor, String textColor) {
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.backgroundColor = backgroundColor;

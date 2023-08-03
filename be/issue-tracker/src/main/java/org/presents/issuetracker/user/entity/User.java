@@ -1,10 +1,10 @@
 package org.presents.issuetracker.user.entity;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
+@Builder
 public class User {
 	private Long userId;
 	private String loginId;

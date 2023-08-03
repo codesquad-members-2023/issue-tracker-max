@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.presents.issuetracker.comment.dto.response.CommentResponseDto;
-import org.presents.issuetracker.issue.dto.vo.IssueDetailVo;
-import org.presents.issuetracker.label.dto.response.LabelResponseDto;
+import org.presents.issuetracker.comment.dto.response.CommentResponse;
+import org.presents.issuetracker.issue.entity.vo.IssueDetailVo;
+import org.presents.issuetracker.label.dto.response.LabelResponse;
 import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
-import org.presents.issuetracker.user.dto.response.UserResponseDto;
+import org.presents.issuetracker.user.dto.response.UserResponse;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -21,29 +21,29 @@ public class IssueDetailResponse {
 	private String contents;
 	private LocalDateTime createdAt;
 	private String status;
-	private UserResponseDto author;
+	private UserResponse author;
 	private MilestonePreviewResponse milestone;
-	private List<UserResponseDto> assignees;
-	private List<LabelResponseDto> labels;
-	private List<CommentResponseDto> comments;
+	private List<UserResponse> assignees;
+	private List<LabelResponse> labels;
+	private List<CommentResponse> comments;
 
 	public static IssueDetailResponse fromVo(IssueDetailVo issueDetailVo) {
 		return IssueDetailResponse.builder()
-			.issueId(issueDetailVo.getIssueId())
+			.issueId(issueDetailVo.getId())
 			.title(issueDetailVo.getTitle())
 			.contents(issueDetailVo.getContents())
 			.createdAt(issueDetailVo.getCreatedAt())
 			.status(issueDetailVo.getStatus())
-			.author(UserResponseDto.fromEntity(issueDetailVo.getAuthor()))
-			.milestone(MilestonePreviewResponse.fromEntity(issueDetailVo.getMilestone()))
+			.author(UserResponse.fromEntity(issueDetailVo.getAuthor()))
+			.milestone(MilestonePreviewResponse.fromVo(issueDetailVo.getMilestone()))
 			.assignees(issueDetailVo.getAssignees().stream()
-				.map(UserResponseDto::fromEntity)
+				.map(UserResponse::fromEntity)
 				.collect(Collectors.toList()))
 			.labels(issueDetailVo.getLabels().stream()
-				.map(LabelResponseDto::fromEntity)
+				.map(LabelResponse::fromEntity)
 				.collect(Collectors.toList()))
 			.comments(issueDetailVo.getComments().stream()
-				.map(CommentResponseDto::fromEntity)
+				.map(CommentResponse::fromVo)
 				.collect(Collectors.toList()))
 			.build();
 	}

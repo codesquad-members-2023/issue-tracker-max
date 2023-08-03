@@ -7,15 +7,15 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class LabelResponseDto {
+public class LabelResponse {
 	private Long labelId;
 	private String name;
 	private String textColor;
 	private String backgroundColor;
 
-	public static LabelResponseDto fromEntity(Label label) {
-		return LabelResponseDto.builder()
-			.labelId(label.getLabelId())
+	public static LabelResponse fromEntity(Label label) {
+		return LabelResponse.builder()
+			.labelId(label.getId())
 			.name(label.getName())
 			.backgroundColor(label.getBackgroundColor())
 			.textColor(label.getTextColor())

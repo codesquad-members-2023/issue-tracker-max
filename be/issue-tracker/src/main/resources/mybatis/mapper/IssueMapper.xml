@@ -10,7 +10,7 @@
     </select>
 
     <resultMap id="issueDetailResultMap" type="IssueDetailVo">
-        <id property="issueId" column="issue_id"/>
+        <id property="id" column="issue_id"/>
         <result property="title" column="title"/>
         <result property="contents" column="contents"/>
         <result property="createdAt" column="created_at"/>
@@ -22,8 +22,8 @@
             <result property="image" column="author_image"/>
         </association>
 
-        <association property="milestone" javaType="Milestone">
-            <id property="milestoneId" column="milestone_id"/>
+        <association property="milestone" javaType="MilestonePreviewVo">
+            <id property="id" column="milestone_id"/>
             <result property="name" column="milestone_name"/>
             <result property="progress" column="progress"/>
         </association>
@@ -35,14 +35,14 @@
         </collection>
 
         <collection property="labels" ofType="Label">
-            <id property="labelId" column="label_id"/>
+            <id property="id" column="label_id"/>
             <result property="name" column="label_name"/>
             <result property="textColor" column="text_color"/>
             <result property="backgroundColor" column="background_color"/>
         </collection>
 
         <collection property="comments" ofType="Comment">
-            <id property="commentId" column="comment_id"/>
+            <id property="id" column="comment_id"/>
             <result property="contents" column="comment_contents"/>
             <result property="created_at" column="comment_created_at"/>
             <association property="author" javaType="User">

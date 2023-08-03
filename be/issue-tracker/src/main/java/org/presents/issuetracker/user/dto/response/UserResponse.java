@@ -7,13 +7,13 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UserResponseDto {
+public class UserResponse {
 	private Long userId;
 	private String loginId;
 	private String image;
 
-	public static UserResponseDto fromEntity(User user) {
-		return UserResponseDto.builder()
+	public static UserResponse fromEntity(User user) {
+		return UserResponse.builder()
 			.userId(user.getUserId())
 			.loginId(user.getLoginId())
 			.image(user.getImage())
