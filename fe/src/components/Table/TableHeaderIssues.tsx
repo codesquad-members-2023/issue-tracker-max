@@ -46,6 +46,7 @@ export default function TableHeaderIssues({
             dropdownName="assignee"
             dropdownList={[
               {
+                id: 1,
                 variant: "withImg",
                 name: "assignee",
                 content: "Kakamotobi",
