@@ -22,7 +22,7 @@ import codesquard.app.issue.dto.request.IssueModifyTitleRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.fixture.FixtureFactory;
 import codesquard.app.issue.repository.IssueRepository;
-import codesquard.app.label.dto.LabelSaveRequest;
+import codesquard.app.label.dto.request.LabelSaveRequest;
 import codesquard.app.label.entity.Label;
 import codesquard.app.label.service.LabelService;
 import codesquard.app.milestone.service.MilestoneService;
