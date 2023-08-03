@@ -27,4 +27,9 @@ public class IssueController {
     public FilterListResponse readFilters() {
         return FilterListResponse.from(issueService.readFilters());
     }
+
+    @GetMapping("/api/issues")
+    public FilterListResponse readFiltersFromIssue() {
+        return FilterListResponse.from(issueService.readFiltersFromIssue());
+    }
 }
