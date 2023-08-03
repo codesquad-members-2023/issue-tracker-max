@@ -3,7 +3,7 @@ spring:
     group:
       prod: prodDB, common
       test: testDB, common
-    active: prod
+    active: test
 ---
 spring:
   config:
@@ -12,6 +12,7 @@ spring:
   mvc:
     path match:
       matching-strategy: ant_path_matcher
+
   sql:
     init:
       mode: always
