@@ -11,19 +11,21 @@ public class MilestoneReadResponse {
 	private Long closedMilestoneCount;
 	@JsonProperty("labelCount")
 	private Long labelCount;
+	@JsonProperty("status")
+	private String status;
 	@JsonProperty("milestones")
 	private List<MilestonesResponse> milestones;
 
 	public MilestoneReadResponse(final Long openedMilestoneCount, final Long closedMilestoneCount,
-		final Long labelCount,
-		final List<MilestonesResponse> milestones) {
+		final Long labelCount, final String status, final List<MilestonesResponse> milestones) {
 		this.openedMilestoneCount = openedMilestoneCount;
 		this.closedMilestoneCount = closedMilestoneCount;
 		this.labelCount = labelCount;
+		this.status = status;
 		this.milestones = milestones;
 	}
 
 	public MilestoneReadResponse success() {
-		return new MilestoneReadResponse(openedMilestoneCount, closedMilestoneCount, labelCount, milestones);
+		return new MilestoneReadResponse(openedMilestoneCount, closedMilestoneCount, labelCount, status, milestones);
 	}
 }
