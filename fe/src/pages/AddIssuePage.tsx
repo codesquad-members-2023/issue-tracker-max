@@ -27,6 +27,7 @@ type SelectionState = {
 // 추후 구현 보완시 추가
 // type Props = {
 //   authorId: number;
+//   userImage: string;
 // };
 
 export const AddIssuePage: React.FC = ({}) => {

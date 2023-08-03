@@ -16,18 +16,20 @@ type Props = {
   options: DropDownItem[];
   alignment: string;
   panelHeader: string;
-  onSelected: (index: number) => void;
   selectedItems: { [key: number]: boolean };
+  onSelected: (index: number) => void;
 };
 
 export const DropDownPanel: React.FC<Props> = ({
   options,
   alignment,
   panelHeader,
-  onSelected,
   selectedItems,
+  onSelected,
 }) => {
   const theme = useTheme() as any;
+
+  // todo 페치중일때 보여줄 요소
 
   return (
     <div
