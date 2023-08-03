@@ -27,8 +27,8 @@ public class AssigneeResponse {
 		List<String> names = List.of(assigneeNames.split(","));
 		return IntStream.range(0, ids.size())
 			.mapToObj(i -> AssigneeResponse.builder()
-				.id(Long.parseLong(ids.get(i)))
-				.name(names.get(i))
+				.id(Long.parseLong(ids.get(i).trim()))
+				.name(names.get(i).trim())
 				.build())
 			.collect(Collectors.toList());
 	}
