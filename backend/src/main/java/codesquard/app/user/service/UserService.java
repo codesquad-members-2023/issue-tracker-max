@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.errors.errorcode.UserErrorCode;
 import codesquard.app.errors.exception.RestApiException;
-import codesquard.app.jwt.Jwt;
 import codesquard.app.user.entity.AuthenticateUser;
 import codesquard.app.user.entity.User;
 import codesquard.app.user.repository.UserRepository;
@@ -53,11 +52,5 @@ public class UserService {
 	public AuthenticateUser verifyUser(UserLoginServiceRequest userLoginServiceRequest) {
 		User findUser = userRepository.findByLoginIdAndPassword(userLoginServiceRequest.toEntity());
 		return findUser.toAuthenticateUser();
-	}
-
-	@Transactional
-	public void updateRefreshToken(AuthenticateUser authenticateUser, Jwt jwt) {
-		User user = userRepository.findByLoginId(authenticateUser.toEntity());
-		userRepository.updateRefreshToken(user, jwt);
 	}
 }

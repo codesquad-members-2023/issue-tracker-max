@@ -22,7 +22,7 @@ import codesquard.app.jwt.JwtProvider;
 import codesquard.app.jwt.filter.VerifyUserFilter;
 import codesquard.app.user.controller.response.UserLoginResponse;
 import codesquard.app.user.entity.AuthenticateUser;
-import codesquard.app.user.service.UserService;
+import codesquard.app.user.service.AuthenticateUserService;
 
 @RestController
 public class UserLoginRestController {
@@ -31,12 +31,13 @@ public class UserLoginRestController {
 
 	private final JwtProvider jwtProvider;
 	private final ObjectMapper objectMapper;
-	private final UserService userService;
+	private final AuthenticateUserService authenticateUserService;
 
-	public UserLoginRestController(JwtProvider jwtProvider, ObjectMapper objectMapper, UserService userService) {
+	public UserLoginRestController(JwtProvider jwtProvider, ObjectMapper objectMapper,
+		AuthenticateUserService authenticateUserService) {
 		this.jwtProvider = jwtProvider;
 		this.objectMapper = objectMapper;
-		this.userService = userService;
+		this.authenticateUserService = authenticateUserService;
 	}
 
 	@PostMapping("/api/login")
@@ -51,7 +52,7 @@ public class UserLoginRestController {
 		String authenticateUserJson = objectMapper.writeValueAsString(authenticateUser);
 		claims.put(VerifyUserFilter.AUTHENTICATE_USER, authenticateUserJson);
 		Jwt jwt = jwtProvider.createJwt(claims);
-		userService.updateRefreshToken(authenticateUser, jwt);
+		authenticateUserService.updateRefreshToken(authenticateUser, jwt);
 
 		response.addHeader("Authorization", jwt.createAccessTokenHeaderValue());
 		response.addCookie(jwt.createRefreshTokenCookie());

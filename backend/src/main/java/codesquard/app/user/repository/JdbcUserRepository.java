@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import codesquard.app.errors.errorcode.UserErrorCode;
 import codesquard.app.errors.exception.RestApiException;
-import codesquard.app.jwt.Jwt;
 import codesquard.app.user.entity.User;
 
 @Repository
@@ -101,13 +100,12 @@ public class JdbcUserRepository implements UserRepository {
 	}
 
 	@Override
-	public void updateRefreshToken(User user, Jwt jwt) {
-		String sql = "UPDATE authenticate_user SET refreshToken = :refreshToken WHERE id = :id";
-		MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-		parameterSource.addValues(user.createSaveParamSource().getValues());
-		parameterSource.addValues(jwt.createParamSource().getValues());
-
-		int update = template.update(sql, parameterSource);
-		logger.info("updateRefreshToken update query row : {}", update);
+	public User findByRefreshToken(String refreshToken) {
+		String sql = "SELECT u.id, u.login_id, u.email, u.avatar_url FROM user u INNER JOIN authenticate_user au ON u.id = au.id WHERE au.refreshToken = :refreshToken";
+		MapSqlParameterSource paramSource = new MapSqlParameterSource("refreshToken", refreshToken);
+		return template.query(sql, paramSource, createUserRowMapper())
+			.stream()
+			.findAny()
+			.orElseThrow(() -> new RestApiException(UserErrorCode.NOT_FOUND_USER));
 	}
 }

@@ -16,6 +16,7 @@ import codesquard.app.jwt.JwtProvider;
 import codesquard.app.label.controller.LabelController;
 import codesquard.app.label.service.LabelService;
 import codesquard.app.user.controller.UserRestController;
+import codesquard.app.user.service.AuthenticateUserService;
 import codesquard.app.user.service.UserService;
 
 @WebMvcTest(controllers = {
@@ -47,4 +48,7 @@ public abstract class ControllerTestSupport {
 
 	@MockBean
 	protected UserService userService;
+
+	@MockBean
+	protected AuthenticateUserService authenticateUserService;
 }
