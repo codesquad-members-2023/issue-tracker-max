@@ -1,15 +1,14 @@
 import { useState } from "react";
-// import { color } from "../../constants/colors";
-// import { fonts } from "../util/Txt";
 import { ColorScheme } from "../../contexts/ThemeContext";
 import { css, useTheme } from "@emotion/react";
 import { fonts } from "../../constants/fonts";
 
-type InputState = "enabled" | "active" | "disabled" | "error";
+export type InputState = "enabled" | "active" | "disabled" | "error";
 
 const textInputContainer = (
   color: ColorScheme,
   inputState: string,
+  width: string,
   height: number
 ) => css`
   display: flex;
@@ -17,7 +16,7 @@ const textInputContainer = (
   justify-content: center;
   align-items: start;
   position: relative;
-  width: 320px;
+  width: ${width};
   height: ${height}px;
   border: ${inputState === "active"
     ? `1px solid ${color.neutral.border.defaultActive}`
@@ -37,7 +36,7 @@ const textInputContainer = (
 const input = (color: ColorScheme, inputState: string) => css`
   ...${fonts.medium16};
   outline: none;
-  width: 288px;
+  width: 100%;
   height: 24px;
   color: ${
     inputState === "enabled"
@@ -46,17 +45,25 @@ const input = (color: ColorScheme, inputState: string) => css`
       ? color.neutral.text.weak
       : color.neutral.text.strong
   };
+  font-weight: ${fonts.medium16.fontWeight};
+  font-size: ${fonts.medium16.fontSize};
   border: none;
   background-color: transparent;
+  
+  ::placeholder {
+    color: ${color.neutral.text.weak};
+  }
 `;
 
 export function TextInput({
   isPassword,
+  width,
   height,
   placeholder,
   onChange,
 }: {
   isPassword?: boolean;
+  width: string;
   height: number;
   placeholder: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -74,7 +81,7 @@ export function TextInput({
   };
 
   return (
-    <div css={textInputContainer(color, inputState, height)}>
+    <div css={textInputContainer(color, inputState, width, height)}>
       {inputState === "active" && (
         <div
           css={{

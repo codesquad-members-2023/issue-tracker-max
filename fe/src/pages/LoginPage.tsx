@@ -16,7 +16,7 @@ export function LoginPage() {
   const [isFormValid, setIsFormValid] = useState(false);
 
   const onClickLogo = () => {
-    navigate("/label");
+    navigate("/issues");
   };
 
   const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,9 +90,15 @@ export function LoginPage() {
           position: "absolute",
           top: "512px",
         }}>
-        <TextInput onChange={onChangeId} height={56} placeholder="아이디" />
+        <TextInput
+          onChange={onChangeId}
+          width="100%"
+          height={56}
+          placeholder="아이디"
+        />
         <TextInput
           onChange={onChangePassword}
+          width="100%"
           height={56}
           placeholder="비밀번호"
         />

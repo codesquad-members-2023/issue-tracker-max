@@ -1,9 +1,6 @@
-// import { color } from "../../constants/colors";
 import { useTheme } from "@emotion/react";
 import { ColorScheme } from "../../contexts/ThemeContext";
-// import { fonts } from "../util/Txt";
 import { Button } from "./Button";
-import { fonts } from "../../constants/fonts";
 
 const getTextColorFrom = ({
   isLeft,

@@ -5,8 +5,9 @@ import { Milestone } from "../../pages/MilestonePage";
 import { Icon } from "../common/Icon";
 import { Txt } from "../util/Txt";
 import { Button } from "../common/Button";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MilestoneDetail } from "./MilestoneDetail";
+import { AlertContext } from "../../contexts/AlertContext";
 
 const elementContainer = (color: ColorScheme) => css`
   display: flex;
@@ -61,14 +62,14 @@ const progressIndicator = css`
   flex-direction: column;
 `;
 
-const progressBar = css`
+export const progressBar = (percentage: number) => css`
   height: 8px;
   border-radius: 10px;
   background: linear-gradient(
     90deg,
     #007aff 0%,
-    #007aff 50.51%,
-    #eff0f6 50.52%,
+    #007aff ${percentage}%,
+    #eff0f6 ${percentage}%,
     #eff0f6 100%
   );
 `;
@@ -90,6 +91,14 @@ const issueCount = css`
 export function MilestoneElement({ milestones }: { milestones: Milestone }) {
   const [isEditMode, setIsEditMode] = useState(false);
 
+  const AlertContextValue = useContext(AlertContext)!;
+  const {
+    setIsLabelAlertOpen,
+    setDeleteElementId,
+    setEditElementId,
+    setCurrentType,
+  } = AlertContextValue!;
+
   const color = useTheme() as ColorScheme;
 
   useEffect(() => {
@@ -98,6 +107,7 @@ export function MilestoneElement({ milestones }: { milestones: Milestone }) {
   }, [isEditMode]);
 
   const onClickEditButton = () => {
+    setEditElementId(milestones.id);
     setIsEditMode(true);
   };
   const onClickCancelButton = () => {
@@ -106,7 +116,20 @@ export function MilestoneElement({ milestones }: { milestones: Milestone }) {
 
   const onClickCompleteButton = () => {
     setIsEditMode(false);
+    window.location.reload();
   };
+
+  const onClickDeleteButton = () => {
+    setIsLabelAlertOpen(true);
+    setCurrentType("milestone");
+    setDeleteElementId(milestones.id!);
+  };
+
+  const percentage = Math.floor(
+    (milestones.issueClosedCount /
+      (milestones.issueOpenedCount + milestones.issueClosedCount)) *
+      100
+  );
 
   if (isEditMode) {
     return (
@@ -118,6 +141,7 @@ export function MilestoneElement({ milestones }: { milestones: Milestone }) {
       />
     );
   }
+
   return (
     <div key={milestones.id} css={elementContainer(color)}>
       <div css={leftArea}>
@@ -157,6 +181,7 @@ export function MilestoneElement({ milestones }: { milestones: Milestone }) {
             textColor={color.neutral.text.default}
           />
           <Button
+            onClick={onClickDeleteButton}
             type="ghost"
             size="S"
             text="삭제"
@@ -165,10 +190,10 @@ export function MilestoneElement({ milestones }: { milestones: Milestone }) {
           />
         </div>
         <div css={progressIndicator}>
-          <div css={progressBar}></div>
+          <div css={progressBar(percentage)}></div>
           <div css={issueCountContainer}>
             <Txt typography="medium12" color={color.neutral.text.weak}>
-              50%
+              {percentage}%
             </Txt>
             <div css={issueCount}>
               <Txt typography="medium12" color={color.neutral.text.weak}>

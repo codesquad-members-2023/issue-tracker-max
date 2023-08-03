@@ -20,7 +20,7 @@ export function RegisterPage() {
   const [isWrongPassword, setIsWrongPassword] = useState(false);
 
   const onClickLogo = () => {
-    navigate("/label");
+    navigate("/issues");
   };
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +41,7 @@ export function RegisterPage() {
 
   const onClickRegisterButton = () => {
     if (isFormValid) {
-      console.log("가입정보", email, id, password, checkPassword); //API 연결전 임사사용
+      console.log("가입정보", email, id, password, checkPassword); //API 연결전 임시 사용
       navigate("/");
     }
   };
@@ -88,18 +88,26 @@ export function RegisterPage() {
             gap: "16px",
           }}>
           <TextInput
+            width="100%"
             height={56}
             placeholder="이메일"
             onChange={onChangeEmail}
           />
-          <TextInput height={56} placeholder="아이디" onChange={onChangeId} />
           <TextInput
+            width="100%"
+            height={56}
+            placeholder="아이디"
+            onChange={onChangeId}
+          />
+          <TextInput
+            width="100%"
             isPassword={true}
             height={56}
             placeholder="비밀번호"
             onChange={onChangePassword}
           />
           <TextInput
+            width="100%"
             isPassword={true}
             height={56}
             placeholder="비밀번호 확인"
