@@ -91,7 +91,8 @@ public class IssueServiceTest {
 
         FilterListInformation actual = issueService.readFilters();
 
-        assertThat(actual.getAssigneeFilterInformations().size()).isEqualTo(3);
+        assertThat(actual.getAssigneeFilterInformations().size()).isEqualTo(4);
+        assertThat(actual.getAuthorFilterInformations().size()).isEqualTo(3);
         assertThat(actual.getAuthorFilterInformations().get(0).getName()).isEqualTo("ati");
         assertThat(actual.getLabelFilterInformations().size()).isEqualTo(3);
         assertThat(actual.getLabelFilterInformations().get(0).getId()).isEqualTo(3L);

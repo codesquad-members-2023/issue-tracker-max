@@ -10,14 +10,14 @@ import lombok.Getter;
 @Getter
 public class FilterListInformation {
 
-    private final List<MemberFilterInformation> assigneeFilterInformations;
-    private final List<MemberFilterInformation> authorFilterInformations;
+    private final List<AssigneeFilterInformation> assigneeFilterInformations;
+    private final List<AuthorFilterInformation> authorFilterInformations;
     private final List<LabelFilterInformation> labelFilterInformations;
     private final List<MilestoneFilterInformation> milestoneFilterInformations;
 
     @Builder
-    private FilterListInformation(List<MemberFilterInformation> assigneeFilterInformations,
-                                 List<MemberFilterInformation> authorFilterInformations,
+    private FilterListInformation(List<AssigneeFilterInformation> assigneeFilterInformations,
+                                 List<AuthorFilterInformation> authorFilterInformations,
                                  List<LabelFilterInformation> labelFilterInformations,
                                  List<MilestoneFilterInformation> milestoneFilterInformations) {
         this.assigneeFilterInformations = assigneeFilterInformations;
@@ -26,11 +26,11 @@ public class FilterListInformation {
         this.milestoneFilterInformations = milestoneFilterInformations;
     }
 
-    public static FilterListInformation from(List<MemberDetailsVO> members, List<LabelDetailsVO> labels,
-                                             List<MilestoneDetailsVO> milestones) {
+    public static FilterListInformation from(List<MemberDetailsVO> assignees, List<MemberDetailsVO> authors,
+                                             List<LabelDetailsVO> labels, List<MilestoneDetailsVO> milestones) {
         return FilterListInformation.builder()
-                .assigneeFilterInformations(MemberFilterInformation.from(members))
-                .authorFilterInformations(MemberFilterInformation.from(members))
+                .assigneeFilterInformations(AssigneeFilterInformation.from(assignees))
+                .authorFilterInformations(AuthorFilterInformation.from(authors))
                 .labelFilterInformations(LabelFilterInformation.from(labels))
                 .milestoneFilterInformations(MilestoneFilterInformation.from(milestones))
                 .build();

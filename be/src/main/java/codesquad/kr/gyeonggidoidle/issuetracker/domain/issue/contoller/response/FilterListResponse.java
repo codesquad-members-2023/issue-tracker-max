@@ -8,14 +8,14 @@ import lombok.Getter;
 @Getter
 public class FilterListResponse {
 
-    private final List<MemberFilterResponse> assignees;
-    private final List<MemberFilterResponse> authors;
+    private final List<AssigneeFilterResponse> assignees;
+    private final List<AuthorFilterResponse> authors;
     private final List<LabelFilterResponse> labels;
     private final List<MilestoneFilterResponse> milestones;
 
     @Builder
-    private FilterListResponse(List<MemberFilterResponse> assignees, List<MemberFilterResponse> authors,
-                              List<LabelFilterResponse> labels, List<MilestoneFilterResponse> milestones) {
+    private FilterListResponse(List<AssigneeFilterResponse> assignees, List<AuthorFilterResponse> authors,
+                               List<LabelFilterResponse> labels, List<MilestoneFilterResponse> milestones) {
         this.assignees = assignees;
         this.authors = authors;
         this.labels = labels;
@@ -24,8 +24,8 @@ public class FilterListResponse {
 
     public static FilterListResponse from(FilterListInformation information) {
         return FilterListResponse.builder()
-                .assignees(MemberFilterResponse.from(information.getAssigneeFilterInformations()))
-                .authors(MemberFilterResponse.from(information.getAuthorFilterInformations()))
+                .assignees(AssigneeFilterResponse.from(information.getAssigneeFilterInformations()))
+                .authors(AuthorFilterResponse.from(information.getAuthorFilterInformations()))
                 .labels(LabelFilterResponse.from(information.getLabelFilterInformations()))
                 .milestones(MilestoneFilterResponse.from(information.getMilestoneFilterInformations()))
                 .build();

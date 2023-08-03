@@ -57,11 +57,11 @@ public class IssueIntegrationTest {
 
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.assignees.length()").value(3))
+                .andExpect(jsonPath("$.assignees.length()").value(4))
                 .andExpect(jsonPath("$.authors.length()").value(3))
                 .andExpect(jsonPath("$.labels.length()").value(4))
                 .andExpect(jsonPath("$.milestones.length()").value(4))
-                .andExpect(jsonPath("$.assignees.[0].name").value("ati"))
+                .andExpect(jsonPath("$.assignees.[0].name").value("담당자가 없는 이슈"))
                 .andDo(print());
     }
 }

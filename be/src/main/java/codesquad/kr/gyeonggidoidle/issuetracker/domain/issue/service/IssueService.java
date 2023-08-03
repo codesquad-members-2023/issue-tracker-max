@@ -54,7 +54,7 @@ public class IssueService {
         List<MemberDetailsVO> members = memberRepository.findAllFilters();
         List<LabelDetailsVO> labels = labelRepository.findAllFilters();
         List<MilestoneDetailsVO> milestones = milestoneRepository.findAllFilters();
-        return FilterListInformation.from(members, labels, milestones);
+        return FilterListInformation.from(members, members, labels, milestones);
     }
 
     private List<Long> getIssueIds(List<IssueVO> issueVOs) {

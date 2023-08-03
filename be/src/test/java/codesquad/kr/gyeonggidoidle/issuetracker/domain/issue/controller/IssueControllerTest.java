@@ -3,11 +3,12 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller;
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.ControllerTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.IssueController;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.AssigneeFilterInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterListInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.LabelFilterInformation;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.MemberFilterInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.AuthorFilterInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.MilestoneFilterInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.information.LabelInformation;
 import org.junit.jupiter.api.DisplayName;
@@ -79,7 +80,8 @@ public class IssueControllerTest {
 
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.assignees.length()").value(2))
+                .andExpect(jsonPath("$.assignees.length()").value(3))
+                .andExpect(jsonPath("$.authors.length()").value(2))
                 .andExpect(jsonPath("$.authors.[0].name").value("a"))
                 .andExpect(jsonPath("$.labels.length()").value(1))
                 .andExpect(jsonPath("$.milestones.length()").value(0))
@@ -88,20 +90,39 @@ public class IssueControllerTest {
 
     private FilterListInformation createDummyFilterListInformation() {
         return FilterListInformation.builder()
-                .assigneeFilterInformations(createDummyMemberFilterInformations())
-                .authorFilterInformations(createDummyMemberFilterInformations())
+                .assigneeFilterInformations(createDummyAssigneeFilterInformations())
+                .authorFilterInformations(createDummyAuthorFilterInformations())
                 .labelFilterInformations(createDummyLabelFilterInformations())
                 .milestoneFilterInformations(createDummyMilestoneFilterInformations())
                 .build();
     }
 
-    private List<MemberFilterInformation> createDummyMemberFilterInformations(){
-        MemberFilterInformation tmp1 = MemberFilterInformation.builder()
+    private List<AssigneeFilterInformation> createDummyAssigneeFilterInformations() {
+        AssigneeFilterInformation tmp1 = AssigneeFilterInformation.builder()
+                .id(0L)
+                .name("담당자가 없는 이슈")
+                .profile("")
+                .build();
+        AssigneeFilterInformation tmp2 = AssigneeFilterInformation.builder()
                 .id(1L)
                 .name("a")
                 .profile("aa")
                 .build();
-        MemberFilterInformation tmp2 = MemberFilterInformation.builder()
+        AssigneeFilterInformation tmp3 = AssigneeFilterInformation.builder()
+                .id(2L)
+                .name("b")
+                .profile("bb")
+                .build();
+        return List.of(tmp1, tmp2, tmp3);
+    }
+
+    private List<AuthorFilterInformation> createDummyAuthorFilterInformations(){
+        AuthorFilterInformation tmp1 = AuthorFilterInformation.builder()
+                .id(1L)
+                .name("a")
+                .profile("aa")
+                .build();
+        AuthorFilterInformation tmp2 = AuthorFilterInformation.builder()
                 .id(2L)
                 .name("b")
                 .profile("bb")
