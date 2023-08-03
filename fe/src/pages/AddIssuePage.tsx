@@ -24,16 +24,16 @@ type SelectionState = {
   milestones: SelectedItems;
 };
 
-type Props = {
-  authorId: number;
-};
+// 추후 구현 보완시 추가
+// type Props = {
+//   authorId: number;
+// };
 
-const userImage = 'https://avatars.githubusercontent.com/u/57523197?v=4'; //임시 이미지
-const availableFileSize = 1048576; //1MB
-
-export const AddIssuePage: React.FC<Props> = ({ authorId = 1 }) => {
+export const AddIssuePage: React.FC = ({}) => {
   const theme = useTheme() as any;
   const navigate = useNavigate();
+  const userImage = 'https://avatars.githubusercontent.com/u/57523197?v=4'; //임시 이미지
+  const availableFileSize = 1048576; //1MB
 
   const defaultFileStatus = {
     typeError: false,
@@ -118,7 +118,8 @@ export const AddIssuePage: React.FC<Props> = ({ authorId = 1 }) => {
     const bodyData = {
       title: titleInput,
       contents: textAreaValue,
-      authorId: authorId,
+      // authorId: authorId,
+      authorId: 1,
       assigneeIds: Object.keys(selections.assignees)
         .filter((key) => selections.assignees[parseInt(key)])
         .map((key) => Number(key) + 1),
@@ -254,7 +255,7 @@ export const AddIssuePage: React.FC<Props> = ({ authorId = 1 }) => {
         <Button
           typeVariant="contained"
           size="L"
-          disabled={titleInput === ''}
+          disabled={titleInput.length === 0}
           onClick={onSubmit}
         >
           완료

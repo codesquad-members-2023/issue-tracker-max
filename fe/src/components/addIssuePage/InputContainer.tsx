@@ -8,7 +8,6 @@ export const InputContainer: React.FC<Props> = ({ children }) => {
       css={{
         display: 'flex',
         flexDirection: 'column',
-        // gap: '8px',
         width: '100%',
       }}
     >

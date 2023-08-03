@@ -12,8 +12,6 @@ type Props = {
 };
 
 export const ListMilestone: React.FC<Props> = ({ selectedMilestonesData }) => {
-  console.log(selectedMilestonesData);
-
   return (
     <>
       {selectedMilestonesData.map((milestone) => (

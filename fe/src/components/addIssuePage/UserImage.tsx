@@ -1,6 +1,5 @@
 import { useTheme } from '@emotion/react';
 import { ReactComponent as UserImageLarge } from '@assets/icons/userImageLarge.svg';
-import React, { useState } from 'react';
 
 type Props = {
   image?: string;

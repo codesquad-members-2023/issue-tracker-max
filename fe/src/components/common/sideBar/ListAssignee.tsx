@@ -1,4 +1,4 @@
-import { css, useTheme } from '@emotion/react';
+import { useTheme } from '@emotion/react';
 import { ReactComponent as UserImageSmall } from '@assets/icons/userImageSmall.svg';
 
 type SelectedAssigneesData = {
