@@ -1,4 +1,4 @@
-package codesquard.app.label.dto;
+package codesquard.app.label.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -8,12 +8,12 @@ public class LabelSaveResponse {
 	@JsonProperty("id")
 	private final Long id;
 
-	private LabelSaveResponse(boolean success, Long id) {
+	private LabelSaveResponse(final boolean success, final Long id) {
 		this.success = success;
 		this.id = id;
 	}
 
-	public static LabelSaveResponse success(Long id) {
+	public static LabelSaveResponse success(final Long id) {
 		return new LabelSaveResponse(true, id);
 	}
 }

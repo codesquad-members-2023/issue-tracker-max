@@ -20,21 +20,15 @@ public class JdbcLabelRepository implements LabelRepository {
 
 	private final NamedParameterJdbcTemplate template;
 
-	public JdbcLabelRepository(NamedParameterJdbcTemplate template) {
+	public JdbcLabelRepository(final NamedParameterJdbcTemplate template) {
 		this.template = template;
 	}
 
 	@Override
-	public Optional<Long> save(Label label) {
+	public Optional<Long> save(final Label label) {
 		String sql = "INSERT INTO `label` (`name`, `color`, `background`, `description`) "
 			+ "VALUES (:name, :color, :background, :description)";
-
-		SqlParameterSource param = new MapSqlParameterSource()
-			.addValue("name", label.getName())
-			.addValue("color", label.getColor().getNameToLowerCase())
-			.addValue("background", label.getBackground())
-			.addValue("description", label.getDescription());
-
+		SqlParameterSource param = Label.makeParam(label);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
 		template.update(sql, param, keyHolder);
@@ -63,25 +57,19 @@ public class JdbcLabelRepository implements LabelRepository {
 	}
 
 	@Override
-	public void updateBy(Long labelId, Label label) {
+	public void updateBy(final Long labelId, final Label label) {
 		String sql = "UPDATE `label` " +
 			"SET `name` = :name, `color` = :color, `background` = :background, `description` = :description " +
-			"WHERE id = :id";
-
-		SqlParameterSource param = new MapSqlParameterSource()
-			.addValue("name", label.getName())
-			.addValue("color", label.getColor().getNameToLowerCase())
-			.addValue("background", label.getBackground())
-			.addValue("description", label.getDescription())
-			.addValue("id", labelId);
+			"WHERE `id` = :id";
+		SqlParameterSource param = Label.makeParam(labelId, label);
 
 		template.update(sql, param);
 	}
 
 	@Override
-	public void deleteBy(Long labelId) {
+	public void deleteBy(final Long labelId) {
 		String sql = "DELETE FROM `label` " +
-			"WHERE id = :id";
+			"WHERE `id` = :id";
 
 		template.update(sql, Map.of("id", labelId));
 	}

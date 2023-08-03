@@ -27,8 +27,9 @@ public class MilestonesResponse {
 	@JsonProperty("issues")
 	private Map<String, Long> issues; // 이슈 카운트
 
-	private MilestonesResponse(Long id, MilestoneStatus status, String name, String description,
-		LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDate deadline, Map<String, Long> issues) {
+	private MilestonesResponse(final Long id, final MilestoneStatus status, final String name, final String description,
+		final LocalDateTime createdAt, final LocalDateTime modifiedAt, final LocalDate deadline,
+		final Map<String, Long> issues) {
 		this.id = id;
 		this.status = status;
 		this.name = name;

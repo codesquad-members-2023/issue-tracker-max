@@ -1,4 +1,4 @@
-package codesquard.app.label.dto;
+package codesquard.app.label.dto.request;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import codesquard.app.label.entity.Label;
 import codesquard.app.label.entity.LabelColor;
 
-public class LabelSaveRequest {
+public class LabelUpdateRequest {
 	@NotNull(message = "제목 입력은 필수입니다.")
 	@Size(min = 1, max = 20, message = "제목은 1글자 이상, 20글자 이하여야 합니다.")
 	@JsonProperty("name")
@@ -25,26 +25,21 @@ public class LabelSaveRequest {
 	@JsonProperty("description")
 	private String description;
 
-	private LabelSaveRequest() {
+	private LabelUpdateRequest() {
 	}
 
-	public LabelSaveRequest(String name, String color, String background, String description) {
+	public LabelUpdateRequest(final String name, final String color, final String background,
+		final String description) {
 		this.name = name;
-		validateColor(color);
+		if (LabelColor.validateColor(color)) {
+			this.color = color;
+		}
 		this.background = background;
 		this.description = description;
 	}
 
-	private void validateColor(String color) {
-		if (!color.equalsIgnoreCase(LabelColor.DARK_STRING) && !color.equalsIgnoreCase(LabelColor.LIGHT_STRING)) {
-			throw new RuntimeException("임시");
-		}
-
-		this.color = color;
-	}
-
-	public static Label toEntity(LabelSaveRequest labelSaveRequest) {
-		return new Label(labelSaveRequest.name, labelSaveRequest.color, labelSaveRequest.background,
-			labelSaveRequest.description);
+	public static Label toEntity(final LabelUpdateRequest labelUpdateRequest) {
+		return new Label(labelUpdateRequest.name, labelUpdateRequest.color, labelUpdateRequest.background,
+			labelUpdateRequest.description);
 	}
 }

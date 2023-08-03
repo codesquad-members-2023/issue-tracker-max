@@ -1,7 +1,6 @@
-package codesquard.app.label.dto;
+package codesquard.app.label.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import codesquard.app.label.entity.Label;
 import codesquard.app.label.entity.LabelColor;
@@ -18,7 +17,8 @@ public class LabelsResponse {
 	@JsonProperty("description")
 	private String description;
 
-	private LabelsResponse(Long id, String name, LabelColor color, String background, String description) {
+	private LabelsResponse(final Long id, final String name, final LabelColor color, final String background,
+		final String description) {
 		this.id = id;
 		this.name = name;
 		this.color = color;

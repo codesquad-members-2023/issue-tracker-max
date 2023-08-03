@@ -13,18 +13,19 @@ public class Milestone {
 	private String description; // 설명
 	private LocalDate deadline; // 완료일
 
-	public Milestone(String status) {
+	public Milestone(final String status) {
 		chooseStatus(status);
 	}
 
-	public Milestone(String name, String description, LocalDate deadline) {
+	public Milestone(final String name, final String description, final LocalDate deadline) {
 		this.name = name;
 		this.description = description;
 		this.deadline = deadline;
 	}
 
-	public Milestone(Long id, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, String name,
-		String description, LocalDate deadline) {
+	public Milestone(final Long id, final String status, final LocalDateTime createdAt, final LocalDateTime modifiedAt,
+		final String name,
+		final String description, final LocalDate deadline) {
 		this.id = id;
 		chooseStatus(status);
 		this.createdAt = createdAt;
@@ -34,7 +35,7 @@ public class Milestone {
 		this.deadline = deadline;
 	}
 
-	private void chooseStatus(String status) {
+	private void chooseStatus(final String status) {
 		if (status.equalsIgnoreCase("OPENED")) {
 			this.status = MilestoneStatus.OPENED;
 			return;

@@ -21,33 +21,33 @@ import codesquard.app.milestone.repository.MilestoneRepository;
 public class MilestoneService {
 	private final MilestoneRepository milestoneRepository;
 
-	public MilestoneService(MilestoneRepository milestoneRepository) {
+	public MilestoneService(final MilestoneRepository milestoneRepository) {
 		this.milestoneRepository = milestoneRepository;
 	}
 
 	@Transactional
-	public Long saveMilestone(MilestoneSaveRequest milestoneSaveRequest) {
+	public Long saveMilestone(final MilestoneSaveRequest milestoneSaveRequest) {
 		Milestone milestone = MilestoneSaveRequest.toEntity(milestoneSaveRequest);
 		return milestoneRepository.save(milestone).orElseThrow(() -> new RuntimeException("임시"));
 	}
 
 	@Transactional
-	public void updateMilestone(Long milestoneId, MilestoneUpdateRequest milestoneUpdateRequest) {
+	public void updateMilestone(final Long milestoneId, final MilestoneUpdateRequest milestoneUpdateRequest) {
 		milestoneRepository.updateBy(milestoneId, MilestoneUpdateRequest.toEntity(milestoneUpdateRequest));
 	}
 
 	@Transactional
-	public void updateMilestoneStatus(Long milestoneId, MilestoneStatusRequest milestoneStatusRequest) {
+	public void updateMilestoneStatus(final Long milestoneId, final MilestoneStatusRequest milestoneStatusRequest) {
 		milestoneRepository.updateBy(milestoneId, MilestoneStatusRequest.toStatus(milestoneStatusRequest));
 	}
 
 	@Transactional
-	public void deleteMilestone(Long milestoneId) {
+	public void deleteMilestone(final Long milestoneId) {
 		milestoneRepository.deleteBy(milestoneId);
 	}
 
 	@Transactional
-	public MilestoneReadResponse makeMilestoneResponse(MilestoneStatus status) {
+	public MilestoneReadResponse makeMilestoneResponse(final MilestoneStatus status) {
 		// 1. milestones 배열 (이 List가 여러개 있는 2차원 배열이라고 생각하면 됨)
 		// makeIssues(): issues를 `countIssuesBy()`로 milestoneStatus별로 각각 1번씩 가져오기
 		// id ~ deadline까지 `findAllBy()`로 가져와서 issues랑 합치기
@@ -71,7 +71,8 @@ public class MilestoneService {
 		return issues;
 	}
 
-	private List<MilestonesResponse> sumMilestonesResponseAndIssues(MilestoneStatus status, Map<String, Long> issues) {
+	private List<MilestonesResponse> sumMilestonesResponseAndIssues(final MilestoneStatus status,
+		final Map<String, Long> issues) {
 		return milestoneRepository.findAllBy(status)
 			.stream()
 			// 미리 생성해둔 issues 배열을 각 milestone 객체마다 넣어줌
