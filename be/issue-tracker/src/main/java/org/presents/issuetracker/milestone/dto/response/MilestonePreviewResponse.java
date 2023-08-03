@@ -19,6 +19,9 @@ public class MilestonePreviewResponse {
 	}
 
 	public static MilestonePreviewResponse fromVo(MilestonePreviewVo milestonePreviewVo) {
+		if (milestonePreviewVo == null) {
+			return null;
+		}
 		return MilestonePreviewResponse.builder()
 			.id(milestonePreviewVo.getId())
 			.name(milestonePreviewVo.getName())
