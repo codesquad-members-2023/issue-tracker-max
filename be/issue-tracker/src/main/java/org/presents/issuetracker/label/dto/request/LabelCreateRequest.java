@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class LabelRequestDto {
+public class LabelCreateRequest {
     private String name;
     private String description;
     private String backgroundColor;
     private String textColor;
 
     @Builder
-    public LabelRequestDto(String name, String description, String backgroundColor, String textColor) {
+    public LabelCreateRequest(String name, String description, String backgroundColor, String textColor) {
         this.name = name;
         this.description = description;
         this.backgroundColor = backgroundColor;
