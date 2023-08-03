@@ -19,6 +19,20 @@ import LogoLightMedium from './asset/logo/logo_light_medium.svg';
 import { AppContext } from './main';
 import AuthenticatedRoute from './routes/AuthenticatedRoute';
 
+import Button from './components/common/button/BaseButton';
+import ButtonLarge from './components/common/button/ButtonLarge';
+import ButtonSmall from './components/common/button/ButtonSmall';
+import ColorCodeInput from './components/common/ColorCodeInput';
+import TabButton from './components/common/TabButton';
+import InformationTag from './components/common/InformationTag';
+import TextInput from './components/common/TextInput';
+import ProgressIndicator from './components/common/ProgressIndicator';
+import DropdownIndicator from './components/common/DropdownIndicator';
+import DropdownPanel from './components/common/DropdownPanel';
+import TextArea from './components/common/TextArea';
+import Comment from './components/common/CommentElements';
+import SideBar from './components/common/SideBar';
+import FilterBar from './components/common/FilterBar';
 
 
 function App() {
