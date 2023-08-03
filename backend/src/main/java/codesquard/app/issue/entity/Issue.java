@@ -2,27 +2,41 @@ package codesquard.app.issue.entity;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
-@Getter
-@Builder
-@EqualsAndHashCode(of = "id")
-@ToString
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Issue {
 
-	private final Long id;
+	private Long id;
 	private final Long milestoneId;
 	private final Long userId;
 	private final String title;
 	private final String content;
-	private final Boolean status;
-	@JsonProperty("isDeleted")
-	private final Boolean isDeleted;
-	private final LocalDateTime createdAt;
-	private final LocalDateTime modifiedAt;
+	private IssueStatus status;
+	private Boolean isDeleted;
+	private LocalDateTime createdAt;
+	private LocalDateTime modifiedAt;
+
+	public Long getMilestoneId() {
+		return milestoneId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public IssueStatus getStatus() {
+		return status;
+	}
 }
+

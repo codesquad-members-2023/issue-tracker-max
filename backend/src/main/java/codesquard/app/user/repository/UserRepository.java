@@ -15,4 +15,8 @@ public interface UserRepository {
 	Long modify(User user);
 
 	Long deleteById(Long id);
+
+	boolean existLoginId(User user);
+
+	boolean existEmail(User user);
 }
