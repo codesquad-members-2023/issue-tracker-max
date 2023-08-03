@@ -123,6 +123,12 @@ public class IssueRepository {
 		return jdbcTemplate.query(sql, Map.of("isOpen", 0), ISSUE_ROW_MAPPER);
 	}
 
+	public Boolean existById(Long id) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM label WHERE id = :id)";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("id", id), Boolean.class);
+	}
+
 	private static final RowMapper<Issue> ISSUE_ROW_MAPPER = (rs, rowNum) ->
 		Issue.builder()
 			.id(rs.getLong("id"))

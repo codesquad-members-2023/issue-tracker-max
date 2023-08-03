@@ -97,6 +97,10 @@ public class IssueService {
 	 */
 	@Transactional
 	public void applyLabels(Long issueId, IssueApplyRequest request) {
+		if(!issueRepository.existById(issueId)) {
+			throw new NotFoundIssueException();
+		}
+
 		// 기존에 적용된 라벨 정보 삭제
 		issueRepository.deleteAppliedLabels(issueId);
 
@@ -111,6 +115,9 @@ public class IssueService {
 	 */
 	@Transactional
 	public void applyAssignees(Long issueId, IssueApplyRequest request) {
+		if(!issueRepository.existById(issueId)) {
+			throw new NotFoundIssueException();
+		}
 		issueRepository.deleteAppliedAssignees(issueId);
 		for (Long memberId : request.getIds()) {
 			issueRepository.applyAssignees(issueId, memberId);
@@ -120,6 +127,9 @@ public class IssueService {
 	// todo : milestone 있는지 검증
 	@Transactional
 	public void applyMilestone(Long issueId, Long milestoneId) {
+		if(!issueRepository.existById(issueId)) {
+			throw new NotFoundIssueException();
+		}
 		issueRepository.applyMilestone(issueId, milestoneId);
 	}
 }
