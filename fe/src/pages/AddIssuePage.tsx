@@ -19,30 +19,34 @@ type SelectedItems = {
   [key: number]: boolean;
 };
 
-const userImage = 'https://avatars.githubusercontent.com/u/57523197?v=4';
+const userImage = 'https://avatars.githubusercontent.com/u/57523197?v=4'; //임시 이미지
 const availableFileSize = 1048576; //1MB
 
 export const AddIssuePage: React.FC = ({}) => {
   const theme = useTheme() as any;
   const navigate = useNavigate();
 
+  const defaultFileStatus = {
+    typeError: false,
+    sizeError: false,
+    isUploading: false,
+    uploadFailed: false,
+  };
+
   const [titleInput, setTitleInput] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
   const [isDisplayingCount, setIsDisplayingCount] = useState(false);
 
-  const [isFileTypeError, SetIsFileTypeError] = useState<boolean>(false);
-  const [isFileSizeError, SetIsFileSizeError] = useState<boolean>(false);
-  const [isFileUploading, setIsFileUploading] = useState<boolean>(false);
-  const [isFileUploadFailed, setIsFileUploadFailed] = useState<boolean>(false);
+  const [fileStatus, setFileStatus] = useState(defaultFileStatus);
 
   const uploadImage = async (file: File) => {
     try {
-      setIsFileUploading(true);
+      setFileStatus((prev) => ({ ...prev, isUploading: true }));
 
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('/your-server-endpoint', {
+      const response = await fetch('/server-endpoint', {
         method: 'POST',
         body: formData,
       });
@@ -54,35 +58,43 @@ export const AddIssuePage: React.FC = ({}) => {
       const data = await response.json();
       return data;
     } catch (error) {
-      setIsFileUploadFailed(true);
+      setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
     } finally {
-      setIsFileUploading(false);
+      setFileStatus((prev) => ({ ...prev, isUploading: false }));
     }
   };
 
   const onFileChange = (e) => {
+    setFileStatus((prev) => ({ ...prev, sizeError: false }));
+    setFileStatus((prev) => ({ ...prev, typeError: false }));
+    setFileStatus((prev) => ({ ...prev, uploadFailed: false }));
+
     if (e.target.files.length > 0) {
       const file = e.target.files[0];
       const fileName = file.name;
 
       if (file.size > availableFileSize) {
-        SetIsFileSizeError(true);
+        setFileStatus((prev) => ({ ...prev, sizeError: true }));
         return;
       }
 
       if (!file.type.startsWith('image/')) {
-        SetIsFileTypeError(true);
+        setFileStatus((prev) => ({ ...prev, typeError: true }));
         return;
       }
 
-      SetIsFileTypeError(false);
-      SetIsFileSizeError(false);
+      setFileStatus((prev) => ({ ...prev, sizeError: false }));
+      setFileStatus((prev) => ({ ...prev, typeError: false }));
 
       uploadImage(file); //파일 서버 업로드 로직
 
-      setIsFileUploadFailed(false);
+      setFileStatus((prev) => ({ ...prev, uploadFailed: false }));
       setTextAreaValue((prevValue) => `${prevValue}![${fileName}](file path)`);
     }
+  };
+
+  const onSubmit = () => {
+    navigate('/');
   };
 
   // const [assigneesData, setAssigneesData] = useState<any[]>([]);
@@ -149,10 +161,10 @@ export const AddIssuePage: React.FC = ({}) => {
             letterCount={textAreaValue.length}
             textAreaValue={textAreaValue}
             isDisplayingCount={isDisplayingCount}
-            isFileUploading={isFileUploading}
-            isFileTypeError={isFileTypeError}
-            isFileSizeError={isFileSizeError}
-            isFileUploadFailed={isFileUploadFailed}
+            isFileUploading={fileStatus.isUploading}
+            isFileTypeError={fileStatus.typeError}
+            isFileSizeError={fileStatus.sizeError}
+            isFileUploadFailed={fileStatus.uploadFailed}
             onFileChange={onFileChange}
             onChangeTextArea={onChangeTextArea}
           />
@@ -179,7 +191,12 @@ export const AddIssuePage: React.FC = ({}) => {
           <XSquare stroke={theme.neutral.text.default} />
           작성취소
         </Button>
-        <Button typeVariant="contained" size="L" disabled={titleInput === ''}>
+        <Button
+          typeVariant="contained"
+          size="L"
+          disabled={titleInput === ''}
+          onClick={onSubmit}
+        >
           완료
         </Button>
       </ButtonContainer>
