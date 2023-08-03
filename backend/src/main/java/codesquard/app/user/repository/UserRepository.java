@@ -2,6 +2,7 @@ package codesquard.app.user.repository;
 
 import java.util.List;
 
+import codesquard.app.jwt.Jwt;
 import codesquard.app.user.entity.User;
 
 public interface UserRepository {
@@ -19,4 +20,10 @@ public interface UserRepository {
 	boolean existLoginId(User user);
 
 	boolean existEmail(User user);
+
+	User findByLoginId(User user);
+
+	User findByLoginIdAndPassword(User user);
+
+	void updateRefreshToken(User user, Jwt jwt);
 }
