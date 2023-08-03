@@ -76,6 +76,7 @@ class CommentRepositoryTest extends IntegrationTestSupport {
 		assertThat(modifiedCommentId).isEqualTo(savedCommentId);
 	}
 
+
 	@DisplayName("등록된 댓글을 삭제한다.")
 	@Test
 	void test() {

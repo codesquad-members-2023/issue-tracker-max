@@ -6,12 +6,11 @@ import java.util.List;
 
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
-import codesquard.app.user.dto.request.UserSaveRequest;
+import codesquard.app.user.controller.request.UserSaveRequest;
 
 public class FixtureFactory {
 
-	public static IssueSaveRequest createIssueRegisterRequest(String title, Long milestone) {
-		String content = "내용";
+	public static IssueSaveRequest createIssueRegisterRequest(String title, String content, Long milestone) {
 		List<Long> labels = new ArrayList<>();
 		List<Long> assignees = List.of(1L);
 		return new IssueSaveRequest(title, content, milestone, labels, assignees);
