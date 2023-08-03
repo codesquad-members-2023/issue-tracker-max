@@ -1,6 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
+import { worker } from './mocks/browser';
+
+export const API_URL = import.meta.env.DEV ? '' : import.meta.env.VITE_API_URL;
+
+if (import.meta.env.DEV) {
+  worker.start({
+    onUnhandledRequest: 'bypass',
+  });
+}
+
+console.log(import.meta.env);
 
 const appContext = {
   util: {} as Record<string, () => unknown>,
