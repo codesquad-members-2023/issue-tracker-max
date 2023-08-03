@@ -52,4 +52,8 @@ public class LabelService {
 
         return LabelResponse.builder().id(label.getId()).build();
     }
+
+    public void delete(Long id) {
+        labelRepository.deleteById(id);
+    }
 }

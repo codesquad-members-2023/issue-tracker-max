@@ -1,8 +1,6 @@
 package org.presents.issuetracker.label.repository;
 
 import org.presents.issuetracker.label.entity.Label;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,6 +14,8 @@ import java.util.List;
 @Repository
 public class LabelRepository {
 
+    private static final int OPEN_FLAG = 0;
+    private static final int DELETED_FLAG = 1;
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -39,12 +39,22 @@ public class LabelRepository {
                 "    text_color = :text_color " +
                 "WHERE label_id = :id";
 
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("name", label.getName());
-        params.addValue("description", label.getDescription());
-        params.addValue("background_color", label.getBackgroundColor());
-        params.addValue("text_color", label.getTextColor());
-        params.addValue("id", label.getId());
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", label.getName())
+                .addValue("description", label.getDescription())
+                .addValue("background_color", label.getBackgroundColor())
+                .addValue("text_color", label.getTextColor())
+                .addValue("id", label.getId());
+
+        jdbcTemplate.update(sql, params);
+    }
+
+    public void deleteById(Long id) {
+        String sql = "UPDATE label SET is_deleted = :deletedFlag WHERE label_id = :id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("deletedFlag", DELETED_FLAG)
+                .addValue("id", id);
 
         jdbcTemplate.update(sql, params);
     }
@@ -66,12 +76,16 @@ public class LabelRepository {
     }
 
     public List<Label> findAll() {
-        String sql = "SELECT label_id, name, background_color, text_color FROM label " +
+        String sql = "SELECT label_id, name, background_color, text_color " +
+                "FROM label " +
+                "WHERE is_deleted = :openFlag " +
                 "UNION ALL " +
-                "SELECT 0 AS label_id, 'none' AS name, '' AS background_color, '' AS label " +
+                "SELECT 0 AS label_id, 'none' AS name, '' AS background_color, '' AS text_color " +
                 "ORDER BY label_id";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+        MapSqlParameterSource params = new MapSqlParameterSource("openFlag", OPEN_FLAG);
+
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
             long id = rs.getLong("label_id");
             String name = rs.getString("name");
             String backgroundColor = rs.getString("background_color");
