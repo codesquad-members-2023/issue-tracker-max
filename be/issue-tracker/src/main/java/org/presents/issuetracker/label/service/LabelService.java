@@ -3,9 +3,13 @@ package org.presents.issuetracker.label.service;
 import org.presents.issuetracker.global.dto.response.LabelResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
+import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.label.entity.Label;
 import org.presents.issuetracker.label.repository.LabelRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LabelService {
@@ -14,6 +18,18 @@ public class LabelService {
 
     public LabelService(LabelRepository labelRepository) {
         this.labelRepository = labelRepository;
+    }
+
+    public List<LabelPreviewResponse> getLabels() {
+        List<Label> labels = labelRepository.findAll();
+
+        return labels.stream().map(label -> LabelPreviewResponse.builder()
+                        .id(label.getId())
+                        .name(label.getName())
+                        .backgroundColor(label.getBackgroundColor())
+                        .textColor(label.getTextColor())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     public LabelResponse create(LabelCreateRequest labelCreateRequest) {

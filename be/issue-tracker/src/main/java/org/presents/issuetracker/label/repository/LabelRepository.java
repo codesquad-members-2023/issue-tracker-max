@@ -11,15 +11,13 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class LabelRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private static final Logger logger = LoggerFactory.getLogger(LabelRepository.class);
-
-    // ...
 
     public LabelRepository(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -33,7 +31,7 @@ public class LabelRepository {
         return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(label)).longValue();
     }
 
-    public Label update(final Label label) {
+    public void update(final Label label) {
         String sql = "UPDATE label " +
                 "SET name = :name, " +
                 "    description = :description, " +
@@ -49,8 +47,6 @@ public class LabelRepository {
         params.addValue("id", label.getId());
 
         jdbcTemplate.update(sql, params);
-
-        return label;
     }
 
     public Label findById(final Long labelId) {
@@ -67,5 +63,20 @@ public class LabelRepository {
         );
 
         return jdbcTemplate.queryForObject(sql, params, mapper);
+    }
+
+    public List<Label> findAll() {
+        String sql = "SELECT label_id, name, background_color, text_color FROM label " +
+                "UNION ALL " +
+                "SELECT 0 AS label_id, 'none' AS name, '' AS background_color, '' AS label " +
+                "ORDER BY label_id";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            long id = rs.getLong("label_id");
+            String name = rs.getString("name");
+            String backgroundColor = rs.getString("background_color");
+            String textColor = rs.getString("text_color");
+            return Label.of(id, name, backgroundColor, textColor);
+        });
     }
 }
