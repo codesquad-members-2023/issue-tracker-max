@@ -1,14 +1,9 @@
-import { TextArea } from '@components/common/TextArea';
-import { DropDownContainer } from '@components/common/dropDown/DropDownContainer';
-import {
-  issueFilterList,
-  issueStateList,
-  textColors,
-  contributors,
-  milestones,
-  labels,
-} from '@components/common/dropDown/types';
+import { useTheme } from '@emotion/react';
+import { Button } from '@components/common/Button';
+import { FilterBar } from '@components/common/FilterBar';
+import { DropDownIndicator } from '@components/common/dropDown/DropDownIndicator';
 import { useState } from 'react';
+import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 
 type Issues = {
   openIssueCount: number;
@@ -24,21 +19,8 @@ type Issues = {
   }[];
 };
 
-type SelectedItems = {
-  [key: number]: boolean;
-};
-
 export const IssueListPage: React.FC = ({}) => {
   const [issues, setIssues] = useState<Issues>();
-  const [selectedItems, setSelectedItems] = useState<SelectedItems>({});
-
-  const onSingleSelected = (index: number) => {
-    setSelectedItems({ [index]: true });
-  };
-
-  const onMultipleSelected = (index: number) => {
-    setSelectedItems((prev) => ({ ...prev, [index]: !prev[index] }));
-  };
 
   return <></>;
 };

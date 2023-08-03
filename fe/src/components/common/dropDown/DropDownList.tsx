@@ -4,6 +4,7 @@ import { ReactComponent as CheckOnCircle } from '@assets/icons/checkOnCircle.svg
 import { ReactComponent as CheckOffCircle } from '@assets/icons/checkOffCircle.svg';
 
 type DropDownItem = {
+  loginId?: string;
   id?: string;
   image?: string;
   name?: string;
@@ -75,7 +76,7 @@ export const DropDownList: React.FC<Props> = ({
           />
         </div>
       )}
-      <span css={commonStyles}>{item.id || item.name}</span>
+      <span css={commonStyles}>{item.id || item.name || item.loginId}</span>
       {isSelected ? (
         <CheckOnCircle stroke={theme.neutral.text.default} />
       ) : (

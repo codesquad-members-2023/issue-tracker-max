@@ -1,10 +1,11 @@
 import { useTheme } from '@emotion/react';
+type TextColor = string;
 
 type Props = {
   size: 'L' | 'S';
   typeVariant: 'default' | 'filled';
   fillColor?: string;
-  textColor?: 'light' | 'dark';
+  textColor?: 'light' | 'dark' | TextColor;
   children: React.ReactNode;
 };
 
@@ -50,10 +51,7 @@ export const InformationTag: React.FC<Props> = ({
         width: 'fit-content',
         borderRadius: theme.radius.l,
         font: theme.fonts.displayMedium12,
-        color:
-          textColor === 'light'
-            ? theme.brand.text.default
-            : theme.neutral.text.weak,
+        color: textColor === 'light' ? theme.brand.text.default : '#14142B',
 
         ...SIZE[size],
         ...TYPE_VARIANT[typeVariant],
