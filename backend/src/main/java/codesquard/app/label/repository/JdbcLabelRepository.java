@@ -20,12 +20,12 @@ public class JdbcLabelRepository implements LabelRepository {
 
 	private final NamedParameterJdbcTemplate template;
 
-	public JdbcLabelRepository(NamedParameterJdbcTemplate template) {
+	public JdbcLabelRepository(final NamedParameterJdbcTemplate template) {
 		this.template = template;
 	}
 
 	@Override
-	public Optional<Long> save(Label label) {
+	public Optional<Long> save(final Label label) {
 		String sql = "INSERT INTO `label` (`name`, `color`, `background`, `description`) "
 			+ "VALUES (:name, :color, :background, :description)";
 
@@ -63,7 +63,7 @@ public class JdbcLabelRepository implements LabelRepository {
 	}
 
 	@Override
-	public void updateBy(Long labelId, Label label) {
+	public void updateBy(final Long labelId, final Label label) {
 		String sql = "UPDATE `label` " +
 			"SET `name` = :name, `color` = :color, `background` = :background, `description` = :description " +
 			"WHERE id = :id";
@@ -79,7 +79,7 @@ public class JdbcLabelRepository implements LabelRepository {
 	}
 
 	@Override
-	public void deleteBy(Long labelId) {
+	public void deleteBy(final Long labelId) {
 		String sql = "DELETE FROM `label` " +
 			"WHERE id = :id";
 

@@ -23,13 +23,13 @@ public class MilestoneSaveRequest {
 	private MilestoneSaveRequest() {
 	}
 
-	public MilestoneSaveRequest(String name, LocalDate deadline, String description) {
+	public MilestoneSaveRequest(final String name, final LocalDate deadline, final String description) {
 		this.name = name;
 		this.deadline = deadline;
 		this.description = description;
 	}
 
-	public static Milestone toEntity(MilestoneSaveRequest milestoneSaveRequest) {
+	public static Milestone toEntity(final MilestoneSaveRequest milestoneSaveRequest) {
 		return new Milestone(milestoneSaveRequest.name, milestoneSaveRequest.description,
 			milestoneSaveRequest.deadline);
 	}

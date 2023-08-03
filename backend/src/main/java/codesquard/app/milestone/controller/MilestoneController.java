@@ -35,8 +35,8 @@ public class MilestoneController {
 
 	@GetMapping("/api/milestones")
 	public ResponseEntity<MilestoneReadResponse> get(
-		@RequestParam(name = "state", defaultValue = "opened") String openedString,
-		@RequestParam(name = "state", defaultValue = "closed") String closedString) {
+		@RequestParam(name = "state", defaultValue = "opened") final String openedString,
+		@RequestParam(name = "state", defaultValue = "closed") final String closedString) {
 		MilestoneReadResponse milestoneReadResponse = milestoneService.makeMilestoneResponse(
 			MilestoneStatus.chooseStatus(openedString, closedString));
 
@@ -45,7 +45,8 @@ public class MilestoneController {
 	}
 
 	@PostMapping("/api/milestones")
-	public ResponseEntity<MilestoneSaveResponse> save(@Valid @RequestBody MilestoneSaveRequest milestoneSaveRequest) {
+	public ResponseEntity<MilestoneSaveResponse> save(
+		@Valid @RequestBody final MilestoneSaveRequest milestoneSaveRequest) {
 		Long milestoneId = milestoneService.saveMilestone(milestoneSaveRequest);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(MilestoneSaveResponse.success(milestoneId));
@@ -53,7 +54,7 @@ public class MilestoneController {
 
 	@PutMapping("/api/milestones/{milestoneId}")
 	public ResponseEntity<MilestoneUpdateResponse> update(@PathVariable final Long milestoneId,
-		@Valid @RequestBody MilestoneUpdateRequest milestoneUpdateRequest) {
+		@Valid @RequestBody final MilestoneUpdateRequest milestoneUpdateRequest) {
 		milestoneService.updateMilestone(milestoneId, milestoneUpdateRequest);
 
 		return ResponseEntity.status(HttpStatus.OK)
@@ -62,7 +63,7 @@ public class MilestoneController {
 
 	@PatchMapping("/api/milestones/{milestoneId}/status")
 	public ResponseEntity<MilestoneStatusUpdateResponse> updateStatus(@PathVariable final Long milestoneId,
-		@Valid @RequestBody MilestoneStatusRequest milestoneStatusRequest) {
+		@Valid @RequestBody final MilestoneStatusRequest milestoneStatusRequest) {
 		milestoneService.updateMilestoneStatus(milestoneId, milestoneStatusRequest);
 
 		return ResponseEntity.status(HttpStatus.OK)

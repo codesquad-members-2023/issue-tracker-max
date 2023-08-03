@@ -27,12 +27,12 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	private final NamedParameterJdbcTemplate template;
 
-	public JdbcMilestoneRepository(NamedParameterJdbcTemplate template) {
+	public JdbcMilestoneRepository(final NamedParameterJdbcTemplate template) {
 		this.template = template;
 	}
 
 	@Override
-	public Optional<Long> save(Milestone milestone) {
+	public Optional<Long> save(final Milestone milestone) {
 		String sql = "INSERT INTO `milestone` (`name`, `deadline`, `description`) " +
 			"VALUES (:name, :deadline, :description)";
 
@@ -45,7 +45,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public Long countIssuesBy(MilestoneStatus status) {
+	public Long countIssuesBy(final MilestoneStatus status) {
 		String sql = "SELECT COUNT(*) FROM `issue` " +
 			"WHERE `status` = :status";
 
@@ -56,7 +56,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public Long countMilestonesBy(MilestoneStatus status) {
+	public Long countMilestonesBy(final MilestoneStatus status) {
 		String sql = "SELECT COUNT(*) FROM `milestone` " +
 			"WHERE `status` = :status";
 
@@ -76,7 +76,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public List<Milestone> findAllBy(MilestoneStatus status) {
+	public List<Milestone> findAllBy(final MilestoneStatus status) {
 		String sql = "SELECT `id`, `status`, `name`, `description`, `created_at`, `modified_at`, `deadline` " +
 			"FROM `milestone` " +
 			"WHERE status = :status";
@@ -104,7 +104,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public void updateBy(Long milestoneId, Milestone milestone) {
+	public void updateBy(final Long milestoneId, final Milestone milestone) {
 		String sql = "UPDATE `milestone` " +
 			"SET `name` = :name, `deadline` = :deadline, `description` = :description " +
 			"WHERE id = :id";
@@ -119,7 +119,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public void updateBy(Long milestoneId, MilestoneStatus status) {
+	public void updateBy(final Long milestoneId, final MilestoneStatus status) {
 		String sql = "UPDATE `milestone` " +
 			"SET `status` = :status " +
 			"WHERE id = :id";
@@ -132,7 +132,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public void deleteBy(Long milestoneId) {
+	public void deleteBy(final Long milestoneId) {
 		String sql = "DELETE FROM `milestone` "
 			+ "WHERE id = :id";
 

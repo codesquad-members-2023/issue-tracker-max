@@ -11,11 +11,11 @@ public class MilestoneStatusRequest {
 	private MilestoneStatusRequest() {
 	}
 
-	private MilestoneStatusRequest(String status) {
+	private MilestoneStatusRequest(final String status) {
 		this.status = status;
 	}
 
-	public static MilestoneStatus toStatus(MilestoneStatusRequest milestoneStatusRequest) {
+	public static MilestoneStatus toStatus(final MilestoneStatusRequest milestoneStatusRequest) {
 		if (milestoneStatusRequest.status.equalsIgnoreCase(MilestoneStatus.OPENED_STRING)) {
 			return MilestoneStatus.OPENED;
 		}

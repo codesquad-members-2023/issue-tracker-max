@@ -10,7 +10,7 @@ public enum LabelColor {
 		return this.name().toLowerCase();
 	}
 
-	public static LabelColor chooseColor(String color) {
+	public static LabelColor chooseColor(final String color) {
 		if (color.equalsIgnoreCase(DARK_STRING)) {
 			return DARK;
 		}
@@ -18,7 +18,7 @@ public enum LabelColor {
 		return LIGHT;
 	}
 
-	public static boolean validateColor(String color) {
+	public static boolean validateColor(final String color) {
 		if (!color.equalsIgnoreCase(LabelColor.DARK_STRING) && !color.equalsIgnoreCase(LabelColor.LIGHT_STRING)) {
 			throw new RuntimeException("임시");
 		}

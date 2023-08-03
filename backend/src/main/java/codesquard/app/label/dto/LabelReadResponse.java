@@ -12,8 +12,8 @@ public class LabelReadResponse {
 	@JsonProperty("labels")
 	private List<LabelsResponse> labels;
 
-	public LabelReadResponse(Long openedMilestoneCount, Long labelCount,
-		List<LabelsResponse> labels) {
+	public LabelReadResponse(final Long openedMilestoneCount, final Long labelCount,
+		final List<LabelsResponse> labels) {
 		this.openedMilestoneCount = openedMilestoneCount;
 		this.labelCount = labelCount;
 		this.labels = labels;

@@ -28,7 +28,8 @@ public class LabelUpdateRequest {
 	private LabelUpdateRequest() {
 	}
 
-	public LabelUpdateRequest(String name, String color, String background, String description) {
+	public LabelUpdateRequest(final String name, final String color, final String background,
+		final String description) {
 		this.name = name;
 		if (LabelColor.validateColor(color)) {
 			this.color = color;
@@ -37,7 +38,7 @@ public class LabelUpdateRequest {
 		this.description = description;
 	}
 
-	public static Label toEntity(LabelUpdateRequest labelUpdateRequest) {
+	public static Label toEntity(final LabelUpdateRequest labelUpdateRequest) {
 		return new Label(labelUpdateRequest.name, labelUpdateRequest.color, labelUpdateRequest.background,
 			labelUpdateRequest.description);
 	}

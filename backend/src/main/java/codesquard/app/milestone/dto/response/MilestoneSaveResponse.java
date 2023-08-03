@@ -8,12 +8,12 @@ public class MilestoneSaveResponse {
 	@JsonProperty("id")
 	private final Long id;
 
-	private MilestoneSaveResponse(boolean success, Long id) {
+	private MilestoneSaveResponse(final boolean success, final Long id) {
 		this.success = success;
 		this.id = id;
 	}
 
-	public static MilestoneSaveResponse success(Long id) {
+	public static MilestoneSaveResponse success(final Long id) {
 		return new MilestoneSaveResponse(true, id);
 	}
 }

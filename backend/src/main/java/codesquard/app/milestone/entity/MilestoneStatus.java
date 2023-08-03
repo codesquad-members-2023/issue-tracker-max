@@ -10,7 +10,7 @@ public enum MilestoneStatus {
 		return this.name();
 	}
 
-	public static MilestoneStatus chooseStatus(String openedString, String closedString) {
+	public static MilestoneStatus chooseStatus(final String openedString, final String closedString) {
 		if (openedString.equalsIgnoreCase(OPENED_STRING)) {
 			return MilestoneStatus.OPENED;
 		}

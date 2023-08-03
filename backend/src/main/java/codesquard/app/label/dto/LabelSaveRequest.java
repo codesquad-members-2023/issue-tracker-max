@@ -28,7 +28,7 @@ public class LabelSaveRequest {
 	private LabelSaveRequest() {
 	}
 
-	public LabelSaveRequest(String name, String color, String background, String description) {
+	public LabelSaveRequest(final String name, final String color, final String background, final String description) {
 		this.name = name;
 		if (LabelColor.validateColor(color)) {
 			this.color = color;
@@ -37,7 +37,7 @@ public class LabelSaveRequest {
 		this.description = description;
 	}
 
-	public static Label toEntity(LabelSaveRequest labelSaveRequest) {
+	public static Label toEntity(final LabelSaveRequest labelSaveRequest) {
 		return new Label(labelSaveRequest.name, labelSaveRequest.color, labelSaveRequest.background,
 			labelSaveRequest.description);
 	}

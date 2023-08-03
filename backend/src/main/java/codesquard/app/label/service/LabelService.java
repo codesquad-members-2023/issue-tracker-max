@@ -20,24 +20,24 @@ public class LabelService {
 	private final LabelRepository labelRepository;
 	private final MilestoneRepository milestoneRepository;
 
-	public LabelService(LabelRepository labelRepository, MilestoneRepository milestoneRepository) {
+	public LabelService(final LabelRepository labelRepository, final MilestoneRepository milestoneRepository) {
 		this.labelRepository = labelRepository;
 		this.milestoneRepository = milestoneRepository;
 	}
 
 	@Transactional
-	public Long saveLabel(LabelSaveRequest labelSaveRequest) {
+	public Long saveLabel(final LabelSaveRequest labelSaveRequest) {
 		Label label = LabelSaveRequest.toEntity(labelSaveRequest);
 		return labelRepository.save(label).orElseThrow(() -> new RuntimeException("임시"));
 	}
 
 	@Transactional
-	public void updateLabel(Long labelId, LabelUpdateRequest labelUpdateRequest) {
+	public void updateLabel(final Long labelId, final LabelUpdateRequest labelUpdateRequest) {
 		labelRepository.updateBy(labelId, LabelUpdateRequest.toEntity(labelUpdateRequest));
 	}
 
 	@Transactional
-	public void deleteLabel(Long labelId) {
+	public void deleteLabel(final Long labelId) {
 		labelRepository.deleteBy(labelId);
 	}
 

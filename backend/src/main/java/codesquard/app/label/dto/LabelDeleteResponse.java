@@ -6,7 +6,7 @@ public class LabelDeleteResponse {
 	@JsonProperty("success")
 	private final boolean success;
 
-	private LabelDeleteResponse(boolean success) {
+	private LabelDeleteResponse(final boolean success) {
 		this.success = success;
 	}
 

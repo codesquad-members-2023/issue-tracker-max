@@ -7,7 +7,8 @@ public class Label {
 	private String background; // 배경색
 	private String description; // 설명
 
-	public Label(Long id, String name, String color, String background, String description) {
+	public Label(final Long id, final String name, final String color, final String background,
+		final String description) {
 		this.id = id;
 		this.name = name;
 		this.color = LabelColor.chooseColor(color);
@@ -15,7 +16,7 @@ public class Label {
 		this.description = description;
 	}
 
-	public Label(String name, String color, String background, String description) {
+	public Label(final String name, final String color, final String background, final String description) {
 		this.name = name;
 		this.color = LabelColor.chooseColor(color);
 		this.background = background;

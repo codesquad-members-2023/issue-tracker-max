@@ -24,7 +24,7 @@ import codesquard.app.label.service.LabelService;
 public class LabelController {
 	private final LabelService labelService;
 
-	public LabelController(LabelService labelService) {
+	public LabelController(final LabelService labelService) {
 		this.labelService = labelService;
 	}
 
@@ -37,7 +37,7 @@ public class LabelController {
 	}
 
 	@PostMapping("/api/labels")
-	public ResponseEntity<LabelSaveResponse> save(@Valid @RequestBody LabelSaveRequest labelSaveRequest) {
+	public ResponseEntity<LabelSaveResponse> save(@Valid @RequestBody final LabelSaveRequest labelSaveRequest) {
 		Long labelId = labelService.saveLabel(labelSaveRequest);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(LabelSaveResponse.success(labelId));

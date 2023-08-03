@@ -6,7 +6,7 @@ public class MilestoneUpdateResponse {
 	@JsonProperty("success")
 	private final boolean success;
 
-	private MilestoneUpdateResponse(boolean success) {
+	private MilestoneUpdateResponse(final boolean success) {
 		this.success = success;
 	}
 
