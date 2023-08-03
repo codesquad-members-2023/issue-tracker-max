@@ -15,6 +15,8 @@ public class GlobalExceptionHandler {
 		return ErrorResponse.exception(errorCode);
 	}
 
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ErrorResponse validationExceptionHandler(MethodArgumentNotValidException e) {
 		String message = e.getBindingResult()
 			.getFieldErrors()

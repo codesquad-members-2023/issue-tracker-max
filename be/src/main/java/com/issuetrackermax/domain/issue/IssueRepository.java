@@ -39,7 +39,8 @@ public class IssueRepository {
 			+ "LEFT JOIN member m ON i.writer_id = m.id "
 			+ "LEFT JOIN member m2 ON a.member_id = m2.id "
 			+ "LEFT JOIN milestone ms ON i.milestone_id = ms.id "
-			+ "WHERE i.id = :id";
+			+ "WHERE i.id = :id "
+			+ "GROUP BY i.id, i.is_open, i.title, m.id, m.nick_name, ms.id, ms.title";
 		return jdbcTemplate.query(sql, Map.of("id", id), ISSUE_RESULT_VO_ROW_MAPPER).stream()
 			.findAny()
 			.orElseThrow(() -> new NotFoundIssueException());

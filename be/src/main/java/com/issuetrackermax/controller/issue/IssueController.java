@@ -1,5 +1,7 @@
 package com.issuetrackermax.controller.issue;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,7 +31,7 @@ public class IssueController {
 	private final IssueService issueService;
 
 	@PostMapping
-	public ApiResponse<IssuePostResponse> post(@RequestBody IssuePostRequest request) {
+	public ApiResponse<IssuePostResponse> post(@RequestBody @Valid IssuePostRequest request) {
 		return ApiResponse.success(IssuePostResponse.from(issueService.post(request)));
 	}
 
@@ -51,7 +53,7 @@ public class IssueController {
 	}
 
 	@PatchMapping("/{id}/title")
-	public ApiResponse<Void> modifyTitle(@PathVariable Long id, @RequestBody IssueTitleRequest request) {
+	public ApiResponse<Void> modifyTitle(@PathVariable Long id, @RequestBody @Valid IssueTitleRequest request) {
 		issueService.modifyTitle(id, request);
 		return ApiResponse.success();
 	}
