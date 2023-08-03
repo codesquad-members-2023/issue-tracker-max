@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.issuetracker.issue.domain.Milestone;
-import com.issuetracker.issue.infrastrucure.MilestoneRepository;
+import com.issuetracker.milestone.domain.Milestone;
+import com.issuetracker.milestone.infrastructure.MilestoneRepository;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
 

@@ -14,7 +14,7 @@ import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.infrastrucure.IssueRepository;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.member.domain.Member;
-import com.issuetracker.issue.domain.Milestone;
+import com.issuetracker.milestone.domain.Milestone;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
 

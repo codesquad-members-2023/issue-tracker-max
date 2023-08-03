@@ -11,8 +11,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import com.issuetracker.config.exception.MilestoneNotFoundException;
-import com.issuetracker.issue.application.MilestoneValidator;
-import com.issuetracker.issue.infrastrucure.MilestoneRepository;
+import com.issuetracker.milestone.application.MilestoneValidator;
+import com.issuetracker.milestone.infrastructure.MilestoneRepository;
 import com.issuetracker.util.MockTest;
 
 @MockTest

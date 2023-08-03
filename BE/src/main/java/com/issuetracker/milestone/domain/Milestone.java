@@ -1,4 +1,4 @@
-package com.issuetracker.issue.domain;
+package com.issuetracker.milestone.domain;
 
 import java.time.LocalDate;
 

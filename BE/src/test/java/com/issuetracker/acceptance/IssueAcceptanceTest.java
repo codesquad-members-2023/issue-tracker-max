@@ -28,7 +28,7 @@ import com.issuetracker.issue.ui.dto.IssueCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 import com.issuetracker.issue.ui.dto.IssueSearchResponse;
 import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
-import com.issuetracker.issue.ui.dto.MilestonesSearchResponse;
+import com.issuetracker.milestone.ui.dto.MilestonesSearchResponse;
 import com.issuetracker.util.AcceptanceTest;
 import com.issuetracker.util.fixture.LabelFixture;
 import com.issuetracker.util.fixture.MemberFixture;

@@ -1,11 +1,11 @@
-package com.issuetracker.issue.application;
+package com.issuetracker.milestone.application;
 
 import java.util.Objects;
 
 import org.springframework.stereotype.Component;
 
 import com.issuetracker.config.exception.MilestoneNotFoundException;
-import com.issuetracker.issue.infrastrucure.MilestoneRepository;
+import com.issuetracker.milestone.infrastructure.MilestoneRepository;
 
 import lombok.RequiredArgsConstructor;
 

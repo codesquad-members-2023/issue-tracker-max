@@ -1,9 +1,10 @@
-package com.issuetracker.issue.application.dto;
+package com.issuetracker.milestone.application.dto;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.issuetracker.issue.domain.Milestone;
+import com.issuetracker.milestone.domain.Milestone;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,10 @@ public class MilestoneSearchInformation {
 	private String title;
 
 	public static MilestoneSearchInformation from(Milestone milestone) {
+		if (Objects.isNull(milestone)) {
+			return null;
+		}
+
 		return new MilestoneSearchInformation(
 			milestone.getId(),
 			milestone.getTitle()

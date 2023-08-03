@@ -42,12 +42,14 @@ public class IssueSteps {
 		return RestAssured.given().log().all()
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().get("/api/issues/milestones")
+			.then().log().all().extract();
   }
   
 	public static ExtractableResponse<Response> 작성자_목록_조회_요청() {
 		return RestAssured.given().log().all()
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().get("/api/issues/authors")
+			.then().log().all().extract();
   }
   
 	public static ExtractableResponse<Response> 이슈에_등록_되어있는_담당자_목록_조회_요청() {
