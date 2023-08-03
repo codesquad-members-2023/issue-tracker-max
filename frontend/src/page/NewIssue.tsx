@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { Button } from "../components/Button";
@@ -8,7 +8,7 @@ import { Sidebar, SidebarOptionData } from "../components/sidebar/Sidebar";
 
 type AssigneeData = {
   id: number;
-  name: string;
+  loginId: string;
   avatarUrl: string;
   selected: boolean;
 };
@@ -18,13 +18,14 @@ type LabelData = {
   name: string;
   background: string;
   color?: string;
+  description: string | null;
   selected: boolean;
 };
 
 type MilestoneData = {
   id: number;
   name: string;
-  status: "OPEN" | "CLOSED";
+  status: "OPENED" | "CLOSED";
   description: string;
   issues: {
     openedIssueCount: number;
@@ -36,173 +37,49 @@ type MilestoneData = {
 type OptionData = AssigneeData | LabelData | MilestoneData;
 
 export function NewIssue() {
-  const initialAssigneeOptions = [
-    {
-      id: 1,
-      name: "jjinbbang52",
-      avatarUrl: "",
-      selected: false,
-    },
-    {
-      id: 2,
-      name: "htmlH3AD",
-      avatarUrl: "",
-      selected: false,
-    },
-    {
-      id: 3,
-      name: "samsamis9",
-      avatarUrl: "",
-      selected: false,
-    },
-    {
-      id: 4,
-      name: "dev_angel0",
-      avatarUrl: "",
-      selected: false,
-    },
-    {
-      id: 5,
-      name: "jjinbbang52",
-      avatarUrl: "",
-      selected: false,
-    },
-    {
-      id: 6,
-      name: "htmlH3AD",
-      avatarUrl: "",
-      selected: false,
-    },
-    {
-      id: 7,
-      name: "samsamis9",
-      avatarUrl: "",
-      selected: false,
-    },
-    {
-      id: 8,
-      name: "dev_angel0",
-      avatarUrl: "",
-      selected: false,
-    },
-    {
-      id: 9,
-      name: "jjinbbang52",
-      avatarUrl: "",
-      selected: false,
-    },
-    {
-      id: 10,
-      name: "htmlH3AD",
-      avatarUrl: "",
-      selected: false,
-    },
-    {
-      id: 11,
-      name: "samsamis9",
-      avatarUrl: "",
-      selected: false,
-    },
-    {
-      id: 12,
-      name: "dev_angel0",
-      avatarUrl: "",
-      selected: false,
-    },
-  ];
-
-  const initialLabelOptions = [
-    {
-      id: 1,
-      name: "documentation",
-      background: "#0025E6",
-      selected: false,
-    },
-    {
-      id: 2,
-      name: "bug",
-      background: "#FF3B30",
-      selected: false,
-    },
-    {
-      id: 3,
-      name: "feature",
-      background: "#F9D0C3",
-      selected: false,
-    },
-    {
-      id: 4,
-      name: "design",
-      background: "#E99695",
-      selected: false,
-    },
-    {
-      id: 5,
-      name: "test",
-      background: "#91C147",
-      selected: false,
-    },
-    {
-      id: 6,
-      name: "chore",
-      background: "#6FBDAB",
-      selected: false,
-    },
-  ];
-
-  const initialMilestoneOptions = [
-    {
-      id: 1,
-      name: "Sprint#1",
-      status: "OPEN" as "OPEN" | "CLOSED",
-      description: "스프린트 #1",
-      issues: {
-        openedIssueCount: 2,
-        closedIssueCount: 10,
-      },
-      selected: false,
-    },
-    {
-      id: 2,
-      name: "Sprint#2",
-      status: "OPEN" as "OPEN" | "CLOSED",
-      description: "스프린트 #2",
-      issues: {
-        openedIssueCount: 2,
-        closedIssueCount: 4,
-      },
-      selected: false,
-    },
-    {
-      id: 3,
-      name: "Sprint#3",
-      status: "OPEN" as "OPEN" | "CLOSED",
-      description: "스프린트 #3",
-      issues: {
-        openedIssueCount: 5,
-        closedIssueCount: 0,
-      },
-      selected: false,
-    },
-  ];
-
-  const [assigneeOptions, setAssigneeOptions] = useState<AssigneeData[]>(
-    initialAssigneeOptions,
-  );
-  const [labelOptions, setLabelOptions] =
-    useState<LabelData[]>(initialLabelOptions);
-  const [milestoneOptions, setMilestoneOptions] = useState<MilestoneData[]>(
-    initialMilestoneOptions,
-  );
+  const [assignees, setAssignees] = useState<AssigneeData[]>([]);
+  const [labels, setLabels] = useState<LabelData[]>([]);
+  const [milestones, setMilestones] = useState<MilestoneData[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const navigate = useNavigate();
 
-  const invalidToSubmit = title.trim().length === 0;
-  const titleCaption =
-    title.trim().length === 0
-      ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
-      : "";
+  useEffect(() => {
+    fetchOptions();
+  }, []);
+
+  const fetchOptions = async () => {
+    const url = "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io";
+    const responses = await Promise.all([
+      fetch(`${url}/api/assignees`),
+      fetch(`${url}/api/labels`),
+      fetch(`${url}/api/milestones`),
+    ]);
+    const dataList = await Promise.all(
+      responses.map((response) => response.json()),
+    );
+
+    setAssignees(
+      dataList[0].assignees.map((assignee: AssigneeData) => ({
+        ...assignee,
+        selected: false,
+      })),
+    );
+    setLabels(
+      dataList[1].labels.map((label: LabelData) => ({ ...label, selected: false })),
+    );
+    setMilestones(
+      dataList[2].milestones.map((milestone: MilestoneData) => ({
+        ...milestone,
+        selected: false,
+      })) ?? [],
+    );
+  };
+
+  const invalidTitle = title.trim().length === 0;
+  const titleCaption = invalidTitle
+    ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
+    : "";
 
   const toggleOptionSelection = <T extends OptionData>(
     options: T[],
@@ -231,29 +108,32 @@ export function NewIssue() {
     return options.map((option) => {
       if ("avatarUrl" in option) {
         return {
-          name: option.name,
+          id: option.id,
+          name: option.loginId,
           profile: option.avatarUrl,
           selected: option.selected,
           onClick: () => {
-            setAssigneeOptions((a) => toggleOptionSelection(a, option.id));
+            setAssignees((a) => toggleOptionSelection(a, option.id));
           },
         };
       } else if ("background" in option) {
         return {
+          id: option.id,
           name: option.name,
           background: option.background,
           selected: option.selected,
           onClick: () => {
-            setLabelOptions((a) => toggleOptionSelection(a, option.id));
+            setLabels((a) => toggleOptionSelection(a, option.id));
           },
         };
       } else if ("issues" in option) {
         return {
+          id: option.id,
           name: option.name,
           selected: option.selected,
           issues: option.issues,
           onClick: () => {
-            setMilestoneOptions((a) => switchOptionSelection(a, option.id));
+            setMilestones((a) => switchOptionSelection(a, option.id));
           },
         };
       }
@@ -272,13 +152,13 @@ export function NewIssue() {
     const issueData = {
       title: title,
       content: content,
-      assignees: assigneeOptions
+      assignees: assignees
         .filter((option) => option.selected)
         .map((option) => option.id),
-      labels: labelOptions
+      labels: labels
         .filter((option) => option.selected)
         .map((option) => option.id),
-      milestone: milestoneOptions.find((option) => option.selected)?.id ?? null,
+      milestone: milestones?.find((option) => option.selected)?.id ?? null,
     };
 
     try {
@@ -325,8 +205,8 @@ export function NewIssue() {
             label="제목"
             value={title}
             maxLength={50}
+            isError={invalidTitle}
             caption={titleCaption}
-            isError={title.trim().length === 0}
             onChange={onTitleChange}
           />
           <TextArea
@@ -338,9 +218,9 @@ export function NewIssue() {
           />
         </NewIssueContent>
         <Sidebar
-          assigneeOptions={createOptionsForSideBar(assigneeOptions)}
-          labelOptions={createOptionsForSideBar(labelOptions)}
-          milestoneOptions={createOptionsForSideBar(milestoneOptions)}
+          assigneeOptions={createOptionsForSideBar(assignees)}
+          labelOptions={createOptionsForSideBar(labels)}
+          milestoneOptions={createOptionsForSideBar(milestones)}
         />
       </NewIssueBody>
       <Line />
@@ -357,7 +237,7 @@ export function NewIssue() {
           size="L"
           buttonType="Container"
           onClick={onSubmitButtonClick}
-          disabled={invalidToSubmit}
+          disabled={invalidTitle}
         >
           완료
         </Button>
@@ -402,7 +282,7 @@ const NewIssueContent = styled.div`
   flex: 1 0 0;
   align-self: stretch;
 
-  & > div:first-child {
+  & > div:first-of-type {
     width: 100%;
     align-self: stretch;
     flex-shrink: 0;
@@ -413,7 +293,7 @@ const NewIssueContent = styled.div`
     }
   }
 
-  & > div:last-child {
+  & > div:last-of-type {
     align-self: stretch;
   }
 `;

@@ -14,7 +14,7 @@ export function DropdownPanel({
     name: string;
     profile?: string;
     background?: string;
-    color?: "Light" | "Dark" | "Center";
+    color?: "LIGHT" | "DARK";
     selected: boolean;
     onClick: () => void;
   }[];

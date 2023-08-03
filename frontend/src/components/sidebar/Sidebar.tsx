@@ -1,26 +1,30 @@
 import { styled } from "styled-components";
+import { getProgress } from "../../utils/getProgress";
 import { InformationTag } from "../InformationTag";
 import { DropdownContainer } from "../dropdown/DropdownContainer";
 import { AssigneeElement } from "./AssigneeElement";
 import { ElementContainer } from "./ElementContainer";
 import { MilestoneElmeent } from "./MilestoneElement";
 
-export type AssigneeOptionData = {
+type AssigneeOptionData = {
+  id: number;
   name: string;
   profile?: string;
   selected: boolean;
   onClick: () => void;
 };
 
-export type LabelOptionData = {
+type LabelOptionData = {
+  id: number;
   name: string;
   background?: string;
-  color?: "Light" | "Dark";
+  color?: "LIGHT" | "DARK";
   selected: boolean;
   onClick: () => void;
 };
 
-export type MilestoneOptionData = {
+type MilestoneOptionData = {
+  id: number;
   name: string;
   selected: boolean;
   issues?: {
@@ -52,27 +56,15 @@ export function Sidebar({
     return options.filter((option) => option.selected);
   };
 
-  const selectedAssigneeOptions = collectSelectedOptions(assigneeOptions);
-  const selectedLabelOptions = collectSelectedOptions(labelOptions);
-  const selectedMilestoneOptions = collectSelectedOptions(milestoneOptions);
-
   const getMilestoneProgress = (issues?: {
     openedIssueCount: number;
     closedIssueCount: number;
-  }) => {
-    if (!issues) {
-      return 0;
-    }
+  }) =>
+    issues ? getProgress(issues.closedIssueCount, issues.openedIssueCount) : 0;
 
-    const { openedIssueCount, closedIssueCount } = issues;
-    const totalIssueCount = openedIssueCount + closedIssueCount;
-
-    if (totalIssueCount === 0) {
-      return 0;
-    }
-
-    return Math.floor((closedIssueCount / totalIssueCount) * 100);
-  };
+  const selectedAssigneeOptions = collectSelectedOptions(assigneeOptions);
+  const selectedLabelOptions = collectSelectedOptions(labelOptions);
+  const selectedMilestoneOptions = collectSelectedOptions(milestoneOptions);
 
   return (
     <Div>
@@ -87,12 +79,8 @@ export function Sidebar({
         />
         {selectedAssigneeOptions.length > 0 && (
           <ElementContainer direction="Vertical">
-            {collectSelectedOptions(assigneeOptions).map((assignee, index) => (
-              <AssigneeElement
-                key={`assignee-${index}`}
-                name={assignee.name}
-                profile={assignee.profile}
-              />
+            {selectedAssigneeOptions.map(({ id, name, profile }) => (
+              <AssigneeElement key={id} name={name} profile={profile} />
             ))}
           </ElementContainer>
         )}
@@ -108,13 +96,13 @@ export function Sidebar({
         />
         {selectedLabelOptions.length > 0 && (
           <ElementContainer direction="Horizontal">
-            {collectSelectedOptions(labelOptions).map((label, index) => (
+            {selectedLabelOptions.map(({ id, name, background }) => (
               <InformationTag
-                key={`label-${index}`}
-                value={label.name}
+                key={id}
+                value={name}
                 size="S"
-                fill={label.background}
-                fontColor="Light"
+                fill={background}
+                fontColor="LIGHT"
               />
             ))}
           </ElementContainer>
@@ -131,16 +119,14 @@ export function Sidebar({
         />
         {selectedMilestoneOptions.length > 0 && (
           <ElementContainer direction="Vertical">
-            {collectSelectedOptions(milestoneOptions).map(
-              (milestone, index) => (
-                <MilestoneElmeent
-                  key={`milestone-${index}`}
-                  progress={getMilestoneProgress(milestone.issues)}
-                >
-                  {milestone.name}
-                </MilestoneElmeent>
-              ),
-            )}
+            {selectedMilestoneOptions.map(({ id, name, issues }) => (
+              <MilestoneElmeent
+                key={id}
+                progress={getMilestoneProgress(issues)}
+              >
+                {name}
+              </MilestoneElmeent>
+            ))}
           </ElementContainer>
         )}
       </OptionDiv>
