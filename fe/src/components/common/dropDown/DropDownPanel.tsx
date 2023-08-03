@@ -46,7 +46,13 @@ export const DropDownPanel: React.FC<Props> = ({
       }}
     >
       <DropDownHeader panelHeader={panelHeader} />
-      <ul>
+      <ul
+        css={{
+          boxSizing: 'border-box',
+          maxHeight: '288px',
+          overflowY: 'auto',
+        }}
+      >
         {options.length > 0 ? (
           options.map((item, index: number) => (
             <DropDownList
