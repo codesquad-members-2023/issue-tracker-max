@@ -14,7 +14,8 @@ type TextInputProps = {
   borderNone?: boolean;
   disabled?: boolean;
   isError?: boolean;
-  onChange?: () => void;
+  maxLength?: number;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: () => void;
   onBlur?: () => void;
 };
@@ -44,6 +45,7 @@ export function TextInput({
   borderNone = false,
   disabled = false,
   isError = false,
+  maxLength,
   onChange,
   onFocus,
   onBlur,
@@ -61,7 +63,7 @@ export function TextInput({
     const value = event.target.value;
 
     setInputValue(value);
-    onChange && onChange();
+    onChange && onChange(event);
   };
 
   const handleInputFocus = () => {
@@ -100,6 +102,7 @@ export function TextInput({
         <Input
           placeholder={placeholder}
           value={inputValue}
+          maxLength={maxLength}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}

@@ -1,3 +1,4 @@
+import { cloneElement } from "react";
 import { css, styled } from "styled-components";
 import { ReactComponent as AlertCircle } from "../assets/alertCircle.svg";
 import { ReactComponent as Archive } from "../assets/archive.svg";
@@ -10,6 +11,7 @@ import { ReactComponent as CheckBoxActive } from "../assets/checkboxActive.svg";
 import { ReactComponent as ChevronDown } from "../assets/chevronDown.svg";
 import { ReactComponent as Comment } from "../assets/comment.svg";
 import { ReactComponent as Edit } from "../assets/edit.svg";
+import { ReactComponent as Grip } from "../assets/grip.svg";
 import { ReactComponent as Label } from "../assets/label.svg";
 import { ReactComponent as LogoDarkLarge } from "../assets/logoDarkLarge.svg";
 import { ReactComponent as LogoDarkMedium } from "../assets/logoDarkMedium.svg";
@@ -25,7 +27,6 @@ import { ReactComponent as Trash } from "../assets/trash.svg";
 import { ReactComponent as UserImageLarge } from "../assets/userImageLarge.svg";
 import { ReactComponent as UserImageSmall } from "../assets/userImageSmall.svg";
 import { ReactComponent as XSquare } from "../assets/xSquare.svg";
-import { cloneElement } from "react";
 
 export function Icon({
   name,
@@ -42,7 +43,7 @@ export function Icon({
     <>
       {isSvgExist && (
         <IconWrapper $fillType={fillTypes.includes(name)}>
-          {cloneElement(getIcon(name)!, {fill, stroke})}
+          {cloneElement(getIcon(name)!, { fill, stroke })}
         </IconWrapper>
       )}
     </>
@@ -105,6 +106,8 @@ const getIcon = (name: string) => {
       return <UserImageSmall />;
     case "xSquare":
       return <XSquare />;
+    case "grip":
+      return <Grip />;
     default:
       return null;
   }

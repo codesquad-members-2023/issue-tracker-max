@@ -2,27 +2,25 @@ import { css, styled } from "styled-components";
 import { DropdownOption } from "./DropdownOption";
 
 export function DropdownPanel({
-  type = "Default",
   showProfile = true,
   alignment,
   optionTitle,
   options,
 }: {
-  type: "Default" | "Long";
   showProfile?: boolean;
-  alignment: "Left" | "Right";
+  alignment: "Left" | "Right" | "Center";
   optionTitle: string;
   options: {
     name: string;
     profile?: string;
     background?: string;
-    color?: "Light" | "Dark";
+    color?: "Light" | "Dark" | "Center";
     selected: boolean;
     onClick: () => void;
   }[];
 }) {
   return (
-    <StyledPanel $alignment={type === "Long" ? "Center" : alignment}>
+    <StyledPanel $alignment={alignment}>
       <div className="dropdown__header">{optionTitle}</div>
       <ul>
         {options.map(
@@ -67,8 +65,6 @@ const StyledPanel = styled.div<{ $alignment: "Left" | "Right" | "Center" }>`
         return css``;
     }
   }}
-  /* left: ${({ $alignment }) => ($alignment === "Left" ? "0" : "auto")};
-  right: ${({ $alignment }) => ($alignment === "Right" ? "0" : "auto")}; */
 
   display: flex;
   flex-direction: column;

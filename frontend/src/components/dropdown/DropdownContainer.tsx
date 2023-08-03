@@ -24,7 +24,7 @@ export function DropdownContainer({
   }[];
   showProfile?: boolean;
   type?: "Default" | "Long";
-  alignment: "Left" | "Right";
+  alignment: "Left" | "Right" | "Center";
   disabled?: boolean;
 }) {
   const [isPanelOpened, setIsPanelOpened] = useState(false);
@@ -49,7 +49,6 @@ export function DropdownContainer({
         <>
           <div className="dropdown__dim" onClick={closePanel}></div>
           <DropdownPanel
-            type={type}
             optionTitle={optionTitle}
             showProfile={showProfile}
             alignment={alignment}

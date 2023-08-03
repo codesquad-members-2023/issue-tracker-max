@@ -13,7 +13,7 @@ export function DropdownOption({
   showProfile?: boolean;
   profile?: string;
   background?: string;
-  color?: "Light" | "Dark";
+  color?: "Light" | "Dark" | "Center";
   selected: boolean;
   children: string;
   onClick: () => void;

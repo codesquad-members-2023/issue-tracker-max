@@ -2,9 +2,10 @@ import {
   ChangeEvent,
   TextareaHTMLAttributes,
   useEffect,
+  useRef,
   useState,
 } from "react";
-import { styled, useTheme } from "styled-components";
+import { keyframes, styled, useTheme } from "styled-components";
 import { Icon } from "./Icon";
 
 type TextAreaProps = {
@@ -19,24 +20,27 @@ export function TextArea({
   label,
   disabled,
   placeholder,
+  maxLength,
+  onChange,
 }: TextAreaProps) {
   const [state, setState] = useState<TextAreaState>(
     disabled ? "Disabled" : "Enabled",
   );
   const [inputValue, setInputValue] = useState(value);
-  const [showCount, setShowCount] = useState(false);
+  const [countHidden, setCountHidden] = useState(true);
+  const textArea = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
 
-    if (showCount) {
+    if (!countHidden) {
       timer = setTimeout(() => {
-        setShowCount(false);
+        setCountHidden(true);
       }, 2000);
     }
 
     return () => clearTimeout(timer);
-  }, [showCount]);
+  }, [countHidden]);
 
   const onFocus = () => {
     setState("Active");
@@ -48,30 +52,72 @@ export function TextArea({
 
   const onTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
-    setShowCount(true);
+    setCountHidden(false);
+    onChange && onChange(e);
   };
 
-  const onFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log("upload file", file);
+
+    if (file) {
+      // TODO: 이미지 확장자 검증
+
+      const data = await fetchImageText(file);
+
+      setInputValue((i) => {
+        const start = textArea.current?.selectionStart;
+        const end = textArea.current?.selectionEnd;
+
+        if (start === undefined || end === undefined) {
+          return i;
+        }
+
+        const textBefore = i.slice(0, start);
+        const textAfter = i.slice(end);
+
+        return `${textBefore}![image](${data})${textAfter}`;
+      });
+    }
+  };
+
+  const fetchImageText = async (file: File) => {
+    const formData = new FormData();
+    formData.append("image", file as File);
+
+    const response = await fetch(
+      "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/images",
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
+    const data = await response.text();
+
+    return data;
   };
 
   const theme = useTheme();
   const iconColor = theme.color.neutralTextDefault;
+  const gripColor = theme.color.neutralTextWeak;
 
   return (
     <Div $state={state} onFocus={onFocus} onBlur={onBlur}>
       <InputContainer>
         {inputValue && label && <Label>{label}</Label>}
-        <TextInput
-          placeholder={placeholder}
-          value={inputValue}
-          onChange={onTextChange}
-          disabled={disabled}
-        />
-        {showCount && (
-          <TextCount>띄어쓰기 포함 {inputValue.length}글자</TextCount>
-        )}
+        <ResizableDiv>
+          <Input
+            placeholder={placeholder}
+            value={inputValue}
+            maxLength={maxLength}
+            onChange={onTextChange}
+            disabled={disabled}
+            ref={textArea}
+          />
+          <TextCount $hidden={countHidden}>
+            띄어쓰기 포함 {inputValue.length}글자
+          </TextCount>
+          <Icon name="grip" fill={gripColor} stroke={gripColor} />
+        </ResizableDiv>
       </InputContainer>
       <Footer>
         <UploadButton htmlFor="imageUpload">
@@ -95,7 +141,6 @@ const Div = styled.div<{ $state: TextAreaState }>`
   min-height: 184px;
   flex-direction: column;
   align-items: flex-start;
-  flex-shrink: 0;
   border: ${({ theme, $state }) =>
     `${theme.border.default} ${
       $state === "Active"
@@ -114,8 +159,7 @@ const Div = styled.div<{ $state: TextAreaState }>`
 
 const InputContainer = styled.div`
   align-self: stretch;
-  flex-grow: 1;
-  position: relative;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -132,11 +176,30 @@ const Label = styled.span`
   font: ${({ theme }) => theme.font.displayMedium12};
 `;
 
-const TextInput = styled.textarea`
+const ResizableDiv = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  resize: vertical;
+  overflow: hidden;
+
+  &::-webkit-resizer {
+    display: none;
+  }
+
+  & svg {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: grab;
+  }
+`;
+
+const Input = styled.textarea`
   box-sizing: border-box;
-  flex-grow: 1;
   width: 100%;
-  min-width: 100%;
+  height: 461px;
+  resize: none;
   border: none;
   background: none;
   font: ${({ theme }) => theme.font.displayMedium16};
@@ -152,11 +215,30 @@ const TextInput = styled.textarea`
   }
 `;
 
-const TextCount = styled.span`
-  position: absolute;
-  bottom: 16px;
-  right: 32px;
+const TextCount = styled.span<{ $hidden: boolean }>`
+  align-self: flex-end;
+  margin-right: 28px;
   font: ${({ theme }) => theme.font.displayMedium12};
+  opacity: ${({ $hidden }) => ($hidden ? 0 : 1)};
+  animation: ${({ $hidden }) => ($hidden ? fadeOut : fadeIn)} 0.2s ease-in-out;
+`;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 `;
 
 const Footer = styled.div`
