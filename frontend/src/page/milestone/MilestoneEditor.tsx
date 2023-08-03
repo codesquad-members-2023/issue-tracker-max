@@ -1,0 +1,190 @@
+import { useEffect, useState } from "react";
+import { styled } from "styled-components";
+import { Button } from "../../components/Button";
+import { TextInput } from "../../components/TextInput";
+import { MilestoneData } from "./Milestone";
+
+type MilestoneEditorProps = {
+  onClickClose: () => void;
+} & (
+  | { type: "add"; milestone?: never }
+  | { type: "edit"; milestone: MilestoneData }
+);
+
+export function MilestoneEditor({
+  onClickClose,
+  type,
+  milestone,
+}: MilestoneEditorProps) {
+  const isEditMode = type === "edit" && milestone;
+
+  const [milestoneName, setMilestoneName] = useState(
+    isEditMode ? milestone.name : "",
+  );
+  const [deadline, setDeadline] = useState(
+    isEditMode ? milestone.deadline : "",
+  );
+  const [description, setDescription] = useState(
+    isEditMode ? milestone.description : "",
+  );
+  const [isValidDeadline, setIsValidDeadline] = useState(true);
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+  useEffect(() => {
+    if (deadline === "") {
+      setIsValidDeadline(true);
+    } else {
+      const regex = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+      setIsValidDeadline(regex.test(deadline));
+    }
+  }, [deadline]);
+
+  useEffect(() => {
+    const isMilestoneNameEmpty = milestoneName === "";
+
+    if (isEditMode) {
+      const isMilestoneChanged =
+        milestone.name !== milestoneName ||
+        milestone.deadline !== deadline ||
+        milestone.description !== description;
+
+      setIsButtonDisabled(
+        !isMilestoneChanged || isMilestoneNameEmpty || !isValidDeadline,
+      );
+    } else {
+      setIsButtonDisabled(isMilestoneNameEmpty || !isValidDeadline);
+    }
+  }, [milestoneName, deadline, description, isValidDeadline]);
+
+  const onChangeMilestoneName = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const value = event.target.value;
+
+    setMilestoneName(value.trim());
+  };
+
+  const onChangeDeadline = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let value = event.target.value;
+    value = value.replace(/[^0-9]/g, "");
+
+    if (value.length < 5) {
+      value = value.replace(/(\d{4})/, "$1-");
+    } else if (value.length < 8) {
+      value = value.replace(/(\d{4})(\d{2})/, "$1-$2-");
+    } else {
+      value = value.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
+    }
+
+    setDeadline(value);
+  };
+
+  const onChangeDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+
+    setDescription(value.trim());
+  };
+
+  const submit = () => {
+    const obj = {
+      name: milestoneName,
+      description: description,
+      deadline: deadline,
+    };
+
+    console.log(obj);
+  };
+
+  return (
+    <Div>
+      <Title>{type === "add" ? "새로운 마일스톤 추가" : "마일스톤 편집"}</Title>
+      <Editor>
+        <Info>
+          <TextInput
+            width={600}
+            size="S"
+            label="이름"
+            value={milestoneName}
+            fixLabel
+            placeholder="마일스톤의 이름을 입력하세요."
+            onChange={onChangeMilestoneName}
+          />
+          <TextInput
+            width={600}
+            size="S"
+            label="완료일(선택)"
+            value={deadline}
+            fixLabel
+            placeholder="YYYY-MM-DD"
+            onChange={onChangeDeadline}
+            isError={!isValidDeadline}
+          />
+        </Info>
+        <TextInput
+          width={1216}
+          size="S"
+          label="설명(선택)"
+          value={description}
+          fixLabel
+          placeholder="마일스톤에 대한 설명을 입력하세요"
+          onChange={onChangeDescription}
+        />
+      </Editor>
+      <Buttons>
+        <Button
+          size="S"
+          icon="xSquare"
+          buttonType="Outline"
+          onClick={onClickClose}
+        >
+          취소
+        </Button>
+        <Button
+          size="S"
+          icon="plus"
+          buttonType="Container"
+          onClick={submit}
+          disabled={isButtonDisabled}
+        >
+          완료
+        </Button>
+      </Buttons>
+    </Div>
+  );
+}
+
+const Div = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-self: stretch;
+  box-sizing: border-box;
+  padding: 32px;
+  gap: 24px;
+`;
+
+const Title = styled.div`
+  font: ${({ theme }) => theme.font.displayBold20};
+  color: ${({ theme }) => theme.color.neutralTextStrong};
+`;
+
+const Editor = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const Info = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 16px;
+`;
+
+const Buttons = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  gap: 16px;
+`;

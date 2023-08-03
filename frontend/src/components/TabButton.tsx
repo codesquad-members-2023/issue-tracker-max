@@ -4,24 +4,16 @@ import { styled } from "styled-components";
 export function TabButton({
   type = "Outline",
   children,
-  onClick,
 }: {
   type?: "Ghost" | "Outline";
   children: ReactElement[];
-  onClick: (name: string) => void;
 }) {
   const TabButtonDiv =
     type === "Ghost" ? GhostTabButtonDiv : OutlineTabButtonDiv;
 
   return (
     <TabButtonDiv>
-      {Children.map(children, (child) =>
-        cloneElement(child, {
-          onClick: () => {
-            onClick(child.props.children);
-          },
-        }),
-      )}
+      {Children.map(children, (child) => cloneElement(child))}
     </TabButtonDiv>
   );
 }
