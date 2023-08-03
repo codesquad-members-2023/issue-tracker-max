@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquard.app.jwt.JwtProvider;
+import codesquard.app.jwt.filter.JwtAuthorizationFilter;
 import codesquard.app.jwt.filter.VerifyUserFilter;
 import codesquard.app.user.service.UserService;
 
@@ -22,6 +24,14 @@ public class JwtConfig {
 		FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
 		filterFilterRegistrationBean.setFilter(new VerifyUserFilter(objectMapper, userService));
 		filterFilterRegistrationBean.addUrlPatterns("/api/login");
+		return filterFilterRegistrationBean;
+	}
+
+	@Bean
+	public FilterRegistrationBean jwtAuthorizationFilter(JwtProvider provider, ObjectMapper objectMapper) {
+		FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
+		filterFilterRegistrationBean.setFilter(new JwtAuthorizationFilter(provider, objectMapper));
+		filterFilterRegistrationBean.addUrlPatterns("/api/*");
 		return filterFilterRegistrationBean;
 	}
 }

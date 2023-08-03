@@ -2,23 +2,20 @@ package codesquard.app.user.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import codesquard.app.jwt.Jwt;
+import codesquard.app.user.entity.AuthenticateUser;
+
 public class UserLoginResponse {
-	@JsonProperty("id")
-	private Long id;
-	@JsonProperty("loginId")
-	private String loginId;
-	@JsonProperty("email")
-	private String email;
-	@JsonProperty("avatarUrl")
-	private String avatarUrl;
+	@JsonProperty("user")
+	private AuthenticateUser authenticateUser;
+	@JsonProperty("jwt")
+	private Jwt jwt;
 
 	public UserLoginResponse() {
 	}
 
-	public UserLoginResponse(Long id, String loginId, String email, String avatarUrl) {
-		this.id = id;
-		this.loginId = loginId;
-		this.email = email;
-		this.avatarUrl = avatarUrl;
+	public UserLoginResponse(AuthenticateUser authenticateUser, Jwt jwt) {
+		this.authenticateUser = authenticateUser;
+		this.jwt = jwt;
 	}
 }

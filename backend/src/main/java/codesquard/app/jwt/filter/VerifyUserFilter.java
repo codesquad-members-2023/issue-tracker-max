@@ -41,6 +41,9 @@ public class VerifyUserFilter implements Filter {
 		ServletException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+
+		logger.info("doFilter : {}", httpServletRequest.getRequestURI());
+
 		if ((httpServletRequest.getMethod().equals("POST"))) {
 			// 입력받은 json을 UserLoginRequest으로 변환
 			UserLoginRequest userLoginRequest = objectMapper.readValue(request.getReader(), UserLoginRequest.class);

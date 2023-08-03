@@ -55,6 +55,6 @@ public class UserLoginRestController {
 
 		response.addHeader("Authorization", jwt.createAccessTokenHeaderValue());
 		response.addCookie(jwt.createRefreshTokenCookie());
-		return ResponseEntity.ok(authenticateUser.toUserLoginResponse());
+		return ResponseEntity.ok(new UserLoginResponse(authenticateUser, jwt));
 	}
 }

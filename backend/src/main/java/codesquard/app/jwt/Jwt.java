@@ -4,10 +4,14 @@ import javax.servlet.http.Cookie;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Jwt {
 	private static final int REFRESH_TOKEN_MAXAGE = 60 * 60 * 24 * 30; // 1달
 
+	@JsonProperty("accessToken")
 	private final String accessToken;
+	@JsonProperty("refreshToken")
 	private final String refreshToken;
 
 	public Jwt(String accessToken, String refreshToken) {

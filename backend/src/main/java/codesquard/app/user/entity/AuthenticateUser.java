@@ -2,7 +2,6 @@ package codesquard.app.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import codesquard.app.user.controller.response.UserLoginResponse;
 import lombok.ToString;
 
 @ToString
@@ -28,9 +27,5 @@ public class AuthenticateUser {
 
 	public User toEntity() {
 		return new User(id, loginId, email, null, avatarUrl);
-	}
-
-	public UserLoginResponse toUserLoginResponse() {
-		return new UserLoginResponse(id, loginId, email, avatarUrl);
 	}
 }
