@@ -1,5 +1,8 @@
 package codesquard.app.label.entity;
 
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+
 public class Label {
 	private Long id; // 등록번호
 	private String name; // 이름
@@ -21,6 +24,23 @@ public class Label {
 		this.color = LabelColor.chooseColor(color);
 		this.background = background;
 		this.description = description;
+	}
+
+	public static SqlParameterSource makeParam(final Label label) {
+		return new MapSqlParameterSource()
+			.addValue("name", label.name)
+			.addValue("color", label.color.getNameToLowerCase())
+			.addValue("background", label.background)
+			.addValue("description", label.description);
+	}
+
+	public static SqlParameterSource makeParam(final Long labelId, final Label label) {
+		return new MapSqlParameterSource()
+			.addValue("name", label.name)
+			.addValue("color", label.color.getNameToLowerCase())
+			.addValue("background", label.background)
+			.addValue("description", label.description)
+			.addValue("id", labelId);
 	}
 
 	public Long getId() {
