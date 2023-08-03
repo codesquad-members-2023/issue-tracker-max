@@ -4,24 +4,25 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.presents.issuetracker.comment.entity.vo.CommentVo;
-import org.presents.issuetracker.label.entity.Label;
+import org.presents.issuetracker.label.entity.vo.LabelVo;
 import org.presents.issuetracker.milestone.entity.vo.MilestonePreviewVo;
 import org.presents.issuetracker.user.entity.User;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class IssueDetailVo {
-	private final Long id;
-	private final String title;
-	private final String contents;
-	private final LocalDateTime createdAt;
-	private final String status;
-	private final User author;
-	private final MilestonePreviewVo milestone;
-	private final List<User> assignees;
-	private final List<Label> labels;
-	private final List<CommentVo> comments;
+	private Long id;
+	private String title;
+	private String contents;
+	private LocalDateTime createdAt;
+	private String status;
+	private User author;
+	private MilestonePreviewVo milestone;
+	private List<User> assignees;
+	private List<LabelVo> labels;
+	private List<CommentVo> comments;
 }

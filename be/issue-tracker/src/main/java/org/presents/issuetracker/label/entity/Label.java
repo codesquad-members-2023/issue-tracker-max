@@ -1,9 +1,13 @@
 package org.presents.issuetracker.label.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Label {
 	private Long id;
@@ -11,7 +15,7 @@ public class Label {
 	private String description;
 	private String backgroundColor;
 	private String textColor;
-	private boolean isDeleted = false;
+	private boolean isDeleted;
 
 	private Label(String name, String description, String backgroundColor, String textColor) {
 		this.name = name;

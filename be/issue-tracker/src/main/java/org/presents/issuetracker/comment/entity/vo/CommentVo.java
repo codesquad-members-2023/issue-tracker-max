@@ -4,11 +4,12 @@ import java.time.LocalDateTime;
 
 import org.presents.issuetracker.user.entity.User;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommentVo {
 	private Long id;
 	private String contents;

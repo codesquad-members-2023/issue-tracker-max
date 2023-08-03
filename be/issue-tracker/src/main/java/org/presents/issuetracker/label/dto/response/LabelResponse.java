@@ -1,6 +1,6 @@
 package org.presents.issuetracker.label.dto.response;
 
-import org.presents.issuetracker.label.entity.Label;
+import org.presents.issuetracker.label.entity.vo.LabelVo;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,12 +13,12 @@ public class LabelResponse {
 	private String textColor;
 	private String backgroundColor;
 
-	public static LabelResponse fromEntity(Label label) {
+	public static LabelResponse fromVo(LabelVo labelVo) {
 		return LabelResponse.builder()
-			.labelId(label.getId())
-			.name(label.getName())
-			.backgroundColor(label.getBackgroundColor())
-			.textColor(label.getTextColor())
+			.labelId(labelVo.getId())
+			.name(labelVo.getName())
+			.backgroundColor(labelVo.getBackgroundColor())
+			.textColor(labelVo.getTextColor())
 			.build();
 	}
 }

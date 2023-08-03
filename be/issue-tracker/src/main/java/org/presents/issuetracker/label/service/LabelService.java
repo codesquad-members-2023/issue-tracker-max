@@ -8,18 +8,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class LabelService {
 
-    private final LabelRepository labelRepository;
+	private final LabelRepository labelRepository;
 
-    public LabelService(LabelRepository labelRepository) {
-        this.labelRepository = labelRepository;
-    }
+	public LabelService(LabelRepository labelRepository) {
+		this.labelRepository = labelRepository;
+	}
 
-    public Long create(LabelRequestDto labelRequestDto) {
-        return labelRepository.save(
-                Label.of(
-                        labelRequestDto.getName(),
-                        labelRequestDto.getDescription(),
-                        labelRequestDto.getBackgroundColor(),
-                        labelRequestDto.getTextColor()));
-    }
+	public Long create(LabelRequestDto labelRequestDto) {
+		return labelRepository.save(
+			Label.of(
+				labelRequestDto.getName(),
+				labelRequestDto.getDescription(),
+				labelRequestDto.getBackgroundColor(),
+				labelRequestDto.getTextColor()));
+	}
 }
