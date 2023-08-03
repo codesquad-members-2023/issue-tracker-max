@@ -5,6 +5,10 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  #root {
+    background: ${({ theme }) => theme.color.neutral.surface.default};
+  }
+
   .blind {
     width: 1px;
     height: 1px;

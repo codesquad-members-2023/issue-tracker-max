@@ -13,8 +13,12 @@ import TextArea from '../components/common/TextArea';
 import SideBar from '../components/common/SideBar';
 import FilterBar from '../components/common/FilterBar';
 import Comment from '../components/common/CommentElements';
+import { AppContext } from '../main';
+import { useContext } from 'react';
 
 export default function Components() {
+  const appContext = useContext(AppContext);
+  const { changeTheme } = appContext.control;
   return (
     <StyledComponents>
       <Wrapper>
@@ -30,8 +34,8 @@ export default function Components() {
         <ButtonSmall type="submit" ghost iconName="plus">
           BUTTON
         </ButtonSmall>
-        <ButtonSmall type="button" ghost flexible onClick={changeTheme}>
-          Change Theme
+        <ButtonSmall type="submit" ghost iconName="plus" onClick={changeTheme}>
+          BUTTON
         </ButtonSmall>
         <ColorCodeInput label="배경색" />
         <TabButton />
