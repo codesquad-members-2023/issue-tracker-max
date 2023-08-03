@@ -6,5 +6,6 @@ WORKDIR /app
 COPY . ./
 
 RUN npm install
+npm install vite-plugin-svgr
 
 CMD ["npm", "run", "dev"]
