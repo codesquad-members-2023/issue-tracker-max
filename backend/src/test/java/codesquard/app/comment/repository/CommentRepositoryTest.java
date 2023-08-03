@@ -76,7 +76,6 @@ class CommentRepositoryTest extends IntegrationTestSupport {
 		assertThat(modifiedCommentId).isEqualTo(savedCommentId);
 	}
 
-
 	@DisplayName("등록된 댓글을 삭제한다.")
 	@Test
 	void test() {
@@ -93,7 +92,7 @@ class CommentRepositoryTest extends IntegrationTestSupport {
 	}
 
 	private void createUserFixture() {
-		User user = new User("yeon", "yeon@email.com", "password1000", "url path");
+		User user = new User(null, "yeon", "yeon@email.com", "password1000", "url path");
 		userRepository.save(user);
 	}
 

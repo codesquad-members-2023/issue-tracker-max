@@ -78,7 +78,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		issueRepository.modifyStatus(issueStatus.name(), id);
 
 		// then
-		assertThat(issueRepository.findById(id).getStatus()).isEqualTo(issueStatus);
+		assertThat(issueRepository.findBy(id).getStatus()).isEqualTo(issueStatus);
 	}
 
 	@DisplayName("이슈를 등록하고 그 등록 번호의 이슈 제목을 수정한다.")
@@ -92,7 +92,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		issueRepository.modifyTitle(title, id);
 
 		// then
-		assertThat(issueRepository.findById(id).getTitle()).isEqualTo(title);
+		assertThat(issueRepository.findBy(id).getTitle()).isEqualTo(title);
 	}
 
 	@DisplayName("이슈를 등록하고 그 등록 번호의 이슈 내용을 수정한다.")
@@ -106,7 +106,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		issueRepository.modifyContent(content, id);
 
 		// then
-		assertThat(issueRepository.findById(id).getContent()).isEqualTo(content);
+		assertThat(issueRepository.findBy(id).getContent()).isEqualTo(content);
 	}
 
 	@DisplayName("이슈를 등록하고 그 등록 번호의 마일스톤을 수정한다.")
@@ -119,7 +119,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		issueRepository.modifyMilestone(null, id);
 
 		// then
-		assertThat(issueRepository.findById(id).getMilestoneId()).isEqualTo(0L);
+		assertThat(issueRepository.findBy(id).getMilestoneId()).isEqualTo(0L);
 	}
 
 	@DisplayName("이슈를 등록하고 삭제한다.")
@@ -129,7 +129,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		Long id = createIssue();
 
 		// when
-		issueRepository.deleteById(id);
+		issueRepository.deleteBy(id);
 
 		// then
 		assertThat(issueRepository.exist(id)).isFalse();

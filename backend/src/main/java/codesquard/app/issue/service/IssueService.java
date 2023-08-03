@@ -77,7 +77,7 @@ public class IssueService {
 	@Transactional
 	public void modifyAssignees(IssueModifyAssigneesRequest issueModifyAssigneesRequest, Long issueId) {
 		existIssue(issueId);
-		issueRepository.deleteIssueAssigneesById(issueId);
+		issueRepository.deleteIssueAssigneesBy(issueId);
 		registerIssueAssignee(issueId, issueModifyAssigneesRequest.getAssignees());
 	}
 
@@ -90,23 +90,23 @@ public class IssueService {
 	@Transactional
 	public void modifyLabels(IssueModifyLabelsRequest issueModifyLabelsRequest, Long issueId) {
 		existIssue(issueId);
-		issueRepository.deleteIssueLabelsById(issueId);
+		issueRepository.deleteIssueLabelsBy(issueId);
 		registerIssueLabel(issueId, issueModifyLabelsRequest.getLabels());
 	}
 
 	@Transactional(readOnly = true)
 	public Issue findById(Long issueId) {
-		return issueRepository.findById(issueId);
+		return issueRepository.findBy(issueId);
 	}
 
 	@Transactional(readOnly = true)
 	public List<User> findAssigneesById(Long issueId) {
-		return issueRepository.findAssigneesById(issueId);
+		return issueRepository.findAssigneesBy(issueId);
 	}
 
 	@Transactional(readOnly = true)
 	public List<Label> findLabelsById(Long issueId) {
-		return issueRepository.findLabelsById(issueId);
+		return issueRepository.findLabelsBy(issueId);
 	}
 
 	@Transactional
@@ -119,7 +119,7 @@ public class IssueService {
 	@Transactional
 	public void delete(Long issueId) {
 		existIssue(issueId);
-		issueRepository.deleteById(issueId);
+		issueRepository.deleteBy(issueId);
 		commentRepository.deleteByIssueId(issueId);
 	}
 }
