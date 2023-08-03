@@ -50,7 +50,7 @@ public class IssueIntegrationTest {
                 .andDo(print());
     }
 
-    @DisplayName("필터 목록을 가지고 온다.")
+    @DisplayName("메인 화면의 필터 목록을 가지고 온다.")
     @Test
     void testReadFilters() throws Exception {
         ResultActions resultActions = mockMvc.perform(get("/api/filters"));
@@ -62,6 +62,24 @@ public class IssueIntegrationTest {
                 .andExpect(jsonPath("$.labels.length()").value(4))
                 .andExpect(jsonPath("$.milestones.length()").value(4))
                 .andExpect(jsonPath("$.assignees.[0].name").value("담당자가 없는 이슈"))
+                .andDo(print());
+    }
+
+    @DisplayName("이슈 화면의 필터 목록을 가지고 온다.")
+    @Test
+    void testReadFiltersByIssue() throws Exception {
+        ResultActions resultActions = mockMvc.perform(get("/api/issues"));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.assignees.length()").value(3))
+                .andExpect(jsonPath("$.authors.length()").value(0))
+                .andExpect(jsonPath("$.labels.length()").value(4))
+                .andExpect(jsonPath("$.milestones.length()").value(4))
+                .andExpect(jsonPath("$.milestones.[0].openIssueCount").value(0))
+                .andExpect(jsonPath("$.milestones.[0].closedIssueCount").value(0))
+                .andExpect(jsonPath("$.milestones.[1].openIssueCount").value(1))
+                .andExpect(jsonPath("$.milestones.[1].closedIssueCount").value(2))
                 .andDo(print());
     }
 }

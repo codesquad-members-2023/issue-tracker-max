@@ -13,6 +13,7 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.Memb
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.MilestoneRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.StatRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.StatVO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -82,7 +83,7 @@ public class IssueServiceTest {
         assertThat(actual.getIssueInformations().get(1).getAssigneeProfiles().get(0)).isEqualTo("담당자 4");
     }
 
-    @DisplayName("레포지토리에서 필터 정보를 받아 FilterListInformation으로 변환할 수 있다.")
+    @DisplayName("레포지토리에서 메인 페이지의 필터 정보를 받아 FilterListInformation으로 변환할 수 있다.")
     @Test
     void testReadFilters() {
         given(memberRepository.findAllFilters()).willReturn(createDummyMemberDetailsVOs());
@@ -97,6 +98,37 @@ public class IssueServiceTest {
         assertThat(actual.getLabelFilterInformations().size()).isEqualTo(3);
         assertThat(actual.getLabelFilterInformations().get(0).getId()).isEqualTo(3L);
         assertThat(actual.getMilestoneFilterInformations().size()).isEqualTo(2);
+    }
+
+    @DisplayName("레포지토리에서 이슈 페이지의 필터 정보를 받아 FilterListInformation으로 변환할 수 있다.")
+    @Test
+    void testReadFiltersFromIssue() {
+        given(memberRepository.findAllFilters()).willReturn(createDummyMemberDetailsVOs());
+        given(labelRepository.findAllFilters()).willReturn(createDummyLabelDetailsVOs());
+        given(milestoneRepository.findAllFilters()).willReturn(createDummyMilestoneDetailVOs());
+        given(statRepository.findIssuesCountByMilestoneIds(any())).willReturn(createDummyIssueByMilestoneVOs());
+
+        FilterListInformation actual = issueService.readFiltersFromIssue();
+
+        assertThat(actual.getAssigneeFilterInformations().size()).isEqualTo(3);
+        assertThat(actual.getAuthorFilterInformations()).isEmpty();
+        assertThat(actual.getLabelFilterInformations().size()).isEqualTo(3);
+        assertThat(actual.getMilestoneFilterInformations().size()).isEqualTo(2);
+        assertThat(actual.getMilestoneFilterInformations().get(0).getId()).isEqualTo(0L);
+        assertThat(actual.getMilestoneFilterInformations().get(0).getOpenIssueCount()).isEqualTo(1);
+        assertThat(actual.getMilestoneFilterInformations().get(1).getId()).isEqualTo(1L);
+    }
+
+    private Map<Long, IssueByMilestoneVO> createDummyIssueByMilestoneVOs() {
+        IssueByMilestoneVO tmp1 = IssueByMilestoneVO.builder()
+                .openIssueCount(1)
+                .closedIssueCount(2)
+                .build();
+        IssueByMilestoneVO tmp2 = IssueByMilestoneVO.builder()
+                .openIssueCount(3)
+                .closedIssueCount(4)
+                .build();
+        return Map.of(0L, tmp1, 1L, tmp2);
     }
 
     private List<MemberDetailsVO> createDummyMemberDetailsVOs() {

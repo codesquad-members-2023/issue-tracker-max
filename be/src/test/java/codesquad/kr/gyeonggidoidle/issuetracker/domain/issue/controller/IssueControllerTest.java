@@ -71,7 +71,7 @@ public class IssueControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("필터 내용을 담은 FilterListInformation을 FilterListResponse으로 변환한다.")
+    @DisplayName("메인 화면의 필터 내용을 담은 FilterListInformation을 FilterListResponse으로 변환한다.")
     @Test
     void testReadFilters() throws Exception {
         given(issueService.readFilters()).willReturn(createDummyFilterListInformation());
@@ -88,10 +88,35 @@ public class IssueControllerTest {
                 .andDo(print());
     }
 
+    @DisplayName("이슈 화면의 필터 내용을 담은 FilterListInformation을 FilterListResponse으로 변환한다.")
+    @Test
+    void testReadFiltersFromIssue() throws Exception {
+        given(issueService.readFiltersFromIssue()).willReturn(createDummyFilterListInformationByIssue());
+
+        ResultActions resultActions = mockMvc.perform(get("/api/issues"));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.assignees.length()").value(3))
+                .andExpect(jsonPath("$.authors.length()").value(0))
+                .andExpect(jsonPath("$.labels.length()").value(1))
+                .andExpect(jsonPath("$.milestones.length()").value(0))
+                .andDo(print());
+    }
+
     private FilterListInformation createDummyFilterListInformation() {
         return FilterListInformation.builder()
                 .assigneeFilterInformations(createDummyAssigneeFilterInformations())
                 .authorFilterInformations(createDummyAuthorFilterInformations())
+                .labelFilterInformations(createDummyLabelFilterInformations())
+                .milestoneFilterInformations(createDummyMilestoneFilterInformations())
+                .build();
+    }
+
+    private FilterListInformation createDummyFilterListInformationByIssue() {
+        return FilterListInformation.builder()
+                .assigneeFilterInformations(createDummyAssigneeFilterInformations())
+                .authorFilterInformations(Collections.emptyList())
                 .labelFilterInformations(createDummyLabelFilterInformations())
                 .milestoneFilterInformations(createDummyMilestoneFilterInformations())
                 .build();
