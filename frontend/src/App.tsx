@@ -6,8 +6,8 @@ import { designSystem } from "./constants/designSystem";
 import { Error404 } from "./page/Error404";
 import { Label } from "./page/label/Label";
 import { Main } from "./page/main/Main";
-import { NewIssue } from "./page/NewIssue";
 import { Milestone } from "./page/milestone/Milestone";
+import { NewIssue } from "./page/newIssue/NewIssue";
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<"LIGHT" | "DARK">("LIGHT");

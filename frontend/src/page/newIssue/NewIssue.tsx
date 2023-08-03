@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import { Button } from "../components/Button";
-import { TextArea } from "../components/TextArea";
-import { TextInput } from "../components/TextInput";
-import { Sidebar, SidebarOptionData } from "../components/sidebar/Sidebar";
+import { SidebarOptionData } from "../../components/sidebar/Sidebar";
+import { NewIssueBody } from "./NewIssueBody";
+import { NewIssueFooter } from "./NewIssueFooter";
 
 type AssigneeData = {
   id: number;
@@ -34,7 +33,7 @@ type MilestoneData = {
   selected: boolean;
 };
 
-type OptionData = AssigneeData | LabelData | MilestoneData;
+export type OptionData = AssigneeData | LabelData | MilestoneData;
 
 export function NewIssue() {
   const [assignees, setAssignees] = useState<AssigneeData[]>([]);
@@ -45,11 +44,12 @@ export function NewIssue() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchOptions();
+    fetchSidebarOptions();
   }, []);
 
-  const fetchOptions = async () => {
+  const fetchSidebarOptions = async () => {
     const url = "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io";
+
     const responses = await Promise.all([
       fetch(`${url}/api/assignees`),
       fetch(`${url}/api/labels`),
@@ -80,9 +80,6 @@ export function NewIssue() {
   };
 
   const invalidTitle = title.trim().length === 0;
-  const titleCaption = invalidTitle
-    ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
-    : "";
 
   const changeOptionSelection = <T extends OptionData>(
     options: T[],
@@ -188,55 +185,21 @@ export function NewIssue() {
     <Div>
       <NewIssueHeader>새로운 이슈 작성</NewIssueHeader>
       <Line />
-      <NewIssueBody>
-        <img
-          style={{ width: "32px" }}
-          src="https://avatars.githubusercontent.com/u/41321198?v=4"
-        />
-        <NewIssueContent>
-          <TextInput
-            size="L"
-            placeholder="제목"
-            label="제목"
-            value={title}
-            maxLength={50}
-            isError={invalidTitle}
-            caption={titleCaption}
-            onChange={onTitleChange}
-          />
-          <TextArea
-            placeholder="코멘트"
-            label="코멘트"
-            value={content}
-            maxLength={10000}
-            onChange={onContentChange}
-          />
-        </NewIssueContent>
-        <Sidebar
-          assigneeOptions={createOptionsForSideBar(assignees)}
-          labelOptions={createOptionsForSideBar(labels)}
-          milestoneOptions={createOptionsForSideBar(milestones)}
-        />
-      </NewIssueBody>
+      <NewIssueBody
+        title={title}
+        content={content}
+        assignees={createOptionsForSideBar(assignees)}
+        labels={createOptionsForSideBar(labels)}
+        milestones={createOptionsForSideBar(milestones)}
+        onTitleChange={onTitleChange}
+        onContentChange={onContentChange}
+      />
       <Line />
-      <NewIssueFooter>
-        <Button
-          size="M"
-          buttonType="Ghost"
-          icon="xSquare"
-          onClick={onCancelButtonClick}
-        >
-          작성 취소
-        </Button>
-        <Button
-          size="L"
-          buttonType="Container"
-          onClick={onSubmitButtonClick}
-          disabled={invalidTitle}
-        >
-          완료
-        </Button>
-      </NewIssueFooter>
+      <NewIssueFooter
+        invalidTitle={invalidTitle}
+        onSubmitButtonClick={onSubmitButtonClick}
+        onCancelButtonClick={onCancelButtonClick}
+      />
     </Div>
   );
 }
@@ -253,44 +216,6 @@ const Div = styled.div`
 const NewIssueHeader = styled.div`
   font: ${({ theme }) => theme.font.displayBold32};
   color: ${({ theme }) => theme.color.neutralTextStrong};
-`;
-
-const NewIssueBody = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 24px;
-  flex: 1 0 0;
-  align-self: stretch;
-`;
-
-const NewIssueFooter = styled.div`
-  align-self: flex-end;
-  display: flex;
-  align-items: center;
-  gap: 32px;
-`;
-
-const NewIssueContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1 0 0;
-  align-self: stretch;
-
-  & > div:first-of-type {
-    width: 100%;
-    align-self: stretch;
-    flex-shrink: 0;
-
-    & > div,
-    & input {
-      width: 100%;
-    }
-  }
-
-  & > div:last-of-type {
-    align-self: stretch;
-  }
 `;
 
 const Line = styled.hr`
