@@ -1,17 +1,21 @@
 import { useTheme } from '@emotion/react';
 import { Button } from './Button';
-import { Input } from './textInput/Input';
-import { InputContainer } from './textInput/InputContainer';
 import { ReactComponent as Search } from '@assets/icons/search.svg';
 import { ReactComponent as ChevronDown } from '@assets/icons/chevronDown.svg';
+import { InputContainer } from './textInput/InputContainer';
+import { Input } from './textInput/Input';
 
 type Props = {
-  value: string;
+  filterString: string;
   onClick: () => void;
   onChange: (value: string) => void;
 };
 
-export const FilterBar: React.FC<Props> = ({ value, onClick, onChange }) => {
+export const FilterBar: React.FC<Props> = ({
+  filterString,
+  onClick,
+  onChange,
+}) => {
   const theme = useTheme() as any;
 
   return (
@@ -54,7 +58,7 @@ export const FilterBar: React.FC<Props> = ({ value, onClick, onChange }) => {
         >
           <Search stroke={theme.neutral.text.default} />
           <Input
-            value={value}
+            value={filterString}
             onChange={onChange}
             placeholder="Search all issues"
           />

@@ -1,9 +1,6 @@
-import { useTheme } from '@emotion/react';
-import { Button } from '@components/common/Button';
-import { FilterBar } from '@components/common/FilterBar';
-import { DropDownIndicator } from '@components/common/dropDown/DropDownIndicator';
+import { IssueTable } from '@components/issueListPage/IssueTable';
+import { SubNav } from '@components/issueListPage/SubNav';
 import { useState } from 'react';
-import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 
 type Issues = {
   openIssueCount: number;
@@ -21,6 +18,12 @@ type Issues = {
 
 export const IssueListPage: React.FC = ({}) => {
   const [issues, setIssues] = useState<Issues>();
+  const [filterString, setFilterString] = useState('status:open');
 
-  return <></>;
+  return (
+    <>
+      <SubNav {...{ filterString }} />
+      <IssueTable />
+    </>
+  );
 };

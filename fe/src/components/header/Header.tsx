@@ -26,6 +26,7 @@ export const Header: React.FC<Props> = ({
       <header
         css={{
           height: '94px',
+          marginBottom: '32px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
