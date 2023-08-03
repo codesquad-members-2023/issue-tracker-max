@@ -49,10 +49,12 @@ class UserLoginRestControllerTest extends ControllerTestSupport {
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("id").value(equalTo(1)))
-			.andExpect(jsonPath("loginId").value(equalTo("hong1234")))
-			.andExpect(jsonPath("email").value(equalTo("hong1234@gmail.com")))
-			.andExpect(jsonPath("avatarUrl").value(equalTo(null)))
+			.andExpect(jsonPath("user.id").value(equalTo(1)))
+			.andExpect(jsonPath("user.loginId").value(equalTo("hong1234")))
+			.andExpect(jsonPath("user.email").value(equalTo("hong1234@gmail.com")))
+			.andExpect(jsonPath("user.avatarUrl").value(equalTo(null)))
+			.andExpect(jsonPath("jwt.accessToken").exists())
+			.andExpect(jsonPath("jwt.refreshToken").exists())
 			.andExpect(header().exists("Authorization"))
 			.andExpect(cookie().exists("refreshToken"));
 	}
