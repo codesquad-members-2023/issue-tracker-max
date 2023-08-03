@@ -177,7 +177,7 @@ const IconWrapper = styled.div`
 `;
 
 const Input = styled.input<InputProps>`
-  width: 100%;
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   border: none;
