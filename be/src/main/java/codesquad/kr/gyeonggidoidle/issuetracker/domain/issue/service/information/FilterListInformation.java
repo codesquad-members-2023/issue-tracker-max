@@ -32,7 +32,7 @@ public class FilterListInformation {
     public static FilterListInformation from(List<MemberDetailsVO> assignees, List<MemberDetailsVO> authors,
                                              List<LabelDetailsVO> labels, List<MilestoneDetailsVO> milestones) {
         return FilterListInformation.builder()
-                .assigneeFilterInformations(AssigneeFilterInformation.from(assignees))
+                .assigneeFilterInformations(AssigneeFilterInformation.fromByMain(assignees))
                 .authorFilterInformations(AuthorFilterInformation.from(authors))
                 .labelFilterInformations(LabelFilterInformation.from(labels))
                 .milestoneFilterInformations(MilestoneFilterInformation.from(milestones))
@@ -43,7 +43,7 @@ public class FilterListInformation {
     public static FilterListInformation from(List<MemberDetailsVO> assignees, List<LabelDetailsVO> labels,
                                              List<MilestoneDetailsVO> milestones, Map<Long, IssueByMilestoneVO> issuesCountByMilestoneIds) {
         return FilterListInformation.builder()
-                .assigneeFilterInformations(AssigneeFilterInformation.from(assignees))
+                .assigneeFilterInformations(AssigneeFilterInformation.fromByIssue(assignees))
                 .authorFilterInformations(Collections.emptyList())
                 .labelFilterInformations(LabelFilterInformation.from(labels))
                 .milestoneFilterInformations(MilestoneFilterInformation.from(milestones, issuesCountByMilestoneIds))

@@ -4,6 +4,7 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.Memb
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,7 +22,7 @@ public class AssigneeFilterInformation {
         this.profile = profile;
     }
 
-    public static List<AssigneeFilterInformation> from(List<MemberDetailsVO> memberDetailsVOs) {
+    public static List<AssigneeFilterInformation> fromByMain(List<MemberDetailsVO> memberDetailsVOs) {
         List<AssigneeFilterInformation> informations = new ArrayList<>();
         informations.add(new AssigneeFilterInformation(0L, "담당자가 없는 이슈", ""));
 
@@ -30,6 +31,13 @@ public class AssigneeFilterInformation {
                 .forEach(informations::add);
 
         return Collections.unmodifiableList(informations);
+    }
+
+    public static List<AssigneeFilterInformation> fromByIssue(List<MemberDetailsVO> memberDetailsVOs) {
+
+        return memberDetailsVOs.stream()
+                .map(AssigneeFilterInformation::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public static AssigneeFilterInformation from(MemberDetailsVO memberDetailsVO) {
