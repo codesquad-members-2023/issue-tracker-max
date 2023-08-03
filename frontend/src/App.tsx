@@ -6,6 +6,7 @@ import { designSystem } from "./constants/designSystem";
 import { Error404 } from "./page/Error404";
 import { Label } from "./page/label/Label";
 import { Main } from "./page/main/Main";
+import { Milestone } from "./page/milestone/Milestone";
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<"LIGHT" | "DARK">("LIGHT");
@@ -18,6 +19,8 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/label" element={<Label />} />
+            <Route path="/milestone" element={<Milestone />} />
+            <Route path="/milestone/:state" element={<Milestone />} />
             <Route path="*" element={<Error404 />} />
           </Routes>
         </Router>
