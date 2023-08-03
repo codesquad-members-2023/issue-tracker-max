@@ -16,6 +16,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class LabelRepositoryImpl implements LabelRepository {
 
+    private static final String FIND_COUNT_BY_ORGANIZATION_SQL = "SELECT COUNT(id)"
+            + " FROM label"
+            + " WHERE organization_id = :organization_id";
     private static final String ORGANIZATION_ID = "organization_id";
     private static final String FIND_FILTER_BY_ORGANIZATION_ID_SQL =
             "SELECT id,title,background_color, is_dark"
@@ -94,6 +97,15 @@ public class LabelRepositoryImpl implements LabelRepository {
         return template.query(FIND_FILTER_BY_ORGANIZATION_ID_SQL,
                 Map.of(ORGANIZATION_ID, organizationId),
                 getLabelFilterRowMapper());
+    }
+
+    @Override
+    public Long findCountByOrganizationId(Long organizationId) {
+        return template.queryForObject(
+                FIND_COUNT_BY_ORGANIZATION_SQL,
+                Map.of(ORGANIZATION_ID, organizationId),
+                Long.class
+        );
     }
 
     private RowMapper<Label> labelRowMapper() {

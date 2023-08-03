@@ -50,6 +50,10 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
             "SELECT id,title"
                     + " from milestone"
                     + " WHERE organization_id = :organization_id";
+    private static final String FIND_COUNT_BY_ORGANIZATION_SQL =
+            "SELECT COUNT(id)"
+            + " FROM milestone"
+            + " WHERE organization_id = :organization_id";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
@@ -98,6 +102,15 @@ public class MilestoneRepositoryImpl implements MilestoneRepository {
         return jdbcTemplate.query(FIND_FILTER_BY_ORGANIZATION_ID_SQL,
                 Map.of(ORGANIZATION_ID,organizationId),
                 getMilestoneFilterRowMapper());
+    }
+
+    @Override
+    public Long findCountByOrganizationId(Long organizationId) {
+        return jdbcTemplate.queryForObject(
+                FIND_COUNT_BY_ORGANIZATION_SQL,
+                Map.of(ORGANIZATION_ID, organizationId),
+                Long.class
+        );
     }
 
     private static MapSqlParameterSource getSaveSqlParameterSource(Milestone milestone) {
