@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.issuetracker.issue.domain.Issue;
+import com.issuetracker.issue.domain.IssuesCountData;
 import com.issuetracker.label.application.dto.LabelSearchInformation;
 import com.issuetracker.milestone.application.dto.MilestoneSearchInformation;
 

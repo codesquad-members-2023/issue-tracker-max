@@ -33,7 +33,10 @@ public class IssueController {
 
 	@GetMapping
 	public ResponseEntity<IssuesSearchResponse> showIssues(@ModelAttribute IssueSearchRequest issueSearchRequest) {
-		IssuesSearchResponse issuesSearchResponse = IssuesSearchResponse.from(issueService.search(issueSearchRequest.toIssueSearchData(1L)));
+		IssuesSearchResponse issuesSearchResponse = IssuesSearchResponse.of(
+			issueService.getIssuesCount(),
+			issueService.search(issueSearchRequest.toIssueSearchData(1L))
+		);
 		return ResponseEntity.ok().body(issuesSearchResponse);
 	}
 

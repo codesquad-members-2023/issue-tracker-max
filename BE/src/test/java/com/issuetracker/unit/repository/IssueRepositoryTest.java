@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.issuetracker.issue.domain.Issue;
+import com.issuetracker.issue.domain.IssuesCountData;
 import com.issuetracker.issue.infrastrucure.IssueRepository;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.member.domain.Member;
@@ -54,5 +55,17 @@ class IssueRepositoryTest {
 
 		// then
 		assertThat(issueId).isNotNull();
+	}
+
+	@Test
+	void 열린_이슈_닫힌_이슈_라벨_마일스톤_개수를_조회한다() {
+		// when
+		IssuesCountData actual = issueRepository.findAllCount();
+
+		// then
+		assertThat(actual.getIssueOpenCount()).isEqualTo(6);
+		assertThat(actual.getIssueCloseCount()).isEqualTo(6);
+		assertThat(actual.getLabelCount()).isEqualTo(7);
+		assertThat(actual.getMilestoneCount()).isEqualTo(4);
 	}
 }

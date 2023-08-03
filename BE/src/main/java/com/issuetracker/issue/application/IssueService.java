@@ -12,7 +12,10 @@ import com.issuetracker.issue.application.dto.IssueCreateInformation;
 import com.issuetracker.issue.application.dto.IssueLabelMappingInformation;
 import com.issuetracker.issue.application.dto.IssueSearchInputData;
 import com.issuetracker.issue.application.dto.IssueSearchInformation;
+import com.issuetracker.issue.application.dto.IssuesCountInformation;
 import com.issuetracker.issue.domain.IssueMapper;
+import com.issuetracker.issue.domain.IssuesCountData;
+import com.issuetracker.issue.infrastrucure.IssueRepository;
 import com.issuetracker.milestone.infrastructure.MilestoneRepository;
 import com.issuetracker.milestone.application.dto.MilestoneSearchInformation;
 import com.issuetracker.issue.infrastrucure.AuthorRepository;
@@ -28,6 +31,7 @@ public class IssueService {
 
 	private final IssueMapper issueMapper;
 	private final IssueCreator issueCreator;
+	private final IssueRepository issueRepository;
 	private final MilestoneRepository milestoneRepository;
 	private final AuthorRepository authorRepository;
 	private final AssigneeRepository assigneeRepository;
@@ -36,6 +40,10 @@ public class IssueService {
 	@Transactional(readOnly = true)
 	public List<IssueSearchInformation> search(IssueSearchInputData issueSearchData) {
 		return IssueSearchInformation.from(issueMapper.search(issueSearchData.toIssueSearch()));
+	}
+
+	public IssuesCountInformation getIssuesCount() {
+		return IssuesCountInformation.from(issueRepository.findAllCount());
 	}
 
 	public IssueCreateInformation create(IssueCreateInputData issueCreateData) {

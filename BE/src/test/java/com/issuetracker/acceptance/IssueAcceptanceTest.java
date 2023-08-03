@@ -242,6 +242,16 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 	}
 
 	private void 검색_조건에_맞는_이슈_목록_검증(ExtractableResponse<Response> response, IssueSearchRequest issueSearchRequest) {
+		int issueOpenCount = response.jsonPath().getInt("metadata.issueOpenCount");
+		int issueCloseCount = response.jsonPath().getInt("metadata.issueCloseCount");
+		int labelCount = response.jsonPath().getInt("metadata.labelCount");
+		int milestoneCount = response.jsonPath().getInt("metadata.milestoneCount");
+
+		assertThat(issueOpenCount).isEqualTo(6);
+		assertThat(issueCloseCount).isEqualTo(6);
+		assertThat(labelCount).isEqualTo(7);
+		assertThat(milestoneCount).isEqualTo(4);
+
 		if (issueSearchRequest.getIsOpen() != null) {
 			List<Boolean> isOpens = response.jsonPath().getList("issues.isOpen", Boolean.class);
 
