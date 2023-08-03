@@ -14,36 +14,33 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.issuetrackermax.controller.auth.dto.response.JwtResponse;
 import com.issuetrackermax.controller.auth.dto.response.MemberProfileResponse;
 import com.issuetrackermax.controller.auth.dto.response.OauthTokenResponse;
+import com.issuetrackermax.domain.jwt.JwtRepository;
+import com.issuetrackermax.domain.jwt.entity.Jwt;
 import com.issuetrackermax.domain.member.entity.Member;
 import com.issuetrackermax.domain.oauth.InMemoryProviderRepository;
 import com.issuetrackermax.domain.oauth.entity.OauthAttributes;
 import com.issuetrackermax.service.jwt.JwtProvider;
 import com.issuetrackermax.service.member.MemberService;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class OauthService {
 
 	private final InMemoryProviderRepository inMemoryProviderRepository;
 	private final MemberService memberService;
 	private final JwtProvider jwtProvider;
-
-	public OauthService(InMemoryProviderRepository inMemoryProviderRepository, MemberService memberService,
-		JwtProvider jwtProvider) {
-		this.inMemoryProviderRepository = inMemoryProviderRepository;
-		this.memberService = memberService;
-		this.jwtProvider = jwtProvider;
-	}
+	private final JwtRepository jwtRepository;
 
 	public JwtResponse login(String providerName, String code) {
 		OauthProvider provider = inMemoryProviderRepository.findByProviderName(providerName);
-
 		OauthTokenResponse tokenResponse = getToken(code, provider);
-
 		MemberProfileResponse memberProfileResponse = getMemberProfileResponse(providerName, tokenResponse, provider);
-
 		Member member = memberService.registerOauthMember(memberProfileResponse);
-
-		return JwtResponse.from(jwtProvider.createJwt(Map.of("memberId", String.valueOf(member.getId()))));
+		Jwt jwt = jwtProvider.createJwt(Map.of("memberId", String.valueOf(member.getId())));
+		jwtRepository.saveRefreshToken(jwt.getRefreshToken(), member.getId());
+		return JwtResponse.from(jwt);
 	}
 
 	private MemberProfileResponse getMemberProfileResponse(String providerName, OauthTokenResponse tokenResponse,
