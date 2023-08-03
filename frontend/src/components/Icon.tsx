@@ -6,7 +6,7 @@ import {ReactComponent as CheckBoxDisable} from "../assets/checkBoxDisable.svg";
 import {ReactComponent as CheckBoxInitial} from "../assets/checkBoxInitial.svg";
 import {ReactComponent as CheckOffCircle} from "../assets/checkOffCircle.svg";
 import {ReactComponent as CheckOnCircle} from "../assets/checkOnCircle.svg";
-import {ReactComponent as CheckBoxActive} from "../assets/checkboxActive.svg";
+import {ReactComponent as CheckBoxActive} from "/src/assets/checkboxActive.svg";
 import {ReactComponent as ChevronDown} from "../assets/chevronDown.svg";
 import {ReactComponent as Comment} from "../assets/comment.svg";
 import {ReactComponent as Edit} from "../assets/edit.svg";
@@ -28,86 +28,86 @@ import {ReactComponent as XSquare} from "../assets/xSquare.svg";
 import {cloneElement} from "react";
 
 export function Icon({
-                       name,
-                       fill,
-                       stroke,
+                         name,
+                         fill,
+                         stroke,
                      }: {
-  name: string;
-  fill?: string;
-  stroke?: string;
+    name: string;
+    fill?: string;
+    stroke?: string;
 }) {
-  const isSvgExist = getIcon(name) !== null;
+    const isSvgExist = getIcon(name) !== null;
 
-  return (
-      <>
-        {isSvgExist && (
-            <IconWrapper $fillType={fillTypes.includes(name)}>
-              {cloneElement(getIcon(name)!, {fill, stroke})}
-            </IconWrapper>
-        )}
-      </>
-  );
+    return (
+        <>
+            {isSvgExist && (
+                <IconWrapper $fillType={fillTypes.includes(name)}>
+                    {cloneElement(getIcon(name)!, {fill, stroke})}
+                </IconWrapper>
+            )}
+        </>
+    );
 }
 
 const fillTypes = ["milestone", "userImageLarge", "userImageSmall"];
 
 const getIcon = (name: string) => {
-  switch (name) {
-    case "alertCircle":
-      return <AlertCircle/>;
-    case "archive":
-      return <Archive/>;
-    case "calendar":
-      return <Calendar/>;
-    case "checkBoxActive":
-      return <CheckBoxActive/>;
-    case "checkBoxDisable":
-      return <CheckBoxDisable/>;
-    case "checkBoxInitial":
-      return <CheckBoxInitial/>;
-    case "checkOffCircle":
-      return <CheckOffCircle/>;
-    case "checkOnCircle":
-      return <CheckOnCircle/>;
-    case "chevronDown":
-      return <ChevronDown/>;
-    case "comment":
-      return <Comment/>;
-    case "edit":
-      return <Edit/>;
-    case "label":
-      return <Label/>;
-    case "logoDarkMedium":
-      return <LogoDarkMedium/>;
-    case "logoDarkLarge":
-      return <LogoDarkLarge/>;
-    case "logoLightMedium":
-      return <LogoLightMedium/>;
-    case "logoLightLarge":
-      return <LogoLightLarge/>;
-    case "milestone":
-      return <Milestone/>;
-    case "paperclip":
-      return <PaperClip/>;
-    case "plus":
-      return <Plus/>;
-    case "refreshCcw":
-      return <RefreshCcw/>;
-    case "search":
-      return <Search/>;
-    case "smile":
-      return <Smile/>;
-    case "trash":
-      return <Trash/>;
-    case "userImageLarge":
-      return <UserImageLarge/>;
-    case "userImageSmall":
-      return <UserImageSmall/>;
-    case "xSquare":
-      return <XSquare/>;
-    default:
-      return null;
-  }
+    switch (name) {
+        case "alertCircle":
+            return <AlertCircle/>;
+        case "archive":
+            return <Archive/>;
+        case "calendar":
+            return <Calendar/>;
+        case "checkBoxActive":
+            return <CheckBoxActive/>;
+        case "checkBoxDisable":
+            return <CheckBoxDisable/>;
+        case "checkBoxInitial":
+            return <CheckBoxInitial/>;
+        case "checkOffCircle":
+            return <CheckOffCircle/>;
+        case "checkOnCircle":
+            return <CheckOnCircle/>;
+        case "chevronDown":
+            return <ChevronDown/>;
+        case "comment":
+            return <Comment/>;
+        case "edit":
+            return <Edit/>;
+        case "label":
+            return <Label/>;
+        case "logoDarkMedium":
+            return <LogoDarkMedium/>;
+        case "logoDarkLarge":
+            return <LogoDarkLarge/>;
+        case "logoLightMedium":
+            return <LogoLightMedium/>;
+        case "logoLightLarge":
+            return <LogoLightLarge/>;
+        case "milestone":
+            return <Milestone/>;
+        case "paperclip":
+            return <PaperClip/>;
+        case "plus":
+            return <Plus/>;
+        case "refreshCcw":
+            return <RefreshCcw/>;
+        case "search":
+            return <Search/>;
+        case "smile":
+            return <Smile/>;
+        case "trash":
+            return <Trash/>;
+        case "userImageLarge":
+            return <UserImageLarge/>;
+        case "userImageSmall":
+            return <UserImageSmall/>;
+        case "xSquare":
+            return <XSquare/>;
+        default:
+            return null;
+    }
 };
 
 const IconWrapper = styled.div<{ $fillType: boolean }>`
