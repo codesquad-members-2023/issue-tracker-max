@@ -19,6 +19,13 @@ public class Label {
 		this.description = description;
 	}
 
+	public Label(Long id, String name, String color, String background) {
+		this.id = id;
+		this.name = name;
+		this.color = LabelColor.chooseColor(color);
+		this.background = background;
+	}
+
 	public Label(final String name, final String color, final String background, final String description) {
 		this.name = name;
 		this.color = LabelColor.chooseColor(color);

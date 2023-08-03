@@ -60,7 +60,7 @@ public class MilestoneService {
 		Long openedMilestoneCount = milestoneRepository.countMilestonesBy(MilestoneStatus.OPENED);
 		Long closedMilestoneCount = milestoneRepository.countMilestonesBy(MilestoneStatus.CLOSED);
 
-		return new MilestoneReadResponse(openedMilestoneCount, closedMilestoneCount, labelCount, milestones);
+		return new MilestoneReadResponse(openedMilestoneCount, closedMilestoneCount, labelCount, status.getName(), milestones);
 	}
 
 	private Map<String, Long> makeIssues() {

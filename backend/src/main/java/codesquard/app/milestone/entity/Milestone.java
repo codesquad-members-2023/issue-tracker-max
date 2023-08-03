@@ -13,35 +13,21 @@ public class Milestone {
 	private String description; // 설명
 	private LocalDate deadline; // 완료일
 
-	public Milestone(final String status) {
-		chooseStatus(status);
-	}
-
 	public Milestone(final String name, final String description, final LocalDate deadline) {
 		this.name = name;
 		this.description = description;
 		this.deadline = deadline;
 	}
 
-	public Milestone(final Long id, final String status, final LocalDateTime createdAt, final LocalDateTime modifiedAt,
+	public Milestone(final Long id, final LocalDateTime createdAt, final LocalDateTime modifiedAt,
 		final String name,
 		final String description, final LocalDate deadline) {
 		this.id = id;
-		chooseStatus(status);
 		this.createdAt = createdAt;
 		this.modifiedAt = modifiedAt;
 		this.name = name;
 		this.description = description;
 		this.deadline = deadline;
-	}
-
-	private void chooseStatus(final String status) {
-		if (status.equalsIgnoreCase("OPENED")) {
-			this.status = MilestoneStatus.OPENED;
-			return;
-		}
-
-		this.status = MilestoneStatus.CLOSED;
 	}
 
 	public Long getId() {
