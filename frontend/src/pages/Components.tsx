@@ -43,6 +43,8 @@ export default function Components() {
           Label
         </InformationTag>
         <TextInput
+          id="test1"
+          name="test1"
           size="tall"
           labelName="label"
           placeholder="placeholder"
@@ -52,6 +54,8 @@ export default function Components() {
           }}
         />
         <TextInput
+          id="test2"
+          name="test2"
           size="short"
           labelName="label"
           placeholder="placeholder"

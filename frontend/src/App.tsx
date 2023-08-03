@@ -18,8 +18,8 @@ import AuthenticatedRoute from './routes/AuthenticatedRoute';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
-  const context = useContext(AppContext);
-  context.util.getLogoByTheme = () =>
+  const { util, control } = useContext(AppContext);
+  util.getLogoByTheme = () =>
     isLight
       ? {
           large: LogoLightLarge,
@@ -29,7 +29,7 @@ function App() {
           large: LogoDarkLarge,
           medium: LogoDarkMedium,
         };
-  context.control.changeTheme = () => {
+  control.changeTheme = () => {
     setIsLight(!isLight);
   };
 

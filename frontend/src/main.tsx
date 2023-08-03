@@ -11,8 +11,6 @@ if (import.meta.env.DEV) {
   });
 }
 
-console.log(import.meta.env);
-
 const appContext = {
   util: {} as Record<string, () => unknown>,
   control: {} as Record<string, () => void>,

@@ -21,8 +21,20 @@ export default function Register() {
         <figcaption className="blind">이슈트래커</figcaption>
       </Logo>
       <RegisterForm>
-        <TextInput size="tall" labelName="아이디" placeholder="아이디" />
-        <TextInput size="tall" labelName="비밀번호" placeholder="비밀번호" />
+        <TextInput
+          id="id"
+          name="name"
+          size="tall"
+          labelName="아이디"
+          placeholder="아이디"
+        />
+        <TextInput
+          id="password"
+          name="password"
+          size="tall"
+          labelName="비밀번호"
+          placeholder="비밀번호"
+        />
         <RegisterButton type="submit">회원가입</RegisterButton>
       </RegisterForm>
       <LoginLink type="button" ghost onClick={() => navigate('/login')}>

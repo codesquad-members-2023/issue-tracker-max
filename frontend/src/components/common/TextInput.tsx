@@ -3,6 +3,8 @@ import { styled } from 'styled-components';
 
 type TextInputProps = React.HTMLAttributes<HTMLInputElement> & {
   size: 'tall' | 'short';
+  id: string;
+  name: string;
   labelName: string;
   disabled?: boolean;
   placeholder?: string;
@@ -15,8 +17,16 @@ export default function TextInput(props: TextInputProps) {
   const [isError, setIsError] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
 
-  const { size, labelName, disabled, placeholder, helpText, validationFunc } =
-    props;
+  const {
+    id,
+    name,
+    size,
+    labelName,
+    disabled,
+    placeholder,
+    helpText,
+    validationFunc,
+  } = props;
   const hasHelpText = !!helpText;
 
   const handleBlur = () => {
@@ -42,6 +52,8 @@ export default function TextInput(props: TextInputProps) {
       {(isFocused || inputValue) && <Label $size={size}>{labelName}</Label>}
       <StyledTextInput
         type="text"
+        id={id}
+        name={name}
         placeholder={placeholder}
         value={inputValue}
         disabled={disabled}

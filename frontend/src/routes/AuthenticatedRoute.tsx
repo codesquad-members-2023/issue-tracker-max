@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Navigate, useLocation } from 'react-router';
+import { useState, useContext } from 'react';
+import { Navigate } from 'react-router';
+import { AppContext } from '../main';
 
 export default function AuthenticatedRoute({
   children,
@@ -7,12 +8,10 @@ export default function AuthenticatedRoute({
   children: React.ReactNode;
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => {
-    const session = localStorage.getItem('session');
-    setIsAuthenticated(!!session);
-  }, [location]); // location이 바뀔 때마다 로그인 상태를 확인합니다.
+  const appContext = useContext(AppContext);
+  appContext.util.isLogined = () => isAuthenticated;
+  appContext.control.logined = () => setIsAuthenticated(true);
+  appContext.control.logouted = () => setIsAuthenticated(false);
 
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 }

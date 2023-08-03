@@ -8,10 +8,38 @@ import ButtonLarge from '../components/common/button/ButtonLarge';
 import Button from '../components/common/button/BaseButton';
 
 export default function Login() {
-  const appContext = useContext(AppContext);
-  const logo = (appContext.util.getLogoByTheme() as ContextLogo)
-    .large as string;
+  const { util, control } = useContext(AppContext);
+  const logo = (util.getLogoByTheme() as ContextLogo).large;
   const navigate = useNavigate();
+  const login = (id: string, password: string) => {
+    (async function () {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, password }),
+      });
+
+      if (res.status === 200) {
+        control.logined();
+      }
+      navigate('/');
+    })();
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const { id, password } = Object.fromEntries(formData) as {
+      id: string;
+      password: string;
+    };
+
+    console.log(id, password);
+    login(id, password);
+  };
 
   return (
     <Container>
@@ -24,9 +52,21 @@ export default function Login() {
         GitHub 계정으로 로그인
       </GitHubOAuthButton>
       <span>or</span>
-      <LoginForm>
-        <TextInput size="tall" labelName="아이디" placeholder="아이디" />
-        <TextInput size="tall" labelName="비밀번호" placeholder="비밀번호" />
+      <LoginForm onSubmit={handleSubmit}>
+        <TextInput
+          id="id"
+          name="id"
+          size="tall"
+          labelName="아이디"
+          placeholder="아이디"
+        />
+        <TextInput
+          id="password"
+          name="password"
+          size="tall"
+          labelName="비밀번호"
+          placeholder="비밀번호"
+        />
         <LoginButton type="submit">아이디로 로그인</LoginButton>
       </LoginForm>
       <RegisterButton type="button" ghost onClick={() => navigate('/register')}>
