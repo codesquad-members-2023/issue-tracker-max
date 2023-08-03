@@ -1,6 +1,5 @@
-import { styled } from "styled-components";
-
 import { useNavigate } from "react-router-dom";
+import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { FilterBar } from "../../components/FilterBar";
 import { TabButton } from "../../components/TabButton";
@@ -66,7 +65,7 @@ export function MainHeader({
         />
       </div>
       <div style={{ display: "flex", gap: "16px" }}>
-        <TabButton onClick={onTabClick}>
+        <TabButton>
           {tabs.map(({ name, icon, selected }, index) => (
             <Button
               key={`tab-${index}`}
@@ -75,6 +74,7 @@ export function MainHeader({
               buttonType="Ghost"
               flexible="Flexible"
               selected={selected}
+              onClick={() => onTabClick(name)}
             >
               {name}
             </Button>

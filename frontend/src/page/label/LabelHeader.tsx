@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TabButton } from "../../components/TabButton";
@@ -15,23 +16,30 @@ export function LabelHeader({
   openedMilestoneCount,
   labelCount,
 }: LabelHeaderProps) {
+  const navigate = useNavigate();
   const tabs = [
-    { name: `label(${labelCount})`, icon: "label", selected: true },
+    {
+      name: `label(${labelCount})`,
+      icon: "label",
+      selected: true,
+      onClick: () => {
+        navigate("/label");
+      },
+    },
     {
       name: `milestone(${openedMilestoneCount})`,
       icon: "milestone",
       selected: false,
+      onClick: () => {
+        navigate("/milestone");
+      },
     },
   ];
 
-  const onTabClick = () => {
-    console.log("click tab");
-  };
-
   return (
     <Div>
-      <TabButton onClick={onTabClick}>
-        {tabs.map(({ name, icon, selected }, index) => (
+      <TabButton>
+        {tabs.map(({ name, icon, selected, onClick }, index) => (
           <Button
             key={`tab-${index}`}
             icon={icon}
@@ -39,6 +47,7 @@ export function LabelHeader({
             buttonType="Ghost"
             flexible="Flexible"
             selected={selected}
+            onClick={onClick}
           >
             {name}
           </Button>
