@@ -1,6 +1,7 @@
 package com.issuetrackermax.domain.label;
 
 import java.sql.Types;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,5 +37,12 @@ public class LabelRepository {
 	public Long getLabelCount() {
 		String sql = "SELECT COUNT(*) FROM label";
 		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Long.class);
+	}
+
+	public Boolean existByIds(List<Long> ids) {
+		String sql = "SELECT COUNT(*) FROM label WHERE id IN (:ids)";
+		Integer count = jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("ids", ids), Integer.class);
+		return count != null && count.equals(ids.size());
 	}
 }
