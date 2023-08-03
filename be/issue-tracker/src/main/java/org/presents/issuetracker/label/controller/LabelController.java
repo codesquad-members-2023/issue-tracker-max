@@ -1,13 +1,14 @@
 package org.presents.issuetracker.label.controller;
 
-import org.presents.issuetracker.label.dto.request.LabelRequestDto;
+import lombok.extern.slf4j.Slf4j;
+import org.presents.issuetracker.global.dto.response.LabelResponse;
+import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
+import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
 import org.presents.issuetracker.label.service.LabelService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/labels")
 public class LabelController {
@@ -19,8 +20,15 @@ public class LabelController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody LabelRequestDto labelRequestDto) {
-        labelService.create(labelRequestDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<LabelResponse> create(@RequestBody LabelCreateRequest labelCreateRequest) {
+        LabelResponse labelResponse = labelService.create(labelCreateRequest);
+        return ResponseEntity.ok().body(labelResponse);
     }
+
+    @PatchMapping
+    public ResponseEntity<LabelResponse> update(@RequestBody LabelUpdateRequest dto) {
+        LabelResponse labelResponse = labelService.update(dto);
+        return ResponseEntity.ok().body(labelResponse);
+    }
+
 }
