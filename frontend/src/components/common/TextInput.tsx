@@ -61,7 +61,6 @@ type InputContainerProps = {
 };
 
 const InputContainer = styled.fieldset<InputContainerProps>`
-  width: 288px;
   height: ${({ $size }) => ($size === 'short' ? '40px' : '56px')};
   padding: 0 16px;
   display: flex;

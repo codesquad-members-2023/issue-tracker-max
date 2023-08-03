@@ -3,14 +3,9 @@ import { styled } from 'styled-components';
 import { AppContext } from '../main';
 import ContextLogo from '../types/ContextLogo';
 import TextInput from '../components/common/TextInput';
-// type TextInputProps = React.HTMLAttributes<HTMLInputElement> & {
-//   size: 'tall' | 'short';
-//   labelName: string;
-//   disabled?: boolean;
-//   placeholder?: string;
-//   helpText?: string;
-//   validationFunc?: (value: string) => boolean;
-// };
+import ButtonLarge from '../components/common/button/ButtonLarge';
+import Button from '../components/common/button/BaseButton';
+
 export default function Login() {
   const appContext = useContext(AppContext);
   const logo = (appContext.util.getLogoByTheme() as ContextLogo)
@@ -18,13 +13,22 @@ export default function Login() {
   return (
     <Container>
       <h1 className="blind">로그인 페이지</h1>
-      <figure>
+      <Logo>
         <img src={logo} alt="" />
         <figcaption className="blind">이슈트래커</figcaption>
-      </figure>
-      <form>
-        <TextInput size='tall' labelName='아이디'></TextInput>
-      </form>
+      </Logo>
+      <GitHubOAuthButton type="button" outline>
+        GitHub 계정으로 로그인
+      </GitHubOAuthButton>
+      <span>or</span>
+      <LoginForm>
+        <TextInput size="tall" labelName="아이디" placeholder="아이디" />
+        <TextInput size="tall" labelName="비밀번호" placeholder="비밀번호" />
+        <LoginButton type="submit">아이디로 로그인</LoginButton>
+      </LoginForm>
+      <RegisterButton type="button" ghost>
+        회원가입
+      </RegisterButton>
     </Container>
   );
 }
@@ -36,4 +40,34 @@ const Container = styled.article`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
+  & > span {
+    margin-bottom: 18px;
+    color: ${({ theme }) => theme.color.neutral.text.weak};
+    ${({ theme }) => theme.font.display.medium[16]};
+  }
+
+  fieldset {
+    margin-bottom: 16px;
+  }
 `;
+
+const Logo = styled.figure`
+  margin-bottom: 64px;
+`;
+
+const GitHubOAuthButton = styled(ButtonLarge)`
+  width: 320px;
+  margin-bottom: 14px;
+`;
+
+const LoginForm = styled.form`
+  width: 320px;
+`;
+
+const LoginButton = styled(ButtonLarge)`
+  width: 100%;
+  margin-bottom: 16px;
+`;
+
+const RegisterButton = styled(Button)``;

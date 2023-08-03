@@ -5,7 +5,7 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
-  #root {
+  body {
     background: ${({ theme }) => theme.color.neutral.surface.default};
   }
 
