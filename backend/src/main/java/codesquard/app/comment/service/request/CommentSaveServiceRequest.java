@@ -13,9 +13,7 @@ import lombok.NoArgsConstructor;
 public class CommentSaveServiceRequest {
 
 	private Long issueId;
-
 	private Long userId;
-
 	private String content;
 
 	public Comment toEntity(LocalDateTime createdAt) {

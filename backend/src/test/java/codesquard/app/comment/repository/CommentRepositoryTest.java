@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.comment.entity.Comment;
 import codesquard.app.issue.entity.Issue;
-import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.user.entity.User;
 import codesquard.app.user.repository.UserRepository;
@@ -46,11 +45,10 @@ class CommentRepositoryTest extends IntegrationTestSupport {
 	@Test
 	void save() {
 		// given
+		createUserFixture();
+		createIssueFixture();
+
 		LocalDateTime createdAt = LocalDateTime.of(2023, 8, 1, 16, 0);
-
-		createUser("yeon", "yeon@email.com", "password1000", "url path");
-		createIssue(null, 1L, "test issue", "hello", IssueStatus.OPENED, createdAt);
-
 		Comment comment = new Comment(1L, 1L, "Create New Comment", createdAt);
 
 		// when
@@ -64,15 +62,11 @@ class CommentRepositoryTest extends IntegrationTestSupport {
 	@Test
 	void modify() {
 		// given
-		LocalDateTime createdAt = LocalDateTime.of(2023, 8, 1, 16, 0);
+		createUserFixture();
+		createIssueFixture();
+		Long savedCommentId = createCommentFixture();
+
 		LocalDateTime modifiedAt = LocalDateTime.of(2023, 8, 1, 17, 0);
-
-		createUser("yeon", "yeon@email.com", "password1000", "url path");
-		createIssue(null, 1L, "test issue", "hello", IssueStatus.OPENED, createdAt);
-
-		Comment comment = new Comment(1L, 1L, "Create New Comment", createdAt);
-		Long savedCommentId = commentRepository.save(comment);
-
 		Comment commentForModify = new Comment(savedCommentId, "modified repository content", modifiedAt);
 
 		// when
@@ -82,15 +76,35 @@ class CommentRepositoryTest extends IntegrationTestSupport {
 		assertThat(modifiedCommentId).isEqualTo(savedCommentId);
 	}
 
-	private void createUser(String loginId, String email, String password, String avatarUrl) {
-		User user = new User(null, loginId, email, password, avatarUrl);
+	@DisplayName("등록된 댓글을 삭제한다.")
+	@Test
+	void test() {
+		// given
+		createUserFixture();
+		createIssueFixture();
+		Long savedCommentId = createCommentFixture();
+
+		// when
+		Long deletedCommentId = commentRepository.deleteById(savedCommentId);
+
+		// then
+		assertThat(savedCommentId).isEqualTo(deletedCommentId);
+	}
+
+	private void createUserFixture() {
+		User user = new User(null, "yeon", "yeon@email.com", "password1000", "url path");
 		userRepository.save(user);
 	}
 
-	private void createIssue(Long milestoneId, Long userId, String title, String content, IssueStatus status,
-		LocalDateTime createdAt) {
-		Issue issue = new Issue(milestoneId, userId, title, content);
+	private void createIssueFixture() {
+		Issue issue = new Issue(null, 1L, "test issue", "hello");
 		issueRepository.save(issue);
+	}
+
+	private Long createCommentFixture() {
+		LocalDateTime createdAt = LocalDateTime.of(2023, 8, 1, 16, 0);
+		Comment comment = new Comment(1L, 1L, "Create New Comment", createdAt);
+		return commentRepository.save(comment);
 	}
 
 }

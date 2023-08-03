@@ -10,6 +10,14 @@ public class User {
 	private final String password;
 	private final String avatarUrl;
 
+	public User(Long id, String loginId, String avatarUrl) {
+		this.id = id;
+		this.loginId = loginId;
+		this.avatarUrl = avatarUrl;
+		this.email = null;
+		this.password = null;
+	}
+
 	public User(Long id, String loginId, String email, String password, String avatarUrl) {
 		this.id = id;
 		this.loginId = loginId;
@@ -17,6 +25,10 @@ public class User {
 		this.password = password;
 		this.avatarUrl = avatarUrl;
 	}
+
+	public String getLoginId() {
+		return loginId;
+  }
 
 	public MapSqlParameterSource createSaveParamSource() {
 		return new MapSqlParameterSource()

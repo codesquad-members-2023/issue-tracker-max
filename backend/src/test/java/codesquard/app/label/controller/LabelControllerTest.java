@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import codesquard.app.label_milestone.ControllerTestSupport;
-import codesquard.app.label.dto.LabelSaveRequest;
+import codesquard.app.label.dto.request.LabelSaveRequest;
 
 class LabelControllerTest extends ControllerTestSupport {
 

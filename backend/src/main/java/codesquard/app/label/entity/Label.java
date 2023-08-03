@@ -1,5 +1,8 @@
 package codesquard.app.label.entity;
 
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+
 public class Label {
 	private Long id; // 등록번호
 	private String name; // 이름
@@ -7,20 +10,41 @@ public class Label {
 	private String background; // 배경색
 	private String description; // 설명
 
-	public Label(String name, String color, String background, String description) {
+	public Label(final Long id, final String name, final String color, final String background,
+		final String description) {
+		this.id = id;
 		this.name = name;
-		chooseColor(color);
+		this.color = LabelColor.chooseColor(color);
 		this.background = background;
 		this.description = description;
 	}
 
-	private void chooseColor(String color) {
-		if (color.equalsIgnoreCase(LabelColor.DARK_STRING)) {
-			this.color = LabelColor.DARK;
-			return;
-		}
+	public Label(final String name, final String color, final String background, final String description) {
+		this.name = name;
+		this.color = LabelColor.chooseColor(color);
+		this.background = background;
+		this.description = description;
+	}
 
-		this.color = LabelColor.LIGHT;
+	public static SqlParameterSource makeParam(final Label label) {
+		return new MapSqlParameterSource()
+			.addValue("name", label.name)
+			.addValue("color", label.color.getNameToLowerCase())
+			.addValue("background", label.background)
+			.addValue("description", label.description);
+	}
+
+	public static SqlParameterSource makeParam(final Long labelId, final Label label) {
+		return new MapSqlParameterSource()
+			.addValue("name", label.name)
+			.addValue("color", label.color.getNameToLowerCase())
+			.addValue("background", label.background)
+			.addValue("description", label.description)
+			.addValue("id", labelId);
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public String getName() {

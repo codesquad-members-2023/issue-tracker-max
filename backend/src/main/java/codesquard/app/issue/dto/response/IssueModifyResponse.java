@@ -5,14 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class IssueSaveResponse {
+public class IssueModifyResponse {
 
 	@JsonProperty("success")
 	private final boolean success;
-	@JsonProperty("id")
-	private final Long id;
 
-	public static IssueSaveResponse success(Long id) {
-		return new IssueSaveResponse(true, id);
+	public static IssueModifyResponse success() {
+		return new IssueModifyResponse(true);
 	}
 }

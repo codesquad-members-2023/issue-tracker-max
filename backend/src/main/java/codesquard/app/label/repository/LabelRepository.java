@@ -7,13 +7,11 @@ import codesquard.app.label.entity.Label;
 
 public interface LabelRepository {
 
-	Optional<Long> save(Label label);
+	Optional<Long> save(final Label label);
 
 	List<Label> findAll();
 
-	Label findById(Long id);
-
 	void updateBy(final Long labelId, final Label label);
 
-	Long deleteById(Long id);
+	void deleteBy(final Long labelId);
 }
