@@ -15,21 +15,6 @@ export const users = [
   },
 ];
 
-export const milestoneList = [
-  {
-    milestoneId: 1,
-    milestoneName: "Sprint #1",
-    openIssueCount: 5,
-    closedIssueCount: 1,
-  },
-  {
-    milestoneId: 2,
-    milestoneName: "Sprint #2",
-    openIssueCount: 4,
-    closedIssueCount: 10,
-  },
-];
-
 export const issueList = [
   {
     issueNumber: 1,
@@ -130,6 +115,50 @@ export const issueList = [
   },
 ];
 
+export const issueDetail = {
+  issueId: 3,
+  title: "이슈 제목",
+  isOpen: true,
+  createdAt: "2023-07-31 11:33:03",
+  author: {
+    username: "asdf",
+    profileUrl: "~~~",
+  },
+  content: "~~~~",
+  assignees: [
+    {
+      userAccountId: 1,
+      username: "kakamotobi",
+      profileUrl: "~~~",
+    },
+    {
+      userAccountId: 5,
+      username: "brunini",
+      profileUrl: "~~~",
+    },
+  ],
+  labels: [
+    {
+      labelId: 1,
+      labelName: "feat",
+      fontColor: "#FFF",
+      backgroundColor: "#DDD",
+    },
+    {
+      labelId: 2,
+      labelName: "documentation",
+      fontColor: "#FFF",
+      backgroundColor: "#EEE",
+    },
+  ],
+  milestone: {
+    milestoneId: 1,
+    milestoneName: "~~",
+    openIssueCount: 3,
+    closedIssueCount: 5,
+  },
+};
+
 export const labelList = [
   {
     labelId: 1,
@@ -166,5 +195,20 @@ export const labelList = [
     name: "qerqer",
     fontColor: "#000",
     backgroundColor: "#FF3B30",
+  },
+];
+
+export const milestoneList = [
+  {
+    milestoneId: 1,
+    milestoneName: "Sprint #1",
+    openIssueCount: 5,
+    closedIssueCount: 1,
+  },
+  {
+    milestoneId: 2,
+    milestoneName: "Sprint #2",
+    openIssueCount: 4,
+    closedIssueCount: 10,
   },
 ];

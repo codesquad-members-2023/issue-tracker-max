@@ -1,5 +1,12 @@
 import { rest } from "msw";
-import { issueList, labelList, loginInfo, milestoneList, users } from "./data";
+import {
+  issueDetail,
+  issueList,
+  labelList,
+  loginInfo,
+  milestoneList,
+  users,
+} from "./data";
 
 type AuthRequestBody = {
   username: string;
@@ -68,6 +75,10 @@ export const handlers = [
 
   rest.get("/api/issues", async (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(issueList));
+  }),
+
+  rest.get("/api/issues/1", async (_req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(issueDetail));
   }),
 
   rest.get("/api/labels", async (_, res, ctx) => {
