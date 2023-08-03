@@ -1,37 +1,37 @@
-import { css, styled } from "styled-components";
-import { ReactComponent as AlertCircle } from "../assets/alertCircle.svg";
-import { ReactComponent as Archive } from "../assets/archive.svg";
-import { ReactComponent as Calendar } from "../assets/calendar.svg";
-import { ReactComponent as CheckBoxDisable } from "../assets/checkBoxDisable.svg";
-import { ReactComponent as CheckBoxInitial } from "../assets/checkBoxInitial.svg";
-import { ReactComponent as CheckOffCircle } from "../assets/checkOffCircle.svg";
-import { ReactComponent as CheckOnCircle } from "../assets/checkOnCircle.svg";
-import { ReactComponent as CheckBoxActive } from "../assets/checkboxActive.svg";
-import { ReactComponent as ChevronDown } from "../assets/chevronDown.svg";
-import { ReactComponent as Comment } from "../assets/comment.svg";
-import { ReactComponent as Edit } from "../assets/edit.svg";
-import { ReactComponent as Label } from "../assets/label.svg";
-import { ReactComponent as LogoDarkLarge } from "../assets/logoDarkLarge.svg";
-import { ReactComponent as LogoDarkMedium } from "../assets/logoDarkMedium.svg";
-import { ReactComponent as LogoLightLarge } from "../assets/logoLightLarge.svg";
-import { ReactComponent as LogoLightMedium } from "../assets/logoLightMedium.svg";
-import { ReactComponent as Milestone } from "../assets/milestone.svg";
-import { ReactComponent as PaperClip } from "../assets/paperclip.svg";
-import { ReactComponent as Plus } from "../assets/plus.svg";
-import { ReactComponent as RefreshCcw } from "../assets/refreshCcw.svg";
-import { ReactComponent as Search } from "../assets/search.svg";
-import { ReactComponent as Smile } from "../assets/smile.svg";
-import { ReactComponent as Trash } from "../assets/trash.svg";
-import { ReactComponent as UserImageLarge } from "../assets/userImageLarge.svg";
-import { ReactComponent as UserImageSmall } from "../assets/userImageSmall.svg";
-import { ReactComponent as XSquare } from "../assets/xSquare.svg";
-import { cloneElement } from "react";
+import {css, styled} from "styled-components";
+import {ReactComponent as AlertCircle} from "../assets/alertCircle.svg";
+import {ReactComponent as Archive} from "../assets/archive.svg";
+import {ReactComponent as Calendar} from "../assets/calendar.svg";
+import {ReactComponent as CheckBoxDisable} from "../assets/checkBoxDisable.svg";
+import {ReactComponent as CheckBoxInitial} from "../assets/checkBoxInitial.svg";
+import {ReactComponent as CheckOffCircle} from "../assets/checkOffCircle.svg";
+import {ReactComponent as CheckOnCircle} from "../assets/checkOnCircle.svg";
+import {ReactComponent as CheckBoxActive} from "../assets/checkboxActive.svg";
+import {ReactComponent as ChevronDown} from "../assets/chevronDown.svg";
+import {ReactComponent as Comment} from "../assets/comment.svg";
+import {ReactComponent as Edit} from "../assets/edit.svg";
+import {ReactComponent as Label} from "../assets/label.svg";
+import {ReactComponent as LogoDarkLarge} from "../assets/logoDarkLarge.svg";
+import {ReactComponent as LogoDarkMedium} from "../assets/logoDarkMedium.svg";
+import {ReactComponent as LogoLightLarge} from "../assets/logoLightLarge.svg";
+import {ReactComponent as LogoLightMedium} from "../assets/logoLightMedium.svg";
+import {ReactComponent as Milestone} from "../assets/milestone.svg";
+import {ReactComponent as PaperClip} from "../assets/paperclip.svg";
+import {ReactComponent as Plus} from "../assets/plus.svg";
+import {ReactComponent as RefreshCcw} from "../assets/refreshCcw.svg";
+import {ReactComponent as Search} from "../assets/search.svg";
+import {ReactComponent as Smile} from "../assets/smile.svg";
+import {ReactComponent as Trash} from "../assets/trash.svg";
+import {ReactComponent as UserImageLarge} from "../assets/userImageLarge.svg";
+import {ReactComponent as UserImageSmall} from "../assets/userImageSmall.svg";
+import {ReactComponent as XSquare} from "../assets/xSquare.svg";
+import {cloneElement} from "react";
 
 export function Icon({
-  name,
-  fill,
-  stroke,
-}: {
+                       name,
+                       fill,
+                       stroke,
+                     }: {
   name: string;
   fill?: string;
   stroke?: string;
@@ -39,13 +39,13 @@ export function Icon({
   const isSvgExist = getIcon(name) !== null;
 
   return (
-    <>
-      {isSvgExist && (
-        <IconWrapper $fillType={fillTypes.includes(name)}>
-          {cloneElement(getIcon(name)!, {fill, stroke})}
-        </IconWrapper>
-      )}
-    </>
+      <>
+        {isSvgExist && (
+            <IconWrapper $fillType={fillTypes.includes(name)}>
+              {cloneElement(getIcon(name)!, {fill, stroke})}
+            </IconWrapper>
+        )}
+      </>
   );
 }
 
@@ -54,57 +54,57 @@ const fillTypes = ["milestone", "userImageLarge", "userImageSmall"];
 const getIcon = (name: string) => {
   switch (name) {
     case "alertCircle":
-      return <AlertCircle />;
+      return <AlertCircle/>;
     case "archive":
-      return <Archive />;
+      return <Archive/>;
     case "calendar":
-      return <Calendar />;
+      return <Calendar/>;
     case "checkBoxActive":
-      return <CheckBoxActive />;
+      return <CheckBoxActive/>;
     case "checkBoxDisable":
-      return <CheckBoxDisable />;
+      return <CheckBoxDisable/>;
     case "checkBoxInitial":
-      return <CheckBoxInitial />;
+      return <CheckBoxInitial/>;
     case "checkOffCircle":
-      return <CheckOffCircle />;
+      return <CheckOffCircle/>;
     case "checkOnCircle":
-      return <CheckOnCircle />;
+      return <CheckOnCircle/>;
     case "chevronDown":
-      return <ChevronDown />;
+      return <ChevronDown/>;
     case "comment":
-      return <Comment />;
+      return <Comment/>;
     case "edit":
-      return <Edit />;
+      return <Edit/>;
     case "label":
-      return <Label />;
+      return <Label/>;
     case "logoDarkMedium":
-      return <LogoDarkMedium />;
+      return <LogoDarkMedium/>;
     case "logoDarkLarge":
-      return <LogoDarkLarge />;
+      return <LogoDarkLarge/>;
     case "logoLightMedium":
-      return <LogoLightMedium />;
+      return <LogoLightMedium/>;
     case "logoLightLarge":
-      return <LogoLightLarge />;
+      return <LogoLightLarge/>;
     case "milestone":
-      return <Milestone />;
+      return <Milestone/>;
     case "paperclip":
-      return <PaperClip />;
+      return <PaperClip/>;
     case "plus":
-      return <Plus />;
+      return <Plus/>;
     case "refreshCcw":
-      return <RefreshCcw />;
+      return <RefreshCcw/>;
     case "search":
-      return <Search />;
+      return <Search/>;
     case "smile":
-      return <Smile />;
+      return <Smile/>;
     case "trash":
-      return <Trash />;
+      return <Trash/>;
     case "userImageLarge":
-      return <UserImageLarge />;
+      return <UserImageLarge/>;
     case "userImageSmall":
-      return <UserImageSmall />;
+      return <UserImageSmall/>;
     case "xSquare":
-      return <XSquare />;
+      return <XSquare/>;
     default:
       return null;
   }
@@ -114,14 +114,14 @@ const IconWrapper = styled.div<{ $fillType: boolean }>`
   display: flex;
   align-items: center;
 
-  ${({ $fillType }) =>
+  ${({$fillType}) =>
     $fillType
-      ? css`
+        ? css`
           & > svg {
             stroke: transparent;
           }
         `
-      : css`
+        : css`
           & > svg {
             fill: transparent;
           }

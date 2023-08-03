@@ -1,70 +1,70 @@
-import { useState } from "react";
-import { styled } from "styled-components";
-import { Button } from "../Button";
-import { TabButton } from "../TabButton";
-import { DropdownContainer } from "../dropdown/DropdownContainer";
+import {useState} from "react";
+import {styled} from "styled-components";
+import {Button} from "../Button";
+import {TabButton} from "../TabButton";
+import {DropdownContainer} from "../dropdown/DropdownContainer";
 
 type TableHeaderProps = {
-  openedIssueCount: number;
-  closedIssueCount: number;
-  multiFilters: object;
+    openedIssueCount: number;
+    closedIssueCount: number;
+    multiFilters: object;
 };
 
 export function IssueTableHeader({
-  openedIssueCount,
-  closedIssueCount,
-  multiFilters,
-}: TableHeaderProps) {
-  const [issueStates, setIssueStates] = useState([
-    {
-      name: `열린 이슈${openedIssueCount}`,
-      icon: "alertCircle",
-      selected: true,
-    },
-    { name: `닫힌 이슈${closedIssueCount}`, icon: "archive" },
-  ]);
+                                     openedIssueCount,
+                                     closedIssueCount,
+                                     multiFilters,
+                                 }: TableHeaderProps) {
+    const [issueStates, setIssueStates] = useState([
+        {
+            name: `열린 이슈${openedIssueCount}`,
+            icon: "alertCircle",
+            selected: true,
+        },
+        {name: `닫힌 이슈${closedIssueCount}`, icon: "archive"},
+    ]);
 
-  const onIssueStateClick = (name: string) => {
-    setIssueStates((t) =>
-      t.map((issueState) =>
-        issueState.name === name
-          ? { ...issueState, selected: true }
-          : { ...issueState, selected: false },
-      ),
+    const onIssueStateClick = (name: string) => {
+        setIssueStates((t) =>
+            t.map((issueState) =>
+                issueState.name === name
+                    ? {...issueState, selected: true}
+                    : {...issueState, selected: false},
+            ),
+        );
+    };
+    return (
+        <Div>
+            <CheckboxLabel>
+                <input type="checkbox"/>
+            </CheckboxLabel>
+            <TabButton type="Ghost" onClick={onIssueStateClick}>
+                {issueStates.map(({name, icon, selected}, index) => (
+                    <Button
+                        key={`tab-${index}`}
+                        icon={icon}
+                        size="M"
+                        buttonType="Ghost"
+                        flexible="Flexible"
+                        selected={selected}
+                    >
+                        {name}
+                    </Button>
+                ))}
+            </TabButton>
+            <MultiFiltersDiv>
+                {Object.entries(multiFilters).map(([key, value], index) => (
+                    <DropdownContainer
+                        key={index}
+                        name={key}
+                        optionTitle={`${key} 필터`}
+                        options={value}
+                        alignment="Left"
+                    />
+                ))}
+            </MultiFiltersDiv>
+        </Div>
     );
-  };
-  return (
-    <Div>
-      <CheckboxLabel>
-        <input type="checkbox" />
-      </CheckboxLabel>
-      <TabButton type="Ghost" onClick={onIssueStateClick}>
-        {issueStates.map(({ name, icon, selected }, index) => (
-          <Button
-            key={`tab-${index}`}
-            icon={icon}
-            size="M"
-            buttonType="Ghost"
-            flexible="Flexible"
-            selected={selected}
-          >
-            {name}
-          </Button>
-        ))}
-      </TabButton>
-      <MultiFiltersDiv>
-        {Object.entries(multiFilters).map(([key, value], index) => (
-          <DropdownContainer
-            key={index}
-            name={key}
-            optionTitle={`${key} 필터`}
-            options={value}
-            alignment="Left"
-          />
-        ))}
-      </MultiFiltersDiv>
-    </Div>
-  );
 }
 
 const Div = styled.div`
@@ -72,9 +72,9 @@ const Div = styled.div`
   height: 64px;
   display: flex;
   align-items: center;
-  background: ${({ theme }) => theme.color.neutralSurfaceDefault};
-  border-top-right-radius: ${({ theme }) => theme.radius.large};
-  border-top-left-radius: ${({ theme }) => theme.radius.large};
+  background: ${({theme}) => theme.color.neutralSurfaceDefault};
+  border-top-right-radius: ${({theme}) => theme.radius.large};
+  border-top-left-radius: ${({theme}) => theme.radius.large};
 `;
 
 const CheckboxLabel = styled.label`

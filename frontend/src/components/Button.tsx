@@ -1,6 +1,6 @@
-import { ButtonHTMLAttributes } from "react";
-import { styled, useTheme } from "styled-components";
-import { Icon } from "./Icon";
+import {ButtonHTMLAttributes} from "react";
+import {styled, useTheme} from "styled-components";
+import {Icon} from "./Icon";
 
 type ButtonProps = {
   size: "S" | "M" | "L";
@@ -12,15 +12,15 @@ type ButtonProps = {
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
-  size,
-  buttonType,
-  flexible,
-  icon,
-  selected,
-  children,
-  color,
-  ...props
-}: ButtonProps) {
+                         size,
+                         buttonType,
+                         flexible,
+                         icon,
+                         selected,
+                         children,
+                         color,
+                         ...props
+                       }: ButtonProps) {
   const buttonMap = {
     Container: ContainerButton,
     Outline: OutlineButton,
@@ -32,27 +32,27 @@ export function Button({
     Container: theme.color.brandTextDefault,
     Outline: theme.color.brandTextWeak,
     Ghost: selected
-      ? theme.color.neutralTextStrong
-      : theme.color.neutralTextDefault,
+        ? theme.color.neutralTextStrong
+        : theme.color.neutralTextDefault,
   };
 
   const ButtonComponent = buttonMap[buttonType];
   const iconColor = color || iconColorMap[buttonType];
 
   return (
-    <ButtonComponent
-      className={selected ? "selected" : ""}
-      $size={size}
-      $flexible={flexible === "Flexible"}
-      $selected={selected}
-      $color={color}
-      {...props}
-    >
-      <div>
-        {icon && <Icon name={icon} fill={iconColor} stroke={iconColor} />}
-        <span>{children}</span>
-      </div>
-    </ButtonComponent>
+      <ButtonComponent
+          className={selected ? "selected" : ""}
+          $size={size}
+          $flexible={flexible === "Flexible"}
+          $selected={selected}
+          $color={color}
+          {...props}
+      >
+        <div>
+          {icon && <Icon name={icon} fill={iconColor} stroke={iconColor}/>}
+          <span>{children}</span>
+        </div>
+      </ButtonComponent>
   );
 }
 
@@ -61,60 +61,60 @@ const StyledButton = styled.button<{
   $flexible?: boolean;
   $color?: string;
 }>`
-  width: ${({ $size, $flexible }) => {
-    if ($flexible) {
-      return "fit-content";
-    }
-    switch ($size) {
-      case "L":
-        return "240px";
-      case "M":
-        return "184px";
-      case "S":
-        return "128px";
-      default:
-        return "";
-    }
-  }};
-  height: ${({ $size }) => {
-    switch ($size) {
-      case "L":
-        return "56px";
-      case "M":
-        return "48px";
-      case "S":
-        return "40px";
-      default:
-        return "";
-    }
-  }};
-  padding: ${({ $flexible }) => ($flexible ? "0 24px 0 24px" : "")};
-  border-radius: ${({ theme, $size }) =>
+  width: ${({$size, $flexible}) => {
+  if ($flexible) {
+    return "fit-content";
+  }
+  switch ($size) {
+    case "L":
+      return "240px";
+    case "M":
+      return "184px";
+    case "S":
+      return "128px";
+    default:
+      return "";
+  }
+}};
+  height: ${({$size}) => {
+  switch ($size) {
+    case "L":
+      return "56px";
+    case "M":
+      return "48px";
+    case "S":
+      return "40px";
+    default:
+      return "";
+  }
+}};
+  padding: ${({$flexible}) => ($flexible ? "0 24px 0 24px" : "")};
+  border-radius: ${({theme, $size}) =>
     $size === "L" ? theme.radius.large : theme.radius.medium};
-  font: ${({ theme, $size }) => {
-    switch ($size) {
-      case "L":
-        return theme.font.availableMedium20;
-      case "M":
-        return theme.font.availableMedium16;
-      case "S":
-        return theme.font.availableMedium12;
-      default:
-        return "";
-    }
-  }};
-  opacity: ${({ theme }) => theme.opacity.default};
+  font: ${({theme, $size}) => {
+  switch ($size) {
+    case "L":
+      return theme.font.availableMedium20;
+    case "M":
+      return theme.font.availableMedium16;
+    case "S":
+      return theme.font.availableMedium12;
+    default:
+      return "";
+  }
+}};
+  opacity: ${({theme}) => theme.opacity.default};
 
   &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
+    opacity: ${({theme}) => theme.opacity.hover};
   }
 
   &:active {
-    opacity: ${({ theme }) => theme.opacity.press};
+    opacity: ${({theme}) => theme.opacity.press};
   }
 
   &:disabled {
-    opacity: ${({ theme }) => theme.opacity.disabled};
+    opacity: ${({theme}) => theme.opacity.disabled};
   }
 
   div {
@@ -129,38 +129,38 @@ const StyledButton = styled.button<{
 `;
 
 const ContainerButton = styled(StyledButton)`
-  background-color: ${({ theme }) => theme.color.brandSurfaceDefault};
-  color: ${({ theme, $color }) => $color || theme.color.brandTextDefault};
+  background-color: ${({theme}) => theme.color.brandSurfaceDefault};
+  color: ${({theme, $color}) => $color || theme.color.brandTextDefault};
 `;
 
 const OutlineButton = styled(StyledButton)`
-  border: ${({ theme }) =>
+  border: ${({theme}) =>
     theme.border.default + theme.color.brandBorderDefault};
-  color: ${({ theme, $color }) => $color || theme.color.brandTextWeak};
+  color: ${({theme, $color}) => $color || theme.color.brandTextWeak};
 `;
 
 const GhostButton = styled(StyledButton)<{ $selected?: boolean }>`
-  font: ${({ theme, $size, $selected }) => {
-    switch ($size) {
-      case "L":
-        return $selected
+  font: ${({theme, $size, $selected}) => {
+  switch ($size) {
+    case "L":
+      return $selected
           ? theme.font.selectedBold20
           : theme.font.availableMedium20;
-      case "M":
-        return $selected
+    case "M":
+      return $selected
           ? theme.font.selectedBold16
           : theme.font.availableMedium16;
-      case "S":
-        return $selected
+    case "S":
+      return $selected
           ? theme.font.selectedBold12
           : theme.font.availableMedium12;
-      default:
-        return "";
-    }
-  }};
-  color: ${({ theme, $selected, $color }) =>
+    default:
+      return "";
+  }
+}};
+  color: ${({theme, $selected, $color}) =>
     $color ||
     ($selected
-      ? theme.color.neutralTextStrong
-      : theme.color.neutralTextDefault)};
+        ? theme.color.neutralTextStrong
+        : theme.color.neutralTextDefault)};
 `;
