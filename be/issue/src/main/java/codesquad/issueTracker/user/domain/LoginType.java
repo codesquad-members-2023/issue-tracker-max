@@ -9,8 +9,8 @@ import java.util.Arrays;
 @Getter
 public enum LoginType {
 
-    LOCAL("LOCAL"),
-    GITHUB("GITHUB");
+    LOCAL("local"),
+    GITHUB("github");
 
     private String type;
 

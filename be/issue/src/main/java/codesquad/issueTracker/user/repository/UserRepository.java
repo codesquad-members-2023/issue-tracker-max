@@ -100,5 +100,12 @@ public class UserRepository {
 			.refreshToken(rs.getString("refresh_token"))
 			.build()
 	));
+
+
+	public Long updateUserLoginType(User existUser, User user) {
+		String sql = "UPDATE users SET login_type = :loginType WHERE id = :userId";
+		jdbcTemplate.update(sql,Map.of("loginType",user.getLoginType().getType(),"userId",existUser.getId()));
+		return existUser.getId();
+	}
 }
 
