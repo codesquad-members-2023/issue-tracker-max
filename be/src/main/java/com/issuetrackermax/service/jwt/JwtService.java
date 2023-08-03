@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetrackermax.common.exception.InCorrectPasswordException;
 import com.issuetrackermax.domain.jwt.JwtRepository;
 import com.issuetrackermax.domain.jwt.entity.Jwt;
 import com.issuetrackermax.domain.member.MemberRepository;
@@ -24,7 +25,7 @@ public class JwtService {
 		Member member = memberRepository.findByMemberLoginId(email).get();
 
 		if (!verifyPassword(member, password)) {
-			throw new Exception();
+			throw new InCorrectPasswordException();
 		}
 		Jwt jwt = jwtProvider.createJwt(generateMemberClaims(member.getId()));
 
@@ -37,12 +38,6 @@ public class JwtService {
 	public Jwt reissueAccessToken(String refreshToken) {
 		jwtProvider.getClaims(refreshToken);
 		Long memberId = jwtRepository.findByRefreshToken(refreshToken);
-		/*
-		 * TODO
-		 * */
-		// if(memberId == null) {
-		// 	throw new IllegalJwtTokenException(JwtTokenType.REFRESH);
-		// }
 
 		return jwtProvider.reissueAccessToken(generateMemberClaims(memberId), refreshToken);
 	}

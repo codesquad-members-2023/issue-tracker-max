@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.issuetrackermax.controller.ApiResponse;
-import com.issuetrackermax.controller.filter.dto.FilterRequest;
-import com.issuetrackermax.controller.filter.dto.FilterResponse;
+import com.issuetrackermax.controller.filter.dto.request.FilterRequest;
+import com.issuetrackermax.controller.filter.dto.response.FilterResponse;
 import com.issuetrackermax.service.filter.FilterService;
 import com.issuetrackermax.service.filter.dto.FilterInformation;
 

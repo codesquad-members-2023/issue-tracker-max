@@ -3,6 +3,8 @@ package com.issuetrackermax.service.member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetrackermax.common.exception.InvalidLoginIdException;
+import com.issuetrackermax.common.exception.InvalidPasswordException;
 import com.issuetrackermax.controller.auth.dto.response.MemberProfileResponse;
 import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
 import com.issuetrackermax.domain.member.MemberRepository;
@@ -17,12 +19,12 @@ public class MemberService {
 
 	@Transactional
 	public void registerMember(SignUpRequest signUpRequest) {
-		/*
-		 * TODO
-		 */
-		// if(memberRepository.existEmail(memberRegisterDto.getEmail())){
-		// 	return;
-		// }
+		if (signUpRequest.getPassword().length() < 8) {
+			throw new InvalidPasswordException();
+		}
+		if (memberRepository.existsLoginId(signUpRequest.getLoginId())) {
+			throw new InvalidLoginIdException();
+		}
 		memberRepository.save(signUpRequest.toMember());
 	}
 

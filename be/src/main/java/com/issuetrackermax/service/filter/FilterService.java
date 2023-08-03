@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.issuetrackermax.controller.filter.dto.FilterResponse;
-import com.issuetrackermax.controller.filter.dto.IssueResponse;
+import com.issuetrackermax.controller.filter.dto.response.FilterResponse;
+import com.issuetrackermax.controller.filter.dto.response.IssueResponse;
 import com.issuetrackermax.domain.filter.FilterMapper;
 import com.issuetrackermax.domain.filter.FilterResultVO;
 import com.issuetrackermax.domain.issue.IssueRepository;
@@ -35,7 +35,7 @@ public class FilterService {
 			.build();
 	}
 
-	public List<IssueResponse> getIssues(List<FilterResultVO> filterResultVOS) {
+	private List<IssueResponse> getIssues(List<FilterResultVO> filterResultVOS) {
 		if (filterResultVOS.size() == 0) {
 			return null;
 		}
@@ -44,23 +44,23 @@ public class FilterService {
 			.collect(Collectors.toList());
 	}
 
-	public List<FilterResultVO> getFilterVO(FilterInformation filterInformation) {
+	private List<FilterResultVO> getFilterVO(FilterInformation filterInformation) {
 		return filterMapper.getFilteredList(filterInformation);
 	}
 
-	public Long getMilestoneCount() {
+	private Long getMilestoneCount() {
 		return milestoneRepository.getMilestoneCount();
 	}
 
-	public Long getLabelCount() {
+	private Long getLabelCount() {
 		return labelRepository.getLabelCount();
 	}
 
-	public Long getOpenIssueCount() {
+	private Long getOpenIssueCount() {
 		return ((long)issueRepository.getOpenIssue().size());
 	}
 
-	public Long getClosedIssueCount() {
+	private Long getClosedIssueCount() {
 		return (long)issueRepository.getClosedIssue().size();
 
 	}

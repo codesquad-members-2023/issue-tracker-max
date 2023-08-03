@@ -1,6 +1,6 @@
 package com.issuetrackermax.service.filter.dto;
 
-import com.issuetrackermax.controller.filter.dto.FilterRequest;
+import com.issuetrackermax.controller.filter.dto.request.FilterRequest;
 
 import lombok.Builder;
 import lombok.Getter;
