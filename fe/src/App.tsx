@@ -18,9 +18,11 @@ export const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <Global styles={globalStyle} />
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <div css={{ width: '1280px' }}>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </div>
     </ThemeProvider>
   );
 };

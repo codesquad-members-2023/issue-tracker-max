@@ -116,6 +116,7 @@ export const globalStyle = css`
   }
   body {
     line-height: 1;
+    background-color: #f7f7fc;
   }
   ol,
   ul {
