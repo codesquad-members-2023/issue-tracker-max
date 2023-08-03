@@ -1,4 +1,4 @@
-package codesquad.issueTracker.jwt.service;
+package codesquad.issueTracker.jwt.util;
 
 import java.util.Base64;
 import java.util.Date;
@@ -37,7 +37,7 @@ public class JwtProvider {
 
 	public Long getUserId(String token) {
 		Claims claims = getClaims(token);
-		return claims.get("id", Long.class);
+		return claims.get("userId", Long.class);
 	}
 
 	public Claims getClaims(String token) {

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codesquad.issueTracker.global.ApiResponse;
 import codesquad.issueTracker.global.exception.ErrorCode;
 import codesquad.issueTracker.global.exception.StatusCode;
-import codesquad.issueTracker.jwt.service.JwtProvider;
+import codesquad.issueTracker.jwt.util.JwtProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthFilter implements Filter {
 
-	private final String[] whiteListUris = new String[] {"/", "/api/login", "/api/signup", "/api/login/oauth",
+	private final String[] whiteListUris = new String[] {"/", "/api/login", "/api/signup", "/api/login/**",
 		"/api/reissue/token"};
 
 	private final ObjectMapper objectMapper;

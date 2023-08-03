@@ -17,7 +17,7 @@ import annotation.ServiceTest;
 import codesquad.issueTracker.global.exception.CustomException;
 import codesquad.issueTracker.jwt.domain.Jwt;
 import codesquad.issueTracker.jwt.domain.Token;
-import codesquad.issueTracker.jwt.service.JwtProvider;
+import codesquad.issueTracker.jwt.util.JwtProvider;
 import codesquad.issueTracker.user.domain.User;
 import codesquad.issueTracker.user.dto.LoginRequestDto;
 import codesquad.issueTracker.user.repository.UserRepository;
