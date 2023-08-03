@@ -79,7 +79,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	public List<Milestone> findAllBy(final MilestoneStatus status) {
 		String sql = "SELECT `id`, `status`, `name`, `description`, `created_at`, `modified_at`, `deadline` " +
 			"FROM `milestone` " +
-			"WHERE status = :status";
+			"WHERE `status` = :status";
 
 		SqlParameterSource param = new MapSqlParameterSource("status", status.getName());
 
@@ -107,7 +107,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	public void updateBy(final Long milestoneId, final Milestone milestone) {
 		String sql = "UPDATE `milestone` " +
 			"SET `name` = :name, `deadline` = :deadline, `description` = :description " +
-			"WHERE id = :id";
+			"WHERE `id` = :id";
 
 		SqlParameterSource param = new MapSqlParameterSource()
 			.addValue("name", milestone.getName())
@@ -122,7 +122,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	public void updateBy(final Long milestoneId, final MilestoneStatus status) {
 		String sql = "UPDATE `milestone` " +
 			"SET `status` = :status " +
-			"WHERE id = :id";
+			"WHERE `id` = :id";
 
 		SqlParameterSource param = new MapSqlParameterSource()
 			.addValue("status", status.getName())
@@ -134,7 +134,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	@Override
 	public void deleteBy(final Long milestoneId) {
 		String sql = "DELETE FROM `milestone` "
-			+ "WHERE id = :id";
+			+ "WHERE `id` = :id";
 
 		template.update(sql, Map.of("id", milestoneId));
 	}

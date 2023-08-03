@@ -60,7 +60,7 @@ public class JdbcLabelRepository implements LabelRepository {
 	public void updateBy(final Long labelId, final Label label) {
 		String sql = "UPDATE `label` " +
 			"SET `name` = :name, `color` = :color, `background` = :background, `description` = :description " +
-			"WHERE id = :id";
+			"WHERE `id` = :id";
 		SqlParameterSource param = Label.makeParam(labelId, label);
 
 		template.update(sql, param);
@@ -69,7 +69,7 @@ public class JdbcLabelRepository implements LabelRepository {
 	@Override
 	public void deleteBy(final Long labelId) {
 		String sql = "DELETE FROM `label` " +
-			"WHERE id = :id";
+			"WHERE `id` = :id";
 
 		template.update(sql, Map.of("id", labelId));
 	}

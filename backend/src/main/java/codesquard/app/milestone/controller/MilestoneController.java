@@ -29,7 +29,7 @@ import codesquard.app.milestone.service.MilestoneService;
 public class MilestoneController {
 	private final MilestoneService milestoneService;
 
-	public MilestoneController(MilestoneService milestoneService) {
+	public MilestoneController(final MilestoneService milestoneService) {
 		this.milestoneService = milestoneService;
 	}
 
@@ -48,6 +48,7 @@ public class MilestoneController {
 	public ResponseEntity<MilestoneSaveResponse> save(
 		@Valid @RequestBody final MilestoneSaveRequest milestoneSaveRequest) {
 		Long milestoneId = milestoneService.saveMilestone(milestoneSaveRequest);
+
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(MilestoneSaveResponse.success(milestoneId));
 	}
