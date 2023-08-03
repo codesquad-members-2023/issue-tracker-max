@@ -10,7 +10,7 @@ public class JwtRefreshTokenRequest {
 	private String refreshToken;
 
 	@Builder
-	private JwtRefreshTokenRequest(String refreshToken) {
+	public JwtRefreshTokenRequest(String refreshToken) {
 		this.refreshToken = refreshToken;
 	}
 }

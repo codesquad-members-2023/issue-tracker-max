@@ -1,5 +1,6 @@
 package com.issuetrackermax.domain.filter;
 
+import static com.issuetrackermax.fixture.entityFixture.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
@@ -230,63 +231,6 @@ class FilterMapperTest extends IntegrationTestSupport {
 				tuple("issue_title_test", null, "June", true, null,
 					null, null, null, "milestone_title")
 			);
-	}
-
-	private Milestone makeMilestone(Boolean isOpen, String title, String description) {
-		return Milestone.builder()
-			.isOpen(isOpen)
-			.title(title)
-			.description(description)
-			.build();
-	}
-
-	private Label makeLabel(String title, String description, String textColor, String backgroundColor) {
-		return Label.builder()
-			.title(title)
-			.description(description)
-			.textColor(textColor)
-			.backgroundColor(backgroundColor)
-			.build();
-	}
-
-	private Issue makeIssue(Boolean isOpen, String title, Long milestoneId, Long writerId) {
-		return Issue.builder()
-			.isOpen(isOpen)
-			.title(title)
-			.milestoneId(milestoneId)
-			.writerId(writerId)
-			.build();
-	}
-
-	private Assignee makeAssignee(Long issueId, Long memberId) {
-		return Assignee.builder()
-			.issueId(issueId)
-			.memberid(memberId)
-			.build();
-	}
-
-	private History makeHistory(Long memberId, Long issueId, boolean issueIsOpen) {
-		return History.builder()
-			.editor(memberId)
-			.issueId(issueId)
-			.issueIsOpen(issueIsOpen)
-			.build();
-	}
-
-	private IssueWithLabel makeIssueWithLabel(Long labelId, Long issueId) {
-		return IssueWithLabel.builder()
-			.issueId(issueId)
-			.labelId(labelId)
-			.build();
-	}
-
-	private Member makeMember(String loginId, String password, String nickName, LoginType loginType) {
-		return Member.builder()
-			.loginId(loginId)
-			.password(password)
-			.nickName(nickName)
-			.loginType(loginType)
-			.build();
 	}
 
 	private void assertExtractingWithParameter(List<FilterResultVO> filteredList, String title, String editor,

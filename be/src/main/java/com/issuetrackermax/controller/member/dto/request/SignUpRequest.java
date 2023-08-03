@@ -15,7 +15,7 @@ public class SignUpRequest {
 	private String nickName;
 
 	@Builder
-	private SignUpRequest(String loginId, String password, String nickName) {
+	public SignUpRequest(String loginId, String password, String nickName) {
 		this.loginId = loginId;
 		this.password = password;
 		this.nickName = nickName;

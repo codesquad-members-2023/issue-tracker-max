@@ -11,7 +11,7 @@ public class LoginRequest {
 	private String password;
 
 	@Builder
-	private LoginRequest(String loginId, String password) {
+	public LoginRequest(String loginId, String password) {
 		this.loginId = loginId;
 		this.password = password;
 	}
