@@ -1,4 +1,4 @@
-import { css, useTheme } from '@emotion/react';
+import { useTheme } from '@emotion/react';
 import { ReactComponent as UserImageSmall } from '@assets/icons/userImageSmall.svg';
 
 type SelectedAssigneesData = {
@@ -17,6 +17,7 @@ export const ListAssignee: React.FC<Props> = ({ selectedAssigneesData }) => {
     <>
       {selectedAssigneesData.map((assignee) => (
         <div
+          key={assignee.userId}
           css={{
             position: 'relative',
             display: 'flex',
@@ -31,6 +32,7 @@ export const ListAssignee: React.FC<Props> = ({ selectedAssigneesData }) => {
               width: '20px',
               height: '20px',
               position: 'absolute',
+              borderRadius: theme.radius.half,
               top: 0,
               left: 0,
             }}

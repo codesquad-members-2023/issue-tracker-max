@@ -6,6 +6,7 @@ import { IssueListPage } from '@pages/IssueListPage';
 import { LabelListPage } from '@pages/LabelListPage';
 import { MileStoneListPage } from '@pages/MileStoneListPage';
 import { SignPage } from '@pages/SignPage';
+import { NotFoundPage } from '@pages/NotFoundPage';
 
 type Props = {
   currentTheme: ThemeType;
@@ -22,6 +23,7 @@ export const AppRoutes: React.FC<Props> = ({ currentTheme, toggleTheme }) => {
         <Route path="issue/:id" element={<IssueDetailPage />} />
         <Route path="label" element={<LabelListPage />} />
         <Route path="milestone" element={<MileStoneListPage />} />
+        <Route path="/*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );
