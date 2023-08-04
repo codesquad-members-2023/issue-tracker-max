@@ -22,9 +22,9 @@ export default function Login() {
       });
 
       if (res.status === 200) {
-        control.logined();
+        control.loginCheck();
       }
-      navigate('/');
+      navigate("/");
     })();
   };
 
@@ -36,8 +36,6 @@ export default function Login() {
       id: string;
       password: string;
     };
-
-    console.log(id, password);
     login(id, password);
   };
 

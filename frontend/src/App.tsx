@@ -45,7 +45,9 @@ function App() {
             path="/"
             element={
               <AuthenticatedRoute>
-                <Route element={<Main />} />
+                <Routes>
+                  <Route path='/' element={<Main />} />
+                </Routes>
               </AuthenticatedRoute>
             }
           />
