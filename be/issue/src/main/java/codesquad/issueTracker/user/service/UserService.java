@@ -59,16 +59,11 @@ public class UserService {
 		User user = userRepository.findByEmail(loginRequestDto.getEmail())
 				.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
 		if(user.getPassword() == null){
-			throw new CustomException(ErrorCode.GITHUB_LOGIN_USER);
+			throw new CustomException(ErrorCode.FAILED_LOGIN_USER);
 		}
 		validateLoginUser(loginRequestDto, user);
-		Token token = userRepository.findTokenByUserId(user.getId()).orElse(null);
-		Jwt jwt = jwtProvider.createJwt(Map.of("userId", user.getId()));
-		if (token == null) {
-			userRepository.insertRefreshToken(user.getId(), jwt.getRefreshToken());
-		} else {
-			userRepository.updateRefreshToken(user.getId(), jwt.getRefreshToken());
-		}
+		validateLoginType(LoginType.LOCAL, user.getLoginType());
+		Jwt jwt = insertToken(user.getId());
 		return LoginResponseDto.builder()
 				.userId(user.getId())
 				.profileImgUrl(user.getProfileImg())
@@ -177,5 +172,21 @@ public class UserService {
 				.retrieve()
 				.bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
 				.block();
+	}
+	private Jwt insertToken(Long userId){
+		Jwt jwt = jwtProvider.createJwt(Map.of("userId", userId));
+		if(userRepository.findTokenByUserId(userId).isEmpty()){
+			userRepository.insertRefreshToken(userId,jwt.getRefreshToken());
+		}
+		else {
+			userRepository.updateRefreshToken(userId, jwt.getRefreshToken());
+		}
+		return jwt;
+	}
+
+	private void validateLoginType(LoginType inputLoginType, LoginType existLoginType){
+		if(inputLoginType != existLoginType){
+			throw new CustomException(ErrorCode.FAILED_LOGIN_USER);
+		}
 	}
 }
