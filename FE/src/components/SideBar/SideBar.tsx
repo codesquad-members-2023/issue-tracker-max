@@ -14,7 +14,6 @@ export default function SideBar() {
           padding={"0px"}
           width={"224px"}
           height={"24px"}
-          onClick={() => {}}
         ></DropdownIndicator>
         <AssigneeItem imgUrl={"/logo/profile.jpg"} userId={"litae"} />
       </ItemList>
@@ -25,7 +24,6 @@ export default function SideBar() {
           padding={"0px"}
           width={"224px"}
           height={"24px"}
-          onClick={() => {}}
         ></DropdownIndicator>
         <LabelContainer>
           <LabelItem label={"feat"} color={"#d93f0b"} />
@@ -44,7 +42,6 @@ export default function SideBar() {
           padding={"0px"}
           width={"224px"}
           height={"24px"}
-          onClick={() => {}}
         ></DropdownIndicator>
         <MilestonesItem title={"이슈트래커"} percentage={40} />
       </ItemList>

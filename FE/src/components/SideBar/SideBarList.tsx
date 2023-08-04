@@ -15,7 +15,6 @@ export default function SideBarList({ title }: Props) {
         padding={"0px"}
         width={"224px"}
         height={"24px"}
-        onClick={() => {}}
       ></DropdownIndicator>
       <AssigneeItem imgUrl={"/logo/profile.jpg"} userId={"litae"} />
     </Container>
