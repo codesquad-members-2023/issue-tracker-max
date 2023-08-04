@@ -11,6 +11,11 @@ public enum ErrorCode implements StatusCode {
 
 	REQUEST_VALIDATION_FAIL(HttpStatus.BAD_REQUEST),
 
+	// -- [OAuth] -- //
+	NOT_SUPPORTED_PROVIDER(HttpStatus.BAD_REQUEST, "지원하지 않는 로그인 방식입니다."),
+	GITHUB_LOGIN_USER(HttpStatus.BAD_REQUEST, "이미 깃허브로 로그인한 유저입니다"),
+
+
 	// -- [JWT] -- //
 	NOT_FOUND_REFRESH_TOKEN(HttpStatus.BAD_REQUEST,"해당하는 리프레시 토큰을 찾을 수 없습니다."),
 	MALFORMED_JWT_EXCEPTION(HttpStatus.UNAUTHORIZED, "잘못된 형식의 토큰입니다."),

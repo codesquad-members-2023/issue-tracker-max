@@ -21,12 +21,13 @@ public class SignUpRequestDto {
     @Size(min = 6, max = 16, message = "아이디는 최소 6자리에서 16자리까지 입력할 수 있다.")
     private final String name;
 
-    public static User toEntity(SignUpRequestDto signUpRequestDto, String encodedPassword) {
+    public static User toEntity(SignUpRequestDto signUpRequestDto, String encodedPassword, String profileImg) {
         return User.builder()
                 .email(signUpRequestDto.getEmail())
                 .password(encodedPassword)
                 .name(signUpRequestDto.getName())
                 .loginType(LoginType.LOCAL)
+                .profileImg(profileImg)
                 .build();
     }
 }

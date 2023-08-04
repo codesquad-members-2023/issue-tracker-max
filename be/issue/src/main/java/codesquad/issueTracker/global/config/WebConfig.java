@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquad.issueTracker.global.filter.AuthFilter;
-import codesquad.issueTracker.jwt.service.JwtProvider;
+import codesquad.issueTracker.jwt.util.JwtProvider;
 
 @Configuration
 public class WebConfig {

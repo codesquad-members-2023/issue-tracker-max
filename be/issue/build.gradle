@@ -40,6 +40,7 @@ dependencies {
     // 패스워드 암호화
     implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
 
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 }
 
