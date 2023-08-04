@@ -1,10 +1,9 @@
 package org.presents.issuetracker.label.entity;
 
-import java.util.Objects;
-
+import lombok.Getter;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
 
-import lombok.Getter;
+import java.util.Objects;
 
 @Getter
 public class Label {

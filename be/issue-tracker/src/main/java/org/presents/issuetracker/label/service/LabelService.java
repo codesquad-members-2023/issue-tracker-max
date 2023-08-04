@@ -1,8 +1,5 @@
 package org.presents.issuetracker.label.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.presents.issuetracker.global.dto.response.LabelResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
@@ -11,6 +8,9 @@ import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.label.entity.Label;
 import org.presents.issuetracker.label.repository.LabelRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LabelService {
@@ -21,30 +21,30 @@ public class LabelService {
 		this.labelRepository = labelRepository;
 	}
 
-    public List<LabelDetailResponse> getLabelDetails() {
-        List<Label> labels = labelRepository.findAll();
+	public List<LabelDetailResponse> getLabelDetails() {
+		List<Label> labels = labelRepository.findAll();
 
-        return labels.stream().map(label -> LabelDetailResponse.builder()
-                        .id(label.getLabelId())
-                        .name(label.getName())
-                        .description(label.getDescription())
-                        .backgroundColor(label.getBackgroundColor())
-                        .textColor(label.getTextColor())
-                        .build())
-                .collect(Collectors.toList());
-    }
+		return labels.stream().map(label -> LabelDetailResponse.builder()
+				.id(label.getId())
+				.name(label.getName())
+				.description(label.getDescription())
+				.backgroundColor(label.getBackgroundColor())
+				.textColor(label.getTextColor())
+				.build())
+			.collect(Collectors.toList());
+	}
 
-    public List<LabelPreviewResponse> getLabelPreviews() {
-        List<Label> labelPreviews = labelRepository.findPreviews();
+	public List<LabelPreviewResponse> getLabelPreviews() {
+		List<Label> labelPreviews = labelRepository.findPreviews();
 
-        return labelPreviews.stream().map(label -> LabelPreviewResponse.builder()
-                        .id(label.getLabelId())
-                        .name(label.getName())
-                        .backgroundColor(label.getBackgroundColor())
-                        .textColor(label.getTextColor())
-                        .build())
-                .collect(Collectors.toList());
-    }
+		return labelPreviews.stream().map(label -> LabelPreviewResponse.builder()
+				.id(label.getId())
+				.name(label.getName())
+				.backgroundColor(label.getBackgroundColor())
+				.textColor(label.getTextColor())
+				.build())
+			.collect(Collectors.toList());
+	}
 
 	public LabelResponse create(LabelCreateRequest labelCreateRequest) {
 		Long createdId = labelRepository.save(
@@ -64,7 +64,7 @@ public class LabelService {
 		label = label.updateFrom(labelUpdateRequest);
 		labelRepository.update(label);
 
-		return LabelResponse.builder().id(label.getLabelId()).build();
+		return LabelResponse.builder().id(label.getId()).build();
 	}
 
 	public void delete(Long id) {
