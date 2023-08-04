@@ -1,0 +1,75 @@
+name: BE CI/CD
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev-be
+
+env:
+  S3_BUCKET_NAME: room-number7-presents
+  AWS_REGION: ap-northeast-2
+  PROFILE_RESOURCE_PATH: ./src/main/resources/application-prodDB.yml
+  CODE_DEPLOY_APPLICATION_NAME: codedeploy-app
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: issue-tracker-deploy-group
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./be/issue-tracker
+
+    steps:
+      # 1. 워크플로우 실행 전 체크아웃
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # 2. JDK 11 설치
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      # 3. application-prodDB.yml 생성
+      - name: Create application-prodDB.yml file
+        run: touch '${{ env.PROFILE_RESOURCE_PATH }}'
+      - name: Set application-prodDB.yml file
+        run: echo '${{ secrets.APPLICATION_PROPERTIES }}' > '${{ env.PROFILE_RESOURCE_PATH }}'
+
+      # 4. gradle 빌드
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+
+      # 5. 프로젝트 압축해서 S3에 업로드
+      - name: Make zip file
+        run: zip -qq -r ./$GITHUB_SHA.zip .
+      # AWS 접근 권한 부여
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      # S3에 업로드
+      - name: Upload to S3
+        run: aws s3 cp --region ${{ env.AWS_REGION }} ./$GITHUB_SHA.zip s3://${{ env.S3_BUCKET_NAME }}/$GITHUB_SHA.zip
+
+      # 6. Code Deploy 실행
+      - name: Code Deploy
+        run: |
+          aws deploy create-deployment \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --application-name $CODE_DEPLOY_APPLICATION_NAME \
+          --deployment-group-name $CODE_DEPLOY_DEPLOYMENT_GROUP_NAME \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
