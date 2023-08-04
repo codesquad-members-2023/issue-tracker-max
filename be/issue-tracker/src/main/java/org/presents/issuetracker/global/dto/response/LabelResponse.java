@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class LabelResponse {
-    private Long id;
+	private Long id;
 
-    @Builder
-    public LabelResponse(Long id) {
-        this.id = id;
-    }
+	@Builder
+	public LabelResponse(Long id) {
+		this.id = id;
+	}
 }

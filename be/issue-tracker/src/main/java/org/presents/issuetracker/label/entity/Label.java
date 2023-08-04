@@ -1,11 +1,14 @@
 package org.presents.issuetracker.label.entity;
 
-import lombok.Getter;
-import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
-
 import java.util.Objects;
 
+import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 @Getter
+@NoArgsConstructor
 public class Label {
 	private Long id;
 	private String name;

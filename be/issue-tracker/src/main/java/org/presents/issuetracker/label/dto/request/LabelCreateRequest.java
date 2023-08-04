@@ -5,16 +5,16 @@ import lombok.Getter;
 
 @Getter
 public class LabelCreateRequest {
-    private String name;
-    private String description;
-    private String backgroundColor;
-    private String textColor;
+	private String name;
+	private String description;
+	private String backgroundColor;
+	private String textColor;
 
-    @Builder
-    public LabelCreateRequest(String name, String description, String backgroundColor, String textColor) {
-        this.name = name;
-        this.description = description;
-        this.backgroundColor = backgroundColor;
-        this.textColor = textColor;
-    }
+	@Builder
+	public LabelCreateRequest(String name, String description, String backgroundColor, String textColor) {
+		this.name = name;
+		this.description = description;
+		this.backgroundColor = backgroundColor;
+		this.textColor = textColor;
+	}
 }

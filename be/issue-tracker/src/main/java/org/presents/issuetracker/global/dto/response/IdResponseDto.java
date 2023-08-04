@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class IdResponseDto {
-    private Long id;
+	private Long id;
 }
