@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { styled } from "styled-components";
-import { LabelEditor } from "./LabelEditor";
-import { LabelHeader } from "./LabelHeader";
-import { LabelTable } from "./LabelTable";
+import {useEffect, useState} from "react";
+import {styled} from "styled-components";
+import {LabelEditor} from "./LabelEditor";
+import {LabelHeader} from "./LabelHeader";
+import {LabelTable} from "./LabelTable";
 
 export type LabelData = {
   id: number;
@@ -33,7 +33,7 @@ export function Label() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(
-        "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/labels",
+          "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/labels",
       );
 
       setLabelsRes(await res.json());
@@ -43,22 +43,22 @@ export function Label() {
   }, []);
 
   return (
-    <Div>
-      {labelsRes && (
-        <LabelHeader
-          onClick={openAddLabel}
-          openedMilestoneCount={labelsRes.openedMilestoneCount}
-          labelCount={labelsRes.labelCount}
-          isAdding={isAdding}
-        />
-      )}
-      {isAdding && (
-        <EditorWrapper>
-          <LabelEditor onClickClose={closeAddLabel} type="add" />
-        </EditorWrapper>
-      )}
-      {labelsRes && <LabelTable labels={labelsRes.labels} />}
-    </Div>
+      <Div>
+        {labelsRes && (
+            <LabelHeader
+                onClick={openAddLabel}
+                openedMilestoneCount={labelsRes.openedMilestoneCount}
+                labelCount={labelsRes.labelCount}
+                isAdding={isAdding}
+            />
+        )}
+        {isAdding && (
+            <EditorWrapper>
+              <LabelEditor onClickClose={closeAddLabel} type="add"/>
+            </EditorWrapper>
+        )}
+        {labelsRes && <LabelTable labels={labelsRes.labels}/>}
+      </Div>
   );
 }
 
@@ -69,7 +69,7 @@ const Div = styled.div`
 `;
 
 const EditorWrapper = styled.div`
-  border: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
-  border-radius: ${({ theme }) => theme.radius.large};
+  border: 1px solid ${({theme}) => theme.color.neutralBorderDefault};
+  border-radius: ${({theme}) => theme.radius.large};
   margin-bottom: 24px;
 `;
