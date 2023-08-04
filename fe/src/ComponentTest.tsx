@@ -1,7 +1,8 @@
 import { Icon } from "components/Common/Icon/Icon";
 import { Button } from "components/Common/Button/Button";
 import { Tag } from "components/Common/Tag/Tag";
-import { Input } from "components/Common/Input/Input";
+import { TextInput } from "components/Common/Input/TextInput";
+
 import { TabButton, Tab } from "components/Common/Button/TabButton";
 import { FilterBar } from "components/Common/FilterBar/FilterBar";
 
@@ -124,10 +125,12 @@ export const ComponentTest = () => {
           size="S"
         />
         <div style={{ width: "300px" }}>
-          <Input />
-          <Input $labelText="아이디" />
-          <Input placeholder="asfasdasd" />
-          <Input placeholder="asfasdasd" type="S" />
+          <TextInput placeholder="asfasd"></TextInput>
+          <TextInput $state="error" $labelText="아이디"></TextInput>
+          <TextInput $state="disabled"></TextInput>
+          <TextInput $state="error" helperText="안녕하시오"></TextInput>
+          <TextInput $heightSize="S" $labelText="아이디"></TextInput>
+          <TextInput $heightSize="S" radius="right"></TextInput>
         </div>
         <Tab>
           <TabButton icon="Label" text="레이블" count={3} />
