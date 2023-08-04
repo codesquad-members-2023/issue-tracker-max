@@ -8,9 +8,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.issuetracker.issue.domain.Author;
+import com.issuetracker.issue.domain.AuthorRepository;
 
 @Repository
-public class AuthorRepository {
+public class JdbcAuthorRepository implements AuthorRepository {
 
 	private static final String SEARCH_SQL = "SELECT DISTINCT member.id, member.nickname, member.profile_image_url "
 		+ "FROM issue "
@@ -18,10 +19,11 @@ public class AuthorRepository {
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
-	public AuthorRepository(JdbcTemplate jdbcTemplate) {
+	public JdbcAuthorRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
+	@Override
 	public List<Author> search() {
 
 		RowMapper<Author> authorRowMapper =

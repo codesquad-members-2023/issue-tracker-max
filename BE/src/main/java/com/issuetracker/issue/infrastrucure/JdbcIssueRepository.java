@@ -11,20 +11,22 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.issuetracker.issue.domain.Issue;
+import com.issuetracker.issue.domain.IssueRepository;
 import com.issuetracker.issue.domain.IssuesCountData;
 
 @Repository
-public class IssueRepository {
+public class JdbcIssueRepository implements IssueRepository {
 
 	private static final String SAVE_SQL = "INSERT INTO issue(title, content, is_open, create_at, milestone_id, author_id) VALUES(:title, :content, :isOpen, :createAt, :milestoneId, :authorId)";
 	private static final String FIND_ALL_COUNT_SQL = "SELECT SUM(CASE WHEN is_open = 0 THEN 1 ELSE 0 END) AS issue_close_count, SUM(CASE WHEN is_open = 1 THEN 1 ELSE 0 END) AS issue_open_count, (SELECT COUNT(id) FROM label) AS label_count, (SELECT COUNT(id) FROM milestone) AS milestone_count FROM issue";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
-	public IssueRepository(JdbcTemplate jdbcTemplate) {
+	public JdbcIssueRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
+	@Override
 	public Long save(Issue issue) {
 		MapSqlParameterSource param = new MapSqlParameterSource()
 			.addValue("title", issue.getTitle())
@@ -39,6 +41,7 @@ public class IssueRepository {
 		return keyHolder.getKey().longValue();
 	}
 
+	@Override
 	public IssuesCountData findAllCount() {
 		return jdbcTemplate.queryForObject(FIND_ALL_COUNT_SQL, Map.of(), ISSUE_MAIN_PAGE_COUNT_ROW_MAPPER);
 	}

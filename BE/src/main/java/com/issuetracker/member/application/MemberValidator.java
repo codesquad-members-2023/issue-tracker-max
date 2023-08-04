@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.issuetracker.config.exception.MemberNotFoundException;
-import com.issuetracker.member.infrastructure.MemberRepository;
+import com.issuetracker.member.domain.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 

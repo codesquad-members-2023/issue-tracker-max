@@ -1,4 +1,4 @@
-package com.issuetracker.unit.repository;
+package com.issuetracker.unit.infrastrucure;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.issuetracker.issue.domain.IssueLabelMapping;
-import com.issuetracker.issue.infrastrucure.IssueLabelMappingRepository;
+import com.issuetracker.issue.domain.IssueLabelMappingRepository;
+import com.issuetracker.issue.infrastrucure.JdbcIssueLabelMappingRepository;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
@@ -23,7 +24,7 @@ class IssueLabelMappingRepositoryTest {
 
 	@Autowired
 	public IssueLabelMappingRepositoryTest(JdbcTemplate jdbcTemplate) {
-		this.issueLabelMappingRepository = new IssueLabelMappingRepository(jdbcTemplate);
+		this.issueLabelMappingRepository = new JdbcIssueLabelMappingRepository(jdbcTemplate);
 		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
 	}
 

@@ -5,7 +5,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -21,7 +20,8 @@ import org.mockito.Mockito;
 
 import com.issuetracker.config.exception.MemberNotFoundException;
 import com.issuetracker.member.application.MemberValidator;
-import com.issuetracker.member.infrastructure.MemberRepository;
+import com.issuetracker.member.domain.MemberRepository;
+import com.issuetracker.member.infrastructure.JdbcMemberRepository;
 import com.issuetracker.util.MockTest;
 
 @MockTest

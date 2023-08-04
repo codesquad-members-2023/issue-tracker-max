@@ -1,4 +1,4 @@
-package com.issuetracker.unit.repository;
+package com.issuetracker.unit.infrastrucure;
 
 import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL5;

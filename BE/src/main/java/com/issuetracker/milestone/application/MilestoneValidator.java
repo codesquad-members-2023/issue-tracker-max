@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Component;
 
 import com.issuetracker.config.exception.MilestoneNotFoundException;
-import com.issuetracker.milestone.infrastructure.MilestoneRepository;
+import com.issuetracker.milestone.domain.MilestoneRepository;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.issuetracker.unit.repository;
+package com.issuetracker.unit.infrastrucure;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.issuetracker.label.infrastructure.LabelRepository;
+import com.issuetracker.label.domain.LabelRepository;
+import com.issuetracker.label.infrastructure.JdbcLabelRepository;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
 
@@ -21,7 +22,7 @@ class LabelRepositoryTest {
 
 	@Autowired
 	public LabelRepositoryTest(JdbcTemplate jdbcTemplate) {
-		this.labelRepository = new LabelRepository(jdbcTemplate);
+		this.labelRepository = new JdbcLabelRepository(jdbcTemplate);
 		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
 	}
 

@@ -1,4 +1,4 @@
-package com.issuetracker.unit.repository;
+package com.issuetracker.unit.infrastrucure;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.issuetracker.milestone.domain.Milestone;
-import com.issuetracker.milestone.infrastructure.MilestoneRepository;
+import com.issuetracker.milestone.domain.MilestoneRepository;
+import com.issuetracker.milestone.infrastructure.JdbcMilestoneRepository;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
 
@@ -22,7 +23,7 @@ class MilestoneRepositoryTest {
 
 	@Autowired
 	public MilestoneRepositoryTest(JdbcTemplate jdbcTemplate) {
-		this.milestoneRepository = new MilestoneRepository(jdbcTemplate);
+		this.milestoneRepository = new JdbcMilestoneRepository(jdbcTemplate);
 		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
 	}
 

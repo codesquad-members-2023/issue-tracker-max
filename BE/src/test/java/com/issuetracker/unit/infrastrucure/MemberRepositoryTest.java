@@ -1,7 +1,6 @@
-package com.issuetracker.unit.repository;
+package com.issuetracker.unit.infrastrucure;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
@@ -10,7 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.issuetracker.member.infrastructure.MemberRepository;
+import com.issuetracker.member.domain.MemberRepository;
+import com.issuetracker.member.infrastructure.JdbcMemberRepository;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
 
@@ -22,7 +22,7 @@ class MemberRepositoryTest {
 
 	@Autowired
 	public MemberRepositoryTest(JdbcTemplate jdbcTemplate) {
-		this.memberRepository = new MemberRepository(jdbcTemplate);
+		this.memberRepository = new JdbcMemberRepository(jdbcTemplate);
 		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
 	}
 

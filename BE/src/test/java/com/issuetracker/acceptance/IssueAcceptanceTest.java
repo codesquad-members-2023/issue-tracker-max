@@ -1,11 +1,11 @@
 package com.issuetracker.acceptance;
 
-import static com.issuetracker.acceptance.IssueSteps.마일스톤_목록_조회_요청;
-import static com.issuetracker.acceptance.IssueSteps.작성자_목록_조회_요청;
-import static com.issuetracker.acceptance.IssueSteps.이슈에_등록_되어있는_담당자_목록_조회_요청;
-import static com.issuetracker.acceptance.IssueSteps.이슈_목록_조회_요청;
-import static com.issuetracker.acceptance.IssueSteps.이슈_작성_요청;
-import static com.issuetracker.acceptance.IssueSteps.이슈에_등록_되어있는_라벨_목록_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.마일스톤_목록_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.작성자_목록_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈에_등록_되어있는_담당자_목록_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈_목록_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈_작성_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈에_등록_되어있는_라벨_목록_조회_요청;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL2;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL4;

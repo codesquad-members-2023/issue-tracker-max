@@ -13,9 +13,9 @@ import org.mockito.Mock;
 
 import com.issuetracker.issue.application.IssueCreator;
 import com.issuetracker.issue.application.dto.IssueCreateInputData;
-import com.issuetracker.issue.infrastrucure.AssigneeRepository;
-import com.issuetracker.issue.infrastrucure.IssueLabelMappingRepository;
-import com.issuetracker.issue.infrastrucure.IssueRepository;
+import com.issuetracker.issue.domain.AssigneeRepository;
+import com.issuetracker.issue.domain.IssueLabelMappingRepository;
+import com.issuetracker.issue.domain.IssueRepository;
 import com.issuetracker.label.application.LabelValidator;
 import com.issuetracker.member.application.MemberValidator;
 import com.issuetracker.milestone.application.MilestoneValidator;

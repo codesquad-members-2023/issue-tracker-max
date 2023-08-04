@@ -34,7 +34,7 @@ public class IssueController {
 	@GetMapping
 	public ResponseEntity<IssuesSearchResponse> showIssues(@ModelAttribute IssueSearchRequest issueSearchRequest) {
 		IssuesSearchResponse issuesSearchResponse = IssuesSearchResponse.of(
-			issueService.getIssuesCount(),
+			issueService.findIssuesCount(),
 			issueService.search(issueSearchRequest.toIssueSearchData(1L))
 		);
 		return ResponseEntity.ok().body(issuesSearchResponse);
@@ -47,7 +47,7 @@ public class IssueController {
 			.body(issueCreateResponse);
 	}
   
-  @GetMapping("/milestones")
+  	@GetMapping("/milestones")
 	public ResponseEntity<MilestonesSearchResponse> showMilestonesForFilter() {
 		return ResponseEntity.ok().body(MilestonesSearchResponse.from(issueService.searchMilestonesForFilter()));
 	}
@@ -59,13 +59,13 @@ public class IssueController {
   
 	@GetMapping("/assignees")
 	public ResponseEntity<IssueAssigneesResponse> showAssignees() {
-		IssueAssigneesResponse issueAssigneesResponse = IssueAssigneesResponse.from(issueService.findAllAssignee());
+		IssueAssigneesResponse issueAssigneesResponse = IssueAssigneesResponse.from(issueService.searchAssignee());
 		return ResponseEntity.ok().body(issueAssigneesResponse);
 	}
 
 	@GetMapping("/labels")
 	public ResponseEntity<IssueLabelMappingsResponse> showLabels() {
-		IssueLabelMappingsResponse issueLabelMappingsResponse = IssueLabelMappingsResponse.from(issueService.findAllLabelMappings());
+		IssueLabelMappingsResponse issueLabelMappingsResponse = IssueLabelMappingsResponse.from(issueService.searchIssueLabelMapping());
 		return ResponseEntity.ok().body(issueLabelMappingsResponse);
 	}
 }

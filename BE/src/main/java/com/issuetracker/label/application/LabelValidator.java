@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.issuetracker.config.exception.LabelNotFoundException;
-import com.issuetracker.label.infrastructure.LabelRepository;
+import com.issuetracker.label.domain.LabelRepository;
 
 import lombok.RequiredArgsConstructor;
 

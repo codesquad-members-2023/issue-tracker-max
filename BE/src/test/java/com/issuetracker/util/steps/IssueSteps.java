@@ -1,4 +1,4 @@
-package com.issuetracker.acceptance;
+package com.issuetracker.util.steps;
 
 import java.util.HashMap;
 import java.util.Map;
