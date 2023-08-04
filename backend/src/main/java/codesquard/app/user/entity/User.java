@@ -26,9 +26,17 @@ public class User {
 		this.avatarUrl = avatarUrl;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
 	public String getLoginId() {
 		return loginId;
-  }
+	}
+
+	public String getAvatarUrl() {
+		return avatarUrl;
+	}
 
 	public MapSqlParameterSource createSaveParamSource() {
 		MapSqlParameterSource parameterSource = new MapSqlParameterSource();
