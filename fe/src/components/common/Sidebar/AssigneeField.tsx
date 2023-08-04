@@ -11,11 +11,13 @@ import { Container } from "./Container";
 export default function AssigneeField({
   assignees,
   onAssigneeChange,
+  onEditIssue,
 }: {
   assignees: Set<number>;
   onAssigneeChange: (assignees: Set<number>) => void;
+  onEditIssue?: () => void;
 }) {
-  const userList = useFetch<User[]>([], getUsers);
+  const [userList] = useFetch<User[]>([], getUsers);
 
   const assigneeDropdownList: DropdownItemType[] = userList.map((user) => ({
     id: user.userAccountId,
@@ -54,6 +56,7 @@ export default function AssigneeField({
           dropdownList={assigneeDropdownList}
           dropdownPanelPosition="right"
           dropdownOption="multiple"
+          outsideClickHandler={onEditIssue}
         />
       </CheckboxGroup>
       {generateAssignees()}

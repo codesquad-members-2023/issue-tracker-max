@@ -26,12 +26,12 @@ export default function TabBar({
 
   const onLeftClick = () => {
     setSelectedTab(left.name);
-    left.callback && left.callback();
+    left.callback?.();
   };
 
   const onRightClick = () => {
     setSelectedTab(right.name);
-    right.callback && right.callback();
+    right.callback?.();
   };
 
   return (

@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 export default function useFetch<T>(
   initialData: T,
   fetchFn: () => Promise<AxiosResponse<T>>
-) {
+): [T, (newData: T) => void] {
   const [data, setData] = useState(initialData);
+
+  const updateData = (newData: T) => {
+    setData(newData);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,5 +30,5 @@ export default function useFetch<T>(
     fetchData();
   }, [fetchFn]);
 
-  return data;
+  return [data, updateData];
 }

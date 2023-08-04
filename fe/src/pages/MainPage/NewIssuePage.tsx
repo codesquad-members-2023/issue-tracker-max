@@ -4,7 +4,6 @@ import Button from "@components/common/Button";
 import Sidebar from "@components/common/Sidebar/Sidebar";
 import TextArea from "@components/common/TextArea";
 import TextInput from "@components/common/TextInput";
-import { NewIssueInfo } from "@customTypes/index";
 import { postIssue } from "api";
 import { useAuth } from "context/authContext";
 import { useState } from "react";
@@ -12,15 +11,13 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export default function NewIssuePage() {
-  const [newIssueInfo, setNewIssueInfo] = useState<NewIssueInfo>({
+  const [newIssueInfo, setNewIssueInfo] = useState({
     title: "",
     content: "",
     assignees: new Set<number>(),
     labels: new Set<number>(),
     milestone: 0,
   });
-
-  console.log(newIssueInfo);
 
   const { userInfo } = useAuth();
 

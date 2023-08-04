@@ -26,7 +26,7 @@ export default function SignupPage() {
 
     try {
       const response = await postSignup(username.value, password.value);
-      if (response.status === 200) {
+      if (response.status === 201) {
         alert("회원가입이 완료되었습니다. 가입하신 계정으로 로그인해주세요 :)");
         navigate("/auth");
       }

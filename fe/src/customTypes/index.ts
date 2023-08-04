@@ -35,7 +35,7 @@ export type User = {
   profileUrl: string;
 };
 
-export type NewIssueInfo = {
+export type IssueInfo = {
   title: string;
   content: string;
   assignees: Set<number>;

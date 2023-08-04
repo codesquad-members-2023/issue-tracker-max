@@ -5,16 +5,15 @@ import FilterBar from "@components/FilterBar";
 import { Table, TableBodyIssues, TableHeaderIssues } from "@components/Table";
 import Button from "@components/common/Button";
 import TabBar from "@components/common/TabBar";
-import { IssueItem, Label, Milestone } from "@customTypes/index";
 import useFetch from "@hooks/useFetch";
 import { getIssues, getLabels, getMilestones } from "api";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 export default function IssuesPage() {
-  const issuesList = useFetch<IssueItem[]>([], getIssues);
-  const labelsList = useFetch<Label[]>([], getLabels);
-  const milestonesList = useFetch<Milestone[]>([], getMilestones);
+  const [issuesList] = useFetch([], getIssues);
+  const [labelsList] = useFetch([], getLabels);
+  const [milestonesList] = useFetch([], getMilestones);
 
   const numOpen = issuesList.filter((issue) => issue.isOpen).length;
   const numClosed = issuesList.length - numOpen;

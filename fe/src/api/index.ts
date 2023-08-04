@@ -1,9 +1,21 @@
-import { IssueItem, Label, Milestone, User } from "@customTypes/index";
+import {
+  IssueDetail,
+  IssueItem,
+  Label,
+  Milestone,
+  User,
+} from "@customTypes/index";
 import {
   fetcher,
   fetcherFormDataWithBearer,
   fetcherWithBearer,
 } from "./fetcher";
+import {
+  EditAssigneesBody,
+  EditLabelsBody,
+  EditMilestoneBody,
+  NewIssueBody,
+} from "./type";
 
 export const postSignup = async (username: string, password: string) => {
   return await fetcher.post("/auth/signup", { loginId: username, password });
@@ -18,8 +30,7 @@ export const getIssues = async () => {
 };
 
 export const getIssue = async (issueId: number) => {
-  // TODO: specify return type
-  return await fetcherWithBearer.get(`/issues/${issueId}`);
+  return await fetcherWithBearer.get<IssueDetail>(`/issues/${issueId}`);
 };
 
 export const getLabels = async () => {
@@ -34,14 +45,6 @@ export const getUsers = async () => {
   return await fetcherWithBearer.get<User[]>("/users");
 };
 
-type NewIssueBody = {
-  title: string;
-  content: string;
-  assignees: number[];
-  labels: number[];
-  milestone: number;
-};
-
 export const postIssue = async (body: NewIssueBody) => {
   return await fetcherWithBearer.post<{ issueId: number }>("/issues", body);
 };
@@ -54,4 +57,12 @@ export const postImage = async (file: File) => {
     "/upload",
     formData
   );
+};
+
+export const postEditField = async (
+  issuesId: number,
+  field: "assignees" | "labels" | "milestone",
+  body: EditAssigneesBody | EditLabelsBody | EditMilestoneBody
+) => {
+  return await fetcherWithBearer.post(`/issues/${issuesId}/${field}`, body);
 };
