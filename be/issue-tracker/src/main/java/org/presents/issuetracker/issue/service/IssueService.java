@@ -11,7 +11,6 @@ import org.presents.issuetracker.issue.entity.Assignee;
 import org.presents.issuetracker.issue.entity.Issue;
 import org.presents.issuetracker.issue.entity.IssueLabel;
 import org.presents.issuetracker.issue.entity.vo.IssueSearchVo;
-import org.presents.issuetracker.issue.dto.IssueDto;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 
 import org.presents.issuetracker.issue.mapper.IssueMapper;

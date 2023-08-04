@@ -1,9 +1,6 @@
 package org.presents.issuetracker.issue.controller;
 
-import java.util.List;
-
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
-import org.presents.issuetracker.issue.dto.IssueDto;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequestDto;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
 import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
@@ -40,7 +37,7 @@ public class IssueController {
 	public ResponseEntity<IssueSearchResponse> showIssues(@RequestParam(required = false) String query) {
 		IssueSearchParam issueSearchParam = IssueSearchParam.from(query);
 		return ResponseEntity.ok().body(issueService.getIssues(issueSearchParam));
-  }
+	}
 
 	@GetMapping("/{issueId}")
 	public IssueDetailResponse getIssueDetail(@PathVariable Long issueId) {
