@@ -103,7 +103,7 @@ jobs:
       matrix:
         node-version: [ 18.x ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Docker build to dev
         if: contains(github.ref, 'dev') ||
           contains(github.ref, 'be/infra/#9-cicd')

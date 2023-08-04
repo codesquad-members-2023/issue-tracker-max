@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import codesquard.app.issue.dto.request.IssueModifyTitleRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.dto.response.IssueDeleteResponse;
 import codesquard.app.issue.dto.response.IssueModifyResponse;
+import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueSaveResponse;
 import codesquard.app.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,12 @@ import lombok.RequiredArgsConstructor;
 public class IssueController {
 
 	private final IssueService issueService;
+
+	@GetMapping("/api/issues/{issueId}")
+	public ResponseEntity<IssueReadResponse> get(@PathVariable Long issueId) {
+		IssueReadResponse issueReadResponse = issueService.get(issueId);
+		return ResponseEntity.status(HttpStatus.OK).body(issueReadResponse);
+	}
 
 	@PostMapping("/api/issues")
 	public ResponseEntity<IssueSaveResponse> save(
