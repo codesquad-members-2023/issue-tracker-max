@@ -5,6 +5,7 @@ import { TextInput } from "components/Common/Input/TextInput";
 
 import { TabButton, Tab } from "components/Common/Button/TabButton";
 import { FilterBar } from "components/Common/FilterBar/FilterBar";
+import { ProgressBar } from "components/Common/Bar/ProgressBar";
 
 export const ComponentTest = () => {
   const handleIndecatorClick = () => {};
@@ -130,13 +131,14 @@ export const ComponentTest = () => {
           <TextInput $state="disabled"></TextInput>
           <TextInput $state="error" helperText="안녕하시오"></TextInput>
           <TextInput $heightSize="S" $labelText="아이디"></TextInput>
-          <TextInput $heightSize="S" radius="right"></TextInput>
+          <TextInput $heightSize="S"></TextInput>
         </div>
         <Tab>
           <TabButton icon="Label" text="레이블" count={3} />
           <TabButton icon="Milestone" text="마일스톤" count={2} />
         </Tab>
         <FilterBar onIndicatorClick={handleIndecatorClick}></FilterBar>
+        <ProgressBar openIssues={2} closedIssues={4}></ProgressBar>
       </div>
     </div>
   );
