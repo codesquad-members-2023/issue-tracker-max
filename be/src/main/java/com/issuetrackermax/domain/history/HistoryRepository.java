@@ -13,7 +13,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.issuetrackermax.common.exception.NotFoundHistoryException;
+import com.issuetrackermax.common.exception.ApiException;
+import com.issuetrackermax.common.exception.domain.HistoryException;
 import com.issuetrackermax.domain.history.entity.History;
 
 @Repository
@@ -24,7 +25,6 @@ public class HistoryRepository {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
-	// todo : 예외처리
 	public History findLatestByIssueId(Long issueId) {
 		String sql = "SELECT h.id, h.issue_id, h.editor, h.issue_is_open, h.modified_at FROM history h "
 			+ "WHERE h.id = ("
@@ -33,7 +33,7 @@ public class HistoryRepository {
 			+ "WHERE issue_id = :issueId)";
 		return jdbcTemplate.query(sql, Map.of("issueId", issueId), HISTORY_ROW_MAPPER).stream()
 			.findAny()
-			.orElseThrow(() -> new NotFoundHistoryException());
+			.orElseThrow(() -> new ApiException(HistoryException.NOT_FOUND_HISTORY));
 	}
 
 	public Long save(History history) {
@@ -44,7 +44,8 @@ public class HistoryRepository {
 			.addValue("issueId", history.getIssueId(), Types.BIGINT)
 			.addValue("issueIsOpen", history.getIssueIsOpen(), Types.TINYINT);
 		jdbcTemplate.update(sql, parameters, keyHolder);
-		return (Long)Objects.requireNonNull(keyHolder.getKeys().get("ID"));
+		Map<String, Object> keys = keyHolder.getKeys();
+		return (Long)Objects.requireNonNull(keys).get("ID");
 	}
 
 	private static final RowMapper<History> HISTORY_ROW_MAPPER = ((rs, rowNum) -> History.builder()

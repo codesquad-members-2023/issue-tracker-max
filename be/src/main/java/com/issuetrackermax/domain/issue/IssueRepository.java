@@ -11,7 +11,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.issuetrackermax.common.exception.NotFoundIssueException;
+import com.issuetrackermax.common.exception.ApiException;
+import com.issuetrackermax.common.exception.domain.IssueException;
 import com.issuetrackermax.domain.issue.entity.Issue;
 import com.issuetrackermax.domain.issue.entity.IssueResultVO;
 
@@ -23,8 +24,7 @@ public class IssueRepository {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
-	// todo : 예외처리
-	public IssueResultVO findById(Long id) {
+	public IssueResultVO findIssueDetailsById(Long id) {
 		String sql = "SELECT i.id, i.is_open, i.title, "
 			+ "GROUP_CONCAT(DISTINCT l.id ORDER BY l.id SEPARATOR ',') AS label_ids, "
 			+ "GROUP_CONCAT(DISTINCT l.title ORDER BY l.id SEPARATOR ',') AS label_titles, "
@@ -43,7 +43,7 @@ public class IssueRepository {
 			+ "GROUP BY i.id, i.is_open, i.title, m.id, m.nick_name, ms.id, ms.title";
 		return jdbcTemplate.query(sql, Map.of("id", id), ISSUE_RESULT_VO_ROW_MAPPER).stream()
 			.findAny()
-			.orElseThrow(() -> new NotFoundIssueException());
+			.orElseThrow(() -> new ApiException(IssueException.NOT_FOUND_ISSUE));
 	}
 
 	public Long save(Issue issue) {
@@ -81,30 +81,30 @@ public class IssueRepository {
 			.addValue("title", title));
 	}
 
-	public void applyLabels(Long issueId, Long labelId) {
+	public int applyLabels(Long issueId, Long labelId) {
 		String sql = "INSERT INTO issue_label(issue_id, label_id) VALUES (:issueId, :labelId)";
 		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(sql, new MapSqlParameterSource()
+		return jdbcTemplate.update(sql, new MapSqlParameterSource()
 			.addValue("issueId", issueId)
 			.addValue("labelId", labelId), keyHolder);
 	}
 
-	public void deleteAppliedLabels(Long issueId) {
+	public int deleteAppliedLabels(Long issueId) {
 		String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
-		jdbcTemplate.update(sql, new MapSqlParameterSource("issueId", issueId));
+		return jdbcTemplate.update(sql, new MapSqlParameterSource("issueId", issueId));
 	}
 
-	public void applyAssignees(Long issueId, Long memberId) {
+	public int applyAssignees(Long issueId, Long memberId) {
 		String sql = "INSERT INTO assignee(issue_id, member_id) VALUES (:issueId, :memberId)";
 		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(sql, new MapSqlParameterSource()
+		return jdbcTemplate.update(sql, new MapSqlParameterSource()
 			.addValue("issueId", issueId)
 			.addValue("memberId", memberId), keyHolder);
 	}
 
-	public void deleteAppliedAssignees(Long issueId) {
+	public int deleteAppliedAssignees(Long issueId) {
 		String sql = "DELETE FROM assignee WHERE issue_id = :issueId";
-		jdbcTemplate.update(sql, new MapSqlParameterSource("issueId", issueId));
+		return jdbcTemplate.update(sql, new MapSqlParameterSource("issueId", issueId));
 	}
 
 	public int applyMilestone(Long issueId, Long milestoneId) {

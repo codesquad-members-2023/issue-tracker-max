@@ -18,7 +18,7 @@ public class MemberProfileResponse {
 	public Member toMember() {
 		return Member.builder()
 			.password(null)
-			.nickName(null)
+			.nickName(loginId)
 			.loginId(loginId)
 			.loginType(LoginType.GITHUB)
 			.build();

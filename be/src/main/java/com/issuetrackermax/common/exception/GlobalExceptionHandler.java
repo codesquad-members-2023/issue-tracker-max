@@ -7,12 +7,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.issuetrackermax.common.exception.response.ErrorResponse;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	@ExceptionHandler(ApiException.class)
 	public ErrorResponse apiExceptionHandler(ApiException e) {
-		ErrorCode errorCode = new ErrorCode(e.getHttpStatus().value(), e.getMessage());
-		return ErrorResponse.exception(errorCode);
+		return new ErrorResponse(e.getCustomException().getHttpStatus().value(), e.getMessage());
 	}
 
 
@@ -24,7 +25,6 @@ public class GlobalExceptionHandler {
 			.map(fieldError -> Optional.ofNullable(fieldError.getDefaultMessage()).orElse("유효하지 않은 값입니다."))
 			.findAny()
 			.orElseThrow();
-		ErrorCode errorCode = new ErrorCode(HttpStatus.BAD_REQUEST.value(), message);
-		return ErrorResponse.exception(errorCode);
+		return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), message);
 	}
 }

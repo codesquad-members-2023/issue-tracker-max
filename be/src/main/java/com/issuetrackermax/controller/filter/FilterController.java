@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 public class FilterController {
+	private static final String MEMBER_ID = "memberId";
 	private final FilterService filterService;
-	private final String MEMBER_ID = "memberId";
 
 	@GetMapping()
 	public ApiResponse<FilterResponse> getFilteredIssues(@ModelAttribute FilterRequest filterRequest,

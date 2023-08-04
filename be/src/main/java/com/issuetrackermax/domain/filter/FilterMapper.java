@@ -9,6 +9,6 @@ import com.issuetrackermax.service.filter.dto.FilterInformation;
 @Mapper
 public interface FilterMapper {
 
-	List<FilterResultVO> getFilteredList(FilterInformation param);
+	List<FilterResultVO> getFilteredList(FilterInformation filterInformation);
 
 }

@@ -11,15 +11,14 @@ import com.issuetrackermax.domain.oauth.entity.OauthProperties;
 import com.issuetrackermax.domain.oauth.utils.OauthAdapter;
 import com.issuetrackermax.service.oauth.OauthProvider;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Configuration
 @EnableConfigurationProperties(OauthProperties.class)
 public class OauthConfig {
 
 	private final OauthProperties properties;
-
-	public OauthConfig(OauthProperties properties) {
-		this.properties = properties;
-	}
 
 	@Bean
 	public InMemoryProviderRepository inMemoryProviderRepository() {

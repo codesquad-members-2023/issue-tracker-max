@@ -7,12 +7,12 @@ import lombok.Getter;
 public class Assignee {
 	private Long id;
 	private Long issueId;
-	private Long memberid;
+	private Long memberId;
 
 	@Builder
-	public Assignee(Long id, Long issueId, Long memberid) {
+	public Assignee(Long id, Long issueId, Long memberId) {
 		this.id = id;
 		this.issueId = issueId;
-		this.memberid = memberid;
+		this.memberId = memberId;
 	}
 }

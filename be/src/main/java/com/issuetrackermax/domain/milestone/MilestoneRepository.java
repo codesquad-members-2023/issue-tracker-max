@@ -1,7 +1,7 @@
 package com.issuetrackermax.domain.milestone;
 
 import java.sql.Types;
-import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,7 +31,8 @@ public class MilestoneRepository {
 			.addValue("isOpen", milestone.getIsOpen(), Types.TINYINT);
 
 		jdbcTemplate.update(sql, parameters, keyHolder);
-		return (Long)Objects.requireNonNull(keyHolder.getKeys().get("ID"));
+		Map<String, Object> keys = keyHolder.getKeys();
+		return (Long)Objects.requireNonNull(keys).get("ID");
 	}
 
 	public Long getMilestoneCount() {

@@ -6,10 +6,9 @@ import lombok.Getter;
 public enum LoginType {
 	LOCAL("LOCAL"), GITHUB("GITHUB");
 
-	private String name;
+	private final String name;
 
 	LoginType(String name) {
 		this.name = name;
 	}
-
 }

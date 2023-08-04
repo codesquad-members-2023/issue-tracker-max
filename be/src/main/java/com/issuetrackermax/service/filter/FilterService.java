@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetrackermax.controller.filter.dto.response.FilterResponse;
 import com.issuetrackermax.controller.filter.dto.response.IssueResponse;
@@ -24,6 +25,7 @@ public class FilterService {
 	private final IssueRepository issueRepository;
 	private final LabelRepository labelRepository;
 
+	@Transactional(readOnly = true)
 	public FilterResponse getMainPageIssue(FilterInformation filterInformation) {
 		List<FilterResultVO> filterResultVOS = getFilterVO(filterInformation);
 		return FilterResponse.builder()

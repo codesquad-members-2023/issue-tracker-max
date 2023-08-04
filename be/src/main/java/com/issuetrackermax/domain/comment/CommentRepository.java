@@ -2,6 +2,7 @@ package com.issuetrackermax.domain.comment;
 
 import java.sql.Types;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,7 +32,8 @@ public class CommentRepository {
 			.addValue("image_url", comment.getImageUrl(), Types.VARCHAR)
 			.addValue("writerId", comment.getWriterId(), Types.BIGINT);
 		jdbcTemplate.update(sql, parameters, keyHolder);
-		return (Long)Objects.requireNonNull(keyHolder.getKeys().get("ID"));
+		Map<String, Object> keys = keyHolder.getKeys();
+		return (Long)Objects.requireNonNull(keys).get("ID");
 	}
 
 	public List<Comment> findByIssueId(Long id) {
