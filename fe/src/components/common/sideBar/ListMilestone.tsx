@@ -1,0 +1,25 @@
+import { ProgressBar } from '../ProgressBar';
+import { ProgressLabel } from '../ProgressLabel';
+
+type selectedMilestonesData = {
+  milestoneId: number;
+  name: string;
+  progress: number;
+};
+
+type Props = {
+  selectedMilestonesData: selectedMilestonesData[];
+};
+
+export const ListMilstone: React.FC<Props> = ({ selectedMilestonesData }) => {
+  return (
+    <>
+      {selectedMilestonesData.map((milestone) => (
+        <div>
+          <ProgressBar progress={milestone.progress} />
+          <ProgressLabel name={milestone.name} />
+        </div>
+      ))}
+    </>
+  );
+};
