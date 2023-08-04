@@ -9,6 +9,7 @@ import MilestonePage from "@pages/MainPage/MilestonePage";
 import NewIssuePage from "@pages/MainPage/NewIssuePage";
 import GlobalStyle from "@styles/GlobalStyle";
 import { darkMode, lightMode } from "@styles/designSystem";
+import { ProtectedRoute } from "ProtectedRoute";
 import { ThemeModeContext } from "context/themeModeContext";
 import { useContext } from "react";
 import {
@@ -27,8 +28,14 @@ const router = createBrowserRouter(
         <Route path="signup" element={<SignupPage />} />
       </Route>
 
-      <Route path="/" element={<MainPage />}>
-        <Route path="issues" element={<IssuesPage />} />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <MainPage />
+          </ProtectedRoute>
+        }>
+        <Route index element={<IssuesPage />} />
         <Route path="issues/:issueId" element={<IssueDetailPage />} />
         <Route path="labels" element={<LabelPage />} />
         <Route path="milestones" element={<MilestonePage />} />
