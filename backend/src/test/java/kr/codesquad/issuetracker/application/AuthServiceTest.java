@@ -14,7 +14,7 @@ import kr.codesquad.issuetracker.exception.ApplicationException;
 import kr.codesquad.issuetracker.exception.ErrorCode;
 import kr.codesquad.issuetracker.infrastructure.persistence.UserAccountRepository;
 import kr.codesquad.issuetracker.infrastructure.security.hash.PasswordEncoder;
-import kr.codesquad.issuetracker.presentation.response.TokenResponse;
+import kr.codesquad.issuetracker.presentation.response.LoginSuccessResponse;
 
 @ApplicationTest
 public class AuthServiceTest {
@@ -66,13 +66,13 @@ public class AuthServiceTest {
 			userAccountRepository.save(new UserAccount("loginId", passwordEncoder.encrypt("password")));
 
 			// when
-			TokenResponse response = authService.login("loginId", "password");
+			LoginSuccessResponse response = authService.login("loginId", "password");
 
 			// then
 			assertAll(
 				() -> assertThat(response).isNotNull(),
-				() -> assertThat(response.getTokenType()).isEqualTo("Bearer"),
-				() -> assertThat(response.getAccessToken()).isNotEmpty()
+				() -> assertThat(response.getToken().getTokenType()).isEqualTo("Bearer"),
+				() -> assertThat(response.getToken().getAccessToken()).isNotEmpty()
 			);
 		}
 
@@ -88,7 +88,7 @@ public class AuthServiceTest {
 				.extracting("errorCode").isEqualTo(ErrorCode.FAILED_LOGIN);
 		}
 
-		@DisplayName("존재하지 안흔 로그인 아이디가 주어지면 예외를 던진다.")
+		@DisplayName("존재하지 않는 로그인 아이디가 주어지면 예외를 던진다.")
 		@Test
 		void givenNotExistsLoginId_thenThrowsException() {
 			// given
