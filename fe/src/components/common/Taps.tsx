@@ -1,50 +1,46 @@
-import { css } from '@emotion/react';
-import { color } from '../../styles/color';
-import { font } from '../../styles/font';
-import { border, radius } from '../../styles/object';
-import LabelIcon from '../../assets/Icons/LabelIcon';
-import MilestoneIcon from '../../assets/Icons/MilestoneIcon';
+import { Theme, css, useTheme } from '@emotion/react';
+import { border, font, radius } from '../../styles/styles';
 import { NavLink } from 'react-router-dom';
+import { ReactComponent as LabelIcon } from '/src/assets/icon/label.svg';
+import { ReactComponent as MilestoneIcon } from '/src/assets/icon/milestone.svg';
 
-export default function Taps() {
+type Props = {
+  labelCount: number;
+  milestoneCount: number;
+};
+
+export default function Taps({ labelCount, milestoneCount }: Props) {
+  const theme = useTheme();
+
   return (
-    <div css={taps}>
+    <div css={taps(theme)}>
       <NavLink to={'/label'}>
-        <button
-          css={css`
-            border-radius: ${radius.medium} 0 0 ${radius.medium};
-          `}
-        >
+        <button className="label-button">
           <LabelIcon />
-          레이블(0)
+          레이블({labelCount})
         </button>
       </NavLink>
       <NavLink to={'/milestone'}>
-        <button
-          css={css`
-            border-radius: 0 ${radius.medium} ${radius.medium} 0;
-            border-left: ${border.default} ${color.neutral.borderDefault};
-          `}
-        >
-          <MilestoneIcon />
-          마일스톤(0)
+        <button className="milestone-button">
+          <MilestoneIcon className="milestone-icon" />
+          마일스톤({milestoneCount})
         </button>
       </NavLink>
     </div>
   );
 }
 
-const taps = css`
+const taps = (theme: Theme) => css`
   display: flex;
   border-radius: ${radius.medium};
-  border: ${border.default} ${color.neutral.borderDefault};
-  background-color: ${color.neutral.surfaceDefault};
+  border: ${border.default} ${theme.neutral.borderDefault};
+  background-color: ${theme.neutral.surfaceDefault};
 
-  & a {
+  a {
     text-decoration: none;
   }
 
-  & button {
+  button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -52,15 +48,29 @@ const taps = css`
     width: 160px;
     height: 40px;
     font: ${font.availableMedium16};
-    color: ${color.neutral.textDefault};
-    background-color: ${color.neutral.surfaceDefault};
+    color: ${theme.neutral.textDefault};
+    background-color: ${theme.neutral.surfaceDefault};
   }
 
   & .active {
-    & button {
+    button {
       font: ${font.selectedBold16};
-      color: ${color.neutral.textStrong};
-      background-color: ${color.neutral.surfaceBold};
+      color: ${theme.neutral.textStrong};
+      background-color: ${theme.neutral.surfaceBold};
+    }
+  }
+
+  .label-button {
+    border-radius: ${radius.medium} 0 0 ${radius.medium};
+  }
+
+  .milestone-button {
+    border-radius: 0 ${radius.medium} ${radius.medium} 0;
+    border-left: ${border.default} ${theme.neutral.borderDefault};
+
+    .milestone-icon path {
+      fill: ${theme.neutral.textDefault};
+      stroke: none;
     }
   }
 `;

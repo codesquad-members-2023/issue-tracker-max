@@ -1,55 +1,72 @@
-import { css } from '@emotion/react';
-import { color } from '../../../styles/color';
-import { border, opacity, radius } from '../../../styles/object';
-import { font } from '../../../styles/font';
+import { Theme, css, useTheme } from '@emotion/react';
+import { border, font, opacity, radius } from '../../../styles/styles';
 
-type ButtonVariant = 'github' | 'signIn' | 'signUp';
+type ButtonType = 'github' | 'signIn' | 'signUp';
 
-type Props = {
-  variant: ButtonVariant;
-  disabled?: boolean;
-};
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  buttonType: ButtonType;
+}
 
-export default function SignButton({ variant, disabled = false }: Props) {
+export default function SignButton({
+  type,
+  value,
+  disabled = false,
+  buttonType,
+}: Props) {
+  const theme = useTheme();
+
   return (
     <button
-      type={variant === 'signIn' ? 'submit' : 'button'}
+      type={type}
       disabled={disabled}
-      css={[common, variants[variant], disabled && disabledStyle]}
+      css={[
+        button,
+        buttonWithType(theme, buttonType),
+        disabled && disabledStyle,
+      ]}
     >
-      {variant === 'github'
-        ? 'GitHub 계정으로 로그인'
-        : variant === 'signIn'
-        ? '이메일로 로그인'
-        : '회원가입'}
+      {value}
     </button>
   );
 }
 
-const common = css`
+const button = css`
   width: 320px;
   height: 56px;
   border-radius: ${radius.large};
 `;
 
-const variants = {
-  github: css`
+const buttonWithType = (theme: Theme, buttonType: ButtonType) => {
+  const githubButton = css`
     font: ${font.availableMedium20};
-    background-color: ${color.neutral.surfaceDefault};
-    color: ${color.brand.textWeak};
-    border: ${border.default} ${color.brand.borderDefault};
-  `,
-  signIn: css`
+    background-color: ${theme.neutral.surfaceDefault};
+    color: ${theme.brand.textWeak};
+    border: ${border.default} ${theme.brand.borderDefault};
+  `;
+
+  const signInButton = css`
     font: ${font.availableMedium20};
-    background-color: ${color.brand.surfaceDefault};
-    color: ${color.brand.textDefault};
-  `,
-  signUp: css`
+    background-color: ${theme.brand.surfaceDefault};
+    color: ${theme.brand.textDefault};
+  `;
+
+  const signUpButton = css`
     font: ${font.availableMedium16};
-    background-color: ${color.neutral.surfaceDefault};
-    color: ${color.neutral.textDefault};
-    border: ${border.default} ${color.neutral.borderDefault};
-  `,
+    background-color: ${theme.neutral.surfaceDefault};
+    color: ${theme.neutral.textDefault};
+    border: ${border.default} ${theme.neutral.borderDefault};
+  `;
+
+  switch (buttonType) {
+    case 'github':
+      return githubButton;
+    case 'signIn':
+      return signInButton;
+    case 'signUp':
+      return signUpButton;
+    default:
+      return;
+  }
 };
 
 const disabledStyle = css`

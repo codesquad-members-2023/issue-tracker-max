@@ -1,17 +1,22 @@
-import { css } from '@emotion/react';
-import Logo from '../../assets/Logo/Logo';
-import UserImageIcon from '../../assets/Icons/UserImageIcon';
+import { Theme, css, useTheme } from '@emotion/react';
+import { Link } from 'react-router-dom';
+import { ReactComponent as MediumLogo } from '/src/assets/logo/mediumLogo.svg';
+import { ReactComponent as UserImageLargeIcon } from '/src/assets/icon/userImageLarge.svg';
 
 export default function Header() {
+  const theme = useTheme();
+
   return (
-    <header css={headerWrapper}>
-      <Logo theme="light" size="medium"></Logo>
-      <UserImageIcon size="large"></UserImageIcon>
+    <header css={header(theme)}>
+      <Link to={'/issue'}>
+        <MediumLogo className="logo" />
+      </Link>
+      <UserImageLargeIcon />
     </header>
   );
 }
 
-const headerWrapper = css`
+const header = (theme: Theme) => css`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,4 +24,9 @@ const headerWrapper = css`
   height: 94px;
   margin: 0 auto;
   padding: 0 40px;
+
+  .logo path {
+    fill: ${theme.neutral.textStrong};
+    stroke: none;
+  }
 `;
