@@ -16,7 +16,6 @@ export const IssueList: React.FC<Props> = ({ image }) => {
       css={{
         display: 'flex',
         padding: '16px 0px',
-        backgroundColor: theme.neutral.surface.strong,
       }}
     >
       <div

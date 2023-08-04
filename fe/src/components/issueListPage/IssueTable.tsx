@@ -1,35 +1,24 @@
-import { useTheme } from '@emotion/react';
 import { TableHeader } from './TableHeader';
 import { IssueList } from './IssueList';
+import { Box } from '@components/common/box/Box';
+import { BoxHeader } from '@components/common/box/BoxHeader';
 
 type Props = {};
 
 export const IssueTable: React.FC<Props> = ({}) => {
-  const theme = useTheme() as any;
-
   return (
-    <div
-      css={{
-        borderRadius: theme.radius.l,
-        border: `${theme.border.default} ${theme.neutral.border.default}`,
-        overflow: 'hidden',
-      }}
-    >
-      <TableHeader />
+    <Box>
+      <BoxHeader>
+        <TableHeader />
+      </BoxHeader>
 
-      <ul
-        css={{
-          '> li:not(:last-child)': {
-            borderBottom: `${theme.border.default} ${theme.neutral.border.default}`,
-          },
-        }}
-      >
+      <ul>
         <IssueList />
         <IssueList />
         <IssueList />
         <IssueList />
         <IssueList />
       </ul>
-    </div>
+    </Box>
   );
 };

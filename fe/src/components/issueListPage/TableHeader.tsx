@@ -6,7 +6,10 @@ import { useTheme } from '@emotion/react';
 import { DropDownIndicator } from '@components/common/dropDown/DropDownIndicator';
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 
-type Props = { openIssueCount: number; closedIssueCount: number };
+type Props = {
+  openIssueCount: number;
+  closedIssueCount: number;
+};
 
 export const TableHeader: React.FC<Props> = ({
   openIssueCount = 0,
@@ -17,11 +20,10 @@ export const TableHeader: React.FC<Props> = ({
   return (
     <div
       css={{
-        minHeight: '64px',
+        width: '100%',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottom: `${theme.border.default} ${theme.neutral.border.default}`,
       }}
     >
       <div
@@ -62,7 +64,7 @@ export const TableHeader: React.FC<Props> = ({
             <Archive stroke={theme.neutral.text.strong} />
             <span
               css={{ font: theme.fonts.availableMedium16 }}
-            >{`열린 이슈 (${closedIssueCount})`}</span>
+            >{`닫힌 이슈 (${closedIssueCount})`}</span>
           </Button>
         </div>
       </div>
