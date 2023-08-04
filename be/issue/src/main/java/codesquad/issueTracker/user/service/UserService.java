@@ -161,6 +161,10 @@ public class UserService {
 
 	private UserProfile getUserProfile(String providerName, OauthTokenResponse tokenResponse, OauthProvider provider) {
 		Map<String, Object> userAttributes = getUserAttributes(provider, tokenResponse);
+		if(providerName.equals("github") && userAttributes.get("email") == null) {
+			List<Map<String, Object>> temp = getUserEmail(tokenResponse);
+			userAttributes.put("email",temp.get(0).get("email"));
+		}
 		return OauthAttributes.extract(providerName, userAttributes);
 	}
 
@@ -189,4 +193,15 @@ public class UserService {
 			throw new CustomException(ErrorCode.FAILED_LOGIN_USER);
 		}
 	}
+
+	private List<Map<String, Object>> getUserEmail(OauthTokenResponse tokenResponse){
+		return WebClient.create()
+			.get()
+			.uri("https://api.github.com/user/emails")
+			.headers(header -> header.setBearerAuth(tokenResponse.getAccessToken()))
+			.retrieve()
+			.bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
+			.block();
+	}
+
 }
