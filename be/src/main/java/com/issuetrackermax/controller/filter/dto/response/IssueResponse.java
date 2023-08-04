@@ -30,7 +30,8 @@ public class IssueResponse {
 			.editor(resultVO.getEditor())
 			.modifiedAt(resultVO.getModifiedAt())
 			.build();
-		this.labels = LabelResponse.convertToLabelResponseList(resultVO.getLabelIds(), resultVO.getLabelTitles());
+		this.labels = LabelResponse.convertToLabelResponseList(resultVO.getLabelIds(), resultVO.getLabelTitles(),
+			resultVO.getLabelTextColors(), resultVO.getLabelBackgroundColors());
 		this.writer = WriterResponse.builder()
 			.id(resultVO.getWriterId())
 			.name(resultVO.getWriter())

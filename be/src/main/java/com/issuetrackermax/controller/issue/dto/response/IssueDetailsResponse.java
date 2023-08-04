@@ -33,7 +33,8 @@ public class IssueDetailsResponse {
 		this.id = resultVO.getId();
 		this.isOpen = resultVO.getIsOpen();
 		this.title = resultVO.getTitle();
-		this.labels = LabelResponse.convertToLabelResponseList(resultVO.getLabelIds(), resultVO.getLabelTitles());
+		this.labels = LabelResponse.convertToLabelResponseList(resultVO.getLabelIds(), resultVO.getLabelTitles(),
+			resultVO.getLabelTextColors(), resultVO.getLabelBackgroundColors());
 		this.assignees = AssigneeResponse.convertToAssigneeResponseList(resultVO.getAssigneeIds(),
 			resultVO.getAssigneeNames());
 		this.writer = WriterResponse.builder()
