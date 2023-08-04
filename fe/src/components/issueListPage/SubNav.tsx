@@ -5,10 +5,18 @@ import { ReactComponent as PlusIcon } from '@assets/icons/plus.svg';
 import { useTheme } from '@emotion/react';
 
 type Props = {
-  filterString: string;
+  labelCount: IssuePageData['labelCount'];
+  milestoneCount: IssuePageData['milestoneCount'];
+  filterValue: string;
+  onChangeFilterValue: (value: string) => void;
 };
 
-export const SubNav: React.FC<Props> = ({ filterString }) => {
+export const SubNav: React.FC<Props> = ({
+  labelCount,
+  milestoneCount,
+  filterValue,
+  onChangeFilterValue,
+}) => {
   const theme = useTheme() as any;
 
   return (
@@ -20,14 +28,14 @@ export const SubNav: React.FC<Props> = ({ filterString }) => {
       }}
     >
       <div css={{ width: '560px' }}>
-        <FilterBar {...{ filterString }} />
+        <FilterBar {...{ filterValue, onChangeFilterValue }} />
       </div>
 
       <div
         className="right-side-container"
         css={{ display: 'flex', gap: '16px' }}
       >
-        <TabButton />
+        <TabButton {...{ labelCount, milestoneCount }} />
 
         <Button className="add-issue-button" size="S">
           <PlusIcon stroke={theme.brand.text.default} />

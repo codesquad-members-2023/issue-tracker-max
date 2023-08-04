@@ -6,15 +6,13 @@ import { InputContainer } from './textInput/InputContainer';
 import { Input } from './textInput/Input';
 
 type Props = {
-  filterString: string;
-  onClick: () => void;
-  onChange: (value: string) => void;
+  filterValue: string;
+  onChangeFilterValue: (value: string) => void;
 };
 
 export const FilterBar: React.FC<Props> = ({
-  filterString,
-  onClick,
-  onChange,
+  filterValue,
+  onChangeFilterValue,
 }) => {
   const theme = useTheme() as any;
 
@@ -29,7 +27,6 @@ export const FilterBar: React.FC<Props> = ({
       >
         <Button
           typeVariant="ghost"
-          onClick={onClick}
           css={{
             width: '128px',
             minWidth: '128px',
@@ -58,8 +55,8 @@ export const FilterBar: React.FC<Props> = ({
         >
           <Search stroke={theme.neutral.text.default} />
           <Input
-            value={filterString}
-            onChange={onChange}
+            value={filterValue}
+            onChange={onChangeFilterValue}
             placeholder="Search all issues"
           />
         </div>
