@@ -90,6 +90,7 @@
                 </trim>
             </if>
         </where>
+    </select>
 
     <resultMap id="issueDetailResultMap" type="IssueDetailVo">
         <id property="id" column="issue_id"/>
