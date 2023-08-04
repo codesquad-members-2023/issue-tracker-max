@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class Assignee {
-    private Long issueId;
-    private Long userId;
+	private Long issueId;
+	private Long userId;
 }

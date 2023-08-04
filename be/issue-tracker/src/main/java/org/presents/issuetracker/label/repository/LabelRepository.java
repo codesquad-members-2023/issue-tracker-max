@@ -23,9 +23,9 @@ public class LabelRepository {
     public LabelRepository(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("label")
-                .usingColumns("name", "description", "background_color", "text_color")
-                .usingGeneratedKeyColumns("label_id");
+            .withTableName("label")
+            .usingColumns("name", "description", "background_color", "text_color")
+            .usingGeneratedKeyColumns("label_id");
     }
 
     public Long save(final Label label) {
@@ -34,18 +34,18 @@ public class LabelRepository {
 
     public void update(final Label label) {
         String sql = "UPDATE label " +
-                "SET name = :name, " +
-                "    description = :description, " +
-                "    background_color = :background_color, " +
-                "    text_color = :text_color " +
-                "WHERE label_id = :id";
+            "SET name = :name, " +
+            "    description = :description, " +
+            "    background_color = :background_color, " +
+            "    text_color = :text_color " +
+            "WHERE label_id = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("name", label.getName())
-                .addValue("description", label.getDescription())
-                .addValue("background_color", label.getBackgroundColor())
-                .addValue("text_color", label.getTextColor())
-                .addValue("id", label.getId());
+            .addValue("name", label.getName())
+            .addValue("description", label.getDescription())
+            .addValue("background_color", label.getBackgroundColor())
+            .addValue("text_color", label.getTextColor())
+            .addValue("id", label.getId());
 
         jdbcTemplate.update(sql, params);
     }
@@ -54,8 +54,8 @@ public class LabelRepository {
         String sql = "UPDATE label SET is_deleted = :deletedFlag WHERE label_id = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("deletedFlag", DELETED_FLAG)
-                .addValue("id", id);
+            .addValue("deletedFlag", DELETED_FLAG)
+            .addValue("id", id);
 
         jdbcTemplate.update(sql, params);
     }
@@ -66,11 +66,11 @@ public class LabelRepository {
         MapSqlParameterSource params = new MapSqlParameterSource("id", labelId);
 
         RowMapper<Label> mapper = (rs, rowNum) -> Label.of(
-                rs.getLong("label_id"),
-                rs.getString("name"),
-                rs.getString("description"),
-                rs.getString("background_color"),
-                rs.getString("text_color")
+            rs.getLong("label_id"),
+            rs.getString("name"),
+            rs.getString("description"),
+            rs.getString("background_color"),
+            rs.getString("text_color")
         );
 
         return jdbcTemplate.queryForObject(sql, params, mapper);
@@ -78,9 +78,9 @@ public class LabelRepository {
 
     public List<Label> findAll() {
         String sql = "SELECT label_id, name, description, background_color, text_color " +
-                "FROM label " +
-                "WHERE is_deleted = :openFlag " +
-                "ORDER BY label_id";
+            "FROM label " +
+            "WHERE is_deleted = :openFlag " +
+            "ORDER BY label_id";
 
         MapSqlParameterSource params = new MapSqlParameterSource("openFlag", OPEN_FLAG);
 
@@ -96,11 +96,11 @@ public class LabelRepository {
 
     public List<Label> findPreviews() {
         String sql = "SELECT label_id, name, background_color, text_color " +
-                "FROM label " +
-                "WHERE is_deleted = :openFlag " +
-                "UNION ALL " +
-                "SELECT 0 AS label_id, 'none' AS name, '' AS background_color, '' AS text_color " +
-                "ORDER BY label_id";
+            "FROM label " +
+            "WHERE is_deleted = :openFlag " +
+            "UNION ALL " +
+            "SELECT 0 AS label_id, 'none' AS name, '' AS background_color, '' AS text_color " +
+            "ORDER BY label_id";
 
         MapSqlParameterSource params = new MapSqlParameterSource("openFlag", OPEN_FLAG);
 

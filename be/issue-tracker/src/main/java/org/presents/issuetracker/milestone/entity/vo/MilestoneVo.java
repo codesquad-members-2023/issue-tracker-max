@@ -1,4 +1,4 @@
-package org.presents.issuetracker.milestone.entity;
+package org.presents.issuetracker.milestone.entity.vo;
 
 import java.time.LocalDateTime;
 
@@ -7,10 +7,13 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class Milestone {
+public class MilestoneVo {
 	private Long id;
 	private String name;
 	private LocalDateTime deadline;
 	private String description;
 	private String status;
+	private int openIssueCount;
+	private int closedIssueCount;
+	private int progress;
 }
