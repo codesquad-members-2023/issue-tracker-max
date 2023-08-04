@@ -3,6 +3,7 @@ package kr.codesquad.issuetracker.infrastructure.persistence;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -132,6 +133,33 @@ public class IssueRepository {
 		));
 	}
 
+	public Optional<Issue> findById(Integer issueId) {
+		String sql = "SELECT id, title, is_open, content, user_account_id FROM issue WHERE id = :issueId";
+
+		return Optional.ofNullable(DataAccessUtils.singleResult(
+			jdbcTemplate.query(sql, Map.of("issueId", issueId), (rs, rowNum) -> new Issue(
+				rs.getInt("id"),
+				rs.getString("title"),
+				rs.getString("content"),
+				rs.getBoolean("is_open"),
+				rs.getInt("user_account_id")
+			))));
+	}
+
+	public void updateIssue(Issue issue) {
+		String sql = "UPDATE issue "
+			+ "SET title = :title, is_open = :isOpen, content = :content "
+			+ "WHERE id = :issueId";
+
+		MapSqlParameterSource param = new MapSqlParameterSource()
+			.addValue("title", issue.getTitle())
+			.addValue("isOpen", issue.getIsOpen())
+			.addValue("content", issue.getContent())
+			.addValue("issueId", issue.getId());
+
+		jdbcTemplate.update(sql, param);
+  }
+  
 	public void updateIssueMilestone(Integer issueId, Integer milestoneId) {
 		String sql = "UPDATE issue SET milestone_id = :milestoneId WHERE id = :issueId";
 

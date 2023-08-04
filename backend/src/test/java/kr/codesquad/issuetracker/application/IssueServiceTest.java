@@ -129,6 +129,53 @@ class IssueServiceTest {
 			.extracting("errorCode").isEqualTo(ErrorCode.ISSUE_NOT_FOUND);
 	}
 
+	@DisplayName("이슈를 수정할 때")
+	@Nested
+	class IssueModifyTest {
+
+		@DisplayName("제목을 수정하는 데이터가 주어지면 수정에 성공한다.")
+		@Test
+		void modifyIssueTitle() {
+			// given
+
+			// when
+			issueService.modifyIssue(1, 1,
+				FixtureFactory.createIssueModifyRequest("변경된 제목", null, null));
+
+			// then
+			IssueDetailResponse result = issueService.getIssueDetails(1);
+			assertThat(result.getTitle()).isEqualTo("변경된 제목");
+		}
+
+		@DisplayName("내용을 수정하는 데이터가 주어지면 수정에 성공한다.")
+		@Test
+		void modifyIssueContent() {
+			// given
+
+			// when
+			issueService.modifyIssue(1, 1,
+				FixtureFactory.createIssueModifyRequest(null, "변경된 내용", null));
+
+			// then
+			IssueDetailResponse result = issueService.getIssueDetails(1);
+			assertThat(result.getContent()).isEqualTo("변경된 내용");
+		}
+
+		@DisplayName("이슈의 OPEN 상태를 수정하는 데이터가 주어지면 수정에 성공한다.")
+		@Test
+		void modifyIssueOpenStatus() {
+			// given
+
+			// when
+			issueService.modifyIssue(1, 1,
+				FixtureFactory.createIssueModifyRequest(null, null, false));
+
+			// then
+			IssueDetailResponse result = issueService.getIssueDetails(1);
+			assertThat(result.getIsOpen()).isFalse();
+		}
+	}
+
 	@DisplayName("특정 이슈의 마일스톤을 수정할 수 있다.")
 	@Test
 	void updateIssueMilestone() {

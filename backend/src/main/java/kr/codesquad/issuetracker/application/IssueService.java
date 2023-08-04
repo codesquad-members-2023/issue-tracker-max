@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import kr.codesquad.issuetracker.domain.Issue;
 import kr.codesquad.issuetracker.domain.IssueAssignee;
@@ -18,6 +19,7 @@ import kr.codesquad.issuetracker.infrastructure.persistence.IssueRepository;
 import kr.codesquad.issuetracker.infrastructure.persistence.mapper.IssueSimpleMapper;
 import kr.codesquad.issuetracker.presentation.request.AssigneeRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueLabelRequest;
+import kr.codesquad.issuetracker.presentation.request.IssueModifyRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueRegisterRequest;
 import kr.codesquad.issuetracker.presentation.response.IssueDetailResponse;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +65,32 @@ public class IssueService {
 	@Transactional(readOnly = true)
 	public List<IssueSimpleMapper> findAll() {
 		return issueRepository.findAll();
+	}
+
+	@Transactional
+	public void modifyIssue(Integer userId, Integer issueId, IssueModifyRequest request) {
+		Issue issue = issueRepository.findById(issueId)
+			.orElseThrow(() -> new ApplicationException(ErrorCode.ISSUE_NOT_FOUND));
+
+		if (!issue.isAuthor(userId)) {
+			throw new ApplicationException(ErrorCode.NO_AUTHORIZATION);
+		}
+
+		updateIssueAttribute(request, issue);
+
+		issueRepository.updateIssue(issue);
+	}
+
+	private void updateIssueAttribute(IssueModifyRequest request, Issue issue) {
+		if (request.getIsOpen() != null) {
+			issue.modifyOpenStatus(request.getIsOpen());
+			return;
+		}
+		if (StringUtils.hasText(request.getTitle())) {
+			issue.modifyTitle(request.getTitle());
+			return;
+		}
+		issue.modifyContent(request.getContent());
 	}
 
 	@Transactional
