@@ -7,6 +7,7 @@ import codesquad.issueTracker.jwt.util.InMemoryProviderRepository;
 import codesquad.issueTracker.jwt.util.OauthProvider;
 import codesquad.issueTracker.user.domain.LoginType;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Collections;
 
@@ -59,7 +60,7 @@ public class UserService {
 		User user = userRepository.findByEmail(loginRequestDto.getEmail())
 				.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
 		if(user.getPassword() == null){
-			throw new CustomException(ErrorCode.FAILED_LOGIN_USER);
+			throw new CustomException(ErrorCode.GITHUB_LOGIN_USER);
 		}
 		validateLoginUser(loginRequestDto, user);
 		validateLoginType(LoginType.LOCAL, user.getLoginType());
@@ -104,35 +105,17 @@ public class UserService {
 
 	public LoginResponseDto oauthLogin(String providerName, String code) {
 		OauthProvider provider = inMemoryProviderRepository.findByProviderName(providerName);
-
 		OauthTokenResponse tokenResponse = getToken(code, provider);
-
 		User user = getUserProfile(providerName, tokenResponse, provider).toUser(providerName);
-		User existUser = userRepository.findByEmail(user.getEmail()).orElse(null);
-		Long userId;
-		if(existUser != null){
-			if(!existUser.getLoginType().getType().equals(providerName) && existUser.getLoginType() != LoginType.LOCAL) {
-				throw new CustomException(ErrorCode.ALREADY_EXIST_USER);
-			} else if (existUser.getLoginType().getType().equals(providerName)) {
-				userId = existUser.getId();
-//				userRepository.deleteTokenByUserId(userId);
-			} else {
-				userId = userRepository.updateUserLoginType(existUser, user);
-//				userRepository.deleteTokenByUserId(userId);
-			}
-		} else {
-			userId = userRepository.insert(user);
-		}
-
-		Jwt jwt = jwtProvider.createJwt(Map.of("userId", userId));
-		userRepository.insertRefreshToken(userId, jwt.getRefreshToken());
-
+		User existUser =userRepository.findByEmail(user.getEmail()).orElseGet(() -> insertOauthUser(user));
+		validateLoginType(user.getLoginType(), existUser.getLoginType());
+		Jwt jwt = insertToken(existUser.getId());
 		return LoginResponseDto.builder()
-				.userId(userId)
-				.accessToken(jwt.getAccessToken())
-				.refreshToken(jwt.getRefreshToken())
-				.profileImgUrl(user.getProfileImg())
-				.build();
+						.userId(existUser.getId())
+						.accessToken(jwt.getAccessToken())
+						.refreshToken(jwt.getRefreshToken())
+						.profileImgUrl(user.getProfileImg())
+						.build();
 	}
 
 	private OauthTokenResponse getToken(String code, OauthProvider provider) {
@@ -204,4 +187,8 @@ public class UserService {
 			.block();
 	}
 
+	private User insertOauthUser(User user){
+		userRepository.insert(user);
+		return userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+	}
 }
