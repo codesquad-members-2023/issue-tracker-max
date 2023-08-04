@@ -8,19 +8,24 @@ import { AppRoutes } from 'routes';
 export const App: React.FC = () => {
   const [userId, setUserId] = useState();
   const [accessToken, setAccessToken] = useState();
-  const [currentTheme, setCurrentTheme] = useState(true);
-  const theme = currentTheme ? lightMode : darkMode;
+  const [currentTheme, setCurrentTheme] = useState<ThemeType>('light');
+  const theme = currentTheme === 'light' ? lightMode : darkMode;
 
   const resetUserId = () => {};
   const resetAccessToken = () => {};
-  const toggleCurrentTheme = () => {};
+  const toggleTheme = () => {
+    setCurrentTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <Global styles={globalStyle} />
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+
+      <div css={{ width: '1280px', margin: 'auto' }}>
+        <BrowserRouter>
+          <AppRoutes {...{ currentTheme, toggleTheme }} />
+        </BrowserRouter>
+      </div>
     </ThemeProvider>
   );
 };
