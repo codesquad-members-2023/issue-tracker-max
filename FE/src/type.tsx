@@ -21,6 +21,7 @@ export type Label = {
 };
 
 export type Milestone = {
+  id: number;
   title: string;
 };
 
@@ -36,5 +37,21 @@ export type IssueListProps = {
 };
 
 export type ListDataProps = {
+  metadata: {
+    issueOpenCount: number;
+    issueCloseCount: number;
+    labelCount: number;
+    milestoneCount: number;
+  };
   issues: IssueListProps[] | [];
+};
+
+export type AssigneesList = {
+  id: number;
+  nickname: string;
+  profile_image_url: string;
+};
+
+export type AssigneesProps = {
+  assignees: AssigneesList[] | [];
 };

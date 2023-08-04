@@ -1,4 +1,7 @@
 import { styled } from "styled-components";
+import DropdownPanel from "../DropdownPanel/DropdownPanel";
+import { useEffect, useState } from "react";
+import { AssigneesProps } from "../../type";
 
 type Props = {
   icon?: string;
@@ -6,7 +9,7 @@ type Props = {
   padding?: string;
   width?: string;
   height?: string;
-  onClick(): void;
+  hasDropdown?: boolean;
 };
 
 export default function DropdownIndicator({
@@ -15,17 +18,51 @@ export default function DropdownIndicator({
   padding = "4px 0px",
   width = "80px",
   height = "32px",
-  onClick,
+  hasDropdown = false,
 }: Props) {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [assigneesData, setAssigneesData] = useState<AssigneesProps>();
+
+  const openDropdown = () => {
+    setIsOpen(true);
+  };
+
+  const closeDropdown = () => {
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://3.34.141.196/api/issues/assignees",
+        );
+        const data = await response.json();
+        setAssigneesData(data);
+      } catch (error) {
+        console.log("error");
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <IndicatorButton
       $padding={padding}
       $width={width}
       $height={height}
-      onClick={onClick}
+      onClick={openDropdown}
     >
       <IndicatorLabel>{label}</IndicatorLabel>
       <IndicatorIcon src={`/icons/${icon}.svg`} />
+      {hasDropdown && isOpen && (
+        <DropdownPanel
+          title={label}
+          assigneesList={assigneesData!}
+          closeDropdown={closeDropdown}
+        />
+      )}
     </IndicatorButton>
   );
 }
@@ -35,6 +72,7 @@ const IndicatorButton = styled.button<{
   $width: string;
   $height: string;
 }>`
+  position: relative;
   width: ${({ $width }) => $width};
   height: ${({ $height }) => $height};
   display: flex;

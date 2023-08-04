@@ -1,15 +1,15 @@
 import { styled } from "styled-components";
 import UserProfileButton from "../components/UserProfileButton/UserProfileButton";
 import SideBar from "../components/SideBar/SideBar";
-import { useEffect } from "react";
 import Button from "../components/common/Button/Button";
 import TextInput from "../components/common/TextInput/TextInput";
-
-// type Props = {
-// };
+import { useNavigate } from "react-router-dom";
 
 export default function AddIssuePage() {
-  useEffect(() => {});
+  const navigate = useNavigate();
+  const goMainPage = () => {
+    navigate("/issues/isOpen=true");
+  };
 
   return (
     <Page>
@@ -28,7 +28,7 @@ export default function AddIssuePage() {
             label={"작성 취소"}
             type={"ghost"}
             size={"medium"}
-            onClick={() => {}}
+            onClick={goMainPage}
           />
           <Button
             label={"완료"}

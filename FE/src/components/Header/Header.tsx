@@ -9,7 +9,7 @@ export default function Header({ toggleTheme }: Props) {
   return (
     <Wrapper>
       <Container>
-        <Logo href={"/"}>
+        <Logo href={"/issues/isOpen=true"}>
           <LogoImg src={"/logo/mediumLogo.svg"} alt={"Issue Tracker"} />
         </Logo>
         <UserProfileButton

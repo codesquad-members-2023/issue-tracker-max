@@ -4,20 +4,26 @@ import { useState } from "react";
 
 type Props = {
   id: string;
+  inputType?: "text" | "password";
   direction?: "row" | "column";
   size?: "large" | "small";
   label: string;
+  hasCaption?: boolean;
   caption?: string;
   captionType?: "normal" | "error";
+  onChange?(e: React.ChangeEvent<HTMLInputElement>): void;
 };
 
 export default function TextInput({
   id,
+  inputType,
   direction = "column",
   size = "large",
   label,
+  hasCaption = false,
   caption,
   captionType = "normal",
+  onChange,
 }: Props) {
   const [isFocus, setIsFocus] = useState<boolean>(false);
 
@@ -35,12 +41,14 @@ export default function TextInput({
         {isFocus && <Label htmlFor={id}>{label}</Label>}
         <Input
           id={id}
+          inputType={inputType}
           placeholder={label}
           handleFocus={handleFocus}
           handleBlur={handleBlur}
+          onChange={onChange}
         />
       </InputWrapper>
-      {caption && <Caption $captionType={captionType}>{caption}</Caption>}
+      {hasCaption && <Caption $captionType={captionType}>{caption}</Caption>}
     </Container>
   );
 }
@@ -79,4 +87,9 @@ const Label = styled.label`
 const Caption = styled.p<{ $captionType: "normal" | "error" }>`
   width: 100%;
   padding-left: 16px;
+  font: ${({ theme }) => theme.font.displayMedium12};
+  color: ${({ $captionType, theme }) =>
+    $captionType === "normal"
+      ? theme.colorSystem.neutral.text.weak
+      : theme.colorSystem.danger.text.default};
 `;

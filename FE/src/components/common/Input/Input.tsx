@@ -2,31 +2,42 @@ import { styled } from "styled-components";
 
 type Props = {
   id?: string;
+  inputType?: "text" | "password";
   placeholder?: string;
   handleFocus?(): void;
   handleBlur?(): void;
-  updateInputValue?(value: string): void;
+  onChange?(e: React.ChangeEvent<HTMLInputElement>): void;
+  value?: string;
+  handleEnterFilter?(): void;
 };
 
 export default function Input({
   id,
+  inputType = "text",
   placeholder,
   handleFocus,
   handleBlur,
-  updateInputValue,
+  onChange,
+  value,
+  handleEnterFilter,
 }: Props) {
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateInputValue!(e.target.value);
+  const enterKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleEnterFilter && handleEnterFilter();
+    }
   };
 
   return (
     <TextInput
       id={id}
-      type="text"
+      type={inputType}
       placeholder={placeholder}
-      onChange={handleInputChange}
+      onChange={onChange}
       onFocus={handleFocus}
       onBlur={handleBlur}
+      value={value}
+      onKeyPress={enterKeyPress}
     />
   );
 }

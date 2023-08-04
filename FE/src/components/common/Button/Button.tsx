@@ -16,6 +16,7 @@ type Props = {
   width?: string;
   height?: string;
   onClick: () => void;
+  disabled?: boolean;
 };
 
 export default function Button({
@@ -26,6 +27,7 @@ export default function Button({
   width,
   height,
   onClick,
+  disabled = false,
 }: Props) {
   return (
     <StyledButton
@@ -34,6 +36,7 @@ export default function Button({
       width={width}
       height={height}
       onClick={onClick}
+      disabled={disabled}
     >
       {icon && <IconImg type={type} size={size} src={`/icons/${icon}.svg`} />}
       <ButtonLabel>{label}</ButtonLabel>
