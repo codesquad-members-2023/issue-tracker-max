@@ -11,6 +11,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
     <div
       css={{
         width: '288px',
+        height: 'fit-content',
         background: theme.neutral.surface.strong,
         border: `${theme.border.default} ${theme.neutral.border.default}`,
         borderRadius: theme.radius.l,
