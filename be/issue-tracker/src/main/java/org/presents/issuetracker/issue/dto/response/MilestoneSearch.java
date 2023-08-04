@@ -18,7 +18,7 @@ public class MilestoneSearch {
 			return null;
 		}
 		return MilestoneSearch.builder()
-			.id(milestone.getMilestoneId())
+			.id(milestone.getId())
 			.name(milestone.getName()).build();
 	}
 }

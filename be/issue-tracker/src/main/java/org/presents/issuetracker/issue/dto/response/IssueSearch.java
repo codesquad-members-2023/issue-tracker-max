@@ -22,7 +22,7 @@ public class IssueSearch {
 
 	public static IssueSearch from(IssueSearchVo issue) {
 		return IssueSearch.builder()
-			.id(issue.getIssueId())
+			.id(issue.getId())
 			.title(issue.getTitle())
 			.author(UserSearch.fromEntity(issue.getAuthor()))
 			.labels(issue.getLabels().stream().map(LabelSearch::fromEntity).collect(Collectors.toUnmodifiableList()))

@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class Issue {
-	private Long issueId;
+	private Long id;
 	private Long authorId;
 	private Long milestoneId;
 	private String title;

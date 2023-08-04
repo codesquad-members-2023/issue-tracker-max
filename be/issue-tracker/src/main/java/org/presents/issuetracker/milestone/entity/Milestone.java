@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Milestone {
-	private Long milestoneId;
+	private Long id;
 	private String name;
 	private LocalDateTime deadline;
 	private String description;

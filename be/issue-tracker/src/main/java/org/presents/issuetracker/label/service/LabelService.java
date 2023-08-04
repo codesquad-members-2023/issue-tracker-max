@@ -21,53 +21,53 @@ public class LabelService {
 		this.labelRepository = labelRepository;
 	}
 
-    public List<LabelDetailResponse> getLabelDetails() {
-        List<Label> labels = labelRepository.findAll();
+	public List<LabelDetailResponse> getLabelDetails() {
+		List<Label> labels = labelRepository.findAll();
 
-        return labels.stream().map(label -> LabelDetailResponse.builder()
-                        .id(label.getLabelId())
-                        .name(label.getName())
-                        .description(label.getDescription())
-                        .backgroundColor(label.getBackgroundColor())
-                        .textColor(label.getTextColor())
-                        .build())
-                .collect(Collectors.toList());
-    }
+		return labels.stream().map(label -> LabelDetailResponse.builder()
+				.id(label.getId())
+				.name(label.getName())
+				.description(label.getDescription())
+				.backgroundColor(label.getBackgroundColor())
+				.textColor(label.getTextColor())
+				.build())
+			.collect(Collectors.toList());
+	}
 
-    public List<LabelPreviewResponse> getLabelPreviews() {
-        List<Label> labelPreviews = labelRepository.findPreviews();
+	public List<LabelPreviewResponse> getLabelPreviews() {
+		List<Label> labelPreviews = labelRepository.findPreviews();
 
-        return labelPreviews.stream().map(label -> LabelPreviewResponse.builder()
-                        .id(label.getLabelId())
-                        .name(label.getName())
-                        .backgroundColor(label.getBackgroundColor())
-                        .textColor(label.getTextColor())
-                        .build())
-                .collect(Collectors.toList());
-    }
+		return labelPreviews.stream().map(label -> LabelPreviewResponse.builder()
+				.id(label.getId())
+				.name(label.getName())
+				.backgroundColor(label.getBackgroundColor())
+				.textColor(label.getTextColor())
+				.build())
+			.collect(Collectors.toList());
+	}
 
-    public LabelResponse create(LabelCreateRequest labelCreateRequest) {
-        Long createdId = labelRepository.save(
-          Label.of(
-            labelCreateRequest.getName(),
-            labelCreateRequest.getDescription(),
-            labelCreateRequest.getBackgroundColor(),
-            labelCreateRequest.getTextColor()));
+	public LabelResponse create(LabelCreateRequest labelCreateRequest) {
+		Long createdId = labelRepository.save(
+			Label.of(
+				labelCreateRequest.getName(),
+				labelCreateRequest.getDescription(),
+				labelCreateRequest.getBackgroundColor(),
+				labelCreateRequest.getTextColor()));
 
-        return LabelResponse.builder().id(createdId).build();
-    }
+		return LabelResponse.builder().id(createdId).build();
+	}
 
-    public LabelResponse update(LabelUpdateRequest labelUpdateRequest) {
-        Long id = labelUpdateRequest.getId();
-        Label label = labelRepository.findById(id);
+	public LabelResponse update(LabelUpdateRequest labelUpdateRequest) {
+		Long id = labelUpdateRequest.getId();
+		Label label = labelRepository.findById(id);
 
-        label = label.updateFrom(labelUpdateRequest);
-        labelRepository.update(label);
-      
-        return LabelResponse.builder().id(label.getLabelId()).build();
-    }
+		label = label.updateFrom(labelUpdateRequest);
+		labelRepository.update(label);
 
-    public void delete(Long id) {
-        labelRepository.deleteById(id);
-    }
+		return LabelResponse.builder().id(label.getId()).build();
+	}
+
+	public void delete(Long id) {
+		labelRepository.deleteById(id);
+	}
 }

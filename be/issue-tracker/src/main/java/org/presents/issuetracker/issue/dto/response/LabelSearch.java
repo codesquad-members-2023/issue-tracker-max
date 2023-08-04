@@ -17,7 +17,7 @@ public class LabelSearch {
 
 	public static LabelSearch fromEntity(Label label) {
 		return LabelSearch.builder()
-			.id(label.getLabelId())
+			.id(label.getId())
 			.name(label.getName())
 			.backgroundColor(label.getBackgroundColor())
 			.textColor(label.getTextColor())

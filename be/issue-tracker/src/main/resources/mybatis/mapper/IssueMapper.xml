@@ -4,7 +4,7 @@
 <mapper namespace="org.presents.issuetracker.issue.mapper.IssueMapper">
 
     <resultMap id="issueResultMap" type="IssueSearchVo">
-        <id property="issueId" column="issue_id"/>
+        <id property="id" column="issue_id"/>
         <result property="title" column="issue_title"/>
         <result property="status" column="issue_status"/>
         <result property="createdAt" column="issue_created_at"/>
@@ -16,12 +16,12 @@
         </association>
 
         <association property="milestone" javaType="Milestone">
-            <id property="milestoneId" column="milestone_id"/>
+            <id property="id" column="milestone_id"/>
             <result property="name" column="milestone_name"/>
         </association>
 
         <collection property="labels" ofType="Label">
-            <id property="labelId" column="label_id"/>
+            <id property="id" column="label_id"/>
             <result property="name" column="label_name"/>
             <result property="textColor" column="label_text_color"/>
             <result property="backgroundColor" column="label_background_color"/>

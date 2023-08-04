@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class Label {
-	private Long labelId;
+	private Long id;
 	private String name;
 	private String description;
 	private String backgroundColor;
@@ -18,7 +18,7 @@ public class Label {
 	private boolean isDeleted;
 
 	private Label(Long id, String name, String description, String backgroundColor, String textColor) {
-		this.labelId = id;
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.backgroundColor = backgroundColor;
@@ -26,7 +26,7 @@ public class Label {
 	}
 
 	private Label(Long id, String name, String backgroundColor, String textColor) {
-		this.labelId = id;
+		this.id = id;
 		this.name = name;
 		this.backgroundColor = backgroundColor;
 		this.textColor = textColor;
