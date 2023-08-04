@@ -23,5 +23,5 @@ spring:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-  type-aliases-package: org.presents.issuetracker.issue.entity.*, org.presents.issuetracker.user.entity, org.presents.issuetracker.label.entity, org.presents.issuetracker.milestone.entity
+  type-aliases-package: org.presents.issuetracker.issue.entity, org.presents.issuetracker.issue.entity.vo,  org.presents.issuetracker.user.entity, org.presents.issuetracker.user.entity.vo, org.presents.issuetracker.label.entity, org.presents.issuetracker.label.entity.vo, org.presents.issuetracker.milestone.entity, org.presents.issuetracker.milestone.entity.vo, org.presents.issuetracker.comment.entity, org.presents.issuetracker.comment.entity.vo
   mapper-locations: classpath:/mybatis/mapper/**.xml
