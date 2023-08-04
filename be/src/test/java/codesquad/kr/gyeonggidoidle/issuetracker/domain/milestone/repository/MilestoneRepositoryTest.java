@@ -31,4 +31,16 @@ class MilestoneRepositoryTest {
         assertThat(actual.get(1).getName()).isEqualTo("마일스톤 1");
         assertThat(actual.get(2).getName()).isEqualTo("마일스톤 3");
     }
+
+    @DisplayName("모든 마일스톤 정보를 이름 순으로 가지고 온다.")
+    @Test
+    void testFindAllFilters() {
+        List<MilestoneDetailsVO> actual = repository.findAllFilters();
+
+        assertThat(actual.size()).isEqualTo(4);
+        assertThat(actual.get(0).getName()).isEqualTo("마일스톤 0");
+        assertThat(actual.get(1).getName()).isEqualTo("마일스톤 1");
+        assertThat(actual.get(2).getName()).isEqualTo("마일스톤 2");
+        assertThat(actual.get(3).getName()).isEqualTo("마일스톤 3");
+    }
 }

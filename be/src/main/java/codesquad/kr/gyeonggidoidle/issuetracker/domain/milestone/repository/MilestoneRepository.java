@@ -35,12 +35,26 @@ public class MilestoneRepository {
         return template.query(sql, new MapSqlParameterSource(), milestoneDetailsVORowMapper());
     }
 
+    public List<MilestoneDetailsVO> findAllFilters() {
+        String sql = "SELECT id, name " +
+                "FROM milestone " +
+                "ORDER BY name";
+        return template.query(sql, new MapSqlParameterSource(), milestoneSipmleVORowMapper());
+    }
+
     private final RowMapper<MilestoneDetailsVO> milestoneDetailsVORowMapper() {
         return ((rs, rowNum) -> MilestoneDetailsVO.builder()
                 .id(rs.getLong("id"))
                 .name(rs.getString("name"))
                 .description(rs.getString("description"))
                 .dueDate(rs.getDate("due_date").toLocalDate())
+                .build());
+    }
+
+    private final RowMapper<MilestoneDetailsVO> milestoneSipmleVORowMapper() {
+        return ((rs, rowNum) -> MilestoneDetailsVO.builder()
+                .id(rs.getLong("id"))
+                .name(rs.getString("name"))
                 .build());
     }
 }

@@ -50,6 +50,13 @@ public class LabelRepository {
         return template.query(sql, new MapSqlParameterSource(), labelDetailsVORowMapper());
     }
 
+    public List<LabelDetailsVO> findAllFilters() {
+        String sql = "SELECT id, name, background_color, text_color " +
+                "FROM label " +
+                "ORDER BY name";
+        return template.query(sql, new MapSqlParameterSource(), labelSimpleVORowMapper());
+    }
+
     private final RowMapper<LabelVO> labelRowMapper() {
         return ((rs, rowNum) -> LabelVO.builder()
                 .name(rs.getString("name"))
@@ -63,6 +70,15 @@ public class LabelRepository {
                 .id(rs.getLong("id"))
                 .name(rs.getString("name"))
                 .description(rs.getString("description"))
+                .backgroundColor(rs.getString("background_color"))
+                .textColor(rs.getString("text_color"))
+                .build());
+    }
+
+    private final RowMapper<LabelDetailsVO> labelSimpleVORowMapper(){
+        return ((rs, rowNum) -> LabelDetailsVO.builder()
+                .id(rs.getLong("id"))
+                .name(rs.getString("name"))
                 .backgroundColor(rs.getString("background_color"))
                 .textColor(rs.getString("text_color"))
                 .build());

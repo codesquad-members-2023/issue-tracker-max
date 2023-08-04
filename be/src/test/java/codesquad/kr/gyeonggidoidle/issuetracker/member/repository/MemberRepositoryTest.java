@@ -2,6 +2,7 @@ package codesquad.kr.gyeonggidoidle.issuetracker.member.repository;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.RepositoryTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.MemberRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,16 @@ public class MemberRepositoryTest {
         assertThat(actual.size()).isEqualTo(2);
         assertThat(actual.get(0)).isEqualTo("https://e7.pngegg.com/pngimages/981/645/png-clipart-default-profile-united-states-computer-icons-desktop-free-high-quality-person-icon-miscellaneous-silhouette.png");
         assertThat(actual.get(1)).isEqualTo("https://e7.pngegg.com/pngimages/981/645/png-clipart-default-profile-united-states-computer-icons-desktop-free-high-quality-person-icon-miscellaneous-silhouette.png");
+    }
+
+    @DisplayName("모든 가입자의 정보를 이름 순으로 가지고 온다.")
+    @Test
+    void testFindAllFilters() {
+        List<MemberDetailsVO> actual = repository.findAllFilters();
+
+        assertThat(actual.size()).isEqualTo(3);
+        assertThat(actual.get(0).getName()).isEqualTo("ati");
+        assertThat(actual.get(1).getName()).isEqualTo("joy");
+        assertThat(actual.get(2).getName()).isEqualTo("nag");
     }
 }
