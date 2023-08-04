@@ -20,7 +20,7 @@ class MemberControllerTest extends ControllerTestSupport {
 		SignUpRequest signUpRequest = SignUpRequest.builder()
 			.loginId("June@codesquad.co.kr")
 			.nickName("June")
-			.password("1234")
+			.password("12345678")
 			.build();
 		// when&then
 		mockMvc.perform(

@@ -23,13 +23,13 @@ public class LabelRepository {
 	}
 
 	public Long save(Label label) {
-		String sql = "INSERT INTO label(title ,description, text_color, background_color) VALUES (:title,:description,:textColor,:backgrounColor)";
+		String sql = "INSERT INTO label(title ,description, text_color, background_color) VALUES (:title,:description,:textColor,:backgroundColor)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		SqlParameterSource parameters = new MapSqlParameterSource()
 			.addValue("title", label.getTitle(), Types.VARCHAR)
 			.addValue("description", label.getDescription(), Types.VARCHAR)
 			.addValue("textColor", label.getTextColor(), Types.VARCHAR)
-			.addValue("backgrounColor", label.getBackgroundColor(), Types.VARCHAR);
+			.addValue("backgroundColor", label.getBackgroundColor(), Types.VARCHAR);
 		jdbcTemplate.update(sql, parameters, keyHolder);
 		return (Long)Objects.requireNonNull(keyHolder.getKey());
 	}

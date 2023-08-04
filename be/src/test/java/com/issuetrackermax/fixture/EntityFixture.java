@@ -40,7 +40,7 @@ public class EntityFixture {
 	public static Assignee makeAssignee(Long issueId, Long memberId) {
 		return Assignee.builder()
 			.issueId(issueId)
-			.memberid(memberId)
+			.memberId(memberId)
 			.build();
 	}
 

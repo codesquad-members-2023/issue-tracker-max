@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class ApiResponse<T> {
-	private boolean success;
+	private final boolean success;
 	private T data;
 
 	public ApiResponse(boolean success, T data) {
@@ -14,10 +14,6 @@ public class ApiResponse<T> {
 
 	public ApiResponse(boolean success) {
 		this.success = success;
-	}
-
-	public ApiResponse(T data) {
-		this.data = data;
 	}
 
 	public static <T> ApiResponse<T> of(boolean success, T data) {

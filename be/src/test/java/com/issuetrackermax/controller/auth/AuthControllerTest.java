@@ -21,7 +21,7 @@ class AuthControllerTest extends ControllerTestSupport {
 	void login() throws Exception {
 		// given
 		String email = "june@codesquad.co.kr";
-		String password = "1234";
+		String password = "12345678";
 		String accessToken = "accessToken";
 		String refreshToken = "refreshToken";
 		Jwt jwt = new Jwt(accessToken, refreshToken);

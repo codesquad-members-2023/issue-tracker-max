@@ -1,5 +1,6 @@
 package com.issuetrackermax.controller.issue;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,11 +29,15 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/issues")
 public class IssueController {
+	private static final String MEMBER_ID = "memberId";
 	private final IssueService issueService;
 
 	@PostMapping
-	public ApiResponse<IssuePostResponse> post(@RequestBody @Valid IssuePostRequest request) {
-		return ApiResponse.success(IssuePostResponse.from(issueService.post(request)));
+	public ApiResponse<IssuePostResponse> post(
+		@RequestBody
+		@Valid IssuePostRequest request, HttpServletRequest servletRequest) {
+		Integer memberId = (Integer)servletRequest.getAttribute(MEMBER_ID);
+		return ApiResponse.success(IssuePostResponse.from(issueService.post(request, memberId.longValue())));
 	}
 
 	@PatchMapping("/status")
@@ -53,7 +58,9 @@ public class IssueController {
 	}
 
 	@PatchMapping("/{id}/title")
-	public ApiResponse<Void> modifyTitle(@PathVariable Long id, @RequestBody @Valid IssueTitleRequest request) {
+	public ApiResponse<Void> modifyTitle(@PathVariable Long id,
+		@RequestBody
+		@Valid IssueTitleRequest request) {
 		issueService.modifyTitle(id, request);
 		return ApiResponse.success();
 	}

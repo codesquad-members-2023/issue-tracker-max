@@ -27,7 +27,7 @@ public class AssigneeRepository {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		SqlParameterSource parameters = new MapSqlParameterSource()
 			.addValue("issueId", assignee.getIssueId(), Types.BIGINT)
-			.addValue("memberId", assignee.getMemberid(), Types.BIGINT);
+			.addValue("memberId", assignee.getMemberId(), Types.BIGINT);
 		jdbcTemplate.update(sql, parameters, keyHolder);
 		return (Long)Objects.requireNonNull(keyHolder.getKey());
 	}

@@ -5,7 +5,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.issuetrackermax.common.exception.InCorrectPasswordException;
+import com.issuetrackermax.common.exception.ApiException;
+import com.issuetrackermax.common.exception.domain.LoginException;
 import com.issuetrackermax.domain.jwt.JwtRepository;
 import com.issuetrackermax.domain.jwt.entity.Jwt;
 import com.issuetrackermax.domain.member.MemberRepository;
@@ -21,11 +22,11 @@ public class JwtService {
 	private final JwtProvider jwtProvider;
 
 	@Transactional
-	public Jwt login(String email, String password) throws Exception {
+	public Jwt login(String email, String password)  {
 		Member member = memberRepository.findByMemberLoginId(email).get();
 
 		if (!verifyPassword(member, password)) {
-			throw new InCorrectPasswordException();
+			throw new ApiException(LoginException.INCORRECT_PASSWORD);
 		}
 		Jwt jwt = jwtProvider.createJwt(generateMemberClaims(member.getId()));
 

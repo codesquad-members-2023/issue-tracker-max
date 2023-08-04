@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.issuetrackermax.common.exception.InvalidIssueStatusException;
-import com.issuetrackermax.common.exception.NotFoundAssigneeException;
-import com.issuetrackermax.common.exception.NotFoundIssueException;
-import com.issuetrackermax.common.exception.NotFoundLabelException;
-import com.issuetrackermax.common.exception.NotFoundMilestoneException;
+import com.issuetrackermax.common.exception.ApiException;
+import com.issuetrackermax.common.exception.AssigneeCustomException;
+import com.issuetrackermax.common.exception.domain.IssueException;
+import com.issuetrackermax.common.exception.domain.LabelException;
+import com.issuetrackermax.common.exception.domain.MilestoneException;
 import com.issuetrackermax.controller.issue.dto.request.IssueApplyRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuePostRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssueTitleRequest;
@@ -30,19 +30,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class IssueService {
+	private static final String OPEN_ISSUE = "open";
+	private static final String CLOSED_ISSUE = "closed";
 	private final IssueRepository issueRepository;
 	private final CommentRepository commentRepository;
 	private final HistoryRepository historyRepository;
 	private final LabelRepository labelRepository;
 	private final AssigneeRepository assigneeRepository;
 	private final MilestoneRepository milestoneRepository;
-	private final String OPEN_ISSUE = "open";
-	private final String CLOSED_ISSUE = "closed";
 
-	// todo : 전체 예외 처리
 	@Transactional
-	public Long post(IssuePostRequest request) {
-		Long issueId = issueRepository.save(request.toIssue());
+	public Long post(IssuePostRequest request, Long writerId) {
+		Long issueId = issueRepository.save(request.toIssue(writerId));
 
 		if (request.getAssigneeIds() != null) {
 			applyAssignees(issueId, request.toAssignee());
@@ -53,7 +52,7 @@ public class IssueService {
 		}
 
 		if (request.getContent() != null || request.getImageUrl() != null) {
-			commentRepository.save(request.toComment());
+			commentRepository.save(request.toComment(writerId));
 		}
 		return issueId;
 	}
@@ -62,13 +61,13 @@ public class IssueService {
 	public void delete(Long id) {
 		int count = issueRepository.deleteById(id);
 		if (count == 0) {
-			throw new NotFoundIssueException();
+			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
 		}
 	}
 
 	@Transactional(readOnly = true)
 	public IssueDetailsResponse show(Long id) {
-		IssueResultVO issue = issueRepository.findById(id);
+		IssueResultVO issue = issueRepository.findIssueDetailsById(id);
 		History history = historyRepository.findLatestByIssueId(id);
 		List<Comment> comments = commentRepository.findByIssueId(id);
 		return new IssueDetailsResponse(issue, history, comments);
@@ -84,12 +83,12 @@ public class IssueService {
 		} else if (status.equals(CLOSED_ISSUE)) {
 			count = issueRepository.closeByIds(ids);
 		} else {
-			throw new InvalidIssueStatusException();
+			throw new ApiException(IssueException.INVALID_ISSUE_STATUS);
 		}
 
 		// todo : 예외처리 Not Found 괜찮은지?
 		if (count != ids.size()) {
-			throw new NotFoundIssueException();
+			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
 		}
 	}
 
@@ -97,18 +96,18 @@ public class IssueService {
 	public void modifyTitle(Long issueId, IssueTitleRequest request) {
 		int count = issueRepository.modifyTitle(issueId, request.getTitle());
 		if (count != 1) {
-			throw new NotFoundIssueException();
+			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
 		}
 	}
 
 	@Transactional
 	public void applyLabels(Long issueId, IssueApplyRequest request) {
 		if (!issueRepository.existById(issueId)) {
-			throw new NotFoundIssueException();
+			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
 		}
 
 		if (!labelRepository.existByIds(request.getIds())) {
-			throw new NotFoundLabelException();
+			throw new ApiException(LabelException.NOT_FOUND_LABEL);
 		}
 
 		issueRepository.deleteAppliedLabels(issueId);
@@ -120,11 +119,11 @@ public class IssueService {
 	@Transactional
 	public void applyAssignees(Long issueId, IssueApplyRequest request) {
 		if (!issueRepository.existById(issueId)) {
-			throw new NotFoundIssueException();
+			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
 		}
 
 		if (!assigneeRepository.existByIds(request.getIds())) {
-			throw new NotFoundAssigneeException();
+			throw new ApiException(AssigneeCustomException.NOT_FOUND_ASSIGNEE);
 		}
 
 		issueRepository.deleteAppliedAssignees(issueId);
@@ -136,11 +135,11 @@ public class IssueService {
 	@Transactional
 	public void applyMilestone(Long issueId, Long milestoneId) {
 		if (!issueRepository.existById(issueId)) {
-			throw new NotFoundIssueException();
+			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
 		}
 
 		if (!milestoneRepository.existById(milestoneId)) {
-			throw new NotFoundMilestoneException();
+			throw new ApiException(MilestoneException.NOT_FOUND_MILESTONE);
 		}
 
 		issueRepository.applyMilestone(issueId, milestoneId);

@@ -52,6 +52,11 @@ public class MemberRepository {
 	}
 
 	private static final RowMapper<Member> MEMBER_ROW_MAPPER = (rs, rowNum) ->
-		new Member(rs.getLong("id"), rs.getString("login_id"), rs.getString("password"), rs.getString("nick_name"),
-			LoginType.valueOf(rs.getString("login_type")));
+		Member.builder()
+		.id(rs.getLong("id"))
+		.loginId(rs.getString("login_id"))
+		.password(rs.getString("password"))
+		.nickName(rs.getString("nick_name"))
+		.loginType(LoginType.valueOf(rs.getString("login_type")))
+		.build();
 }

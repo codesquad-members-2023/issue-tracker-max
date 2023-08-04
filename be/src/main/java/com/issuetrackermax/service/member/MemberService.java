@@ -3,8 +3,8 @@ package com.issuetrackermax.service.member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.issuetrackermax.common.exception.InvalidLoginIdException;
-import com.issuetrackermax.common.exception.InvalidPasswordException;
+import com.issuetrackermax.common.exception.ApiException;
+import com.issuetrackermax.common.exception.domain.LoginException;
 import com.issuetrackermax.controller.auth.dto.response.MemberProfileResponse;
 import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
 import com.issuetrackermax.domain.member.MemberRepository;
@@ -15,15 +15,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class MemberService {
+	private static final int PASSWORD_MIN_LENGTH = 8;
 	private final MemberRepository memberRepository;
 
 	@Transactional
 	public void registerMember(SignUpRequest signUpRequest) {
-		if (signUpRequest.getPassword().length() < 8) {
-			throw new InvalidPasswordException();
+		if (signUpRequest.getPassword().length() < PASSWORD_MIN_LENGTH) {
+			throw new ApiException(LoginException.INVALID_PASSWORD);
 		}
 		if (memberRepository.existsLoginId(signUpRequest.getLoginId())) {
-			throw new InvalidLoginIdException();
+			throw new ApiException(LoginException.INVALID_LOGIN_ID);
 		}
 		memberRepository.save(signUpRequest.toMember());
 	}

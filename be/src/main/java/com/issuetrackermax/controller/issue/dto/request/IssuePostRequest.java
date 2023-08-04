@@ -18,24 +18,22 @@ public class IssuePostRequest {
 	private String title;
 	private String content;
 	private String imageUrl;
-	private Long writerId;
 	private List<Long> assigneeIds;
 	private List<Long> labelIds;
 	private Long milestoneId;
 
 	@Builder
-	public IssuePostRequest(String title, String content, String imageUrl, Long writerId, List<Long> assigneeIds,
+	public IssuePostRequest(String title, String content, String imageUrl, List<Long> assigneeIds,
 		List<Long> labelIds, Long milestoneId) {
 		this.title = title;
 		this.content = content;
 		this.imageUrl = imageUrl;
-		this.writerId = writerId;
 		this.assigneeIds = assigneeIds;
 		this.labelIds = labelIds;
 		this.milestoneId = milestoneId;
 	}
 
-	public Issue toIssue() {
+	public Issue toIssue(Long writerId) {
 		return Issue.builder()
 			.title(title)
 			.isOpen(true)
@@ -56,11 +54,11 @@ public class IssuePostRequest {
 			.build();
 	}
 
-	public Comment toComment() {
+	public Comment toComment(Long writerId) {
 		return Comment.builder()
 			.content(content)
-			.imageUrl(imageUrl)
 			.writerId(writerId)
+			.imageUrl(imageUrl)
 			.build();
 	}
 }
