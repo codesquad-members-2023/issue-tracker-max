@@ -3,7 +3,7 @@ spring:
     group:
       prod: prodDB, common
       test: testDB, common
-    active: prod
+    active: test
 ---
 spring:
   config:
