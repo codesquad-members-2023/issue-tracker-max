@@ -41,7 +41,7 @@ class MilestoneServiceTest {
         MilestonePageInformation actual = milestoneService.readOpenMilestonePage();
 
         assertThat(actual.getOpenMilestoneCount()).isEqualTo(1);
-        assertThat(actual.getMilestoneDetailsInformations().get(0).getDueDate()).isEqualTo("2023-08-02");
+        assertThat(actual.getMilestoneDetailsInformations().get(0).getDueDate()).isEqualTo(LocalDate.now());
         assertThat(actual.getMilestoneDetailsInformations().get(1).getDueDate()).isEqualTo("1998-10-27");
         assertThat(actual.getMilestoneDetailsInformations().size()).isEqualTo(3);
 
