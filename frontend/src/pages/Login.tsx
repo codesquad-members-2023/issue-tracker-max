@@ -20,11 +20,14 @@ export default function Login() {
         },
         body: JSON.stringify({ id, password }),
       });
+      const data = await res.json();
 
       if (res.status === 200) {
+        localStorage.setItem('accessToken', data.messages.accessToken);
+        localStorage.setItem('refreshToken', data.messages.refreshToken);
         control.loginCheck();
       }
-      navigate("/");
+      navigate('/');
     })();
   };
 

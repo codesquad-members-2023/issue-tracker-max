@@ -7,13 +7,10 @@ export default function AuthenticatedRoute({
 }: {
   children: React.ReactNode;
 }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { util, control } = useContext(AppContext);
   util.isLogin = () => isAuthenticated;
-  control.loginCheck = () => {
-    setIsAuthenticated(true);
-    console.log(isAuthenticated);
-  };
+  control.loginCheck = () => setIsAuthenticated(true);
   control.logoutCheck = () => setIsAuthenticated(false);
 
   return isAuthenticated ? children : <Navigate to="/login" replace />;
