@@ -2,9 +2,13 @@ package com.issuetrackermax.domain.label;
 
 import java.sql.Types;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -45,4 +49,19 @@ public class LabelRepository {
 			.addValue("ids", ids), Integer.class);
 		return count != null && count.equals(ids.size());
 	}
+
+	public Label findbyId(Long id) {
+		String sql = "SELECT id, title, description, text_color, background_color FROM label WHERE id = :id ";
+		return Optional.ofNullable(
+			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), LABEL_ROW_MAPPER))).get();
+	}
+
+	private static final RowMapper<Label> LABEL_ROW_MAPPER = (rs, rowNum) ->
+		Label.builder()
+			.id(rs.getLong("id"))
+			.title(rs.getString("title"))
+			.description(rs.getString("description"))
+			.textColor(rs.getString("text_color"))
+			.backgroundColor(rs.getString("background_color"))
+			.build();
 }

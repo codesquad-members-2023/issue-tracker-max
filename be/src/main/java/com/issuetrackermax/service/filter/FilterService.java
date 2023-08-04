@@ -1,5 +1,6 @@
 package com.issuetrackermax.service.filter;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetrackermax.controller.filter.dto.response.FilterResponse;
 import com.issuetrackermax.controller.filter.dto.response.IssueResponse;
+import com.issuetrackermax.controller.filter.dto.response.LabelResponse;
 import com.issuetrackermax.domain.filter.FilterMapper;
 import com.issuetrackermax.domain.filter.FilterResultVO;
 import com.issuetrackermax.domain.issue.IssueRepository;
@@ -42,7 +44,23 @@ public class FilterService {
 			return null;
 		}
 		return filterResultVOS.stream()
-			.map(i -> IssueResponse.builder().resultVO(i).build())
+			.map(this::getIssueResponseWithLabelIds)
+			.collect(Collectors.toList());
+	}
+
+	private IssueResponse getIssueResponseWithLabelIds(FilterResultVO filterResultVO) {
+		String[] labelIds = filterResultVO.getLabelIds().split(",");
+		List<LabelResponse> labels = getLabelResponse(labelIds);
+		return IssueResponse.builder()
+			.resultVO(filterResultVO)
+			.labels(labels)
+			.build();
+	}
+
+	private List<LabelResponse> getLabelResponse(String[] labelIds) {
+		return Arrays.stream(labelIds)
+			.map(labelid -> LabelResponse.from(
+				labelRepository.findbyId(Long.parseLong(labelid))))
 			.collect(Collectors.toList());
 	}
 

@@ -1,8 +1,6 @@
 package com.issuetrackermax.controller.filter.dto.response;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import com.issuetrackermax.domain.label.entity.Label;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -23,24 +21,13 @@ public class LabelResponse {
 		this.backgroundColor = backgroundColor;
 	}
 
-	public static List<LabelResponse> convertToLabelResponseList(String labelIds, String labelTitles,
-		String labelTextColors, String labelBackgroundColors) {
-		if (labelIds == null) {
-			return null;
-		}
-		List<String> ids = List.of(labelIds.split(","));
-		List<String> titles = List.of(labelTitles.split(","));
-		List<String> textColors = List.of(labelTextColors.split(","));
-		List<String> backgroundColors = List.of(labelBackgroundColors.split(","));
-
-		return IntStream.range(0, ids.size())
-			.mapToObj(i -> LabelResponse.builder()
-				.id(Long.parseLong(ids.get(i)))
-				.title(titles.get(i))
-				.textColor(textColors.get(i))
-				.backgroundColor(backgroundColors.get(i))
-				.build())
-			.collect(Collectors.toList());
+	public static LabelResponse from(Label label) {
+		return LabelResponse.builder()
+			.id(label.getId())
+			.title(label.getTitle())
+			.textColor(label.getTextColor())
+			.backgroundColor(label.getBackgroundColor())
+			.build();
 	}
 
 }
