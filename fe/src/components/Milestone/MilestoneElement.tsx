@@ -116,7 +116,6 @@ export function MilestoneElement({ milestones }: { milestones: Milestone }) {
 
   const onClickCompleteButton = () => {
     setIsEditMode(false);
-    window.location.reload();
   };
 
   const onClickDeleteButton = () => {

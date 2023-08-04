@@ -64,7 +64,7 @@ export function MilestoneDetail({
   );
 
   const AlertContextValue = useContext(AlertContext)!;
-  const { editElementId } = AlertContextValue;
+  const { editElementId, setShouldFetchAgain } = AlertContextValue;
 
   const color = useTheme() as ColorScheme;
 
@@ -121,6 +121,7 @@ export function MilestoneDetail({
         console.error("API 요청 중 에러 발생:", error);
       }
     }
+    setShouldFetchAgain(true);
     onClickCompleteButton && onClickCompleteButton();
   };
 

@@ -25,9 +25,8 @@ import {
 import { IssueDropdownTab } from "../components/Issue/IssueDropdownTab";
 import { Icon } from "../components/common/Icon";
 import { Txt } from "../components/util/Txt";
+import { COMMON_URL, SERVER } from "../constants/url";
 
-const TOTAL_COUNT_URL =
-  "http://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/common/navigation";
 // const ISSUE_URL = API 연결 시 사용
 // "http://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/issues?assignee=anonymous&label=label&milestone=milestone&author=author&label=label2";
 
@@ -95,7 +94,7 @@ export function IssuePage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const totalCountResponse = await fetch(TOTAL_COUNT_URL);
+        const totalCountResponse = await fetch(`${SERVER}${COMMON_URL}`);
         // const issueResponse = await fetch(ISSUE_URL); // API 연결 시 사용
         const totalCountData = await totalCountResponse.json();
         // const issueData = await issueResponse.json(); // API 연결 시 사용

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header/Header";
 import { Background } from "../components/common/Background";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TabButton } from "../components/common/TabButton";
 import { Button } from "../components/common/Button";
 import { ColorScheme } from "../contexts/ThemeContext";
@@ -17,6 +17,7 @@ import { LoadingBar } from "../components/common/LoadingBar";
 import { MilestoneDetail } from "../components/Milestone/MilestoneDetail";
 import { MainArea } from "../components/common/MainArea";
 import { COMMON_URL, MILESTONE_URL, SERVER } from "../constants/url";
+import { AlertContext } from "../contexts/AlertContext";
 
 type MilestonesData = {
   milestoneOpenedCount: number;
@@ -46,10 +47,11 @@ export function MilestonePage() {
   const [isOpenSelected, setIsOpenSelected] = useState(true);
   const [isAddMilestoneOpen, setIsAddMilestoneOpen] = useState(false);
 
+  const alertContextValue = useContext(AlertContext)!;
+  const { shouldFetchAgain, setShouldFetchAgain } = alertContextValue;
+
   const navigate = useNavigate();
   const color = useTheme() as ColorScheme;
-  // const milestoneTable = tableStyle(color);
-  // const milestoneTableHeader = tableHeaderStyle(color);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,7 +73,8 @@ export function MilestonePage() {
     };
 
     fetchData();
-  }, []);
+    setShouldFetchAgain(false);
+  }, [shouldFetchAgain]);
 
   const AddMilestoneButtonStatus = isAddMilestoneOpen ? "disabled" : "enabled";
 
@@ -84,7 +87,6 @@ export function MilestonePage() {
   };
 
   const onClickCompleteButton = () => {
-    window.location.reload();
     setIsAddMilestoneOpen(false);
   };
   const onClickCancelButton = () => {

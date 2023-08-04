@@ -9,6 +9,8 @@ type AlertContextType = {
   setEditElementId: (id: number) => void;
   currentType: AlertType;
   setCurrentType: (type: AlertType) => void;
+  shouldFetchAgain: boolean;
+  setShouldFetchAgain: (shouldFetchAgain: boolean) => void;
 };
 
 type AlertProviderProps = {
@@ -27,6 +29,8 @@ export function AlertProvider({ children }: AlertProviderProps) {
   const [editElementId, setEditElementId] = useState<number>(-1);
   const [currentType, setCurrentType] = useState<AlertType>();
 
+  const [shouldFetchAgain, setShouldFetchAgain] = useState(false);
+
   const value: AlertContextType = {
     isLabelAlertOpen,
     setIsLabelAlertOpen,
@@ -36,6 +40,8 @@ export function AlertProvider({ children }: AlertProviderProps) {
     setEditElementId,
     currentType,
     setCurrentType,
+    shouldFetchAgain,
+    setShouldFetchAgain,
   };
 
   return (

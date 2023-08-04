@@ -33,7 +33,6 @@ export function Header() {
 
   const onClickLogo = () => {
     navigate("/issues");
-    window.location.reload();
   };
   return (
     <div css={headerStyle}>
