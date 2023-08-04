@@ -140,6 +140,7 @@ const OutlineButton = styled(StyledButton)`
 `;
 
 const GhostButton = styled(StyledButton)<{ $selected?: boolean }>`
+  width: fit-content;
   font: ${({ theme, $size, $selected }) => {
     switch ($size) {
       case "L":

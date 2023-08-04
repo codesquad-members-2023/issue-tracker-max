@@ -1,4 +1,4 @@
-import { styled, useTheme } from "styled-components";
+import { DefaultTheme, styled, useTheme } from "styled-components";
 import { Icon } from "./Icon";
 
 export function InformationTag({
@@ -38,7 +38,7 @@ export function InformationTag({
   );
 }
 
-const getBorderColor = (hexColor: string | undefined): string => {
+const getBorderColor = (hexColor: string | undefined, theme: DefaultTheme): string => {
   if (!hexColor || hexColor.length !== 7 || !hexColor.startsWith("#")) {
     return "transparent";
   }
@@ -49,8 +49,6 @@ const getBorderColor = (hexColor: string | undefined): string => {
   const g = parseInt(hexColor.substring(2, 4), 16);
   const b = parseInt(hexColor.substring(4, 6), 16);
   const brightness = Math.round((r * 299 + g * 587 + b * 114) / 1000);
-
-  const theme = useTheme();
 
   return brightness > 200 && brightness <= 255
     ? theme.color.neutralBorderDefault
@@ -73,7 +71,7 @@ const StyledInformationTag = styled.div<{
     ${({ theme, $stroke, $fill }) =>
       $stroke && theme.color[`neutralBorder${$stroke}`]
         ? theme.color[`neutralBorder${$stroke}`]
-        : getBorderColor($fill)};
+        : getBorderColor($fill, theme)};
   border-radius: ${({ theme }) => theme.radius.large};
   background-color: ${({ theme, $fill }) =>
     $fill && /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/g.test($fill)

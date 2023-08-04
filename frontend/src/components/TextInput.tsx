@@ -14,6 +14,7 @@ type TextInputProps = {
   borderNone?: boolean;
   disabled?: boolean;
   isError?: boolean;
+  maxLength?: number;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -44,6 +45,7 @@ export function TextInput({
   borderNone = false,
   disabled = false,
   isError = false,
+  maxLength,
   onChange,
   onFocus,
   onBlur,
@@ -98,6 +100,7 @@ export function TextInput({
         <Input
           placeholder={placeholder}
           value={initialValue}
+          maxLength={maxLength}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
@@ -125,10 +128,11 @@ const InputContainer = styled.div<InputContainerProps>`
   display: flex;
   width: ${({ $width }) => $width}px;
   height: ${({ $size }) => ($size === "L" ? "56px" : "40px")};
-  padding: 0px 16px;
+  padding: 5px 16px;
   align-self: stretch;
   flex-direction: ${({ $size }) => ($size === "L" ? "column" : "")};
   align-items: ${({ $size }) => ($size === "L" ? "flex-start" : "center")};
+  justify-content: center;
   border-radius: ${({ theme }) => theme.radius.large};
   box-sizing: border-box;
   background: ${({ $state, theme }) => {

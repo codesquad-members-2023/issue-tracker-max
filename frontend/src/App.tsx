@@ -7,6 +7,7 @@ import { Error404 } from "./page/Error404";
 import { Label } from "./page/label/Label";
 import { Main } from "./page/main/Main";
 import { Milestone } from "./page/milestone/Milestone";
+import { NewIssue } from "./page/newIssue/NewIssue";
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<"LIGHT" | "DARK">("LIGHT");
@@ -18,6 +19,7 @@ export default function App() {
           <Header />
           <Routes>
             <Route path="/" element={<Main />} />
+            <Route path="/issues/new" element={<NewIssue />} />
             <Route path="/label" element={<Label />} />
             <Route path="/milestone" element={<Milestone />} />
             <Route path="/milestone/:state" element={<Milestone />} />

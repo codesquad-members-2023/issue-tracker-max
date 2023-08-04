@@ -85,7 +85,7 @@ export function MainHeader({
           size="S"
           buttonType="Container"
           selected
-          onClick={() => {}}
+          onClick={() => navigate("/issues/new")}
         >
           이슈 작성
         </Button>

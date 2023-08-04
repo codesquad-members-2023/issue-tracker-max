@@ -64,7 +64,7 @@ export function Issue({ issue }: { issue: IssueData }) {
       <CommentDiv>
         {issue.commentCount !== 0 && (
           <>
-            <Icon name="comment" />
+            <Icon name="comment" fill={iconColors.issueInfo} stroke={iconColors.issueInfo} />
             <span>{issue.commentCount}</span>
           </>
         )}
