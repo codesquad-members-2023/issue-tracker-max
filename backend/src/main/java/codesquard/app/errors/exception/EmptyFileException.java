@@ -3,9 +3,9 @@ package codesquard.app.errors.exception;
 import codesquard.app.errors.errorcode.ErrorCode;
 import codesquard.app.errors.errorcode.ImageErrorCode;
 
-public class CommentMaxLengthExceededException extends RuntimeException {
+public class EmptyFileException extends RuntimeException {
 
-	private final ErrorCode errorCode = ImageErrorCode.MAX_UPLOAD_SIZE_EXCEED;
+	private final ErrorCode errorCode = ImageErrorCode.EMPTY_FILE;
 
 	public ErrorCode getErrorCode() {
 		return errorCode;

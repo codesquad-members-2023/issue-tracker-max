@@ -32,11 +32,14 @@ public abstract class ControllerTestSupport {
 
 	@MockBean
 	protected IssueService issueService;
+
 	@MockBean
 	protected CommentService commentService;
+
 	@MockBean
 	protected LabelService labelService;
 
 	@MockBean
 	protected UserService userService;
+
 }
