@@ -20,10 +20,11 @@ import codesquard.app.issue.dto.request.IssueModifyMilestoneRequest;
 import codesquard.app.issue.dto.request.IssueModifyStatusRequest;
 import codesquard.app.issue.dto.request.IssueModifyTitleRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
+import codesquard.app.issue.dto.response.IssueLabelResponse;
+import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.fixture.FixtureFactory;
 import codesquard.app.issue.repository.IssueRepository;
-import codesquard.app.label.dto.LabelSaveRequest;
-import codesquard.app.label.entity.Label;
+import codesquard.app.label.dto.request.LabelSaveRequest;
 import codesquard.app.label.service.LabelService;
 import codesquard.app.milestone.service.MilestoneService;
 import codesquard.app.user.repository.UserRepository;
@@ -55,15 +56,29 @@ class IssueServiceTest extends IntegrationTestSupport {
 		jdbcTemplate.update("TRUNCATE TABLE issue");
 		jdbcTemplate.update("TRUNCATE TABLE milestone");
 		jdbcTemplate.update("TRUNCATE TABLE user");
+		jdbcTemplate.update("TRUNCATE TABLE label");
 		jdbcTemplate.update("SET FOREIGN_KEY_CHECKS = 1");
+	}
+
+	@DisplayName("이슈의 상세 내용을 조회한다.")
+	@Test
+	void getDetail() {
+		// given
+		Long id = createIssue();
+
+		// when
+		IssueReadResponse issueReadResponse = issueService.get(id);
+
+		// then
+		assertThat(issueReadResponse.getTitle()).isEqualTo("Service");
+		assertThat(issueReadResponse.getContent()).isEqualTo("내용");
 	}
 
 	@DisplayName("이슈를 등록한다.")
 	@Test
 	void create() {
 		// given
-		UserSaveServiceRequest userSaveServiceRequest = new UserSaveServiceRequest("wis", "wis@abcd.com", "code1234",
-			"code1234", null);
+		UserSaveServiceRequest userSaveServiceRequest = FixtureFactory.createUserSaveServiceRequest();
 		Long loginId = userRepository.save(userSaveServiceRequest.toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
@@ -79,10 +94,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyStatus() {
 		// given
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
-		Long id = issueService.save(issueSaveRequest, loginId);
+		Long id = createIssue();
 
 		String issueStatus = "CLOSED";
 		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(issueStatus);
@@ -112,10 +124,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyInvalidStatus_Response400() {
 		// given
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
-		Long id = issueService.save(issueSaveRequest, loginId);
+		Long id = createIssue();
 
 		String issueStatus = "OPEN";
 		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(issueStatus);
@@ -129,10 +138,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyTitle() {
 		// given
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
-		Long id = issueService.save(issueSaveRequest, loginId);
+		Long id = createIssue();
 
 		String title = "modified Service title";
 		IssueModifyTitleRequest issueModifyTitleRequest = new IssueModifyTitleRequest(title);
@@ -148,10 +154,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyContent() {
 		// given
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
-		Long id = issueService.save(issueSaveRequest, loginId);
+		Long id = createIssue();
 
 		String content = "modified Service content";
 		IssueModifyContentRequest issueModifyContentRequest = new IssueModifyContentRequest(content);
@@ -186,10 +189,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyAssignees() {
 		// given
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId1 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId1);
-		Long id = issueService.save(issueSaveRequest, loginId);
+		Long id = createIssue();
 
 		IssueModifyAssigneesRequest issueModifyAssigneesRequest = new IssueModifyAssigneesRequest(List.of());
 
@@ -219,7 +219,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 		issueService.modifyLabels(issueModifyLabelsRequest, id);
 
 		// then
-		List<Label> label = issueService.findLabelsById(id);
+		List<IssueLabelResponse> label = issueService.findLabelsById(id);
 		assertThat(label.get(0).getName()).isEqualTo(name);
 		assertThat(label.get(0).getBackground()).isEqualTo(background);
 		assertThat(label.get(0).getColor().getNameToLowerCase()).isEqualTo(color);
@@ -229,10 +229,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyLabels_Null() {
 		// given
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
-		Long id = issueService.save(issueSaveRequest, loginId);
+		Long id = createIssue();
 
 		IssueModifyLabelsRequest issueModifyLabelsRequest = new IssueModifyLabelsRequest(List.of());
 
@@ -240,7 +237,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 		issueService.modifyLabels(issueModifyLabelsRequest, id);
 
 		// then
-		List<Label> label = issueService.findLabelsById(id);
+		List<IssueLabelResponse> label = issueService.findLabelsById(id);
 		assertThat(label).isEmpty();
 	}
 
@@ -248,15 +245,19 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void delete() {
 		// given
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
-		Long id = issueService.save(issueSaveRequest, loginId);
+		Long id = createIssue();
 
 		// when
 		issueService.delete(id);
 
 		// then
 		assertThatThrownBy(() -> issueService.delete(id)).isInstanceOf(NoSuchIssueException.class);
+	}
+
+	private Long createIssue() {
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
+		return issueService.save(issueSaveRequest, loginId);
 	}
 }
