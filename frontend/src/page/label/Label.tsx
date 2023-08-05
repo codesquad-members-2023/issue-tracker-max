@@ -13,8 +13,8 @@ export type LabelData = {
 };
 
 type LabelsResData = {
-  openedMilestoneCount: Number;
-  labelCount: Number;
+  openedMilestoneCount: number;
+  labelCount: number;
   labels: LabelData[];
 };
 
