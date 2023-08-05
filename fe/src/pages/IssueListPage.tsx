@@ -36,7 +36,12 @@ export const IssueListPage: React.FC = ({}) => {
           onChangeFilterValue,
         }}
       />
-      <IssueTable />
+      <IssueTable
+        {...{
+          openIssueCount: pageData.openIssueCount,
+          closedIssueCount: pageData.closedIssueCount,
+        }}
+      />
     </>
   );
 };

@@ -53,7 +53,7 @@ export const TableHeader: React.FC<Props> = ({
           />
         </div>
 
-        <div css={{ display: 'flex', gap: '24px' }}>
+        <div css={{ display: 'flex', gap: '24px', textWrap: 'nowrap' }}>
           <Button typeVariant="ghost">
             <AlertCircle stroke={theme.neutral.text.strong} />
             <span

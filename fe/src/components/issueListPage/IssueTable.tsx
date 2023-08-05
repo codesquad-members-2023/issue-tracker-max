@@ -3,13 +3,19 @@ import { IssueList } from './IssueList';
 import { Box } from '@components/common/box/Box';
 import { BoxHeader } from '@components/common/box/BoxHeader';
 
-type Props = {};
+type Props = {
+  openIssueCount: number;
+  closedIssueCount: number;
+};
 
-export const IssueTable: React.FC<Props> = ({}) => {
+export const IssueTable: React.FC<Props> = ({
+  openIssueCount,
+  closedIssueCount,
+}) => {
   return (
     <Box>
       <BoxHeader>
-        <TableHeader />
+        <TableHeader {...{ openIssueCount, closedIssueCount }} />
       </BoxHeader>
 
       <ul>
