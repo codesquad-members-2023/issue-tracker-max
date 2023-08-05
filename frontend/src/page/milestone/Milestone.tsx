@@ -35,6 +35,7 @@ export function Milestone() {
 
   const [milestonesRes, setMilestonesRes] = useState<MilestonesResData>();
   const [isAdding, setIsAdding] = useState(false);
+
   useEffect(() => {
     if (state !== "opened" && state !== "closed") {
       navigate("/404");
@@ -50,7 +51,7 @@ export function Milestone() {
     };
 
     fetchData();
-  }, [state]);
+  }, [state, navigate]);
 
   const openAddMilestone = () => {
     setIsAdding(true);
@@ -97,4 +98,5 @@ const EditorWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
   border-radius: ${({ theme }) => theme.radius.large};
   margin-bottom: 24px;
+  background: ${({ theme }) => theme.color.neutralSurfaceStrong};
 `;

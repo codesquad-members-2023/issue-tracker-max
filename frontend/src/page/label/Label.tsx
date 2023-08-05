@@ -72,4 +72,5 @@ const EditorWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
   border-radius: ${({ theme }) => theme.radius.large};
   margin-bottom: 24px;
+  background: ${({ theme }) => theme.color.neutralSurfaceStrong};
 `;
