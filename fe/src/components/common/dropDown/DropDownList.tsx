@@ -5,7 +5,7 @@ import { ReactComponent as CheckOffCircle } from '@assets/icons/checkOffCircle.s
 
 type DropDownItem = {
   loginId?: string;
-  id?: number;
+  id: number;
   image?: string;
   name?: string;
   backgroundColor?: string;
@@ -13,14 +13,14 @@ type DropDownItem = {
 
 type Props = {
   item: DropDownItem;
-  index: number;
+  // index: number;
   isSelected?: boolean;
-  onSelected: (index: number) => void;
+  onSelected: (id: number) => void;
 };
 
 export const DropDownList: React.FC<Props> = ({
   item,
-  index,
+  // index,
   isSelected,
   onSelected,
 }) => {
@@ -32,7 +32,7 @@ export const DropDownList: React.FC<Props> = ({
   return (
     <li
       onClick={() => {
-        onSelected(index);
+        onSelected(item.id);
       }}
       css={{
         display: 'flex',

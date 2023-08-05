@@ -123,16 +123,15 @@ export const AddIssuePage: React.FC = ({}) => {
       authorId: 1,
       assigneeIds: Object.keys(selections.assignees)
         .filter((key) => selections.assignees[parseInt(key)])
-        .map((key) => Number(key) + 1),
+        .map((key) => parseInt(key)),
       labelIds: Object.keys(selections.labels)
         .filter((key) => selections.labels[parseInt(key)])
-        .map((key) => Number(key) + 1),
-      milestoneId:
-        Number(
-          Object.keys(selections.milestones).find(
-            (key) => selections.milestones[parseInt(key)],
-          ),
-        ) + 1,
+        .map((key) => parseInt(key)),
+      milestoneId: Number(
+        Object.keys(selections.milestones).find(
+          (key) => selections.milestones[parseInt(key)],
+        ),
+      ),
     };
 
     try {
@@ -168,24 +167,24 @@ export const AddIssuePage: React.FC = ({}) => {
     }
   }, [textAreaValue]);
 
-  const onMultipleSelectedAssignee = (index: number) => {
+  const onMultipleSelectedAssignee = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      assignees: { ...prev.assignees, [index]: !prev.assignees[index] },
+      assignees: { ...prev.assignees, [id]: !prev.assignees[id] },
     }));
   };
 
-  const onMultipleSelectedLabel = (index: number) => {
+  const onMultipleSelectedLabel = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      labels: { ...prev.labels, [index]: !prev.labels[index] },
+      labels: { ...prev.labels, [id]: !prev.labels[id] },
     }));
   };
 
-  const onSingleSelectedMilestone = (index: number) => {
+  const onSingleSelectedMilestone = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      milestones: { [index]: true },
+      milestones: { [id]: true },
     }));
   };
 

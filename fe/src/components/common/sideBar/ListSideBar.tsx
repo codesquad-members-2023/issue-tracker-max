@@ -32,9 +32,9 @@ type Props = {
   selectedAssignees: { [key: number]: boolean };
   selectedLabels: { [key: number]: boolean };
   selectedMilestones: { [key: number]: boolean };
-  onSingleSelectedMilestone: (index: number) => void;
-  onMultipleSelectedAssignee: (index: number) => void;
-  onMultipleSelectedLabel: (index: number) => void;
+  onSingleSelectedMilestone: (id: number) => void;
+  onMultipleSelectedAssignee: (id: number) => void;
+  onMultipleSelectedLabel: (id: number) => void;
 };
 
 export const ListSideBar: React.FC<Props> = ({
@@ -57,6 +57,12 @@ export const ListSideBar: React.FC<Props> = ({
     milestones: [],
   });
 
+  const [isFetched, setIsFetched] = useState({
+    users: false,
+    labels: false,
+    milestones: false,
+  });
+
   const indicatorMapping: Record<Indicator, FetchPath> = {
     담당자: 'users',
     레이블: 'labels',
@@ -64,9 +70,11 @@ export const ListSideBar: React.FC<Props> = ({
   };
 
   const onFetchData = async (indicator: Indicator) => {
-    // todo 페치가 완료되었고 길이가 0이 아니라면 페치하지 않기
     const path = indicatorMapping[indicator];
+
     try {
+      if (isFetched[path]) return;
+
       const response = await fetch(
         `https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/${path}/previews`,
         {
@@ -85,27 +93,36 @@ export const ListSideBar: React.FC<Props> = ({
         [path]: data,
       }));
 
+      setIsFetched((prev) => ({
+        ...prev,
+        [path]: true,
+      }));
+
       return data;
     } catch (error) {
       console.error(`There was a problem with the fetch operation: ${error}`);
     }
   };
-  // id로 찾기
-  const assigneeOptions = listData.users.slice(1);
+
+  const modifiedUserData = listData.users.map((item) => {
+    const { userId, ...rest } = item;
+    return { id: userId, ...rest };
+  });
+  const assigneeOptions = modifiedUserData.slice(1);
   const labelOptions = listData.labels.slice(1);
   const milestoneOptions = listData.milestones.slice(1);
 
   const selectedAssigneeIds = Object.keys(selectedAssignees)
     .filter((id) => selectedAssignees[parseInt(id)])
-    .map((id) => parseInt(id) + 1);
+    .map((id) => parseInt(id));
 
-  const selectedAssigneesData = assigneeOptions.filter((users) =>
-    selectedAssigneeIds.includes(users.userId),
+  const selectedAssigneesData = modifiedUserData.filter((users) =>
+    selectedAssigneeIds.includes(users.id),
   );
 
   const selectedLabelIds = Object.keys(selectedLabels)
     .filter((id) => selectedLabels[parseInt(id)])
-    .map((id) => parseInt(id) + 1);
+    .map((id) => parseInt(id));
 
   const selectedLabelsData = labelOptions.filter((label) =>
     selectedLabelIds.includes(label.id),
@@ -113,7 +130,7 @@ export const ListSideBar: React.FC<Props> = ({
 
   const selectedMilestoneIds = Object.keys(selectedMilestones)
     .filter((id) => selectedMilestones[parseInt(id)])
-    .map((id) => parseInt(id) + 1);
+    .map((id) => parseInt(id));
 
   const selectedMilestonesData = milestoneOptions.filter((milestone) =>
     selectedMilestoneIds.includes(milestone.id),

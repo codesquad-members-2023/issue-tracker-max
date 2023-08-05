@@ -3,7 +3,7 @@ import { DropDownList } from './DropDownList';
 import { DropDownHeader } from './DropDownHeader';
 
 type DropDownItem = {
-  id?: number;
+  id: number;
   image?: string;
   name?: string;
   backgroundColor?: string;
@@ -51,13 +51,13 @@ export const DropDownPanel: React.FC<Props> = ({
         }}
       >
         {options.length > 0 ? (
-          options.map((item, index: number) => (
+          options.map((item) => (
             <DropDownList
-              key={index}
+              key={item.id}
               item={item}
-              onSelected={() => onSelected(index)}
-              isSelected={selectedItems[index]}
-              index={index}
+              onSelected={() => onSelected(item.id)}
+              isSelected={selectedItems[item.id]}
+              // index={index}
             />
           ))
         ) : (
