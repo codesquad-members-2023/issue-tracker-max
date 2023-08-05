@@ -6,6 +6,9 @@ import { ListAssignee } from './ListAssignee';
 import { ListLabel } from './ListLabel';
 import { ListMilestone } from './ListMilestone';
 
+type FetchPath = 'users' | 'labels' | 'milestones';
+type Indicator = '담당자' | '레이블' | '마일스톤';
+
 type UserData = {
   userId: number;
   loginId: string;
@@ -54,8 +57,15 @@ export const ListSideBar: React.FC<Props> = ({
     milestones: [],
   });
 
-  const onFetchData = async (path: string) => {
-    // todo 데이터가 같으면 페치하지 않기
+  const indicatorMapping: Record<Indicator, FetchPath> = {
+    담당자: 'users',
+    레이블: 'labels',
+    마일스톤: 'milestones',
+  };
+
+  const onFetchData = async (indicator: Indicator) => {
+    // todo 페치가 완료되었고 길이가 0이 아니라면 페치하지 않기
+    const path = indicatorMapping[indicator];
     try {
       const response = await fetch(
         `https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/${path}/previews`,
@@ -80,7 +90,7 @@ export const ListSideBar: React.FC<Props> = ({
       console.error(`There was a problem with the fetch operation: ${error}`);
     }
   };
-
+  // id로 찾기
   const assigneeOptions = listData.users.slice(1);
   const labelOptions = listData.labels.slice(1);
   const milestoneOptions = listData.milestones.slice(1);
@@ -127,7 +137,6 @@ export const ListSideBar: React.FC<Props> = ({
           indicator="담당자"
           size="L"
           onFetchData={onFetchData}
-          fetchPath="users"
         >
           <DropDownPanel
             panelHeader="담당자 설정"
@@ -144,7 +153,6 @@ export const ListSideBar: React.FC<Props> = ({
           indicator="레이블"
           size="L"
           onFetchData={onFetchData}
-          fetchPath="labels"
         >
           <DropDownPanel
             panelHeader="레이블 설정"
@@ -161,7 +169,6 @@ export const ListSideBar: React.FC<Props> = ({
           indicator="마일스톤"
           size="L"
           onFetchData={onFetchData}
-          fetchPath="milestones"
         >
           <DropDownPanel
             panelHeader="마일스톤 설정"

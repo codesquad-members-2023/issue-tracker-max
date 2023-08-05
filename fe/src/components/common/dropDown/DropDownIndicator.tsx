@@ -6,18 +6,18 @@ import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 
 import { Button } from '../Button';
 
+type Indicator = '담당자' | '레이블' | '마일스톤';
+
 type Props = {
   size: 'L' | 'M' | 'defaultSize';
-  indicator: string;
-  fetchPath: string;
+  indicator: Indicator;
   children: React.ReactNode;
-  onFetchData: (path: string) => Promise<any>;
+  onFetchData: (indicator: Indicator) => Promise<any>;
 };
 
 export const DropDownIndicator: React.FC<Props> = ({
   size,
   indicator,
-  fetchPath,
   children,
   onFetchData,
 }) => {
@@ -25,8 +25,8 @@ export const DropDownIndicator: React.FC<Props> = ({
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const onPanelOpen = async () => {
-    await onFetchData(fetchPath);
     setIsPanelOpen(true);
+    await onFetchData(indicator);
   };
 
   const onPanelClose = (e: React.MouseEvent) => {

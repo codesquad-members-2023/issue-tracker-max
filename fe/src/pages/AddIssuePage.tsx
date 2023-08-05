@@ -6,13 +6,13 @@ import { Body } from '@components/addIssuePage/Body';
 import { UserImage } from '@components/addIssuePage/UserImage';
 import { UserImageContainer } from '@components/addIssuePage/UserImageContainer';
 import { InputContainer } from '@components/addIssuePage/InputContainer';
-import { TextInput } from '@components/common/textInput/TextInput';
 import { TextArea } from '@components/common/TextArea';
 import { SideBar } from '@components/common/sideBar/SideBar';
 import { ListSideBar } from '@components/common/sideBar/ListSideBar';
 import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
+import { TextInput } from '@components/common/TextInput/TextInput';
 
 type SelectedItems = {
   [key: number]: boolean;
@@ -256,7 +256,7 @@ export const AddIssuePage: React.FC = ({}) => {
         <Button
           typeVariant="contained"
           size="L"
-          disabled={titleInput.length === 0}
+          disabled={titleInput === ''}
           onClick={onSubmit}
         >
           완료

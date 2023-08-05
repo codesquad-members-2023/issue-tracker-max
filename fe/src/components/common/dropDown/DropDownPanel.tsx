@@ -68,7 +68,7 @@ export const DropDownPanel: React.FC<Props> = ({
               color: theme.neutral.text.strong,
             }}
           >
-            데이터가 없습니다
+            로딩중
           </span>
         )}
       </ul>
