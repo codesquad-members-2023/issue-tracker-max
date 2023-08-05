@@ -15,7 +15,7 @@ type IssueDataState = {
   closedIssueCount: number;
   openedIssueCount: number;
   issues: IssueData[];
-  multiFilters: Object;
+  multiFilters: object;
   singleFilters: SingleFilterData[];
 };
 
@@ -100,4 +100,5 @@ const MainBody = styled.div`
   flex-direction: column;
   border: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
   border-radius: ${({ theme }) => theme.radius.large};
+  background: ${({ theme }) => theme.color.neutralSurfaceStrong};
 `;
