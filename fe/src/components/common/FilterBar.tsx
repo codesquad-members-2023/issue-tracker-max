@@ -2,8 +2,8 @@ import { useTheme } from '@emotion/react';
 import { Button } from './Button';
 import { ReactComponent as Search } from '@assets/icons/search.svg';
 import { ReactComponent as ChevronDown } from '@assets/icons/chevronDown.svg';
-import { InputContainer } from './textInput/InputContainer';
-import { Input } from './textInput/Input';
+import { InputContainer } from './TextInputt/InputContainer';
+import { Input } from './TextInputt/Input';
 
 type Props = {
   filterValue: string;
