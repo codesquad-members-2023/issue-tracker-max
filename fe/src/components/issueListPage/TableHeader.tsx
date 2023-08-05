@@ -19,39 +19,22 @@ export const TableHeader: React.FC<Props> = ({
 
   return (
     <div
-      css={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
+      css={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
     >
-      <div
-        css={{
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div
+      <div css={{ display: 'flex', alignItems: 'center' }}>
+        <CheckBoxInitial
+          width={16}
+          height={16}
+          stroke={theme.neutral.border.default}
           css={{
             padding: '0px 32px',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <CheckBoxInitial
-            width={16}
-            height={16}
-            stroke={theme.neutral.border.default}
-            css={{
-              cursor: 'pointer',
+            cursor: 'pointer',
 
-              '&: hover': {
-                opacity: theme.opacity.hover,
-              },
-            }}
-          />
-        </div>
+            '&: hover': {
+              opacity: theme.opacity.hover,
+            },
+          }}
+        />
 
         <div css={{ display: 'flex', gap: '24px', textWrap: 'nowrap' }}>
           <Button typeVariant="ghost">
