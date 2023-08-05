@@ -22,7 +22,7 @@ export default function NewIssuePage() {
   const { userInfo } = useAuth();
 
   const navigate = useNavigate();
-  const moveMainPage = () => navigate("/issues");
+  const moveMainPage = () => navigate("/");
   const moveIssueDetailPage = (issueId: number) =>
     navigate(`/issues/${issueId}`);
 

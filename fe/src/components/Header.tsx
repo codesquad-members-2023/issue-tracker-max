@@ -3,6 +3,7 @@ import sunIcon from "@assets/icon/sun.svg";
 import { useAuth } from "context/authContext";
 import { ThemeModeContext } from "context/themeModeContext";
 import { useContext } from "react";
+import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 import { Avatar } from "./common/Avatar";
 import Logo from "./common/Logo";
@@ -14,7 +15,9 @@ export default function Header() {
 
   return (
     <StyledHeader>
-      <Logo size="large" />
+      <Link to="/">
+        <Logo size="large" />
+      </Link>
       <div className="global-bar">
         <ToggleSwitch
           onImg={moonIcon}
