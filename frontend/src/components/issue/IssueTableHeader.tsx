@@ -38,7 +38,7 @@ export function IssueTableHeader({
       <CheckboxLabel>
         <input type="checkbox" />
       </CheckboxLabel>
-      <TabButton type="Ghost" onClick={onIssueStateClick}>
+      <TabButton type="Ghost">
         {issueStates.map(({ name, icon, selected }, index) => (
           <Button
             key={`tab-${index}`}
@@ -47,6 +47,7 @@ export function IssueTableHeader({
             buttonType="Ghost"
             flexible="Flexible"
             selected={selected}
+            onClick={() => onIssueStateClick(name)}
           >
             {name}
           </Button>
