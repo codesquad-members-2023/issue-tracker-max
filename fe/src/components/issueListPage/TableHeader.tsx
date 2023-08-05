@@ -5,6 +5,7 @@ import { Button } from '@components/common/Button';
 import { useTheme } from '@emotion/react';
 import { DropDownIndicator } from '@components/common/dropDown/DropDownIndicator';
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   openIssueCount: number;
@@ -16,6 +17,14 @@ export const TableHeader: React.FC<Props> = ({
   closedIssueCount = 0,
 }) => {
   const theme = useTheme() as any;
+  const navigate = useNavigate();
+
+  const onIssueFilterClick = (filter: 'open' | 'closed') => {
+    const query = `status:${filter} ` + getFilteredQuery();
+    const trimmedQuery = removeDuplicateSpaces(query);
+
+    navigate('?query=' + encodeURIComponent(trimmedQuery));
+  };
 
   return (
     <div
@@ -37,13 +46,19 @@ export const TableHeader: React.FC<Props> = ({
         />
 
         <div css={{ display: 'flex', gap: '24px', textWrap: 'nowrap' }}>
-          <Button typeVariant="ghost">
+          <Button
+            typeVariant="ghost"
+            onClick={() => onIssueFilterClick('open')}
+          >
             <AlertCircle stroke={theme.neutral.text.strong} />
             <span
               css={{ font: theme.fonts.availableMedium16 }}
             >{`열린 이슈 (${openIssueCount})`}</span>
           </Button>
-          <Button typeVariant="ghost">
+          <Button
+            typeVariant="ghost"
+            onClick={() => onIssueFilterClick('closed')}
+          >
             <Archive stroke={theme.neutral.text.strong} />
             <span
               css={{ font: theme.fonts.availableMedium16 }}
@@ -74,4 +89,14 @@ export const TableHeader: React.FC<Props> = ({
       </div>
     </div>
   );
+};
+
+const getFilteredQuery = () => {
+  return decodeURIComponent(location.search)
+    .replace('?query=', '')
+    .replace(/status:[^\s]+/g, '');
+};
+
+const removeDuplicateSpaces = (str: string) => {
+  return str.replace(/\s+/g, ' ').trim();
 };
