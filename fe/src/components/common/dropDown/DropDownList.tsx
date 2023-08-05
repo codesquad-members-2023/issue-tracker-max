@@ -58,25 +58,17 @@ export const DropDownList: React.FC<Props> = ({
     >
       {item.backgroundColor && <UserImageSmall fill={item.backgroundColor} />}
       {item.image && (
-        <div
+        <img
+          alt="userImage"
+          src={item.image}
           css={{
-            position: 'relative',
+            width: '20px',
+            height: '20px',
+            borderRadius: theme.radius.half,
+            top: 0,
+            left: 0,
           }}
-        >
-          <UserImageSmall fill={theme.neutral.surface.bold} />
-          <img
-            alt="userImage"
-            src={item.image}
-            css={{
-              width: '20px',
-              height: '20px',
-              position: 'absolute',
-              borderRadius: theme.radius.half,
-              top: 0,
-              left: 0,
-            }}
-          />
-        </div>
+        />
       )}
       <span css={commonStyles}>{item.loginId || item.name}</span>
       {isSelected ? (
