@@ -12,3 +12,16 @@ spring:
   mvc:
     path match:
       matching-strategy: ant_path_matcher
+
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+#      schema.sql, data.sql 경로 지정해주지 않아도 자동으로 주입.
+
+---
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: org.presents.issuetracker.issue.entity, org.presents.issuetracker.issue.entity.vo,  org.presents.issuetracker.user.entity, org.presents.issuetracker.user.entity.vo, org.presents.issuetracker.label.entity, org.presents.issuetracker.label.entity.vo, org.presents.issuetracker.milestone.entity, org.presents.issuetracker.milestone.entity.vo, org.presents.issuetracker.comment.entity, org.presents.issuetracker.comment.entity.vo
+  mapper-locations: classpath:/mybatis/mapper/**.xml
