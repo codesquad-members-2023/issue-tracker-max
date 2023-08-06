@@ -1,5 +1,7 @@
 package com.issuetrackermax.controller.member;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +18,9 @@ public class MemberController {
 	private final MemberService memberService;
 
 	@PostMapping("/signup")
-	public ApiResponse<Void> signup(@RequestBody SignUpRequest signUpRequest) {
+	public ApiResponse<Void> signup(
+		@RequestBody
+		@Valid SignUpRequest signUpRequest) {
 		memberService.registerMember(signUpRequest);
 		return ApiResponse.success();
 	}

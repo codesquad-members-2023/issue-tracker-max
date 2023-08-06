@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.issuetrackermax.domain.filter.FilterMapper">
+    <select id="getFilteredList" resultType="FilterResultVO" parameterType="map">
+        SELECT
+        i.id, i.is_open, i.title,
+        m3.nick_name AS editor, latest_editor.modified_at,
+        GROUP_CONCAT(DISTINCT l.id ORDER BY l.id SEPARATOR ',') AS label_ids,
+        GROUP_CONCAT(DISTINCT l.title ORDER BY l.id SEPARATOR ',') AS label_titles,
+        m.id AS writerId, m.nick_name AS writer,
+        GROUP_CONCAT(DISTINCT m2.id ORDER BY a.id SEPARATOR ',') AS assignee_ids,
+        GROUP_CONCAT(DISTINCT m2.nick_name ORDER BY a.id SEPARATOR ',') AS assignee_names,
+        ms.id AS milestone_id, ms.title AS milestone_title
+
+        FROM
+        issue as i
+        LEFT JOIN
+        (
+        SELECT
+        issue_id , MAX(id) as id
+        FROM
+        history
+        GROUP BY issue_id
+        ) AS latest_history ON i.id = latest_history.issue_id
+        LEFT JOIN
+        history latest_editor ON latest_editor.id=latest_history.id
+        LEFT JOIN
+        issue_label il ON i.id = il.issue_id
+        LEFT JOIN
+        label l ON il.label_id = l.id
+        LEFT JOIN
+        assignee a ON i.id = a.issue_id
+        LEFT JOIN
+        member m ON i.writer_id = m.id
+        LEFT JOIN
+        member m2 ON a.member_id = m2.id
+        LEFT JOIN
+        member m3 ON latest_editor.editor = m3.id
+        LEFT JOIN
+        milestone ms ON i.milestone_id = ms.id
+        <choose>
+            <when test="commentWriter != null">
+                LEFT JOIN
+                issue_comment icmts ON icmts.issue_id = i.id
+                LEFT JOIN
+                comments cmts ON icmts.comment_id = cmts.id
+            </when>
+        </choose>
+        WHERE
+        <choose>
+            <when test="issueIsOpen == false">
+                i.is_open = 0
+            </when>
+            <otherwise>
+                i.is_open = 1
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="writer != null">
+                AND i.writer_id = #{writer}
+            </when>
+        </choose>
+
+        <choose>
+            <when test="assignee != null">
+                AND EXISTS (
+                SELECT 1
+                FROM assignee a2
+                WHERE a2.issue_id = i.id
+                AND a2.member_id = #{assignee}
+                )
+            </when>
+
+        </choose>
+        <choose>
+
+            <when test="label != null">
+                AND EXISTS (
+                SELECT 1
+                FROM issue_label il2
+                WHERE il2.issue_id = i.id
+                AND il2.label_id = #{label}
+                )
+
+            </when>
+        </choose>
+
+
+        <choose>
+            <when test="milestone != null">
+                AND EXISTS (
+                SELECT 1
+                FROM milestone ms2
+                WHERE ms2.id = i.milestone_Id
+                AND ms2.id = #{milestone}
+                )
+            </when>
+        </choose>
+        <choose>
+            <when test="commentWriter != null">
+                AND cmts.writer_id = #{commentWriter}
+            </when>
+        </choose>
+        GROUP BY
+        i.id, i.is_open, i.title, latest_editor.editor, latest_editor.issue_id, m.nick_name, ms.title;
+    </select>
+</mapper>

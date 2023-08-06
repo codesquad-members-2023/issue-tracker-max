@@ -1,4 +1,4 @@
-package com.issuetrackermax.domain.jwt.service;
+package com.issuetrackermax.service.jwt;
 
 import java.security.Key;
 import java.util.Date;
@@ -16,8 +16,8 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtProvider {
-	private final long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60;
-	private final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60;
+	private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60;
+	private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60;
 	private final JwtProperties jwtProperties;
 	private final Key key;
 

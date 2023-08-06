@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@JdbcTest
-@ActiveProfiles("test")
-class JwtRepositoryTest {
+import com.issuetrackermax.domain.IntegrationTestSupport;
+
+@Transactional
+class JwtRepositoryTest extends IntegrationTestSupport {
 
 	private JwtRepository jwtRepository;
 

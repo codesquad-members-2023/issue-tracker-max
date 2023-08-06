@@ -1,4 +1,4 @@
-package com.issuetrackermax.domain.member.Entity;
+package com.issuetrackermax.domain.member.entity;
 
 import lombok.Getter;
 
@@ -6,10 +6,9 @@ import lombok.Getter;
 public enum LoginType {
 	LOCAL("LOCAL"), GITHUB("GITHUB");
 
-	private String name;
+	private final String name;
 
 	LoginType(String name) {
 		this.name = name;
 	}
-
 }

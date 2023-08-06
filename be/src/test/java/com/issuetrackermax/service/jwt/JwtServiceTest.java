@@ -6,18 +6,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
+import com.issuetrackermax.common.exception.ApiException;
+import com.issuetrackermax.common.exception.domain.LoginException;
 import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
+import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.jwt.entity.Jwt;
-import com.issuetrackermax.domain.jwt.service.JwtProvider;
 import com.issuetrackermax.service.member.MemberService;
 import com.issuetrackermax.util.DatabaseCleaner;
 
-@SpringBootTest
-@ActiveProfiles("test")
-class JwtServiceTest {
+class JwtServiceTest extends IntegrationTestSupport {
 
 	@Autowired
 	JwtService jwtService;
@@ -38,17 +36,17 @@ class JwtServiceTest {
 
 	@DisplayName("JwtToken을 가지고 로그인에 성공한다.")
 	@Test
-	void login() throws Exception {
+	void login() {
 		// given
 		SignUpRequest signUpRequest = SignUpRequest.builder()
 			.loginId("June@codesquad.co.kr")
 			.nickName("June")
-			.password("1234")
+			.password("12345678")
 			.build();
 		memberService.registerMember(signUpRequest);
 
 		// when
-		Jwt jwt = jwtService.login("June@codesquad.co.kr", "1234");
+		Jwt jwt = jwtService.login("June@codesquad.co.kr", "12345678");
 		String accessToken = jwt.getAccessToken();
 		String refreshToken = jwt.getRefreshToken();
 
@@ -60,31 +58,80 @@ class JwtServiceTest {
 
 	@DisplayName("패스워드가 일치하지 않으면 오류를 일으킨다.")
 	@Test
-	void login2() throws Exception {
+	void incoreectPasswordException() {
 		// given
 		SignUpRequest signUpRequest = SignUpRequest.builder()
 			.loginId("June@codesquad.co.kr")
 			.nickName("June")
-			.password("1234")
+			.password("12345678")
 			.build();
 		// when
 		memberService.registerMember(signUpRequest);
 
 		// then
-		assertThatThrownBy(() -> jwtService.login("June@codesquad.co.kr", "123")).isInstanceOf(Exception.class);
+		assertThatThrownBy(() -> jwtService.login("June@codesquad.co.kr", "12345679"))
+			.isInstanceOf(ApiException.class)
+			.satisfies(exception -> {
+				ApiException apiException = (ApiException)exception;
+				assertThat(apiException.getCustomException()).isInstanceOf(LoginException.class);
+			});
 	}
 
-	@DisplayName("accessToken의 만료기간이 지나 refreshToken을 통해 accessToken을 재발행받는다.")
+	@DisplayName("패스워드가 8글자 이하면 오류를 일으킨다.")
 	@Test
-	void reissueAccessToken() throws Exception {
+	void invalidPasswordException() {
 		// given
 		SignUpRequest signUpRequest = SignUpRequest.builder()
 			.loginId("June@codesquad.co.kr")
 			.nickName("June")
 			.password("1234")
 			.build();
+		// when & then
+		assertThatThrownBy(() -> memberService.registerMember(signUpRequest))
+			.isInstanceOf(ApiException.class)
+			.satisfies(exception -> {
+				ApiException apiException = (ApiException)exception;
+				assertThat(apiException.getCustomException()).isInstanceOf(LoginException.class);
+			});
+
+	}
+
+	@DisplayName("이미 같은 아이디가 존재하면 오류를 일으킨다.")
+	@Test
+	void invalidLoginException() {
+		// given
+		SignUpRequest signUpRequest = SignUpRequest.builder()
+			.loginId("June@codesquad.co.kr")
+			.nickName("June")
+			.password("12345678")
+			.build();
 		memberService.registerMember(signUpRequest);
-		Jwt jwt = jwtService.login("June@codesquad.co.kr", "1234");
+		SignUpRequest invalidSignUpRequest = SignUpRequest.builder()
+			.loginId("June@codesquad.co.kr")
+			.nickName("June")
+			.password("12345678")
+			.build();
+
+		// when & then
+		assertThatThrownBy(() -> memberService.registerMember(invalidSignUpRequest))
+			.isInstanceOf(ApiException.class)
+			.satisfies(exception -> {
+				ApiException apiException = (ApiException)exception;
+				assertThat(apiException.getCustomException()).isInstanceOf(LoginException.class);
+			});
+	}
+
+	@DisplayName("accessToken의 만료기간이 지나 refreshToken을 통해 accessToken을 재발행받는다.")
+	@Test
+	void reissueAccessToken() {
+		// given
+		SignUpRequest signUpRequest = SignUpRequest.builder()
+			.loginId("June@codesquad.co.kr")
+			.nickName("June")
+			.password("12345678")
+			.build();
+		memberService.registerMember(signUpRequest);
+		Jwt jwt = jwtService.login("June@codesquad.co.kr", "12345678");
 		// when
 		Jwt newJwt = jwtService.reissueAccessToken(jwt.getRefreshToken());
 		String accessToken = newJwt.getAccessToken();

@@ -15,20 +15,20 @@ import org.springframework.http.MediaType;
 import org.springframework.util.PatternMatchUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.issuetrackermax.common.exception.ErrorCode;
-import com.issuetrackermax.common.exception.ErrorResponse;
-import com.issuetrackermax.common.exception.JwtExceptionType;
-import com.issuetrackermax.domain.jwt.service.JwtProvider;
+import com.issuetrackermax.common.exception.response.ErrorResponse;
+import com.issuetrackermax.common.exception.domain.JwtException;
+import com.issuetrackermax.service.jwt.JwtProvider;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.MalformedJwtException;
 
 public class JwtAuthorizationFilter implements Filter {
-	private final String TOKEN_PREFIX = "Bearer ";
-	private final String HEADER_AUTHORIZATION = "Authorization";
-	private final String MEMBER_ID = "memberId";
-	private final String[] whiteListUris = new String[] {"/h2-console/**", "/signin", "/signup",
+	private static final String TOKEN_PREFIX = "Bearer ";
+	private static final String HEADER_AUTHORIZATION = "Authorization";
+	private static final String MEMBER_ID = "memberId";
+	private static final String[] whiteListUris = new String[] {"/h2-console/**", "/signin", "/signup",
 		"/reissue-access-token", "/oauth/**", "/redirect/**"};
+
 	private final JwtProvider jwtProvider;
 	private final ObjectMapper objectMapper;
 
@@ -57,7 +57,7 @@ public class JwtAuthorizationFilter implements Filter {
 			String token = getToken(httpServletRequest);
 			Claims claims = jwtProvider.getClaims(token);
 			request.setAttribute(MEMBER_ID,
-				claims.get(MEMBER_ID)); // TODO: 닉네임을 사용한다면 nickname을 추가로 보내 주거나 멤버 response 객체를 하나 만들면 좋을 듯
+				claims.get(MEMBER_ID));
 			chain.doFilter(request, response);
 		} catch (RuntimeException e) {
 			sendErrorApiResponse(response, e);
@@ -89,9 +89,8 @@ public class JwtAuthorizationFilter implements Filter {
 		);
 	}
 
-	private ErrorResponse<ErrorCode> generateErrorApiResponse(RuntimeException e) {
-		JwtExceptionType jwtExceptionType = JwtExceptionType.from(e);
-		ErrorCode errorCode = new ErrorCode(jwtExceptionType.getHttpStatus().value(), jwtExceptionType.getMessage());
-		return ErrorResponse.exception(errorCode);
+	private ErrorResponse generateErrorApiResponse(RuntimeException e) {
+		JwtException jwtException = JwtException.from(e);
+		return new ErrorResponse(jwtException.getHttpStatus().value(), jwtException.getMessage());
 	}
 }

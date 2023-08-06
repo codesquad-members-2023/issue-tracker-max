@@ -5,11 +5,12 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetrackermax.common.exception.ApiException;
+import com.issuetrackermax.common.exception.domain.LoginException;
 import com.issuetrackermax.domain.jwt.JwtRepository;
 import com.issuetrackermax.domain.jwt.entity.Jwt;
-import com.issuetrackermax.domain.jwt.service.JwtProvider;
-import com.issuetrackermax.domain.member.Entity.Member;
 import com.issuetrackermax.domain.member.MemberRepository;
+import com.issuetrackermax.domain.member.entity.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,11 +22,11 @@ public class JwtService {
 	private final JwtProvider jwtProvider;
 
 	@Transactional
-	public Jwt login(String email, String password) throws Exception {
+	public Jwt login(String email, String password)  {
 		Member member = memberRepository.findByMemberLoginId(email).get();
 
 		if (!verifyPassword(member, password)) {
-			throw new Exception();
+			throw new ApiException(LoginException.INCORRECT_PASSWORD);
 		}
 		Jwt jwt = jwtProvider.createJwt(generateMemberClaims(member.getId()));
 
@@ -38,12 +39,6 @@ public class JwtService {
 	public Jwt reissueAccessToken(String refreshToken) {
 		jwtProvider.getClaims(refreshToken);
 		Long memberId = jwtRepository.findByRefreshToken(refreshToken);
-		/*
-		 * TODO
-		 * */
-		// if(memberId == null) {
-		// 	throw new IllegalJwtTokenException(JwtTokenType.REFRESH);
-		// }
 
 		return jwtProvider.reissueAccessToken(generateMemberClaims(memberId), refreshToken);
 	}

@@ -15,8 +15,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.issuetrackermax.domain.member.Entity.LoginType;
-import com.issuetrackermax.domain.member.Entity.Member;
+import com.issuetrackermax.domain.member.entity.LoginType;
+import com.issuetrackermax.domain.member.entity.Member;
 
 @Repository
 public class MemberRepository {
@@ -46,7 +46,17 @@ public class MemberRepository {
 		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
 
+	public Boolean existsLoginId(String loginId) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM member WHERE login_id = :loginId)";
+		return jdbcTemplate.queryForObject(sql, Map.of("loginId", loginId), Boolean.class);
+	}
+
 	private static final RowMapper<Member> MEMBER_ROW_MAPPER = (rs, rowNum) ->
-		new Member(rs.getLong("id"), rs.getString("login_id"), rs.getString("password"), rs.getString("nick_name"),
-			LoginType.valueOf(rs.getString("login_type")));
+		Member.builder()
+		.id(rs.getLong("id"))
+		.loginId(rs.getString("login_id"))
+		.password(rs.getString("password"))
+		.nickName(rs.getString("nick_name"))
+		.loginType(LoginType.valueOf(rs.getString("login_type")))
+		.build();
 }
