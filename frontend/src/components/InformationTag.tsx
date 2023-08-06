@@ -38,7 +38,10 @@ export function InformationTag({
   );
 }
 
-const getBorderColor = (hexColor: string | undefined, theme: DefaultTheme): string => {
+const getBorderColor = (
+  hexColor: string | undefined,
+  theme: DefaultTheme,
+): string => {
   if (!hexColor || hexColor.length !== 7 || !hexColor.startsWith("#")) {
     return "transparent";
   }
