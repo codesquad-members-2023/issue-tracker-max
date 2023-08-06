@@ -1,38 +1,23 @@
-import { css } from '@emotion/react';
-import { radius } from '../../styles/object';
-import { color } from '../../styles/color';
-import EditIcon from '../../assets/Icons/EditIcon';
-import PlusIcon from '../../assets/Icons/PlusIcon';
-import { font } from '../../styles/font';
+import { Theme, css, useTheme } from '@emotion/react';
+import { font, radius } from '../../styles/styles';
+import { ButtonHTMLAttributes } from 'react';
 
-type Props = {
-  variant: 'issue' | 'comment' | 'edit' | 'label' | 'milestone' | 'success';
-};
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: React.ReactNode;
+}
 
-export default function Button({ variant }: Props) {
-  const buttonValue =
-    variant === 'issue'
-      ? '이슈 작성'
-      : variant === 'comment'
-      ? '코멘트 작성'
-      : variant === 'edit'
-      ? '편집 완료'
-      : variant === 'label'
-      ? '레이블 추가'
-      : variant === 'milestone'
-      ? '마일스톤 추가'
-      : '완료';
+export default function Button({ type, value, children }: Props) {
+  const theme = useTheme();
 
   return (
-    <>
-      <button css={commonButton}>
-        {variant === 'edit' ? <EditIcon /> : <PlusIcon />} {buttonValue}
-      </button>
-    </>
+    <button type={type} css={button(theme)}>
+      {children}
+      {value}
+    </button>
   );
 }
 
-const commonButton = css`
+const button = (theme: Theme) => css`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,7 +26,11 @@ const commonButton = css`
   height: 40px;
   padding: 0px 16px;
   border-radius: ${radius.medium};
-  background-color: ${color.brand.surfaceDefault};
-  color: ${color.brand.textDefault};
   font: ${font.availableMedium12};
+  background-color: ${theme.brand.surfaceDefault};
+  color: ${theme.brand.textDefault};
+
+  & svg path {
+    stroke: ${theme.brand.textDefault};
+  }
 `;

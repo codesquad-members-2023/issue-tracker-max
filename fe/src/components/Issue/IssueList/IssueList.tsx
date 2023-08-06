@@ -1,101 +1,170 @@
-import { css } from '@emotion/react';
-import { font } from '../../../styles/font';
-import { color } from '../../../styles/color';
-import { border, radius } from '../../../styles/object';
-import CheckBoxIcon from '../../../assets/Icons/CheckBoxIcon';
-import AlertCircleIcon from '../../../assets/Icons/AlertCircleIcon';
-import ArchiveIcon from '../../../assets/Icons/ArchiveIcon';
+import { useState } from 'react';
+import { Theme, css, useTheme } from '@emotion/react';
+import { border, radius } from '../../../styles/styles';
 import IssueItem from './IssueItem';
-import DropdownIndicator from './DropdownIndicator';
-import MainWrapper from '../../common/MainWrapper';
-import MainWrapperHeader from '../../common/MainWrapperHeader';
+import TableContainer from '../../TableContainer';
+import SubNavBar from '../../SubNavbar';
+import IssueFilter from './IssueFilter';
+
+const mockData = {
+  success: 'true',
+  data: {
+    labelCount: 2,
+    milestoneCount: 2,
+    openIssueCount: 2,
+    closedIssueCount: 0,
+    issues: [
+      {
+        id: 1,
+        status: 'open',
+        title: '이슈1',
+        history: {
+          modifier: 'June',
+          dateTime: '2023-07-22 12:01',
+        },
+        labels: [
+          {
+            id: 1,
+            name: 'Backend',
+            description: '백엔드',
+            textColor: '#6E7191',
+            backgroundColor: '#FEFEFE',
+          },
+        ],
+        number: '#1',
+        writer: 'June',
+        assignees: [
+          {
+            id: 2,
+            name: 'Movie',
+          },
+        ],
+        milestone: '프로젝트1',
+      },
+      {
+        id: 2,
+        status: 'open',
+        title: '이슈2',
+        history: {
+          modifier: 'Movie',
+          dateTime: '2023-07-23 12:01',
+        },
+        labels: [
+          {
+            id: 2,
+            name: 'Frontend',
+            description: '프론트엔드',
+            textColor: '#FEFEFE',
+            backgroundColor: '#0025E6',
+          },
+        ],
+        number: '#2',
+        writer: 'Movie',
+        assignees: [
+          {
+            id: 1,
+            name: 'June',
+          },
+          {
+            id: 2,
+            name: 'Movie',
+          },
+        ],
+        milestone: '',
+      },
+    ],
+  },
+};
 
 export default function IssueList() {
-  const filterType = ['담당자', '레이블', '마일스톤', '작성자'];
+  const theme = useTheme();
+  const [activeIssue, setActiveIssue] = useState<'open' | 'close'>('open');
+  const [checkedItemIdList, setCheckedItemIdList] = useState<number[]>([]);
+
+  const allItemIdList = mockData.data.issues.map((item) => item.id);
+  const isAllItemChecked = allItemIdList.length === checkedItemIdList.length;
+
+  const onIssueFilterClick = (issueFilter: 'open' | 'close') => {
+    setActiveIssue(issueFilter);
+  };
+
+  const onSingleCheck = (checked: boolean, id: number) => {
+    if (checked) {
+      setCheckedItemIdList((prev) => [...prev, id]);
+    } else {
+      setCheckedItemIdList(checkedItemIdList.filter((itemId) => itemId !== id));
+    }
+  };
+
+  const onAllCheck = (checked: boolean) => {
+    if (checked) {
+      setCheckedItemIdList(allItemIdList);
+    } else {
+      setCheckedItemIdList([]);
+    }
+  };
 
   return (
-    <MainWrapper>
-      <MainWrapperHeader variant="issue"></MainWrapperHeader>
-      {/* 공통 컴포넌트 재활용 작업 중입니다 */}
-      <div css={issueTable}>
-        <div css={issueTableHeader}>
-          <div css={issueTableHeaderLeft}>
-            <CheckBoxIcon status="initial" />
-            <div css={openIssue}>
-              <AlertCircleIcon color="default" />
-              열린 이슈(1)
-            </div>
-            <div css={closeIssue}>
-              <ArchiveIcon />
-              닫힌 이슈(0)
-            </div>
+    <>
+      <SubNavBar
+        isIssue
+        labelCount={mockData.data.labelCount}
+        milestoneCount={mockData.data.milestoneCount}
+        buttonValue="이슈 작성"
+      />
+      <TableContainer>
+        <div css={issueTable(theme)}>
+          <div className="header">
+            <IssueFilter
+              activeIssue={activeIssue}
+              onCheckBoxClick={onAllCheck}
+              isAllItemChecked={isAllItemChecked}
+              onIssueFilterClick={onIssueFilterClick}
+              openIssueCount={mockData.data.openIssueCount}
+              closedIssueCount={mockData.data.closedIssueCount}
+              checkedItemLength={checkedItemIdList.length}
+            />
           </div>
-          <div css={issueTableHeaderRight}>
-            {/* 임시로 key 값을 index로 지정했습니다  */}
-            {filterType.map((filter, index) => (
-              <DropdownIndicator key={index} filterText={filter} />
-            ))}
-          </div>
+          <ul className="item-container">
+            {mockData.data.issues.map((item) => {
+              return (
+                <IssueItem
+                  key={item.id}
+                  issue={item}
+                  onSingleCheck={onSingleCheck}
+                  checkedItemIdList={checkedItemIdList}
+                />
+              );
+            })}
+          </ul>
         </div>
-        <ul css={issueItemContainer}>
-          <IssueItem />
-        </ul>
-      </div>
-    </MainWrapper>
+      </TableContainer>
+    </>
   );
 }
 
-const issueTable = css`
+const issueTable = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
-  border: ${border.default} ${color.neutral.borderDefault};
   border-radius: ${radius.medium};
+  border: ${border.default} ${theme.neutral.borderDefault};
+  color: ${theme.neutral.textDefault};
 
-  & > * {
-    padding: 0 32px;
-  }
-`;
-
-const issueTableHeader = css`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 64px;
-  border-bottom: ${border.default} ${color.neutral.borderDefault};
-  border-radius: ${radius.medium} ${radius.medium} 0 0;
-  background-color: ${color.neutral.surfaceDefault};
-`;
-
-const issueTableHeaderLeft = css`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-
-  & * {
+  .item-container {
     display: flex;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
+    flex-direction: column;
+    border-radius: 0 0 ${radius.medium} ${radius.medium};
+    background-color: ${theme.neutral.surfaceStrong};
+
+    li {
+      box-sizing: border-box;
+      padding: 0 32px;
+      border-bottom: ${border.default} ${theme.neutral.borderDefault};
+
+      &:last-child {
+        border-bottom: none;
+        border-radius: 0 0 ${radius.medium} ${radius.medium};
+      }
+    }
   }
-`;
-
-const openIssue = css`
-  margin-left: 12px;
-  font: ${font.selectedBold16};
-`;
-
-const closeIssue = css`
-  font: ${font.availableMedium16};
-`;
-
-const issueTableHeaderRight = css`
-  display: flex;
-  gap: 32px;
-`;
-
-const issueItemContainer = css`
-  display: flex;
-  flex-direction: column;
-  background-color: ${color.neutral.surfaceStrong};
-  border-radius: 0 0 ${radius.medium} ${radius.medium};
 `;
