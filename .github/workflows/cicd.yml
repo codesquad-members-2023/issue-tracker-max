@@ -60,7 +60,7 @@ jobs:
           touch ./application-dev.yml
           echo "${{ secrets.APPLICATION_DEV }}" > ./application-dev.yml
         shell: bash
-      # 환경별 yml 파일 생성(3) - prod
+      # 환경별 yml 파일 생성(3) - release
       - name: make application-release.yml
         if: contains(github.ref, 'release')
         run: |
