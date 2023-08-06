@@ -14,7 +14,7 @@ type Props = {
   children: React.ReactNode;
   isPanelOpen: boolean;
   // onIndicatorClick: () => void;
-  onDimClick: () => void;
+  onDimClick: (event: React.MouseEvent) => void;
 };
 
 export const DropDownIndicator: React.FC<Props> = ({

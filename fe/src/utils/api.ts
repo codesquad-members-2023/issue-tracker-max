@@ -1,14 +1,17 @@
 export const onFetchData = async (path: string) => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/${path}`, {
-      method: 'GET',
-    });
-
+    const response = await fetch(
+      // `${import.meta.env.VITE_REACT_APP_API_URL}/${path}`,
+      `${path}`,
+      {
+        method: 'GET',
+      },
+    );
+    const data = await response.json();
+    console.log(data);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
-    const data = await response.json();
 
     return data;
   } catch (error) {

@@ -14,16 +14,20 @@ import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/TextInput/TextInput';
 
-type SelectedItems = {
-  [key: number]: boolean;
-};
+// type SelectedItems = {
+//   [key: number]: boolean;
+// };
 
+// type SelectionState = {
+//   assignees: SelectedItems;
+//   labels: SelectedItems;
+//   milestones: SelectedItems;
+// };
 type SelectionState = {
-  assignees: SelectedItems;
-  labels: SelectedItems;
-  milestones: SelectedItems;
+  assignees: number[];
+  labels: number[];
+  milestones: number[];
 };
-
 // 추후 구현 보완시 추가
 // type Props = {
 //   authorId: number;
@@ -162,21 +166,25 @@ export const AddIssuePage: React.FC = ({}) => {
   const onMultipleSelectedAssignee = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      assignees: { ...prev.assignees, [id]: !prev.assignees[id] },
+      assignees: prev.assignees.includes(id)
+        ? prev.assignees.filter((itemId) => itemId !== id)
+        : [...prev.assignees, id],
     }));
   };
 
   const onMultipleSelectedLabel = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      labels: { ...prev.labels, [id]: !prev.labels[id] },
+      labels: prev.labels.includes(id)
+        ? prev.labels.filter((itemId) => itemId !== id)
+        : [...prev.labels, id],
     }));
   };
 
   const onSingleSelectedMilestone = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      milestones: { [id]: true },
+      milestones: prev.milestones.includes(id) ? [] : [id],
     }));
   };
 
