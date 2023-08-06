@@ -36,9 +36,6 @@ function App() {
   return (
     <ThemeProvider theme={isLight ? lightTheme : darkTheme}>
       <GlobalStyle />
-      {/* <ButtonSmall type="button" ghost flexible onClick={changeTheme}>
-        Change Theme
-      </ButtonSmall> */}
       <Router>
         <Routes>
           <Route
@@ -46,7 +43,7 @@ function App() {
             element={
               <AuthenticatedRoute>
                 <Routes>
-                  <Route path='/' element={<Main />} />
+                  <Route path="/" element={<Main />} />
                 </Routes>
               </AuthenticatedRoute>
             }
