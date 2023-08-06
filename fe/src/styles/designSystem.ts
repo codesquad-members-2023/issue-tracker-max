@@ -69,7 +69,7 @@ const radius = {
 const border = {
   default: `1px solid`,
   icon: `1.6px solid`,
-  dash: `1px dash`,
+  dash: `1px dashed`,
 };
 
 export const lightMode = {

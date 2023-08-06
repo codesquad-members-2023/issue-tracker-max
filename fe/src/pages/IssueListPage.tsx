@@ -1,23 +1,50 @@
-import { useState } from 'react';
+import { IssueTable } from '@components/issueListPage/IssueTable';
+import { SubNav } from '@components/issueListPage/SubNav';
+import { useEffect, useState } from 'react';
 
-type Props = {};
+export const IssueListPage: React.FC = ({}) => {
+  const [pageData, setPageData] = useState<IssuePageData>(initialPageData);
+  const [filterValue, setFilterValue] = useState('status:open');
 
-type Issues = {
-  openIssueCount: number;
-  closedIssueCount: number;
-  issues: {
-    id: number;
-    title: string;
-    author: string;
-    labelIds: number[];
-    milestoneId: number;
-    createdAt: string;
-    isOpen: boolean;
-  }[];
+  const onChangeFilterValue = (value: string) => {
+    setFilterValue(value);
+  };
+
+  const fetchPageData = async () => {
+    const response = await fetch(import.meta.env.VITE_APP_BASE_URL + 'issues');
+
+    if (!response.ok) {
+      throw new Error('이슈 목록 가져오기 요청이 실패했습니다.');
+    }
+
+    const data = await response.json();
+
+    setPageData(data);
+  };
+
+  useEffect(() => {
+    fetchPageData();
+  }, []);
+
+  return (
+    <>
+      <SubNav
+        {...{
+          labelCount: pageData.labelCount,
+          milestoneCount: pageData.milestoneCount,
+          filterValue,
+          onChangeFilterValue,
+        }}
+      />
+      <IssueTable />
+    </>
+  );
 };
 
-export const IssueListPage: React.FC = ({}: Props) => {
-  const [issues, setIssues] = useState<Issues>();
-
-  return <></>;
+const initialPageData: IssuePageData = {
+  labelCount: 0,
+  milestoneCount: 0,
+  openIssueCount: 0,
+  closedIssueCount: 0,
+  issues: [],
 };
