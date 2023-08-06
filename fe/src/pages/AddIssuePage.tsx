@@ -14,15 +14,6 @@ import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/TextInput/TextInput';
 
-// type SelectedItems = {
-//   [key: number]: boolean;
-// };
-
-// type SelectionState = {
-//   assignees: SelectedItems;
-//   labels: SelectedItems;
-//   milestones: SelectedItems;
-// };
 type SelectionState = {
   assignees: number[];
   labels: number[];
@@ -59,6 +50,14 @@ export const AddIssuePage: React.FC = ({}) => {
 
   const [fileStatus, setFileStatus] = useState(defaultFileStatus);
 
+  useEffect(() => {
+    if (textAreaValue) {
+      setIsDisplayingCount(true);
+      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [textAreaValue]); // >> textArea로.
+
   const uploadImage = async (file: File) => {
     try {
       setFileStatus((prev) => ({ ...prev, isUploading: true }));
@@ -66,13 +65,10 @@ export const AddIssuePage: React.FC = ({}) => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/file-upload`,
-        {
-          method: 'POST',
-          body: formData,
-        },
-      );
+      const response = await fetch(`/file-upload`, {
+        method: 'POST',
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error('File upload failed');
@@ -88,9 +84,12 @@ export const AddIssuePage: React.FC = ({}) => {
   };
 
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileStatus((prev) => ({ ...prev, sizeError: false }));
-    setFileStatus((prev) => ({ ...prev, typeError: false }));
-    setFileStatus((prev) => ({ ...prev, uploadFailed: false }));
+    setFileStatus((prev) => ({
+      ...prev,
+      sizeError: false,
+      typeError: false,
+      uploadFailed: false,
+    }));
 
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -147,21 +146,12 @@ export const AddIssuePage: React.FC = ({}) => {
       }
 
       const data = await response.json();
+      navigate('/');
       return data;
     } catch (error) {
       console.error('이슈가 정상적으로 등록되지 않았습니다.');
-    } finally {
-      // navigate('/'); 보내버리면 안댐.
     }
   };
-
-  useEffect(() => {
-    if (textAreaValue) {
-      setIsDisplayingCount(true);
-      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [textAreaValue]); // >> textArea로.
 
   const onMultipleSelectedAssignee = (id: number) => {
     setSelections((prev) => ({

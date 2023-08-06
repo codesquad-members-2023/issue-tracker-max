@@ -13,7 +13,6 @@ type Props = {
   indicator: Indicator;
   children: React.ReactNode;
   isPanelOpen: boolean;
-  // onIndicatorClick: () => void;
   onDimClick: (event: React.MouseEvent) => void;
 };
 
@@ -22,7 +21,6 @@ export const DropDownIndicator: React.FC<Props> = ({
   indicator,
   children,
   isPanelOpen,
-  // onIndicatorClick,
   onDimClick,
 }) => {
   const theme = useTheme() as any;
@@ -38,7 +36,6 @@ export const DropDownIndicator: React.FC<Props> = ({
         font: theme.fonts.availableMedium16,
         ...SIZE[size],
       }}
-      // onClick={onIndicatorClick}
     >
       <Button
         typeVariant="ghost"

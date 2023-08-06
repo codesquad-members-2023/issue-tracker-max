@@ -28,6 +28,8 @@ export const DropDownPanel: React.FC<Props> = ({
 }) => {
   const theme = useTheme() as any;
 
+  console.log(selectedItems);
+
   return (
     <div
       css={{

@@ -102,31 +102,45 @@ export const ListSideBar: React.FC<Props> = ({
     null | 'users' | 'labels' | 'milestones'
   >(null);
 
-  const openUserPanel = async () => {
-    const usersData = await getUsers();
-    setListData((prev) => ({
-      ...prev,
-      users: usersData,
-    }));
-    setIsPanelOpen('users');
-  };
+  // const openUserPanel = async () => {
+  //   const usersData = await getUsers();
+  //   setListData((prev) => ({
+  //     ...prev,
+  //     users: usersData,
+  //   }));
+  //   setIsPanelOpen('users');
+  // };
 
-  const openLabelPanel = async () => {
-    const labelsData = await getLabels();
-    setListData((prev) => ({
-      ...prev,
-      labels: labelsData,
-    }));
-    setIsPanelOpen('labels');
-  };
+  // const openLabelPanel = async () => {
+  //   const labelsData = await getLabels();
+  //   setListData((prev) => ({
+  //     ...prev,
+  //     labels: labelsData,
+  //   }));
+  //   setIsPanelOpen('labels');
+  // };
 
-  const openMilestonePanel = async () => {
-    const milestonesData = await getMilestones();
+  // const openMilestonePanel = async () => {
+  //   const milestonesData = await getMilestones();
+  //   setListData((prev) => ({
+  //     ...prev,
+  //     milestones: milestonesData,
+  //   }));
+  //   setIsPanelOpen('milestones');
+  // };
+
+  const openPanel = async (
+    fetchDataFunction: () => Promise<
+      UserData[] | LabelData[] | MilestoneData[]
+    >,
+    panelName: FetchPath,
+  ) => {
+    const data = await fetchDataFunction();
     setListData((prev) => ({
       ...prev,
-      milestones: milestonesData,
+      [panelName]: data,
     }));
-    setIsPanelOpen('milestones');
+    setIsPanelOpen(panelName);
   };
 
   const closePanel = () => {
@@ -151,60 +165,57 @@ export const ListSideBar: React.FC<Props> = ({
 
   return (
     <>
-      <div css={commonStyles} onClick={openUserPanel}>
+      <div css={commonStyles} onClick={() => openPanel(getUsers, 'users')}>
         <DropDownIndicator
           indicator="담당자"
           size="L"
           onDimClick={handleDimClick}
           isPanelOpen={isPanelOpen === 'users'}
         >
-          {isPanelOpen === 'users' && (
-            <DropDownPanel
-              panelHeader="담당자 설정"
-              alignment="center"
-              options={assigneeOptions}
-              onSelected={onMultipleSelectedAssignee}
-              selectedItems={selectedAssignees}
-            />
-          )}
+          <DropDownPanel
+            panelHeader="담당자 설정"
+            alignment="center"
+            options={assigneeOptions}
+            onSelected={onMultipleSelectedAssignee}
+            selectedItems={selectedAssignees}
+          />
         </DropDownIndicator>
         <ListAssignee selectedAssigneesData={selectedAssigneesData} />
       </div>
-      <div css={commonStyles} onClick={openLabelPanel}>
+      <div css={commonStyles} onClick={() => openPanel(getLabels, 'labels')}>
         <DropDownIndicator
           indicator="레이블"
           size="L"
           onDimClick={handleDimClick}
           isPanelOpen={isPanelOpen === 'labels'}
         >
-          {isPanelOpen === 'labels' && (
-            <DropDownPanel
-              panelHeader="레이블 설정"
-              alignment="center"
-              options={labelOptions}
-              onSelected={onMultipleSelectedLabel}
-              selectedItems={selectedLabels}
-            />
-          )}
+          <DropDownPanel
+            panelHeader="레이블 설정"
+            alignment="center"
+            options={labelOptions}
+            onSelected={onMultipleSelectedLabel}
+            selectedItems={selectedLabels}
+          />
         </DropDownIndicator>
         <ListLabel selectedLabelsData={selectedLabelsData} />
       </div>
-      <div css={commonStyles} onClick={openMilestonePanel}>
+      <div
+        css={commonStyles}
+        onClick={() => openPanel(getMilestones, 'milestones')}
+      >
         <DropDownIndicator
           indicator="마일스톤"
           size="L"
           onDimClick={handleDimClick}
           isPanelOpen={isPanelOpen === 'milestones'}
         >
-          {isPanelOpen === 'milestones' && (
-            <DropDownPanel
-              panelHeader="마일스톤 설정"
-              alignment="center"
-              options={milestoneOptions}
-              onSelected={onSingleSelectedMilestone}
-              selectedItems={selectedMilestones}
-            />
-          )}
+          <DropDownPanel
+            panelHeader="마일스톤 설정"
+            alignment="center"
+            options={milestoneOptions}
+            onSelected={onSingleSelectedMilestone}
+            selectedItems={selectedMilestones}
+          />
         </DropDownIndicator>
         <ListMilestone selectedMilestonesData={selectedMilestonesData} />
       </div>
