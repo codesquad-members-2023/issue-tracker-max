@@ -41,7 +41,6 @@ public class IssueServiceTest {
     LabelRepository labelRepository;
     @Mock
     MemberRepository memberRepository;
-
     @Mock
     MilestoneRepository milestoneRepository;
 

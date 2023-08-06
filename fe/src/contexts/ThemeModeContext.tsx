@@ -1,6 +1,6 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from "react";
 
-type ThemeMode = 'light' | 'dark';
+type ThemeMode = "light" | "dark";
 type ThemeModeContextType = {
   mode: ThemeMode;
   toggleTheme: () => void;
@@ -13,10 +13,10 @@ const ThemeModeContext = createContext<ThemeModeContextType | undefined>(
 export const ThemeModeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [mode, setMode] = useState<ThemeMode>('light');
+  const [mode, setMode] = useState<ThemeMode>("light");
 
   const toggleTheme = () => {
-    setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+    setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
   };
 
   return (
@@ -29,7 +29,7 @@ export const ThemeModeProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useThemeMode = () => {
   const context = useContext(ThemeModeContext);
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };

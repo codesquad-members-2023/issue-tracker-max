@@ -1,17 +1,17 @@
 const colorDefault = {
-  grayscale50: '#FEFEFE',
-  grayscale100: '#F7F7FC',
-  grayscale200: '#EFF0F6',
-  grayscale300: '#D9DBE9',
-  grayscale400: '#BEC1D5',
-  grayscale500: '#A0A3BD',
-  grayscale600: '#6E7191',
-  grayscale700: '#4E4B66',
-  grayscale800: '#2A2A44',
-  grayscale900: '#14142B',
-  accentBlue: '#007AFF',
-  accentNavy: '#0025E6',
-  accentRed: '#FF3B30',
+  grayscale50: "#FEFEFE",
+  grayscale100: "#F7F7FC",
+  grayscale200: "#EFF0F6",
+  grayscale300: "#D9DBE9",
+  grayscale400: "#BEC1D5",
+  grayscale500: "#A0A3BD",
+  grayscale600: "#6E7191",
+  grayscale700: "#4E4B66",
+  grayscale800: "#2A2A44",
+  grayscale900: "#14142B",
+  accentBlue: "#007AFF",
+  accentNavy: "#0025E6",
+  accentRed: "#FF3B30",
 };
 
 const lightMode = {
@@ -40,7 +40,7 @@ const lightMode = {
     paletteRed: colorDefault.accentRed,
   },
 
-  dropshadow: '0 0 8px rgba(20, 20, 43, 0.04)',
+  dropshadow: "0 0 8px rgba(20, 20, 43, 0.04)",
 };
 
 const darkMode = {
@@ -69,7 +69,7 @@ const darkMode = {
     paletteRed: colorDefault.accentRed,
   },
 
-  dropshadow: '0 0 16px rgba(20, 20, 43, 0.8)',
+  dropshadow: "0 0 16px rgba(20, 20, 43, 0.8)",
 };
 
 const commonTheme = {
@@ -90,22 +90,22 @@ const commonTheme = {
   },
 
   radius: {
-    half: '50%',
-    medium: '12px',
-    large: '16px',
+    half: "50%",
+    medium: "12px",
+    large: "16px",
   },
 
   border: {
-    default: '1px solid',
-    icon: '1.6px solid',
-    dash: '1px dash',
+    default: "1px solid",
+    icon: "1.6px solid",
+    dash: "1px dash",
   },
 
   opacity: {
-    default: '100%',
-    hover: '80%',
-    press: '64%',
-    disabled: '32%',
+    default: "100%",
+    hover: "80%",
+    press: "64%",
+    disabled: "32%",
   },
 };
 
