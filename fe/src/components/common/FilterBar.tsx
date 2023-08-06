@@ -4,6 +4,7 @@ import { ReactComponent as Search } from '@assets/icons/search.svg';
 import { ReactComponent as ChevronDown } from '@assets/icons/chevronDown.svg';
 import { InputContainer } from './textInput/InputContainer';
 import { Input } from './textInput/Input';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   filterValue: string;
@@ -15,6 +16,7 @@ export const FilterBar: React.FC<Props> = ({
   onChangeFilterValue,
 }) => {
   const theme = useTheme() as any;
+  const navigate = useNavigate();
 
   return (
     <InputContainer height={40} radius="m" hasborderColor>
@@ -44,7 +46,7 @@ export const FilterBar: React.FC<Props> = ({
           <ChevronDown stroke={theme.neutral.text.default} />
         </Button>
 
-        <div
+        <form
           css={{
             width: '100%',
             display: 'flex',
@@ -52,14 +54,19 @@ export const FilterBar: React.FC<Props> = ({
             padding: '0px 25px',
             gap: '8px',
           }}
+          onSubmit={(event) => {
+            event.preventDefault();
+
+            navigate('?query=' + filterValue);
+          }}
         >
           <Search stroke={theme.neutral.text.default} />
           <Input
             value={filterValue}
-            onChange={onChangeFilterValue}
             placeholder="Search all issues"
+            onChange={onChangeFilterValue}
           />
-        </div>
+        </form>
       </div>
     </InputContainer>
   );
