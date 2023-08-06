@@ -9,84 +9,60 @@ import { Button } from '../Button';
 type Indicator = '담당자' | '레이블' | '마일스톤';
 
 type Props = {
-  size: 'L' | 'M' | 'defaultSize';
+  size: keyof typeof SIZE;
   indicator: Indicator;
   children: React.ReactNode;
-  onFetchData: (indicator: Indicator) => Promise<any>;
+  isPanelOpen: boolean;
+  // onIndicatorClick: () => void;
+  onDimClick: () => void;
 };
 
 export const DropDownIndicator: React.FC<Props> = ({
   size,
   indicator,
   children,
-  onFetchData,
+  isPanelOpen,
+  // onIndicatorClick,
+  onDimClick,
 }) => {
   const theme = useTheme() as any;
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-  const onPanelOpen = async () => {
-    setIsPanelOpen(true);
-    await onFetchData(indicator);
-  };
-
-  const onPanelClose = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsPanelOpen(false);
-  };
-
-  const SIZE = {
-    L: {
-      width: '224px',
-      height: '24px',
-    },
-    M: {
-      width: '80px',
-      height: '32px',
-    },
-    defaultSize: {
-      width: 'fit-content',
-      height: '32px',
-    },
-  };
 
   return (
-    <>
-      <div
+    <div
+      css={{
+        position: 'relative',
+        boxSizing: 'border-box',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        font: theme.fonts.availableMedium16,
+        ...SIZE[size],
+      }}
+      // onClick={onIndicatorClick}
+    >
+      <Button
+        typeVariant="ghost"
         css={{
-          position: 'relative',
-          boxSizing: 'border-box',
           display: 'flex',
-          alignItems: 'center',
           justifyContent: 'space-between',
           font: theme.fonts.availableMedium16,
-          ...SIZE[size],
+          width: '100%',
         }}
-        onClick={onPanelOpen}
       >
-        <Button
-          typeVariant="ghost"
-          css={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            font: theme.fonts.availableMedium16,
-            width: '100%',
-          }}
-        >
-          {indicator}
-          {size === 'L' ? (
-            <Plus stroke={theme.neutral.text.default} />
-          ) : (
-            <ChevronDown stroke={theme.neutral.text.default} />
-          )}
-        </Button>
-        {isPanelOpen && (
-          <>
-            <div css={dim} onClick={onPanelClose}></div>
-            {children}
-          </>
+        {indicator}
+        {size === 'L' ? (
+          <Plus stroke={theme.neutral.text.default} />
+        ) : (
+          <ChevronDown stroke={theme.neutral.text.default} />
         )}
-      </div>
-    </>
+      </Button>
+      {isPanelOpen && (
+        <>
+          <div css={dim} onClick={onDimClick}></div>
+          {children}
+        </>
+      )}
+    </div>
   );
 };
 
@@ -98,3 +74,18 @@ const dim = css`
   width: 100vw;
   height: 100vh;
 `;
+
+const SIZE = {
+  L: {
+    width: '224px',
+    height: '24px',
+  },
+  M: {
+    width: '80px',
+    height: '32px',
+  },
+  defaultSize: {
+    width: 'fit-content',
+    height: '32px',
+  },
+} as const;

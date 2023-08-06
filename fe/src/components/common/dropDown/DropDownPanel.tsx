@@ -12,10 +12,10 @@ type DropDownItem = {
 };
 
 type Props = {
-  options: DropDownItem[];
+  options?: DropDownItem[];
   alignment: string;
   panelHeader: string;
-  selectedItems: { [key: number]: boolean };
+  selectedItems: number[];
   onSelected: (index: number) => void;
 };
 
@@ -50,27 +50,15 @@ export const DropDownPanel: React.FC<Props> = ({
           overflowY: 'auto',
         }}
       >
-        {options.length > 0 ? (
-          options.map((item) => (
+        {options &&
+          options?.map((item) => (
             <DropDownList
               key={item.id}
               item={item}
-              onSelected={() => onSelected(item.id)}
-              isSelected={selectedItems[item.id]}
-              // index={index}
+              onClick={() => onSelected(item.id)}
+              isSelected={selectedItems.includes(item.id)}
             />
-          ))
-        ) : (
-          <span
-            css={{
-              marginLeft: '16px',
-              font: theme.fonts.displayMedium12,
-              color: theme.neutral.text.strong,
-            }}
-          >
-            로딩중
-          </span>
-        )}
+          ))}
       </ul>
     </div>
   );

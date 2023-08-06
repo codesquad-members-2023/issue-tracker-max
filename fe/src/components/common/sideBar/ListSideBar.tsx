@@ -5,6 +5,7 @@ import { DropDownPanel } from '../dropDown/DropDownPanel';
 import { ListAssignee } from './ListAssignee';
 import { ListLabel } from './ListLabel';
 import { ListMilestone } from './ListMilestone';
+import { getLabels, getMilestones, getUsers } from '@utils/api';
 
 type FetchPath = 'users' | 'labels' | 'milestones';
 type Indicator = '담당자' | '레이블' | '마일스톤';
@@ -69,48 +70,20 @@ export const ListSideBar: React.FC<Props> = ({
     마일스톤: 'milestones',
   };
 
-  const onFetchData = async (indicator: Indicator) => {
-    const path = indicatorMapping[indicator];
-
-    try {
-      if (isFetched[path]) return;
-
-      const response = await fetch(
-        `https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/${path}/previews`,
-        {
-          method: 'GET',
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      setListData((prev) => ({
-        ...prev,
-        [path]: data,
-      }));
-
-      setIsFetched((prev) => ({
-        ...prev,
-        [path]: true,
-      }));
-
-      return data;
-    } catch (error) {
-      console.error(`There was a problem with the fetch operation: ${error}`);
-    }
-  };
-
+  setIsFetched((prev) => ({
+    ...prev,
+    [path]: true,
+  }));
+  // response.status
   const modifiedUserData = listData.users.map((item) => {
     const { userId, ...rest } = item;
     return { id: userId, ...rest };
   });
+
   const assigneeOptions = modifiedUserData.slice(1);
   const labelOptions = listData.labels.slice(1);
   const milestoneOptions = listData.milestones.slice(1);
+  // api 수정요청..
 
   const selectedAssigneeIds = Object.keys(selectedAssignees)
     .filter((id) => selectedAssignees[parseInt(id)])
@@ -136,6 +109,8 @@ export const ListSideBar: React.FC<Props> = ({
     selectedMilestoneIds.includes(milestone.id),
   );
 
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+
   const commonStyles = css`
     display: flex;
     flex-direction: column;
@@ -149,12 +124,8 @@ export const ListSideBar: React.FC<Props> = ({
 
   return (
     <>
-      <div css={commonStyles}>
-        <DropDownIndicator
-          indicator="담당자"
-          size="L"
-          onFetchData={onFetchData}
-        >
+      <div css={commonStyles} onClick={getUsers}>
+        <DropDownIndicator indicator="담당자" size="L">
           <DropDownPanel
             panelHeader="담당자 설정"
             alignment="center"
@@ -165,12 +136,8 @@ export const ListSideBar: React.FC<Props> = ({
         </DropDownIndicator>
         <ListAssignee selectedAssigneesData={selectedAssigneesData} />
       </div>
-      <div css={commonStyles}>
-        <DropDownIndicator
-          indicator="레이블"
-          size="L"
-          onFetchData={onFetchData}
-        >
+      <div css={commonStyles} onClick={getLabels}>
+        <DropDownIndicator indicator="레이블" size="L">
           <DropDownPanel
             panelHeader="레이블 설정"
             alignment="center"
@@ -181,12 +148,8 @@ export const ListSideBar: React.FC<Props> = ({
         </DropDownIndicator>
         <ListLabel selectedLabelsData={selectedLabelsData} />
       </div>
-      <div css={commonStyles}>
-        <DropDownIndicator
-          indicator="마일스톤"
-          size="L"
-          onFetchData={onFetchData}
-        >
+      <div css={commonStyles} onClick={getMilestones}>
+        <DropDownIndicator indicator="마일스톤" size="L">
           <DropDownPanel
             panelHeader="마일스톤 설정"
             alignment="center"

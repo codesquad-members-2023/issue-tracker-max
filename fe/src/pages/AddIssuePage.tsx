@@ -44,9 +44,9 @@ export const AddIssuePage: React.FC = ({}) => {
   };
 
   const [selections, setSelections] = useState<SelectionState>({
-    assignees: {},
-    labels: {},
-    milestones: {},
+    assignees: [],
+    labels: [],
+    milestones: [],
   });
 
   const [titleInput, setTitleInput] = useState<string>('');
@@ -63,7 +63,7 @@ export const AddIssuePage: React.FC = ({}) => {
       formData.append('file', file);
 
       const response = await fetch(
-        'https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/file-upload',
+        `${process.env.REACT_APP_API_URL}/file-upload`,
         {
           method: 'POST',
           body: formData,
@@ -121,22 +121,14 @@ export const AddIssuePage: React.FC = ({}) => {
       contents: textAreaValue,
       // authorId: authorId,
       authorId: 1,
-      assigneeIds: Object.keys(selections.assignees)
-        .filter((key) => selections.assignees[parseInt(key)])
-        .map((key) => parseInt(key)),
-      labelIds: Object.keys(selections.labels)
-        .filter((key) => selections.labels[parseInt(key)])
-        .map((key) => parseInt(key)),
-      milestoneId: Number(
-        Object.keys(selections.milestones).find(
-          (key) => selections.milestones[parseInt(key)],
-        ),
-      ),
+      assigneeIds: selections.assignees,
+      labelIds: selections.labels,
+      milestoneId: selections.milestones,
     };
 
     try {
       const response = await fetch(
-        'https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/issues/new',
+        `${process.env.REACT_APP_API_URL}/issues/new`,
         {
           method: 'POST',
           headers: {
@@ -155,7 +147,7 @@ export const AddIssuePage: React.FC = ({}) => {
     } catch (error) {
       console.error('이슈가 정상적으로 등록되지 않았습니다.');
     } finally {
-      navigate('/');
+      // navigate('/'); 보내버리면 안댐.
     }
   };
 
@@ -165,7 +157,7 @@ export const AddIssuePage: React.FC = ({}) => {
       const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
       return () => clearTimeout(timer);
     }
-  }, [textAreaValue]);
+  }, [textAreaValue]); // >> textArea로.
 
   const onMultipleSelectedAssignee = (id: number) => {
     setSelections((prev) => ({

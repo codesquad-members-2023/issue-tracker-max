@@ -13,27 +13,22 @@ type DropDownItem = {
 
 type Props = {
   item: DropDownItem;
-  // index: number;
   isSelected?: boolean;
-  onSelected: (id: number) => void;
+  onClick: () => void;
 };
 
 export const DropDownList: React.FC<Props> = ({
   item,
-  // index,
   isSelected,
-  onSelected,
+  onClick,
 }) => {
   const theme = useTheme() as any;
   const commonStyles = css`
     flex: 1 0 0;
   `;
-
   return (
     <li
-      onClick={() => {
-        onSelected(item.id);
-      }}
+      onClick={onClick}
       css={{
         display: 'flex',
         alignItems: 'center',
