@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.issuetracker.issue.domain.IssueMapper">
+    <resultMap id="issueResultMap" type="Issue">
+        <id property="id" column="issue_id" />
+        <result property="title" column="issue_title" />
+        <result property="content" column="issue_content" />
+        <result property="isOpen" column="issue_is_open" />
+        <result property="createAt" column="issue_create_at" />
+
+        <association property="author" javaType="Member">
+            <id property="id" column="author_id" />
+            <result property="nickname" column="author_nickname" />
+            <result property="proFileImageUrl" column="author_profile_image_url" />
+        </association>
+
+        <association property="milestone" javaType="Milestone">
+            <id property="id" column="milestone_id" />
+            <result property="title" column="milestone_title" />
+        </association>
+
+        <collection property="labels" ofType="Label">
+            <id property="id" column="label_id" />
+            <result property="title" column="label_title" />
+            <result property="color" column="label_color" />
+        </collection>
+    </resultMap>
+
+    <select id="search" resultMap="issueResultMap" parameterType="IssueSearch">
+        SELECT DISTINCT issue.id as issue_id,
+                issue.title as issue_title,
+                issue.content as issue_content,
+                issue.is_open as issue_is_open,
+                issue.create_at as issue_create_at,
+                author.id as author_id,
+                author.nickname as author_nickname,
+                author.profile_image_url as author_profile_image_url,
+                milestone.id as milestone_id,
+                milestone.title as milestone_title,
+                label.id as label_id,
+                label.title as label_title,
+                label.color as label_color
+        FROM issue issue
+        INNER JOIN member author ON author.id = issue.author_id
+        LEFT OUTER JOIN milestone milestone ON issue.milestone_id = milestone.id
+        LEFT OUTER JOIN issue_label_mapping issue_label_mapping ON issue.id = issue_label_mapping.issue_id
+        LEFT OUTER JOIN label label ON issue_label_mapping.label_id = label.id
+        LEFT OUTER JOIN assignee assignee ON issue.id = assignee.issue_id
+        LEFT OUTER JOIN member assignee_member ON assignee.member_id = assignee_member.id
+        LEFT OUTER JOIN issue_comment issue_comment ON issue.id = issue_comment.issue_id
+        <where>
+            <if test="isOpen != null">
+                <trim prefix="AND">
+                    issue.is_open = #{isOpen}
+                </trim>
+            </if>
+            <if test="assigneeIds != null and assigneeIds.size() > 0">
+                <trim prefix="AND">
+                    assignee.member_id IN
+                </trim>
+                <foreach collection="assigneeIds" item="assigneeId" separator="," open="(" close=")">
+                    #{assigneeId}
+                </foreach>
+            </if>
+            <if test="labelIds != null and labelIds.size() > 0">
+                <trim prefix="AND">
+                    issue_label_mapping.label_id IN
+                </trim>
+                <foreach collection="labelIds" item="labelId" separator="," open="(" close=")">
+                    #{labelId}
+                </foreach>
+            </if>
+            <if test="milestoneId != null">
+                <trim prefix="AND">
+                    issue.milestone_id = #{milestoneId}
+                </trim>
+            </if>
+            <if test="authorId != null">
+                <trim prefix="AND">
+                    issue.author_id = #{authorId}
+                </trim>
+            </if>
+            <if test="commentAuthorId != null">
+                <trim prefix="AND">
+                    issue_comment.author_id = #{commentAuthorId}
+                </trim>
+            </if>
+        </where>
+        ORDER BY issue.id, label.id
+    </select>
+</mapper>

@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    group:
+      prod: prodDB, common
+      test: testDB, common
+    active: prod
+---
+spring:
+  config:
+    activate:
+      on-profile: common
+
+mybatis:
+  type-aliases-package: com.issuetracker.issue.domain, com.issuetracker.label.domain, com.issuetracker.milestone.domain, com.issuetracker.member.domain
+  mapper-locations: classpath:mapper/*.xml
