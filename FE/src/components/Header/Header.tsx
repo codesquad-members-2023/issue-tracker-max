@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import UserProfileButton from "../UserProfileButton/UserProfileButton";
 
 type Props = {
   toggleTheme(): void;
@@ -7,23 +8,35 @@ type Props = {
 export default function Header({ toggleTheme }: Props) {
   return (
     <Wrapper>
-      <Logo href={"/"}>
-        <LogoImg src={"/logo/mediumLogo.svg"} alt={"Issue Tracker"} />
-      </Logo>
-      <button onClick={toggleTheme}>다크모드</button>
-      <ProfileButton>
-        <ProfileImg src={"/logo/profile.jpg"} />
-      </ProfileButton>
+      <Container>
+        <Logo href={"/issues/isOpen=true"}>
+          <LogoImg src={"/logo/mediumLogo.svg"} alt={"Issue Tracker"} />
+        </Logo>
+        <UserProfileButton
+          src={"/logo/profile.jpg"}
+          size={"large"}
+          onClick={toggleTheme}
+        />
+      </Container>
     </Wrapper>
   );
 }
 
-const Wrapper = styled.header`
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  background-color: ${({ theme }) => theme.colorSystem.neutral.surface.default};
+`;
+
+const Container = styled.header`
   padding: 0px 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 1440px;
+  min-width: 1440px;
   height: 94px;
 `;
 
@@ -34,15 +47,4 @@ const Logo = styled.a`
 
 const LogoImg = styled.img`
   filter: ${({ theme }) => theme.filter.neutral.text.strong};
-`;
-
-const ProfileButton = styled.button`
-  width: 32px;
-  height: 32px;
-`;
-
-const ProfileImg = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: ${({ theme }) => theme.radius.half};
 `;

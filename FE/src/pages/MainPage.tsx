@@ -1,100 +1,158 @@
 import { styled } from "styled-components";
-import Header from "../components/Header/Header";
 import FilterBar from "../components/FilterBar/FilterBar";
-import Button from "../components/Button/Button";
+import Button from "../components/common/Button/Button";
 import DropdownIndicator from "../components/DropdownIndicator/DropdownIndicator";
 import IssueList from "../components/IssueList/IssueList";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { ListDataProps } from "../type";
+import parseFilter from "../utils/parseFilter";
+import parseParam from "../utils/parseParam";
 
-type Props = {
-  toggleTheme(): void;
-};
+export default function MainPage() {
+  const navigate = useNavigate();
+  const { filter } = useParams();
+  const [data, setData] = useState<ListDataProps | null>(null);
+  const [filterValue, setFilterValue] = useState<string>(
+    filter ? filter : "isOpen=true",
+  );
 
-export default function MainPage({ toggleTheme }: Props) {
+  const goAddNewIssuePage = () => {
+    navigate("/new");
+  };
+
+  const showOpenIssue = () => {
+    navigate("/issues/isOpen=true");
+  };
+
+  const showCloseIssue = () => {
+    navigate("/issues/isOpen=false");
+  };
+
+  const handleEnterFilter = () => {
+    navigate(`/issues/${filterValue}`);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterValue(e.target.value);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          filter
+            ? `http://3.34.141.196/api/issues${parseFilter(filter)}`
+            : "http://3.34.141.196/api/issues",
+        );
+        if (!response.ok) {
+          throw new Error("데이터를 가져오는 데 실패했습니다.");
+        }
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (error) {
+        console.log("error");
+      }
+    };
+
+    fetchData();
+  }, [filter]);
+
+  useEffect(() => {
+    setFilterValue(parseParam(filter!));
+  }, [filter]);
+
   return (
-    <Page>
-      <Header toggleTheme={toggleTheme} />
-      <Main>
-        <FilterSection>
-          <FilterBar />
-          <Taps>
-            <TapButtonWrapper>
+    <Main>
+      <FilterSection>
+        <FilterBar
+          filterValue={filterValue}
+          onChange={handleInputChange}
+          handleEnterFilter={handleEnterFilter}
+        />
+        <Taps>
+          <TapButtonWrapper>
+            <Button
+              icon={"label"}
+              label={`레이블(${data && data.metadata.labelCount})`}
+              type={"ghost"}
+              size={"medium"}
+              width={"50%"}
+              onClick={() => {}}
+            />
+            <Button
+              icon={"milestone"}
+              label={`레이블(${data && data.metadata.milestoneCount})`}
+              type={"ghost"}
+              size={"medium"}
+              width={"50%"}
+              onClick={() => {}}
+            />
+          </TapButtonWrapper>
+          <Button
+            icon={"plus"}
+            label={"이슈 작성"}
+            onClick={goAddNewIssuePage}
+          />
+        </Taps>
+      </FilterSection>
+      <IssueTable>
+        <TableHeader>
+          <CheckboxWrapper>
+            <CheckboxLabel htmlFor={"tableCheckbox"}></CheckboxLabel>
+            <Checkbox id={"tableCheckbox"} type="checkbox" />
+          </CheckboxWrapper>
+          <TapWrapper>
+            <IssueTap>
               <Button
-                icon={"label"}
-                label={"레이블"}
+                icon={"alertCircle"}
+                label={`열린 이슈(${data && data.metadata.issueOpenCount})`}
                 type={"ghost"}
                 size={"medium"}
-                width={"50%"}
-                onClick={() => {}}
+                onClick={showOpenIssue}
               />
               <Button
-                icon={"milestone"}
-                label={"마일스톤"}
+                icon={"archive"}
+                label={`닫힌 이슈(${data && data.metadata.issueCloseCount})`}
                 type={"ghost"}
                 size={"medium"}
-                width={"50%"}
-                onClick={() => {}}
+                onClick={showCloseIssue}
               />
-            </TapButtonWrapper>
-            <Button icon={"plus"} label={"이슈 작성"} onClick={() => {}} />
-          </Taps>
-        </FilterSection>
-        <IssueTable>
-          <TableHeader>
-            <CheckboxWrapper>
-              <CheckboxLabel htmlFor={"tableCheckbox"}></CheckboxLabel>
-              <Checkbox id={"tableCheckbox"} type="checkbox" />
-            </CheckboxWrapper>
-            <TapWrapper>
-              <IssueTap>
-                <Button
-                  icon={"alertCircle"}
-                  label={"열린 이슈"}
-                  type={"ghost"}
-                  size={"medium"}
-                  width={"50%"}
-                  onClick={() => {}}
-                />
-                <Button
-                  icon={"archive"}
-                  label={"닫힌 이슈"}
-                  type={"ghost"}
-                  size={"medium"}
-                  width={"50%"}
-                  onClick={() => {}}
-                />
-              </IssueTap>
-              <FilterTap>
-                <DropdownIndicator text={"담당자"} onClick={() => {}} />
-                <DropdownIndicator text={"레이블"} onClick={() => {}} />
-                <DropdownIndicator text={"마일스톤"} onClick={() => {}} />
-                <DropdownIndicator text={"작성자"} onClick={() => {}} />
-              </FilterTap>
-            </TapWrapper>
-          </TableHeader>
-          <IssueContents>
-            <IssueList />
-            <IssueList />
-            <IssueList />
-            <IssueList />
-            <IssueList />
-          </IssueContents>
-        </IssueTable>
-      </Main>
-    </Page>
+            </IssueTap>
+            <FilterTap>
+              <DropdownIndicator label={"담당자"} hasDropdown={true} />
+              <DropdownIndicator label={"레이블"} />
+              <DropdownIndicator label={"마일스톤"} />
+              <DropdownIndicator label={"작성자"} />
+            </FilterTap>
+          </TapWrapper>
+        </TableHeader>
+        <IssueContents>
+          {data &&
+            (data.issues.length !== 0 ? (
+              data.issues.map((issue, key) => (
+                <IssueList key={key} issue={issue} />
+              ))
+            ) : (
+              <EmptyList>
+                <EmptyContent>등록된 이슈가 없습니다</EmptyContent>
+              </EmptyList>
+            ))}
+        </IssueContents>
+      </IssueTable>
+    </Main>
   );
 }
 
-const Page = styled.div`
+const Main = styled.div`
+  padding-top: 32px;
   display: flex;
-  gap: 32px;
   flex-direction: column;
   align-items: center;
   min-width: 100vw;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.colorSystem.neutral.surface.default};
 `;
-
-const Main = styled.div``;
 
 const FilterSection = styled.section`
   width: 1280px;
@@ -206,4 +264,30 @@ const IssueContents = styled.ul`
     border-bottom-left-radius: ${({ theme }) => theme.radius.large};
     border-bottom-right-radius: ${({ theme }) => theme.radius.large};
   }
+`;
+
+const EmptyList = styled.li`
+  display: flex;
+  align-items: center;
+  padding: 0px 32px;
+  width: 100%;
+  height: 96px;
+  background-color: ${({ theme }) => theme.colorSystem.neutral.surface.strong};
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 1px;
+    width: 100%;
+    background-color: ${({ theme }) =>
+      theme.colorSystem.neutral.border.default};
+  }
+`;
+
+const EmptyContent = styled.span`
+  width: 100%;
+  text-align: center;
+  font: ${({ theme }) => theme.font.displayMedium16};
+  color: ${({ theme }) => theme.colorSystem.neutral.text.weak};
 `;

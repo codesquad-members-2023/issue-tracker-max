@@ -16,6 +16,7 @@ type Props = {
   width?: string;
   height?: string;
   onClick: () => void;
+  disabled?: boolean;
 };
 
 export default function Button({
@@ -26,33 +27,29 @@ export default function Button({
   width,
   height,
   onClick,
+  disabled = false,
 }: Props) {
   return (
     <StyledButton
-      icon={icon}
-      label={label}
       type={type}
       size={size}
       width={width}
       height={height}
       onClick={onClick}
+      disabled={disabled}
     >
-      <IconImg
-        icon={icon}
-        label={label}
-        type={type}
-        size={size}
-        width={width}
-        height={height}
-        onClick={onClick}
-        src={`/icons/${icon}.svg`}
-      />
+      {icon && <IconImg type={type} size={size} src={`/icons/${icon}.svg`} />}
       <ButtonLabel>{label}</ButtonLabel>
     </StyledButton>
   );
 }
 
-const StyledButton = styled.button<Props>`
+const StyledButton = styled.button<{
+  type: "container" | "outline" | "ghost";
+  size: "large" | "medium" | "small";
+  width?: string;
+  height?: string;
+}>`
   ${CommonStyle}
   ${({ size }) => size && SizeStyles[size]}
   ${({ type }) => type && TypeStyles[type]}
@@ -61,7 +58,10 @@ const StyledButton = styled.button<Props>`
   ${({ height }) => height && `height: ${height};`}
 `;
 
-const IconImg = styled.img<Props>`
+const IconImg = styled.img<{
+  type: "container" | "outline" | "ghost";
+  size: "large" | "medium" | "small";
+}>`
   ${({ size }) => size && IconSizeStyles[size]}
   ${({ type }) => type && IconColorStyles[type]}
 `;

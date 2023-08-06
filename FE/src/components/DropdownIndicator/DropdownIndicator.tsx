@@ -1,25 +1,84 @@
 import { styled } from "styled-components";
+import DropdownPanel from "../DropdownPanel/DropdownPanel";
+import { useEffect, useState } from "react";
+import { AssigneesProps } from "../../type";
 
 type Props = {
-  text: string;
+  icon?: string;
+  label: string;
   padding?: string;
-  onClick(): void;
+  width?: string;
+  height?: string;
+  hasDropdown?: boolean;
 };
 
-export default function DropdownIndicator({ text, padding, onClick }: Props) {
+export default function DropdownIndicator({
+  icon = "chevronDown",
+  label,
+  padding = "4px 0px",
+  width = "80px",
+  height = "32px",
+  hasDropdown = false,
+}: Props) {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [assigneesData, setAssigneesData] = useState<AssigneesProps>();
+
+  const openDropdown = () => {
+    setIsOpen(true);
+  };
+
+  const closeDropdown = () => {
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://3.34.141.196/api/issues/assignees",
+        );
+        const data = await response.json();
+        setAssigneesData(data);
+      } catch (error) {
+        console.log("error");
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <IndicatorButton text={text} padding={padding} onClick={onClick}>
-      <IndicatorLabel>{text}</IndicatorLabel>
-      <IndicatorIcon src={"/icons/chevronDown.svg"} />
+    <IndicatorButton
+      $padding={padding}
+      $width={width}
+      $height={height}
+      onClick={openDropdown}
+    >
+      <IndicatorLabel>{label}</IndicatorLabel>
+      <IndicatorIcon src={`/icons/${icon}.svg`} />
+      {hasDropdown && isOpen && (
+        <DropdownPanel
+          title={label}
+          assigneesList={assigneesData!}
+          closeDropdown={closeDropdown}
+        />
+      )}
     </IndicatorButton>
   );
 }
 
-const IndicatorButton = styled.button<Props>`
+const IndicatorButton = styled.button<{
+  $padding: string;
+  $width: string;
+  $height: string;
+}>`
+  position: relative;
+  width: ${({ $width }) => $width};
+  height: ${({ $height }) => $height};
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: ${({ padding }) => padding && padding};
-  gap: 4px;
+  padding: ${({ $padding }) => $padding && $padding};
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};
   }
@@ -32,12 +91,13 @@ const IndicatorButton = styled.button<Props>`
 `;
 
 const IndicatorLabel = styled.span`
-  width: 60px;
   font: ${({ theme }) => theme.font.availableMedium16};
   color: ${({ theme }) => theme.colorSystem.neutral.text.default};
   text-align: left;
 `;
 
 const IndicatorIcon = styled.img`
+  width: 16px;
+  height: 16px;
   filter: ${({ theme }) => theme.filter.neutral.text.default};
 `;

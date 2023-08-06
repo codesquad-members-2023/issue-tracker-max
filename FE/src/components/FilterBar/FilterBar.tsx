@@ -1,22 +1,34 @@
 import { styled } from "styled-components";
 import DropdownIndicator from "../DropdownIndicator/DropdownIndicator";
-import Input from "../Input/Input";
+import Input from "../common/Input/Input";
 
-export default function FilterBar() {
+type Props = {
+  filterValue: string;
+  onChange(e: React.ChangeEvent<HTMLInputElement>): void;
+  handleEnterFilter(): void;
+};
+
+export default function FilterBar({
+  filterValue,
+  onChange,
+  handleEnterFilter,
+}: Props) {
   return (
     <Wrapper>
       <FilterButtonField>
-        <DropdownIndicator
-          text={"필터"}
-          padding={"7px 24px"}
-          onClick={() => {}}
-        />
+        <DropdownIndicator label={"필터"} />
       </FilterButtonField>
       <FilterInputField>
         <FilterInputLabel htmlFor="filterInput">
           <FilterInputImg src={"/icons/search.svg"} alt={"search"} />
         </FilterInputLabel>
-        <Input id={"filterInput"} inputLabel={"Search all issues"} />
+        <Input
+          id={"filterInput"}
+          placeholder={"Search all issues"}
+          onChange={onChange}
+          value={filterValue}
+          handleEnterFilter={handleEnterFilter}
+        />
       </FilterInputField>
     </Wrapper>
   );
@@ -43,6 +55,7 @@ const Wrapper = styled.div`
 `;
 
 const FilterButtonField = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
