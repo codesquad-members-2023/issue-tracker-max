@@ -1,32 +1,21 @@
 import { Header } from "../components/Header/Header";
 import { Background } from "../components/common/Background";
 import { TabButton } from "../components/common/TabButton";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "../components/common/Button";
 import { LabelDetail } from "../components/Label/LabelDetail";
 import { LabelElement } from "../components/Label/LabelElement";
 import { useNavigate } from "react-router-dom";
 import { css, useTheme } from "@emotion/react";
 import { ColorScheme } from "../contexts/ThemeContext";
-import { Alert } from "../components/util/Alert";
+
 // import { fonts } from "../constants/fonts";
 import { tableHeaderStyle, tableStyle } from "../styles/commonStyles";
 import { MainArea } from "../components/common/MainArea";
 import { TotalCount } from "./MilestonePage";
 import { LoadingBar } from "../components/common/LoadingBar";
-
-export type LabelType = {
-  id: number;
-  title: string;
-  description: string;
-  backgroundColor: string;
-  isDark: boolean;
-};
-
-const TOTAL_COUNT_URL =
-  "http://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/common/navigation";
-const LABEL_URL =
-  "http://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/labels";
+import { COMMON_URL, LABEL_URL, SERVER } from "../constants/url";
+import { AlertContext } from "../contexts/AlertContext";
 
 const tableContainer = css`
   display: flex;
@@ -36,30 +25,38 @@ const tableContainer = css`
   top: 24px;
 `;
 
+export type LabelType = {
+  id?: number;
+  title: string;
+  name?: string;
+  description?: string;
+  backgroundColor: string;
+  color?: string;
+  isDark?: boolean;
+  textColor?: string | number;
+};
+
 export function LabelPage() {
   const [totalCount, setTotalCount] = useState<TotalCount | undefined>();
   const [labels, setLabels] = useState<LabelType[] | undefined>();
   const [loading, setLoading] = useState(true);
-
   const [isLeftSelected, setIsLeftSelected] = useState(true);
   const [isAddLabelOpen, setIsAddLabelOpen] = useState(false);
 
-  const navigate = useNavigate();
-  const color = useTheme() as ColorScheme;
-  const labelTable = tableStyle(color);
-  const labelTableHeader = tableHeaderStyle(color);
+  const alertContextValue = useContext(AlertContext)!;
+  const { shouldFetchAgain, setShouldFetchAgain } = alertContextValue;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const totalCountResponse = await fetch(TOTAL_COUNT_URL);
-        const labelsResponse = await fetch(LABEL_URL);
+        const totalCountResponse = await fetch(`${SERVER}${COMMON_URL}`);
+        const labelsResponse = await fetch(`${SERVER}${LABEL_URL}`);
         const totalCountData = await totalCountResponse.json();
         const labelsData = await labelsResponse.json();
 
         setTotalCount(totalCountData);
-        setLabels(labelsData.labels);
+        setLabels(labelsData);
         setLoading(false);
       } catch (error) {
         console.error("API 요청 중 에러 발생:", error);
@@ -68,7 +65,13 @@ export function LabelPage() {
     };
 
     fetchData();
-  }, []);
+    setShouldFetchAgain(false);
+  }, [shouldFetchAgain]);
+
+  const navigate = useNavigate();
+  const color = useTheme() as ColorScheme;
+  const labelTable = tableStyle(color);
+  const labelTableHeader = tableHeaderStyle(color);
 
   const leftText = "레이블";
   const rightText = "마일스톤";
@@ -155,31 +158,6 @@ export function LabelPage() {
           </div>
         </div>
       </MainArea>
-      <Alert text="정말 이 레이블을 삭제하시겠습니까?" />
     </Background>
   );
 }
-
-// const labelList = [
-//   {
-//     id: 1,
-//     title: "Label",
-//     description: "레이블1 설명",
-//     backgroundColor: "#FEFEFE",
-//     isDark: true,
-//   },
-//   {
-//     id: 2,
-//     title: "documentation",
-//     description: "레이블2 설명",
-//     backgroundColor: "#0025E6",
-//     isDark: false,
-//   },
-//   {
-//     id: 3,
-//     title: "bug",
-//     description: "레이블3 설명",
-//     backgroundColor: "#FF3B30",
-//     isDark: false,
-//   },
-// ];
