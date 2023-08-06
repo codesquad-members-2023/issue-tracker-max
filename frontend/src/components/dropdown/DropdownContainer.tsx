@@ -1,19 +1,24 @@
-import { useState } from "react";
-import { styled } from "styled-components";
-import { DropdownIndicator } from "./DropdownIndicator";
-import { DropdownPanel } from "./DropdownPanel";
+import {useState} from "react";
+import {styled} from "styled-components";
+import {DropdownIndicator} from "./DropdownIndicator";
+import {DropdownPanel} from "./DropdownPanel";
 
 export function DropdownContainer({
-  name,
-  options,
-  showProfile = true,
-  alignment,
-  disabled = false
-}: {
+                                    name,
+                                    optionTitle,
+                                    options,
+                                    showProfile = true,
+                                    alignment,
+                                    disabled = false,
+                                  }: {
   name: string;
+  optionTitle: string;
   options: {
     name: string;
     profile?: string;
+    background?: string;
+    color?: "LIGHT" | "DARK";
+    selected: boolean;
     onClick: () => void;
   }[];
   showProfile?: boolean;
@@ -31,19 +36,20 @@ export function DropdownContainer({
   };
 
   return (
-    <StyledContainer>
-      <DropdownIndicator value={name} onClick={openPanel} disabled={disabled} />
-      {isPanelOpened && (
-        <>
-          <div className="dropdown__dim" onClick={closePanel}></div>
-          <DropdownPanel
-            showProfile={showProfile}
-            alignment={alignment}
-            options={options}
-          />
-        </>
-      )}
-    </StyledContainer>
+      <StyledContainer>
+        <DropdownIndicator value={name} onClick={openPanel} disabled={disabled}/>
+        {isPanelOpened && (
+            <>
+              <div className="dropdown__dim" onClick={closePanel}></div>
+              <DropdownPanel
+                  optionTitle={optionTitle}
+                  showProfile={showProfile}
+                  alignment={alignment}
+                  options={options}
+              />
+            </>
+        )}
+      </StyledContainer>
   );
 }
 
