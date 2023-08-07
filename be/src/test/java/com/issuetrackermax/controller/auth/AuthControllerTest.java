@@ -35,7 +35,7 @@ class AuthControllerTest extends ControllerTestSupport {
 
 		// then
 		mockMvc.perform(
-				post("/signin")
+				post("/api/signin")
 					.content(objectMapper.writeValueAsString(loginRequest))
 					.contentType(MediaType.APPLICATION_JSON)
 			)
@@ -62,7 +62,7 @@ class AuthControllerTest extends ControllerTestSupport {
 
 		// then
 		mockMvc.perform(
-				post("/reissue-access-token")
+				post("/api/reissue-access-token")
 					.content(objectMapper.writeValueAsString(jwtRefreshTokenRequest))
 					.contentType(MediaType.APPLICATION_JSON)
 			)

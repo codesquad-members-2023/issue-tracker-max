@@ -45,6 +45,11 @@ public class IssueRepository {
 			.orElseThrow(() -> new ApiException(IssueException.NOT_FOUND_ISSUE));
 	}
 
+	public List<Issue> findByMilestoneId(Long milestoneId) {
+		String sql = "SELECT id, title, is_open, writer_id, milestone_id,created_at FROM issue WHERE milestone_id = :milestoneId";
+		return jdbcTemplate.query(sql, Map.of("milestoneId", milestoneId), ISSUE_ROW_MAPPER);
+	}
+
 	public Long save(Issue issue) {
 		String sql = "INSERT INTO issue(title, is_open, writer_id, milestone_id) "
 			+ "VALUES (:title, :isOpen, :writerId, :milestoneId)";

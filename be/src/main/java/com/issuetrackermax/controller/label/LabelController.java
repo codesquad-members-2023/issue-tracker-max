@@ -24,14 +24,14 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/labels")
+@RequestMapping("/api/labels")
 public class LabelController {
 	private final LabelService labelService;
 	private final MilestoneService milestoneService;
 
 	@GetMapping
 	public ApiResponse<LabelsResponse> show() {
-		Long milestonCount = milestoneService.getMilstoneCount();
+		Long milestonCount = milestoneService.getMilestoneCount();
 		List<LabelDetailResponse> labelList = labelService.getLabelList();
 		LabelsResponse response = LabelsResponse
 			.builder()
