@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { keyframes, styled, useTheme } from "styled-components";
+import { Button } from "./Button";
 import { Icon } from "./Icon";
 
 type TextAreaProps = {
@@ -23,6 +24,8 @@ export function TextArea({
   maxLength,
   onChange,
 }: TextAreaProps) {
+  const theme = useTheme();
+
   const [state, setState] = useState<TextAreaState>(
     disabled ? "Disabled" : "Enabled",
   );
@@ -30,6 +33,7 @@ export function TextArea({
   const [countHidden, setCountHidden] = useState(true);
   const [uploadErrorMessage, setUploadErrorMessage] = useState("");
   const textArea = useRef<HTMLTextAreaElement>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -55,6 +59,8 @@ export function TextArea({
     return () => clearTimeout(timer);
   }, [uploadErrorMessage]);
 
+  const gripColor = theme.color.neutralTextWeak;
+
   const onFocus = () => {
     setState("Active");
   };
@@ -67,6 +73,10 @@ export function TextArea({
     setInputValue(e.target.value);
     setCountHidden(false);
     onChange && onChange(e);
+  };
+
+  const onFileInputClick = () => {
+    fileInput.current?.click();
   };
 
   const onFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -91,6 +101,8 @@ export function TextArea({
     } else {
       setUploadErrorMessage("이미지 파일만 업로드 가능합니다.");
     }
+
+    e.target.value = "";
   };
 
   const isImageTypeFile = (file: File) => {
@@ -131,10 +143,6 @@ export function TextArea({
     }
   };
 
-  const theme = useTheme();
-  const iconColor = theme.color.neutralTextDefault;
-  const gripColor = theme.color.neutralTextWeak;
-
   return (
     <Wrapper>
       <Div $state={state} onFocus={onFocus} onBlur={onBlur}>
@@ -156,16 +164,21 @@ export function TextArea({
           </ResizableDiv>
         </InputContainer>
         <Footer>
-          <UploadButton htmlFor="imageUpload">
-            <Icon name="paperclip" fill={iconColor} stroke={iconColor} />
-            <span>파일 첨부하기</span>
-            <input
-              id="imageUpload"
-              type="file"
-              accept="image/*"
-              onChange={onFileInputChange}
-            />
-          </UploadButton>
+          <Button
+            size="S"
+            buttonType="Ghost"
+            icon="paperclip"
+            onClick={onFileInputClick}
+          >
+            파일 첨부하기
+          </Button>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={onFileInputChange}
+            ref={fileInput}
+            hidden
+          />
         </Footer>
       </Div>
       {uploadErrorMessage && <ErrorMessage>{uploadErrorMessage}</ErrorMessage>}
@@ -287,26 +300,9 @@ const Footer = styled.div`
   display: flex;
   height: 52px;
   padding: 0px 16px;
-  align-items: stretch;
+  align-items: center;
   gap: 8px;
   align-self: stretch;
-`;
-
-const UploadButton = styled.label`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  font: ${({ theme }) => theme.font.availableMedium12};
-
-  &:hover {
-    cursor: pointer;
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  & input {
-    display: none;
-  }
 `;
 
 const ErrorMessage = styled.span`
