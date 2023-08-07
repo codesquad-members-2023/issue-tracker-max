@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +26,7 @@ import codesquard.app.milestone.dto.response.MilestoneUpdateResponse;
 import codesquard.app.milestone.entity.MilestoneStatus;
 import codesquard.app.milestone.service.MilestoneService;
 
+@RequestMapping(path = "/api/milestones")
 @RestController
 public class MilestoneController {
 	private final MilestoneService milestoneService;
@@ -33,7 +35,7 @@ public class MilestoneController {
 		this.milestoneService = milestoneService;
 	}
 
-	@GetMapping("/api/milestones")
+	@GetMapping
 	public ResponseEntity<MilestoneReadResponse> get(
 		@RequestParam(name = "state", defaultValue = "opened") final String openedString,
 		@RequestParam(name = "state", defaultValue = "closed") final String closedString) {
@@ -44,7 +46,7 @@ public class MilestoneController {
 			.body(milestoneReadResponse.success());
 	}
 
-	@PostMapping("/api/milestones")
+	@PostMapping
 	public ResponseEntity<MilestoneSaveResponse> save(
 		@Valid @RequestBody final MilestoneSaveRequest milestoneSaveRequest) {
 		Long milestoneId = milestoneService.saveMilestone(milestoneSaveRequest);
@@ -53,7 +55,7 @@ public class MilestoneController {
 			.body(MilestoneSaveResponse.success(milestoneId));
 	}
 
-	@PutMapping("/api/milestones/{milestoneId}")
+	@PutMapping("/{milestoneId}")
 	public ResponseEntity<MilestoneUpdateResponse> update(@PathVariable final Long milestoneId,
 		@Valid @RequestBody final MilestoneUpdateRequest milestoneUpdateRequest) {
 		milestoneService.updateMilestone(milestoneId, milestoneUpdateRequest);
@@ -62,7 +64,7 @@ public class MilestoneController {
 			.body(MilestoneUpdateResponse.success());
 	}
 
-	@PatchMapping("/api/milestones/{milestoneId}/status")
+	@PatchMapping("/{milestoneId}/status")
 	public ResponseEntity<MilestoneStatusUpdateResponse> updateStatus(@PathVariable final Long milestoneId,
 		@Valid @RequestBody final MilestoneStatusRequest milestoneStatusRequest) {
 		milestoneService.updateMilestoneStatus(milestoneId, milestoneStatusRequest);
@@ -71,7 +73,7 @@ public class MilestoneController {
 			.body(MilestoneStatusUpdateResponse.success());
 	}
 
-	@DeleteMapping("/api/milestones/{milestoneId}")
+	@DeleteMapping("/{milestoneId}")
 	public ResponseEntity<MilestoneDeleteResponse> delete(@PathVariable final Long milestoneId) {
 		milestoneService.deleteMilestone(milestoneId);
 

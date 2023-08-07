@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.label.dto.response.LabelDeleteResponse;
@@ -20,6 +21,7 @@ import codesquard.app.label.dto.request.LabelUpdateRequest;
 import codesquard.app.label.dto.response.LabelUpdateResponse;
 import codesquard.app.label.service.LabelService;
 
+@RequestMapping(path = "/api/labels")
 @RestController
 public class LabelController {
 	private final LabelService labelService;
@@ -28,7 +30,7 @@ public class LabelController {
 		this.labelService = labelService;
 	}
 
-	@GetMapping("/api/labels")
+	@GetMapping
 	public ResponseEntity<LabelReadResponse> get() {
 		LabelReadResponse labelReadResponse = labelService.makeLabelReadResponse();
 
@@ -36,7 +38,7 @@ public class LabelController {
 			.body(labelReadResponse.success());
 	}
 
-	@PostMapping("/api/labels")
+	@PostMapping
 	public ResponseEntity<LabelSaveResponse> save(@Valid @RequestBody final LabelSaveRequest labelSaveRequest) {
 		Long labelId = labelService.saveLabel(labelSaveRequest);
 
@@ -44,7 +46,7 @@ public class LabelController {
 			.body(LabelSaveResponse.success(labelId));
 	}
 
-	@PutMapping("/api/labels/{labelId}")
+	@PutMapping("/{labelId}")
 	public ResponseEntity<LabelUpdateResponse> update(@PathVariable final Long labelId,
 		@Valid @RequestBody LabelUpdateRequest labelUpdateRequest) {
 		labelService.updateLabel(labelId, labelUpdateRequest);
@@ -53,7 +55,7 @@ public class LabelController {
 			.body(LabelUpdateResponse.success());
 	}
 
-	@DeleteMapping("/api/labels/{labelId}")
+	@DeleteMapping("/{labelId}")
 	public ResponseEntity<LabelDeleteResponse> delete(@PathVariable final Long labelId) {
 		labelService.deleteLabel(labelId);
 
