@@ -23,12 +23,13 @@ export const CommentHeader: React.FC<Props> = ({
   return (
     <div
       css={{
-        height: '100%',
+        height: '64px',
         width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 24px',
+        background: theme.neutral.surface.default,
       }}
     >
       <div

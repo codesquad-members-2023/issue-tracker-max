@@ -8,6 +8,8 @@ import { Caption } from '../textArea/Caption';
 import { AddButtons } from '../textArea/AddButtons';
 import { Button } from '../Button';
 import { ReactComponent as PaperClip } from '@assets/icons/paperclip.svg';
+import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
+import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 
 type DefaultFileStatusType = {
   typeError: boolean;
@@ -36,7 +38,7 @@ export const Comment: React.FC<Props> = ({
   const availableFileSize = 1048576; //1MB
 
   const [isDisplayingCount, setIsDisplayingCount] = useState(false);
-  // const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [fileStatus, setFileStatus] = useState<DefaultFileStatusType>({
     typeError: false,
     sizeError: false,
@@ -111,13 +113,14 @@ export const Comment: React.FC<Props> = ({
     }
   }, [textAreaValue]);
 
-  // const onClickEdit = () => {
-  //   setIsEditing(true);
-  // };
+  const onClickEdit = () => {
+    setIsEditing(true);
+  };
 
   const isTyping = textAreaValue.length > 0;
 
   const wrapperStyle = {
+    background: theme.neutral.surface.strong,
     '&:focus-within': {
       border: `${theme.border.default} ${theme.neutral.border.defaultActive}`,
     },
@@ -133,71 +136,12 @@ export const Comment: React.FC<Props> = ({
           onChangeTextArea={onChangeTextArea}
         />
       )}
-      {typeVariant === 'edit' && (
-        <>
-          <Box
-            header={
-              <CommentHeader
-                // onClickEdit={onClickEdit}
-                image="D"
-                loginId="D"
-                createdAt="12시간전"
-                isAuthor={true}
-              ></CommentHeader>
-            }
-            customStyle={wrapperStyle}
-          >
-            <div
-              css={{
-                background: theme.neutral.surface.strong,
-                '&:focus-within': {
-                  background: theme.neutral.surface.strong,
-                },
-                paddingTop: '16px',
-              }}
-            >
-              {isTyping && !isDisabled && (
-                <div
-                  css={{
-                    padding: '0 16px 8px 16px',
-                    font: theme.fonts.displayMedium12,
-                    color: theme.neutral.text.weak,
-                  }}
-                >
-                  코멘트를 입력하세요
-                </div>
-              )}
-              <TextAreaInput
-                textAreaValue={textAreaValue}
-                onChangeTextArea={onChangeTextArea}
-                isDisabled={isDisabled}
-              ></TextAreaInput>
-              <Caption
-                isDisplayingCount={isDisplayingCount}
-                letterCount={letterCount}
-              />
-              <AddButtons onFileChange={onFileChange} fileStatus={fileStatus}>
-                <Button
-                  typeVariant="ghost"
-                  size="S"
-                  css={{
-                    pointerEvents: 'none',
-                  }}
-                >
-                  <PaperClip stroke={theme.neutral.text.weak} />
-                  파일 첨부하기
-                </Button>
-              </AddButtons>
-            </div>
-          </Box>
-        </>
-      )}
       {typeVariant === 'default' && (
         <>
           <Box
             header={
               <CommentHeader
-                // onClickEdit={onClickEdit}
+                onClickEdit={onClickEdit}
                 image="D"
                 loginId="D"
                 createdAt="12시간전"
@@ -206,33 +150,102 @@ export const Comment: React.FC<Props> = ({
             }
             customStyle={wrapperStyle}
           >
-            <div
-              css={{
-                '&:focus-within': {
-                  background: theme.neutral.surface.strong,
-                },
-                paddingTop: '16px',
-              }}
-            >
-              {isTyping && !isDisabled && (
+            {isEditing ? (
+              <>
                 <div
                   css={{
-                    padding: '0 16px 8px 16px',
-                    font: theme.fonts.displayMedium12,
-                    color: theme.neutral.text.weak,
+                    background: theme.neutral.surface.strong,
+                    paddingTop: '16px',
                   }}
                 >
-                  코멘트를 입력하세요
+                  {isTyping && !isDisabled && (
+                    <div
+                      css={{
+                        padding: '0 16px 8px 16px',
+                        font: theme.fonts.displayMedium12,
+                        color: theme.neutral.text.weak,
+                      }}
+                    >
+                      코멘트를 입력하세요
+                    </div>
+                  )}
+                  <TextAreaInput
+                    textAreaValue={textAreaValue}
+                    onChangeTextArea={onChangeTextArea}
+                    isDisabled={isDisabled}
+                  ></TextAreaInput>
+                  <Caption
+                    isDisplayingCount={isDisplayingCount}
+                    letterCount={letterCount}
+                  />
+                  <AddButtons
+                    onFileChange={onFileChange}
+                    fileStatus={fileStatus}
+                  >
+                    <Button
+                      typeVariant="ghost"
+                      size="S"
+                      css={{
+                        pointerEvents: 'none',
+                      }}
+                    >
+                      <PaperClip stroke={theme.neutral.text.weak} />
+                      파일 첨부하기
+                    </Button>
+                  </AddButtons>
                 </div>
-              )}
-              <TextAreaInput
-                textAreaValue={textAreaValue}
-                // onChangeTextArea={onChangeTextArea}
-                // placeholder={textAreaValue}
-                isDisabled={true}
-              ></TextAreaInput>
-            </div>
+              </>
+            ) : (
+              <div
+                css={{
+                  '&:focus-within': {
+                    background: theme.neutral.surface.strong,
+                  },
+                  paddingTop: '16px',
+                }}
+              >
+                {isTyping && !isDisabled && (
+                  <div
+                    css={{
+                      padding: '0 16px 8px 16px',
+                      font: theme.fonts.displayMedium12,
+                      color: theme.neutral.text.weak,
+                    }}
+                  >
+                    코멘트를 입력하세요
+                  </div>
+                )}
+                <TextAreaInput
+                  textAreaValue={textAreaValue}
+                  // onChangeTextArea={onChangeTextArea}
+                  // placeholder={textAreaValue}
+                  isDisabled={true}
+                ></TextAreaInput>
+              </div>
+            )}
           </Box>
+          {isEditing && (
+            <ButtonContainer>
+              <Button
+                typeVariant="ghost"
+                size="M"
+                onClick={() => {
+                  setIsEditing(false);
+                }}
+              >
+                <XSquare stroke={theme.neutral.text.default} />
+                편집 취소
+              </Button>
+              <Button
+                typeVariant="contained"
+                size="L"
+                // disabled={titleInput === '' || isSubmiting}
+                // onClick={onSubmit}
+              >
+                편집 완료
+              </Button>
+            </ButtonContainer>
+          )}
         </>
       )}
     </>

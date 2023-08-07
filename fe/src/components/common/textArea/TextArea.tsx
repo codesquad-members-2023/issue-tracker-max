@@ -130,10 +130,12 @@ export const TextArea: React.FC<Props> = ({
           onChangeTextArea={onChangeTextArea}
           isDisabled={isDisabled}
         />
+
         <Caption
           isDisplayingCount={isDisplayingCount}
           letterCount={letterCount}
         />
+
         <AddButtons onFileChange={onFileChange} fileStatus={fileStatus}>
           <Button
             typeVariant="ghost"
