@@ -13,18 +13,12 @@ export const IssueTable: React.FC<Props> = ({
   closedIssueCount,
 }) => {
   return (
-    <Box>
-      <BoxHeader>
-        <TableHeader {...{ openIssueCount, closedIssueCount }} />
-      </BoxHeader>
-
-      <ul>
-        <IssueList />
-        <IssueList />
-        <IssueList />
-        <IssueList />
-        <IssueList />
-      </ul>
+    <Box header={<TableHeader {...{ openIssueCount, closedIssueCount }} />}>
+      <IssueList />
+      <IssueList />
+      <IssueList />
+      <IssueList />
+      <IssueList />
     </Box>
   );
 };
