@@ -1,17 +1,22 @@
 import { useContext } from 'react';
 import { styled } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AppContext } from '../main';
+import { useAuth } from '../hooks/useAuth';
 import ContextLogo from '../types/ContextLogo';
 import TextInput from '../components/common/TextInput';
 import ButtonLarge from '../components/common/button/ButtonLarge';
 import Button from '../components/common/button/BaseButton';
 
 export default function Login() {
-  const { util, control } = useContext(AppContext);
+  const { login } = useAuth();
+  const { util } = useContext(AppContext);
   const logo = (util.getLogoByTheme() as ContextLogo).large;
   const navigate = useNavigate();
-  const login = (id: string, password: string) => {
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
+
+  const handleLogin = (id: string, password: string) => {
     (async function () {
       const res = await fetch('/api/login', {
         method: 'POST',
@@ -25,9 +30,14 @@ export default function Login() {
       if (res.status === 200) {
         localStorage.setItem('accessToken', data.messages.accessToken);
         localStorage.setItem('refreshToken', data.messages.refreshToken);
-        control.loginCheck();
+        login({
+          user: id,
+          pwd: password,
+          accessToken: data.messages.accessToken,
+        });
       }
-      navigate('/');
+
+      navigate(from, { replace: true });
     })();
   };
 
@@ -39,7 +49,7 @@ export default function Login() {
       id: string;
       password: string;
     };
-    login(id, password);
+    handleLogin(id, password);
   };
 
   return (
