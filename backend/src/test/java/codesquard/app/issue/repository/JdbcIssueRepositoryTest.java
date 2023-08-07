@@ -73,12 +73,8 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 
 		// when
 		Long id = issueRepository.save(issue);
-		for (Long labelId : issueSaveRequest.getLabels()) {
-			issueRepository.saveIssueLabel(id, labelId);
-		}
-		for (Long assigneeId : issueSaveRequest.getAssignees()) {
-			issueRepository.saveIssueAssignee(id, assigneeId);
-		}
+		issueRepository.saveIssueLabel(id, issueSaveRequest.getLabels());
+		issueRepository.saveIssueAssignee(id, issueSaveRequest.getAssignees());
 
 		// then
 		assertThat(id).isNotNull();
@@ -160,12 +156,8 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		Issue issue = issueSaveRequest.toEntity(loginId);
 
 		Long id = issueRepository.save(issue);
-		for (Long labelId : issueSaveRequest.getLabels()) {
-			issueRepository.saveIssueLabel(id, labelId);
-		}
-		for (Long assigneeId : issueSaveRequest.getAssignees()) {
-			issueRepository.saveIssueAssignee(id, assigneeId);
-		}
+		issueRepository.saveIssueLabel(id, issueSaveRequest.getLabels());
+		issueRepository.saveIssueAssignee(id, issueSaveRequest.getAssignees());
 		return id;
 	}
 }

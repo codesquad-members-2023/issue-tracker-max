@@ -99,15 +99,39 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public void saveIssueLabel(Long issueId, Long labelId) {
+	public void saveIssueLabel(Long issueId, List<Long> labels) {
 		String sql = "INSERT INTO issue_label(issue_id, label_id) VALUES(:issueId, :labelId)";
-		template.update(sql, Map.of("issueId", issueId, "labelId", labelId));
+		template.batchUpdate(sql, generateIssueLabelParameters(issueId, labels));
+	}
+
+	private SqlParameterSource[] generateIssueLabelParameters(Long issueId, List<Long> labels) {
+		return labels.stream()
+			.map(labelId -> generateIssueLabelParameter(issueId, labelId))
+			.toArray(SqlParameterSource[]::new);
+	}
+
+	private SqlParameterSource generateIssueLabelParameter(Long issueId, Long labelId) {
+		return new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("labelId", labelId);
 	}
 
 	@Override
-	public void saveIssueAssignee(Long issueId, Long userId) {
-		String sql = "INSERT INTO issue_assignee(issue_id, user_id) VALUES(:issueId, :userId)";
-		template.update(sql, Map.of("issueId", issueId, "userId", userId));
+	public void saveIssueAssignee(Long issueId, List<Long> assignees) {
+		String sql = "INSERT INTO issue_assignee(issue_id, user_id) VALUES(:issueId, :assigneeId)";
+		template.batchUpdate(sql, generateIssueAssigneeParameters(issueId, assignees));
+	}
+
+	private SqlParameterSource[] generateIssueAssigneeParameters(Long issueId, List<Long> assignees) {
+		return assignees.stream()
+			.map(assigneeId -> generateIssueAssigneeParameter(issueId, assigneeId))
+			.toArray(SqlParameterSource[]::new);
+	}
+
+	private SqlParameterSource generateIssueAssigneeParameter(Long issueId, Long assigneeId) {
+		return new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("assigneeId", assigneeId);
 	}
 
 	@Override

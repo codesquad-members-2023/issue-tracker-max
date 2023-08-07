@@ -1,7 +1,5 @@
 package codesquard.app.issue.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,21 +26,9 @@ public class IssueService {
 
 	public Long save(IssueSaveRequest issueSaveRequest, Long userId) {
 		Long id = issueRepository.save(issueSaveRequest.toEntity(userId));
-		registerIssueLabel(id, issueSaveRequest.getLabels());
-		registerIssueAssignee(id, issueSaveRequest.getAssignees());
+		issueRepository.saveIssueLabel(id, issueSaveRequest.getLabels());
+		issueRepository.saveIssueAssignee(id, issueSaveRequest.getAssignees());
 		return id;
-	}
-
-	private void registerIssueLabel(Long issueId, List<Long> labels) {
-		for (Long labelId : labels) {
-			issueRepository.saveIssueLabel(issueId, labelId);
-		}
-	}
-
-	private void registerIssueAssignee(Long issueId, List<Long> assignees) {
-		for (Long assignee : assignees) {
-			issueRepository.saveIssueAssignee(issueId, assignee);
-		}
 	}
 
 	public void modifyStatus(IssueModifyStatusRequest issueModifyStatusRequest, Long issueId) {
@@ -64,7 +50,7 @@ public class IssueService {
 	public void modifyAssignees(IssueModifyAssigneesRequest issueModifyAssigneesRequest, Long issueId) {
 		issueQueryService.existIssue(issueId);
 		issueRepository.deleteIssueAssigneesBy(issueId);
-		registerIssueAssignee(issueId, issueModifyAssigneesRequest.getAssignees());
+		issueRepository.saveIssueAssignee(issueId, issueModifyAssigneesRequest.getAssignees());
 	}
 
 	public void modifyMilestone(IssueModifyMilestoneRequest issueModifyMilestoneRequest, Long issueId) {
@@ -75,7 +61,7 @@ public class IssueService {
 	public void modifyLabels(IssueModifyLabelsRequest issueModifyLabelsRequest, Long issueId) {
 		issueQueryService.existIssue(issueId);
 		issueRepository.deleteIssueLabelsBy(issueId);
-		registerIssueLabel(issueId, issueModifyLabelsRequest.getLabels());
+		issueRepository.saveIssueLabel(issueId, issueModifyLabelsRequest.getLabels());
 	}
 
 	public void delete(Long issueId) {
