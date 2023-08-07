@@ -54,7 +54,10 @@ class CommentControllerTest extends ControllerTestSupport {
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.content").value("내용은 필수입니다."));
+			.andExpect(jsonPath("$.code").value("400"))
+			.andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+			.andExpect(jsonPath("$.message").value("내용은 필수입니다."))
+			.andExpect(jsonPath("$.data").isEmpty());
 	}
 
 	@DisplayName("등록된 댓글을 수정한다.")
@@ -84,7 +87,10 @@ class CommentControllerTest extends ControllerTestSupport {
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.content").value("내용은 필수입니다."));
+			.andExpect(jsonPath("$.code").value("400"))
+			.andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+			.andExpect(jsonPath("$.message").value("내용은 필수입니다."))
+			.andExpect(jsonPath("$.data").isEmpty());
 	}
 
 	@DisplayName("등록된 댓글을 삭제한다.")

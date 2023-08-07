@@ -3,7 +3,6 @@ package codesquard.app.comment.service;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -62,8 +61,7 @@ class CommentServiceTest extends IntegrationTestSupport {
 		CommentSaveResponse savedComment = commentService.save(request, createdAt);
 
 		// then
-		assertThat(savedComment).extracting("success", "commentId")
-			.isEqualTo(List.of(true, 1L));
+		assertThat(savedComment.getSavedCommentId()).isEqualTo(1L);
 	}
 
 	@DisplayName("10000자를 초과하는 댓글을 등록하려는 경우 예외가 발생한다.")
@@ -93,15 +91,14 @@ class CommentServiceTest extends IntegrationTestSupport {
 
 		LocalDateTime modifiedAt = LocalDateTime.of(2023, 8, 1, 17, 0);
 
-		CommentModifyServiceRequest modifyRequest = new CommentModifyServiceRequest(savedComment.getCommentId(),
+		CommentModifyServiceRequest modifyRequest = new CommentModifyServiceRequest(savedComment.getSavedCommentId(),
 			"modified service content");
 
 		// when
 		CommentModifyResponse modifiedComment = commentService.modify(modifyRequest, modifiedAt);
 
 		// then
-		assertThat(modifiedComment).extracting("success", "commentId")
-			.isEqualTo(List.of(true, savedComment.getCommentId()));
+		assertThat(savedComment.getSavedCommentId()).isEqualTo(1L);
 	}
 
 	@DisplayName("댓글 수정 시 10000자를 초과하는 경우 예외가 발생한다.")
@@ -115,7 +112,7 @@ class CommentServiceTest extends IntegrationTestSupport {
 		LocalDateTime modifiedAt = LocalDateTime.of(2023, 8, 1, 17, 0);
 
 		String invalidContent = generateExceedingMaxLengthContent(10000);
-		CommentModifyServiceRequest modifyRequest = new CommentModifyServiceRequest(savedComment.getCommentId(),
+		CommentModifyServiceRequest modifyRequest = new CommentModifyServiceRequest(savedComment.getSavedCommentId(),
 			invalidContent);
 
 		// when // then
@@ -132,10 +129,10 @@ class CommentServiceTest extends IntegrationTestSupport {
 		CommentSaveResponse savedComment = createCommentFixture();
 
 		// when
-		CommentDeleteResponse deletedComment = commentService.delete(savedComment.getCommentId());
+		CommentDeleteResponse deletedComment = commentService.delete(savedComment.getSavedCommentId());
 
 		// then
-		assertThat(deletedComment.isSuccess()).isTrue();
+		assertThat(deletedComment.getDeletedCommentId()).isEqualTo(savedComment.getSavedCommentId());
 	}
 
 	private void createUserFixture() {

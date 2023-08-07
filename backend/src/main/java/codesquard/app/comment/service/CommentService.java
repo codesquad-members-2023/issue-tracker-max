@@ -25,20 +25,20 @@ public class CommentService {
 		Comment comment = serviceRequest.toEntity(createdAt);
 		Long savedCommentId = commentRepository.save(comment);
 
-		return new CommentSaveResponse(true, savedCommentId);
+		return new CommentSaveResponse(savedCommentId);
 	}
 
 	public CommentModifyResponse modify(CommentModifyServiceRequest serviceRequest, LocalDateTime modifiedAt) {
 		Comment comment = serviceRequest.toEntity(modifiedAt);
 		Long modifiedCommentId = commentRepository.modify(comment);
 
-		return new CommentModifyResponse(true, modifiedCommentId);
+		return new CommentModifyResponse(modifiedCommentId);
 	}
 
 	public CommentDeleteResponse delete(Long id) {
-		commentRepository.deleteById(id);
+		Long deletedCommentId = commentRepository.deleteById(id);
 
-		return new CommentDeleteResponse(true);
+		return new CommentDeleteResponse(deletedCommentId);
 	}
 
 }
