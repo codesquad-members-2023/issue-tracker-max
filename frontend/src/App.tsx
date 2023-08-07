@@ -13,8 +13,8 @@ export default function App() {
   const [themeMode, setThemeMode] = useState<"LIGHT" | "DARK">("LIGHT");
 
   return (
-    <Div>
-      <ThemeProvider theme={designSystem[themeMode]}>
+    <ThemeProvider theme={designSystem[themeMode]}>
+      <Div>
         <Router>
           <Header />
           <Routes>
@@ -26,13 +26,15 @@ export default function App() {
             <Route path="*" element={<Error404 />} />
           </Routes>
         </Router>
-      </ThemeProvider>
-    </Div>
+      </Div>
+    </ThemeProvider>
   );
 }
 
 const Div = styled.div`
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: ${({ theme }) => theme.color.neutralSurfaceDefault};
 `;
