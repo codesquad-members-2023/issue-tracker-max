@@ -39,7 +39,6 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          cd be/issue
           chmod +x gradlew
           ./gradlew clean build -x test
 
