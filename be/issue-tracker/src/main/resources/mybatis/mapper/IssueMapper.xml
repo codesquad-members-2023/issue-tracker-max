@@ -30,19 +30,19 @@
 
     <select id="getIssues" resultMap="issueResultMap"
             parameterType="org.presents.issuetracker.issue.dto.request.IssueSearchParam">
-        SELECT DISTINCT i.issue_id AS issue_id,
-        i.title AS issue_title,
-        i.status AS issue_status,
-        i.created_at AS issue_created_at,
-        user.user_id AS author_id,
-        user.login_id AS author_login_id,
-        user.image AS author_image,
-        l.label_id AS label_id,
-        l.name AS label_name,
-        l.text_color AS label_text_color,
-        l.background_color AS label_background_color,
-        m.milestone_id AS milestone_id,
-        m.name AS milestone_name
+        SELECT DISTINCT i.issue_id as issue_id,
+        i.title as issue_title,
+        i.status as issue_status,
+        i.created_at as issue_created_at,
+        user.user_id as author_id,
+        user.login_id as author_login_id,
+        user.image as author_image,
+        l.label_id as label_id,
+        l.name as label_name,
+        l.text_color as label_text_color,
+        l.background_color as label_background_color,
+        m.milestone_id as milestone_id,
+        m.name as milestone_name
         FROM issue i
         INNER JOIN user AS user ON user.user_id = i.author_id
         LEFT OUTER JOIN milestone as m ON i.milestone_id = m.milestone_id AND m.status != 'deleted'
@@ -61,12 +61,17 @@
             </if>
             <if test="authorName != null">
                 <trim prefix="AND">
-                    u.login_id = #{authorName}
+                    user.login_id = #{authorName}
                 </trim>
             </if>
             <if test="labelName != null">
                 <trim prefix="AND">
-                    l.name = #{labelName}
+                    i.issue_id IN (
+                    SELECT issue_id
+                    FROM issue_label
+                    JOIN label ON issue_label.label_id = label.label_id
+                    WHERE label.name = #{labelName}
+                    )
                 </trim>
             </if>
             <if test="milestoneName != null">
@@ -76,7 +81,12 @@
             </if>
             <if test="assigneeName != null">
                 <trim prefix="AND">
-                    assignee_user.login_id = #{assigneeName}
+                    i.issue_id IN (
+                    SELECT issue_id
+                    FROM assignee
+                    JOIN user ON assignee.user_id = user.user_id
+                    WHERE user.login_id = #{assigneeName}
+                    )
                 </trim>
             </if>
             <if test="commentAuthorName != null">
