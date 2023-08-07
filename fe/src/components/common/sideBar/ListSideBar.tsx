@@ -15,10 +15,17 @@ type SelectionState = {
 };
 
 type FetchPath = 'users' | 'labels' | 'milestones';
-type Indicator = '담당자' | '레이블' | '마일스톤';
+
+type OptionsData = ModifiedUserData | LabelData | MilestoneData;
 
 type UserData = {
   userId: number;
+  loginId: string;
+  image: string;
+};
+
+type ModifiedUserData = {
+  id: number;
   loginId: string;
   image: string;
 };
@@ -71,12 +78,6 @@ export const ListSideBar: React.FC<Props> = ({
     milestones: false,
   });
 
-  // setIsFetched((prev) => ({
-  //   ...prev,
-  //   [path]: true,
-  // }));
-  // response.status
-
   const modifiedUserData = listData.users.map((item) => {
     const { userId, ...rest } = item;
     return { id: userId, ...rest };
@@ -85,10 +86,6 @@ export const ListSideBar: React.FC<Props> = ({
   const assigneeOptions = modifiedUserData.slice(1);
   const labelOptions = listData.labels.slice(1);
   const milestoneOptions = listData.milestones.slice(1);
-
-  const getSelectedData = (data: number[], key: keyof SelectionState) => {
-    data.filter((item) => selections[key].includes(item.id));
-  };
 
   const selectedAssigneesData = modifiedUserData.filter((users) =>
     selections.assignees.includes(users.id),
@@ -102,17 +99,43 @@ export const ListSideBar: React.FC<Props> = ({
     selections.milestones.includes(milestone.id),
   );
 
+  // function useFilteredData(selections: number[], optionsData: OptionsData[]) {
+  //   return optionsData.filter((data) => selections.includes(data.id));
+  // }
+  // const assigneeOptions = modifiedUserData.slice(1);
+  // const labelOptions = listData.labels.slice(1);
+  // const milestoneOptions = listData.milestones.slice(1);
+
+  // const selectedAssigneesData = useFilteredData(
+  //   selections.assignees,
+  //   assigneeOptions,
+  // );
+  // const selectedLabelsData = useFilteredData(selections.labels, labelOptions);
+  // const selectedMilestonesData = useFilteredData(
+  //   selections.milestones,
+  //   milestoneOptions,
+  // );
+
   const openPanel = async (
     fetchDataFunction: () => Promise<
       UserData[] | LabelData[] | MilestoneData[]
     >,
     panelName: FetchPath,
   ) => {
-    const data = await fetchDataFunction();
-    setListData((prev) => ({
-      ...prev,
-      [panelName]: data,
-    }));
+    if (!isFetched[panelName]) {
+      const data = await fetchDataFunction();
+
+      setListData((prev) => ({
+        ...prev,
+        [panelName]: data,
+      }));
+
+      setIsFetched((prev) => ({
+        ...prev,
+        [panelName]: true,
+      }));
+    }
+
     setIsPanelOpen(panelName);
   };
 
@@ -139,42 +162,42 @@ export const ListSideBar: React.FC<Props> = ({
   return (
     <>
       <div css={commonStyles} onClick={() => openPanel(getUsers, 'users')}>
-        <DropDownIndicator
-          indicator="담당자"
-          size="L"
-          onDimClick={handleDimClick}
-          isPanelOpen={isPanelOpen === 'users'}
-        >
-          <DropDownPanel panelHeader="담당자 설정" position="center">
-            {assigneeOptions?.map((item) => (
-              <DropDownList
-                key={item.id}
-                item={item}
-                onClick={() => onMultipleSelectedAssignee(item.id)}
-                isSelected={selections.assignees.includes(item.id)}
-              />
-            ))}
-          </DropDownPanel>
+        <DropDownIndicator indicator="담당자" size="L">
+          {isPanelOpen === 'users' && (
+            <>
+              <div css={dim} onClick={handleDimClick}></div>
+              <DropDownPanel panelHeader="담당자 설정" position="center">
+                {assigneeOptions?.map((item) => (
+                  <DropDownList
+                    key={item.id}
+                    item={item}
+                    onClick={() => onMultipleSelectedAssignee(item.id)}
+                    isSelected={selections.assignees.includes(item.id)}
+                  />
+                ))}
+              </DropDownPanel>
+            </>
+          )}
         </DropDownIndicator>
         <ListAssignee selectedAssigneesData={selectedAssigneesData} />
       </div>
       <div css={commonStyles} onClick={() => openPanel(getLabels, 'labels')}>
-        <DropDownIndicator
-          indicator="레이블"
-          size="L"
-          onDimClick={handleDimClick}
-          isPanelOpen={isPanelOpen === 'labels'}
-        >
-          <DropDownPanel panelHeader="레이블 설정" position="center">
-            {labelOptions?.map((item) => (
-              <DropDownList
-                key={item.id}
-                item={item}
-                onClick={() => onMultipleSelectedLabel(item.id)}
-                isSelected={selections.labels.includes(item.id)}
-              />
-            ))}
-          </DropDownPanel>
+        <DropDownIndicator indicator="레이블" size="L">
+          {isPanelOpen === 'labels' && (
+            <>
+              <div css={dim} onClick={handleDimClick}></div>
+              <DropDownPanel panelHeader="레이블 설정" position="center">
+                {labelOptions?.map((item) => (
+                  <DropDownList
+                    key={item.id}
+                    item={item}
+                    onClick={() => onMultipleSelectedLabel(item.id)}
+                    isSelected={selections.labels.includes(item.id)}
+                  />
+                ))}
+              </DropDownPanel>
+            </>
+          )}
         </DropDownIndicator>
         <ListLabel selectedLabelsData={selectedLabelsData} />
       </div>
@@ -182,25 +205,33 @@ export const ListSideBar: React.FC<Props> = ({
         css={commonStyles}
         onClick={() => openPanel(getMilestones, 'milestones')}
       >
-        <DropDownIndicator
-          indicator="마일스톤"
-          size="L"
-          onDimClick={handleDimClick}
-          isPanelOpen={isPanelOpen === 'milestones'}
-        >
-          <DropDownPanel panelHeader="마일스톤 설정" position="center">
-            {milestoneOptions?.map((item) => (
-              <DropDownList
-                key={item.id}
-                item={item}
-                onClick={() => onSingleSelectedMilestone(item.id)}
-                isSelected={selections.milestones.includes(item.id)}
-              />
-            ))}
-          </DropDownPanel>
+        <DropDownIndicator indicator="마일스톤" size="L">
+          {isPanelOpen === 'milestones' && (
+            <>
+              <div css={dim} onClick={handleDimClick}></div>
+              <DropDownPanel panelHeader="마일스톤 설정" position="center">
+                {milestoneOptions?.map((item) => (
+                  <DropDownList
+                    key={item.id}
+                    item={item}
+                    onClick={() => onSingleSelectedMilestone(item.id)}
+                    isSelected={selections.milestones.includes(item.id)}
+                  />
+                ))}
+              </DropDownPanel>
+            </>
+          )}
         </DropDownIndicator>
         <ListMilestone selectedMilestonesData={selectedMilestonesData} />
       </div>
     </>
   );
 };
+const dim = css`
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+`;

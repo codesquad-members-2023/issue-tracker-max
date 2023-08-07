@@ -1,6 +1,4 @@
 import { useTheme } from '@emotion/react';
-import { css } from '@emotion/react';
-import React, { useState } from 'react';
 import { ReactComponent as ChevronDown } from '@assets/icons/chevronDown.svg';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 
@@ -12,16 +10,12 @@ type Props = {
   size: keyof typeof SIZE;
   indicator: Indicator;
   children: React.ReactNode;
-  isPanelOpen: boolean;
-  onDimClick: (event: React.MouseEvent) => void;
 };
 
 export const DropDownIndicator: React.FC<Props> = ({
   size,
   indicator,
   children,
-  isPanelOpen,
-  onDimClick,
 }) => {
   const theme = useTheme() as any;
 
@@ -53,24 +47,10 @@ export const DropDownIndicator: React.FC<Props> = ({
           <ChevronDown stroke={theme.neutral.text.default} />
         )}
       </Button>
-      {isPanelOpen && (
-        <>
-          <div css={dim} onClick={onDimClick}></div>
-          {children}
-        </>
-      )}
+      {children}
     </div>
   );
 };
-
-const dim = css`
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  width: 100vw;
-  height: 100vh;
-`;
 
 const SIZE = {
   L: {
