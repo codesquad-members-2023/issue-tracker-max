@@ -18,6 +18,7 @@ import codesquard.app.label.repository.LabelRepository;
 import codesquard.app.milestone.entity.MilestoneStatus;
 import codesquard.app.milestone.repository.MilestoneRepository;
 
+@Transactional
 @Service
 public class LabelService {
 	private final LabelRepository labelRepository;
@@ -28,23 +29,19 @@ public class LabelService {
 		this.milestoneRepository = milestoneRepository;
 	}
 
-	@Transactional
 	public Long saveLabel(final LabelSaveRequest labelSaveRequest) {
 		Label label = LabelSaveRequest.toEntity(labelSaveRequest);
 		return labelRepository.save(label).orElseThrow(() -> new NoSuchLabelException(LabelErrorCode.NOT_FOUND_LABEL));
 	}
 
-	@Transactional
 	public void updateLabel(final Long labelId, final LabelUpdateRequest labelUpdateRequest) {
 		labelRepository.updateBy(labelId, LabelUpdateRequest.toEntity(labelUpdateRequest));
 	}
 
-	@Transactional
 	public void deleteLabel(final Long labelId) {
 		labelRepository.deleteBy(labelId);
 	}
 
-	@Transactional
 	public LabelReadResponse makeLabelReadResponse() {
 		// 1. labels 배열
 		List<LabelsResponse> labels = toDto();
