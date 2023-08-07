@@ -113,7 +113,7 @@ public class IssueService {
 
 	@Transactional
 	private void existIssue(Long issueId) {
-		if (!issueRepository.exist(issueId)) {
+		if (!issueRepository.isExist(issueId)) {
 			throw new NoSuchIssueException();
 		}
 	}

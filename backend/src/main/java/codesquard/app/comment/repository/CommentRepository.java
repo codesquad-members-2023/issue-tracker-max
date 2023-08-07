@@ -52,7 +52,7 @@ public class CommentRepository {
 		template.update(sql, Map.of("issueId", issueId));
 	}
 
-	public boolean isExists(Long id) {
+	public boolean isExist(Long id) {
 		String sql = "SELECT EXISTS (SELECT 1 FROM comment WHERE id = :id AND is_deleted = false)";
 		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", id), Boolean.class));
 	}

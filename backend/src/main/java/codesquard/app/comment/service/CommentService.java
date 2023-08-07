@@ -49,13 +49,13 @@ public class CommentService {
 	}
 
 	private void validateIssueId(Long issueId) {
-		if (!issueRepository.exist(issueId)) {
+		if (!issueRepository.isExist(issueId)) {
 			throw new NoSuchIssueException();
 		}
 	}
 
 	private void validateCommentId(Long commentId) {
-		if (!commentRepository.isExists(commentId)) {
+		if (!commentRepository.isExist(commentId)) {
 			throw new NoSuchCommentException();
 		}
 	}
