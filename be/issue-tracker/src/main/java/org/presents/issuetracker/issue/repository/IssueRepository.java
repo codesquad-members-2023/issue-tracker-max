@@ -3,6 +3,7 @@ package org.presents.issuetracker.issue.repository;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -94,4 +95,10 @@ public class IssueRepository {
 			.build());
 	}
 
+	public boolean existsById(Long issueId) {
+		final String sql = "SELECT COUNT(*) FROM issue WHERE issue_id = :issueId";
+
+		return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+			Map.of("issue_id", issueId), Integer.class)).orElse(0) > 0;
+	}
 }
