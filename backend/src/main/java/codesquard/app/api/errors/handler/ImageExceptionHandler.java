@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import codesquard.app.api.errors.exception.EmptyFileException;
 import codesquard.app.api.response.ApiResponse;
+import codesquard.app.api.response.ResponseMessage;
 
 @RestControllerAdvice
 public class ImageExceptionHandler {
@@ -21,7 +22,7 @@ public class ImageExceptionHandler {
 	public ApiResponse<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
 		return ApiResponse.of(
 			HttpStatus.BAD_REQUEST,
-			e.getMessage(),
+			ResponseMessage.MAXIMUM_UPLOAD_SIZE_EXCEEDED,
 			null
 		);
 	}

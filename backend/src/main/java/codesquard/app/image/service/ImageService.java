@@ -1,4 +1,4 @@
-package codesquard.app.image;
+package codesquard.app.image.service;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class S3Uploader {
+public class ImageService {
 
 	private final AmazonS3Client amazonS3Client;
 
