@@ -15,6 +15,7 @@ public class IssueSearch {
 	private Long id;
 	private String title;
 	private String authorLoginId;
+	private List<String> assigneeImages;
 	private List<LabelSearch> labels;
 	private MilestoneSearch milestone;
 	private LocalDateTime createdAt;
@@ -25,6 +26,7 @@ public class IssueSearch {
 			.id(issue.getId())
 			.title(issue.getTitle())
 			.authorLoginId(issue.getAuthorLoginId())
+			.assigneeImages(issue.getGeneratedAssigneeImages())
 			.labels(issue.getLabels().stream().map(LabelSearch::fromEntity).collect(Collectors.toUnmodifiableList()))
 			.milestone(MilestoneSearch.fromEntity(issue.getMilestone()))
 			.createdAt(issue.getCreatedAt())

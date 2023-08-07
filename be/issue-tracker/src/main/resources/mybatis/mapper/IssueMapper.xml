@@ -15,12 +15,17 @@
             <result property="name" column="milestone_name"/>
         </association>
 
+        <collection property="assigneeImages" ofType="AssigneeImage">
+            <result property="image" column="assignee_image"/>
+        </collection>
+
         <collection property="labels" ofType="Label">
             <id property="id" column="label_id"/>
             <result property="name" column="label_name"/>
             <result property="textColor" column="label_text_color"/>
             <result property="backgroundColor" column="label_background_color"/>
         </collection>
+
     </resultMap>
 
     <select id="getIssues" resultMap="issueResultMap"
@@ -30,6 +35,7 @@
         i.status as issue_status,
         i.created_at as issue_created_at,
         author.login_id as author_login_id,
+        assignee_user.image as assignee_image,
         l.label_id as label_id,
         l.name as label_name,
         l.text_color as label_text_color,
