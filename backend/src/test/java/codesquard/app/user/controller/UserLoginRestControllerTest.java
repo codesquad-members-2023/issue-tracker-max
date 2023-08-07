@@ -32,7 +32,7 @@ class UserLoginRestControllerTest extends ControllerTestSupport {
 		mockMvc = MockMvcBuilders.standaloneSetup(
 				new UserLoginRestController(jwtProvider, objectMapper, authenticateUserService))
 			.setControllerAdvice(new GlobalExceptionHandler())
-			.addFilter(new VerifyUserFilter(objectMapper, userService))
+			.addFilter(new VerifyUserFilter(objectMapper, userQueryService))
 			.build();
 	}
 
@@ -43,7 +43,7 @@ class UserLoginRestControllerTest extends ControllerTestSupport {
 		UserLoginRequest userLoginRequest = new UserLoginRequest("hong1234", "hong1234");
 		AuthenticateUser mockAuthenticateUser = new AuthenticateUser(1L, "hong1234", "hong1234@gmail.com", null);
 		// mocking
-		when(userService.verifyUser(Mockito.any(UserLoginServiceRequest.class))).thenReturn(mockAuthenticateUser);
+		when(userQueryService.verifyUser(Mockito.any(UserLoginServiceRequest.class))).thenReturn(mockAuthenticateUser);
 		// when & then
 		mockMvc.perform(post("/api/login")
 				.content(objectMapper.writeValueAsString(userLoginRequest))
@@ -66,7 +66,7 @@ class UserLoginRestControllerTest extends ControllerTestSupport {
 		// given
 		UserLoginRequest userLoginRequest = new UserLoginRequest("", "hong1234");
 		// mocking
-		when(userService.verifyUser(Mockito.any(UserLoginServiceRequest.class)))
+		when(userQueryService.verifyUser(Mockito.any(UserLoginServiceRequest.class)))
 			.thenThrow(new RestApiException(UserErrorCode.NOT_FOUND_USER));
 		// when & then
 		mockMvc.perform(post("/api/login")

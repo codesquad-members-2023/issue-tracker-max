@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,7 @@ import codesquard.app.user.controller.response.UserLoginResponse;
 import codesquard.app.user.entity.AuthenticateUser;
 import codesquard.app.user.service.AuthenticateUserService;
 
+@RequestMapping(path = "/api")
 @RestController
 public class UserLoginRestController {
 
@@ -40,7 +42,7 @@ public class UserLoginRestController {
 		this.authenticateUserService = authenticateUserService;
 	}
 
-	@PostMapping("/api/login")
+	@PostMapping("/login")
 	public ResponseEntity<UserLoginResponse> login(HttpServletRequest request, HttpServletResponse response) throws
 		IOException {
 		Object attribute = request.getAttribute(VerifyUserFilter.AUTHENTICATE_USER);

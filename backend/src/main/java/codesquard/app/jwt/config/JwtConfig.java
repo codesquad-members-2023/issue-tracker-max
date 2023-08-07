@@ -13,16 +13,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codesquard.app.jwt.JwtProvider;
 import codesquard.app.jwt.filter.JwtAuthorizationFilter;
 import codesquard.app.jwt.filter.VerifyUserFilter;
-import codesquard.app.user.service.UserService;
+import codesquard.app.user.service.UserQueryService;
 
 @Configuration
 public class JwtConfig {
 	private static final Logger logger = LoggerFactory.getLogger(JwtConfig.class);
 
 	@Bean
-	public FilterRegistrationBean verifyUserFilter(ObjectMapper objectMapper, UserService userService) {
+	public FilterRegistrationBean verifyUserFilter(ObjectMapper objectMapper, UserQueryService userQueryService) {
 		FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
-		filterFilterRegistrationBean.setFilter(new VerifyUserFilter(objectMapper, userService));
+		filterFilterRegistrationBean.setFilter(new VerifyUserFilter(objectMapper, userQueryService));
 		filterFilterRegistrationBean.addUrlPatterns("/api/login");
 		return filterFilterRegistrationBean;
 	}

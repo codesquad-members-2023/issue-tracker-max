@@ -27,6 +27,9 @@ class AuthenticateUserServiceTest extends IntegrationTestSupport {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private UserQueryService userQueryService;
+
 	@Transactional
 	@Test
 	@DisplayName("refreshToken이 주어지고 토큰 갱신을 요청할때 토큰이 갱신된다")
@@ -38,7 +41,8 @@ class AuthenticateUserServiceTest extends IntegrationTestSupport {
 		// 인증 유저 및 jwt 생성
 		HashMap<String, Object> claims = new HashMap<>();
 		Jwt jwt = jwtProvider.createJwt(claims);
-		AuthenticateUser authenticateUser = userService.verifyUser(new UserLoginServiceRequest("hong1234", "hong1234"));
+		AuthenticateUser authenticateUser = userQueryService.verifyUser(
+			new UserLoginServiceRequest("hong1234", "hong1234"));
 		authenticateUserService.updateRefreshToken(authenticateUser, jwt);
 		RefreshTokenServiceRequest refreshTokenServiceRequest = new RefreshTokenServiceRequest(
 			jwt.createRefreshTokenCookie().getValue());

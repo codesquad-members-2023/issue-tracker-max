@@ -22,17 +22,17 @@ import codesquard.app.errors.response.ErrorResponse;
 import codesquard.app.errors.response.ErrorResultResponse;
 import codesquard.app.user.controller.request.UserLoginRequest;
 import codesquard.app.user.entity.AuthenticateUser;
-import codesquard.app.user.service.UserService;
+import codesquard.app.user.service.UserQueryService;
 
 public class VerifyUserFilter implements Filter {
 	public static final String AUTHENTICATE_USER = "authenticateUser";
 	private static final Logger logger = LoggerFactory.getLogger(VerifyUserFilter.class);
 	private final ObjectMapper objectMapper;
-	private final UserService userService;
+	private final UserQueryService userQueryService;
 
-	public VerifyUserFilter(ObjectMapper objectMapper, UserService userService) {
+	public VerifyUserFilter(ObjectMapper objectMapper, UserQueryService userQueryService) {
 		this.objectMapper = objectMapper;
-		this.userService = userService;
+		this.userQueryService = userQueryService;
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class VerifyUserFilter implements Filter {
 			try {
 				// 로그인 아이디에 따른 회원이 있는지 확인
 				AuthenticateUser authenticateUser =
-					userService.verifyUser(userLoginRequest.toUserLoginServiceRequest());
+					userQueryService.verifyUser(userLoginRequest.toUserLoginServiceRequest());
 				logger.info("authenticateUser : {}", authenticateUser);
 				// request 객체에 인증 유저 설정
 				request.setAttribute(AUTHENTICATE_USER, authenticateUser);
