@@ -14,10 +14,11 @@ export default function Login() {
   const logo = (util.getLogoByTheme() as ContextLogo).large;
   const navigate = useNavigate();
   const location = useLocation();
+  // 로그인 화면 넘어오기 전 페이지를 기억해서 로그인 성공 시 그 페이지로 이동
   const from = location.state?.from?.pathname || '/';
 
-  const handleLogin = (id: string, password: string) => {
-    (async function () {
+  const handleLogin = async (id: string, password: string) => {
+    try {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: {
@@ -38,7 +39,9 @@ export default function Login() {
       }
 
       navigate(from, { replace: true });
-    })();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
