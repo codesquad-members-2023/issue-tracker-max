@@ -10,7 +10,7 @@ export function Header() {
     <Div onClick={() => navigate("/")}>
       <Anchor>
         <Icon
-          name="logoLightMedium"
+          name="logoMedium"
           fill={theme.color.neutralTextStrong}
           stroke={theme.color.neutralTextStrong}
         />
