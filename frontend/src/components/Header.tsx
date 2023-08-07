@@ -7,8 +7,8 @@ export function Header() {
   const theme = useTheme();
 
   return (
-    <Div onClick={() => navigate("/")}>
-      <Anchor>
+    <Div>
+      <Anchor onClick={() => navigate("/")}>
         <Icon
           name="logoMedium"
           fill={theme.color.neutralTextStrong}

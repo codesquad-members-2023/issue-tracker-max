@@ -54,6 +54,7 @@ const fillTypes = [
   "userImageSmall",
   "comment",
   "logoMedium",
+  "logoLarge",
 ];
 
 const getIcon = (name: string) => {
