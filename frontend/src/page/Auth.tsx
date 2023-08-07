@@ -74,6 +74,10 @@ export function Auth() {
     }
   };
 
+  const checkInput = (value: string, isValid: boolean) => {
+    return !(value === "") && !isValid;
+  };
+
   return (
     <Div>
       <AuthWrapper>
@@ -97,9 +101,9 @@ export function Auth() {
             label="아이디"
             placeholder="아이디"
             value={id}
-            isError={!(id === "") && !isValidId}
+            isError={checkInput(id, isValidId)}
             caption={
-              !(id === "") && !isValidId
+              checkInput(id, isValidId)
                 ? "6자리에서 16자리 까지 입력해주세요"
                 : ""
             }
@@ -112,9 +116,9 @@ export function Auth() {
             placeholder={"비밀번호"}
             value={password}
             type="password"
-            isError={!(password === "") && !isValidPassword}
+            isError={checkInput(password, isValidPassword)}
             caption={
-              !(password === "") && !isValidPassword
+              checkInput(password, isValidPassword)
                 ? "6자리에서 12자리 까지 입력해주세요"
                 : ""
             }
@@ -129,9 +133,9 @@ export function Auth() {
                 placeholder={"비밀번호 확인"}
                 value={passwordCheck}
                 type="password"
-                isError={!(passwordCheck === "") && !isPasswordMatch}
+                isError={checkInput(passwordCheck, isPasswordMatch)}
                 caption={
-                  !(passwordCheck === "") && !isPasswordMatch
+                  checkInput(passwordCheck, isPasswordMatch)
                     ? "비밀번호를 확인해 주세요"
                     : ""
                 }
@@ -143,9 +147,9 @@ export function Auth() {
                 label="이메일"
                 placeholder="이메일"
                 value={email}
-                isError={!(email === "") && !isValidEmail}
+                isError={checkInput(email, isValidEmail)}
                 caption={
-                  !(email === "") && !isValidEmail
+                  checkInput(email, isValidEmail)
                     ? "이메일 형식에 맞게 입력해 주세요"
                     : ""
                 }
