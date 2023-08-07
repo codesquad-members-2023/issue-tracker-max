@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.comment.repository.CommentRepository;
-import codesquard.app.errors.errorcode.IssueErrorCode;
-import codesquard.app.errors.exception.IllegalIssueStatusException;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -48,13 +46,8 @@ public class IssueService {
 	}
 
 	public void modifyStatus(IssueModifyStatusRequest issueModifyStatusRequest, Long issueId) {
+		IssueStatus issueStatus = IssueStatus.validateIssueStatus(issueModifyStatusRequest.getStatus());
 		issueQueryService.existIssue(issueId);
-		IssueStatus issueStatus;
-		try {
-			issueStatus = IssueStatus.valueOf(issueModifyStatusRequest.getStatus());
-		} catch (IllegalArgumentException e) {
-			throw new IllegalIssueStatusException(IssueErrorCode.INVALID_ISSUE_STATUS);
-		}
 		issueRepository.modifyStatus(issueStatus.name(), issueId);
 	}
 
