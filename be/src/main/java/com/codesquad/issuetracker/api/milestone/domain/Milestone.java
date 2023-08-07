@@ -16,7 +16,7 @@ public class Milestone {
 
     @Builder
     public Milestone(Long id, String title, String description, LocalDate dueDate, boolean isClosed,
-            Long organizationId) {
+        Long organizationId) {
         this.id = id;
         this.title = title;
         this.description = description;
