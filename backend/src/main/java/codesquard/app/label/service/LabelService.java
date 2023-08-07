@@ -1,13 +1,11 @@
 package codesquard.app.label.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.errors.errorcode.LabelErrorCode;
-import codesquard.app.errors.exception.IllegalIssueStatusException;
 import codesquard.app.errors.exception.NoSuchLabelException;
 import codesquard.app.label.dto.response.LabelReadResponse;
 import codesquard.app.label.dto.request.LabelSaveRequest;
@@ -44,7 +42,7 @@ public class LabelService {
 
 	public LabelReadResponse makeLabelReadResponse() {
 		// 1. labels 배열
-		List<LabelsResponse> labels = toDto();
+		List<LabelsResponse> labels = LabelsResponse.toDtoList(labelRepository.findAll());
 
 		// 2. labelCount 가져오기
 		Long labelCount = milestoneRepository.countLabels();
@@ -53,12 +51,5 @@ public class LabelService {
 		Long openedMilestoneCount = milestoneRepository.countMilestonesBy(MilestoneStatus.OPENED);
 
 		return new LabelReadResponse(openedMilestoneCount, labelCount, labels);
-	}
-
-	private List<LabelsResponse> toDto() {
-		return labelRepository.findAll()
-			.stream()
-			.map(LabelsResponse::fromEntity)
-			.collect(Collectors.toUnmodifiableList());
 	}
 }
