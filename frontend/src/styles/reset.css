@@ -92,6 +92,7 @@ video {
   font-size: 100%;
   vertical-align: baseline;
 }
+
 article,
 aside,
 details,
@@ -106,21 +107,26 @@ nav,
 section {
   display: block;
 }
+
 [hidden] {
   display: none;
 }
+
 body {
   line-height: 1;
 }
+
 menu,
 ol,
 ul {
   list-style: none;
 }
+
 blockquote,
 q {
   quotes: none;
 }
+
 blockquote:after,
 blockquote:before,
 q:after,
@@ -128,10 +134,12 @@ q:before {
   content: "";
   content: none;
 }
+
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
 button {
   background-color: transparent;
   border: none;
