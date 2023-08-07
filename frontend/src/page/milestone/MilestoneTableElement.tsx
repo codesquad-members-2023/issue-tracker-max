@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { styled, useTheme } from "styled-components";
 import { Button } from "../../components/Button";
-import { Icon } from "../../components/Icon";
+import { Icon } from "../../components/icon/Icon";
 import { MilestoneData } from "./Milestone";
 import { MilestoneEditor } from "./MilestoneEditor";
 
@@ -55,19 +55,11 @@ export function MilestoneTableElement({
           <MilestoneInfo>
             <div>
               <Title>
-                <Icon
-                  name="milestone"
-                  fill={theme.color.paletteBlue}
-                  stroke={theme.color.paletteBlue}
-                />
+                <Icon name="Milestone" color="paletteBlue" />
                 <span>{milestone.name}</span>
               </Title>
               <Deadline>
-                <Icon
-                  name="calendar"
-                  fill={theme.color.neutralTextWeak}
-                  stroke={theme.color.neutralTextWeak}
-                />
+                <Icon name="Calendar" color="neutralTextWeak" />
                 <span>{milestone.deadline}</span>
               </Deadline>
             </div>
@@ -77,7 +69,7 @@ export function MilestoneTableElement({
             <Buttons>
               <Button
                 size="S"
-                icon="archive"
+                icon="Archive"
                 buttonType="Ghost"
                 onClick={changeStatus}
               >
@@ -85,7 +77,7 @@ export function MilestoneTableElement({
               </Button>
               <Button
                 size="S"
-                icon="edit"
+                icon="Edit"
                 buttonType="Ghost"
                 onClick={onClickEdit}
               >
@@ -93,7 +85,7 @@ export function MilestoneTableElement({
               </Button>
               <Button
                 size="S"
-                icon="trash"
+                icon="Trash"
                 buttonType="Ghost"
                 color={theme.color.dangerSurfaceDefault}
                 onClick={deleteMilestone}

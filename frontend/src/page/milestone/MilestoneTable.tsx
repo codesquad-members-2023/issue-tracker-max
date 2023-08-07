@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TabButton } from "../../components/TabButton";
+import { IconType } from "../../components/icon/Icon";
 import { MilestoneData } from "./Milestone";
 import { MilestoneTableElement } from "./MilestoneTableElement";
 
@@ -12,6 +13,13 @@ type MilestoneTableProps = {
   status: "OPENED" | "CLOSED";
 };
 
+type Tab = {
+  name: string;
+  icon: keyof IconType;
+  selected: boolean;
+  onClick: () => void;
+};
+
 export function MilestoneTable({
   milestones,
   openCount,
@@ -20,10 +28,10 @@ export function MilestoneTable({
 }: MilestoneTableProps) {
   const navigate = useNavigate();
 
-  const tabs = [
+  const tabs: Tab[] = [
     {
       name: `열린 마일스톤(${openCount})`,
-      icon: "alertCircle",
+      icon: "AlertCircle",
       selected: status === "OPENED",
       onClick: () => {
         navigate("/milestone/opened");
@@ -31,7 +39,7 @@ export function MilestoneTable({
     },
     {
       name: `닫힌 마일스톤(${closeCount})`,
-      icon: "archive",
+      icon: "Archive",
       selected: status === "CLOSED",
       onClick: () => {
         navigate("/milestone/closed");

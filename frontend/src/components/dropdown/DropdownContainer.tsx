@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { styled } from "styled-components";
+import { IconColor } from "../icon/Icon";
 import { DropdownIndicator } from "./DropdownIndicator";
 import { DropdownPanel } from "./DropdownPanel";
 
@@ -17,7 +18,7 @@ export function DropdownContainer({
   options: {
     name: string;
     profile?: string;
-    background?: string;
+    background?: IconColor;
     selected: boolean;
     onClick: () => void;
   }[];

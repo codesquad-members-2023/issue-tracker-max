@@ -1,4 +1,5 @@
 import { css, styled } from "styled-components";
+import { IconColor } from "../icon/Icon";
 import { DropdownOption } from "./DropdownOption";
 
 export function DropdownPanel({
@@ -13,7 +14,7 @@ export function DropdownPanel({
   options: {
     name: string;
     profile?: string;
-    background?: string;
+    background?: IconColor;
     selected: boolean;
     onClick: () => void;
   }[];

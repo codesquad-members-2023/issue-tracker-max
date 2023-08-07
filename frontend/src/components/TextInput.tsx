@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import styled, { useTheme } from "styled-components";
-import { Icon } from "./Icon";
+import styled from "styled-components";
+import { Icon, IconType } from "./icon/Icon";
 
 type TextInputProps = {
   width?: number;
@@ -9,7 +9,7 @@ type TextInputProps = {
   placeholder?: string;
   label?: string;
   caption?: string;
-  icon?: string;
+  icon?: keyof IconType;
   fixLabel?: boolean;
   borderNone?: boolean;
   disabled?: boolean;
@@ -81,9 +81,6 @@ export function TextInput({
     onBlur && onBlur();
   };
 
-  const theme = useTheme();
-  const iconColor = theme.color.neutralTextDefault;
-
   return (
     <Div $state={state} $width={width}>
       <InputContainer
@@ -97,7 +94,7 @@ export function TextInput({
         )}
         {icon && (
           <IconWrapper>
-            <Icon name={icon} fill={iconColor} stroke={iconColor} />
+            <Icon name={icon} color="neutralTextDefault" />
           </IconWrapper>
         )}
         <Input

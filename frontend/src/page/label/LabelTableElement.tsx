@@ -37,7 +37,7 @@ export function LabelTableElement({ label }: { label: LabelData }) {
             <Button
               size="S"
               buttonType="Ghost"
-              icon="edit"
+              icon="Edit"
               onClick={onClickEdit}
             >
               편집
@@ -45,7 +45,7 @@ export function LabelTableElement({ label }: { label: LabelData }) {
             <Button
               size="S"
               buttonType="Ghost"
-              icon="trash"
+              icon="Trash"
               color={theme.color.dangerSurfaceDefault}
             >
               삭제

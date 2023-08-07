@@ -1,14 +1,15 @@
-import { styled, useTheme } from "styled-components";
+import { styled } from "styled-components";
 import { IssueData } from "../../page/main/Main";
 import { getElapsedSince } from "../../utils/getElapsedSince";
-import { Icon } from "../Icon";
 import { InformationTag } from "../InformationTag";
+import { Icon, ThemeColorKeys } from "../icon/Icon";
 
 export function Issue({ issue }: { issue: IssueData }) {
-  const theme = useTheme();
-  const iconColors = {
-    issueTitle: theme.color.paletteBlue,
-    issueInfo: theme.color.neutralTextWeak,
+  const iconColors: {
+    [key: string]: ThemeColorKeys;
+  } = {
+    issueTitle: "paletteBlue",
+    issueInfo: "neutralTextWeak",
   };
 
   return (
@@ -20,11 +21,7 @@ export function Issue({ issue }: { issue: IssueData }) {
       </div>
       <IssueContent>
         <IssueTitle>
-          <Icon
-            name="alertCircle"
-            fill={iconColors.issueTitle}
-            stroke={iconColors.issueTitle}
-          />
+          <Icon name="AlertCircle" color={iconColors.issueTitle} />
           <TitleAnchor>{issue.title}</TitleAnchor>
           {issue.labels.map((label, index) => (
             <InformationTag
@@ -45,11 +42,7 @@ export function Issue({ issue }: { issue: IssueData }) {
           </span>
           {issue.milestone && (
             <span>
-              <Icon
-                name="milestone"
-                fill={iconColors.issueInfo}
-                stroke={iconColors.issueInfo}
-              />
+              <Icon name="Milestone" color={iconColors.issueInfo} />
               {issue.milestone.name}
             </span>
           )}
@@ -64,11 +57,7 @@ export function Issue({ issue }: { issue: IssueData }) {
       <CommentDiv>
         {issue.commentCount !== 0 && (
           <>
-            <Icon
-              name="comment"
-              fill={iconColors.issueInfo}
-              stroke={iconColors.issueInfo}
-            />
+            <Icon name="Comment" color={iconColors.issueInfo} />
             <span>{issue.commentCount}</span>
           </>
         )}

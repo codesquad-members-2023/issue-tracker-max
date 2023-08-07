@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import { Button } from "../Button";
 import { TabButton } from "../TabButton";
 import { DropdownContainer } from "../dropdown/DropdownContainer";
+import { IconType } from "../icon/Icon";
 
 type TableHeaderProps = {
   openedIssueCount: number;
@@ -18,10 +19,10 @@ export function IssueTableHeader({
   const [issueStates, setIssueStates] = useState([
     {
       name: `열린 이슈${openedIssueCount}`,
-      icon: "alertCircle",
+      icon: "AlertCircle" as keyof IconType,
       selected: true,
     },
-    { name: `닫힌 이슈${closedIssueCount}`, icon: "archive" },
+    { name: `닫힌 이슈${closedIssueCount}`, icon: "Archive" as keyof IconType },
   ]);
 
   const onIssueStateClick = (name: string) => {
