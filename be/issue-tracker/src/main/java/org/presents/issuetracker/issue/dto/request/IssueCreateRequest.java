@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class IssueCreateRequestDto {
+public class IssueCreateRequest {
 	private String title;
 	private String contents;
 	private Long authorId;

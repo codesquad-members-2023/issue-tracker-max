@@ -3,7 +3,7 @@ package org.presents.issuetracker.issue.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.presents.issuetracker.issue.dto.request.IssueCreateRequestDto;
+import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 import org.presents.issuetracker.issue.dto.response.IssueSearch;
@@ -26,17 +26,17 @@ public class IssueService {
 	private final IssueMapper issueMapper;
 
 	@Transactional(rollbackFor = Exception.class)
-	public Long create(IssueCreateRequestDto issueCreateRequestDto) {
+	public Long create(IssueCreateRequest issueCreateRequest) {
 		Long savedIssueId = issueRepository.save(
 			Issue.builder()
-				.title(issueCreateRequestDto.getTitle())
-				.authorId(issueCreateRequestDto.getAuthorId())
-				.contents(issueCreateRequestDto.getContents())
+				.title(issueCreateRequest.getTitle())
+				.authorId(issueCreateRequest.getAuthorId())
+				.contents(issueCreateRequest.getContents())
 				.build()
 		);
 
 		issueRepository.addAssignee(
-			issueCreateRequestDto.getAssigneeIds().stream()
+			issueCreateRequest.getAssigneeIds().stream()
 				.map(assigneeId ->
 					Assignee.builder()
 						.issueId(savedIssueId)
@@ -47,7 +47,7 @@ public class IssueService {
 		);
 
 		issueRepository.addLabel(
-			issueCreateRequestDto.getLabelIds().stream()
+			issueCreateRequest.getLabelIds().stream()
 				.map(labelId ->
 					IssueLabel.builder()
 						.issueId(savedIssueId)
@@ -58,7 +58,7 @@ public class IssueService {
 		);
 
 		issueRepository.setMilestone(
-			savedIssueId, issueCreateRequestDto.getMilestoneId()
+			savedIssueId, issueCreateRequest.getMilestoneId()
 		);
 
 		return savedIssueId;
