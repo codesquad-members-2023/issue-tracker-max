@@ -1,4 +1,4 @@
-import { Children, cloneElement, ReactElement } from "react";
+import { ReactNode } from "react";
 import { styled } from "styled-components";
 
 export function TabButton({
@@ -6,16 +6,12 @@ export function TabButton({
   children,
 }: {
   type?: "Ghost" | "Outline";
-  children: ReactElement[];
+  children: ReactNode;
 }) {
   const TabButtonDiv =
     type === "Ghost" ? GhostTabButtonDiv : OutlineTabButtonDiv;
 
-  return (
-    <TabButtonDiv>
-      {Children.map(children, (child) => cloneElement(child))}
-    </TabButtonDiv>
-  );
+  return <TabButtonDiv>{children}</TabButtonDiv>;
 }
 
 const BaseTabButtonDiv = styled.div`
