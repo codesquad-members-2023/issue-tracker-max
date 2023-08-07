@@ -13,10 +13,8 @@ import { ReactComponent as Comment } from "../assets/comment.svg";
 import { ReactComponent as Edit } from "../assets/edit.svg";
 import { ReactComponent as Grip } from "../assets/grip.svg";
 import { ReactComponent as Label } from "../assets/label.svg";
-import { ReactComponent as LogoDarkLarge } from "../assets/logoDarkLarge.svg";
-import { ReactComponent as LogoDarkMedium } from "../assets/logoDarkMedium.svg";
-import { ReactComponent as LogoLightLarge } from "../assets/logoLightLarge.svg";
-import { ReactComponent as LogoLightMedium } from "../assets/logoLightMedium.svg";
+import { ReactComponent as LogoLarge } from "../assets/logoLarge.svg";
+import { ReactComponent as LogoMedium } from "../assets/logoMedium.svg";
 import { ReactComponent as Milestone } from "../assets/milestone.svg";
 import { ReactComponent as PaperClip } from "../assets/paperclip.svg";
 import { ReactComponent as Plus } from "../assets/plus.svg";
@@ -50,7 +48,13 @@ export function Icon({
   );
 }
 
-const fillTypes = ["milestone", "userImageLarge", "userImageSmall", "comment"];
+const fillTypes = [
+  "milestone",
+  "userImageLarge",
+  "userImageSmall",
+  "comment",
+  "logoMedium",
+];
 
 const getIcon = (name: string) => {
   switch (name) {
@@ -78,14 +82,10 @@ const getIcon = (name: string) => {
       return <Edit />;
     case "label":
       return <Label />;
-    case "logoDarkMedium":
-      return <LogoDarkMedium />;
-    case "logoDarkLarge":
-      return <LogoDarkLarge />;
-    case "logoLightMedium":
-      return <LogoLightMedium />;
-    case "logoLightLarge":
-      return <LogoLightLarge />;
+    case "logoMedium":
+      return <LogoMedium />;
+    case "logoLarge":
+      return <LogoLarge />;
     case "milestone":
       return <Milestone />;
     case "paperclip":

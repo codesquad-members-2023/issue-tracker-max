@@ -55,7 +55,14 @@ export function MilestoneEditor({
     } else {
       setIsButtonDisabled(isMilestoneNameEmpty || !isValidDeadline);
     }
-  }, [milestoneName, deadline, description, isValidDeadline]);
+  }, [
+    milestone,
+    milestoneName,
+    deadline,
+    description,
+    isValidDeadline,
+    isEditMode,
+  ]);
 
   const onChangeMilestoneName = (
     event: React.ChangeEvent<HTMLInputElement>,

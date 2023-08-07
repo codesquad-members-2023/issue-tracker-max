@@ -21,6 +21,7 @@ const Div = styled.div`
   flex-direction: column;
   border: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
   border-radius: ${({ theme }) => theme.radius.large};
+  background: ${({ theme }) => theme.color.neutralSurfaceStrong};
 `;
 
 const TableHeader = styled.div`
