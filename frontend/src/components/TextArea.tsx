@@ -91,6 +91,8 @@ export function TextArea({
     } else {
       setUploadErrorMessage("이미지 파일만 업로드 가능합니다.");
     }
+
+    e.target.value = "";
   };
 
   const isImageTypeFile = (file: File) => {
