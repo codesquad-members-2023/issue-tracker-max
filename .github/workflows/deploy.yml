@@ -6,7 +6,7 @@ on:
 
 env:
   working-directory: ./be
-  APPLICATION_YML_FILE_PATH: /issue/src/main/resources/application.yml
+  APPLICATION_YML_FILE_PATH: ./issue/src/main/resources/application.yml
   AWS_REGION: ap-northeast-2
   S3_BUCKET_NAME: issue-tracker-s3-bucket
   CODE_DEPLOY_APPLICATION_NAME: issue-tracker-codedeploy-app
