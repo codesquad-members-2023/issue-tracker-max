@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,6 +14,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import codesquard.app.errors.errorcode.LabelErrorCode;
+import codesquard.app.errors.exception.DuplicateLabelException;
 import codesquard.app.label.entity.Label;
 
 @Repository
@@ -30,8 +33,11 @@ public class JdbcLabelRepository implements LabelRepository {
 			+ "VALUES (:name, :color, :background, :description)";
 		SqlParameterSource param = Label.makeParam(label);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-
-		template.update(sql, param, keyHolder);
+		try {
+			template.update(sql, param, keyHolder);
+		} catch (DataIntegrityViolationException e) {
+			throw new DuplicateLabelException(LabelErrorCode.DUPLICATE_LABEL);
+		}
 
 		return Optional.ofNullable(keyHolder.getKey()).map(Number::longValue);
 	}

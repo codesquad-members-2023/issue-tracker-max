@@ -28,15 +28,6 @@ public class LabelSaveRequest {
 	private LabelSaveRequest() {
 	}
 
-	public LabelSaveRequest(final String name, final String color, final String background, final String description) {
-		this.name = name;
-		if (LabelColor.validateColor(color)) {
-			this.color = color;
-		}
-		this.background = background;
-		this.description = description;
-	}
-
 	public static Label toEntity(final LabelSaveRequest labelSaveRequest) {
 		return new Label(labelSaveRequest.name, labelSaveRequest.color, labelSaveRequest.background,
 			labelSaveRequest.description);

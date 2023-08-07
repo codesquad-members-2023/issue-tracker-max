@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquard.app.errors.errorcode.LabelErrorCode;
+import codesquard.app.errors.exception.IllegalIssueStatusException;
+import codesquard.app.errors.exception.NoSuchLabelException;
 import codesquard.app.label.dto.response.LabelReadResponse;
 import codesquard.app.label.dto.request.LabelSaveRequest;
 import codesquard.app.label.dto.request.LabelUpdateRequest;
@@ -28,7 +31,7 @@ public class LabelService {
 	@Transactional
 	public Long saveLabel(final LabelSaveRequest labelSaveRequest) {
 		Label label = LabelSaveRequest.toEntity(labelSaveRequest);
-		return labelRepository.save(label).orElseThrow(() -> new RuntimeException("임시"));
+		return labelRepository.save(label).orElseThrow(() -> new NoSuchLabelException(LabelErrorCode.NOT_FOUND_LABEL));
 	}
 
 	@Transactional
