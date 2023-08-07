@@ -129,11 +129,6 @@
         LEFT OUTER JOIN user comment_user ON c.author_id = comment_user.user_id
         <where>
             i.status != 'deleted'
-            <if test="status != null">
-                <trim prefix="AND">
-                    i.status = #{status}
-                </trim>
-            </if>
             <if test="authorName != null">
                 <trim prefix="AND">
                     author.login_id = #{authorName}
