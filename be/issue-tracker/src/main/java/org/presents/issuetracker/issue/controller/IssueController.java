@@ -3,17 +3,17 @@ package org.presents.issuetracker.issue.controller;
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequestDto;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
-import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
+import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
 import org.presents.issuetracker.issue.service.IssueService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,13 @@ public class IssueController {
 		return ResponseEntity.status(HttpStatus.OK).body(issueCreateResponse);
 	}
 
-	@GetMapping()
+	/*
+		이슈 목록 조회(메인 페이지)
+		1. GET("/issues") 이면 status="open"인 이슈 반환 -> 이슈 목록 조회(메인 페이지)
+		2. GET("/issues?query=") 이면 status="open"인 이슈, status="closed"인 이슈 모두 반환 -> filter 삭제 버튼 클릭 시
+		3. GET("/issues?query=status:closed") 이면 status="closed"인 이슈 반환 -> filter에 조건 값을 넣었을 시
+	 */
+	@GetMapping
 	public ResponseEntity<IssueSearchResponse> showIssues(@RequestParam(required = false) String query) {
 		IssueSearchParam issueSearchParam = IssueSearchParam.from(query);
 		return ResponseEntity.ok().body(issueService.getIssues(issueSearchParam));

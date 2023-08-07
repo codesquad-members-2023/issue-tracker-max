@@ -68,11 +68,7 @@ public class IssueService {
 	public IssueSearchResponse getIssues(IssueSearchParam issueSearchParam) {
 		List<IssueSearchVo> issues = issueMapper.getIssues(issueSearchParam);
 		IssueSearchCountVo counts = issueMapper.getIssueSearchCounts(issueSearchParam);
-		String status = "open";
-		if ((issueSearchParam != null) && (issueSearchParam.getStatus() != null)) {
-			status = issueSearchParam.getStatus();
-		}
-		return IssueSearchResponse.from(counts, IssueSearch.from(issues), status);
+		return IssueSearchResponse.from(counts, IssueSearch.from(issues));
 	}
 
 	public IssueDetailResponse getIssueDetail(Long issueId) {
