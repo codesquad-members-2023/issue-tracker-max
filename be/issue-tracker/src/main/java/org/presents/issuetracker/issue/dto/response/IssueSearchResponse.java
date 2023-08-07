@@ -2,7 +2,7 @@ package org.presents.issuetracker.issue.dto.response;
 
 import java.util.List;
 
-import org.presents.issuetracker.issue.entity.vo.IssueSearchCountVo;
+import org.presents.issuetracker.issue.entity.vo.IssueSearchCountInfo;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +16,7 @@ public class IssueSearchResponse {
 	private Long closedIssueCount;
 	private List<IssueSearch> issues;
 
-	public static IssueSearchResponse of(IssueSearchCountVo counts, List<IssueSearch> issues) {
+	public static IssueSearchResponse of(IssueSearchCountInfo counts, List<IssueSearch> issues) {
 		return IssueSearchResponse.builder()
 			.labelCount(counts.getLabelCount())
 			.milestoneCount(counts.getMilestoneCount())

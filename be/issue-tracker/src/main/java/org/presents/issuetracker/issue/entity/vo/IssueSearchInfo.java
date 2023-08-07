@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class IssueSearchVo {
+public class IssueSearchInfo {
 	private Long id;
 	private String title;
 	private User author;
@@ -24,7 +24,7 @@ public class IssueSearchVo {
 	private String status;
 
 	@Builder
-	public IssueSearchVo(Long id, String title, User author, List<Label> labels, Milestone milestone,
+	public IssueSearchInfo(Long id, String title, User author, List<Label> labels, Milestone milestone,
 		LocalDateTime createdAt, String status) {
 		this.id = id;
 		this.title = title;

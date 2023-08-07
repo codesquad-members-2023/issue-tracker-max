@@ -3,7 +3,7 @@
 
 <mapper namespace="org.presents.issuetracker.issue.mapper.IssueMapper">
 
-    <resultMap id="issueResultMap" type="IssueSearchVo">
+    <resultMap id="issueResultMap" type="IssueSearchInfo">
         <id property="id" column="issue_id"/>
         <result property="title" column="issue_title"/>
         <result property="status" column="issue_status"/>
@@ -107,7 +107,7 @@
         </where>
     </select>
 
-    <select id="getIssueSearchCounts" resultType="IssueSearchCountVo"
+    <select id="getIssueSearchCounts" resultType="IssueSearchCountInfo"
             parameterType="org.presents.issuetracker.issue.dto.request.IssueSearchParam">
         SELECT
         (SELECT COUNT(*)
