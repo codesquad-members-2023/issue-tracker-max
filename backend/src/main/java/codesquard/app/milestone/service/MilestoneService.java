@@ -28,7 +28,8 @@ public class MilestoneService {
 	@Transactional
 	public Long saveMilestone(final MilestoneSaveRequest milestoneSaveRequest) {
 		Milestone milestone = MilestoneSaveRequest.toEntity(milestoneSaveRequest);
-		return milestoneRepository.save(milestone).orElseThrow(() -> new RuntimeException("임시"));
+		return milestoneRepository.save(milestone)
+			.orElseThrow(() -> new NoSuchMilestoneException(MilestoneErrorCode.NOT_FOUND_MILESTONE));
 	}
 
 	@Transactional
