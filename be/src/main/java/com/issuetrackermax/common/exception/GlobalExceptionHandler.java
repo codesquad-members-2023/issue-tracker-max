@@ -13,9 +13,8 @@ import com.issuetrackermax.common.exception.response.ErrorResponse;
 public class GlobalExceptionHandler {
 	@ExceptionHandler(ApiException.class)
 	public ErrorResponse apiExceptionHandler(ApiException e) {
-		return new ErrorResponse(e.getCustomException().getHttpStatus().value(), e.getMessage());
+		return new ErrorResponse(e.getCustomException().getHttpStatus().value(), e.getCustomException().getMessage());
 	}
-
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ErrorResponse validationExceptionHandler(MethodArgumentNotValidException e) {

@@ -166,9 +166,9 @@ class FilterMapperTest extends IntegrationTestSupport {
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(information);
 		// then
 		assertThat(filteredList).hasSize(1)
-			.extracting("title", "isOpen", "labelIds", "labelTitles")
+			.extracting("title", "isOpen", "labelIds")
 			.containsExactlyInAnyOrder(
-				tuple(issueTitle, issueIsOpen, "1,2", "label_title1,label_title2")
+				tuple(issueTitle, issueIsOpen, "1,2")
 			);
 
 	}

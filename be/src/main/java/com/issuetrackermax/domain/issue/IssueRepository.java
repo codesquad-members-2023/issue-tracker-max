@@ -27,7 +27,6 @@ public class IssueRepository {
 	public IssueResultVO findIssueDetailsById(Long id) {
 		String sql = "SELECT i.id, i.is_open, i.title, "
 			+ "GROUP_CONCAT(DISTINCT l.id ORDER BY l.id SEPARATOR ',') AS label_ids, "
-			+ "GROUP_CONCAT(DISTINCT l.title ORDER BY l.id SEPARATOR ',') AS label_titles, "
 			+ "m.id AS writer_id, m.nick_name AS writer, "
 			+ "GROUP_CONCAT(DISTINCT m2.id ORDER BY a.id SEPARATOR ',') AS assignee_ids, "
 			+ "GROUP_CONCAT(DISTINCT m2.nick_name ORDER BY a.id SEPARATOR ',') "
@@ -146,7 +145,6 @@ public class IssueRepository {
 			.isOpen(rs.getBoolean("is_open"))
 			.title(rs.getString("title"))
 			.labelIds(rs.getString("label_ids"))
-			.labelTitles(rs.getString("label_titles"))
 			.writerId(rs.getLong("writer_id"))
 			.writer(rs.getString("writer"))
 			.assigneeIds(rs.getString("assignee_ids"))

@@ -20,9 +20,6 @@ public class MemberService {
 
 	@Transactional
 	public void registerMember(SignUpRequest signUpRequest) {
-		if (signUpRequest.getPassword().length() < PASSWORD_MIN_LENGTH) {
-			throw new ApiException(LoginException.INVALID_PASSWORD);
-		}
 		if (memberRepository.existsLoginId(signUpRequest.getLoginId())) {
 			throw new ApiException(LoginException.INVALID_LOGIN_ID);
 		}

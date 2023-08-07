@@ -22,7 +22,7 @@ public class IssueResponse {
 	private MilestoneResponse milestone;
 
 	@Builder
-	public IssueResponse(FilterResultVO resultVO) {
+	public IssueResponse(FilterResultVO resultVO, List<LabelResponse> labels) {
 		this.id = resultVO.getId();
 		this.isOpen = resultVO.getIsOpen();
 		this.title = resultVO.getTitle();
@@ -30,7 +30,7 @@ public class IssueResponse {
 			.editor(resultVO.getEditor())
 			.modifiedAt(resultVO.getModifiedAt())
 			.build();
-		this.labels = LabelResponse.convertToLabelResponseList(resultVO.getLabelIds(), resultVO.getLabelTitles());
+		this.labels = labels;
 		this.writer = WriterResponse.builder()
 			.id(resultVO.getWriterId())
 			.name(resultVO.getWriter())
