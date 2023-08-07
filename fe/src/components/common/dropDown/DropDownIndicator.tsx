@@ -1,19 +1,15 @@
 import { useTheme } from '@emotion/react';
-import { css } from '@emotion/react';
-import React, { useState } from 'react';
 import { ReactComponent as ChevronDown } from '@assets/icons/chevronDown.svg';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
-
 import { Button } from '../Button';
 
-type Indicator = '담당자' | '레이블' | '마일스톤';
+type Indicator = '담당자' | '레이블' | '마일스톤' | '필터';
 
 type Props = {
   size: keyof typeof SIZE;
   indicator: Indicator;
   children: React.ReactNode;
   isPanelOpen: boolean;
-  onDimClick: (event: React.MouseEvent) => void;
 };
 
 export const DropDownIndicator: React.FC<Props> = ({
@@ -21,12 +17,12 @@ export const DropDownIndicator: React.FC<Props> = ({
   indicator,
   children,
   isPanelOpen,
-  onDimClick,
 }) => {
   const theme = useTheme() as any;
 
   return (
     <div
+      className="dropdown-panel"
       css={{
         position: 'relative',
         boxSizing: 'border-box',
@@ -53,24 +49,10 @@ export const DropDownIndicator: React.FC<Props> = ({
           <ChevronDown stroke={theme.neutral.text.default} />
         )}
       </Button>
-      {isPanelOpen && (
-        <>
-          <div css={dim} onClick={onDimClick}></div>
-          {children}
-        </>
-      )}
+      {isPanelOpen && <>{children}</>}
     </div>
   );
 };
-
-const dim = css`
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  width: 100vw;
-  height: 100vh;
-`;
 
 const SIZE = {
   L: {
