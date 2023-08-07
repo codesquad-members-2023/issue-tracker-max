@@ -1,5 +1,8 @@
 package codesquard.app.errors.handler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,8 +24,14 @@ public class GlobalExceptionHandler {
 		logger.info("BindException handling : {}", e.toString());
 		return ApiResponse.of(
 			HttpStatus.BAD_REQUEST,
-			e.getBindingResult().getAllErrors().get(0).getDefaultMessage(),
-			null
+			HttpStatus.BAD_REQUEST.getReasonPhrase(),
+			e.getBindingResult().getFieldErrors().stream().map(
+				error -> {
+					Map<String, String> errors = new HashMap<>();
+					errors.put("field", error.getField());
+					errors.put("defaultMessage", error.getDefaultMessage());
+					return errors;
+				})
 		);
 	}
 
