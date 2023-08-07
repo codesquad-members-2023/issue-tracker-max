@@ -45,7 +45,7 @@ class IssueControllerTest extends ControllerTest {
 			mockMvc.perform(
 					post("/api/issues")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1"))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1").getAccessToken())
 						.content(objectMapper.writeValueAsString(request)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("issueId").exists())
@@ -79,7 +79,7 @@ class IssueControllerTest extends ControllerTest {
 			mockMvc.perform(
 					post("/api/issues")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1"))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1").getAccessToken())
 						.content(objectMapper.writeValueAsString(request)))
 				.andExpect(status().isBadRequest())
 				.andDo(print());
@@ -99,7 +99,7 @@ class IssueControllerTest extends ControllerTest {
 			mockMvc.perform(
 					request(HttpMethod.GET, "/api/issues/" + 1)
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1")))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1").getAccessToken()))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.issueId").exists())
 				.andExpect(jsonPath("$.title").exists())
@@ -125,7 +125,7 @@ class IssueControllerTest extends ControllerTest {
 			mockMvc.perform(
 					request(HttpMethod.GET, "/api/issues/" + 1)
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1")))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1").getAccessToken()))
 				.andExpect(status().isNotFound())
 				.andDo(print());
 		}
@@ -144,7 +144,7 @@ class IssueControllerTest extends ControllerTest {
 			mockMvc.perform(
 					patch("/api/issues/1")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1"))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1").getAccessToken())
 						.content(objectMapper.writeValueAsString(
 							FixtureFactory.createIssueModifyRequest("", null, null))))
 				.andExpect(status().isOk())
@@ -162,7 +162,7 @@ class IssueControllerTest extends ControllerTest {
 			mockMvc.perform(
 					patch("/api/issues/1")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1"))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1").getAccessToken())
 						.content(objectMapper.writeValueAsString(
 							FixtureFactory.createIssueModifyRequest("", null, null))))
 				.andExpect(status().isForbidden())

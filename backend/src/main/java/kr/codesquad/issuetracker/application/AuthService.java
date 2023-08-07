@@ -39,7 +39,7 @@ public class AuthService {
 			throw new ApplicationException(ErrorCode.FAILED_LOGIN);
 		}
 
-		return new LoginSuccessResponse(jwtProvider.createToken(String.valueOf(findUserAccount.getId())),
-			findUserAccount.getProfileUrl(), findUserAccount.getLoginId());
+		LoginSuccessResponse.TokenResponse token = jwtProvider.createToken(String.valueOf(findUserAccount.getId()));
+		return new LoginSuccessResponse(token, findUserAccount.getProfileUrl(), findUserAccount.getLoginId());
 	}
 }

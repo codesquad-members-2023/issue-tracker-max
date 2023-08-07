@@ -4,6 +4,8 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.Date;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -56,7 +58,9 @@ class AuthControllerTest extends ControllerTest {
 			String id = "applePIE";
 			String pw = "qwer1234";
 
-			given(authService.login(id, pw)).willReturn(new LoginSuccessResponse("qwerqwer", "url", id));
+			long expirationTime = new Date(new Date().getTime() + 36000).toInstant().toEpochMilli();
+			given(authService.login(id, pw)).willReturn(new LoginSuccessResponse(
+				new LoginSuccessResponse.TokenResponse("qwerqwer", expirationTime), "url", id));
 
 			mockMvc.perform(
 					post("/api/auth/login")

@@ -16,10 +16,12 @@ public class LoginSuccessResponse {
 
 		private final String tokenType;
 		private final String accessToken;
+		private final long expirationTime;
 
-		public TokenResponse(String accessToken) {
+		public TokenResponse(String accessToken, long expirationTime) {
 			this.tokenType = "Bearer";
 			this.accessToken = accessToken;
+			this.expirationTime = expirationTime;
 		}
 	}
 
@@ -31,8 +33,8 @@ public class LoginSuccessResponse {
 		private final String username;
 	}
 
-	public LoginSuccessResponse(String accessToken, String profileUrl, String username) {
-		this.token = new TokenResponse(accessToken);
+	public LoginSuccessResponse(TokenResponse token, String profileUrl, String username) {
+		this.token = new TokenResponse(token.getAccessToken(), token.getExpirationTime());
 		this.user = new UserAccountResponse(profileUrl, username);
 	}
 }

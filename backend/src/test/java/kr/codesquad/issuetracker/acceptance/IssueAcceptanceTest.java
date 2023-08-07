@@ -36,7 +36,7 @@ public class IssueAcceptanceTest {
 		// given
 		var given = RestAssured
 			.given().log().all()
-			.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1"))
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1").getAccessToken())
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.body(FixtureFactory.createIssueRegisterRequest("테스트코드 작성하기", List.of(1, 2), List.of(1, 2)));
 

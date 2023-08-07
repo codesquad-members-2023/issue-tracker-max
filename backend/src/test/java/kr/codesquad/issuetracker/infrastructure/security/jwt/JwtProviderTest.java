@@ -14,6 +14,7 @@ import io.jsonwebtoken.security.Keys;
 import kr.codesquad.issuetracker.exception.ApplicationException;
 import kr.codesquad.issuetracker.exception.ErrorCode;
 import kr.codesquad.issuetracker.infrastructure.config.jwt.JwtProperties;
+import kr.codesquad.issuetracker.presentation.response.LoginSuccessResponse;
 
 class JwtProviderTest {
 
@@ -26,10 +27,10 @@ class JwtProviderTest {
 		// given
 
 		// when
-		String token = jwtProvider.createToken("1");
+		LoginSuccessResponse.TokenResponse token = jwtProvider.createToken("1");
 
 		// then
-		assertThat(token).isNotBlank();
+		assertThat(token.getAccessToken()).isNotBlank();
 	}
 
 	@DisplayName("유효하지 않은 토큰이면 예외가 발생한다.")
@@ -65,10 +66,10 @@ class JwtProviderTest {
 	@Test
 	void givenToken_thenExtractUserId() {
 		// given
-		String token = jwtProvider.createToken("13");
+		LoginSuccessResponse.TokenResponse token = jwtProvider.createToken("13");
 
 		// when
-		String userId = jwtProvider.extractUserId(token);
+		String userId = jwtProvider.extractUserId(token.getAccessToken());
 
 		// then
 		assertThat(userId).isEqualTo("13");
