@@ -96,9 +96,9 @@ public class IssueRepository {
 	}
 
 	public boolean existsById(Long issueId) {
-		final String sql = "SELECT COUNT(*) FROM issue WHERE issue_id = :issueId";
+		final String sql = "SELECT COUNT(*) FROM issue WHERE issue_id = :issueId AND status != 'deleted'";
 
 		return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
-			Map.of("issue_id", issueId), Integer.class)).orElse(0) > 0;
+			Map.of("issueId", issueId), Integer.class)).orElse(0) > 0;
 	}
 }

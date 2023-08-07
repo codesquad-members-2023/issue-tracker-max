@@ -85,7 +85,7 @@ public class IssueService {
 	}
 
 	public IssueDetailResponse getIssueDetail(Long issueId) {
-		if (issueRepository.existsById(issueId)) {
+		if (!issueRepository.existsById(issueId)) {
 			// todo: 커스텀 예외 생성 후 변경
 			throw new RuntimeException("이슈를 찾을 수 없습니다.");
 		}
