@@ -34,9 +34,9 @@
         i.title as issue_title,
         i.status as issue_status,
         i.created_at as issue_created_at,
-        user.user_id as author_id,
-        user.login_id as author_login_id,
-        user.image as author_image,
+        author.user_id as author_id,
+        author.login_id as author_login_id,
+        author.image as author_image,
         l.label_id as label_id,
         l.name as label_name,
         l.text_color as label_text_color,
@@ -44,7 +44,7 @@
         m.milestone_id as milestone_id,
         m.name as milestone_name
         FROM issue i
-        INNER JOIN user AS user ON user.user_id = i.author_id
+        INNER JOIN user AS author ON author.user_id = i.author_id
         LEFT OUTER JOIN milestone as m ON i.milestone_id = m.milestone_id AND m.status != 'deleted'
         LEFT OUTER JOIN issue_label il ON i.issue_id = il.issue_id
         LEFT OUTER JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
@@ -61,7 +61,7 @@
             </if>
             <if test="authorName != null">
                 <trim prefix="AND">
-                    user.login_id = #{authorName}
+                    author.login_id = #{authorName}
                 </trim>
             </if>
             <if test="labelName != null">
@@ -114,7 +114,7 @@
         COUNT(DISTINCT CASE WHEN i.status = 'open' THEN i.issue_id END) AS open_issue_count,
         COUNT(DISTINCT CASE WHEN i.status = 'closed' THEN i.issue_id END) AS closed_issue_count
         FROM issue i
-        INNER JOIN user AS user ON user.user_id = i.author_id
+        INNER JOIN user AS author ON author.user_id = i.author_id
         LEFT OUTER JOIN milestone as m ON i.milestone_id = m.milestone_id AND m.status != 'deleted'
         LEFT OUTER JOIN issue_label il ON i.issue_id = il.issue_id
         LEFT OUTER JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
@@ -131,7 +131,7 @@
             </if>
             <if test="authorName != null">
                 <trim prefix="AND">
-                    user.login_id = #{authorName}
+                    author.login_id = #{authorName}
                 </trim>
             </if>
             <if test="labelName != null">
@@ -213,8 +213,8 @@
              , i.created_at
              , i.status
              , i.author_id
-             , u.login_id
-             , u.image                AS           author_image
+             , author.login_id
+             , author.image           AS           author_image
              , mis.milestone_id
              , mis.name               AS           milestone_name
              , (SELECT FLOOR(COUNT(CASE WHEN status = 'close' THEN 1 END) / COUNT(*) * 100)
@@ -235,7 +235,7 @@
              , comment_user.login_id  AS           comment_login_id
              , comment_user.image     AS           comment_author_image
         FROM issue i
-                 JOIN user u ON i.author_id = u.user_id
+                 JOIN user author ON i.author_id = author.user_id
                  LEFT JOIN milestone mis ON i.milestone_id = mis.milestone_id
                  LEFT JOIN assignee a ON i.issue_id = a.issue_id
                  LEFT JOIN user assignee_user ON a.user_id = assignee_user.user_id
