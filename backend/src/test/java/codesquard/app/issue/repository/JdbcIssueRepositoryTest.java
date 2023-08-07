@@ -17,7 +17,6 @@ import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.issue.fixture.FixtureFactory;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
 import codesquard.app.milestone.repository.MilestoneRepository;
-import codesquard.app.user.entity.User;
 import codesquard.app.user.repository.UserRepository;
 
 @Transactional
@@ -64,8 +63,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 	@Test
 	void save() {
 		// given
-		User user = new User(null, "wis", "wis@abcd.com", "code1234", null);
-		Long loginId = userRepository.save(user);
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		MilestoneSaveRequest milestoneSaveRequest = FixtureFactory.createMilestoneCreateRequest("레포지토리");
 		Long milestoneId = milestoneRepository.save(MilestoneSaveRequest.toEntity(milestoneSaveRequest)).orElseThrow();
 

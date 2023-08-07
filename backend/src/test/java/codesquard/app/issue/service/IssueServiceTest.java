@@ -29,7 +29,6 @@ import codesquard.app.label.service.LabelService;
 import codesquard.app.milestone.service.MilestoneService;
 import codesquard.app.user.repository.UserRepository;
 import codesquard.app.user.service.UserService;
-import codesquard.app.user.service.request.UserSaveServiceRequest;
 
 class IssueServiceTest extends IntegrationTestSupport {
 
@@ -80,8 +79,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void create() {
 		// given
-		UserSaveServiceRequest userSaveServiceRequest = FixtureFactory.createUserSaveServiceRequest();
-		Long loginId = userRepository.save(userSaveServiceRequest.toEntity());
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
 
@@ -128,8 +126,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 		// given
 		Long id = createIssue();
 
-		String issueStatus = "OPEN";
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(issueStatus);
+		String invalidIssueStatus = "OPEN";
+		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(invalidIssueStatus);
 
 		// when & then
 		assertThatThrownBy(() -> issueService.modifyStatus(issueModifyStatusRequest, id)).isInstanceOf(
