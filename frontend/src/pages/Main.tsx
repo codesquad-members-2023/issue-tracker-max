@@ -7,6 +7,7 @@ export default function Main() {
 
   const handleLogout = () => {
     auth.logout();
+    localStorage.clear();
     navigate('/login');
   };
 
