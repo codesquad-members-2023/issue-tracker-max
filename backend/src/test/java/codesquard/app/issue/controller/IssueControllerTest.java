@@ -30,7 +30,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void getIssueDetail() throws Exception {
 		// given
 		int id = 1;
-		given(issueService.get((long)id)).willReturn(FixtureFactory.createIssueReadResponse((long)id));
+		given(issueQueryService.get((long)id)).willReturn(FixtureFactory.createIssueReadResponse((long)id));
 
 		// when & then
 		mockMvc.perform(get("/api/issues/" + id))

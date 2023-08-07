@@ -24,6 +24,7 @@ import codesquard.app.issue.dto.response.IssueDeleteResponse;
 import codesquard.app.issue.dto.response.IssueModifyResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueSaveResponse;
+import codesquard.app.issue.service.IssueQueryService;
 import codesquard.app.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
 
@@ -33,10 +34,11 @@ import lombok.RequiredArgsConstructor;
 public class IssueController {
 
 	private final IssueService issueService;
+	private final IssueQueryService issueQueryService;
 
 	@GetMapping("/{issueId}")
 	public ResponseEntity<IssueReadResponse> get(@PathVariable Long issueId) {
-		IssueReadResponse issueReadResponse = issueService.get(issueId);
+		IssueReadResponse issueReadResponse = issueQueryService.get(issueId);
 		return ResponseEntity.status(HttpStatus.OK).body(issueReadResponse);
 	}
 

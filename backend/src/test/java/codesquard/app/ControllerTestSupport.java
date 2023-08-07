@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codesquard.app.comment.controller.CommentController;
 import codesquard.app.comment.service.CommentService;
 import codesquard.app.issue.controller.IssueController;
+import codesquard.app.issue.service.IssueQueryService;
 import codesquard.app.issue.service.IssueService;
 import codesquard.app.label.controller.LabelController;
 import codesquard.app.label.service.LabelService;
@@ -32,6 +33,9 @@ public abstract class ControllerTestSupport {
 
 	@MockBean
 	protected IssueService issueService;
+
+	@MockBean
+	protected IssueQueryService issueQueryService;
 
 	@MockBean
 	protected CommentService commentService;
