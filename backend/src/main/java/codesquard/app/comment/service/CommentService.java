@@ -14,14 +14,13 @@ import codesquard.app.comment.service.response.CommentModifyResponse;
 import codesquard.app.comment.service.response.CommentSaveResponse;
 import lombok.RequiredArgsConstructor;
 
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class CommentService {
 
 	private final CommentRepository commentRepository;
 
-	@Transactional
 	public CommentSaveResponse save(CommentSaveServiceRequest serviceRequest, LocalDateTime createdAt) {
 		Comment comment = serviceRequest.toEntity(createdAt);
 		Long savedCommentId = commentRepository.save(comment);
@@ -29,7 +28,6 @@ public class CommentService {
 		return new CommentSaveResponse(true, savedCommentId);
 	}
 
-	@Transactional
 	public CommentModifyResponse modify(CommentModifyServiceRequest serviceRequest, LocalDateTime modifiedAt) {
 		Comment comment = serviceRequest.toEntity(modifiedAt);
 		Long modifiedCommentId = commentRepository.modify(comment);
@@ -37,7 +35,6 @@ public class CommentService {
 		return new CommentModifyResponse(true, modifiedCommentId);
 	}
 
-	@Transactional
 	public CommentDeleteResponse delete(Long id) {
 		commentRepository.deleteById(id);
 

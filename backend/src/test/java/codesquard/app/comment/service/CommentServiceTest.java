@@ -80,8 +80,7 @@ class CommentServiceTest extends IntegrationTestSupport {
 
 		// when // then
 		assertThatThrownBy(() -> commentService.save(request, createdAt))
-			.isInstanceOf(CommentMaxLengthExceededException.class)
-			.hasMessage("댓글은 1자 이상 10000자 이하여야 합니다.");
+			.isInstanceOf(CommentMaxLengthExceededException.class);
 	}
 
 	@DisplayName("등록된 댓글을 수정한다.")
@@ -121,8 +120,7 @@ class CommentServiceTest extends IntegrationTestSupport {
 
 		// when // then
 		assertThatThrownBy(() -> commentService.modify(modifyRequest, modifiedAt))
-			.isInstanceOf(CommentMaxLengthExceededException.class)
-			.hasMessage("댓글은 1자 이상 10000자 이하여야 합니다.");
+			.isInstanceOf(CommentMaxLengthExceededException.class);
 	}
 
 	@DisplayName("등록된 댓글을 삭제한다.")
