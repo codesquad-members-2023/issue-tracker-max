@@ -18,7 +18,6 @@ export function DropdownContainer({
     name: string;
     profile?: string;
     background?: string;
-    color?: "LIGHT" | "DARK";
     selected: boolean;
     onClick: () => void;
   }[];

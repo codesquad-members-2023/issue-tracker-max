@@ -14,7 +14,6 @@ export function DropdownPanel({
     name: string;
     profile?: string;
     background?: string;
-    color?: "LIGHT" | "DARK";
     selected: boolean;
     onClick: () => void;
   }[];
@@ -24,13 +23,12 @@ export function DropdownPanel({
       <div className="dropdown__header">{optionTitle}</div>
       <ul>
         {options.map(
-          ({ name, profile, background, color, selected, onClick }, index) => (
+          ({ name, profile, background, selected, onClick }, index) => (
             <DropdownOption
               key={`dropdown-option-${index}`}
               showProfile={showProfile}
               profile={profile}
               background={background}
-              color={color}
               selected={selected}
               onClick={onClick}
             >

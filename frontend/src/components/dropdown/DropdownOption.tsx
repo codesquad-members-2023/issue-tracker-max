@@ -5,7 +5,6 @@ export function DropdownOption({
   showProfile = true,
   profile,
   background,
-  color = "LIGHT",
   selected,
   children,
   onClick,
@@ -13,7 +12,6 @@ export function DropdownOption({
   showProfile?: boolean;
   profile?: string;
   background?: string;
-  color?: "LIGHT" | "DARK";
   selected: boolean;
   children: string;
   onClick: () => void;
