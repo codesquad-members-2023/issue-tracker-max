@@ -102,6 +102,66 @@
         </where>
     </select>
 
+    <select id="getIssueSearchCounts" resultType="IssueSearchCountVo"
+            parameterType="org.presents.issuetracker.issue.dto.request.IssueSearchParam">
+        SELECT
+        (SELECT COUNT(*)
+        FROM label
+        WHERE is_deleted = false) AS label_count,
+        (SELECT COUNT(*)
+        FROM milestone
+        WHERE status != 'deleted') AS milestone_count,
+        COUNT(DISTINCT CASE WHEN i.status = 'open' THEN i.issue_id END) AS open_issue_count,
+        COUNT(DISTINCT CASE WHEN i.status = 'closed' THEN i.issue_id END) AS closed_issue_count
+        FROM issue i
+        INNER JOIN user AS user ON user.user_id = i.author_id
+        LEFT OUTER JOIN milestone as m ON i.milestone_id = m.milestone_id AND m.status != 'deleted'
+        LEFT OUTER JOIN issue_label il ON i.issue_id = il.issue_id
+        LEFT OUTER JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
+        LEFT OUTER JOIN assignee a ON i.issue_id = a.issue_id
+        LEFT OUTER JOIN user assignee_user ON a.user_id = assignee_user.user_id
+        LEFT OUTER JOIN comment c ON i.issue_id = c.issue_id AND c.is_deleted = false
+        LEFT OUTER JOIN user comment_user ON c.author_id = comment_user.user_id
+        <where>
+            i.status != 'deleted'
+            <if test="status != null">
+                <trim prefix="AND">
+                    i.status = #{status}
+                </trim>
+            </if>
+            <if test="authorName != null">
+                <trim prefix="AND">
+                    user.login_id = #{authorName}
+                </trim>
+            </if>
+            <if test="labelName != null">
+                <trim prefix="AND">
+                    l.name = #{labelName}
+                </trim>
+            </if>
+            <if test="milestoneName != null">
+                <trim prefix="AND">
+                    m.name = #{milestoneName}
+                </trim>
+            </if>
+            <if test="assigneeName != null">
+                <trim prefix="AND">
+                    assignee_user.login_id = #{assigneeName}
+                </trim>
+            </if>
+            <if test="commentAuthorName != null">
+                <trim prefix="AND">
+                    comment_user.login_id = #{commentAuthorName}
+                </trim>
+            </if>
+            <if test="title != null and title.trim() != ''">
+                <trim prefix="AND">
+                    i.title LIKE CONCAT('%', #{title}, '%')
+                </trim>
+            </if>
+        </where>
+    </select>
+
     <resultMap id="issueDetailResultMap" type="IssueDetailVo">
         <id property="id" column="issue_id"/>
         <result property="title" column="title"/>
@@ -185,17 +245,4 @@
                  LEFT JOIN user comment_user ON c.author_id = comment_user.user_id
         WHERE i.issue_id = #{issueId}
     </select>
-
-    <select id="getLabelCount" resultType="Long">
-        SELECT COUNT(*)
-        FROM label
-        WHERE is_deleted = false;
-    </select>
-
-    <select id="getMilestoneCount" resultType="Long">
-        SELECT COUNT(*)
-        FROM milestone
-        WHERE status != 'deleted';
-    </select>
-
 </mapper>

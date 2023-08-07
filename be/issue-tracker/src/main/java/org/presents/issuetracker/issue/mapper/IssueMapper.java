@@ -4,16 +4,15 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
-import org.presents.issuetracker.issue.entity.vo.IssueSearchVo;
 import org.presents.issuetracker.issue.entity.vo.IssueDetailVo;
+import org.presents.issuetracker.issue.entity.vo.IssueSearchCountVo;
+import org.presents.issuetracker.issue.entity.vo.IssueSearchVo;
 
 @Mapper
 public interface IssueMapper {
 	List<IssueSearchVo> getIssues(IssueSearchParam issueSearchParam);
 
-	Long getLabelCount();
+	IssueSearchCountVo getIssueSearchCounts(IssueSearchParam issueSearchParam);
 
-	Long getMilestoneCount();
-  
-  IssueDetailVo getIssueDetail(Long issueId);
+	IssueDetailVo getIssueDetail(Long issueId);
 }
