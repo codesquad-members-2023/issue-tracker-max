@@ -5,4 +5,6 @@ import java.util.List;
 public interface LabelRepository {
 
 	boolean existByIds(List<Long> labelIds);
+
+	Long save(Label label);
 }
