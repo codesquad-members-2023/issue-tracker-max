@@ -30,28 +30,28 @@
 
     <select id="getIssues" resultMap="issueResultMap"
             parameterType="org.presents.issuetracker.issue.dto.request.IssueSearchParam">
-        SELECT DISTINCT i.issue_id as issue_id,
-        i.title as issue_title,
-        i.status as issue_status,
-        i.created_at as issue_created_at,
-        u.user_id as author_id,
-        u.login_id as author_login_id,
-        u.image as author_image,
-        l.label_id as label_id,
-        l.name as label_name,
-        l.text_color as label_text_color,
-        l.background_color as label_background_color,
-        m.milestone_id as milestone_id,
-        m.name as milestone_name
+        SELECT DISTINCT i.issue_id AS issue_id,
+        i.title AS issue_title,
+        i.status AS issue_status,
+        i.created_at AS issue_created_at,
+        user.user_id AS author_id,
+        user.login_id AS author_login_id,
+        user.image AS author_image,
+        l.label_id AS label_id,
+        l.name AS label_name,
+        l.text_color AS label_text_color,
+        l.background_color AS label_background_color,
+        m.milestone_id AS milestone_id,
+        m.name AS milestone_name
         FROM issue i
-        INNER JOIN user u ON u.user_id = i.author_id
-        LEFT OUTER JOIN milestone m ON i.milestone_id = m.milestone_id AND m.status != 'deleted'
+        INNER JOIN user AS user ON user.user_id = i.author_id
+        LEFT OUTER JOIN milestone as m ON i.milestone_id = m.milestone_id AND m.status != 'deleted'
         LEFT OUTER JOIN issue_label il ON i.issue_id = il.issue_id
         LEFT OUTER JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
         LEFT OUTER JOIN assignee a ON i.issue_id = a.issue_id
-        LEFT OUTER JOIN user u2 ON a.user_id = u2.user_id
+        LEFT OUTER JOIN user assignee_user ON a.user_id = assignee_user.user_id
         LEFT OUTER JOIN comment c ON i.issue_id = c.issue_id AND c.is_deleted = false
-        LEFT OUTER JOIN user u3 ON c.author_id = u3.user_id
+        LEFT OUTER JOIN user comment_user ON c.author_id = comment_user.user_id
         <where>
             i.status != 'deleted'
             <if test="status != null">
@@ -76,12 +76,12 @@
             </if>
             <if test="assigneeName != null">
                 <trim prefix="AND">
-                    u2.login_id = #{assigneeName}
+                    assignee_user.login_id = #{assigneeName}
                 </trim>
             </if>
             <if test="commentAuthorName != null">
                 <trim prefix="AND">
-                    u3.login_id = #{commentAuthorName}
+                    comment_user.login_id = #{commentAuthorName}
                 </trim>
             </if>
             <if test="title != null and title.trim() != ''">
@@ -137,25 +137,42 @@
     </resultMap>
 
     <select id="getIssueDetail" parameterType="Long" resultMap="issueDetailResultMap">
-        SELECT i.issue_id, i.title, i.contents, i.created_at, i.status
-        , i.author_id, u.login_id, u.image AS author_image
-        , mis.milestone_id, mis.name AS milestone_name
-        , (SELECT FLOOR(COUNT(CASE WHEN status = 'close' THEN 1 END) / COUNT(*) * 100)
-        FROM issue
-        WHERE milestone_id = i.milestone_id AND status IN ('open', 'close')) progress
-        , u2.user_id AS assignee_id, u2.login_id AS assignee_login_id, u2.image AS assignee_image
-        , l.label_id, l.name AS label_name, l.text_color, l.background_color
-        , c.comment_id, c.contents AS comment_contents, c.created_at AS comment_created_at
-        , c.author_id AS comment_author_id, u3.login_id AS comment_login_id, u3.image AS comment_author_image
+        SELECT i.issue_id
+             , i.title
+             , i.contents
+             , i.created_at
+             , i.status
+             , i.author_id
+             , u.login_id
+             , u.image                AS           author_image
+             , mis.milestone_id
+             , mis.name               AS           milestone_name
+             , (SELECT FLOOR(COUNT(CASE WHEN status = 'close' THEN 1 END) / COUNT(*) * 100)
+                FROM issue
+                WHERE milestone_id = i.milestone_id
+                  AND status IN ('open', 'close')) progress
+             , assignee_user.user_id  AS           assignee_id
+             , assignee_user.login_id AS           assignee_login_id
+             , assignee_user.image    AS           assignee_image
+             , l.label_id
+             , l.name                 AS           label_name
+             , l.text_color
+             , l.background_color
+             , c.comment_id
+             , c.contents             AS           comment_contents
+             , c.created_at           AS           comment_created_at
+             , c.author_id            AS           comment_author_id
+             , comment_user.login_id  AS           comment_login_id
+             , comment_user.image     AS           comment_author_image
         FROM issue i
-        JOIN user u ON i.author_id = u.user_id
-        LEFT JOIN milestone mis ON i.milestone_id = mis.milestone_id
-        LEFT JOIN assignee a ON i.issue_id = a.issue_id
-        LEFT JOIN user u2 ON a.user_id = u2.user_id
-        LEFT JOIN issue_label il ON i.issue_id = il.issue_id
-        LEFT JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
-        LEFT JOIN comment c ON i.issue_id = c.issue_id AND c.is_deleted = false
-        LEFT JOIN user u3 ON c.author_id = u3.user_id
+                 JOIN user u ON i.author_id = u.user_id
+                 LEFT JOIN milestone mis ON i.milestone_id = mis.milestone_id
+                 LEFT JOIN assignee a ON i.issue_id = a.issue_id
+                 LEFT JOIN user assignee_user ON a.user_id = assignee_user.user_id
+                 LEFT JOIN issue_label il ON i.issue_id = il.issue_id
+                 LEFT JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
+                 LEFT JOIN comment c ON i.issue_id = c.issue_id AND c.is_deleted = false
+                 LEFT JOIN user comment_user ON c.author_id = comment_user.user_id
         WHERE i.issue_id = #{issueId}
     </select>
 
