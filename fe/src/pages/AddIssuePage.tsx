@@ -12,13 +12,21 @@ import { ListSideBar } from '@components/common/sideBar/ListSideBar';
 import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
-import { TextInput } from '@components/common/TextInput/TextInput';
+import { TextInput } from '@components/common/textInput/TextInput';
+
+type DefaultFileStatusType = {
+  typeError: boolean;
+  sizeError: boolean;
+  isUploading: boolean;
+  uploadFailed: boolean;
+};
 
 type SelectionState = {
   assignees: number[];
   labels: number[];
   milestones: number[];
 };
+
 // 추후 구현 보완시 추가
 // type Props = {
 //   authorId: number;
@@ -31,13 +39,6 @@ export const AddIssuePage: React.FC = ({}) => {
   const userImage = 'https://avatars.githubusercontent.com/u/57523197?v=4'; //임시 이미지
   const availableFileSize = 1048576; //1MB
 
-  const defaultFileStatus = {
-    typeError: false,
-    sizeError: false,
-    isUploading: false,
-    uploadFailed: false,
-  };
-
   const [selections, setSelections] = useState<SelectionState>({
     assignees: [],
     labels: [],
@@ -46,17 +47,12 @@ export const AddIssuePage: React.FC = ({}) => {
 
   const [titleInput, setTitleInput] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
-  const [isDisplayingCount, setIsDisplayingCount] = useState(false);
-
-  const [fileStatus, setFileStatus] = useState(defaultFileStatus);
-
-  useEffect(() => {
-    if (textAreaValue) {
-      setIsDisplayingCount(true);
-      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [textAreaValue]); // >> textArea로.
+  const [fileStatus, setFileStatus] = useState<DefaultFileStatusType>({
+    typeError: false,
+    sizeError: false,
+    isUploading: false,
+    uploadFailed: false,
+  });
 
   const uploadImage = async (file: File) => {
     try {
@@ -211,11 +207,7 @@ export const AddIssuePage: React.FC = ({}) => {
           <TextArea
             letterCount={textAreaValue.length}
             textAreaValue={textAreaValue}
-            isDisplayingCount={isDisplayingCount}
-            isFileUploading={fileStatus.isUploading}
-            isFileTypeError={fileStatus.typeError}
-            isFileSizeError={fileStatus.sizeError}
-            isFileUploadFailed={fileStatus.uploadFailed}
+            fileStatus={fileStatus}
             onFileChange={onFileChange}
             onChangeTextArea={onChangeTextArea}
           />
@@ -225,9 +217,7 @@ export const AddIssuePage: React.FC = ({}) => {
             onSingleSelectedMilestone={onSingleSelectedMilestone}
             onMultipleSelectedAssignee={onMultipleSelectedAssignee}
             onMultipleSelectedLabel={onMultipleSelectedLabel}
-            selectedAssignees={selections.assignees}
-            selectedLabels={selections.labels}
-            selectedMilestones={selections.milestones}
+            selections={selections}
           />
         </SideBar>
       </Body>

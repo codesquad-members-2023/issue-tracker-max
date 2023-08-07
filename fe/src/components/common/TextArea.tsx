@@ -1,19 +1,22 @@
 import { css, useTheme } from '@emotion/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ReactComponent as Grip } from '@assets/icons/grip.svg';
 import { ReactComponent as PaperClip } from '@assets/icons/paperclip.svg';
 import { Button } from './Button';
+
+type DefaultFileStatusType = {
+  typeError: boolean;
+  sizeError: boolean;
+  isUploading: boolean;
+  uploadFailed: boolean;
+};
 
 type Props = {
   size?: 'defaultSize' | 'S';
   isDisabled?: boolean;
   letterCount?: number;
   textAreaValue: string;
-  isDisplayingCount?: boolean;
-  isFileUploading?: boolean;
-  isFileTypeError?: boolean;
-  isFileSizeError?: boolean;
-  isFileUploadFailed?: boolean;
+  fileStatus: { [K in keyof DefaultFileStatusType]: boolean };
   onChangeTextArea: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
@@ -23,15 +26,13 @@ export const TextArea: React.FC<Props> = ({
   isDisabled = false,
   letterCount,
   textAreaValue,
-  isDisplayingCount,
-  isFileUploading,
-  isFileTypeError,
-  isFileSizeError,
-  isFileUploadFailed,
+  fileStatus,
+
   onChangeTextArea,
   onFileChange,
 }) => {
   const theme = useTheme() as any;
+  const [isDisplayingCount, setIsDisplayingCount] = useState(false);
 
   //코멘트 영역때문에 사이즈를 더 추가할 수도 있을 것 같습니다
   const SIZE = {
@@ -43,6 +44,14 @@ export const TextArea: React.FC<Props> = ({
     },
   };
   const isTyping = textAreaValue.length > 0;
+
+  useEffect(() => {
+    if (textAreaValue) {
+      setIsDisplayingCount(true);
+      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [textAreaValue]);
 
   return (
     <div
@@ -163,7 +172,7 @@ export const TextArea: React.FC<Props> = ({
           id="file"
           css={{ display: 'none' }}
         />
-        {isFileUploading && (
+        {fileStatus.isUploading && (
           <span
             css={{
               color: theme.neutral.text.weak,
@@ -173,7 +182,7 @@ export const TextArea: React.FC<Props> = ({
             이미지 업로드 중입니다요..
           </span>
         )}
-        {isFileTypeError && (
+        {fileStatus.typeError && (
           <span
             css={{
               color: theme.danger.text.default,
@@ -183,7 +192,7 @@ export const TextArea: React.FC<Props> = ({
             이미지 형식만 업로드 할 수 있습니다.
           </span>
         )}
-        {isFileSizeError && (
+        {fileStatus.sizeError && (
           <span
             css={{
               color: theme.danger.text.default,
@@ -193,7 +202,7 @@ export const TextArea: React.FC<Props> = ({
             1MB 이하의 이미지만 업로드 할 수 있습니다.
           </span>
         )}
-        {isFileUploadFailed && (
+        {fileStatus.uploadFailed && (
           <span
             css={{
               color: theme.danger.text.default,

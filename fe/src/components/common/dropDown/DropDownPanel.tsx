@@ -1,47 +1,30 @@
 import { useTheme } from '@emotion/react';
-import { DropDownList } from './DropDownList';
 import { DropDownHeader } from './DropDownHeader';
 
-type DropDownItem = {
-  id: number;
-  image?: string;
-  name?: string;
-  backgroundColor?: string;
-  textColor?: string;
-  progress?: number;
-};
-
 type Props = {
-  options?: DropDownItem[];
-  alignment: string;
+  position: keyof typeof POSITION;
   panelHeader: string;
-  selectedItems: number[];
-  onSelected: (index: number) => void;
+  children: React.ReactNode;
 };
 
 export const DropDownPanel: React.FC<Props> = ({
-  options,
-  alignment,
+  position,
   panelHeader,
-  selectedItems,
-  onSelected,
+  children,
 }) => {
   const theme = useTheme() as any;
-
-  console.log(selectedItems);
 
   return (
     <div
       css={{
         position: 'absolute',
         top: '100%',
-        [alignment]: '0',
-        marginLeft: alignment === 'center' ? '-8px' : '0',
         zIndex: 50,
         width: '240px',
         borderRadius: theme.radius.l,
         border: `${theme.border.default} ${theme.neutral.border.default}`,
         background: theme.neutral.surface.default,
+        ...POSITION[position],
       }}
     >
       <DropDownHeader panelHeader={panelHeader} />
@@ -52,16 +35,22 @@ export const DropDownPanel: React.FC<Props> = ({
           overflowY: 'auto',
         }}
       >
-        {options &&
-          options?.map((item) => (
-            <DropDownList
-              key={item.id}
-              item={item}
-              onClick={() => onSelected(item.id)}
-              isSelected={selectedItems.includes(item.id)}
-            />
-          ))}
+        {children}
       </ul>
     </div>
   );
+};
+
+const POSITION = {
+  left: {
+    left: 0,
+  },
+
+  right: {
+    right: 0,
+  },
+
+  center: {
+    left: 'calc(-120px + 50%)',
+  },
 };
