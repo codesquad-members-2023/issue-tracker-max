@@ -7,6 +7,12 @@ import { ListLabel } from './ListLabel';
 import { ListMilestone } from './ListMilestone';
 import { getLabels, getMilestones, getUsers } from '@utils/api';
 
+type SelectionState = {
+  assignees: number[];
+  labels: number[];
+  milestones: number[];
+};
+
 type FetchPath = 'users' | 'labels' | 'milestones';
 type Indicator = '담당자' | '레이블' | '마일스톤';
 
@@ -30,18 +36,14 @@ type MilestoneData = {
 };
 
 type Props = {
-  selectedAssignees: number[];
-  selectedLabels: number[];
-  selectedMilestones: number[];
+  selections: SelectionState;
   onSingleSelectedMilestone: (id: number) => void;
   onMultipleSelectedAssignee: (id: number) => void;
   onMultipleSelectedLabel: (id: number) => void;
 };
 
 export const ListSideBar: React.FC<Props> = ({
-  selectedAssignees,
-  selectedLabels,
-  selectedMilestones,
+  selections,
   onSingleSelectedMilestone,
   onMultipleSelectedAssignee,
   onMultipleSelectedLabel,
@@ -58,17 +60,15 @@ export const ListSideBar: React.FC<Props> = ({
     milestones: [],
   });
 
+  const [isPanelOpen, setIsPanelOpen] = useState<
+    null | 'users' | 'labels' | 'milestones'
+  >(null);
+
   const [isFetched, setIsFetched] = useState({
     users: false,
     labels: false,
     milestones: false,
   });
-
-  const indicatorMapping: Record<Indicator, FetchPath> = {
-    담당자: 'users',
-    레이블: 'labels',
-    마일스톤: 'milestones',
-  };
 
   // setIsFetched((prev) => ({
   //   ...prev,
@@ -84,50 +84,22 @@ export const ListSideBar: React.FC<Props> = ({
   const assigneeOptions = modifiedUserData.slice(1);
   const labelOptions = listData.labels.slice(1);
   const milestoneOptions = listData.milestones.slice(1);
-  // api 수정요청..
+
+  const getSelectedData = (data: number[], key: keyof SelectionState) => {
+    data.filter((item) => selections[key].includes(item.id));
+  };
 
   const selectedAssigneesData = modifiedUserData.filter((users) =>
-    selectedAssignees.includes(users.id),
+    selections.assignees.includes(users.id),
   );
 
   const selectedLabelsData = labelOptions.filter((label) =>
-    selectedLabels.includes(label.id),
+    selections.labels.includes(label.id),
   );
 
   const selectedMilestonesData = milestoneOptions.filter((milestone) =>
-    selectedMilestones.includes(milestone.id),
+    selections.milestones.includes(milestone.id),
   );
-
-  const [isPanelOpen, setIsPanelOpen] = useState<
-    null | 'users' | 'labels' | 'milestones'
-  >(null);
-
-  // const openUserPanel = async () => {
-  //   const usersData = await getUsers();
-  //   setListData((prev) => ({
-  //     ...prev,
-  //     users: usersData,
-  //   }));
-  //   setIsPanelOpen('users');
-  // };
-
-  // const openLabelPanel = async () => {
-  //   const labelsData = await getLabels();
-  //   setListData((prev) => ({
-  //     ...prev,
-  //     labels: labelsData,
-  //   }));
-  //   setIsPanelOpen('labels');
-  // };
-
-  // const openMilestonePanel = async () => {
-  //   const milestonesData = await getMilestones();
-  //   setListData((prev) => ({
-  //     ...prev,
-  //     milestones: milestonesData,
-  //   }));
-  //   setIsPanelOpen('milestones');
-  // };
 
   const openPanel = async (
     fetchDataFunction: () => Promise<
@@ -177,7 +149,7 @@ export const ListSideBar: React.FC<Props> = ({
             alignment="center"
             options={assigneeOptions}
             onSelected={onMultipleSelectedAssignee}
-            selectedItems={selectedAssignees}
+            selectedItems={selections.assignees}
           />
         </DropDownIndicator>
         <ListAssignee selectedAssigneesData={selectedAssigneesData} />
@@ -194,7 +166,7 @@ export const ListSideBar: React.FC<Props> = ({
             alignment="center"
             options={labelOptions}
             onSelected={onMultipleSelectedLabel}
-            selectedItems={selectedLabels}
+            selectedItems={selections.labels}
           />
         </DropDownIndicator>
         <ListLabel selectedLabelsData={selectedLabelsData} />
@@ -214,7 +186,7 @@ export const ListSideBar: React.FC<Props> = ({
             alignment="center"
             options={milestoneOptions}
             onSelected={onSingleSelectedMilestone}
-            selectedItems={selectedMilestones}
+            selectedItems={selections.milestones}
           />
         </DropDownIndicator>
         <ListMilestone selectedMilestonesData={selectedMilestonesData} />
