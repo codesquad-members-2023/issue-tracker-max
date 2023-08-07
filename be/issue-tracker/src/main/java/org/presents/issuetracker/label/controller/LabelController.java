@@ -41,6 +41,11 @@ public class LabelController {
 	@GetMapping("/previews")
 	public ResponseEntity<List<LabelPreviewResponse>> getLabelPreviews() {
 		List<LabelPreviewResponse> labelPreviews = labelService.getLabelPreviews();
+
+		// 필터링 뷰에서 `레이블이 없는 이슈`를 표시하기 위해 index 0에 값이 없는 dto 인스턴스를 추가합니다.
+		final int INDEX_LABEL_NOT_ASSIGNED = 0;
+		labelPreviews.add(INDEX_LABEL_NOT_ASSIGNED, LabelPreviewResponse.getLabelNotAssignedResponse());
+
 		return ResponseEntity.ok().body(labelPreviews);
 	}
 

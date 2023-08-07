@@ -1,5 +1,6 @@
 package org.presents.issuetracker.label.service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,13 +38,13 @@ public class LabelService {
 	public List<LabelPreviewResponse> getLabelPreviews() {
 		List<Label> labelPreviews = labelRepository.findPreviews();
 
-		return labelPreviews.stream().map(label -> LabelPreviewResponse.builder()
-				.id(label.getId())
-				.name(label.getName())
-				.backgroundColor(label.getBackgroundColor())
-				.textColor(label.getTextColor())
-				.build())
-			.collect(Collectors.toList());
+		return labelPreviews.stream()
+				.map(label -> LabelPreviewResponse.of(
+						label.getId(),
+						label.getName(),
+						label.getTextColor(),
+						label.getBackgroundColor()))
+				.collect(Collectors.toCollection(LinkedList::new));
 	}
 
 	public LabelResponse create(LabelCreateRequest labelCreateRequest) {

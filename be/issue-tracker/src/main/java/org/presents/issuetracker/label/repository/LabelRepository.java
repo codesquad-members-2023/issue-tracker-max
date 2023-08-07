@@ -99,8 +99,6 @@ public class LabelRepository {
         String sql = "SELECT label_id, name, background_color, text_color " +
             "FROM label " +
             "WHERE is_deleted = :openFlag " +
-            "UNION ALL " +
-            "SELECT 0 AS label_id, 'none' AS name, '' AS background_color, '' AS text_color " +
             "ORDER BY label_id";
 
         MapSqlParameterSource params = new MapSqlParameterSource("openFlag", OPEN_FLAG);
