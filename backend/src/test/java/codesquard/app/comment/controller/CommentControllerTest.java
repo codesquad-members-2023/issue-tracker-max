@@ -56,8 +56,9 @@ class CommentControllerTest extends ControllerTestSupport {
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.code").value("400"))
 			.andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-			.andExpect(jsonPath("$.message").value("내용은 필수입니다."))
-			.andExpect(jsonPath("$.data").isEmpty());
+			.andExpect(jsonPath("$.message").value("Bad Request"))
+			.andExpect(jsonPath("$.data[*].field").value("content"))
+			.andExpect(jsonPath("$.data[*].defaultMessage").value("내용은 필수입니다."));
 	}
 
 	@DisplayName("등록된 댓글을 수정한다.")
@@ -89,8 +90,9 @@ class CommentControllerTest extends ControllerTestSupport {
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.code").value("400"))
 			.andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-			.andExpect(jsonPath("$.message").value("내용은 필수입니다."))
-			.andExpect(jsonPath("$.data").isEmpty());
+			.andExpect(jsonPath("$.message").value("Bad Request"))
+			.andExpect(jsonPath("$.data[*].field").value("content"))
+			.andExpect(jsonPath("$.data[*].defaultMessage").value("내용은 필수입니다."));
 	}
 
 	@DisplayName("등록된 댓글을 삭제한다.")

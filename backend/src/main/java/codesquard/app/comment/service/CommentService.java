@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquard.app.api.errors.exception.NoSuchCommentException;
 import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.comment.entity.Comment;
 import codesquard.app.comment.repository.CommentRepository;
@@ -33,6 +34,7 @@ public class CommentService {
 	}
 
 	public CommentModifyResponse modify(CommentModifyServiceRequest serviceRequest, LocalDateTime modifiedAt) {
+		validateCommentId(serviceRequest.getId());
 		Comment comment = serviceRequest.toEntity(modifiedAt);
 		Long modifiedCommentId = commentRepository.modify(comment);
 
@@ -40,6 +42,7 @@ public class CommentService {
 	}
 
 	public CommentDeleteResponse delete(Long id) {
+		validateCommentId(id);
 		Long deletedCommentId = commentRepository.deleteById(id);
 
 		return new CommentDeleteResponse(deletedCommentId);
@@ -48,6 +51,12 @@ public class CommentService {
 	private void validateIssueId(Long issueId) {
 		if (!issueRepository.exist(issueId)) {
 			throw new NoSuchIssueException();
+		}
+	}
+
+	private void validateCommentId(Long commentId) {
+		if (!commentRepository.isExists(commentId)) {
+			throw new NoSuchCommentException();
 		}
 	}
 
