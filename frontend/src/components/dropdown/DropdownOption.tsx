@@ -1,15 +1,15 @@
-import {styled, useTheme} from "styled-components";
-import {Icon} from "../Icon";
+import { styled, useTheme } from "styled-components";
+import { Icon } from "../Icon";
 
 export function DropdownOption({
-                                 showProfile = true,
-                                 profile,
-                                 background,
-                                 color = "LIGHT",
-                                 selected,
-                                 children,
-                                 onClick,
-                               }: {
+  showProfile = true,
+  profile,
+  background,
+  color = "LIGHT",
+  selected,
+  children,
+  onClick,
+}: {
   showProfile?: boolean;
   profile?: string;
   background?: string;
@@ -21,21 +21,21 @@ export function DropdownOption({
   const theme = useTheme();
 
   return (
-      <StyledDropdownOptionList
-          className={selected ? "selected" : ""}
-          onClick={onClick}
-      >
-        {showProfile && profile ? (
-            <img style={{width: "20px"}} src={profile} alt="프로필 이미지"/>
-        ) : (
-            <Icon
-                name="userImageSmall"
-                fill={background ?? theme.color.neutralSurfaceBold}
-            />
-        )}
-        <span title={children}>{children}</span>
-        <Icon name={`check${selected ? "On" : "Off"}Circle`}/>
-      </StyledDropdownOptionList>
+    <StyledDropdownOptionList
+      className={selected ? "selected" : ""}
+      onClick={onClick}
+    >
+      {showProfile && profile ? (
+        <img style={{ width: "20px" }} src={profile} alt="프로필 이미지" />
+      ) : (
+        <Icon
+          name="userImageSmall"
+          fill={background ?? theme.color.neutralSurfaceBold}
+        />
+      )}
+      <span title={children}>{children}</span>
+      <Icon name={`check${selected ? "On" : "Off"}Circle`} />
+    </StyledDropdownOptionList>
   );
 }
 
@@ -46,23 +46,23 @@ const StyledDropdownOptionList = styled.li`
   gap: 8px;
   height: 40px;
   padding: 8px 16px;
-  background-color: ${({theme}) => theme.color.neutralSurfaceStrong};
+  background-color: ${({ theme }) => theme.color.neutralSurfaceStrong};
 
-  font: ${({theme}) => theme.font.availableMedium16};
-  color: ${({theme}) => theme.color.neutralTextDefault};
+  font: ${({ theme }) => theme.font.availableMedium16};
+  color: ${({ theme }) => theme.color.neutralTextDefault};
 
   &.selected {
-    font: ${({theme}) => theme.font.selectedBold16};
-    color: ${({theme}) => theme.color.neutralTextStrong};
+    font: ${({ theme }) => theme.font.selectedBold16};
+    color: ${({ theme }) => theme.color.neutralTextStrong};
   }
 
   &:last-child {
-    border-radius: ${({theme}) =>
-    `0px 0px ${theme.radius.large} ${theme.radius.large}`};
+    border-radius: ${({ theme }) =>
+      `0px 0px ${theme.radius.large} ${theme.radius.large}`};
   }
 
   &:hover {
-    background-color: ${({theme}) => theme.color.neutralSurfaceBold};
+    background-color: ${({ theme }) => theme.color.neutralSurfaceBold};
     cursor: pointer;
   }
 

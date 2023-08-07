@@ -3,25 +3,25 @@ import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TabButton } from "../../components/TabButton";
 
-type LabelHeaderProps = {
+type MilestoneHeaderProps = {
   onClick: () => void;
   isAdding: boolean;
   openedMilestoneCount: number;
   labelCount: number;
 };
 
-export function LabelHeader({
+export function MilestoneHeader({
   onClick,
   isAdding,
   openedMilestoneCount,
   labelCount,
-}: LabelHeaderProps) {
+}: MilestoneHeaderProps) {
   const navigate = useNavigate();
   const tabs = [
     {
       name: `label(${labelCount})`,
       icon: "label",
-      selected: true,
+      selected: false,
       onClick: () => {
         navigate("/label");
       },
@@ -29,7 +29,7 @@ export function LabelHeader({
     {
       name: `milestone(${openedMilestoneCount})`,
       icon: "milestone",
-      selected: false,
+      selected: true,
       onClick: () => {
         navigate("/milestone");
       },
@@ -60,7 +60,7 @@ export function LabelHeader({
         onClick={onClick}
         disabled={isAdding}
       >
-        레이블 추가
+        마일스톤 추가
       </Button>
     </Div>
   );
