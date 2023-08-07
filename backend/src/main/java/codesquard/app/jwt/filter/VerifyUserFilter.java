@@ -16,12 +16,12 @@ import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.errors.errorcode.LoginErrorCode;
 import codesquard.app.errors.exception.RestApiException;
 import codesquard.app.errors.response.ErrorResponse;
 import codesquard.app.errors.response.ErrorResultResponse;
 import codesquard.app.user.controller.request.UserLoginRequest;
-import codesquard.app.user.entity.AuthenticateUser;
 import codesquard.app.user.service.UserQueryService;
 
 public class VerifyUserFilter implements Filter {

@@ -2,6 +2,8 @@ package codesquard.app.user.entity;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
+
 public class User {
 
 	private final Long id;

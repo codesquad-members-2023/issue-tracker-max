@@ -3,7 +3,7 @@ package codesquard.app.user.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.user.entity.AuthenticateUser;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.user.entity.User;
 import codesquard.app.user.repository.UserRepository;
 import codesquard.app.user.service.request.UserLoginServiceRequest;

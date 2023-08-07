@@ -1,7 +1,8 @@
-package codesquard.app.user.entity;
+package codesquard.app.authenticate_user.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import codesquard.app.user.entity.User;
 import lombok.ToString;
 
 @ToString

@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.errors.errorcode.LoginErrorCode;
 import codesquard.app.errors.exception.RestApiException;
 import codesquard.app.jwt.Jwt;
 import codesquard.app.jwt.JwtProvider;
 import codesquard.app.jwt.filter.VerifyUserFilter;
 import codesquard.app.user.controller.response.UserLoginResponse;
-import codesquard.app.user.entity.AuthenticateUser;
 import codesquard.app.user.service.AuthenticateUserService;
 
 @RequestMapping(path = "/api")

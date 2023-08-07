@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
+import codesquard.app.authenticate_user.repository.AuthenticateUserRepository;
 import codesquard.app.authenticate_user.service.RefreshTokenServiceRequest;
 import codesquard.app.jwt.Jwt;
 import codesquard.app.jwt.JwtProvider;
 import codesquard.app.jwt.filter.VerifyUserFilter;
-import codesquard.app.user.entity.AuthenticateUser;
 import codesquard.app.user.entity.User;
-import codesquard.app.user.repository.AuthenticateUserRepository;
 import codesquard.app.user.repository.UserRepository;
 
 @Service
@@ -39,7 +39,7 @@ public class AuthenticateUserService {
 	@Transactional
 	public void updateRefreshToken(AuthenticateUser authenticateUser, Jwt jwt) {
 		User findUser = userRepository.findByLoginId(authenticateUser.toEntity());
-		if (authenticateUserRepository.existRefreshToken(findUser)) {
+		if (authenticateUserRepository.isExistRefreshToken(findUser)) {
 			authenticateUserRepository.updateRefreshToken(findUser, jwt);
 			return;
 		}

@@ -2,8 +2,8 @@ package codesquard.app.user.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.jwt.Jwt;
-import codesquard.app.user.entity.AuthenticateUser;
 
 public class UserLoginResponse {
 	@JsonProperty("user")

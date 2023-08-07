@@ -1,4 +1,4 @@
-package codesquard.app.user.repository;
+package codesquard.app.authenticate_user.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class JdbcAuthenticateUserRepository implements AuthenticateUserRepositor
 	}
 
 	@Override
-	public boolean existRefreshToken(User user) {
+	public boolean isExistRefreshToken(User user) {
 		String sql = "SELECT EXISTS(SELECT 1 FROM authenticate_user WHERE id = :id) AS count";
 		return template.query(sql, user.createSaveParamSource(), (rs, rowNum) -> rs.getBoolean("count"))
 			.stream()

@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.IntegrationTestSupport;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.authenticate_user.service.RefreshTokenServiceRequest;
 import codesquard.app.jwt.Jwt;
 import codesquard.app.jwt.JwtProvider;
-import codesquard.app.user.entity.AuthenticateUser;
 import codesquard.app.user.service.request.UserLoginServiceRequest;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
 

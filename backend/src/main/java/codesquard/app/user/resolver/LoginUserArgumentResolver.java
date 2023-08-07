@@ -10,8 +10,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.user.annotation.Login;
-import codesquard.app.user.entity.AuthenticateUser;
 
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 	private static final Logger logger = LoggerFactory.getLogger(LoginUserArgumentResolver.class);
