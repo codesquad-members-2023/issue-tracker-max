@@ -10,6 +10,7 @@ import com.issuetrackermax.controller.auth.AuthController;
 import com.issuetrackermax.controller.filter.FilterController;
 import com.issuetrackermax.controller.label.LabelController;
 import com.issuetrackermax.controller.member.MemberController;
+import com.issuetrackermax.controller.milestone.MilestoneController;
 import com.issuetrackermax.service.filter.FilterService;
 import com.issuetrackermax.service.jwt.JwtService;
 import com.issuetrackermax.service.label.LabelService;
@@ -20,6 +21,7 @@ import com.issuetrackermax.service.milestone.MilestoneService;
 	AuthController.class,
 	MemberController.class,
 	FilterController.class,
+	MilestoneController.class,
 	LabelController.class
 })
 public abstract class ControllerTestSupport {

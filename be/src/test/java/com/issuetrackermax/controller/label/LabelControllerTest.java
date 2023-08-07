@@ -37,11 +37,11 @@ class LabelControllerTest extends ControllerTestSupport {
 			.build();
 
 		when(labelService.getLabelList()).thenReturn(List.of(labelDetailResponse, labelDetailResponse2));
-		when(milestoneService.getMilstoneCount()).thenReturn(3L);
+		when(milestoneService.getMilestoneCount()).thenReturn(3L);
 
 		// when & then
 		mockMvc.perform(
-				get("/labels")
+				get("/api/labels")
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
@@ -76,7 +76,7 @@ class LabelControllerTest extends ControllerTestSupport {
 
 		// when & then
 		mockMvc.perform(
-				post("/labels")
+				post("/api/labels")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectMapper.writeValueAsString(labelPostRequest))
 			)
