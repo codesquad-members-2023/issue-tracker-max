@@ -2,9 +2,10 @@ package org.presents.issuetracker.label.service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.presents.issuetracker.global.dto.response.LabelResponse;
+import org.presents.issuetracker.global.dto.response.LabelIdResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
 import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
@@ -47,7 +48,7 @@ public class LabelService {
 				.collect(Collectors.toCollection(LinkedList::new));
 	}
 
-	public LabelResponse create(LabelCreateRequest labelCreateRequest) {
+	public LabelIdResponse create(LabelCreateRequest labelCreateRequest) {
 		Long createdId = labelRepository.save(
 			Label.of(
 				labelCreateRequest.getName(),
@@ -55,17 +56,33 @@ public class LabelService {
 				labelCreateRequest.getBackgroundColor(),
 				labelCreateRequest.getTextColor()));
 
-		return LabelResponse.builder().id(createdId).build();
+		return LabelIdResponse.from(createdId);
 	}
 
-	public LabelResponse update(LabelUpdateRequest labelUpdateRequest) {
+	public LabelIdResponse update(LabelUpdateRequest labelUpdateRequest) {
 		Long id = labelUpdateRequest.getId();
 		Label label = labelRepository.findById(id);
 
-		label = label.updateFrom(labelUpdateRequest);
-		labelRepository.update(label);
+		String name = Optional.ofNullable(labelUpdateRequest.getName())
+				.filter(newName -> !newName.equals(label.getName()))
+				.orElse(label.getName());
 
-		return LabelResponse.builder().id(label.getId()).build();
+		String description = Optional.ofNullable(labelUpdateRequest.getDescription())
+				.filter(newDescription -> !newDescription.equals(label.getDescription()))
+				.orElse(label.getDescription());
+
+		String backgroundColor = Optional.ofNullable(labelUpdateRequest.getBackgroundColor())
+				.filter(newBackgroundColor -> !newBackgroundColor.equals(label.getBackgroundColor()))
+				.orElse(label.getBackgroundColor());
+
+		String textColor = Optional.ofNullable(labelUpdateRequest.getTextColor())
+				.filter(newTextColor -> !newTextColor.equals(label.getTextColor()))
+				.orElse(label.getTextColor());
+
+		Label updatedLabel = Label.of(label.getId(), name, description, backgroundColor, textColor);
+		labelRepository.update(updatedLabel);
+
+		return LabelIdResponse.from(updatedLabel.getId());
 	}
 
 	public void delete(Long id) {
