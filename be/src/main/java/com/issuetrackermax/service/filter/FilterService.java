@@ -1,5 +1,6 @@
 package com.issuetrackermax.service.filter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +42,7 @@ public class FilterService {
 
 	private List<IssueResponse> getIssues(List<FilterResultVO> filterResultVOS) {
 		if (filterResultVOS.size() == 0) {
-			return null;
+			return new ArrayList<>();
 		}
 		return filterResultVOS.stream()
 			.map(this::getIssueResponseWithLabelIds)

@@ -1,5 +1,6 @@
 package com.issuetrackermax.controller.filter.dto.response;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -21,7 +22,7 @@ public class AssigneeResponse {
 
 	public static List<AssigneeResponse> convertToAssigneeResponseList(String assigneeIds, String assigneeNames) {
 		if (assigneeIds == null) {
-			return null;
+			return new ArrayList<>();
 		}
 		List<String> ids = List.of(assigneeIds.split(","));
 		List<String> names = List.of(assigneeNames.split(","));
