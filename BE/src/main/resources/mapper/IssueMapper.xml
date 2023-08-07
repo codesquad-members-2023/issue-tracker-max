@@ -45,12 +45,12 @@
                 label.color as label_color
         FROM issue issue
         INNER JOIN member author ON author.id = issue.author_id
-        LEFT OUTER JOIN milestone milestone ON issue.milestone_id = milestone.id
-        LEFT OUTER JOIN issue_label_mapping issue_label_mapping ON issue.id = issue_label_mapping.issue_id
-        LEFT OUTER JOIN label label ON issue_label_mapping.label_id = label.id
-        LEFT OUTER JOIN assignee assignee ON issue.id = assignee.issue_id
-        LEFT OUTER JOIN member assignee_member ON assignee.member_id = assignee_member.id
-        LEFT OUTER JOIN issue_comment issue_comment ON issue.id = issue_comment.issue_id
+        LEFT OUTER JOIN milestone ON issue.milestone_id = milestone.id
+        LEFT OUTER JOIN issue_label_mapping ON issue.id = issue_label_mapping.issue_id
+        LEFT OUTER JOIN label ON issue_label_mapping.label_id = label.id
+        LEFT OUTER JOIN assignee ON issue.id = assignee.issue_id
+        LEFT OUTER JOIN member ON assignee.member_id = member.id
+        LEFT OUTER JOIN issue_comment ON issue.id = issue_comment.issue_id
         <where>
             <if test="isOpen != null">
                 <trim prefix="AND">
@@ -59,19 +59,32 @@
             </if>
             <if test="assigneeIds != null and assigneeIds.size() > 0">
                 <trim prefix="AND">
-                    assignee.member_id IN
+                    issue.id IN (
+                        SELECT issue_id
+                        FROM assignee
+                        WHERE member_id IN
+                        <foreach collection="assigneeIds" item="assigneeId" separator="," open="(" close=")">
+                            #{assigneeId}
+                        </foreach>
+                        GROUP BY issue_id
+                        HAVING COUNT(DISTINCT member_id) = ${assigneeIds.size}
+                    )
                 </trim>
-                <foreach collection="assigneeIds" item="assigneeId" separator="," open="(" close=")">
-                    #{assigneeId}
-                </foreach>
             </if>
             <if test="labelIds != null and labelIds.size() > 0">
                 <trim prefix="AND">
-                    issue_label_mapping.label_id IN
+                    issue.id IN (
+                        SELECT issue_id
+                        FROM issue_label_mapping
+                        WHERE label_id IN
+                        <foreach collection="labelIds" item="labelId" separator="," open="(" close=")">
+                            #{labelId}
+                        </foreach>
+                        GROUP BY issue_id
+                        HAVING COUNT(DISTINCT label_id) = ${labelIds.size}
+                    )
                 </trim>
-                <foreach collection="labelIds" item="labelId" separator="," open="(" close=")">
-                    #{labelId}
-                </foreach>
+
             </if>
             <if test="milestoneId != null">
                 <trim prefix="AND">
@@ -89,6 +102,6 @@
                 </trim>
             </if>
         </where>
-        ORDER BY issue.id, label.id
+        ORDER BY issue.id desc, label.id
     </select>
 </mapper>

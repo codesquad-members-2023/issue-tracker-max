@@ -29,6 +29,14 @@ public class IssueSteps {
 			.then().log().all().extract();
 	}
 
+	public static ExtractableResponse<Response> 이슈_목록_조회_요청(Map<String, Object> params) {
+		return RestAssured.given().log().all()
+			.queryParams(params)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().get("/api/issues")
+			.then().log().all().extract();
+	}
+
 	public static ExtractableResponse<Response> 이슈_작성_요청(IssueCreateRequest issueCreateRequest) {
 		return RestAssured.given().log().all()
 			.body(issueCreateRequest)

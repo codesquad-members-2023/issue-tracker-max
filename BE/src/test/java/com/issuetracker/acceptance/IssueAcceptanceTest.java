@@ -1,26 +1,34 @@
 package com.issuetracker.acceptance;
 
-import static com.issuetracker.util.steps.IssueSteps.마일스톤_목록_조회_요청;
-import static com.issuetracker.util.steps.IssueSteps.작성자_목록_조회_요청;
-import static com.issuetracker.util.steps.IssueSteps.이슈에_등록_되어있는_담당자_목록_조회_요청;
-import static com.issuetracker.util.steps.IssueSteps.이슈_목록_조회_요청;
-import static com.issuetracker.util.steps.IssueSteps.이슈_작성_요청;
-import static com.issuetracker.util.steps.IssueSteps.이슈에_등록_되어있는_라벨_목록_조회_요청;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL2;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL4;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL7;
 import static com.issuetracker.util.fixture.MemberFixture.USER1;
 import static com.issuetracker.util.fixture.MemberFixture.USER2;
+import static com.issuetracker.util.fixture.MemberFixture.USER3;
 import static com.issuetracker.util.fixture.MemberFixture.USER4;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTONR1;
+import static com.issuetracker.util.fixture.MilestoneFixture.MILESTONR2;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTONR4;
+import static com.issuetracker.util.steps.IssueSteps.마일스톤_목록_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈_목록_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈_작성_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈에_등록_되어있는_담당자_목록_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈에_등록_되어있는_라벨_목록_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.작성자_목록_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 
 import com.issuetracker.issue.ui.dto.AuthorsSearchResponse;
@@ -44,17 +52,10 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 	 * When 검색 조건에 입력하여 이슈 목록을 조회하면
 	 * Then 검색 조건에 맞는 이슈 목록을 조회할 수 있다.
 	 */
-	@Test
-	void 이슈를_목록을_조회한다() {
+	@ParameterizedTest
+	@MethodSource("providerIssueSearchRequest")
+	void 이슈를_목록을_조회한다(IssueSearchRequest issueSearchRequest) {
 		// when
-		IssueSearchRequest issueSearchRequest = new IssueSearchRequest(
-			true,
-			List.of(USER2.getId()),
-			List.of(LABEL4.getId(), LABEL7.getId()),
-			MILESTONR1.getId(),
-			USER2.getId(),
-			true
-		);
 		var response = 이슈_목록_조회_요청(issueSearchRequest);
 
 		// then
@@ -83,6 +84,22 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		// then
 		응답_상태코드_검증(response, HttpStatus.OK);
 		비어있는_이슈_목록_검증(response);
+	}
+
+	/**
+	 * Given 회원, 마일스톤, 라벨, 이슈를 생성하고
+	 * When 이슈 목록 조회 시 검색 조건이 아니면
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 이슈를_목록을_조회한다2() {
+		// when
+		Map<String, Object> params = new HashMap<>();
+		params.put("notSearchCondition", "test");
+		var response = 이슈_목록_조회_요청(params);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
 	}
 
 	/**
@@ -237,6 +254,38 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		이슈에_등록_되어있는_라벨_목록_검증(response);
 	}
 
+	private static Stream<Arguments> providerIssueSearchRequest() {
+		return Stream.of(
+			Arguments.of(
+				new IssueSearchRequest(
+					true,
+					List.of(USER2.getId(), USER3.getId()),
+					List.of(LABEL4.getId(), LABEL7.getId()),
+					MILESTONR2.getId(),
+					USER4.getId(),
+					null)
+			),
+			Arguments.of(
+				new IssueSearchRequest(
+					true,
+					null,
+					List.of(LABEL4.getId(), LABEL7.getId()),
+					MILESTONR1.getId(),
+					USER2.getId(),
+					true)
+			),
+			Arguments.of(
+				new IssueSearchRequest(
+					null,
+					null,
+					null,
+					MILESTONR1.getId(),
+					USER2.getId(),
+					true)
+			)
+		);
+	}
+
 	private void 응답_상태코드_검증(ExtractableResponse<Response> response, HttpStatus httpStatus) {
 		assertThat(response.statusCode()).isEqualTo(httpStatus.value());
 	}
@@ -292,7 +341,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 	private void 이슈_목록_조회_시_생성된_이슈를_검증(ExtractableResponse<Response> response, IssueCreateRequest issueCreateRequest) {
 		var findResponse =  이슈_목록_조회_요청(new IssueSearchRequest(true, null, null, null, null, null));
 		List<IssueSearchResponse> issueSearchResponses = findResponse.as(IssuesSearchResponse.class).getIssues();
-		IssueSearchResponse lastIssueSearchResponse = issueSearchResponses.get(issueSearchResponses.size() - 1);
+		IssueSearchResponse lastIssueSearchResponse = issueSearchResponses.get(0);
 
 		assertThat(lastIssueSearchResponse.getId()).isEqualTo(response.jsonPath().getLong("id"));
 		assertThat(lastIssueSearchResponse.getTitle()).isEqualTo(issueCreateRequest.getTitle());

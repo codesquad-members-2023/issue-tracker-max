@@ -8,6 +8,7 @@ import static com.issuetracker.util.fixture.MilestoneFixture.MILESTONR1;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTONR3;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +45,7 @@ public class IssueMapperTest {
 		// given
 		IssueSearch issueSearch = IssueSearch.builder()
 			.isOpen(true)
-			.assigneeIds(null)
+			.assigneeIds(Collections.emptyList())
 			.labelIds(List.of(LABEL5.getId()))
 			.milestoneId(MILESTONR1.getId())
 			.authorId(USER1.getId())
@@ -63,7 +64,7 @@ public class IssueMapperTest {
 		// given
 		IssueSearch issueSearch = IssueSearch.builder()
 			.isOpen(false)
-			.assigneeIds(null)
+			.assigneeIds(Collections.emptyList())
 			.labelIds(List.of(LABEL1.getId()))
 			.milestoneId(MILESTONR3.getId())
 			.authorId(USER4.getId())

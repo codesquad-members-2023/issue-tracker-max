@@ -2,8 +2,6 @@ package com.issuetracker.issue.application.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.label.domain.Label;
@@ -26,8 +24,8 @@ public class IssueCreateInputData {
 		Long milestoneId, Long author) {
 		this.title = title;
 		this.content = content;
-		this.assigneeIds = getNonNullLabels(assigneeIds);
-		this.labelIds = getNonNullLabels(labelIds);
+		this.assigneeIds = assigneeIds;
+		this.labelIds = labelIds;
 		this.milestoneId = milestoneId;
 		this.author = author;
 	}
@@ -42,11 +40,5 @@ public class IssueCreateInputData {
 			.labels(labels)
 			.milestone(milestone)
 			.build();
-	}
-
-	private List<Long> getNonNullLabels(List<Long> ids) {
-		return ids.stream()
-			.filter(Objects::nonNull)
-			.collect(Collectors.toUnmodifiableList());
 	}
 }

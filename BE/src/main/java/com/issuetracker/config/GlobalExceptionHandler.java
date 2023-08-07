@@ -1,11 +1,14 @@
 package com.issuetracker.config;
 
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.issuetracker.config.exception.ApiException;
 
@@ -14,12 +17,12 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorResponse> methodValidHandler(MethodArgumentNotValidException e) {
-		return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
-	}
-
-	@ExceptionHandler(BindException.class)
-	public ResponseEntity<ErrorResponse> bindHandler(BindException e) {
-		return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage())); // TODO: 메세지 새로 작성해주기
+		String messages = e.getBindingResult()
+			.getFieldErrors()
+			.stream()
+			.map(FieldError::getDefaultMessage)
+			.collect(Collectors.joining(", ", "[", "]"));
+		return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST, messages));
 	}
 
 	@ExceptionHandler(ApiException.class)
@@ -27,10 +30,16 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(e.getStatus()).body(new ErrorResponse(e.getStatus(), e.getMessage()));
 	}
 
+	@ExceptionHandler(NoHandlerFoundException.class)
+	public ResponseEntity<ErrorResponse> handleNotFoundException(NoHandlerFoundException e) {
+		e.printStackTrace();
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+			.body(new ErrorResponse(HttpStatus.NOT_FOUND, "해당 API 경로로는 요청할 수 없습니다."));
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse> exceptionHandler(Exception e) {
 		e.printStackTrace();
 		return ResponseEntity.internalServerError().body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다"));
 	}
-
 }

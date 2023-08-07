@@ -1,6 +1,8 @@
 package com.issuetracker.issue.ui.dto;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 
@@ -35,10 +37,16 @@ public class IssueCreateRequest {
 		return new IssueCreateInputData(
 			title,
 			content,
-			assigneeIds,
-			labelIds,
+			converterNonNullList(assigneeIds),
+			converterNonNullList(labelIds),
 			milestoneId,
 			authorId
 		);
+	}
+
+	private List<Long> converterNonNullList(List<Long> ids) {
+		return ids.stream()
+			.filter(Objects::nonNull)
+			.collect(Collectors.toUnmodifiableList());
 	}
 }

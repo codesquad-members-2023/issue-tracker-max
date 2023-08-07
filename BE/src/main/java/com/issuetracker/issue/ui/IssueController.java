@@ -1,7 +1,9 @@
 package com.issuetracker.issue.ui;
 
 import java.net.URI;
+import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.issuetracker.issue.application.IssueService;
@@ -32,7 +35,7 @@ public class IssueController {
 	private final IssueService issueService;
 
 	@GetMapping
-	public ResponseEntity<IssuesSearchResponse> showIssues(@ModelAttribute IssueSearchRequest issueSearchRequest) {
+	public ResponseEntity<IssuesSearchResponse> showIssues(IssueSearchRequest issueSearchRequest) {
 		IssuesSearchResponse issuesSearchResponse = IssuesSearchResponse.of(
 			issueService.findIssuesCount(),
 			issueService.search(issueSearchRequest.toIssueSearchData(1L))

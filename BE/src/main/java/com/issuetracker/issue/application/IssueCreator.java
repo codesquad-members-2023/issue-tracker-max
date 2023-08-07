@@ -43,7 +43,7 @@ public class IssueCreator {
 		labelValidator.verifyLabels(issueCreateData.getLabelIds());
 
 		return new IssueVerifiedCreator(
-			1L,
+			issueCreateData.getAuthor(),
 			issueCreateData.getAssigneeIds(),
 			issueCreateData.getLabelIds(),
 			issueCreateData.getMilestoneId()

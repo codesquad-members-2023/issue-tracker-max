@@ -2,7 +2,6 @@ package com.issuetracker.member.application;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -28,17 +27,9 @@ public class MemberValidator {
 			return;
 		}
 
-		ids = getNonNullLabels(ids);
-
 		if(!memberRepository.existByIds(ids)) {
 			throw new MemberNotFoundException();
 		}
-	}
-
-	private List<Long> getNonNullLabels(List<Long> ids) {
-		return ids.stream()
-			.filter(Objects::nonNull)
-			.collect(Collectors.toUnmodifiableList());
 	}
 }
 
