@@ -1,14 +1,11 @@
 package codesquard.app.errors.exception;
 
-import codesquard.app.errors.errorcode.ErrorCode;
-import codesquard.app.errors.errorcode.ImageErrorCode;
-
 public class EmptyFileException extends RuntimeException {
 
-	private final ErrorCode errorCode = ImageErrorCode.EMPTY_FILE;
+	private static final String MESSAGE = "파일이 비어있습니다.";
 
-	public ErrorCode getErrorCode() {
-		return errorCode;
+	public EmptyFileException() {
+		super(MESSAGE);
 	}
 
 }

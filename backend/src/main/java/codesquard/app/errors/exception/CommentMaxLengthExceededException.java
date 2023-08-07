@@ -1,14 +1,11 @@
 package codesquard.app.errors.exception;
 
-import codesquard.app.errors.errorcode.ErrorCode;
-import codesquard.app.errors.errorcode.ImageErrorCode;
-
 public class CommentMaxLengthExceededException extends RuntimeException {
 
-	private final ErrorCode errorCode = ImageErrorCode.MAX_UPLOAD_SIZE_EXCEED;
+	private static final String MESSAGE = "댓글은 1자 이상 10000자 이하여야 합니다.";
 
-	public ErrorCode getErrorCode() {
-		return errorCode;
+	public CommentMaxLengthExceededException() {
+		super(MESSAGE);
 	}
 
 }
