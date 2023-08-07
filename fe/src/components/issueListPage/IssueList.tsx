@@ -4,11 +4,9 @@ import { ReactComponent as UserImageSmall } from '@assets/icons/userImageSmall.s
 import { useTheme } from '@emotion/react';
 import { InformationTag } from '@components/common/InformationTag';
 
-type Props = {
-  image: string;
-};
+type Props = {};
 
-export const IssueList: React.FC<Props> = ({ image }) => {
+export const IssueList: React.FC<Props> = () => {
   const theme = useTheme() as any;
 
   return (
@@ -75,19 +73,7 @@ export const IssueList: React.FC<Props> = ({ image }) => {
         </div>
       </div>
       <div css={{ padding: '0px 54px', display: 'flex', alignItems: 'center' }}>
-        {image ? (
-          <img
-            src={image}
-            alt="작성자 프로필 사진"
-            css={{
-              width: '20px',
-              height: '20px',
-              borderRadius: theme.radius.half,
-            }}
-          />
-        ) : (
-          <UserImageSmall />
-        )}
+        <UserImageSmall />
       </div>
     </li>
   );

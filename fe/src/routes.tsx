@@ -19,6 +19,7 @@ export const AppRoutes: React.FC<Props> = ({ currentTheme, toggleTheme }) => {
       <Route path="/sign" element={<SignPage />} />
       <Route path="/" element={<Header {...{ currentTheme, toggleTheme }} />}>
         <Route index element={<IssueListPage />} />
+        <Route path=":query" element={<IssueListPage />} />
         <Route path="add" element={<AddIssuePage />} />
         <Route path="issue/:id" element={<IssueDetailPage />} />
         <Route path="label" element={<LabelListPage />} />
