@@ -38,7 +38,7 @@ public class IssueRepository {
 		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
 
-	public void addAssignee(List<Assignee> assignees) {
+	public void addAssignees(List<Assignee> assignees) {
 		final String sql = "INSERT INTO assignee(issue_id, user_id) VALUES (:issueId, :userId)";
 
 		jdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(assignees));
@@ -50,7 +50,7 @@ public class IssueRepository {
 		jdbcTemplate.update(sql, Map.of("issueId", issueId));
 	}
 
-	public void addLabel(List<IssueLabel> issueLabels) {
+	public void addLabels(List<IssueLabel> issueLabels) {
 		final String sql = "INSERT INTO issue_label(issue_id, label_id) VALUES (:issueId, :labelId)";
 
 		jdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(issueLabels));

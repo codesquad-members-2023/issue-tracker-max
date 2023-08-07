@@ -35,15 +35,15 @@ public class IssueService {
 				.build()
 		);
 
-		setAssignees(issueCreateRequest.getAssigneeIds(), savedIssueId);
-		setLabels(issueCreateRequest.getLabelIds(), savedIssueId);
+		addAssignees(issueCreateRequest.getAssigneeIds(), savedIssueId);
+		addLabels(issueCreateRequest.getLabelIds(), savedIssueId);
 		setMilestone(issueCreateRequest.getMilestoneId(), savedIssueId);
 
 		return savedIssueId;
 	}
 
-	private void setAssignees(List<Long> assigneeIds, Long issueId) {
-		issueRepository.addAssignee(
+	private void addAssignees(List<Long> assigneeIds, Long issueId) {
+		issueRepository.addAssignees(
 			assigneeIds.stream()
 				.map(assigneeId ->
 					Assignee.builder()
@@ -55,8 +55,8 @@ public class IssueService {
 		);
 	}
 
-	private void setLabels(List<Long> labelIds, Long issueId) {
-		issueRepository.addLabel(
+	private void addLabels(List<Long> labelIds, Long issueId) {
+		issueRepository.addLabels(
 			labelIds.stream()
 				.map(labelId ->
 					IssueLabel.builder()
