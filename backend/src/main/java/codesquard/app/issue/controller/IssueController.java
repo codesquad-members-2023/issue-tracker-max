@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
@@ -27,18 +28,19 @@ import codesquard.app.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@RequestMapping(path = "/api/issues")
 @RestController
 public class IssueController {
 
 	private final IssueService issueService;
 
-	@GetMapping("/api/issues/{issueId}")
+	@GetMapping("/{issueId}")
 	public ResponseEntity<IssueReadResponse> get(@PathVariable Long issueId) {
 		IssueReadResponse issueReadResponse = issueService.get(issueId);
 		return ResponseEntity.status(HttpStatus.OK).body(issueReadResponse);
 	}
 
-	@PostMapping("/api/issues")
+	@PostMapping
 	public ResponseEntity<IssueSaveResponse> save(
 		@Valid @RequestBody IssueSaveRequest issueSaveRequest) {
 		Long userId = 1L;
@@ -46,49 +48,49 @@ public class IssueController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(IssueSaveResponse.success(id));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/status")
+	@PatchMapping("/{issueId}/status")
 	public ResponseEntity<IssueModifyResponse> modifyStatus(
 		@RequestBody IssueModifyStatusRequest issueModifyStatusRequest, @PathVariable Long issueId) {
 		issueService.modifyStatus(issueModifyStatusRequest, issueId);
 		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
 	}
 
-	@PatchMapping("/api/issues/{issueId}/title")
+	@PatchMapping("/{issueId}/title")
 	public ResponseEntity<IssueModifyResponse> modifyTitle(
 		@Valid @RequestBody IssueModifyTitleRequest issueModifyTitleRequest, @PathVariable Long issueId) {
 		issueService.modifyTitle(issueModifyTitleRequest, issueId);
 		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
 	}
 
-	@PatchMapping("/api/issues/{issueId}/content")
+	@PatchMapping("/{issueId}/content")
 	public ResponseEntity<IssueModifyResponse> modifyContent(
 		@Valid @RequestBody IssueModifyContentRequest issueModifyContentRequest, @PathVariable Long issueId) {
 		issueService.modifyContent(issueModifyContentRequest, issueId);
 		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
 	}
 
-	@PatchMapping("/api/issues/{issueId}/milestones")
+	@PatchMapping("/{issueId}/milestones")
 	public ResponseEntity<IssueModifyResponse> modifyMilestone(
 		@RequestBody IssueModifyMilestoneRequest issueModifyMilestoneRequest, @PathVariable Long issueId) {
 		issueService.modifyMilestone(issueModifyMilestoneRequest, issueId);
 		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
 	}
 
-	@PatchMapping("/api/issues/{issueId}/assignees")
+	@PatchMapping("/{issueId}/assignees")
 	public ResponseEntity<IssueModifyResponse> modifyAssignees(
 		@RequestBody IssueModifyAssigneesRequest issueModifyAssigneesRequest, @PathVariable Long issueId) {
 		issueService.modifyAssignees(issueModifyAssigneesRequest, issueId);
 		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
 	}
 
-	@PatchMapping("/api/issues/{issueId}/labels")
+	@PatchMapping("/{issueId}/labels")
 	public ResponseEntity<IssueModifyResponse> modifyLabels(
 		@RequestBody IssueModifyLabelsRequest issueModifyLabelsRequest, @PathVariable Long issueId) {
 		issueService.modifyLabels(issueModifyLabelsRequest, issueId);
 		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
 	}
 
-	@DeleteMapping("/api/issues/{issueId}")
+	@DeleteMapping("/{issueId}")
 	public ResponseEntity<IssueDeleteResponse> delete(@PathVariable Long issueId) {
 		issueService.delete(issueId);
 		return ResponseEntity.status(HttpStatus.OK).body(IssueDeleteResponse.success());
