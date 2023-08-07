@@ -7,8 +7,8 @@ import { MilestoneTableElement } from "./MilestoneTableElement";
 
 type MilestoneTableProps = {
   milestones: MilestoneData[];
-  openCount: Number;
-  closeCount: Number;
+  openCount: number;
+  closeCount: number;
   status: "OPENED" | "CLOSED";
 };
 

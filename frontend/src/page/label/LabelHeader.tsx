@@ -6,8 +6,8 @@ import { TabButton } from "../../components/TabButton";
 type LabelHeaderProps = {
   onClick: () => void;
   isAdding: boolean;
-  openedMilestoneCount: Number;
-  labelCount: Number;
+  openedMilestoneCount: number;
+  labelCount: number;
 };
 
 export function LabelHeader({
