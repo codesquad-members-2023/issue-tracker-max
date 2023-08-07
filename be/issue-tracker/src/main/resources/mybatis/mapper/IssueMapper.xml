@@ -92,7 +92,7 @@
         </where>
     </select>
 
-    <resultMap id="issueDetailResultMap" type="IssueDetailVo">
+    <resultMap id="issueDetailResultMap" type="IssueDetailInfo">
         <id property="id" column="issue_id"/>
         <result property="title" column="title"/>
         <result property="contents" column="contents"/>
@@ -105,7 +105,7 @@
             <result property="image" column="author_image"/>
         </association>
 
-        <association property="milestone" javaType="MilestonePreviewVo">
+        <association property="milestone" javaType="MilestonePreview">
             <id property="id" column="milestone_id"/>
             <result property="name" column="milestone_name"/>
             <result property="progress" column="progress"/>
@@ -117,14 +117,14 @@
             <result property="image" column="assignee_image"/>
         </collection>
 
-        <collection property="labels" ofType="LabelVo">
+        <collection property="labels" ofType="Label">
             <id property="id" column="label_id"/>
             <result property="name" column="label_name"/>
             <result property="textColor" column="text_color"/>
             <result property="backgroundColor" column="background_color"/>
         </collection>
 
-        <collection property="comments" ofType="CommentVo">
+        <collection property="comments" ofType="CommentWithAuthor">
             <id property="id" column="comment_id"/>
             <result property="contents" column="comment_contents"/>
             <result property="createdAt" column="comment_created_at"/>

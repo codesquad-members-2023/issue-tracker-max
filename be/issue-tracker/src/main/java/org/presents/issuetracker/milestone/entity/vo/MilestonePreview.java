@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MilestonePreviewVo {
+public class MilestonePreview {
 	private Long id;
 	private String name;
 	private int progress;

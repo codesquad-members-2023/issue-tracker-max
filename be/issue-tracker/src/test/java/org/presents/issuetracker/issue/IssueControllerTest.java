@@ -10,17 +10,17 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.presents.issuetracker.annotation.ControllerTest;
 import org.presents.issuetracker.issue.controller.IssueController;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 import org.presents.issuetracker.issue.service.IssueService;
 import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
 import org.presents.issuetracker.user.dto.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(IssueController.class)
+@ControllerTest(IssueController.class)
 public class IssueControllerTest {
 
 	@Autowired
