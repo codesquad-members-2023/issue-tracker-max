@@ -141,4 +141,3 @@ dist
 /.idea/compiler.xml
 /.idea/codeStyles/codeStyleConfig.xml
 /.idea/checkstyle-idea.xml
-*.yml
