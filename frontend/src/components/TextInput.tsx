@@ -53,10 +53,11 @@ export function TextInput({
   const [state, setState] = useState<TextInputState>(
     disabled ? "Disabled" : "Enabled",
   );
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
-    setState(isError ? "Error" : "Enabled");
-  }, [isError]);
+    setState(isError ? "Error" : isFocused ? "Active" : "Enabled");
+  }, [isError, isFocused]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange && onChange(event);
@@ -67,6 +68,7 @@ export function TextInput({
       setState("Active");
     }
 
+    setIsFocused(true);
     onFocus && onFocus();
   };
 
@@ -75,6 +77,7 @@ export function TextInput({
       setState(disabled ? "Disabled" : "Enabled");
     }
 
+    setIsFocused(false);
     onBlur && onBlur();
   };
 
