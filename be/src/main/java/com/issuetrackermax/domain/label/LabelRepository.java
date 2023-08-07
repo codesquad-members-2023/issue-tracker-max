@@ -38,9 +38,27 @@ public class LabelRepository {
 		return (Long)Objects.requireNonNull(keyHolder.getKey());
 	}
 
+	public Long update(Long id, Label label) {
+		String sql = "UPDATE label SET title = :title, description = :description, text_color = :textColor, background_color=:backgroundColor WHERE id = :labelId";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		SqlParameterSource parameters = new MapSqlParameterSource()
+			.addValue("labelId", id)
+			.addValue("title", label.getTitle(), Types.VARCHAR)
+			.addValue("description", label.getDescription(), Types.VARCHAR)
+			.addValue("textColor", label.getTextColor(), Types.VARCHAR)
+			.addValue("backgroundColor", label.getBackgroundColor(), Types.VARCHAR);
+		jdbcTemplate.update(sql, parameters, keyHolder);
+		return (Long)Objects.requireNonNull(keyHolder.getKey());
+	}
+
 	public Long getLabelCount() {
 		String sql = "SELECT COUNT(*) FROM label";
 		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Long.class);
+	}
+
+	public List<Label> getLabels() {
+		String sql = "SELECT id, title, description, text_color, background_color FROM label";
+		return jdbcTemplate.query(sql, Map.of(), LABEL_ROW_MAPPER);
 	}
 
 	public Boolean existByIds(List<Long> ids) {
@@ -64,4 +82,9 @@ public class LabelRepository {
 			.textColor(rs.getString("text_color"))
 			.backgroundColor(rs.getString("background_color"))
 			.build();
+
+	public int deleteById(Long id) {
+		String sql = "DELETE FROM label WHERE id = :id";
+		return jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
+	}
 }

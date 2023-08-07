@@ -11,4 +11,8 @@ import lombok.RequiredArgsConstructor;
 public class MilestoneService {
 	private final MilestoneRepository milestoneRepository;
 
+	public Long getMilstoneCount() {
+		return milestoneRepository.getMilestoneCount();
+	}
+
 }
