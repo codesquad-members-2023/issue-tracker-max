@@ -166,7 +166,7 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public boolean exist(Long issueId) {
+	public boolean isExist(Long issueId) {
 		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id AND is_deleted = false)";
 		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", issueId), Boolean.class));
 	}

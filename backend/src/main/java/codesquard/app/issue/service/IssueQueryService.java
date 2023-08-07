@@ -34,7 +34,7 @@ public class IssueQueryService {
 	}
 
 	public void existIssue(Long issueId) {
-		if (!issueRepository.exist(issueId)) {
+		if (!issueRepository.isExist(issueId)) {
 			throw new NoSuchIssueException(IssueErrorCode.NOT_FOUND_ISSUE);
 		}
 	}
