@@ -6,6 +6,7 @@ on:
 
 env:
   working-directory: ./be
+  APPLICATION_YML_FILE_PATH: ./src/main/resources/application.yml
   AWS_REGION: ap-northeast-2
   S3_BUCKET_NAME: issue-tracker-s3-bucket
   CODE_DEPLOY_APPLICATION_NAME: issue-tracker-codedeploy-app
@@ -34,10 +35,8 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - uses: actions/checkout@v3
-      - run: touch -c application.yml
-      - run: echo "${{ secrets.APPLICATION }}" > application.yml
-      - run: mv application.yml be/issue/src/main/resources/application.yml
+      - name: Output application information
+        run: echo '${{ secrets.APPLICATION }}' > '${{ env.APPLICATION_YML_FILE_PATH }}'
 
       - name: Build with Gradle
         run: |
