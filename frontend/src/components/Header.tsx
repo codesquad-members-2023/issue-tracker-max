@@ -6,8 +6,8 @@ export function Header() {
   const navigate = useNavigate();
 
   return (
-    <Div onClick={() => navigate("/")}>
-      <Anchor>
+    <Div>
+      <Anchor onClick={() => navigate("/")}>
         <Icon name="LogoMedium" color="neutralTextStrong" />
       </Anchor>
       <img

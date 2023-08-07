@@ -58,4 +58,5 @@ export const fillTypeComponents = [
   UserImageSmall,
   Comment,
   LogoMedium,
+  LogoLarge
 ];

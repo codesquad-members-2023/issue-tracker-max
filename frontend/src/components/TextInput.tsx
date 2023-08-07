@@ -15,6 +15,7 @@ type TextInputProps = {
   disabled?: boolean;
   isError?: boolean;
   maxLength?: number;
+  type?: React.HTMLInputTypeAttribute;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -46,6 +47,7 @@ export function TextInput({
   disabled = false,
   isError = false,
   maxLength,
+  type,
   onChange,
   onFocus,
   onBlur,
@@ -106,6 +108,7 @@ export function TextInput({
           onBlur={handleInputBlur}
           disabled={state === "Disabled"}
           $state={state}
+          type={type}
         />
       </InputContainer>
       {caption && <Caption $state={state}>{caption}</Caption>}
@@ -162,7 +165,7 @@ const InputContainer = styled.div<InputContainerProps>`
 `;
 
 const StyledSpan = styled.span`
-  width: 64px;
+  min-width: 64px;
   color: ${({ theme }) => theme.color.neutralTextWeak};
   font: ${({ theme }) => theme.font.displayMedium12};
 `;
@@ -175,6 +178,7 @@ const IconWrapper = styled.div`
 `;
 
 const Input = styled.input<InputProps>`
+  width: 100%;
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;

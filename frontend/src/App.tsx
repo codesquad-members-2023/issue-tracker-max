@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ThemeProvider, styled } from "styled-components";
 import { Header } from "./components/Header";
 import { designSystem } from "./constants/designSystem";
+import { Auth } from "./page/Auth";
 import { Error404 } from "./page/Error404";
 import { Label } from "./page/label/Label";
 import { Main } from "./page/main/Main";
@@ -16,18 +17,29 @@ export default function App() {
     <ThemeProvider theme={designSystem[themeMode]}>
       <Div>
         <Router>
-          <Header />
           <Routes>
-            <Route path="/" element={<Main />} />
-            <Route path="/issues/new" element={<NewIssue />} />
-            <Route path="/label" element={<Label />} />
-            <Route path="/milestone" element={<Milestone />} />
-            <Route path="/milestone/:state" element={<Milestone />} />
-            <Route path="*" element={<Error404 />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="*" element={<MainRoutes />} />
           </Routes>
         </Router>
       </Div>
     </ThemeProvider>
+  );
+}
+
+function MainRoutes() {
+  return (
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/issues/new" element={<NewIssue />} />
+        <Route path="/label" element={<Label />} />
+        <Route path="/milestone" element={<Milestone />} />
+        <Route path="/milestone/:state" element={<Milestone />} />
+        <Route path="*" element={<Error404 />} />
+      </Routes>
+    </>
   );
 }
 
