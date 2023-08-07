@@ -42,9 +42,6 @@ public class AuthFilter implements Filter {
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 
-		// if (httpServletRequest.getMethod().equals("GET")) {
-		// 	return;
-		// }
 		if (whiteListCheck(httpServletRequest.getRequestURI())) {
 			chain.doFilter(request, response);
 			return;
