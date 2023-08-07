@@ -35,7 +35,7 @@ export const InputContainer: React.FC<Props> = ({
         borderRadius: theme.radius[radius],
         cursor: disabled ? 'default' : 'text',
         backgroundColor: theme.neutral.surface.bold,
-        gap: '8px',
+        gap: height === 56 ? '' : '8px',
 
         border: isError
           ? `${theme.border.default} ${theme.danger.border.default}`

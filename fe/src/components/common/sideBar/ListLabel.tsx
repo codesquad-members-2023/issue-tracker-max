@@ -1,8 +1,7 @@
-import { css, useTheme } from '@emotion/react';
 import { InformationTag } from '../InformationTag';
 
 type SelectedLabelsData = {
-  labelId: number;
+  id: number;
   name: string;
   backgroundColor: string;
   textColor: string;
@@ -24,6 +23,7 @@ export const ListLabel: React.FC<Props> = ({ selectedLabelsData }) => {
     >
       {selectedLabelsData.map((label) => (
         <InformationTag
+          key={label.id}
           size="S"
           fillColor={label.backgroundColor}
           textColor={label.textColor}

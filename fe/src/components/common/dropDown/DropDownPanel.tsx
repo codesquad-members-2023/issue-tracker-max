@@ -1,33 +1,30 @@
 import { useTheme } from '@emotion/react';
-import React, { useState } from 'react';
 import { DropDownList } from './DropDownList';
 import { DropDownHeader } from './DropDownHeader';
 
 type DropDownItem = {
-  id?: string;
+  id?: number;
   image?: string;
   name?: string;
   backgroundColor?: string;
-  filterId?: number;
   textColor?: string;
   progress?: number;
-  milestoneId?: number;
 };
 
 type Props = {
   options: DropDownItem[];
   alignment: string;
   panelHeader: string;
-  onSelected: (index: number) => void;
   selectedItems: { [key: number]: boolean };
+  onSelected: (index: number) => void;
 };
 
 export const DropDownPanel: React.FC<Props> = ({
   options,
   alignment,
   panelHeader,
-  onSelected,
   selectedItems,
+  onSelected,
 }) => {
   const theme = useTheme() as any;
 
@@ -46,16 +43,34 @@ export const DropDownPanel: React.FC<Props> = ({
       }}
     >
       <DropDownHeader panelHeader={panelHeader} />
-      <ul>
-        {options.map((item, index: number) => (
-          <DropDownList
-            key={index}
-            item={item}
-            onSelected={() => onSelected(index)}
-            isSelected={selectedItems[index]}
-            index={index}
-          />
-        ))}
+      <ul
+        css={{
+          boxSizing: 'border-box',
+          maxHeight: '288px',
+          overflowY: 'auto',
+        }}
+      >
+        {options.length > 0 ? (
+          options.map((item, index: number) => (
+            <DropDownList
+              key={index}
+              item={item}
+              onSelected={() => onSelected(index)}
+              isSelected={selectedItems[index]}
+              index={index}
+            />
+          ))
+        ) : (
+          <span
+            css={{
+              marginLeft: '16px',
+              font: theme.fonts.displayMedium12,
+              color: theme.neutral.text.strong,
+            }}
+          >
+            데이터가 없습니다
+          </span>
+        )}
       </ul>
     </div>
   );

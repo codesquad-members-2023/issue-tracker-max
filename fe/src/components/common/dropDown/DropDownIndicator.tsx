@@ -7,20 +7,25 @@ import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 import { Button } from '../Button';
 
 type Props = {
-  indicator: string;
   size: 'L' | 'M' | 'defaultSize';
+  indicator: string;
+  fetchPath: string;
   children: React.ReactNode;
+  onFetchData: (path: string) => Promise<any>;
 };
 
 export const DropDownIndicator: React.FC<Props> = ({
   size,
   indicator,
+  fetchPath,
   children,
+  onFetchData,
 }) => {
   const theme = useTheme() as any;
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  const onPanelOpen = () => {
+  const onPanelOpen = async () => {
+    await onFetchData(fetchPath);
     setIsPanelOpen(true);
   };
 
