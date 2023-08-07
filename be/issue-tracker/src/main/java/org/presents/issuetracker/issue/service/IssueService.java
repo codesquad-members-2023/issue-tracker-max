@@ -35,33 +35,41 @@ public class IssueService {
 				.build()
 		);
 
+		setAssignees(issueCreateRequest.getAssigneeIds(), savedIssueId);
+		setLabels(issueCreateRequest.getLabelIds(), savedIssueId);
+		setMilestone(issueCreateRequest.getMilestoneId(), savedIssueId);
+
+		return savedIssueId;
+	}
+
+	private void setAssignees(List<Long> assigneeIds, Long issueId) {
 		issueRepository.addAssignee(
-			issueCreateRequest.getAssigneeIds().stream()
+			assigneeIds.stream()
 				.map(assigneeId ->
 					Assignee.builder()
-						.issueId(savedIssueId)
+						.issueId(issueId)
 						.userId(assigneeId)
 						.build()
 				)
 				.collect(Collectors.toList())
 		);
+	}
 
+	private void setLabels(List<Long> labelIds, Long issueId) {
 		issueRepository.addLabel(
-			issueCreateRequest.getLabelIds().stream()
+			labelIds.stream()
 				.map(labelId ->
 					IssueLabel.builder()
-						.issueId(savedIssueId)
+						.issueId(issueId)
 						.labelId(labelId)
 						.build()
 				)
 				.collect(Collectors.toList())
 		);
+	}
 
-		issueRepository.setMilestone(
-			savedIssueId, issueCreateRequest.getMilestoneId()
-		);
-
-		return savedIssueId;
+	private void setMilestone(Long milestoneId, Long issueId) {
+		issueRepository.setMilestone(issueId, milestoneId);
 	}
 
 	public IssueSearchResponse getIssues(IssueSearchParam issueSearchParam) {
