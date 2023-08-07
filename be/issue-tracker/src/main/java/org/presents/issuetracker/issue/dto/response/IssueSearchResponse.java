@@ -16,7 +16,7 @@ public class IssueSearchResponse {
 	private Long closedIssueCount;
 	private List<IssueSearch> issues;
 
-	public static IssueSearchResponse from(IssueSearchCountVo counts, List<IssueSearch> issues) {
+	public static IssueSearchResponse of(IssueSearchCountVo counts, List<IssueSearch> issues) {
 		return IssueSearchResponse.builder()
 			.labelCount(counts.getLabelCount())
 			.milestoneCount(counts.getMilestoneCount())

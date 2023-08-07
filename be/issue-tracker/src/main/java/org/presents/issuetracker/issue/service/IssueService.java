@@ -68,7 +68,7 @@ public class IssueService {
 	public IssueSearchResponse getIssues(IssueSearchParam issueSearchParam) {
 		List<IssueSearchVo> issues = issueMapper.getIssues(issueSearchParam);
 		IssueSearchCountVo counts = issueMapper.getIssueSearchCounts(issueSearchParam);
-		return IssueSearchResponse.from(counts, IssueSearch.from(issues));
+		return IssueSearchResponse.of(counts, IssueSearch.from(issues));
 	}
 
 	public IssueDetailResponse getIssueDetail(Long issueId) {
