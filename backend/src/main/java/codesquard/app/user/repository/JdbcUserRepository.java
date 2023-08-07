@@ -68,7 +68,7 @@ public class JdbcUserRepository implements UserRepository {
 	}
 
 	@Override
-	public boolean existLoginId(User user) {
+	public boolean isExistLoginId(User user) {
 		String sql = "SELECT EXISTS(SELECT 1 FROM user WHERE login_id = :loginId) AS count";
 		return template.query(sql, user.createSaveParamSource(), (rs, rowNum) -> rs.getBoolean("count"))
 			.stream()
@@ -76,7 +76,7 @@ public class JdbcUserRepository implements UserRepository {
 	}
 
 	@Override
-	public boolean existEmail(User user) {
+	public boolean isExistEmail(User user) {
 		String sql = "SELECT EXISTS(SELECT 1 FROM user WHERE email = :email) AS count";
 		return template.query(sql, user.createSaveParamSource(), (rs, rowNum) -> rs.getBoolean("count"))
 			.stream()
