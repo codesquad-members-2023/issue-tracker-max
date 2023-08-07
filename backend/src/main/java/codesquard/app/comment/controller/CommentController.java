@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.comment.controller.request.CommentModifyRequest;
@@ -22,19 +23,20 @@ import codesquard.app.comment.service.response.CommentSaveResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@RequestMapping(path = "/api/comments")
 @RestController
 public class CommentController {
 
 	private final CommentService commentService;
 
-	@PostMapping("/api/comments")
+	@PostMapping
 	public ResponseEntity<CommentSaveResponse> saveComment(@Valid @RequestBody CommentSaveRequest request) {
 		LocalDateTime createdAt = LocalDateTime.now();
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(commentService.save(request.toServiceRequest(), createdAt));
 	}
 
-	@PatchMapping("/api/comments/{id}")
+	@PatchMapping("/{id}")
 	public ResponseEntity<CommentModifyResponse> modifyComment(@Valid @RequestBody CommentModifyRequest request,
 		@PathVariable Long id) {
 		LocalDateTime modifiedAt = LocalDateTime.now();
@@ -42,7 +44,7 @@ public class CommentController {
 			.body(commentService.modify(request.toServiceRequest(id), modifiedAt));
 	}
 
-	@DeleteMapping("/api/comments/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<CommentDeleteResponse> deleteComment(@PathVariable Long id) {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(commentService.delete(id));
