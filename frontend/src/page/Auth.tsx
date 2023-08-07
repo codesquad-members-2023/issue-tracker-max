@@ -74,7 +74,7 @@ export function Auth() {
     }
   };
 
-  const checkInput = (value: string, isValid: boolean) => {
+  const checkInputValid = (value: string, isValid: boolean) => {
     return !(value === "") && !isValid;
   };
 
@@ -101,9 +101,9 @@ export function Auth() {
             label="아이디"
             placeholder="아이디"
             value={id}
-            isError={checkInput(id, isValidId)}
+            isError={checkInputValid(id, isValidId)}
             caption={
-              checkInput(id, isValidId)
+              checkInputValid(id, isValidId)
                 ? "6자리에서 16자리 까지 입력해주세요"
                 : ""
             }
@@ -116,9 +116,9 @@ export function Auth() {
             placeholder={"비밀번호"}
             value={password}
             type="password"
-            isError={checkInput(password, isValidPassword)}
+            isError={checkInputValid(password, isValidPassword)}
             caption={
-              checkInput(password, isValidPassword)
+              checkInputValid(password, isValidPassword)
                 ? "6자리에서 12자리 까지 입력해주세요"
                 : ""
             }
@@ -133,9 +133,9 @@ export function Auth() {
                 placeholder={"비밀번호 확인"}
                 value={passwordCheck}
                 type="password"
-                isError={checkInput(passwordCheck, isPasswordMatch)}
+                isError={checkInputValid(passwordCheck, isPasswordMatch)}
                 caption={
-                  checkInput(passwordCheck, isPasswordMatch)
+                  checkInputValid(passwordCheck, isPasswordMatch)
                     ? "비밀번호를 확인해 주세요"
                     : ""
                 }
@@ -147,9 +147,9 @@ export function Auth() {
                 label="이메일"
                 placeholder="이메일"
                 value={email}
-                isError={checkInput(email, isValidEmail)}
+                isError={checkInputValid(email, isValidEmail)}
                 caption={
-                  checkInput(email, isValidEmail)
+                  checkInputValid(email, isValidEmail)
                     ? "이메일 형식에 맞게 입력해 주세요"
                     : ""
                 }
