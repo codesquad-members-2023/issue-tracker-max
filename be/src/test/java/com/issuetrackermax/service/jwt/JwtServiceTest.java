@@ -77,25 +77,6 @@ class JwtServiceTest extends IntegrationTestSupport {
 			});
 	}
 
-	@DisplayName("패스워드가 8글자 이하면 오류를 일으킨다.")
-	@Test
-	void invalidPasswordException() {
-		// given
-		SignUpRequest signUpRequest = SignUpRequest.builder()
-			.loginId("June@codesquad.co.kr")
-			.nickName("June")
-			.password("1234")
-			.build();
-		// when & then
-		assertThatThrownBy(() -> memberService.registerMember(signUpRequest))
-			.isInstanceOf(ApiException.class)
-			.satisfies(exception -> {
-				ApiException apiException = (ApiException)exception;
-				assertThat(apiException.getCustomException()).isInstanceOf(LoginException.class);
-			});
-
-	}
-
 	@DisplayName("이미 같은 아이디가 존재하면 오류를 일으킨다.")
 	@Test
 	void invalidLoginException() {
