@@ -2,7 +2,7 @@ import { useTheme } from '@emotion/react';
 import React, { useState, useEffect } from 'react';
 import { ReactComponent as Grip } from '@assets/icons/grip.svg';
 import { ReactComponent as PaperClip } from '@assets/icons/paperclip.svg';
-import { Button } from './Button';
+import { Button } from '../Button';
 
 type DefaultFileStatusType = {
   typeError: boolean;

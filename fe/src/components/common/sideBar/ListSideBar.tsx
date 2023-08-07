@@ -124,11 +124,6 @@ export const ListSideBar: React.FC<Props> = ({
     setIsPanelOpen(null);
   };
 
-  const handleDimClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    closePanel();
-  };
-
   const commonStyles = css`
     display: flex;
     flex-direction: column;
@@ -143,42 +138,48 @@ export const ListSideBar: React.FC<Props> = ({
   return (
     <>
       <div css={commonStyles} onClick={() => openPanel(getUsers, 'users')}>
-        <DropDownIndicator indicator="담당자" size="L">
-          {isPanelOpen === 'users' && (
-            <>
-              <div css={dim} onClick={handleDimClick}></div>
-              <DropDownPanel panelHeader="담당자 설정" position="center">
-                {assigneeOptions?.map((item) => (
-                  <DropDownList
-                    key={item.id}
-                    item={item}
-                    onClick={() => onMultipleSelectedAssignee(item.id)}
-                    isSelected={selections.assignees.includes(item.id)}
-                  />
-                ))}
-              </DropDownPanel>
-            </>
-          )}
+        <DropDownIndicator
+          indicator="담당자"
+          size="L"
+          isPanelOpen={isPanelOpen === 'users'}
+        >
+          <DropDownPanel
+            panelHeader="담당자 설정"
+            position="center"
+            onOutsideClick={closePanel}
+          >
+            {assigneeOptions?.map((item) => (
+              <DropDownList
+                key={item.id}
+                item={item}
+                onClick={() => onMultipleSelectedAssignee(item.id)}
+                isSelected={selections.assignees.includes(item.id)}
+              />
+            ))}
+          </DropDownPanel>
         </DropDownIndicator>
         <ListAssignee selectedAssigneesData={selectedAssigneesData} />
       </div>
       <div css={commonStyles} onClick={() => openPanel(getLabels, 'labels')}>
-        <DropDownIndicator indicator="레이블" size="L">
-          {isPanelOpen === 'labels' && (
-            <>
-              <div css={dim} onClick={handleDimClick}></div>
-              <DropDownPanel panelHeader="레이블 설정" position="center">
-                {labelOptions?.map((item) => (
-                  <DropDownList
-                    key={item.id}
-                    item={item}
-                    onClick={() => onMultipleSelectedLabel(item.id)}
-                    isSelected={selections.labels.includes(item.id)}
-                  />
-                ))}
-              </DropDownPanel>
-            </>
-          )}
+        <DropDownIndicator
+          indicator="레이블"
+          size="L"
+          isPanelOpen={isPanelOpen === 'labels'}
+        >
+          <DropDownPanel
+            panelHeader="레이블 설정"
+            position="center"
+            onOutsideClick={closePanel}
+          >
+            {labelOptions?.map((item) => (
+              <DropDownList
+                key={item.id}
+                item={item}
+                onClick={() => onMultipleSelectedLabel(item.id)}
+                isSelected={selections.labels.includes(item.id)}
+              />
+            ))}
+          </DropDownPanel>
         </DropDownIndicator>
         <ListLabel selectedLabelsData={selectedLabelsData} />
       </div>
@@ -186,33 +187,28 @@ export const ListSideBar: React.FC<Props> = ({
         css={commonStyles}
         onClick={() => openPanel(getMilestones, 'milestones')}
       >
-        <DropDownIndicator indicator="마일스톤" size="L">
-          {isPanelOpen === 'milestones' && (
-            <>
-              <div css={dim} onClick={handleDimClick}></div>
-              <DropDownPanel panelHeader="마일스톤 설정" position="center">
-                {milestoneOptions?.map((item) => (
-                  <DropDownList
-                    key={item.id}
-                    item={item}
-                    onClick={() => onSingleSelectedMilestone(item.id)}
-                    isSelected={selections.milestones.includes(item.id)}
-                  />
-                ))}
-              </DropDownPanel>
-            </>
-          )}
+        <DropDownIndicator
+          indicator="마일스톤"
+          size="L"
+          isPanelOpen={isPanelOpen === 'milestones'}
+        >
+          <DropDownPanel
+            panelHeader="마일스톤 설정"
+            position="center"
+            onOutsideClick={closePanel}
+          >
+            {milestoneOptions?.map((item) => (
+              <DropDownList
+                key={item.id}
+                item={item}
+                onClick={() => onSingleSelectedMilestone(item.id)}
+                isSelected={selections.milestones.includes(item.id)}
+              />
+            ))}
+          </DropDownPanel>
         </DropDownIndicator>
         <ListMilestone selectedMilestonesData={selectedMilestonesData} />
       </div>
     </>
   );
 };
-const dim = css`
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  width: 100vw;
-  height: 100vh;
-`;

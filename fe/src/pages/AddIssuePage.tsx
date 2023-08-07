@@ -6,7 +6,7 @@ import { Body } from '@components/addIssuePage/Body';
 import { UserImage } from '@components/addIssuePage/UserImage';
 import { UserImageContainer } from '@components/addIssuePage/UserImageContainer';
 import { InputContainer } from '@components/addIssuePage/InputContainer';
-import { TextArea } from '@components/common/TextArea';
+import { TextArea } from '@components/common/textArea/TextArea';
 import { SideBar } from '@components/common/sideBar/SideBar';
 import { ListSideBar } from '@components/common/sideBar/ListSideBar';
 import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
@@ -36,7 +36,6 @@ export const AddIssuePage: React.FC = ({}) => {
     labels: [],
     milestones: [],
   });
-
   const [titleInput, setTitleInput] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
   const [isSubmitError, setIsSubmitError] = useState<boolean>(false);
@@ -157,7 +156,7 @@ export const AddIssuePage: React.FC = ({}) => {
         {isSubmitError && (
           <span
             css={{
-              color: theme.error,
+              color: theme.danger.text.default,
               font: theme.fonts.displayMedium16,
             }}
           >
