@@ -8,12 +8,7 @@
         <result property="title" column="issue_title"/>
         <result property="status" column="issue_status"/>
         <result property="createdAt" column="issue_created_at"/>
-
-        <association property="author" javaType="User">
-            <id property="userId" column="author_id"/>
-            <result property="loginId" column="author_login_id"/>
-            <result property="image" column="author_image"/>
-        </association>
+        <result property="authorLoginId" column="author_login_id"/>
 
         <association property="milestone" javaType="Milestone">
             <id property="id" column="milestone_id"/>
@@ -34,9 +29,7 @@
         i.title as issue_title,
         i.status as issue_status,
         i.created_at as issue_created_at,
-        author.user_id as author_id,
         author.login_id as author_login_id,
-        author.image as author_image,
         l.label_id as label_id,
         l.name as label_name,
         l.text_color as label_text_color,

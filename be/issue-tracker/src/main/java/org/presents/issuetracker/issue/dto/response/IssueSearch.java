@@ -14,7 +14,7 @@ import lombok.Getter;
 public class IssueSearch {
 	private Long id;
 	private String title;
-	private UserSearch author;
+	private String authorLoginId;
 	private List<LabelSearch> labels;
 	private MilestoneSearch milestone;
 	private LocalDateTime createdAt;
@@ -24,7 +24,7 @@ public class IssueSearch {
 		return IssueSearch.builder()
 			.id(issue.getId())
 			.title(issue.getTitle())
-			.author(UserSearch.fromEntity(issue.getAuthor()))
+			.authorLoginId(issue.getAuthorLoginId())
 			.labels(issue.getLabels().stream().map(LabelSearch::fromEntity).collect(Collectors.toUnmodifiableList()))
 			.milestone(MilestoneSearch.fromEntity(issue.getMilestone()))
 			.createdAt(issue.getCreatedAt())
