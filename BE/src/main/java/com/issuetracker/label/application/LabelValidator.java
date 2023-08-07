@@ -5,7 +5,8 @@ import java.util.Objects;
 
 import org.springframework.stereotype.Component;
 
-import com.issuetracker.config.exception.LabelNotFoundException;
+import com.issuetracker.config.exception.CustomHttpException;
+import com.issuetracker.config.exception.ErrorType;
 import com.issuetracker.label.domain.LabelRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class LabelValidator {
 		}
 
 		if (!labelRepository.existByIds(ids)) {
-			throw new LabelNotFoundException();
+			throw new CustomHttpException(ErrorType.LABEL_NOT_FOUND);
 		}
 	}
 }

@@ -14,7 +14,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.issuetracker.config.exception.QueryStringKeyNotMatchException;
+import com.issuetracker.config.exception.CustomHttpException;
+import com.issuetracker.config.exception.ErrorType;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 
 @Component
@@ -36,7 +37,7 @@ public class IssueSearchArgumentResolver implements HandlerMethodArgumentResolve
 			.forEach(parameterName -> {
 				if (issueSearchRequestVariableNames.stream()
 					.noneMatch(variableName -> variableName.equals(parameterName))) {
-					throw new QueryStringKeyNotMatchException();
+					throw new CustomHttpException(ErrorType.QUERY_STRING_KEY_NOT_MATCH);
 				}
 		});
 

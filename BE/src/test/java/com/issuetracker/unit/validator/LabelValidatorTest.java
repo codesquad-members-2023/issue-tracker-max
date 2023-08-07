@@ -18,10 +18,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.issuetracker.config.exception.LabelNotFoundException;
+import com.issuetracker.config.exception.CustomHttpException;
 import com.issuetracker.label.application.LabelValidator;
 import com.issuetracker.label.domain.LabelRepository;
-import com.issuetracker.label.infrastructure.JdbcLabelRepository;
 import com.issuetracker.util.MockTest;
 
 @MockTest
@@ -57,7 +56,7 @@ public class LabelValidatorTest {
 		given(labelRepository.existByIds(any())).willReturn(false);
 
 		// then
-		Assertions.assertThrows(LabelNotFoundException.class,
+		Assertions.assertThrows(CustomHttpException.class,
 			() -> labelValidator.verifyLabels(Arrays.asList(1L, null)));
 	}
 

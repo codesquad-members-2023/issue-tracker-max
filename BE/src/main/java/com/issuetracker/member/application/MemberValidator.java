@@ -5,7 +5,8 @@ import java.util.Objects;
 
 import org.springframework.stereotype.Component;
 
-import com.issuetracker.config.exception.MemberNotFoundException;
+import com.issuetracker.config.exception.CustomHttpException;
+import com.issuetracker.config.exception.ErrorType;
 import com.issuetracker.member.domain.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class MemberValidator {
 
 	public void verifyMember(Long id) {
 		if(Objects.nonNull(id) && !memberRepository.existById(id)) {
-			throw new MemberNotFoundException();
+			throw new CustomHttpException(ErrorType.MEMBER_NOT_FOUND);
 		}
 	}
 
@@ -28,7 +29,7 @@ public class MemberValidator {
 		}
 
 		if(!memberRepository.existByIds(ids)) {
-			throw new MemberNotFoundException();
+			throw new CustomHttpException(ErrorType.MEMBER_NOT_FOUND);
 		}
 	}
 }

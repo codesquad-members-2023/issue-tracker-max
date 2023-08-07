@@ -13,13 +13,15 @@ public class Label {
 	private String title;
 	private String description;
 	private String color;
+	private boolean isDeleted;
 
-	@Builder(builderClassName = "LabelBuilder")
-	private Label(Long id, String title, String description, String color) {
+	@Builder
+	private Label(Long id, String title, String description, String color, boolean isDeleted) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.color = color;
+		this.isDeleted = isDeleted;
 	}
 
 	public static Label createInstanceById(Long id) {
