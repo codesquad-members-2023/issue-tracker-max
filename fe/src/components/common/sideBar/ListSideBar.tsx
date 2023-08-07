@@ -16,8 +16,6 @@ type SelectionState = {
 
 type FetchPath = 'users' | 'labels' | 'milestones';
 
-type OptionsData = ModifiedUserData | LabelData | MilestoneData;
-
 type UserData = {
   userId: number;
   loginId: string;
@@ -98,23 +96,6 @@ export const ListSideBar: React.FC<Props> = ({
   const selectedMilestonesData = milestoneOptions.filter((milestone) =>
     selections.milestones.includes(milestone.id),
   );
-
-  // function useFilteredData(selections: number[], optionsData: OptionsData[]) {
-  //   return optionsData.filter((data) => selections.includes(data.id));
-  // }
-  // const assigneeOptions = modifiedUserData.slice(1);
-  // const labelOptions = listData.labels.slice(1);
-  // const milestoneOptions = listData.milestones.slice(1);
-
-  // const selectedAssigneesData = useFilteredData(
-  //   selections.assignees,
-  //   assigneeOptions,
-  // );
-  // const selectedLabelsData = useFilteredData(selections.labels, labelOptions);
-  // const selectedMilestonesData = useFilteredData(
-  //   selections.milestones,
-  //   milestoneOptions,
-  // );
 
   const openPanel = async (
     fetchDataFunction: () => Promise<

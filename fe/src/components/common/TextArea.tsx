@@ -1,4 +1,4 @@
-import { css, useTheme } from '@emotion/react';
+import { useTheme } from '@emotion/react';
 import React, { useState, useEffect } from 'react';
 import { ReactComponent as Grip } from '@assets/icons/grip.svg';
 import { ReactComponent as PaperClip } from '@assets/icons/paperclip.svg';
@@ -16,9 +16,8 @@ type Props = {
   isDisabled?: boolean;
   letterCount?: number;
   textAreaValue: string;
-  fileStatus: { [K in keyof DefaultFileStatusType]: boolean };
   onChangeTextArea: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onAddFileUrl: (fileName: string, fileUrl: string) => void;
 };
 
 export const TextArea: React.FC<Props> = ({
@@ -26,12 +25,12 @@ export const TextArea: React.FC<Props> = ({
   isDisabled = false,
   letterCount,
   textAreaValue,
-  fileStatus,
-
   onChangeTextArea,
-  onFileChange,
+  onAddFileUrl,
 }) => {
   const theme = useTheme() as any;
+  const availableFileSize = 1048576; //1MB
+
   const [isDisplayingCount, setIsDisplayingCount] = useState(false);
 
   //코멘트 영역때문에 사이즈를 더 추가할 수도 있을 것 같습니다
@@ -44,6 +43,72 @@ export const TextArea: React.FC<Props> = ({
     },
   };
   const isTyping = textAreaValue.length > 0;
+
+  const [fileStatus, setFileStatus] = useState<DefaultFileStatusType>({
+    typeError: false,
+    sizeError: false,
+    isUploading: false,
+    uploadFailed: false,
+  });
+
+  const uploadImage = async (file: File) => {
+    try {
+      setFileStatus((prev) => ({ ...prev, isUploading: true }));
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(`/file-upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('File upload failed');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
+    } finally {
+      setFileStatus((prev) => ({ ...prev, isUploading: false }));
+    }
+  };
+
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileStatus((prev) => ({
+      ...prev,
+      sizeError: false,
+      typeError: false,
+      uploadFailed: false,
+    }));
+
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+
+      if (!file) {
+        setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
+        return;
+      }
+
+      const fileName = file.name;
+
+      if (file.size > availableFileSize) {
+        setFileStatus((prev) => ({ ...prev, sizeError: true }));
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        setFileStatus((prev) => ({ ...prev, typeError: true }));
+        return;
+      }
+
+      const fileUrl = await uploadImage(file);
+
+      onAddFileUrl(fileName, fileUrl.fileUrl);
+    }
+  };
 
   useEffect(() => {
     if (textAreaValue) {

@@ -22,4 +22,21 @@ export const handlers = [
       ctx.json({ message: 'File uploaded successfully!' }),
     );
   }),
+
+  rest.post('/issues/new', (req, res, ctx) => {
+    const bodyData = JSON.parse(req.body as string);
+
+    if (bodyData.content === '') {
+      //에러 확인용 조건
+      return res(
+        ctx.status(400),
+        ctx.json({ message: '필요한 필드가 누락되었습니다.' }),
+      );
+    }
+
+    return res(
+      ctx.status(200),
+      ctx.json({ message: '이슈가 성공적으로 등록되었습니다.' }),
+    );
+  }),
 ];

@@ -4,7 +4,7 @@ import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 
 import { Button } from '../Button';
 
-type Indicator = '담당자' | '레이블' | '마일스톤';
+type Indicator = '담당자' | '레이블' | '마일스톤' | '필터';
 
 type Props = {
   size: keyof typeof SIZE;
