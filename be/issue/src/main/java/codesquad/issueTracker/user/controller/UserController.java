@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.issueTracker.global.ApiResponse;
 import codesquad.issueTracker.jwt.dto.RequestRefreshTokenDto;
+import codesquad.issueTracker.oauth.service.OAuthService;
 import codesquad.issueTracker.user.dto.LoginRequestDto;
 import codesquad.issueTracker.user.dto.LoginResponseDto;
 import codesquad.issueTracker.user.dto.SignUpRequestDto;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api")
 public class UserController {
 	private final UserService userService;
+	private final OAuthService oAuthService;
 
 	@PostMapping("/signup")
 	public ApiResponse<String> signUp(@Valid @RequestBody SignUpRequestDto userSignUpRequestDto) {
@@ -55,7 +57,7 @@ public class UserController {
 
 	@GetMapping("/login/{provider}")
 	public ApiResponse<LoginResponseDto> oauthLogin(@PathVariable String provider, @RequestParam String code) {
-		LoginResponseDto loginResponseDto = userService.oauthLogin(provider, code);
+		LoginResponseDto loginResponseDto = oAuthService.oauthLogin(provider, code);
 		return ApiResponse.success(SUCCESS.getStatus(), loginResponseDto);
 	}
 }
