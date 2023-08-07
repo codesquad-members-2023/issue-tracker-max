@@ -5,8 +5,7 @@ on:
     branches: release
 
 env:
-  working-directory: ./be
-  APPLICATION_YML_FILE_PATH: ./issue/src/main/resources/application.yml
+  APPLICATION_YML_FILE_PATH: ./src/main/resources/application.yml
   AWS_REGION: ap-northeast-2
   S3_BUCKET_NAME: issue-tracker-s3-bucket
   CODE_DEPLOY_APPLICATION_NAME: issue-tracker-codedeploy-app
@@ -23,7 +22,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./be
+        working-directory: ./be/issue
 
     steps:
       - name: Checkout
