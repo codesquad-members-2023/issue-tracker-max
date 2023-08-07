@@ -32,9 +32,7 @@ export function Label() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
-        "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/labels",
-      );
+      const res = await fetch("/api/labels");
 
       setLabelsRes(await res.json());
     };
