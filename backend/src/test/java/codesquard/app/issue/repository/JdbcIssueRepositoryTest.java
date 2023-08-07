@@ -40,6 +40,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		jdbcTemplate.update("TRUNCATE TABLE issue");
 		jdbcTemplate.update("TRUNCATE TABLE milestone");
 		jdbcTemplate.update("TRUNCATE TABLE user");
+		jdbcTemplate.update("TRUNCATE TABLE comment");
 		jdbcTemplate.update("SET FOREIGN_KEY_CHECKS = 1");
 	}
 
