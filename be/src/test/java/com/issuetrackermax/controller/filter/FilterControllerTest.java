@@ -63,7 +63,7 @@ class FilterControllerTest extends ControllerTestSupport {
 
 		// when&then
 		mockMvc.perform(
-				get("/").requestAttr("memberId", 1)
+				get("/api/").requestAttr("memberId", 1)
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
@@ -108,7 +108,7 @@ class FilterControllerTest extends ControllerTestSupport {
 
 		// when & then
 		mockMvc.perform(
-				get("/").requestAttr("memberId", 1)
+				get("/api/").requestAttr("memberId", 1)
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
