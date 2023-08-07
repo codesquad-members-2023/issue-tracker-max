@@ -146,7 +146,7 @@ export const ListSideBar: React.FC<Props> = ({
         >
           <DropDownPanel
             panelHeader="담당자 설정"
-            alignment="center"
+            position="center"
             options={assigneeOptions}
             onSelected={onMultipleSelectedAssignee}
             selectedItems={selections.assignees}
@@ -163,7 +163,7 @@ export const ListSideBar: React.FC<Props> = ({
         >
           <DropDownPanel
             panelHeader="레이블 설정"
-            alignment="center"
+            position="center"
             options={labelOptions}
             onSelected={onMultipleSelectedLabel}
             selectedItems={selections.labels}
@@ -183,7 +183,7 @@ export const ListSideBar: React.FC<Props> = ({
         >
           <DropDownPanel
             panelHeader="마일스톤 설정"
-            alignment="center"
+            position="center"
             options={milestoneOptions}
             onSelected={onSingleSelectedMilestone}
             selectedItems={selections.milestones}
