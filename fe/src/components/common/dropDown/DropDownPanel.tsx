@@ -1,30 +1,16 @@
 import { useTheme } from '@emotion/react';
-import { DropDownList } from './DropDownList';
 import { DropDownHeader } from './DropDownHeader';
 
-type DropDownItem = {
-  id: number;
-  image?: string;
-  name?: string;
-  backgroundColor?: string;
-  textColor?: string;
-  progress?: number;
-};
-
 type Props = {
-  options?: DropDownItem[];
   position: keyof typeof POSITION;
   panelHeader: string;
-  selectedItems: number[];
-  onSelected: (index: number) => void;
+  children: React.ReactNode;
 };
 
 export const DropDownPanel: React.FC<Props> = ({
-  options,
   position,
   panelHeader,
-  selectedItems,
-  onSelected,
+  children,
 }) => {
   const theme = useTheme() as any;
 
@@ -49,15 +35,7 @@ export const DropDownPanel: React.FC<Props> = ({
           overflowY: 'auto',
         }}
       >
-        {options &&
-          options?.map((item) => (
-            <DropDownList
-              key={item.id}
-              item={item}
-              onClick={() => onSelected(item.id)}
-              isSelected={selectedItems.includes(item.id)}
-            />
-          ))}
+        {children}
       </ul>
     </div>
   );

@@ -6,6 +6,7 @@ import { ListAssignee } from './ListAssignee';
 import { ListLabel } from './ListLabel';
 import { ListMilestone } from './ListMilestone';
 import { getLabels, getMilestones, getUsers } from '@utils/api';
+import { DropDownList } from '../dropDown/DropDownList';
 
 type SelectionState = {
   assignees: number[];
@@ -144,13 +145,16 @@ export const ListSideBar: React.FC<Props> = ({
           onDimClick={handleDimClick}
           isPanelOpen={isPanelOpen === 'users'}
         >
-          <DropDownPanel
-            panelHeader="담당자 설정"
-            position="center"
-            options={assigneeOptions}
-            onSelected={onMultipleSelectedAssignee}
-            selectedItems={selections.assignees}
-          />
+          <DropDownPanel panelHeader="담당자 설정" position="center">
+            {assigneeOptions?.map((item) => (
+              <DropDownList
+                key={item.id}
+                item={item}
+                onClick={() => onMultipleSelectedAssignee(item.id)}
+                isSelected={selections.assignees.includes(item.id)}
+              />
+            ))}
+          </DropDownPanel>
         </DropDownIndicator>
         <ListAssignee selectedAssigneesData={selectedAssigneesData} />
       </div>
@@ -161,13 +165,16 @@ export const ListSideBar: React.FC<Props> = ({
           onDimClick={handleDimClick}
           isPanelOpen={isPanelOpen === 'labels'}
         >
-          <DropDownPanel
-            panelHeader="레이블 설정"
-            position="center"
-            options={labelOptions}
-            onSelected={onMultipleSelectedLabel}
-            selectedItems={selections.labels}
-          />
+          <DropDownPanel panelHeader="레이블 설정" position="center">
+            {labelOptions?.map((item) => (
+              <DropDownList
+                key={item.id}
+                item={item}
+                onClick={() => onMultipleSelectedLabel(item.id)}
+                isSelected={selections.labels.includes(item.id)}
+              />
+            ))}
+          </DropDownPanel>
         </DropDownIndicator>
         <ListLabel selectedLabelsData={selectedLabelsData} />
       </div>
@@ -181,13 +188,16 @@ export const ListSideBar: React.FC<Props> = ({
           onDimClick={handleDimClick}
           isPanelOpen={isPanelOpen === 'milestones'}
         >
-          <DropDownPanel
-            panelHeader="마일스톤 설정"
-            position="center"
-            options={milestoneOptions}
-            onSelected={onSingleSelectedMilestone}
-            selectedItems={selections.milestones}
-          />
+          <DropDownPanel panelHeader="마일스톤 설정" position="center">
+            {milestoneOptions?.map((item) => (
+              <DropDownList
+                key={item.id}
+                item={item}
+                onClick={() => onSingleSelectedMilestone(item.id)}
+                isSelected={selections.milestones.includes(item.id)}
+              />
+            ))}
+          </DropDownPanel>
         </DropDownIndicator>
         <ListMilestone selectedMilestonesData={selectedMilestonesData} />
       </div>
