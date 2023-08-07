@@ -27,126 +27,91 @@ public class IssueRepository {
 	}
 
 	public Long save(Issue issue) {
-		final String SQL =
-			"INSERT INTO issue(author_id, title, contents) " +
-				"VALUES (:authorId, :title, :contents)";
+		final String sql = "INSERT INTO issue(author_id, title, contents) VALUES (:authorId, :title, :contents)";
 
-		SqlParameterSource params = new MapSqlParameterSource()
-			.addValue("authorId", issue.getAuthorId())
+		SqlParameterSource params = new MapSqlParameterSource().addValue("authorId", issue.getAuthorId())
 			.addValue("title", issue.getTitle())
 			.addValue("contents", issue.getContents());
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(SQL, params, keyHolder);
+		jdbcTemplate.update(sql, params, keyHolder);
 
 		return keyHolder.getKey().longValue();
 	}
 
 	public List<Long> addAssignee(List<Assignee> assignees) {
-		final String SQL =
-			"INSERT INTO assignee(issue_id, user_id) " +
-				"VALUES (:issueId, :userId)";
+		final String sql = "INSERT INTO assignee(issue_id, user_id) VALUES (:issueId, :userId)";
 
-		return Arrays.stream(
-				jdbcTemplate.batchUpdate(SQL, SqlParameterSourceUtils.createBatch(assignees)))
+		return Arrays.stream(jdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(assignees)))
 			.mapToLong(Long::valueOf)
 			.boxed()
 			.collect(Collectors.toUnmodifiableList());
 	}
 
 	public void deleteAllAssignee(Long issueId) {
-		final String SQL =
-			"DELETE FROM assignee " +
-				"WHERE issue_id = :issueId";
+		final String sql = "DELETE FROM assignee WHERE issue_id = :issueId";
 
-		jdbcTemplate.update(SQL, Map.of("issueId", issueId));
+		jdbcTemplate.update(sql, Map.of("issueId", issueId));
 	}
 
 	public List<Assignee> findAssigneeByIssueId(Long issueId) {
-		final String sql =
-			"SELECT * FROM assignee " +
-				"WHERE issue_id = :issueId";
+		final String sql = "SELECT * FROM assignee WHERE issue_id = :issueId";
 
-		SqlParameterSource params = new MapSqlParameterSource()
-			.addValue("issueId", issueId);
+		SqlParameterSource params = new MapSqlParameterSource().addValue("issueId", issueId);
 
-		return jdbcTemplate.query(sql, params, (rs, rowNum) ->
-			Assignee.builder()
-				.userId(rs.getLong("user_id"))
-				.build()
-		);
+		return jdbcTemplate.query(sql, params,
+			(rs, rowNum) -> Assignee.builder().userId(rs.getLong("user_id")).build());
 	}
 
 	public List<Long> addLabel(List<IssueLabel> issueLabels) {
-		final String SQL =
-			"INSERT INTO issue_label(issue_id, label_id) " +
-				"VALUES (:issueId, :labelId)";
+		final String sql = "INSERT INTO issue_label(issue_id, label_id) VALUES (:issueId, :labelId)";
 
-		return Arrays.stream(
-				jdbcTemplate.batchUpdate(SQL, SqlParameterSourceUtils.createBatch(issueLabels)))
+		return Arrays.stream(jdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(issueLabels)))
 			.mapToLong(Long::valueOf)
 			.boxed()
 			.collect(Collectors.toUnmodifiableList());
 	}
 
 	public void deleteAllLabel(Long issueId) {
-		final String SQL =
-			"DELETE FROM issue_label " +
-				"WHERE issue_id = :issueId";
+		final String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
 
-		jdbcTemplate.update(SQL, Map.of("issueId", issueId));
+		jdbcTemplate.update(sql, Map.of("issueId", issueId));
 	}
 
 	public List<IssueLabel> findLabelByIssueId(Long issueId) {
-		final String SQL =
-			"SELECT * FROM issue_label " +
-				"WHERE issue_id = :issueId";
+		final String sql = "SELECT * FROM issue_label WHERE issue_id = :issueId";
 
-		SqlParameterSource params = new MapSqlParameterSource()
-			.addValue("issueId", issueId);
+		SqlParameterSource params = new MapSqlParameterSource().addValue("issueId", issueId);
 
-		return jdbcTemplate.query(SQL, params, (rs, rowNum) ->
-			IssueLabel.builder()
-				.labelId(rs.getLong("label_id"))
-				.build()
-		);
+		return jdbcTemplate.query(sql, params,
+			(rs, rowNum) -> IssueLabel.builder().labelId(rs.getLong("label_id")).build());
 	}
 
 	public void setMilestone(Long issueId, Long milestoneId) {
-		final String SQL =
-			"UPDATE issue SET milestone_id = :milestoneId " +
-				"WHERE issue_id = :issueId";
+		final String sql = "UPDATE issue SET milestone_id = :milestoneId WHERE issue_id = :issueId";
 
-		SqlParameterSource params = new MapSqlParameterSource()
-			.addValue("milestoneId", milestoneId)
+		SqlParameterSource params = new MapSqlParameterSource().addValue("milestoneId", milestoneId)
 			.addValue("issueId", issueId);
 
-		jdbcTemplate.update(SQL, params);
+		jdbcTemplate.update(sql, params);
 	}
 
 	public void deleteMilestone(Long issueId) {
-		final String SQL =
-			"UPDATE issue SET milestone_id = NULL " +
-				"WHERE issue_id = :issueId";
+		final String sql = "UPDATE issue SET milestone_id = NULL WHERE issue_id = :issueId";
 
-		jdbcTemplate.update(SQL, Map.of("issueId", issueId));
+		jdbcTemplate.update(sql, Map.of("issueId", issueId));
 	}
 
 	public List<Issue> findById(Long issueId) {
-		final String SQL =
-			"SELECT * FROM issue " +
-				"WHERE issue_id = :issueId";
+		final String sql = "SELECT * FROM issue WHERE issue_id = :issueId";
 
-		SqlParameterSource params = new MapSqlParameterSource()
-			.addValue("issueId", issueId);
+		SqlParameterSource params = new MapSqlParameterSource().addValue("issueId", issueId);
 
-		return jdbcTemplate.query(SQL, params, (rs, rowNum) ->
-			Issue.builder()
-				.milestoneId(rs.getLong("milestone_id"))
-				.title(rs.getString("title"))
-				.contents(rs.getString("contents"))
-				.build()
-		);
+		return jdbcTemplate.query(sql, params, (rs, rowNum) -> Issue.builder()
+			.milestoneId(rs.getLong("milestone_id"))
+			.title(rs.getString("title"))
+			.contents(rs.getString("contents"))
+			.build());
 	}
 
 }
