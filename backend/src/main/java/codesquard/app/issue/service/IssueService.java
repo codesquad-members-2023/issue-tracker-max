@@ -114,7 +114,7 @@ public class IssueService {
 	@Transactional
 	private void existIssue(Long issueId) {
 		if (!issueRepository.exist(issueId)) {
-			throw new NoSuchIssueException(IssueErrorCode.NOT_FOUND_ISSUE);
+			throw new NoSuchIssueException();
 		}
 	}
 

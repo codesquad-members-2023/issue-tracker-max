@@ -27,4 +27,8 @@ public class CommentSaveServiceRequest {
 		}
 	}
 
+	public Long getIssueId() {
+		return issueId;
+	}
+
 }
