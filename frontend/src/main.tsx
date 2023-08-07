@@ -5,8 +5,6 @@ import { worker } from './mocks/browser';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider.tsx';
 
-export const API_URL = import.meta.env.DEV ? '' : import.meta.env.VITE_API_URL;
-
 if (import.meta.env.DEV) {
   worker.start({
     onUnhandledRequest: 'bypass',

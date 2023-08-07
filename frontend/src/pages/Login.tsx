@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { styled } from 'styled-components';
+import axios from '../api/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppContext } from '../main';
 import { useAuth } from '../hooks/useAuth';
@@ -19,22 +20,22 @@ export default function Login() {
 
   const handleLogin = async (id: string, password: string) => {
     try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id, password }),
-      });
-      const data = await res.json();
+      const res = await axios.post(
+        '/api/login',
+        JSON.stringify({ id, password }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
 
       if (res.status === 200) {
-        localStorage.setItem('accessToken', data.messages.accessToken);
-        localStorage.setItem('refreshToken', data.messages.refreshToken);
+        localStorage.setItem('accessToken', res.data.messages.accessToken);
+        localStorage.setItem('refreshToken', res.data.messages.refreshToken);
         login({
           user: id,
           pwd: password,
-          accessToken: data.messages.accessToken,
+          accessToken: res.data.messages.accessToken,
         });
       }
 
