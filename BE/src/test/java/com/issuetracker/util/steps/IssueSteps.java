@@ -73,4 +73,11 @@ public class IssueSteps {
 			.when().get("/api/issues/labels")
 			.then().log().all().extract();
 	}
+
+	public static ExtractableResponse<Response> 이슈_상세_조회_요청(Long id) {
+		return RestAssured.given().log().all()
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().get("/api/issues/{id}", id)
+			.then().log().all().extract();
+	}
 }

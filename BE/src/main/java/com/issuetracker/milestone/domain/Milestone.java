@@ -16,21 +16,19 @@ public class Milestone {
 	private String description;
 	private LocalDate deadline;
 	private boolean isOpen;
-	private boolean isDeleted;
+	private Double progress;
 
 	@Builder
-	private Milestone(Long id, String title, String description, LocalDate deadline, boolean isOpen, boolean isDeleted) {
+	public Milestone(Long id, String title, String description, LocalDate deadline, boolean isOpen, Double progress) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.deadline = deadline;
 		this.isOpen = isOpen;
-		this.isDeleted = isDeleted;
+		this.progress = progress;
 	}
 
-	public static Milestone createInstanceById(Long id) {
-		return Milestone.builder()
-			.id(id)
-			.build();
+	public boolean getIsOpen() {
+		return isOpen;
 	}
 }

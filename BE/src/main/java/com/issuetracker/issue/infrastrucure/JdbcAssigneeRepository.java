@@ -41,6 +41,6 @@ public class JdbcAssigneeRepository implements AssigneeRepository {
 		Member.builder()
 			.id(rs.getLong("id"))
 			.nickname(rs.getString("nickname"))
-			.proFileImageUrl(rs.getString("profile_image_url"))
+			.profileImageUrl(rs.getString("profile_image_url"))
 			.build();
 }

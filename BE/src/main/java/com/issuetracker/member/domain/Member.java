@@ -13,20 +13,14 @@ public class Member {
 	private String email;
 	private String password;
 	private String nickname;
-	private String proFileImageUrl;
+	private String profileImageUrl;
 
 	@Builder
-	private Member(Long id, String email, String password, String nickname, String proFileImageUrl) {
+	private Member(Long id, String email, String password, String nickname, String profileImageUrl) {
 		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
-		this.proFileImageUrl = proFileImageUrl;
-	}
-
-	public static Member createInstanceById(Long id) {
-		return Member.builder()
-			.id(id)
-			.build();
+		this.profileImageUrl = profileImageUrl;
 	}
 }

@@ -1,4 +1,4 @@
-package com.issuetracker.issue.application.dto;
+package com.issuetracker.label.application.dto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,23 +10,25 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class IssueLabelMappingInformation {
+public class LabelInformation {
 
 	private Long id;
 	private String title;
 	private String color;
+	private String description;
 
-	public static IssueLabelMappingInformation from(Label label) {
-		return new IssueLabelMappingInformation(
+	public static LabelInformation from(Label label) {
+		return new LabelInformation(
 			label.getId(),
 			label.getTitle(),
-			label.getColor()
+			label.getColor(),
+			label.getDescription()
 		);
 	}
 
-	public static List<IssueLabelMappingInformation> from(List<Label> labels) {
+	public static List<LabelInformation> from(List<Label> labels) {
 		return labels.stream()
-			.map(IssueLabelMappingInformation::from)
+			.map(LabelInformation::from)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }

@@ -46,9 +46,8 @@ class IssueRepositoryTest {
 			.content("내용")
 			.isOpen(true)
 			.createAt(LocalDateTime.now())
-			.milestone(Milestone.createInstanceById(1L))
-			.author(Member.createInstanceById(1L))
-			.labels(List.of(Label.createInstanceById(1L)))
+			.milestoneId(1L)
+			.authorId(1L)
 			.build();
 
 		// when

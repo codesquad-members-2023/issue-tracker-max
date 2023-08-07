@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
 public class Label {
 
@@ -13,20 +13,12 @@ public class Label {
 	private String title;
 	private String description;
 	private String color;
-	private boolean isDeleted;
 
 	@Builder
-	private Label(Long id, String title, String description, String color, boolean isDeleted) {
+	private Label(Long id, String title, String description, String color) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.color = color;
-		this.isDeleted = isDeleted;
-	}
-
-	public static Label createInstanceById(Long id) {
-		return Label.builder()
-			.id(id)
-			.build();
 	}
 }

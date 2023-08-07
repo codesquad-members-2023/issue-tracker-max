@@ -48,6 +48,13 @@ public enum LabelFixture {
 			.orElseThrow();
 	}
 
+	public static List<LabelFixture> findByIssueId(Long issueId) {
+		return Arrays.stream(AssignedLabelFixture.values())
+			.filter(a -> a.getIssueId() == issueId)
+			.map(a -> findById(a.getLabelId()))
+			.collect(Collectors.toUnmodifiableList());
+	}
+
 	public static List<LabelFixture> findAllById(List<Long> ids) {
 		return ids.stream()
 			.map(LabelFixture::findById)

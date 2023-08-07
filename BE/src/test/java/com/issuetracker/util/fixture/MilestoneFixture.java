@@ -7,10 +7,10 @@ import java.util.stream.Collectors;
 
 public enum MilestoneFixture {
 
-	MILESTONR1(1L, "Sprint #0", "첫 번째 스프린트", LocalDate.of(2023, Month.JUNE, 1), false),
-	MILESTONR2(2L, "Sprint #1", "두 번째 스프린트", LocalDate.of(2023, Month.AUGUST, 11), true),
-	MILESTONR3(3L, "Sprint #2", "세 번째 스프린트", LocalDate.of(2023, Month.SEPTEMBER, 7), true),
-	MILESTONR4(4L, "Sprint #3", "네 번째 스프린트", LocalDate.of(2023, Month.SEPTEMBER, 7), true);
+	MILESTON1(1L, "Sprint #0", "첫 번째 스프린트", LocalDate.of(2023, Month.JUNE, 1), false),
+	MILESTON2(2L, "Sprint #1", "두 번째 스프린트", LocalDate.of(2023, Month.AUGUST, 11), true),
+	MILESTON3(3L, "Sprint #2", "세 번째 스프린트", LocalDate.of(2023, Month.SEPTEMBER, 7), true),
+	MILESTON4(4L, "Sprint #3", "네 번째 스프린트", LocalDate.of(2023, Month.SEPTEMBER, 7), true);
 
 	private final Long id;
 	private final String title;

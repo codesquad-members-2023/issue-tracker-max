@@ -4,8 +4,10 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -28,15 +30,8 @@ public class JdbcIssueRepository implements IssueRepository {
 
 	@Override
 	public Long save(Issue issue) {
-		MapSqlParameterSource param = new MapSqlParameterSource()
-			.addValue("title", issue.getTitle())
-			.addValue("content", issue.getContent())
-			.addValue("isOpen", issue.getIsOpen())
-			.addValue("createAt", issue.getCreateAt())
-			.addValue("milestoneId", issue.getMilestone().getId())
-			.addValue("authorId", issue.getAuthor().getId());
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-
+		SqlParameterSource param = new BeanPropertySqlParameterSource(issue);
 		jdbcTemplate.update(SAVE_SQL, param, keyHolder);
 		return keyHolder.getKey().longValue();
 	}

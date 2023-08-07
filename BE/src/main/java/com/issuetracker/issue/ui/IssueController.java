@@ -1,29 +1,29 @@
 package com.issuetracker.issue.ui;
 
 import java.net.URI;
-import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.issuetracker.issue.application.IssueService;
-import com.issuetracker.issue.ui.dto.AuthorsSearchResponse;
-import com.issuetracker.issue.ui.dto.IssueAssigneesResponse;
+import com.issuetracker.issue.ui.dto.AuthorResponses;
+import com.issuetracker.issue.ui.dto.AssigneesResponses;
 import com.issuetracker.issue.ui.dto.IssueCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateResponse;
+import com.issuetracker.issue.ui.dto.AssignedLabelResponses;
+import com.issuetracker.issue.ui.dto.IssueDetailResponse;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
+import com.issuetracker.member.application.MemberService;
+import com.issuetracker.milestone.application.MilestoneService;
 import com.issuetracker.milestone.ui.dto.MilestonesSearchResponse;
-import com.issuetracker.issue.ui.dto.IssueLabelMappingsResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +33,8 @@ import lombok.RequiredArgsConstructor;
 public class IssueController {
 
 	private final IssueService issueService;
+	private final MemberService memberService;
+	private final MilestoneService milestoneService;
 
 	@GetMapping
 	public ResponseEntity<IssuesSearchResponse> showIssues(IssueSearchRequest issueSearchRequest) {
@@ -52,23 +54,29 @@ public class IssueController {
   
   	@GetMapping("/milestones")
 	public ResponseEntity<MilestonesSearchResponse> showMilestonesForFilter() {
-		return ResponseEntity.ok().body(MilestonesSearchResponse.from(issueService.searchMilestonesForFilter()));
+		return ResponseEntity.ok().body(MilestonesSearchResponse.from(milestoneService.searchMilestonesForFilter()));
 	}
 
 	@GetMapping("/authors")
-	public ResponseEntity<AuthorsSearchResponse> showAuthors() {
-		return ResponseEntity.ok().body(AuthorsSearchResponse.from(issueService.searchAuthors()));
+	public ResponseEntity<AuthorResponses> showAuthors() {
+		return ResponseEntity.ok().body(AuthorResponses.from(memberService.searchAuthors()));
   }
   
 	@GetMapping("/assignees")
-	public ResponseEntity<IssueAssigneesResponse> showAssignees() {
-		IssueAssigneesResponse issueAssigneesResponse = IssueAssigneesResponse.from(issueService.searchAssignee());
-		return ResponseEntity.ok().body(issueAssigneesResponse);
+	public ResponseEntity<AssigneesResponses> showAssignees() {
+		AssigneesResponses assigneesResponses = AssigneesResponses.from(issueService.searchAssignee());
+		return ResponseEntity.ok().body(assigneesResponses);
 	}
 
 	@GetMapping("/labels")
-	public ResponseEntity<IssueLabelMappingsResponse> showLabels() {
-		IssueLabelMappingsResponse issueLabelMappingsResponse = IssueLabelMappingsResponse.from(issueService.searchIssueLabelMapping());
-		return ResponseEntity.ok().body(issueLabelMappingsResponse);
+	public ResponseEntity<AssignedLabelResponses> showLabels() {
+		AssignedLabelResponses assignedLabelResponses = AssignedLabelResponses.from(issueService.searchAssignedLabel());
+		return ResponseEntity.ok().body(assignedLabelResponses);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<IssueDetailResponse> showIssueDetail(@PathVariable Long id) {
+		IssueDetailResponse issueDetailResponse = IssueDetailResponse.from(issueService.findById(id));
+		return ResponseEntity.ok().body(issueDetailResponse);
 	}
 }
