@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import axios from '../api/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppContext } from '../main';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import ContextLogo from '../types/ContextLogo';
 import TextInput from '../components/common/TextInput';
 import ButtonLarge from '../components/common/button/ButtonLarge';

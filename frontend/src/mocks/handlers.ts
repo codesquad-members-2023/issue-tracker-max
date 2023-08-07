@@ -44,7 +44,7 @@ const successLogin = {
 
 const newAccessToken = {
   accessToken:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkxlbyBLaW0iLCJpYXQiOjE1MTYyMzkwMjJ9.ZfseO7je1qHjBQgT122YZ-OvCMXUQ5NOkVZM8k9P2eU',
 };
 
 const successGitHubLogin = {
