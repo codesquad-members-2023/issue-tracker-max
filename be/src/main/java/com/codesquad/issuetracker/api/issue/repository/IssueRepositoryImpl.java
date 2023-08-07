@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
@@ -59,6 +60,52 @@ public class IssueRepositoryImpl implements IssueRepository {
     private void saveIssueLabels(List<?> issueLabels) {
         String sql = "INSERT INTO issue_label (issue_id, label_id) VALUES (:issueId, :labelId)";
         template.batchUpdate(sql, SqlParameterSourceUtils.createBatch(issueLabels));
+    }
+
+    @Override
+    public boolean updateTitle(Issue issue) {
+        String sql = "UPDATE issue SET title = :title WHERE id = :issueId";
+        SqlParameterSource parmas = new MapSqlParameterSource().addValue("title", issue.getTitle())
+                .addValue("issueId", issue.getId());
+        return template.update(sql, parmas) == 1;
+    }
+
+    @Override
+    @Transactional
+    public boolean updateAssignees(List<IssueAssignee> assignees) {
+        deleteAssignees(assignees.get(0).getIssueId()); // TODO: 서비스에서 트랜잭션 걸어서 메서드를 각각 호출하는게 좋을지 여기서 처리하는게 맞는지 모르겠음
+
+        String sql = "INSERT INTO issue_assignee (issue_id, member_id) VALUES (:issueId, :memberId)";
+        int[] result = template.batchUpdate(sql, SqlParameterSourceUtils.createBatch(assignees));
+        return result.length == assignees.size();
+    }
+
+    private void deleteAssignees(Long issueId) {
+        String sql = "DELETE FROM issue_assignee WHERE issue_id = :issueId";
+        template.update(sql, Map.of("issueId", issueId));
+    }
+
+    @Override
+    @Transactional
+    public boolean updateLabels(List<IssueLabel> labels) {
+        deleteLabels(labels.get(0).getIssueId());
+
+        String sql = "INSERT INTO issue_label (issue_id, label_id) VALUES (:issueId, :labelId)";
+        int[] result = template.batchUpdate(sql, SqlParameterSourceUtils.createBatch(labels));
+        return result.length == labels.size();
+    }
+
+    private void deleteLabels(Long issueId) {
+        String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
+        template.update(sql, Map.of("issueId", issueId));
+    }
+
+    @Override
+    public boolean updateMilestone(Issue issue) {
+        String sql = "UPDATE issue SET milestone_id = :milestoneId WHERE id = :issueId";
+        SqlParameterSource parmas = new MapSqlParameterSource().addValue("milestoneId", issue.getMilestoneId())
+                .addValue("issueId", issue.getId());
+        return template.update(sql, parmas) == 1;
     }
 
     @Override

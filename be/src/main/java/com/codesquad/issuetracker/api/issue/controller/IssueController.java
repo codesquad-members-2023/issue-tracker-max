@@ -1,6 +1,10 @@
 package com.codesquad.issuetracker.api.issue.controller;
 
+import com.codesquad.issuetracker.api.issue.dto.IssueAssigneeUpdateRequest;
 import com.codesquad.issuetracker.api.issue.dto.IssueCreateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueLabelUpdateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueMilestoneUpdateRequest;
+import com.codesquad.issuetracker.api.issue.dto.IssueTitleUpdateRequest;
 import com.codesquad.issuetracker.api.issue.service.IssueService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
@@ -25,6 +31,42 @@ public class IssueController {
         Long issueId = issueService.create(organizationTitle, issueCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("id", issueId));
+    }
+
+    @PatchMapping("/api/{organizationTitle}/issues/{issueId}/title")
+    public ResponseEntity<Map<String, Long>> updateTitle(
+            @RequestBody IssueTitleUpdateRequest issueTitleUpdateRequest,
+            @PathVariable String organizationTitle,
+            @PathVariable Long issueId) {
+        issueService.update(issueId, issueTitleUpdateRequest);
+        return ResponseEntity.ok(Map.of("id", issueId));
+    }
+
+    @PutMapping("/api/{organizationTitle}/issues/{issueId}/assignees")
+    public ResponseEntity<Map<String, Long>> updateAssignees(
+            @RequestBody IssueAssigneeUpdateRequest issueAssigneeUpdateRequest,
+            @PathVariable String organizationTitle,
+            @PathVariable Long issueId) {
+        issueService.update(issueId, issueAssigneeUpdateRequest);
+        return ResponseEntity.ok(Map.of("id", issueId));
+    }
+
+    @PutMapping("/api/{organizationTitle}/issues/{issueId}/labels")
+    public ResponseEntity<Map<String, Long>> updateLabels(
+            @RequestBody IssueLabelUpdateRequest issueLabelUpdateRequest,
+            @PathVariable String organizationTitle,
+            @PathVariable Long issueId) {
+        issueService.update(issueId, issueLabelUpdateRequest);
+        return ResponseEntity.ok(Map.of("id", issueId));
+    }
+
+    @PatchMapping("/api/{organizationTitle}/issues/{issueId}/milestones")
+    public ResponseEntity<Map<String, Long>> updateMilestones(
+            @RequestBody IssueMilestoneUpdateRequest issueMilestoneUpdateRequest,
+            @PathVariable String organizationTitle,
+            @PathVariable Long issueId) {
+        issueService.update(issueId, issueMilestoneUpdateRequest);
+        return ResponseEntity.ok(Map.of("id", issueId));
     }
 
     @DeleteMapping("/api/{organizationTitle}/issues/{issueId}")
