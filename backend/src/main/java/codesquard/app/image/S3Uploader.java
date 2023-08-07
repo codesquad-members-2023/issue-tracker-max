@@ -12,7 +12,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
-import codesquard.app.errors.exception.EmptyFileException;
+import codesquard.app.api.errors.exception.EmptyFileException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

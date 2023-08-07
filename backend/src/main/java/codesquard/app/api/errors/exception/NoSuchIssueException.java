@@ -1,6 +1,6 @@
-package codesquard.app.errors.exception;
+package codesquard.app.api.errors.exception;
 
-import codesquard.app.errors.errorcode.ErrorCode;
+import codesquard.app.api.errors.errorcode.ErrorCode;
 
 public class NoSuchIssueException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package codesquard.app.errors.response;
+package codesquard.app.api.response;
 
 import org.springframework.http.HttpStatus;
 
@@ -39,5 +39,5 @@ public class ApiResponse<T> {
 	public T getData() {
 		return data;
 	}
-	
+
 }

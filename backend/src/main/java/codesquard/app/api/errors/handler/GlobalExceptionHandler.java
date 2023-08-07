@@ -1,4 +1,4 @@
-package codesquard.app.errors.handler;
+package codesquard.app.api.errors.handler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import codesquard.app.errors.response.ApiResponse;
+import codesquard.app.api.response.ApiResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

@@ -3,8 +3,8 @@ package codesquard.app.user.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.errors.errorcode.UserErrorCode;
-import codesquard.app.errors.exception.RestApiException;
+import codesquard.app.api.errors.errorcode.UserErrorCode;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.user.repository.UserRepository;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
 import codesquard.app.user.service.response.UserSaveResponse;

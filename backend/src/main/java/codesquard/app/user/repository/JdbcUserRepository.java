@@ -10,8 +10,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import codesquard.app.errors.errorcode.UserErrorCode;
-import codesquard.app.errors.exception.RestApiException;
+import codesquard.app.api.errors.errorcode.UserErrorCode;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.user.entity.User;
 
 @Repository

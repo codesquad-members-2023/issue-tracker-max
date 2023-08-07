@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import codesquard.app.IntegrationTestSupport;
+import codesquard.app.api.errors.exception.CommentMaxLengthExceededException;
 import codesquard.app.comment.service.request.CommentModifyServiceRequest;
 import codesquard.app.comment.service.request.CommentSaveServiceRequest;
 import codesquard.app.comment.service.response.CommentDeleteResponse;
 import codesquard.app.comment.service.response.CommentModifyResponse;
 import codesquard.app.comment.service.response.CommentSaveResponse;
-import codesquard.app.errors.exception.CommentMaxLengthExceededException;
 import codesquard.app.issue.entity.Issue;
 import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.user.entity.User;

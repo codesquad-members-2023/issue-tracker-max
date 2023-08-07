@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquard.app.api.response.ApiResponse;
+import codesquard.app.api.response.ResponseMessage;
 import codesquard.app.comment.controller.request.CommentModifyRequest;
 import codesquard.app.comment.controller.request.CommentSaveRequest;
 import codesquard.app.comment.service.CommentService;
 import codesquard.app.comment.service.response.CommentDeleteResponse;
 import codesquard.app.comment.service.response.CommentModifyResponse;
 import codesquard.app.comment.service.response.CommentSaveResponse;
-import codesquard.app.errors.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class CommentController {
 	@PostMapping
 	public ApiResponse<CommentSaveResponse> saveComment(@Valid @RequestBody CommentSaveRequest request) {
 		LocalDateTime createdAt = LocalDateTime.now();
-		return ApiResponse.of(HttpStatus.CREATED, "댓글 등록에 성공했습니다.",
+		return ApiResponse.of(HttpStatus.CREATED, ResponseMessage.COMMENT_SAVE_SUCCESS,
 			commentService.save(request.toServiceRequest(), createdAt));
 	}
 

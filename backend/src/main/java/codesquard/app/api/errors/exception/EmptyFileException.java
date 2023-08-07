@@ -1,4 +1,4 @@
-package codesquard.app.errors.exception;
+package codesquard.app.api.errors.exception;
 
 public class EmptyFileException extends RuntimeException {
 

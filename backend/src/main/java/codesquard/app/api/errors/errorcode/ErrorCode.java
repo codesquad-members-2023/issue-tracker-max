@@ -1,4 +1,4 @@
-package codesquard.app.errors.errorcode;
+package codesquard.app.api.errors.errorcode;
 
 import org.springframework.http.HttpStatus;
 

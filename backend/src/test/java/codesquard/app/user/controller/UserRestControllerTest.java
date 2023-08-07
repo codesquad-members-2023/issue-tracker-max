@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
-import codesquard.app.errors.handler.GlobalExceptionHandler;
+import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.user.controller.request.UserSaveRequest;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
 import codesquard.app.user.service.response.UserSaveResponse;
