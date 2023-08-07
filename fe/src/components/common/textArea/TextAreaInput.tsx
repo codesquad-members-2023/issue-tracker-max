@@ -2,16 +2,18 @@ import { useTheme } from '@emotion/react';
 
 type Props = {
   textAreaValue?: string;
-  onChangeTextArea?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   isDisabled: boolean;
+  placeholder?: string;
+  onChangeTextArea?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 export const TextAreaInput: React.FC<Props> = ({
   textAreaValue,
-  onChangeTextArea,
   isDisabled,
+  onChangeTextArea,
 }) => {
   const theme = useTheme() as any;
+  const placeholderText = textAreaValue ? textAreaValue : '코멘트를 입력하세요';
 
   return (
     <textarea
@@ -31,8 +33,11 @@ export const TextAreaInput: React.FC<Props> = ({
           color: theme.neutral.text.weak,
           font: theme.fonts.displayMedium16,
         },
+        '&:focus': {
+          background: theme.neutral.surface.strong,
+        },
       }}
-      placeholder="코멘트를 입력하세요"
+      placeholder={placeholderText}
     />
   );
 };

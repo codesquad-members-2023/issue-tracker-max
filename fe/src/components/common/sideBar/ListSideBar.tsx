@@ -1,5 +1,5 @@
 import { css, useTheme } from '@emotion/react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { DropDownIndicator } from '../dropDown/DropDownIndicator';
 import { DropDownPanel } from '../dropDown/DropDownPanel';
 import { ListAssignee } from './ListAssignee';
@@ -22,11 +22,11 @@ type UserData = {
   image: string;
 };
 
-type ModifiedUserData = {
-  id: number;
-  loginId: string;
-  image: string;
-};
+// type ModifiedUserData = {
+//   id: number;
+//   loginId: string;
+//   image: string;
+// };
 
 type LabelData = {
   id: number;

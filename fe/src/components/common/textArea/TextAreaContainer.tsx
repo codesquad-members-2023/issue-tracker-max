@@ -24,7 +24,7 @@ export const TextAreaContainer: React.FC<Props> = ({
   return (
     <div
       css={{
-        width: '912px',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         boxSizing: 'border-box',

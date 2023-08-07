@@ -1,7 +1,7 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 
-type Props = {};
+// type Props = {};
 
-export const AddLabelTable: React.FC = ({}: Props) => {
-  return <></>;
-};
+// export const AddLabelTable: React.FC = ({}: Props) => {
+//   return <></>;
+// };

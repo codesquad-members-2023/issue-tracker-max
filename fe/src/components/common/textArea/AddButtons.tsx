@@ -1,5 +1,4 @@
 import { useTheme } from '@emotion/react';
-import { ReactComponent as Grip } from '@assets/icons/grip.svg';
 
 type DefaultFileStatusType = {
   typeError: boolean;

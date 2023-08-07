@@ -1,7 +1,7 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 
-type Props = {};
+// type Props = {};
 
-export const MileStoneListPage: React.FC = ({}: Props) => {
-  return <></>;
-};
+// export const MileStoneListPage: React.FC = ({}: Props) => {
+//   return <></>;
+// };

@@ -3,11 +3,9 @@ import { ReactComponent as ChevronDown } from '@assets/icons/chevronDown.svg';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 import { Button } from '../Button';
 
-type Indicator = '담당자' | '레이블' | '마일스톤' | '필터';
-
 type Props = {
   size: keyof typeof SIZE;
-  indicator: Indicator;
+  indicator: '담당자' | '레이블' | '마일스톤' | '필터';
   children: React.ReactNode;
   isPanelOpen: boolean;
 };
