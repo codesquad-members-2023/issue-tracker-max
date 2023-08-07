@@ -30,21 +30,21 @@
 
     <select id="getIssues" resultMap="issueResultMap"
             parameterType="org.presents.issuetracker.issue.dto.request.IssueSearchParam">
-        SELECT DISTINCT i.issue_id as issue_id,
-        i.title as issue_title,
-        i.status as issue_status,
-        i.created_at as issue_created_at,
-        author.login_id as author_login_id,
-        assignee_user.image as assignee_image,
-        l.label_id as label_id,
-        l.name as label_name,
-        l.text_color as label_text_color,
-        l.background_color as label_background_color,
-        m.milestone_id as milestone_id,
-        m.name as milestone_name
+        SELECT DISTINCT i.issue_id AS issue_id,
+        i.title AS issue_title,
+        i.status AS issue_status,
+        i.created_at AS issue_created_at,
+        author.login_id AS author_login_id,
+        assignee_user.image AS assignee_image,
+        l.label_id AS label_id,
+        l.name AS label_name,
+        l.text_color AS label_text_color,
+        l.background_color AS label_background_color,
+        mis.milestone_id AS milestone_id,
+        mis.name AS milestone_name
         FROM issue i
         INNER JOIN user AS author ON author.user_id = i.author_id
-        LEFT OUTER JOIN milestone as m ON i.milestone_id = m.milestone_id AND m.status != 'deleted'
+        LEFT OUTER JOIN milestone AS mis ON i.milestone_id = mis.milestone_id AND mis.status != 'deleted'
         LEFT OUTER JOIN issue_label il ON i.issue_id = il.issue_id
         LEFT OUTER JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
         LEFT OUTER JOIN assignee a ON i.issue_id = a.issue_id
@@ -80,7 +80,7 @@
             </if>
             <if test="milestoneName != null">
                 <trim prefix="AND">
-                    m.name = #{milestoneName}
+                    mis.name = #{milestoneName}
                 </trim>
             </if>
             <if test="assigneeName != null">
@@ -119,7 +119,7 @@
         COUNT(DISTINCT CASE WHEN i.status = 'closed' THEN i.issue_id END) AS closed_issue_count
         FROM issue i
         INNER JOIN user AS author ON author.user_id = i.author_id
-        LEFT OUTER JOIN milestone as m ON i.milestone_id = m.milestone_id AND m.status != 'deleted'
+        LEFT OUTER JOIN milestone AS mis ON i.milestone_id = mis.milestone_id AND mis.status != 'deleted'
         LEFT OUTER JOIN issue_label il ON i.issue_id = il.issue_id
         LEFT OUTER JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
         LEFT OUTER JOIN assignee a ON i.issue_id = a.issue_id
@@ -140,7 +140,7 @@
             </if>
             <if test="milestoneName != null">
                 <trim prefix="AND">
-                    m.name = #{milestoneName}
+                    mis.name = #{milestoneName}
                 </trim>
             </if>
             <if test="assigneeName != null">
