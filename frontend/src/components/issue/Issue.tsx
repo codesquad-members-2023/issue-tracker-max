@@ -99,6 +99,7 @@ const CheckboxLabel = styled.label`
 const TitleAnchor = styled.a`
   cursor: pointer;
   font: ${({ theme }) => theme.font.displayMedium20};
+  color: ${({ theme }) => theme.color.neutralTextStrong};
 `;
 
 const IssueContent = styled.div`
@@ -143,4 +144,8 @@ const CommentDiv = styled.div`
   align-items: center;
   gap: 4px;
   cursor: pointer;
+
+  & span {
+    color: ${({ theme }) => theme.color.neutralTextStrong};
+  }
 `;

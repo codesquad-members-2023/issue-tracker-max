@@ -18,32 +18,41 @@ export function LabelTableElement({ label }: { label: LabelData }) {
 
   const theme = useTheme();
 
-  return isEditing ? (
-    <LabelEditor type="edit" label={label} onClickClose={closeEditor} />
-  ) : (
+  return (
     <Div>
-      <LabelTag>
-        <InformationTag
-          size="S"
-          value={label.name}
-          fill={label.background}
-          fontColor={label.color}
-        />
-      </LabelTag>
-      <Description>{label.description}</Description>
-      <Buttons>
-        <Button size="S" buttonType="Ghost" icon="edit" onClick={onClickEdit}>
-          편집
-        </Button>
-        <Button
-          size="S"
-          buttonType="Ghost"
-          icon="trash"
-          color={theme.color.dangerSurfaceDefault}
-        >
-          삭제
-        </Button>
-      </Buttons>
+      {isEditing ? (
+        <LabelEditor type="edit" label={label} onClickClose={closeEditor} />
+      ) : (
+        <>
+          <LabelTag>
+            <InformationTag
+              size="S"
+              value={label.name}
+              fill={label.background}
+              fontColor={label.color}
+            />
+          </LabelTag>
+          <Description>{label.description}</Description>
+          <Buttons>
+            <Button
+              size="S"
+              buttonType="Ghost"
+              icon="edit"
+              onClick={onClickEdit}
+            >
+              편집
+            </Button>
+            <Button
+              size="S"
+              buttonType="Ghost"
+              icon="trash"
+              color={theme.color.dangerSurfaceDefault}
+            >
+              삭제
+            </Button>
+          </Buttons>
+        </>
+      )}
     </Div>
   );
 }
