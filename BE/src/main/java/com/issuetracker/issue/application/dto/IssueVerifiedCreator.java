@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.issuetracker.issue.domain.Assignee;
-import com.issuetracker.issue.domain.IssueLabelMapping;
+import com.issuetracker.issue.domain.AssignedLabel;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.member.domain.Member;
 import com.issuetracker.milestone.domain.Milestone;
@@ -38,8 +38,8 @@ public class IssueVerifiedCreator {
 			.collect(Collectors.toUnmodifiableList());
 	}
 
-	public List<IssueLabelMapping> getIssueLabelMappings(Long issueId) {
-		return labels.stream().map(label -> IssueLabelMapping.builder()
+	public List<AssignedLabel> getIssueLabelMappings(Long issueId) {
+		return labels.stream().map(label -> AssignedLabel.builder()
 				.issueId(issueId)
 				.labelId(label.getId())
 				.build())

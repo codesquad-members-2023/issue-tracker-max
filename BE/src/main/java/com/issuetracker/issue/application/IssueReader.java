@@ -9,7 +9,7 @@ import com.issuetracker.issue.domain.AssigneeRepository;
 import com.issuetracker.issue.domain.Author;
 import com.issuetracker.issue.domain.AuthorRepository;
 import com.issuetracker.issue.domain.Issue;
-import com.issuetracker.issue.domain.IssueLabelMappingRepository;
+import com.issuetracker.issue.domain.AssignedLabelRepository;
 import com.issuetracker.issue.domain.IssueMapper;
 import com.issuetracker.issue.domain.IssueRepository;
 import com.issuetracker.issue.domain.IssuesCountData;
@@ -29,7 +29,7 @@ public class IssueReader {
 	private final MilestoneRepository milestoneRepository;
 	private final AuthorRepository authorRepository;
 	private final AssigneeRepository assigneeRepository;
-	private final IssueLabelMappingRepository issueLabelMappingRepository;
+	private final AssignedLabelRepository assignedLabelRepository;
 
 	public List<Issue> search(IssueSearchInputData issueSearchData) {
 		return issueMapper.search(issueSearchData.toIssueSearch());
@@ -52,6 +52,6 @@ public class IssueReader {
 	}
 
 	public List<Label> searchIssueLabelMapping() {
-		return issueLabelMappingRepository.findAll();
+		return assignedLabelRepository.findAll();
 	}
 }

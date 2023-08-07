@@ -3,7 +3,7 @@ package com.issuetracker.util.fixture;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public enum IssueLabelMappingFixture {
+public enum AssignedLabelFixture {
 
 	ISSUE_LABEL_MAPPING_FIXTURE1(1L, 1L, 5L),
 	ISSUE_LABEL_MAPPING_FIXTURE2(2L, 2L, 5L),
@@ -31,7 +31,7 @@ public enum IssueLabelMappingFixture {
 	private final Long issueId;
 	private final Long labelId;
 
-	IssueLabelMappingFixture(Long id, Long issueId, Long labelId) {
+	AssignedLabelFixture(Long id, Long issueId, Long labelId) {
 		this.id = id;
 		this.issueId = issueId;
 		this.labelId = labelId;
@@ -49,7 +49,7 @@ public enum IssueLabelMappingFixture {
 		return labelId;
 	}
 
-	public static IssueLabelMappingFixture findById(Long id) {
+	public static AssignedLabelFixture findById(Long id) {
 		return Arrays.stream(values())
 			.filter(ilm -> ilm.id == id)
 			.findAny()
@@ -58,7 +58,7 @@ public enum IssueLabelMappingFixture {
 
 	public static String createInsertSQL() {
 		return String.format(
-			"INSERT INTO issue_label_mapping(issue_id, label_id) VALUES %s",
+			"INSERT INTO assigned_label(issue_id, label_id) VALUES %s",
 			Arrays.stream(values())
 				.map(ilm -> String.format(
 					"('%s', '%s')",

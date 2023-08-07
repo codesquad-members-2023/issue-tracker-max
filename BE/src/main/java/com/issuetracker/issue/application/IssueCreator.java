@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.issuetracker.issue.application.dto.IssueCreateInputData;
 import com.issuetracker.issue.application.dto.IssueVerifiedCreator;
 import com.issuetracker.issue.domain.AssigneeRepository;
-import com.issuetracker.issue.domain.IssueLabelMappingRepository;
+import com.issuetracker.issue.domain.AssignedLabelRepository;
 import com.issuetracker.issue.domain.IssueRepository;
 import com.issuetracker.label.application.LabelValidator;
 import com.issuetracker.member.application.MemberValidator;
@@ -23,7 +23,7 @@ public class IssueCreator {
 	private final MemberValidator memberValidator;
 	private final LabelValidator labelValidator;
 
-	private final IssueLabelMappingRepository issueLabelMappingRepository;
+	private final AssignedLabelRepository assignedLabelRepository;
 	private final AssigneeRepository assigneeRepository;
 	private final IssueRepository issueRepository;
 
@@ -32,7 +32,7 @@ public class IssueCreator {
 
 		Long savedId = issueRepository.save(issueCreateData.toIssue(issueVerifiedCreator.getAuthor(), issueVerifiedCreator.getLabels(), issueVerifiedCreator.getMilestone(), LocalDateTime.now()));
 		assigneeRepository.saveAll(issueVerifiedCreator.getAssignees(savedId));
-		issueLabelMappingRepository.saveAll(issueVerifiedCreator.getIssueLabelMappings(savedId));
+		assignedLabelRepository.saveAll(issueVerifiedCreator.getIssueLabelMappings(savedId));
 		return savedId;
 	}
 

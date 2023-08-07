@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class IssueLabelMapping {
+public class AssignedLabel {
 
 	private Long issueId;
 	private Long labelId;
 
 	@Builder
-	private IssueLabelMapping(Long issueId, Long labelId) {
+	private AssignedLabel(Long issueId, Long labelId) {
 		this.issueId = issueId;
 		this.labelId = labelId;
 	}
