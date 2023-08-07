@@ -3,7 +3,7 @@ import { DropDownList } from './DropDownList';
 import { DropDownHeader } from './DropDownHeader';
 
 type DropDownItem = {
-  id?: number;
+  id: number;
   image?: string;
   name?: string;
   backgroundColor?: string;
@@ -12,10 +12,10 @@ type DropDownItem = {
 };
 
 type Props = {
-  options: DropDownItem[];
+  options?: DropDownItem[];
   alignment: string;
   panelHeader: string;
-  selectedItems: { [key: number]: boolean };
+  selectedItems: number[];
   onSelected: (index: number) => void;
 };
 
@@ -27,6 +27,8 @@ export const DropDownPanel: React.FC<Props> = ({
   onSelected,
 }) => {
   const theme = useTheme() as any;
+
+  console.log(selectedItems);
 
   return (
     <div
@@ -50,27 +52,15 @@ export const DropDownPanel: React.FC<Props> = ({
           overflowY: 'auto',
         }}
       >
-        {options.length > 0 ? (
-          options.map((item, index: number) => (
+        {options &&
+          options?.map((item) => (
             <DropDownList
-              key={index}
+              key={item.id}
               item={item}
-              onSelected={() => onSelected(index)}
-              isSelected={selectedItems[index]}
-              index={index}
+              onClick={() => onSelected(item.id)}
+              isSelected={selectedItems.includes(item.id)}
             />
-          ))
-        ) : (
-          <span
-            css={{
-              marginLeft: '16px',
-              font: theme.fonts.displayMedium12,
-              color: theme.neutral.text.strong,
-            }}
-          >
-            데이터가 없습니다
-          </span>
-        )}
+          ))}
       </ul>
     </div>
   );

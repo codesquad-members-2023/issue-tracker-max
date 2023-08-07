@@ -6,24 +6,19 @@ import { Body } from '@components/addIssuePage/Body';
 import { UserImage } from '@components/addIssuePage/UserImage';
 import { UserImageContainer } from '@components/addIssuePage/UserImageContainer';
 import { InputContainer } from '@components/addIssuePage/InputContainer';
-import { TextInput } from '@components/common/textInput/TextInput';
 import { TextArea } from '@components/common/TextArea';
 import { SideBar } from '@components/common/sideBar/SideBar';
 import { ListSideBar } from '@components/common/sideBar/ListSideBar';
 import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
-
-type SelectedItems = {
-  [key: number]: boolean;
-};
+import { TextInput } from '@components/common/TextInput/TextInput';
 
 type SelectionState = {
-  assignees: SelectedItems;
-  labels: SelectedItems;
-  milestones: SelectedItems;
+  assignees: number[];
+  labels: number[];
+  milestones: number[];
 };
-
 // 추후 구현 보완시 추가
 // type Props = {
 //   authorId: number;
@@ -44,9 +39,9 @@ export const AddIssuePage: React.FC = ({}) => {
   };
 
   const [selections, setSelections] = useState<SelectionState>({
-    assignees: {},
-    labels: {},
-    milestones: {},
+    assignees: [],
+    labels: [],
+    milestones: [],
   });
 
   const [titleInput, setTitleInput] = useState<string>('');
@@ -55,6 +50,14 @@ export const AddIssuePage: React.FC = ({}) => {
 
   const [fileStatus, setFileStatus] = useState(defaultFileStatus);
 
+  useEffect(() => {
+    if (textAreaValue) {
+      setIsDisplayingCount(true);
+      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [textAreaValue]); // >> textArea로.
+
   const uploadImage = async (file: File) => {
     try {
       setFileStatus((prev) => ({ ...prev, isUploading: true }));
@@ -62,13 +65,10 @@ export const AddIssuePage: React.FC = ({}) => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch(
-        'https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/file-upload',
-        {
-          method: 'POST',
-          body: formData,
-        },
-      );
+      const response = await fetch(`/file-upload`, {
+        method: 'POST',
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error('File upload failed');
@@ -84,9 +84,12 @@ export const AddIssuePage: React.FC = ({}) => {
   };
 
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileStatus((prev) => ({ ...prev, sizeError: false }));
-    setFileStatus((prev) => ({ ...prev, typeError: false }));
-    setFileStatus((prev) => ({ ...prev, uploadFailed: false }));
+    setFileStatus((prev) => ({
+      ...prev,
+      sizeError: false,
+      typeError: false,
+      uploadFailed: false,
+    }));
 
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -121,23 +124,14 @@ export const AddIssuePage: React.FC = ({}) => {
       contents: textAreaValue,
       // authorId: authorId,
       authorId: 1,
-      assigneeIds: Object.keys(selections.assignees)
-        .filter((key) => selections.assignees[parseInt(key)])
-        .map((key) => Number(key) + 1),
-      labelIds: Object.keys(selections.labels)
-        .filter((key) => selections.labels[parseInt(key)])
-        .map((key) => Number(key) + 1),
-      milestoneId:
-        Number(
-          Object.keys(selections.milestones).find(
-            (key) => selections.milestones[parseInt(key)],
-          ),
-        ) + 1,
+      assigneeIds: selections.assignees,
+      labelIds: selections.labels,
+      milestoneId: selections.milestones,
     };
 
     try {
       const response = await fetch(
-        'https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/issues/new',
+        `${process.env.REACT_APP_API_URL}/issues/new`,
         {
           method: 'POST',
           headers: {
@@ -152,40 +146,35 @@ export const AddIssuePage: React.FC = ({}) => {
       }
 
       const data = await response.json();
+      navigate('/');
       return data;
     } catch (error) {
       console.error('이슈가 정상적으로 등록되지 않았습니다.');
-    } finally {
-      navigate('/');
     }
   };
 
-  useEffect(() => {
-    if (textAreaValue) {
-      setIsDisplayingCount(true);
-      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [textAreaValue]);
-
-  const onMultipleSelectedAssignee = (index: number) => {
+  const onMultipleSelectedAssignee = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      assignees: { ...prev.assignees, [index]: !prev.assignees[index] },
+      assignees: prev.assignees.includes(id)
+        ? prev.assignees.filter((itemId) => itemId !== id)
+        : [...prev.assignees, id],
     }));
   };
 
-  const onMultipleSelectedLabel = (index: number) => {
+  const onMultipleSelectedLabel = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      labels: { ...prev.labels, [index]: !prev.labels[index] },
+      labels: prev.labels.includes(id)
+        ? prev.labels.filter((itemId) => itemId !== id)
+        : [...prev.labels, id],
     }));
   };
 
-  const onSingleSelectedMilestone = (index: number) => {
+  const onSingleSelectedMilestone = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      milestones: { [index]: true },
+      milestones: prev.milestones.includes(id) ? [] : [id],
     }));
   };
 
@@ -256,7 +245,7 @@ export const AddIssuePage: React.FC = ({}) => {
         <Button
           typeVariant="contained"
           size="L"
-          disabled={titleInput.length === 0}
+          disabled={titleInput === ''}
           onClick={onSubmit}
         >
           완료
