@@ -1,7 +1,6 @@
 import { useTheme } from '@emotion/react';
 import { ReactComponent as ChevronDown } from '@assets/icons/chevronDown.svg';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
-
 import { Button } from '../Button';
 
 type Indicator = '담당자' | '레이블' | '마일스톤' | '필터';
@@ -10,17 +9,20 @@ type Props = {
   size: keyof typeof SIZE;
   indicator: Indicator;
   children: React.ReactNode;
+  isPanelOpen: boolean;
 };
 
 export const DropDownIndicator: React.FC<Props> = ({
   size,
   indicator,
   children,
+  isPanelOpen,
 }) => {
   const theme = useTheme() as any;
 
   return (
     <div
+      className="dropdown-panel"
       css={{
         position: 'relative',
         boxSizing: 'border-box',
@@ -47,7 +49,7 @@ export const DropDownIndicator: React.FC<Props> = ({
           <ChevronDown stroke={theme.neutral.text.default} />
         )}
       </Button>
-      {children}
+      {isPanelOpen && <>{children}</>}
     </div>
   );
 };

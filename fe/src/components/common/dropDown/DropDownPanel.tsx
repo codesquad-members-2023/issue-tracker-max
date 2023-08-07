@@ -1,18 +1,37 @@
 import { useTheme } from '@emotion/react';
 import { DropDownHeader } from './DropDownHeader';
+import { useEffect } from 'react';
 
 type Props = {
   position: keyof typeof POSITION;
   panelHeader: string;
   children: React.ReactNode;
+  onOutsideClick: () => void;
 };
 
 export const DropDownPanel: React.FC<Props> = ({
   position,
   panelHeader,
   children,
+  onOutsideClick,
 }) => {
   const theme = useTheme() as any;
+
+  useEffect(() => {
+    const onClick = ({ target }: MouseEvent) => {
+      if (target instanceof HTMLElement && target?.closest('.dropdown-panel')) {
+        return;
+      }
+
+      onOutsideClick();
+    };
+
+    window.addEventListener('click', onClick);
+
+    return () => {
+      window.removeEventListener('click', onClick);
+    };
+  }, []);
 
   return (
     <div
