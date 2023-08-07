@@ -23,9 +23,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <AppContext.Provider value={appContext}>
         <AuthProvider>
-          <Routes>
-            <Route path="/*" element={<App />} />
-          </Routes>
+          <App />
         </AuthProvider>
       </AppContext.Provider>
     </BrowserRouter>
