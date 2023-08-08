@@ -6,29 +6,18 @@ import { Button } from '../Button';
 type Props = {
   size: keyof typeof SIZE;
   indicator: string;
-  children: React.ReactNode;
-  isPanelOpen: boolean;
 };
 
-export const DropDownIndicator: React.FC<Props> = ({
-  size,
-  indicator,
-  children,
-  isPanelOpen,
-}) => {
+export const DropDownIndicator: React.FC<Props> = ({ size, indicator }) => {
   const theme = useTheme() as any;
 
   return (
     <div
-      className="dropdown-panel"
       css={{
-        position: 'relative',
-        boxSizing: 'border-box',
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        font: theme.fonts.availableMedium16,
-        ...SIZE[size],
       }}
     >
       <Button
@@ -47,7 +36,6 @@ export const DropDownIndicator: React.FC<Props> = ({
           <ChevronDown stroke={theme.neutral.text.default} />
         )}
       </Button>
-      {isPanelOpen && <>{children}</>}
     </div>
   );
 };

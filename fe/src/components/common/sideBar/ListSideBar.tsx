@@ -1,6 +1,6 @@
 import { css, useTheme } from '@emotion/react';
 import { useState } from 'react';
-import { DropDownIndicator } from '../dropDown/DropDownIndicator';
+import { DropDownContainer } from '../dropDown/DropDownContainer';
 import { DropDownPanel } from '../dropDown/DropDownPanel';
 import { ListAssignee } from './ListAssignee';
 import { ListLabel } from './ListLabel';
@@ -138,7 +138,7 @@ export const ListSideBar: React.FC<Props> = ({
   return (
     <>
       <div css={commonStyles} onClick={() => openPanel(getUsers, 'users')}>
-        <DropDownIndicator
+        <DropDownContainer
           indicator="담당자"
           size="L"
           isPanelOpen={isPanelOpen === 'users'}
@@ -157,11 +157,11 @@ export const ListSideBar: React.FC<Props> = ({
               />
             ))}
           </DropDownPanel>
-        </DropDownIndicator>
+        </DropDownContainer>
         <ListAssignee selectedAssigneesData={selectedAssigneesData} />
       </div>
       <div css={commonStyles} onClick={() => openPanel(getLabels, 'labels')}>
-        <DropDownIndicator
+        <DropDownContainer
           indicator="레이블"
           size="L"
           isPanelOpen={isPanelOpen === 'labels'}
@@ -180,14 +180,14 @@ export const ListSideBar: React.FC<Props> = ({
               />
             ))}
           </DropDownPanel>
-        </DropDownIndicator>
+        </DropDownContainer>
         <ListLabel selectedLabelsData={selectedLabelsData} />
       </div>
       <div
         css={commonStyles}
         onClick={() => openPanel(getMilestones, 'milestones')}
       >
-        <DropDownIndicator
+        <DropDownContainer
           indicator="마일스톤"
           size="L"
           isPanelOpen={isPanelOpen === 'milestones'}
@@ -206,7 +206,7 @@ export const ListSideBar: React.FC<Props> = ({
               />
             ))}
           </DropDownPanel>
-        </DropDownIndicator>
+        </DropDownContainer>
         <ListMilestone selectedMilestonesData={selectedMilestonesData} />
       </div>
     </>
