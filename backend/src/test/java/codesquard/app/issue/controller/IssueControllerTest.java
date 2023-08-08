@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import codesquard.app.ControllerTestSupport;
-import codesquard.app.errors.errorcode.IssueErrorCode;
-import codesquard.app.errors.exception.IllegalIssueStatusException;
+import codesquard.app.api.errors.errorcode.IssueErrorCode;
+import codesquard.app.api.errors.exception.IllegalIssueStatusException;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -24,6 +24,21 @@ import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.fixture.FixtureFactory;
 
 class IssueControllerTest extends ControllerTestSupport {
+
+	@DisplayName("이슈의 상세 내용을 조회한다.")
+	@Test
+	void getIssueDetail() throws Exception {
+		// given
+		int id = 1;
+		given(issueService.get((long)id)).willReturn(FixtureFactory.createIssueReadResponse((long)id));
+
+		// when & then
+		mockMvc.perform(get("/api/issues/" + id))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.title").exists())
+			.andExpect(jsonPath("$.content").exists())
+			.andDo(print());
+	}
 
 	@DisplayName("이슈를 등록한다.")
 	@Test

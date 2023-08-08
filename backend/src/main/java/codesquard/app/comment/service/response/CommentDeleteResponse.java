@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentDeleteResponse {
 
-	private boolean success;
+	private Long deletedCommentId;
 
-	public boolean isSuccess() {
-		return success;
+	public Long getDeletedCommentId() {
+		return deletedCommentId;
 	}
 
 }

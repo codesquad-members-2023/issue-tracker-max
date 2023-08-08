@@ -1,10 +1,16 @@
 package codesquard.app.issue.fixture;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import codesquard.app.issue.dto.request.IssueSaveRequest;
+import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
+import codesquard.app.issue.dto.response.IssueMilestoneResponse;
+import codesquard.app.issue.dto.response.IssueReadResponse;
+import codesquard.app.issue.dto.response.IssueUserResponse;
+import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
 
@@ -28,5 +34,11 @@ public class FixtureFactory {
 		String description = "테스트 코드용";
 		LocalDate localDate = LocalDate.now();
 		return new MilestoneSaveRequest(name, localDate, description);
+	}
+
+	public static IssueReadResponse createIssueReadResponse(Long id) {
+		return new IssueReadResponse(id, "제목", IssueStatus.OPENED, LocalDateTime.now(), LocalDateTime.now(),
+			LocalDateTime.now(), "제목", new IssueMilestoneResponse(id, "마일스톤", new IssueMilestoneCountResponse(1, 0)),
+			new IssueUserResponse(id, "wiz", "url"));
 	}
 }
