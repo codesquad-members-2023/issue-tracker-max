@@ -1,25 +1,16 @@
-import { useEffect, useState } from "react";
+import { InputHTMLAttributes, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Icon, IconType } from "./icon/Icon";
 
-type TextInputProps = {
-  width?: number;
-  size: "L" | "S";
-  value?: string;
-  placeholder?: string;
+export type TextInputProps = {
+  size?: "L" | "S";
   label?: string;
   caption?: string;
   icon?: keyof IconType;
   fixLabel?: boolean;
   borderNone?: boolean;
-  disabled?: boolean;
   isError?: boolean;
-  maxLength?: number;
-  type?: React.HTMLInputTypeAttribute;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onFocus?: () => void;
-  onBlur?: () => void;
-};
+} & Omit<InputHTMLAttributes<HTMLInputElement>, "size">;
 
 type TextInputState = "Enabled" | "Active" | "Disabled" | "Error";
 
@@ -28,7 +19,7 @@ type InputProps = {
 };
 
 type InputContainerProps = {
-  $width: number;
+  $width: string | number;
   $size: "L" | "S";
   $borderNone?: boolean;
   $state: TextInputState;
@@ -36,7 +27,7 @@ type InputContainerProps = {
 
 export function TextInput({
   width = 254,
-  size,
+  size = "S",
   value: initialValue = "",
   label,
   placeholder,
@@ -47,10 +38,10 @@ export function TextInput({
   disabled = false,
   isError = false,
   maxLength,
-  type,
   onChange,
   onFocus,
   onBlur,
+  ...props
 }: TextInputProps) {
   const [state, setState] = useState<TextInputState>(
     disabled ? "Disabled" : "Enabled",
@@ -58,29 +49,31 @@ export function TextInput({
   const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
+    if (state === "Disabled") return;
+
     setState(isError ? "Error" : isFocused ? "Active" : "Enabled");
-  }, [isError, isFocused]);
+  }, [state, isError, isFocused]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange && onChange(event);
+    onChange?.(event);
   };
 
-  const handleInputFocus = () => {
+  const handleInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     if (state !== "Error") {
       setState("Active");
     }
 
     setIsFocused(true);
-    onFocus && onFocus();
+    onFocus?.(event);
   };
 
-  const handleInputBlur = () => {
+  const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     if (state !== "Error") {
       setState(disabled ? "Disabled" : "Enabled");
     }
 
     setIsFocused(false);
-    onBlur && onBlur();
+    onBlur?.(event);
   };
 
   return (
@@ -108,7 +101,7 @@ export function TextInput({
           onBlur={handleInputBlur}
           disabled={state === "Disabled"}
           $state={state}
-          type={type}
+          {...props}
         />
       </InputContainer>
       {caption && <Caption $state={state}>{caption}</Caption>}
@@ -116,9 +109,10 @@ export function TextInput({
   );
 }
 
-const Div = styled.div<{ $state: TextInputState; $width: number }>`
+const Div = styled.div<{ $state: TextInputState; $width: string | number }>`
   display: flex;
-  width: ${({ $width }) => $width}px;
+  width: ${({ $width }) =>
+    typeof $width === "number" ? `${$width}px` : $width};
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
@@ -129,7 +123,8 @@ const Div = styled.div<{ $state: TextInputState; $width: number }>`
 
 const InputContainer = styled.div<InputContainerProps>`
   display: flex;
-  width: ${({ $width }) => $width}px;
+  width: ${({ $width }) =>
+    typeof $width === "number" ? `${$width}px` : $width};
   height: ${({ $size }) => ($size === "L" ? "56px" : "40px")};
   padding: 5px 16px;
   align-self: stretch;
