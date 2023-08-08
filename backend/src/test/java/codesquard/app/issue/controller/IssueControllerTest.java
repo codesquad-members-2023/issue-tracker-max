@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import codesquard.app.ControllerTestSupport;
 import codesquard.app.api.errors.errorcode.IssueErrorCode;
 import codesquard.app.api.errors.exception.IllegalIssueStatusException;
+import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -35,8 +36,22 @@ class IssueControllerTest extends ControllerTestSupport {
 		// when & then
 		mockMvc.perform(get("/api/issues/" + id))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.title").exists())
-			.andExpect(jsonPath("$.content").exists())
+			.andExpect(jsonPath("$.data.title").exists())
+			.andExpect(jsonPath("$.data.content").exists())
+			.andDo(print());
+	}
+
+	@DisplayName("이슈의 상세 내용 조회에 실패한다.")
+	@Test
+	void getIssueDetail_Fail() throws Exception {
+		// given
+		int id = 1;
+		willThrow(new NoSuchIssueException())
+			.given(issueService).get((long)id);
+
+		// when & then
+		mockMvc.perform(get("/api/issues/" + id))
+			.andExpect(status().isNotFound())
 			.andDo(print());
 	}
 
@@ -51,7 +66,7 @@ class IssueControllerTest extends ControllerTestSupport {
 				.content(objectMapper.writeValueAsString(issueSaveRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.savedIssueId").exists())
 			.andDo(print());
 	}
 
@@ -129,7 +144,7 @@ class IssueControllerTest extends ControllerTestSupport {
 				.content(objectMapper.writeValueAsString(issueModifyStatusRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -162,7 +177,7 @@ class IssueControllerTest extends ControllerTestSupport {
 				.content(objectMapper.writeValueAsString(issueModifyTitleRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -226,7 +241,7 @@ class IssueControllerTest extends ControllerTestSupport {
 				.content(objectMapper.writeValueAsString(issueModifyContentRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -258,7 +273,7 @@ class IssueControllerTest extends ControllerTestSupport {
 				.content(objectMapper.writeValueAsString(issueModifyMilestoneRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -274,7 +289,7 @@ class IssueControllerTest extends ControllerTestSupport {
 				.content(objectMapper.writeValueAsString(issueModifyAssigneesRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -290,7 +305,7 @@ class IssueControllerTest extends ControllerTestSupport {
 				.content(objectMapper.writeValueAsString(issueModifyLabelsRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -303,7 +318,7 @@ class IssueControllerTest extends ControllerTestSupport {
 		// when & then
 		mockMvc.perform(delete("/api/issues/" + issueId))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.deletedIssueId").value(issueId))
 			.andDo(print());
 	}
 

@@ -27,12 +27,12 @@ public class IssueExceptionHandler {
 		);
 	}
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(NoSuchIssueException.class)
 	public ApiResponse<Object> handleNoSuchIssueException(NoSuchIssueException e) {
 		logger.info("NoSuchIssueException handling : {}", e.toString());
 		return ApiResponse.of(
-			HttpStatus.BAD_REQUEST,
+			HttpStatus.NOT_FOUND,
 			e.getMessage(),
 			null
 		);
