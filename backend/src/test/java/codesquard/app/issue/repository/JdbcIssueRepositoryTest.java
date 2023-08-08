@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
+import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.entity.Issue;
 import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.issue.fixture.FixtureFactory;
@@ -40,6 +41,22 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		jdbcTemplate.update("TRUNCATE TABLE milestone");
 		jdbcTemplate.update("TRUNCATE TABLE user");
 		jdbcTemplate.update("SET FOREIGN_KEY_CHECKS = 1");
+	}
+
+	@DisplayName("이슈를 등록하고 그 등록 번호의 이슈를 조회한다.")
+	@Test
+	void getDetail() {
+		// given
+		Long issueId = createIssue();
+
+		// when
+		IssueReadResponse issueReadResponse = issueRepository.findBy(issueId);
+
+		// then
+		assertThat(issueReadResponse.getTitle()).isEqualTo("Repository");
+		assertThat(issueRepository.findAssigneesBy(issueId).get(0).getLoginId()).isEqualTo("wis");
+		assertThat(issueRepository.findLabelsBy(issueId)).isEmpty();
+		assertThat(issueRepository.findCommentsBy(issueId)).isEmpty();
 	}
 
 	@DisplayName("이슈를 등록하고 그 등록 번호를 반환한다.")
@@ -132,7 +149,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		issueRepository.deleteBy(id);
 
 		// then
-		assertThat(issueRepository.exist(id)).isFalse();
+		assertThat(issueRepository.isExist(id)).isFalse();
 	}
 
 	private Long createIssue() {

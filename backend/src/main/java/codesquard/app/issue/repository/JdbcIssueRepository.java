@@ -13,6 +13,11 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import codesquard.app.issue.dto.response.IssueCommentsResponse;
+import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
+import codesquard.app.issue.dto.response.IssueMilestoneResponse;
+import codesquard.app.issue.dto.response.IssueReadResponse;
+import codesquard.app.issue.dto.response.IssueUserResponse;
 import codesquard.app.issue.entity.Issue;
 import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.label.entity.Label;
@@ -24,16 +29,16 @@ public class JdbcIssueRepository implements IssueRepository {
 	private final NamedParameterJdbcTemplate template;
 	private final SimpleJdbcInsert simpleJdbcInsert;
 
-	private static final RowMapper<Issue> issueRowMapper = ((rs, rowNum) -> new Issue(
+	private static final RowMapper<IssueReadResponse> issueReadResponseRowMapper = ((rs, rowNum) -> new IssueReadResponse(
 		rs.getLong("id"),
-		rs.getLong("milestone_id"),
-		rs.getLong("user_id"),
 		rs.getString("title"),
-		rs.getString("content"),
 		IssueStatus.valueOf(rs.getString("status")),
-		rs.getBoolean("is_deleted"),
+		rs.getTimestamp("status_modified_at") != null ? rs.getTimestamp("status_modified_at").toLocalDateTime() : null,
 		rs.getTimestamp("created_at").toLocalDateTime(),
-		rs.getTimestamp("modified_at").toLocalDateTime()));
+		rs.getTimestamp("modified_at") != null ? rs.getTimestamp("modified_at").toLocalDateTime() : null,
+		rs.getString("content"),
+		new IssueMilestoneResponse(rs.getLong("milestone_id"), rs.getString("name"), new IssueMilestoneCountResponse()),
+		new IssueUserResponse(rs.getLong("writer_id"), rs.getString("login_id"), rs.getString("avatar_url"))));
 	private static final RowMapper<User> userRowMapper = ((rs, rowNum) -> new User(
 		rs.getLong("id"),
 		rs.getString("login_id"),
@@ -43,6 +48,16 @@ public class JdbcIssueRepository implements IssueRepository {
 		rs.getString("name"),
 		rs.getString("color"),
 		rs.getString("background")));
+	private static final RowMapper<IssueMilestoneCountResponse> issueMilestoneCountResponseRowMapper = ((rs, rowNum) -> new IssueMilestoneCountResponse(
+		rs.getInt("openedIssueCount"),
+		rs.getInt("closedIssueCount")));
+	private static final RowMapper<IssueCommentsResponse> issueCommentsResponseRowMapper = ((rs, rowNum) -> new IssueCommentsResponse(
+		rs.getLong("id"),
+		rs.getString("login_id"),
+		rs.getString("avatar_url"),
+		rs.getString("content"),
+		rs.getTimestamp("created_at").toLocalDateTime(),
+		rs.getTimestamp("modified_at") != null ? rs.getTimestamp("modified_at").toLocalDateTime() : null));
 
 	public JdbcIssueRepository(NamedParameterJdbcTemplate template, DataSource dataSource) {
 		this.template = template;
@@ -63,10 +78,13 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public Issue findBy(Long id) {
-		String sql = "SELECT id, title, content, status, status_modified_at, created_at, modified_at, milestone_id, "
-			+ "user_id, is_deleted FROM issue WHERE id = :id AND is_deleted = false";
-		return template.query(sql, Map.of("id", id), issueRowMapper).get(0);
+	public IssueReadResponse findBy(Long id) {
+		String sql = "SELECT i.id, i.title, i.content, i.status, i.status_modified_at, i.created_at, "
+			+ "i.modified_at, m.id as milestone_id, m.name, u.id as writer_id, u.login_id, u.avatar_url FROM issue as i "
+			+ "LEFT JOIN milestone as m ON m.id = i.milestone_id "
+			+ "LEFT JOIN user as u ON u.id = i.user_id "
+			+ "WHERE i.id = :id AND is_deleted = false";
+		return template.queryForObject(sql, Map.of("id", id), issueReadResponseRowMapper);
 	}
 
 	@Override
@@ -148,8 +166,24 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public boolean exist(Long issueId) {
+	public boolean isExist(Long issueId) {
 		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id AND is_deleted = false)";
 		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", issueId), Boolean.class));
+	}
+
+	@Override
+	public IssueMilestoneCountResponse countIssueBy(Long milestoneId) {
+		String sql = "SELECT COUNT(CASE WHEN status = 'OPENED' AND is_deleted = false AND milestone_id = :milestoneId "
+			+ "THEN 1 END) as openedIssueCount, COUNT(CASE WHEN status = 'CLOSED' AND is_deleted = false "
+			+ "AND milestone_id = :milestoneId THEN 1 END) as closedIssueCount FROM issue";
+		return template.queryForObject(sql, Map.of("milestoneId", milestoneId), issueMilestoneCountResponseRowMapper);
+	}
+
+	@Override
+	public List<IssueCommentsResponse> findCommentsBy(Long issueId) {
+		String sql = "SELECT c.id, c.content, c.created_at, c.modified_at, u.login_id, u.avatar_url FROM comment as c "
+			+ "JOIN user as u ON u.id = c.user_id "
+			+ "WHERE c.issue_id = :issueId";
+		return template.query(sql, Map.of("issueId", issueId), issueCommentsResponseRowMapper);
 	}
 }

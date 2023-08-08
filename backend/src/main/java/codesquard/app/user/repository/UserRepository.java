@@ -16,7 +16,13 @@ public interface UserRepository {
 
 	Long deleteById(Long id);
 
-	boolean existLoginId(User user);
+	boolean isExistLoginId(User user);
 
-	boolean existEmail(User user);
+	boolean isExistEmail(User user);
+
+	User findByLoginId(User user);
+
+	User findByLoginIdAndPassword(User user);
+
+	User findByRefreshToken(String refreshToken);
 }

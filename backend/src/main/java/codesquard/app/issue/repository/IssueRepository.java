@@ -2,6 +2,9 @@ package codesquard.app.issue.repository;
 
 import java.util.List;
 
+import codesquard.app.issue.dto.response.IssueCommentsResponse;
+import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
+import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.entity.Issue;
 import codesquard.app.label.entity.Label;
 import codesquard.app.user.entity.User;
@@ -12,7 +15,7 @@ public interface IssueRepository {
 
 	List<Issue> findAll();
 
-	Issue findBy(Long id);
+	IssueReadResponse findBy(Long id);
 
 	Long modify(Issue issue);
 
@@ -38,5 +41,9 @@ public interface IssueRepository {
 
 	List<Label> findLabelsBy(Long issueId);
 
-	boolean exist(Long issueId);
+	boolean isExist(Long issueId);
+
+	IssueMilestoneCountResponse countIssueBy(Long id);
+
+	List<IssueCommentsResponse> findCommentsBy(Long issueId);
 }
