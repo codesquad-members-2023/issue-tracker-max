@@ -6,6 +6,8 @@ import { useTheme } from '@emotion/react';
 import { DropDownIndicator } from '@components/common/dropDown/DropDownIndicator';
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 import { useNavigate } from 'react-router-dom';
+import { generateEncodedQuery } from '@utils/generateEncodedQuery';
+import { useState } from 'react';
 
 type Props = {
   openIssueCount: number;
@@ -17,13 +19,19 @@ export const TableHeader: React.FC<Props> = ({
   closedIssueCount = 0,
 }) => {
   const theme = useTheme() as any;
+  const [panelOpenStatus, setPanelOpenStatus] = useState({
+    assignees: false,
+    label: false,
+    milestone: false,
+    author: false,
+  });
+
   const navigate = useNavigate();
 
-  const onIssueFilterClick = (filter: 'open' | 'closed') => {
-    const query = `status:${filter} ` + getFilteredQuery();
-    const trimmedQuery = removeDuplicateSpaces(query);
+  const onIssueFilterClick = (queryValue: 'open' | 'closed') => {
+    const query = generateEncodedQuery('status', queryValue);
 
-    navigate('?query=' + encodeURIComponent(trimmedQuery));
+    navigate(query);
   };
 
   return (
@@ -74,29 +82,67 @@ export const TableHeader: React.FC<Props> = ({
           marginRight: '32px',
         }}
       >
-        <DropDownIndicator indicator="담당자" size="M">
-          <DropDownPanel></DropDownPanel>
+        <DropDownIndicator
+          size="M"
+          indicator="담당자"
+          isPanelOpen={panelOpenStatus.assignees}
+        >
+          <DropDownPanel
+            position="right"
+            panelHeader="담당자 필터"
+            onOutsideClick={() =>
+              setPanelOpenStatus((prev) => ({ ...prev, assignees: false }))
+            }
+          >
+            <div></div>
+          </DropDownPanel>
         </DropDownIndicator>
-        <DropDownIndicator indicator="레이블" size="M">
-          <DropDownPanel></DropDownPanel>
+        <DropDownIndicator
+          size="M"
+          indicator="레이블"
+          isPanelOpen={panelOpenStatus.label}
+        >
+          <DropDownPanel
+            position="right"
+            panelHeader="레이블 필터"
+            onOutsideClick={() =>
+              setPanelOpenStatus((prev) => ({ ...prev, label: false }))
+            }
+          >
+            <div></div>
+          </DropDownPanel>
         </DropDownIndicator>
-        <DropDownIndicator indicator="마일스톤" size="M">
-          <DropDownPanel></DropDownPanel>
+        <DropDownIndicator
+          size="M"
+          indicator="마일스톤"
+          isPanelOpen={panelOpenStatus.milestone}
+        >
+          <DropDownPanel
+            position="right"
+            panelHeader="마일스톤 필터"
+            onOutsideClick={() =>
+              setPanelOpenStatus((prev) => ({ ...prev, milestone: false }))
+            }
+          >
+            <div></div>
+          </DropDownPanel>
         </DropDownIndicator>
-        <DropDownIndicator indicator="작성자" size="M">
-          <DropDownPanel></DropDownPanel>
+        <DropDownIndicator
+          size="M"
+          indicator="작성자"
+          isPanelOpen={panelOpenStatus.author}
+        >
+          <DropDownPanel
+            position="right"
+            panelHeader="작성자 필터"
+            onOutsideClick={() =>
+              setPanelOpenStatus((prev) => ({ ...prev, author: false }))
+            }
+          >
+            <div></div>
+          </DropDownPanel>
         </DropDownIndicator>
       </div>
     </div>
   );
-};
-
-const getFilteredQuery = () => {
-  return decodeURIComponent(location.search)
-    .replace('?query=', '')
-    .replace(/status:[^\s]+/g, '');
-};
-
-const removeDuplicateSpaces = (str: string) => {
-  return str.replace(/\s+/g, ' ').trim();
 };
