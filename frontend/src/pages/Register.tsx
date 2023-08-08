@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { styled } from 'styled-components';
+import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../main';
 import ContextLogo from '../types/ContextLogo';
@@ -13,6 +14,37 @@ export default function Register() {
     .large as string;
   const navigate = useNavigate();
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const { userId, password, userName } = Object.fromEntries(formData) as {
+      userId: string;
+      password: string;
+      userName: string;
+    };
+    handleSignUp(userId, password, userName);
+  };
+
+  const handleSignUp = async (id: string, password: string, name: string) => {
+    try {
+      const res = await axios.post(
+        '/api/signup',
+        JSON.stringify({ email: id, password: password, name: name }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        navigate('/login', { replace: true });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <Container>
       <h1 className="blind">회원가입 페이지</h1>
@@ -20,10 +52,10 @@ export default function Register() {
         <img src={logo} alt="" />
         <figcaption className="blind">이슈트래커</figcaption>
       </Logo>
-      <RegisterForm>
+      <RegisterForm onSubmit={handleSubmit}>
         <TextInput
           id="id"
-          name="name"
+          name="userId"
           size="tall"
           labelName="아이디"
           placeholder="아이디"
@@ -34,6 +66,13 @@ export default function Register() {
           size="tall"
           labelName="비밀번호"
           placeholder="비밀번호"
+        />
+        <TextInput
+          id="name"
+          name="userName"
+          size="tall"
+          labelName="닉네임"
+          placeholder="닉네임"
         />
         <RegisterButton type="submit">회원가입</RegisterButton>
       </RegisterForm>
