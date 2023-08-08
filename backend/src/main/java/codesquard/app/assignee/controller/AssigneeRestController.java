@@ -2,11 +2,11 @@ package codesquard.app.assignee.controller;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquard.app.api.response.ApiResponse;
 import codesquard.app.assignee.service.AssigneeQueryService;
 import codesquard.app.assignee.service.response.AssigneeReadResponse;
 
@@ -21,7 +21,7 @@ public class AssigneeRestController {
 	}
 
 	@GetMapping("/assignees")
-	public ResponseEntity<List<AssigneeReadResponse>> listAssignee() {
-		return ResponseEntity.ok(assigneeQueryService.findAll());
+	public ApiResponse<List<AssigneeReadResponse>> listAssignee() {
+		return ApiResponse.ok(assigneeQueryService.findAll());
 	}
 }
