@@ -2,13 +2,19 @@ import { styled } from "styled-components";
 import { LabelData } from "./Label";
 import { LabelTableElement } from "./LabelTableElement";
 
-export function LabelTable({ labels }: { labels: LabelData[] }) {
+export function LabelTable({
+  labels,
+  fetchData,
+}: {
+  labels: LabelData[];
+  fetchData: () => void;
+}) {
   return (
     <Div>
       <TableHeader>{labels.length}개의 레이블</TableHeader>
       <TableBody>
         {labels.map((label, index) => (
-          <LabelTableElement key={index} label={label} />
+          <LabelTableElement fetchData={fetchData} key={index} label={label} />
         ))}
       </TableBody>
     </Div>

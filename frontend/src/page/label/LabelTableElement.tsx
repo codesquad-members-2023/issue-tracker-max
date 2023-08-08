@@ -5,7 +5,13 @@ import { InformationTag } from "../../components/InformationTag";
 import { LabelData } from "./Label";
 import { LabelEditor } from "./LabelEditor";
 
-export function LabelTableElement({ label }: { label: LabelData }) {
+export function LabelTableElement({
+  label,
+  fetchData,
+}: {
+  label: LabelData;
+  fetchData: () => void;
+}) {
   const [isEditing, setIsEditing] = useState(false);
 
   const onClickEdit = () => {
@@ -16,12 +22,25 @@ export function LabelTableElement({ label }: { label: LabelData }) {
     setIsEditing(false);
   };
 
+  const onClickDelete = async () => {
+    await fetch(`/api/labels/${label.id}`, {
+      method: "DELETE",
+    });
+
+    fetchData();
+  };
+
   const theme = useTheme();
 
   return (
     <Div>
       {isEditing ? (
-        <LabelEditor type="edit" label={label} onClickClose={closeEditor} />
+        <LabelEditor
+          type="edit"
+          label={label}
+          fetchData={fetchData}
+          onClickClose={closeEditor}
+        />
       ) : (
         <>
           <LabelTag>
@@ -47,6 +66,7 @@ export function LabelTableElement({ label }: { label: LabelData }) {
               buttonType="Ghost"
               icon="Trash"
               color={theme.color.dangerSurfaceDefault}
+              onClick={onClickDelete}
             >
               삭제
             </Button>
