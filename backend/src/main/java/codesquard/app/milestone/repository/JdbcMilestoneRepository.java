@@ -20,9 +20,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import codesquard.app.errors.errorcode.MilestoneErrorCode;
-import codesquard.app.errors.exception.DuplicateLabelException;
-import codesquard.app.errors.exception.DuplicateMilestoneException;
+import codesquard.app.api.errors.exception.DuplicateMilestoneException;
+import codesquard.app.api.errors.exception.NoSuchMilestoneException;
 import codesquard.app.milestone.entity.Milestone;
 import codesquard.app.milestone.entity.MilestoneStatus;
 
@@ -46,7 +45,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		try {
 			template.update(sql, param, keyHolder);
 		} catch (DataIntegrityViolationException e) {
-			throw new DuplicateMilestoneException(MilestoneErrorCode.DUPLICATE_MILESTONE);
+			throw new DuplicateMilestoneException();
 		}
 
 		return Optional.ofNullable(keyHolder.getKey()).map(Number::longValue);
@@ -112,6 +111,8 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	@Override
 	public void updateBy(final Long milestoneId, final Milestone milestone) {
+		isExist(milestoneId);
+
 		String sql = "UPDATE `milestone` " +
 			"SET `name` = :name, `deadline` = :deadline, `description` = :description " +
 			"WHERE `id` = :id";
@@ -122,11 +123,17 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 			.addValue("description", milestone.getDescription())
 			.addValue("id", milestoneId);
 
-		template.update(sql, param);
+		try {
+			template.update(sql, param);
+		} catch (DataIntegrityViolationException e) {
+			throw new DuplicateMilestoneException();
+		}
 	}
 
 	@Override
 	public void updateBy(final Long milestoneId, final MilestoneStatus status) {
+		isExist(milestoneId);
+
 		String sql = "UPDATE `milestone` " +
 			"SET `status` = :status " +
 			"WHERE `id` = :id";
@@ -140,9 +147,20 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	@Override
 	public void deleteBy(final Long milestoneId) {
+		isExist(milestoneId);
+
 		String sql = "DELETE FROM `milestone` "
 			+ "WHERE `id` = :id";
 
 		template.update(sql, Map.of("id", milestoneId));
+	}
+
+	private void isExist(final Long milestoneId) {
+		String sql = "SELECT COUNT(*) FROM `milestone` WHERE `id` = :id";
+		Integer count = template.queryForObject(sql, Map.of("id", milestoneId), Integer.class);
+
+		if (count == null || count == 0) {
+			throw new NoSuchMilestoneException();
+		}
 	}
 }

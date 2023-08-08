@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.errors.errorcode.MilestoneErrorCode;
-import codesquard.app.errors.exception.NoSuchMilestoneException;
+import codesquard.app.api.errors.exception.NoSuchMilestoneException;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
 import codesquard.app.milestone.dto.request.MilestoneStatusRequest;
 import codesquard.app.milestone.dto.request.MilestoneUpdateRequest;
@@ -31,7 +30,7 @@ public class MilestoneService {
 	public Long saveMilestone(final MilestoneSaveRequest milestoneSaveRequest) {
 		Milestone milestone = MilestoneSaveRequest.toEntity(milestoneSaveRequest);
 		return milestoneRepository.save(milestone)
-			.orElseThrow(() -> new NoSuchMilestoneException(MilestoneErrorCode.NOT_FOUND_MILESTONE));
+			.orElseThrow(NoSuchMilestoneException::new);
 	}
 
 	public void updateMilestone(final Long milestoneId, final MilestoneUpdateRequest milestoneUpdateRequest) {
