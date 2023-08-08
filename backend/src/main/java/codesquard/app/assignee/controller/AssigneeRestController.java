@@ -1,14 +1,12 @@
 package codesquard.app.assignee.controller;
 
-import java.util.List;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.api.response.ApiResponse;
+import codesquard.app.assignee.controller.response.AssigneeReadWrapperResponse;
 import codesquard.app.assignee.service.AssigneeQueryService;
-import codesquard.app.assignee.service.response.AssigneeReadResponse;
 
 @RequestMapping(path = "/api")
 @RestController
@@ -21,7 +19,7 @@ public class AssigneeRestController {
 	}
 
 	@GetMapping("/assignees")
-	public ApiResponse<List<AssigneeReadResponse>> listAssignee() {
-		return ApiResponse.ok(assigneeQueryService.findAll());
+	public ApiResponse<AssigneeReadWrapperResponse> listAssignee() {
+		return ApiResponse.ok(new AssigneeReadWrapperResponse(assigneeQueryService.findAll()));
 	}
 }
