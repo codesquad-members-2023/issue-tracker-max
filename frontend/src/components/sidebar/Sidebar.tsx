@@ -99,7 +99,7 @@ export function Sidebar({
     }));
   };
 
-  const mapToData = <T extends ResponseData, U extends OptionData>(
+  const convertToOptionFormat = <T extends ResponseData, U extends OptionData>(
     data: T,
     multiSelect: boolean,
     setFunction: Dispatch<SetStateAction<U[]>>,
@@ -120,14 +120,16 @@ export function Sidebar({
     };
   };
 
-  const onDivHover = async <T extends OptionData, U extends ResponseData>(
+  const onMouseEnter = async <T extends OptionData, U extends ResponseData>(
     keyword: string,
     multiSelect: boolean,
     setFunction: Dispatch<SetStateAction<T[]>>,
     onClickCallback: (id: number) => void,
   ) => {
     const data = await fetchData(`${url}/api/${keyword}`);
-    const mappedData = data[keyword].map((d: U) => mapToData(d, multiSelect, setFunction, onClickCallback));
+    const mappedData = data[keyword].map((d: U) =>
+      convertToOptionFormat(d, multiSelect, setFunction, onClickCallback),
+    );
 
     setFunction(mappedData);
   };
@@ -143,7 +145,7 @@ export function Sidebar({
       <OptionDiv
         onMouseEnter={() =>
           !(assignees.length > 0) &&
-          onDivHover("assignees", true, setAssignees, onAssigneeClick)
+          onMouseEnter("assignees", true, setAssignees, onAssigneeClick)
         }
       >
         <DropdownContainer
@@ -165,7 +167,7 @@ export function Sidebar({
       <OptionDiv
         onMouseEnter={() => {
           !(labels.length > 0) &&
-            onDivHover("labels", true, setLabels, onLabelClick);
+            onMouseEnter("labels", true, setLabels, onLabelClick);
         }}
       >
         <DropdownContainer
@@ -193,7 +195,7 @@ export function Sidebar({
       <OptionDiv
         onMouseEnter={() => {
           !(milestones.length > 0) &&
-            onDivHover("milestones", false, setMilestones, onMilestoneClick);
+            onMouseEnter("milestones", false, setMilestones, onMilestoneClick);
         }}
       >
         <DropdownContainer
