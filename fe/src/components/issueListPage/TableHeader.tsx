@@ -3,11 +3,11 @@ import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
 import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { Button } from '@components/common/Button';
 import { useTheme } from '@emotion/react';
-import { DropDownIndicator } from '@components/common/dropDown/DropDownIndicator';
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 import { useNavigate } from 'react-router-dom';
 import { generateEncodedQuery } from '@utils/generateEncodedQuery';
 import { useState } from 'react';
+import { DropDownContainer } from '@components/common/dropDown/DropDownContainer';
 
 type Props = {
   openIssueCount: number;
@@ -82,7 +82,7 @@ export const TableHeader: React.FC<Props> = ({
           marginRight: '32px',
         }}
       >
-        <DropDownIndicator
+        <DropDownContainer
           size="M"
           indicator="담당자"
           isPanelOpen={panelOpenStatus.assignees}
@@ -96,8 +96,8 @@ export const TableHeader: React.FC<Props> = ({
           >
             <div></div>
           </DropDownPanel>
-        </DropDownIndicator>
-        <DropDownIndicator
+        </DropDownContainer>
+        <DropDownContainer
           size="M"
           indicator="레이블"
           isPanelOpen={panelOpenStatus.label}
@@ -111,8 +111,8 @@ export const TableHeader: React.FC<Props> = ({
           >
             <div></div>
           </DropDownPanel>
-        </DropDownIndicator>
-        <DropDownIndicator
+        </DropDownContainer>
+        <DropDownContainer
           size="M"
           indicator="마일스톤"
           isPanelOpen={panelOpenStatus.milestone}
@@ -126,8 +126,8 @@ export const TableHeader: React.FC<Props> = ({
           >
             <div></div>
           </DropDownPanel>
-        </DropDownIndicator>
-        <DropDownIndicator
+        </DropDownContainer>
+        <DropDownContainer
           size="M"
           indicator="작성자"
           isPanelOpen={panelOpenStatus.author}
@@ -141,7 +141,7 @@ export const TableHeader: React.FC<Props> = ({
           >
             <div></div>
           </DropDownPanel>
-        </DropDownIndicator>
+        </DropDownContainer>
       </div>
     </div>
   );
