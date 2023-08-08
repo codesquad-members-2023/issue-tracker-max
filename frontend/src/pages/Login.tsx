@@ -17,6 +17,9 @@ export default function Login() {
   const location = useLocation();
   // 로그인 화면 넘어오기 전 페이지를 기억해서 로그인 성공 시 그 페이지로 이동
   const from = location.state?.from?.pathname || '/';
+  const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${
+    import.meta.env.VITE_CLIENT_ID
+  }`;
 
   const handleLogin = async (id: string, password: string) => {
     try {
@@ -63,7 +66,14 @@ export default function Login() {
         <img src={logo} alt="" />
         <figcaption className="blind">이슈트래커</figcaption>
       </Logo>
-      <GitHubOAuthButton type="button" outline>
+      <GitHubOAuthButton
+        type="button"
+        outline
+        onClick={() => {
+          window.location.assign(
+            GITHUB_LOGIN_URL + `&redirect_uri=localhost:5173`
+          );
+        }}>
         GitHub 계정으로 로그인
       </GitHubOAuthButton>
       <span>or</span>
