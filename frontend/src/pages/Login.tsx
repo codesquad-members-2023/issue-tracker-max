@@ -21,11 +21,11 @@ export default function Login() {
     import.meta.env.VITE_CLIENT_ID
   }`;
 
-  const handleLogin = async (id: string, password: string) => {
+  const handleLogin = async (userId: string, password: string) => {
     try {
       const res = await axios.post(
         '/api/login',
-        JSON.stringify({ id, password }),
+        JSON.stringify({ email: userId, password }),
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
@@ -36,7 +36,7 @@ export default function Login() {
         localStorage.setItem('accessToken', res.data.messages.accessToken);
         localStorage.setItem('refreshToken', res.data.messages.refreshToken);
         login({
-          userId: id,
+          userId: userId,
           pwd: password,
           userName: res.data.messages.userName,
           accessToken: res.data.messages.accessToken,
@@ -53,11 +53,11 @@ export default function Login() {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const { id, password } = Object.fromEntries(formData) as {
-      id: string;
+    const { userId, password } = Object.fromEntries(formData) as {
+      userId: string;
       password: string;
     };
-    handleLogin(id, password);
+    handleLogin(userId, password);
   };
 
   return (
@@ -81,7 +81,7 @@ export default function Login() {
       <LoginForm onSubmit={handleSubmit}>
         <TextInput
           id="id"
-          name="id"
+          name="userId"
           size="tall"
           labelName="아이디"
           placeholder="아이디"

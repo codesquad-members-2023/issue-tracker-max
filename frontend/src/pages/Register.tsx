@@ -32,7 +32,10 @@ export default function Register() {
         '/api/signup',
         JSON.stringify({ email: id, password: password, name: name }),
         {
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
           withCredentials: true,
         }
       );
