@@ -1,6 +1,7 @@
 package com.issuetracker.issue.infrastrucure;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,6 +18,19 @@ public class JdbcAssignedLabelRepository implements AssignedLabelRepository {
 
 	private static final String SAVE_ALL_SQL = "INSERT INTO assigned_label(issue_id, label_id) VALUES(:issueId, :labelId)";
 	private static final String FIND_ALL_SEARCH_SQL = "SELECT DISTINCT label.id, label.title, label.color FROM label INNER JOIN assigned_label ON label.id = assigned_label.label_id ORDER BY label.id";
+	private static final String FIND_ALL_ASSIGNED_TO_ISSUE
+		= "SELECT label.id, label.title, label.color "
+		+ "FROM assigned_label "
+		+ "LEFT JOIN label "
+		+ "ON assigned_label.label_id = label.id "
+		+ "WHERE assigned_label.issue_id = :issueId";
+	private static final String FIND_ALL_UNASSIGNED_TO_ISSUE
+		= "SELECT label.id, label.title, label.color "
+		+ "FROM label "
+		+ "WHERE label.id NOT IN( "
+		+ "    SELECT assigned_label.label_id "
+		+ "    FROM assigned_label "
+		+ "    WHERE assigned_label.issue_id = :issueId)";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -35,6 +49,16 @@ public class JdbcAssignedLabelRepository implements AssignedLabelRepository {
 	@Override
 	public List<Label> findAll() {
 		return jdbcTemplate.query(FIND_ALL_SEARCH_SQL, LABEL_ROW_MAPPER);
+	}
+
+	@Override
+	public List<Label> findAllAssignedToIssue(long issueId) {
+		return jdbcTemplate.query(FIND_ALL_ASSIGNED_TO_ISSUE, Map.of("issueId", issueId), LABEL_ROW_MAPPER);
+	}
+
+	@Override
+	public List<Label> findAllUnassignedToIssue(long issueId) {
+		return jdbcTemplate.query(FIND_ALL_UNASSIGNED_TO_ISSUE, Map.of("issueId", issueId), LABEL_ROW_MAPPER);
 	}
 
 	private static final RowMapper<Label> LABEL_ROW_MAPPER = (rs, rowNum) ->

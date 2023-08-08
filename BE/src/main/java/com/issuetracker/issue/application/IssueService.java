@@ -17,6 +17,7 @@ import com.issuetracker.issue.application.dto.IssueSearchInformation;
 import com.issuetracker.issue.application.dto.IssueSearchInputData;
 import com.issuetracker.issue.application.dto.IssueUpdateData;
 import com.issuetracker.issue.application.dto.IssuesCountInformation;
+import com.issuetracker.issue.application.dto.LabelsForIssueUpdateInformation;
 import com.issuetracker.issue.domain.AssignedLabelRepository;
 import com.issuetracker.issue.domain.AssigneeRepository;
 import com.issuetracker.issue.domain.Issue;
@@ -122,6 +123,15 @@ public class IssueService {
 			.from(
 				assigneeRepository.findAllAssignedToIssue(issueId),
 				assigneeRepository.findAllUnassignedToIssue(issueId)
+			);
+	}
+
+	public LabelsForIssueUpdateInformation searchLabelsForIssueUpdate(long issueId) {
+
+		return LabelsForIssueUpdateInformation
+			.from(
+				assignedLabelRepository.findAllAssignedToIssue(issueId),
+				assignedLabelRepository.findAllUnassignedToIssue(issueId)
 			);
 	}
 }

@@ -29,6 +29,7 @@ import com.issuetracker.issue.ui.dto.IssueDetailResponse;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 import com.issuetracker.issue.ui.dto.IssueUpdateRequest;
 import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
+import com.issuetracker.issue.ui.dto.LabelsForIssueUpdateResponse;
 import com.issuetracker.member.application.MemberService;
 import com.issuetracker.milestone.application.MilestoneService;
 import com.issuetracker.milestone.ui.dto.MilestonesSearchResponse;
@@ -141,6 +142,18 @@ public class IssueController {
 			.body(
 				AssigneesForIssueUpdateResponse.from(
 					issueService.searchAssigneesForIssueUpdate(id)
+				)
+			);
+	}
+
+	@GetMapping("/{id}/label-candidates")
+	public ResponseEntity<LabelsForIssueUpdateResponse> showLabelsForIssueUpdate(
+		@PathVariable Long id) {
+
+		return ResponseEntity.ok()
+			.body(
+				LabelsForIssueUpdateResponse.from(
+					issueService.searchLabelsForIssueUpdate(id)
 				)
 			);
 	}
