@@ -3,6 +3,7 @@ package codesquard.app.authenticate_user.controller;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.hamcrest.Matchers;
@@ -13,6 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
+import codesquard.app.api.errors.errorcode.JwtTokenErrorCode;
+import codesquard.app.api.errors.exception.jwt.JwtRestApiException;
 import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.authenticate_user.controller.request.RefreshTokenRequest;
 import codesquard.app.authenticate_user.service.RefreshTokenServiceRequest;
@@ -47,9 +50,34 @@ class AuthenticateUserRestControllerTest extends ControllerTestSupport {
 		mockMvc.perform(post("/api/auth/refresh/token")
 				.content(objectMapper.writeValueAsString(refreshTokenRequest))
 				.contentType(APPLICATION_JSON))
+			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("jwt.accessToken").value(Matchers.equalTo(mockAccessToken)))
-			.andExpect(jsonPath("jwt.refreshToken").value(Matchers.equalTo(mockRefreshToken)));
+			.andExpect(jsonPath("code").value(Matchers.equalTo(200)))
+			.andExpect(jsonPath("status").value(Matchers.equalTo("OK")))
+			.andExpect(jsonPath("message").value(Matchers.equalTo("Refreshtoken이 성공적으로 갱신되었습니다.")))
+			.andExpect(jsonPath("data.jwt.accessToken").value(Matchers.equalTo(mockAccessToken)))
+			.andExpect(jsonPath("data.jwt.refreshToken").value(Matchers.equalTo(mockRefreshToken)));
+	}
+
+	@Test
+	@DisplayName("불일치하는 refreshToken이 주어지고 refreshToken 갱신을 요청할때 에러를 응답한다")
+	public void givenNotMatchRefreshToken_whenRefreshToken_thenResponse400() throws Exception {
+		// given
+		String refreshToken = "";
+		RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(refreshToken);
+		// mocking
+		when(authenticateUserService.refreshToken(any(RefreshTokenServiceRequest.class)))
+			.thenThrow(new JwtRestApiException(JwtTokenErrorCode.NOT_MATCH_REFRESHTOKEN));
+		// when & then
+		mockMvc.perform(post("/api/auth/refresh/token")
+				.content(objectMapper.writeValueAsString(refreshTokenRequest))
+				.contentType(APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("code").value(Matchers.equalTo(400)))
+			.andExpect(jsonPath("status").value(Matchers.equalTo("BAD_REQUEST")))
+			.andExpect(jsonPath("message").value(Matchers.equalTo("Refreshtoken이 일치하지 않습니다.")))
+			.andExpect(jsonPath("data").value(Matchers.equalTo(null)));
 	}
 
 }
