@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetrackermax.common.exception.ApiException;
+import com.issuetrackermax.common.exception.domain.MilestoneException;
 import com.issuetrackermax.controller.milestone.dto.request.MilestoneModifyRequest;
 import com.issuetrackermax.controller.milestone.dto.request.MilestonePostRequest;
 import com.issuetrackermax.controller.milestone.dto.response.MilestoneDetailResponse;
@@ -79,6 +81,14 @@ public class MilestoneService {
 	@Transactional
 	public void delete(Long id) {
 		int count = milestoneRepository.deleteById(id);
+	}
+
+	@Transactional
+	public void applyMilestoneToIssue(Long issueId, Long milestoneId) {
+		int count = milestoneRepository.applyMilestoneToIssue(issueId, milestoneId);
+		if (count != 1) {
+			throw new ApiException(MilestoneException.NOT_FOUND_MILESTONE);
+		}
 	}
 
 	@Transactional

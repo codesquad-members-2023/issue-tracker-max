@@ -32,6 +32,19 @@ public class AssigneeRepository {
 		return (Long)Objects.requireNonNull(keyHolder.getKey());
 	}
 
+	public int applyAssigneesToIssue(Long issueId, Long memberId) {
+		String sql = "INSERT INTO assignee(issue_id, member_id) VALUES (:issueId, :memberId)";
+		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+		return jdbcTemplate.update(sql, new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("memberId", memberId), keyHolder);
+	}
+
+	public int deleteAppliedAssignees(Long issueId) {
+		String sql = "DELETE FROM assignee WHERE issue_id = :issueId";
+		return jdbcTemplate.update(sql, new MapSqlParameterSource("issueId", issueId));
+	}
+
 	public Boolean existByIds(List<Long> ids) {
 		String sql = "SELECT COUNT(*) FROM member WHERE id IN (:ids)";
 		Integer count = jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()

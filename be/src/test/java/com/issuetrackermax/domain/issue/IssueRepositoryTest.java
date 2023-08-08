@@ -32,6 +32,8 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 	@Autowired
 	private IssueRepository issueRepository;
 	@Autowired
+	private IssueLabelRepository issueLabelRepository;
+	@Autowired
 	private LabelRepository labelRepository;
 	@Autowired
 	private AssigneeRepository assigneeRepository;
@@ -167,7 +169,7 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 		Long labelId = labelRepository.save(label);
 
 		//when
-		int count = issueRepository.applyLabels(issueId, labelId);
+		int count = issueLabelRepository.applyLabels(issueId, labelId);
 		IssueResultVO modifiedIssue = issueRepository.findIssueDetailsById(issueId);
 
 		//then
@@ -192,7 +194,7 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 		Long assigneeId = assigneeRepository.save(assignee);
 
 		//when
-		int count = issueRepository.applyAssignees(issueId, assigneeId);
+		int count = assigneeRepository.applyAssigneesToIssue(issueId, assigneeId);
 		IssueResultVO modifiedIssue = issueRepository.findIssueDetailsById(issueId);
 
 		//then
@@ -214,7 +216,7 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 		Long milestoneId = milestoneRepository.save(milestone);
 
 		//when
-		int count = issueRepository.applyMilestone(issueId, milestoneId);
+		int count = milestoneRepository.applyMilestoneToIssue(issueId, milestoneId);
 		IssueResultVO modifiedIssue = issueRepository.findIssueDetailsById(issueId);
 
 		//then

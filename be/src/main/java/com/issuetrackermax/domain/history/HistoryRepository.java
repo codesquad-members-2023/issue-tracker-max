@@ -40,7 +40,7 @@ public class HistoryRepository {
 		String sql = "INSERT INTO history(editor ,issue_id, issue_is_open) VALUES (:editor,:issueId,:issueIsOpen)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		SqlParameterSource parameters = new MapSqlParameterSource()
-			.addValue("editor", history.getEditor(), Types.BIGINT)
+			.addValue("editor", history.getEditor(), Types.VARCHAR)
 			.addValue("issueId", history.getIssueId(), Types.BIGINT)
 			.addValue("issueIsOpen", history.getIssueIsOpen(), Types.TINYINT);
 		jdbcTemplate.update(sql, parameters, keyHolder);

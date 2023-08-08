@@ -44,8 +44,8 @@ public class LabelController {
 	@PostMapping
 	public ApiResponse<LabelPostResponse> post(@RequestBody LabelPostRequest labelPostRequest) {
 		Long id = labelService.save(labelPostRequest);
-		LabelPostResponse respone = LabelPostResponse.builder().id(id).build();
-		return ApiResponse.success(respone);
+		LabelPostResponse response = LabelPostResponse.builder().id(id).build();
+		return ApiResponse.success(response);
 	}
 
 	@PutMapping("/{id}")

@@ -13,4 +13,9 @@ public class ApiException extends RuntimeException {
 	public ApiException(CustomException customException) {
 		this.customException = customException;
 	}
+
+	@Override
+	public String getMessage() {
+		return customException.getMessage();
+	}
 }

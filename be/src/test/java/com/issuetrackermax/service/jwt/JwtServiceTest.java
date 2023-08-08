@@ -62,7 +62,7 @@ class JwtServiceTest extends IntegrationTestSupport {
 
 	@DisplayName("패스워드가 일치하지 않으면 오류를 일으킨다.")
 	@Test
-	void incoreectPasswordException() {
+	void incorrectPasswordException() {
 		// given
 		SignUpRequest signUpRequest = SignUpRequest.builder()
 			.loginId("June@codesquad.co.kr")
