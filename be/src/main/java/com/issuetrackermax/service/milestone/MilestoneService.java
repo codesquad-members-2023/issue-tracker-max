@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetrackermax.controller.milestone.dto.request.MilestoneModifyRequest;
 import com.issuetrackermax.controller.milestone.dto.request.MilestonePostRequest;
@@ -64,21 +65,25 @@ public class MilestoneService {
 		return response;
 	}
 
+	@Transactional
 	public Long save(MilestonePostRequest milestonePostRequest) {
 		Milestone milestone = Milestone.from(milestonePostRequest);
 		return milestoneRepository.save(milestone);
 	}
 
+	@Transactional
 	public void update(Long id, MilestoneModifyRequest milestoneModifyRequest) {
 		milestoneRepository.update(id, Milestone.from(milestoneModifyRequest));
 		return;
 	}
 
+	@Transactional
 	public void delete(Long id) {
 		int count = milestoneRepository.deleteById(id);
 		return;
 	}
 
+	@Transactional
 	public void updateStatus(Long id) {
 		milestoneRepository.updateStatus(id);
 		return;
