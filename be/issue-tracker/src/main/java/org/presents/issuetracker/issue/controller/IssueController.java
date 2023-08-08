@@ -33,7 +33,13 @@ public class IssueController {
 		return ResponseEntity.status(HttpStatus.OK).body(issueCreateResponse);
 	}
 
-	@GetMapping()
+	/*
+		이슈 목록 조회(메인 페이지)
+		1. GET("/issues") 이면 status="open"인 이슈 반환 -> 이슈 목록 조회(메인 페이지)
+		2. GET("/issues?query=") 이면 status="open"인 이슈, status="closed"인 이슈 모두 반환 -> filter 삭제 버튼 클릭 시
+		3. GET("/issues?query=status:closed") 이면 status="closed"인 이슈 반환 -> filter에 조건 값을 넣었을 시
+	 */
+	@GetMapping
 	public ResponseEntity<IssueSearchResponse> showIssues(@RequestParam(required = false) String query) {
 		IssueSearchParam issueSearchParam = IssueSearchParam.from(query);
 		return ResponseEntity.ok().body(issueService.getIssues(issueSearchParam));

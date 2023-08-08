@@ -11,7 +11,8 @@ import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
 import org.presents.issuetracker.issue.entity.Assignee;
 import org.presents.issuetracker.issue.entity.Issue;
 import org.presents.issuetracker.issue.entity.IssueLabel;
-import org.presents.issuetracker.issue.entity.vo.IssueSearchVo;
+import org.presents.issuetracker.issue.entity.vo.IssueSearchCountInfo;
+import org.presents.issuetracker.issue.entity.vo.IssueSearchInfo;
 import org.presents.issuetracker.issue.mapper.IssueMapper;
 import org.presents.issuetracker.issue.repository.IssueRepository;
 import org.springframework.stereotype.Service;
@@ -73,15 +74,9 @@ public class IssueService {
 	}
 
 	public IssueSearchResponse getIssues(IssueSearchParam issueSearchParam) {
-		List<IssueSearchVo> issues = issueMapper.getIssues(issueSearchParam);
-		Long labelCount = issueMapper.getLabelCount();
-		Long milestoneCount = issueMapper.getMilestoneCount();
-		String status = "open";
-		if ((issueSearchParam != null) && (issueSearchParam.getStatus() != null)) {
-			status = issueSearchParam.getStatus();
-		}
-		return IssueSearchResponse.from(IssueSearch.from(issues), labelCount, milestoneCount,
-			status);
+		List<IssueSearchInfo> issues = issueMapper.getIssues(issueSearchParam);
+		IssueSearchCountInfo counts = issueMapper.getIssueSearchCounts(issueSearchParam);
+		return IssueSearchResponse.of(counts, IssueSearch.from(issues));
 	}
 
 	public IssueDetailResponse getIssueDetail(Long issueId) {

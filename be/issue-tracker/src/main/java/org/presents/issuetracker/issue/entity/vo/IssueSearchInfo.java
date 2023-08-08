@@ -2,10 +2,11 @@ package org.presents.issuetracker.issue.entity.vo;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.presents.issuetracker.issue.entity.AssigneeImage;
 import org.presents.issuetracker.label.entity.Label;
 import org.presents.issuetracker.milestone.entity.Milestone;
-import org.presents.issuetracker.user.entity.User;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,24 +15,32 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class IssueSearchVo {
+public class IssueSearchInfo {
 	private Long id;
 	private String title;
-	private User author;
+	private String authorLoginId;
+	private List<AssigneeImage> assigneeImages;
 	private List<Label> labels;
 	private Milestone milestone;
 	private LocalDateTime createdAt;
 	private String status;
 
 	@Builder
-	public IssueSearchVo(Long id, String title, User author, List<Label> labels, Milestone milestone,
-		LocalDateTime createdAt, String status) {
+	public IssueSearchInfo(Long id, String title, String authorLoginId, List<AssigneeImage> assigneeImages,
+		List<Label> labels, Milestone milestone, LocalDateTime createdAt, String status) {
 		this.id = id;
 		this.title = title;
-		this.author = author;
+		this.authorLoginId = authorLoginId;
+		this.assigneeImages = assigneeImages;
 		this.labels = labels;
 		this.milestone = milestone;
 		this.createdAt = createdAt;
 		this.status = status;
+	}
+
+	public List<String> getGeneratedAssigneeImages() {
+		return assigneeImages.stream()
+			.map(AssigneeImage::getImage)
+			.collect(Collectors.toUnmodifiableList());
 	}
 }

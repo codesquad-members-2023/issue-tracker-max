@@ -3,22 +3,21 @@
 
 <mapper namespace="org.presents.issuetracker.issue.mapper.IssueMapper">
 
-    <resultMap id="issueResultMap" type="IssueSearchVo">
+    <resultMap id="issueResultMap" type="IssueSearchInfo">
         <id property="id" column="issue_id"/>
         <result property="title" column="issue_title"/>
         <result property="status" column="issue_status"/>
         <result property="createdAt" column="issue_created_at"/>
-
-        <association property="author" javaType="User">
-            <id property="userId" column="author_id"/>
-            <result property="loginId" column="author_login_id"/>
-            <result property="image" column="author_image"/>
-        </association>
+        <result property="authorLoginId" column="author_login_id"/>
 
         <association property="milestone" javaType="Milestone">
             <id property="id" column="milestone_id"/>
             <result property="name" column="milestone_name"/>
         </association>
+
+        <collection property="assigneeImages" ofType="AssigneeImage">
+            <result property="image" column="assignee_image"/>
+        </collection>
 
         <collection property="labels" ofType="Label">
             <id property="id" column="label_id"/>
@@ -26,34 +25,39 @@
             <result property="textColor" column="label_text_color"/>
             <result property="backgroundColor" column="label_background_color"/>
         </collection>
+
     </resultMap>
 
     <select id="getIssues" resultMap="issueResultMap"
             parameterType="org.presents.issuetracker.issue.dto.request.IssueSearchParam">
-        SELECT DISTINCT i.issue_id as issue_id,
-        i.title as issue_title,
-        i.status as issue_status,
-        i.created_at as issue_created_at,
-        u.user_id as author_id,
-        u.login_id as author_login_id,
-        u.image as author_image,
-        l.label_id as label_id,
-        l.name as label_name,
-        l.text_color as label_text_color,
-        l.background_color as label_background_color,
-        m.milestone_id as milestone_id,
-        m.name as milestone_name
+        SELECT DISTINCT i.issue_id AS issue_id,
+        i.title AS issue_title,
+        i.status AS issue_status,
+        i.created_at AS issue_created_at,
+        author.login_id AS author_login_id,
+        assignee_user.image AS assignee_image,
+        l.label_id AS label_id,
+        l.name AS label_name,
+        l.text_color AS label_text_color,
+        l.background_color AS label_background_color,
+        mis.milestone_id AS milestone_id,
+        mis.name AS milestone_name
         FROM issue i
-        INNER JOIN user u ON u.user_id = i.author_id
-        LEFT OUTER JOIN milestone m ON i.milestone_id = m.milestone_id AND m.status != 'deleted'
+        INNER JOIN user AS author ON author.user_id = i.author_id
+        LEFT OUTER JOIN milestone AS mis ON i.milestone_id = mis.milestone_id AND mis.status != 'deleted'
         LEFT OUTER JOIN issue_label il ON i.issue_id = il.issue_id
         LEFT OUTER JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
         LEFT OUTER JOIN assignee a ON i.issue_id = a.issue_id
-        LEFT OUTER JOIN user u2 ON a.user_id = u2.user_id
+        LEFT OUTER JOIN user assignee_user ON a.user_id = assignee_user.user_id
         LEFT OUTER JOIN comment c ON i.issue_id = c.issue_id AND c.is_deleted = false
-        LEFT OUTER JOIN user u3 ON c.author_id = u3.user_id
+        LEFT OUTER JOIN user comment_user ON c.author_id = comment_user.user_id
         <where>
             i.status != 'deleted'
+            <if test="status == null and !isFilterRemoved">
+                <trim prefix="AND">
+                    i.status = 'open'
+                </trim>
+            </if>
             <if test="status != null">
                 <trim prefix="AND">
                     i.status = #{status}
@@ -61,7 +65,72 @@
             </if>
             <if test="authorName != null">
                 <trim prefix="AND">
-                    u.login_id = #{authorName}
+                    author.login_id = #{authorName}
+                </trim>
+            </if>
+            <if test="labelName != null">
+                <trim prefix="AND">
+                    i.issue_id IN (
+                    SELECT issue_id
+                    FROM issue_label
+                    JOIN label ON issue_label.label_id = label.label_id
+                    WHERE label.name = #{labelName}
+                    )
+                </trim>
+            </if>
+            <if test="milestoneName != null">
+                <trim prefix="AND">
+                    mis.name = #{milestoneName}
+                </trim>
+            </if>
+            <if test="assigneeName != null">
+                <trim prefix="AND">
+                    i.issue_id IN (
+                    SELECT issue_id
+                    FROM assignee
+                    JOIN user ON assignee.user_id = user.user_id
+                    WHERE user.login_id = #{assigneeName}
+                    )
+                </trim>
+            </if>
+            <if test="commentAuthorName != null">
+                <trim prefix="AND">
+                    comment_user.login_id = #{commentAuthorName}
+                </trim>
+            </if>
+            <if test="title != null and title.trim() != ''">
+                <trim prefix="AND">
+                    i.title LIKE CONCAT('%', #{title}, '%')
+                </trim>
+            </if>
+        </where>
+    </select>
+
+    <select id="getIssueSearchCounts" resultType="IssueSearchCountInfo"
+            parameterType="org.presents.issuetracker.issue.dto.request.IssueSearchParam">
+        SELECT
+        (SELECT COUNT(*)
+        FROM label
+        WHERE is_deleted = false) AS label_count,
+        (SELECT COUNT(*)
+        FROM milestone
+        WHERE status != 'deleted') AS milestone_count,
+        COUNT(DISTINCT CASE WHEN i.status = 'open' THEN i.issue_id END) AS open_issue_count,
+        COUNT(DISTINCT CASE WHEN i.status = 'closed' THEN i.issue_id END) AS closed_issue_count
+        FROM issue i
+        INNER JOIN user AS author ON author.user_id = i.author_id
+        LEFT OUTER JOIN milestone AS mis ON i.milestone_id = mis.milestone_id AND mis.status != 'deleted'
+        LEFT OUTER JOIN issue_label il ON i.issue_id = il.issue_id
+        LEFT OUTER JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
+        LEFT OUTER JOIN assignee a ON i.issue_id = a.issue_id
+        LEFT OUTER JOIN user assignee_user ON a.user_id = assignee_user.user_id
+        LEFT OUTER JOIN comment c ON i.issue_id = c.issue_id AND c.is_deleted = false
+        LEFT OUTER JOIN user comment_user ON c.author_id = comment_user.user_id
+        <where>
+            i.status != 'deleted'
+            <if test="authorName != null">
+                <trim prefix="AND">
+                    author.login_id = #{authorName}
                 </trim>
             </if>
             <if test="labelName != null">
@@ -71,17 +140,17 @@
             </if>
             <if test="milestoneName != null">
                 <trim prefix="AND">
-                    m.name = #{milestoneName}
+                    mis.name = #{milestoneName}
                 </trim>
             </if>
             <if test="assigneeName != null">
                 <trim prefix="AND">
-                    u2.login_id = #{assigneeName}
+                    assignee_user.login_id = #{assigneeName}
                 </trim>
             </if>
             <if test="commentAuthorName != null">
                 <trim prefix="AND">
-                    u3.login_id = #{commentAuthorName}
+                    comment_user.login_id = #{commentAuthorName}
                 </trim>
             </if>
             <if test="title != null and title.trim() != ''">
@@ -174,17 +243,4 @@
         LEFT JOIN user comment_user ON c.author_id = comment_user.user_id
         WHERE i.issue_id = #{issueId}
     </select>
-
-    <select id="getLabelCount" resultType="Long">
-        SELECT COUNT(*)
-        FROM label
-        WHERE is_deleted = false;
-    </select>
-
-    <select id="getMilestoneCount" resultType="Long">
-        SELECT COUNT(*)
-        FROM milestone
-        WHERE status != 'deleted';
-    </select>
-
 </mapper>
