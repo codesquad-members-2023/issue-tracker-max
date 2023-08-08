@@ -6,11 +6,16 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import codesquard.app.api.errors.exception.RestApiException;
+import codesquard.app.api.errors.exception.jwt.JwtRestApiException;
+import codesquard.app.api.errors.exception.user.LoginRestApiException;
+import codesquard.app.api.errors.exception.user.UserRestApiException;
 import codesquard.app.api.response.ApiResponse;
 
 @RestControllerAdvice
@@ -33,6 +38,16 @@ public class GlobalExceptionHandler {
 					return errors;
 				})
 		);
+	}
+
+	@ExceptionHandler({UserRestApiException.class, LoginRestApiException.class, JwtRestApiException.class})
+	public ResponseEntity<ApiResponse<Object>> handleUserRestApiException(RestApiException e) {
+		ApiResponse<Object> body = ApiResponse.of(
+			e.getErrorCode().getHttpStatus(),
+			e.getErrorCode().getMessage(),
+			null
+		);
+		return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(body);
 	}
 
 }
