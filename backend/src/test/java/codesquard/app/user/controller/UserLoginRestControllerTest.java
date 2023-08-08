@@ -80,7 +80,7 @@ class UserLoginRestControllerTest extends ControllerTestSupport {
 			.andExpect(jsonPath("code").value(equalTo(400)))
 			.andExpect(jsonPath("status").value(equalTo("BAD_REQUEST")))
 			.andExpect(jsonPath("message").value(equalTo("아이디 또는 비밀번호가 일치하지 않습니다.")))
-			.andExpect(jsonPath("data").value(equalTo("NOT_MATCH_LOGIN")));
+			.andExpect(jsonPath("data").value(equalTo(null)));
 	}
 
 	@Test
@@ -100,6 +100,6 @@ class UserLoginRestControllerTest extends ControllerTestSupport {
 			.andExpect(jsonPath("code").value(equalTo(400)))
 			.andExpect(jsonPath("status").value(equalTo("BAD_REQUEST")))
 			.andExpect(jsonPath("message").value(equalTo("아이디 또는 비밀번호가 일치하지 않습니다.")))
-			.andExpect(jsonPath("data").value(equalTo("NOT_MATCH_LOGIN")));
+			.andExpect(jsonPath("data").value(equalTo(null)));
 	}
 }
