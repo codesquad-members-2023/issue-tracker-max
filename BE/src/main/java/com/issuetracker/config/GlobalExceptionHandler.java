@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,6 +46,14 @@ public class GlobalExceptionHandler {
 		e.printStackTrace();
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 			.body(new ErrorResponse(HttpStatus.NOT_FOUND, "해당 API 경로로는 요청할 수 없습니다."));
+	}
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+		return ResponseEntity.badRequest().body(new ErrorResponse(
+			HttpStatus.BAD_REQUEST,
+			"JSON 필드 값은 String, Number, Array, Object 객체 또는 'null', 'true', 'false'만 입력 가능합니다.")
+		);
 	}
 
 	@ExceptionHandler(Exception.class)

@@ -13,6 +13,7 @@ import com.issuetracker.milestone.application.dto.MilestoneDeleteInputData;
 import com.issuetracker.milestone.application.dto.MilestoneInformation;
 import com.issuetracker.milestone.application.dto.MilestoneSearchInformation;
 import com.issuetracker.milestone.application.dto.MilestoneUpdateInputData;
+import com.issuetracker.milestone.application.dto.MilestoneUpdateOpenStatusInputData;
 import com.issuetracker.milestone.domain.MilestoneRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,16 @@ public class MilestoneService {
 	@Transactional
 	public void update(MilestoneUpdateInputData milestoneUpdateInputData) {
 		int numberOfUpdatedRow = milestoneRepository.update(milestoneUpdateInputData.toMilestoneForUpdate());
+
+		if (numberOfUpdatedRow == 0) {
+			throw new CustomHttpException(ErrorType.MILESTONE_NOT_FOUND);
+		}
+	}
+
+	@Transactional
+	public void updateOpenStatus(MilestoneUpdateOpenStatusInputData milestoneUpdateOpenStatusInputData) {
+		int numberOfUpdatedRow = milestoneRepository.updateOpenStatus(
+			milestoneUpdateOpenStatusInputData.toMilestoneForUpdateOpenStatus());
 
 		if (numberOfUpdatedRow == 0) {
 			throw new CustomHttpException(ErrorType.MILESTONE_NOT_FOUND);

@@ -19,6 +19,7 @@ public enum ErrorType {
 	QUERY_STRING_KEY_NOT_MATCH(HttpStatus.BAD_REQUEST, "올바른 QueryString Key가 아닙니다."),
 
 	ILLEGAL_ID(HttpStatus.BAD_REQUEST, "유효한 id값이 아닙니다."),
+	ILLEGAL_BOOLEAN_VALUE(HttpStatus.BAD_REQUEST, "유효한 boolean값이 아닙니다."),
 
 	FILE_UPLOAD_MAX_SIZE(HttpStatus.BAD_REQUEST, "이미지 파일 용량은 5MB 이하만 가능합니다."),
 	FILE_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "이미지 파일만 업로드 가능합니다."),

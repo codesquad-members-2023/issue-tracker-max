@@ -23,6 +23,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	private static final String FIND_ALL_FOR_FILTER = "SELECT id, title FROM milestone ORDER BY is_open DESC";
 	private static final String SAVE_SQL = "INSERT INTO milestone(title, description, deadline) VALUE(:title, :description, :deadline)";
 	private static final String UPDATE_SQL = "UPDATE milestone SET title = :title, description = :description, deadline = :deadline WHERE id = :id";
+	private static final String UPDATE_OPEN_STATUS_SQL = "UPDATE milestone SET is_open = :isOpen WHERE id = :id";
 	private static final String DELETE_SQL = "UPDATE milestone SET is_deleted = true WHERE id = :id";
 	private static final String FIND_ALL_SQL
 		= "SELECT "
@@ -82,6 +83,15 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 			.addValue("deadline", milestone.getDeadline());
 
 		return jdbcTemplate.update(UPDATE_SQL, param);
+	}
+
+	@Override
+	public int updateOpenStatus(Milestone milestone) {
+		MapSqlParameterSource param = new MapSqlParameterSource()
+			.addValue("id", milestone.getId())
+			.addValue("isOpen", milestone.getIsOpen());
+
+		return jdbcTemplate.update(UPDATE_OPEN_STATUS_SQL, param);
 	}
 
 	@Override

@@ -12,6 +12,8 @@ public interface MilestoneRepository {
 
 	int update(Milestone milestone);
 
+	int updateOpenStatus(Milestone milestone);
+
 	int delete(Milestone milestone);
 
 	List<Milestone> findAll();
