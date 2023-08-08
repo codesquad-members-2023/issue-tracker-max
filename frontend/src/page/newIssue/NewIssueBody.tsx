@@ -1,36 +1,29 @@
 import { styled } from "styled-components";
 import { TextArea } from "../../components/TextArea";
 import { TextInput } from "../../components/TextInput";
-import { Sidebar, SidebarOptionData } from "../../components/sidebar/Sidebar";
-import { useState } from "react";
+import { Sidebar, SidebarProps } from "../../components/sidebar/Sidebar";
 
 type NewIssueBodyProps = {
   title: string;
   content: string;
-  assignees: SidebarOptionData[];
-  labels: SidebarOptionData[];
-  milestones: SidebarOptionData[];
+  invalidTitle: boolean;
   onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onTitleFocus: () => void;
   onContentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-};
+} & SidebarProps;
 
 export function NewIssueBody({
   title,
   content,
-  assignees,
-  labels,
-  milestones,
+  invalidTitle,
   onTitleChange,
+  onTitleFocus,
   onContentChange,
+  ...props
 }: NewIssueBodyProps) {
-  const [invalidTitle, setInvalidTitle] = useState(false);
   const titleCaption = invalidTitle
     ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
     : "";
-
-  const onTitleFocus = () => {
-    setInvalidTitle(title.length === 0);
-  }
 
   return (
     <Div>
@@ -58,11 +51,7 @@ export function NewIssueBody({
           onChange={onContentChange}
         />
       </NewIssueContent>
-      <Sidebar
-        assigneeOptions={assignees}
-        labelOptions={labels}
-        milestoneOptions={milestones}
-      />
+      <Sidebar {...props} />
     </Div>
   );
 }
