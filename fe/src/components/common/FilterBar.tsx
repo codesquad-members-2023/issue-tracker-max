@@ -3,11 +3,12 @@ import { ReactComponent as Search } from '@assets/icons/search.svg';
 import { InputContainer } from './textInput/InputContainer';
 import { Input } from './textInput/Input';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
-import { DropDownIndicator } from './dropDown/DropDownIndicator';
 import { useEffect, useState } from 'react';
 import { DropDownPanel } from './dropDown/DropDownPanel';
 import { DropDownList } from './dropDown/DropDownList';
 import { generateEncodedQuery } from '@utils/generateEncodedQuery';
+import { DropDownContainer } from './dropDown/DropDownContainer';
+import { getLocalStorageUserId } from '@utils/localStorage';
 
 const INITIAL_FILTER_VALUE = 'status:open';
 
@@ -70,7 +71,7 @@ export const FilterBar: React.FC = () => {
             },
           }}
         >
-          <DropDownIndicator
+          <DropDownContainer
             {...{
               size: 'M',
               indicator: '필터',
@@ -88,7 +89,7 @@ export const FilterBar: React.FC = () => {
                 <DropDownList key={id} {...{ item: { id, name }, onClick }} />
               ))}
             </DropDownPanel>
-          </DropDownIndicator>
+          </DropDownContainer>
         </div>
 
         <form
@@ -136,7 +137,8 @@ const generateFilterItems = (
     id: 2,
     name: '내가 작성한 이슈',
     onClick: () => {
-      const query = generateEncodedQuery('status', 'open');
+      const userId = getLocalStorageUserId();
+      const query = generateEncodedQuery('author', userId);
 
       navigate(query);
       closePanel();
@@ -146,7 +148,8 @@ const generateFilterItems = (
     id: 3,
     name: '나에게 할당된 이슈',
     onClick: () => {
-      const query = generateEncodedQuery('status', 'open');
+      const userId = getLocalStorageUserId();
+      const query = generateEncodedQuery('assignee', userId);
 
       navigate(query);
       closePanel();
@@ -156,7 +159,8 @@ const generateFilterItems = (
     id: 4,
     name: '내가 댓글을 남긴 이슈',
     onClick: () => {
-      const query = generateEncodedQuery('status', 'open');
+      const userId = getLocalStorageUserId();
+      const query = generateEncodedQuery('commentAuthor', userId);
 
       navigate(query);
       closePanel();
@@ -166,7 +170,7 @@ const generateFilterItems = (
     id: 5,
     name: '닫힌 이슈',
     onClick: () => {
-      const query = generateEncodedQuery('status', 'open');
+      const query = generateEncodedQuery('status', 'closed');
 
       navigate(query);
       closePanel();

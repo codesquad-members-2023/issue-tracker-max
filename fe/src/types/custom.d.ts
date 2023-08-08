@@ -28,5 +28,11 @@ type Issue = {
   };
 
   createdAt: string;
-  status: boolean;
+  status: 'open' | 'closed';
+};
+
+type UserInfo = {
+  userId: number;
+  loginId: string;
+  image: string;
 };

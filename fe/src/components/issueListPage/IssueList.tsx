@@ -1,13 +1,34 @@
 import { ReactComponent as CheckBoxInitial } from '@assets/icons/checkBoxInitial.svg';
 import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
-import { ReactComponent as UserImageSmall } from '@assets/icons/userImageSmall.svg';
+import { ReactComponent as CheckOnCircle } from '@assets/icons/checkOnCircle.svg';
+import { ReactComponent as MilestoneIcon } from '@assets/icons/milestone.svg';
 import { useTheme } from '@emotion/react';
 import { InformationTag } from '@components/common/InformationTag';
+import { formatISODateString, getFormattedTimeDifference } from '@utils/time';
+import { Link } from 'react-router-dom';
 
-type Props = {};
+type Props = {
+  issue: Issue;
+};
 
-export const IssueList: React.FC<Props> = () => {
+export const IssueList: React.FC<Props> = ({ issue }) => {
   const theme = useTheme() as any;
+  const {
+    id,
+    title,
+    authorLoginId,
+    assigneeImages,
+    labels,
+    milestone,
+    createdAt,
+    status,
+  } = issue;
+
+  const diff = Date.now() - new Date(createdAt).getTime();
+  const date =
+    diff < FIVE_DAYS_IN_MS
+      ? getFormattedTimeDifference(createdAt)
+      : formatISODateString(createdAt);
 
   return (
     <li
@@ -45,36 +66,89 @@ export const IssueList: React.FC<Props> = () => {
             gap: '8px',
           }}
         >
-          <AlertCircle stroke={theme.palette.blue} />
-          <span
+          {status === 'open' ? (
+            <AlertCircle stroke={theme.palette.blue} />
+          ) : (
+            <CheckOnCircle stroke="#a371f7" />
+          )}
+          <Link
+            to={`${id}`}
             css={{
+              textDecoration: 'none',
               font: theme.fonts.availableMedium20,
               color: theme.neutral.text.strong,
             }}
           >
-            FE 이슈트래커 개발
-          </span>
-          <InformationTag
-            size="S"
-            typeVariant="filled"
-            fillColor="#0025E6"
-            textColor="light"
-          >
-            <span>documentation</span>
-          </InformationTag>
+            {title}
+          </Link>
+          {labels.map(({ id, name, textColor, backgroundColor }) => (
+            <InformationTag
+              key={id}
+              size="S"
+              typeVariant="filled"
+              fillColor={backgroundColor}
+              textColor={textColor}
+            >
+              <span>{name}</span>
+            </InformationTag>
+          ))}
         </div>
         <div
           css={{
             font: theme.fonts.displayMedium16,
             color: theme.neutral.text.weak,
+            display: 'flex',
+            gap: '16px',
           }}
         >
-          #1 이 이슈가 8분 전, samsamis9님에 의해 작성되었습니다.
+          <span>{`#${id}`}</span>
+          <span>{`이 이슈가 ${date}, ${authorLoginId}님에 의해 작성되었습니다.`}</span>
+          {milestone && (
+            <span css={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <MilestoneIcon fill={theme.neutral.text.weak} />
+              {milestone.name}
+            </span>
+          )}
         </div>
       </div>
-      <div css={{ padding: '0px 54px', display: 'flex', alignItems: 'center' }}>
-        <UserImageSmall />
+      <div
+        css={{
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          marginRight: '54px',
+          height: '20px',
+          marginTop: 'auto',
+          marginBottom: 'auto',
+
+          ':hover div': {
+            width: '35px',
+          },
+        }}
+      >
+        {assigneeImages.map((image) => (
+          <div
+            css={{
+              width: '16px',
+              display: 'flex',
+              justifyContent: 'right',
+              transition: 'width 0.3s ease',
+            }}
+          >
+            <img
+              src={image || 'src/assets/icons/base-profile-image.jpeg'}
+              alt="담당자 프로필 사진"
+              css={{
+                width: '32px',
+                height: '32px',
+                borderRadius: theme.radius.half,
+              }}
+            />
+          </div>
+        ))}
       </div>
     </li>
   );
 };
+
+const FIVE_DAYS_IN_MS = 432000000;

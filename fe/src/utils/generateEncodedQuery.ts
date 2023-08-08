@@ -6,8 +6,8 @@ export const generateEncodedQuery = (queryKey: string, queryValue: string) => {
   return '?query=' + encodeURIComponent(trimmedQuery);
 };
 
-const getFilteredQuery = (query: string) => {
-  const pattern = new RegExp(`${query}:[^\\s]+`, 'g');
+const getFilteredQuery = (queryKey: string) => {
+  const pattern = new RegExp(`${queryKey}:[^\\s]+`, 'g');
 
   return decodeURIComponent(location.search)
     .replace('?query=', '')

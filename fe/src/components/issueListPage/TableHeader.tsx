@@ -25,7 +25,6 @@ export const TableHeader: React.FC<Props> = ({
     milestone: false,
     author: false,
   });
-
   const navigate = useNavigate();
 
   const onIssueFilterClick = (queryValue: 'open' | 'closed') => {

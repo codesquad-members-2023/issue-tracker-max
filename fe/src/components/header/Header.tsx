@@ -45,15 +45,12 @@ export const Header: React.FC<Props> = ({
           <Button typeVariant="ghost" size="S">
             로그아웃
           </Button>
-          {image ? (
-            <img
-              src={image}
-              alt="프로필 사진"
-              css={{ width: '24px', borderRadius: theme.radius.m }}
-            />
-          ) : (
-            <UserImageLarge />
-          )}
+
+          <img
+            src={image || 'src/assets/icons/base-profile-image.jpeg'}
+            alt="프로필 사진"
+            css={{ width: '32px', borderRadius: theme.radius.half }}
+          />
         </div>
       </header>
 

@@ -29,6 +29,7 @@ export const IssueListPage: React.FC = ({}) => {
         {...{
           openIssueCount: pageData.openIssueCount,
           closedIssueCount: pageData.closedIssueCount,
+          issues: pageData.issues,
         }}
       />
     </>
