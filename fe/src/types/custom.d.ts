@@ -12,12 +12,8 @@ type IssuePageData = {
 type Issue = {
   id: number;
   title: string;
-
-  author: {
-    userId: number;
-    loginId: string;
-    image: string;
-  };
+  authorLoginId: string;
+  assigneeImages: string[];
 
   labels: {
     id: number;
@@ -32,5 +28,5 @@ type Issue = {
   };
 
   createdAt: string;
-  isOpen: boolean;
+  status: boolean;
 };
