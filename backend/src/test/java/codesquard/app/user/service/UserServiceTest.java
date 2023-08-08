@@ -33,7 +33,6 @@ class UserServiceTest extends IntegrationTestSupport {
 		jdbcTemplate.update("TRUNCATE TABLE issue");
 		jdbcTemplate.update("TRUNCATE TABLE milestone");
 		jdbcTemplate.update("TRUNCATE TABLE user");
-		jdbcTemplate.update("TRUNCATE TABLE authenticate_user");
 		jdbcTemplate.update("SET FOREIGN_KEY_CHECKS = 1");
 	}
 

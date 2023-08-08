@@ -1,4 +1,4 @@
-package codesquard.app.image;
+package codesquard.app.image.service;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -12,12 +12,12 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
-import codesquard.app.errors.exception.EmptyFileException;
+import codesquard.app.api.errors.exception.EmptyFileException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class S3Uploader {
+public class ImageService {
 
 	private final AmazonS3Client amazonS3Client;
 

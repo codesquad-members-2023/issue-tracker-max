@@ -149,7 +149,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		issueRepository.deleteBy(id);
 
 		// then
-		assertThat(issueRepository.exist(id)).isFalse();
+		assertThat(issueRepository.isExist(id)).isFalse();
 	}
 
 	private Long createIssue() {

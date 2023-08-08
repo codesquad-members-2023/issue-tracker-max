@@ -57,7 +57,7 @@ public class JdbcIssueRepository implements IssueRepository {
 		rs.getString("avatar_url"),
 		rs.getString("content"),
 		rs.getTimestamp("created_at").toLocalDateTime(),
-		rs.getTimestamp("modified_at").toLocalDateTime()));
+		rs.getTimestamp("modified_at") != null ? rs.getTimestamp("modified_at").toLocalDateTime() : null));
 
 	public JdbcIssueRepository(NamedParameterJdbcTemplate template, DataSource dataSource) {
 		this.template = template;
@@ -166,7 +166,7 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public boolean exist(Long issueId) {
+	public boolean isExist(Long issueId) {
 		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id AND is_deleted = false)";
 		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", issueId), Boolean.class));
 	}

@@ -41,7 +41,7 @@ public interface IssueRepository {
 
 	List<Label> findLabelsBy(Long issueId);
 
-	boolean exist(Long issueId);
+	boolean isExist(Long issueId);
 
 	IssueMilestoneCountResponse countIssueBy(Long id);
 
