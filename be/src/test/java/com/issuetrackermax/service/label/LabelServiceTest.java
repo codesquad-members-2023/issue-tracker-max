@@ -67,7 +67,7 @@ class LabelServiceTest extends IntegrationTestSupport {
 		Long id = labelService.save(labelPostRequest);
 
 		// then
-		Label label = labelRepository.findbyId(id);
+		Label label = labelRepository.findById(id);
 		assertAll(
 			() -> assertThat(label.getId()).isEqualTo(id),
 			() -> assertThat(label.getTitle()).isEqualTo("title1"),
@@ -90,7 +90,7 @@ class LabelServiceTest extends IntegrationTestSupport {
 		labelService.update(savedId, labelModifyRequest);
 
 		// then
-		Label label = labelRepository.findbyId(savedId);
+		Label label = labelRepository.findById(savedId);
 		assertAll(
 			() -> assertThat(label.getId()).isEqualTo(savedId),
 			() -> assertThat(label.getTitle()).isEqualTo("title2"),
