@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { styled } from "styled-components";
 import { getProgress } from "../../utils/getProgress";
 import { InformationTag } from "../InformationTag";
@@ -51,6 +51,17 @@ export function Sidebar({
   const [labels, setLabels] = useState<LabelData[]>([]);
   const [milestones, setMilestones] = useState<MilestoneData[]>([]);
 
+  const url = "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io";
+  const selectedAssignees = assignees.filter((assignee) => assignee.selected);
+  const selectedLabels = labels.filter((label) => label.selected);
+  const selectedMilestone = milestones.find((milestone) => milestone.selected);
+
+  const fetchData = async (url: string) => {
+    const response = await fetch(url);
+    const result = await response.json();
+    return result.data;
+  };
+
   const onOptionMapper = <T extends OptionData>(
     data: T[],
     id: number,
@@ -63,77 +74,77 @@ export function Sidebar({
     return updatedData;
   };
 
-  useEffect(() => {
-    const fetchSidebarLists = async () => {
-      const url = "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io";
+  const mapToAssigneeData = (assignee: {
+    id: number;
+    loginId: string;
+    avatarUrl: string;
+  }) => ({
+    id: assignee.id,
+    name: assignee.loginId,
+    profile: assignee.avatarUrl,
+    selected: false,
+    onClick: () => {
+      setAssignees((a) => onOptionMapper(a, assignee.id, true));
+      onAssigneeClick(assignee.id);
+    },
+  });
 
-      const responses = await Promise.all([
-        fetch(`${url}/api/assignees`),
-        fetch(`${url}/api/labels`),
-        fetch(`${url}/api/milestones`),
-      ]);
-      const dataList = await Promise.all(
-        responses.map((response) => response.json()),
-      );
+  const mapToLabelData = (label: {
+    id: number;
+    name: string;
+    color: "LIGHT" | "DARK";
+    background: IconColor;
+  }) => ({
+    ...label,
+    selected: false,
+    onClick: () => {
+      setLabels((l) => onOptionMapper(l, label.id, true));
+      onLabelClick(label.id);
+    },
+  });
 
-      const assigneesData = dataList[0].data.map(
-        (assignee: { id: number; loginId: string; avatarUrl: string }) => ({
-          id: assignee.id,
-          name: assignee.loginId,
-          profile: assignee.avatarUrl,
-          selected: false,
-          onClick: () => {
-            setAssignees((a) => onOptionMapper(a, assignee.id, false));
-            onAssigneeClick(assignee.id);
-          },
-        }),
-      );
-
-      const labelsData = dataList[1].data.labels.map(
-        (label: {
-          id: number;
-          name: string;
-          color: "LIGHT" | "DARK";
-          background: IconColor;
-        }) => ({
-          ...label,
-          selected: false,
-          onClick: () => {
-            setLabels((l) => onOptionMapper(l, label.id, true));
-            onLabelClick(label.id);
-          },
-        }),
-      );
-
-      const milestonesData = dataList[2].data.milestones.map(
-        (milestone: {
-          id: number;
-          name: string;
-          issues: {
-            openedIssueCount: number;
-            closedIssueCount: number;
-          };
-        }) => ({
-          ...milestone,
-          selected: false,
-          onClick: () => {
-            setMilestones((m) => onOptionMapper(m, milestone.id, false));
-            onMilestoneClick(milestone.id);
-          },
-        }),
-      );
-
-      setAssignees(assigneesData);
-      setLabels(labelsData);
-      setMilestones(milestonesData);
+  const mapToMilestoneData = (milestone: {
+    id: number;
+    name: string;
+    issues: {
+      openedIssueCount: number;
+      closedIssueCount: number;
     };
+  }) => ({
+    ...milestone,
+    selected: false,
+    onClick: () => {
+      setMilestones((m) => onOptionMapper(m, milestone.id, false));
+      onMilestoneClick(milestone.id);
+    },
+  });
 
-    fetchSidebarLists();
-  }, [onAssigneeClick, onLabelClick, onMilestoneClick]);
+  const onAssigneeDivHover = async () => {
+    if (assignees.length > 0) return;
 
-  const selectedAssignees = assignees.filter((assignee) => assignee.selected);
-  const selectedLabels = labels.filter((label) => label.selected);
-  const selectedMilestone = milestones.find((milestone) => milestone.selected);
+    const data = await fetchData(`${url}/api/assignees`);
+    const assigneesData = data.map(mapToAssigneeData);
+
+    setAssignees(assigneesData);
+  };
+
+  const onLabelDivHover = async () => {
+    if (labels.length > 0) return;
+
+    const data = await fetchData(`${url}/api/labels`);
+    const labelsData = data.labels.map(mapToLabelData);
+
+    setLabels(labelsData);
+  };
+
+  const onMilestoneDivHover = async () => {
+    if (milestones.length > 0) return;
+
+    const data = await fetchData(`${url}/api/milestones`);
+    const milestonesData = data.milestones.map(mapToMilestoneData);
+
+    setMilestones(milestonesData);
+  };
 
   const getMilestoneProgress = (issues?: {
     openedIssueCount: number;
@@ -143,7 +154,7 @@ export function Sidebar({
 
   return (
     <Div>
-      <OptionDiv>
+      <OptionDiv onMouseEnter={onAssigneeDivHover}>
         <DropdownContainer
           key="assignees"
           name="담당자"
@@ -160,7 +171,7 @@ export function Sidebar({
           </ElementContainer>
         )}
       </OptionDiv>
-      <OptionDiv>
+      <OptionDiv onMouseEnter={onLabelDivHover}>
         <DropdownContainer
           key="labels"
           name="레이블 "
@@ -183,7 +194,7 @@ export function Sidebar({
           </ElementContainer>
         )}
       </OptionDiv>
-      <OptionDiv>
+      <OptionDiv onMouseEnter={onMilestoneDivHover}>
         <DropdownContainer
           key="milestones"
           name="마일스톤 "
