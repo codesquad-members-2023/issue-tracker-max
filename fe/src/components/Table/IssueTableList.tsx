@@ -1,13 +1,28 @@
 import styled from "styled-components";
 import { IssueTableItem } from "./IssueTableItem";
 
-export const IssueTableList = () => {
+interface IssueItem {
+  id: number;
+  title: string;
+  author: string;
+  assigneeProfiles?: string[];
+  milestone?: string;
+  createdAt: string;
+  labels?: { name: string; backgroundColor: string; textColor: string }[];
+}
+
+interface IssueTableListProps {
+  issuesListData: IssueItem[];
+}
+
+export const IssueTableList: React.FC<IssueTableListProps> = ({
+  issuesListData,
+}) => {
   return (
     <TableList>
-      <IssueTableItem />
-      <IssueTableItem />
-      <IssueTableItem />
-      <IssueTableItem />
+      {issuesListData.map((issueItem) => (
+        <IssueTableItem key={issueItem.id} issueItem={issueItem} />
+      ))}
     </TableList>
   );
 };

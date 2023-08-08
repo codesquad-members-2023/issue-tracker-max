@@ -41,12 +41,16 @@ interface MyIndicatorItem {
 
 interface IssueTableProps {
   isChecked: boolean;
+  openIssueCount: number;
+  closedIssueCount: number;
   onClickCheckBox: () => void;
 }
 
 export const IssueTableHeader: React.FC<IssueTableProps> = ({
   isChecked,
   onClickCheckBox,
+  openIssueCount,
+  closedIssueCount,
 }) => {
   const [indicatorList, setIndicatorList] =
     useState<MyIndicatorItem[]>(initialData);
@@ -95,11 +99,11 @@ export const IssueTableHeader: React.FC<IssueTableProps> = ({
         <TapBox>
           <Button size="M" variant="ghost" states="selected">
             <Icon icon="AlertCircle" stroke="paletteBlue" />
-            <p>열린 이슈(2)</p>
+            <p>열린 이슈({openIssueCount})</p>
           </Button>
           <Button size="M" variant="ghost">
             <Icon icon="Archive" stroke="paletteBlue" />
-            <p>닫힌 이슈(0)</p>
+            <p>닫힌 이슈({closedIssueCount})</p>
           </Button>
         </TapBox>
       </div>

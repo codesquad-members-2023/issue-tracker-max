@@ -18,10 +18,15 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": {
-        target: "http://localhost:8080",
+      // "/api": {
+      //   target: "http://localhost:8080",
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/api/, ""),
+      // },
+      "/profile": {
+        target: "https://source.boringavatars.com/beam/20",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path.replace(/^\/profile/, ""),
       },
     },
   },

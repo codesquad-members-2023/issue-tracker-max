@@ -4,15 +4,23 @@ import { TabButton, Tab } from "components/Common/Button/TabButton";
 import { Button } from "components/Common/Button/Button";
 import { Icon } from "components/Common/Icon/Icon";
 
-export const IssueListHeader = () => {
+interface IssueListHeaderProps {
+  labelCount: number;
+  milestoneCount: number;
+}
+
+export const IssueListHeader: React.FC<IssueListHeaderProps> = ({
+  labelCount,
+  milestoneCount,
+}) => {
   const handleIndecatorClick = () => {};
   return (
     <HeaderLayout>
-      <FilterBar onIndicatorClick={handleIndecatorClick}></FilterBar>
+      <FilterBar onIndicatorClick={handleIndecatorClick} />
       <RightSideActions>
         <Tab>
-          <TabButton icon="Label" text="레이블" count={3} />
-          <TabButton icon="Milestone" text="마일스톤" count={2} />
+          <TabButton icon="Label" text="레이블" count={labelCount} />
+          <TabButton icon="Milestone" text="마일스톤" count={milestoneCount} />
         </Tab>
         <Button size="S" variant="contained">
           <Icon icon="Plus" size="M" stroke="brandTextDefault" />
