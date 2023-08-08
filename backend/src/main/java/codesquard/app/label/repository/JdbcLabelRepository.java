@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import codesquard.app.api.errors.exception.DuplicateLabelException;
 import codesquard.app.api.errors.exception.NoSuchLabelException;
-import codesquard.app.api.errors.exception.NoSuchMilestoneException;
 import codesquard.app.label.entity.Label;
 
 @Repository
@@ -65,7 +64,7 @@ public class JdbcLabelRepository implements LabelRepository {
 
 	@Override
 	public void updateBy(final Long labelId, final Label label) {
-		isExist(labelId);
+		validateExistLabel(labelId);
 
 		String sql = "UPDATE `label` " +
 			"SET `name` = :name, `color` = :color, `background` = :background, `description` = :description " +
@@ -81,7 +80,7 @@ public class JdbcLabelRepository implements LabelRepository {
 
 	@Override
 	public void deleteBy(final Long labelId) {
-		isExist(labelId);
+		validateExistLabel(labelId);
 
 		String sql = "DELETE FROM `label` " +
 			"WHERE `id` = :id";
@@ -90,7 +89,7 @@ public class JdbcLabelRepository implements LabelRepository {
 		template.update(sql, Map.of("id", labelId));
 	}
 
-	private void isExist(final Long labelId) {
+	private void validateExistLabel(final Long labelId) {
 		String sql = "SELECT COUNT(*) FROM `label` WHERE `id` = :id";
 		Integer count = template.queryForObject(sql, Map.of("id", labelId), Integer.class);
 

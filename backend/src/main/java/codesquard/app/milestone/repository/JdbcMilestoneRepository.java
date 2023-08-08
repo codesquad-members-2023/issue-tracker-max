@@ -111,7 +111,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	@Override
 	public void updateBy(final Long milestoneId, final Milestone milestone) {
-		isExist(milestoneId);
+		validateExistMilestone(milestoneId);
 
 		String sql = "UPDATE `milestone` " +
 			"SET `name` = :name, `deadline` = :deadline, `description` = :description " +
@@ -132,7 +132,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	@Override
 	public void updateBy(final Long milestoneId, final MilestoneStatus status) {
-		isExist(milestoneId);
+		validateExistMilestone(milestoneId);
 
 		String sql = "UPDATE `milestone` " +
 			"SET `status` = :status " +
@@ -147,7 +147,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	@Override
 	public void deleteBy(final Long milestoneId) {
-		isExist(milestoneId);
+		validateExistMilestone(milestoneId);
 
 		String sql = "DELETE FROM `milestone` "
 			+ "WHERE `id` = :id";
@@ -155,7 +155,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		template.update(sql, Map.of("id", milestoneId));
 	}
 
-	private void isExist(final Long milestoneId) {
+	private void validateExistMilestone(final Long milestoneId) {
 		String sql = "SELECT COUNT(*) FROM `milestone` WHERE `id` = :id";
 		Integer count = template.queryForObject(sql, Map.of("id", milestoneId), Integer.class);
 
