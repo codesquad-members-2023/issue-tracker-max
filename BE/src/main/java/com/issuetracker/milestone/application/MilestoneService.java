@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetracker.milestone.application.dto.MilestoneCreateInformation;
 import com.issuetracker.milestone.application.dto.MilestoneCreateInputData;
+import com.issuetracker.milestone.application.dto.MilestoneInformation;
 import com.issuetracker.milestone.application.dto.MilestoneSearchInformation;
 import com.issuetracker.milestone.domain.MilestoneRepository;
 
@@ -27,5 +28,9 @@ public class MilestoneService {
 	public MilestoneCreateInformation create(MilestoneCreateInputData milestoneCreateInputData) {
 		return MilestoneCreateInformation.from(
 			milestoneRepository.save(milestoneCreateInputData.toMilestoneForCreate()));
+	}
+
+	public List<MilestoneInformation> search() {
+		return MilestoneInformation.from(milestoneRepository.findAll());
 	}
 }

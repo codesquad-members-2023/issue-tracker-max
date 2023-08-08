@@ -1,6 +1,7 @@
 package com.issuetracker.milestone.domain;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,7 +29,22 @@ public class Milestone {
 		this.progress = progress;
 	}
 
+	@Builder
+	public Milestone(Long id, String title, String description, String deadline, boolean isOpen, Double progress) {
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.deadline = convertFrom(deadline);
+		this.isOpen = isOpen;
+		this.progress = progress;
+	}
+
 	public boolean getIsOpen() {
 		return isOpen;
+	}
+
+	private LocalDate convertFrom(String dateString) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+		return LocalDate.parse(dateString, formatter);
 	}
 }

@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.issuetracker.milestone.application.MilestoneService;
 import com.issuetracker.milestone.ui.dto.MilestoneCreateRequest;
 import com.issuetracker.milestone.ui.dto.MilestoneCreateResponse;
+import com.issuetracker.milestone.ui.dto.MilestonesResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,5 +36,11 @@ public class MilestoneController {
 		return ResponseEntity.created(
 			URI.create("/api/milestones/" + milestoneCreateResponse.getId())
 		).body(milestoneCreateResponse);
+	}
+
+	@GetMapping
+	public ResponseEntity<MilestonesResponse> showMilestones() {
+		return ResponseEntity.ok()
+			.body(MilestonesResponse.from(milestoneService.search()));
 	}
 }

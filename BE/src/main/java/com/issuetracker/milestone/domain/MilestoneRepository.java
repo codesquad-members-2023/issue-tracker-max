@@ -9,4 +9,6 @@ public interface MilestoneRepository {
 	List<Milestone> findAllForFilter();
 
 	Long save(Milestone milestone);
+
+	List<Milestone> findAll();
 }

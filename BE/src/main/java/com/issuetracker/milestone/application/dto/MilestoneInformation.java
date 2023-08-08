@@ -1,0 +1,37 @@
+package com.issuetracker.milestone.application.dto;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.issuetracker.milestone.domain.Milestone;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
+public class MilestoneInformation {
+
+	private Long id;
+	private String title;
+	private String description;
+	private LocalDate deadline;
+	private Double progress;
+
+	public static MilestoneInformation from(Milestone milestone) {
+		return new MilestoneInformation(
+			milestone.getId(),
+			milestone.getTitle(),
+			milestone.getDescription(),
+			milestone.getDeadline(),
+			milestone.getProgress()
+		);
+	}
+
+	public static List<MilestoneInformation> from(List<Milestone> milestones) {
+		return milestones.stream()
+			.map(MilestoneInformation::from)
+			.collect(Collectors.toUnmodifiableList());
+	}
+}
