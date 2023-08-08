@@ -3,7 +3,7 @@ package org.presents.issuetracker.issue.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.presents.issuetracker.issue.dto.request.IssueCreateRequestDto;
+import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 import org.presents.issuetracker.issue.dto.response.IssueSearch;
@@ -27,42 +27,50 @@ public class IssueService {
 	private final IssueMapper issueMapper;
 
 	@Transactional(rollbackFor = Exception.class)
-	public Long create(IssueCreateRequestDto issueCreateRequestDto) {
+	public Long create(IssueCreateRequest issueCreateRequest) {
 		Long savedIssueId = issueRepository.save(
 			Issue.builder()
-				.title(issueCreateRequestDto.getTitle())
-				.authorId(issueCreateRequestDto.getAuthorId())
-				.contents(issueCreateRequestDto.getContents())
+				.title(issueCreateRequest.getTitle())
+				.authorId(issueCreateRequest.getAuthorId())
+				.contents(issueCreateRequest.getContents())
 				.build()
 		);
 
-		issueRepository.addAssignee(
-			issueCreateRequestDto.getAssigneeIds().stream()
+		addAssignees(issueCreateRequest.getAssigneeIds(), savedIssueId);
+		addLabels(issueCreateRequest.getLabelIds(), savedIssueId);
+		setMilestone(issueCreateRequest.getMilestoneId(), savedIssueId);
+
+		return savedIssueId;
+	}
+
+	private void addAssignees(List<Long> assigneeIds, Long issueId) {
+		issueRepository.addAssignees(
+			assigneeIds.stream()
 				.map(assigneeId ->
 					Assignee.builder()
-						.issueId(savedIssueId)
+						.issueId(issueId)
 						.userId(assigneeId)
 						.build()
 				)
 				.collect(Collectors.toList())
 		);
+	}
 
-		issueRepository.addLabel(
-			issueCreateRequestDto.getLabelIds().stream()
+	private void addLabels(List<Long> labelIds, Long issueId) {
+		issueRepository.addLabels(
+			labelIds.stream()
 				.map(labelId ->
 					IssueLabel.builder()
-						.issueId(savedIssueId)
+						.issueId(issueId)
 						.labelId(labelId)
 						.build()
 				)
 				.collect(Collectors.toList())
 		);
+	}
 
-		issueRepository.setMilestone(
-			savedIssueId, issueCreateRequestDto.getMilestoneId()
-		);
-
-		return savedIssueId;
+	private void setMilestone(Long milestoneId, Long issueId) {
+		issueRepository.setMilestone(issueId, milestoneId);
 	}
 
 	public IssueSearchResponse getIssues(IssueSearchParam issueSearchParam) {
@@ -72,6 +80,10 @@ public class IssueService {
 	}
 
 	public IssueDetailResponse getIssueDetail(Long issueId) {
-		return IssueDetailResponse.fromVo(issueMapper.getIssueDetail(issueId));
+		if (!issueRepository.existsById(issueId)) {
+			// todo: 커스텀 예외 생성 후 변경
+			throw new RuntimeException("이슈를 찾을 수 없습니다.");
+		}
+		return IssueDetailResponse.from(issueMapper.getIssueDetail(issueId));
 	}
 }

@@ -12,7 +12,7 @@ public class UserResponse {
 	private String loginId;
 	private String image;
 
-	public static UserResponse fromEntity(User user) {
+	public static UserResponse from(User user) {
 		return UserResponse.builder()
 			.userId(user.getUserId())
 			.loginId(user.getLoginId())

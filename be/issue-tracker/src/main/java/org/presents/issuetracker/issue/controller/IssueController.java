@@ -1,7 +1,7 @@
 package org.presents.issuetracker.issue.controller;
 
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
-import org.presents.issuetracker.issue.dto.request.IssueCreateRequestDto;
+import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
@@ -25,9 +25,9 @@ public class IssueController {
 	private final IssueService issueService;
 
 	@PostMapping("/new")
-	public ResponseEntity<IdResponseDto> create(@RequestBody IssueCreateRequestDto issueCreateRequestDto) {
+	public ResponseEntity<IdResponseDto> create(@RequestBody IssueCreateRequest issueCreateRequest) {
 		IdResponseDto issueCreateResponse = IdResponseDto.builder()
-			.id(issueService.create(issueCreateRequestDto))
+			.id(issueService.create(issueCreateRequest))
 			.build();
 
 		return ResponseEntity.status(HttpStatus.OK).body(issueCreateResponse);
