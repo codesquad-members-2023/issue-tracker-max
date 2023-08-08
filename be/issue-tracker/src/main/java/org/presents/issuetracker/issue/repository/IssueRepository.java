@@ -105,7 +105,8 @@ public class IssueRepository {
 	public void update(Issue issue) {
 		final String sql = "UPDATE issue SET title = :title, contents = :contents WHERE issue_id = :issueId";
 
-		SqlParameterSource params = new MapSqlParameterSource().addValue("title", issue.getTitle())
+		SqlParameterSource params = new MapSqlParameterSource().addValue("issueId", issue.getId())
+			.addValue("title", issue.getTitle())
 			.addValue("contents", issue.getContents());
 
 		jdbcTemplate.update(sql, params);
