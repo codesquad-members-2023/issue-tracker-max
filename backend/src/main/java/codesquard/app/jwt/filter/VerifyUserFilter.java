@@ -16,11 +16,11 @@ import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquard.app.api.errors.errorcode.ErrorCode;
+import codesquard.app.api.errors.errorcode.LoginErrorCode;
+import codesquard.app.api.errors.exception.RestApiException;
+import codesquard.app.api.response.ApiResponse;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
-import codesquard.app.errors.errorcode.LoginErrorCode;
-import codesquard.app.errors.exception.RestApiException;
-import codesquard.app.errors.response.ErrorResponse;
-import codesquard.app.errors.response.ErrorResultResponse;
 import codesquard.app.user.controller.request.UserLoginRequest;
 import codesquard.app.user.service.UserQueryService;
 
@@ -60,9 +60,10 @@ public class VerifyUserFilter implements Filter {
 				httpServletResponse.setStatus(HttpStatus.BAD_REQUEST.value());
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
-				ErrorResultResponse errorResultResponse = new ErrorResultResponse(
-					new ErrorResponse(LoginErrorCode.NOT_MATCH_LOGIN, null));
-				String errorJson = objectMapper.writeValueAsString(errorResultResponse);
+				LoginErrorCode errorCode = LoginErrorCode.NOT_MATCH_LOGIN;
+				ApiResponse<ErrorCode> apiResponse = ApiResponse.of(errorCode.getHttpStatus(), errorCode.getMessage(),
+					errorCode);
+				String errorJson = objectMapper.writeValueAsString(apiResponse);
 				response.getWriter().write(errorJson);
 			}
 		}

@@ -15,10 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
+import codesquard.app.api.errors.errorcode.UserErrorCode;
+import codesquard.app.api.errors.exception.RestApiException;
+import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
-import codesquard.app.errors.errorcode.UserErrorCode;
-import codesquard.app.errors.exception.RestApiException;
-import codesquard.app.errors.handler.GlobalExceptionHandler;
 import codesquard.app.jwt.filter.VerifyUserFilter;
 import codesquard.app.user.controller.request.UserLoginRequest;
 import codesquard.app.user.service.request.UserLoginServiceRequest;

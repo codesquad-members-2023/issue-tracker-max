@@ -9,9 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.IntegrationTestSupport;
+import codesquard.app.api.errors.errorcode.UserErrorCode;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
-import codesquard.app.errors.errorcode.UserErrorCode;
-import codesquard.app.errors.exception.RestApiException;
 import codesquard.app.user.service.request.UserLoginServiceRequest;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
 import codesquard.app.user.service.response.UserSaveResponse;

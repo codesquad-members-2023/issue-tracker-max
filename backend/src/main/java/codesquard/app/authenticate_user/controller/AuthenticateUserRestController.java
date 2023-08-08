@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquard.app.api.errors.errorcode.LoginErrorCode;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.authenticate_user.controller.request.RefreshTokenRequest;
 import codesquard.app.authenticate_user.controller.response.RefreshTokenResponse;
-import codesquard.app.errors.errorcode.LoginErrorCode;
-import codesquard.app.errors.exception.RestApiException;
 import codesquard.app.jwt.Jwt;
 import codesquard.app.user.service.AuthenticateUserService;
 

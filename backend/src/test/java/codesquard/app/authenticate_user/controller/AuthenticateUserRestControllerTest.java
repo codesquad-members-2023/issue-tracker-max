@@ -13,9 +13,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
+import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.authenticate_user.controller.request.RefreshTokenRequest;
 import codesquard.app.authenticate_user.service.RefreshTokenServiceRequest;
-import codesquard.app.errors.handler.GlobalExceptionHandler;
 import codesquard.app.jwt.Jwt;
 import codesquard.app.jwt.filter.JwtAuthorizationFilter;
 

@@ -19,8 +19,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
-import codesquard.app.errors.exception.RestApiException;
 import codesquard.app.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
