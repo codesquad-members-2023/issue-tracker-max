@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquard.app.api.errors.exception.NoSuchCommentException;
+import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.comment.entity.Comment;
 import codesquard.app.comment.repository.CommentRepository;
 import codesquard.app.comment.service.request.CommentModifyServiceRequest;
@@ -12,6 +14,7 @@ import codesquard.app.comment.service.request.CommentSaveServiceRequest;
 import codesquard.app.comment.service.response.CommentDeleteResponse;
 import codesquard.app.comment.service.response.CommentModifyResponse;
 import codesquard.app.comment.service.response.CommentSaveResponse;
+import codesquard.app.issue.repository.IssueRepository;
 import lombok.RequiredArgsConstructor;
 
 @Transactional
@@ -20,8 +23,10 @@ import lombok.RequiredArgsConstructor;
 public class CommentService {
 
 	private final CommentRepository commentRepository;
+	private final IssueRepository issueRepository;
 
 	public CommentSaveResponse save(CommentSaveServiceRequest serviceRequest, LocalDateTime createdAt) {
+		validateIssueId(serviceRequest.getIssueId());
 		Comment comment = serviceRequest.toEntity(createdAt);
 		Long savedCommentId = commentRepository.save(comment);
 
@@ -29,6 +34,7 @@ public class CommentService {
 	}
 
 	public CommentModifyResponse modify(CommentModifyServiceRequest serviceRequest, LocalDateTime modifiedAt) {
+		validateCommentId(serviceRequest.getId());
 		Comment comment = serviceRequest.toEntity(modifiedAt);
 		Long modifiedCommentId = commentRepository.modify(comment);
 
@@ -36,9 +42,22 @@ public class CommentService {
 	}
 
 	public CommentDeleteResponse delete(Long id) {
+		validateCommentId(id);
 		Long deletedCommentId = commentRepository.deleteById(id);
 
 		return new CommentDeleteResponse(deletedCommentId);
+	}
+
+	private void validateIssueId(Long issueId) {
+		if (!issueRepository.isExist(issueId)) {
+			throw new NoSuchIssueException();
+		}
+	}
+
+	private void validateCommentId(Long commentId) {
+		if (!commentRepository.isExist(commentId)) {
+			throw new NoSuchCommentException();
+		}
 	}
 
 }

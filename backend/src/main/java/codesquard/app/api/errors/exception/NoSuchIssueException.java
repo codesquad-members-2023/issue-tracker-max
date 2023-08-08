@@ -1,16 +1,11 @@
 package codesquard.app.api.errors.exception;
 
-import codesquard.app.api.errors.errorcode.ErrorCode;
-
 public class NoSuchIssueException extends RuntimeException {
 
-	private final ErrorCode errorCode;
+	private static final String MESSAGE = "이슈를 찾을 수 없습니다.";
 
-	public NoSuchIssueException(ErrorCode errorCode) {
-		this.errorCode = errorCode;
+	public NoSuchIssueException() {
+		super(MESSAGE);
 	}
 
-	public ErrorCode getErrorCode() {
-		return errorCode;
-	}
 }
