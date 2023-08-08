@@ -26,6 +26,7 @@ public class JdbcIssueRepository implements IssueRepository {
 	private static final String UPDATE_IS_OPEN_SQL = "UPDATE issue SET is_open = :isOpen WHERE id = :id";
 	private static final String UPDATE_TITLE_SQL = "UPDATE issue SET title = :title WHERE id = :id";
 	private static final String UPDATE_CONTENT_SQL = "UPDATE issue SET content = :content WHERE id = :id";
+	private static final String DELETE_SQL = "UPDATE issue SET is_deleted = 1 WHERE id = :id";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -68,6 +69,11 @@ public class JdbcIssueRepository implements IssueRepository {
 			.addValue("id", id)
 			.addValue("content", content);
 		return jdbcTemplate.update(UPDATE_CONTENT_SQL, param);
+	}
+
+	@Override
+	public int delete(long id) {
+		return jdbcTemplate.update(DELETE_SQL, Map.of("id", id));
 	}
 
 	private static final RowMapper<IssuesCountData> ISSUE_MAIN_PAGE_COUNT_ROW_MAPPER = (rs, rowNum) ->

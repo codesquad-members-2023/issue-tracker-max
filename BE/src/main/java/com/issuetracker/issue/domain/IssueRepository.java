@@ -11,4 +11,6 @@ public interface IssueRepository {
 	int updateTitle(long id, String title);
 
 	int updateContent(long id, String content);
+
+	int delete(long id);
 }

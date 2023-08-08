@@ -69,20 +69,26 @@ public class IssueService {
 	}
 
 	@Transactional
-	public void updateOpen(IssueUpdateData issueUpdateData) {
+	public void updateIssueOpen(IssueUpdateData issueUpdateData) {
 		int updatedCount = issueRepository.updateOpen(issueUpdateData.getId(), issueUpdateData.getIsOpen());
-		issueValidator.verifyUpdateIssue(updatedCount);
+		issueValidator.verifyUpdatedOrDeletedCount(updatedCount);
 	}
 
 	@Transactional
-	public void updateTitle(IssueUpdateData issueUpdateData) {
+	public void updateIssueTitle(IssueUpdateData issueUpdateData) {
 		int updatedCount = issueRepository.updateTitle(issueUpdateData.getId(), issueUpdateData.getTitle());
-		issueValidator.verifyUpdateIssue(updatedCount);
+		issueValidator.verifyUpdatedOrDeletedCount(updatedCount);
 	}
 
 	@Transactional
-	public void updateContent(IssueUpdateData issueUpdateData) {
+	public void updateIssueContent(IssueUpdateData issueUpdateData) {
 		int updatedCount = issueRepository.updateContent(issueUpdateData.getId(), issueUpdateData.getContent());
-		issueValidator.verifyUpdateIssue(updatedCount);
+		issueValidator.verifyUpdatedOrDeletedCount(updatedCount);
+	}
+
+	@Transactional
+	public void deleteIssue(long id) {
+		int deletedCount = issueRepository.delete(id);
+		issueValidator.verifyUpdatedOrDeletedCount(deletedCount);
 	}
 }

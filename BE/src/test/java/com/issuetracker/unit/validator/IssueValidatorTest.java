@@ -62,15 +62,15 @@ public class IssueValidatorTest {
 	}
 
 	@Test
-	void 이슈_업데이트시_카운트로_검증한다() {
+	void 이슈_업데이트_및_삭제_시_카운트로_검증한다() {
 		// then
-		Assertions.assertDoesNotThrow(() -> issueValidator.verifyUpdateIssue(1));
+		Assertions.assertDoesNotThrow(() -> issueValidator.verifyUpdatedOrDeletedCount(1));
 	}
 
 	@Test
-	void 이슈_업데이트시_카운트가_1이_아닌_경우_에러를_반환한다() {
+	void 이슈_업데이트_및_삭제_시_카운트가_1이_아닌_경우_에러를_반환한다() {
 		// then
 		Assertions.assertThrows(CustomHttpException.class,
-			() -> issueValidator.verifyUpdateIssue(0));
+			() -> issueValidator.verifyUpdatedOrDeletedCount(0));
 	}
 }

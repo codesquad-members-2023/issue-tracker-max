@@ -15,6 +15,7 @@ import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON4;
 import static com.issuetracker.util.steps.IssueSteps.마일스톤_목록_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_내용_수정_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_목록_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈_삭제_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_상세_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_열림_닫힘_수정_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_작성_요청;
@@ -359,7 +360,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 	/**
 	 * Given 라벨, 마일스톤, 회원, 이슈를 생성하고
 	 * When 이슈 내용을 수정하면
-	 * Then 이슈_상세 조회에서 수정된 값을 확인할 수 있다.
+	 * Then 이슈 상세 조회에서 수정된 값을 확인할 수 있다.
 	 */
 	@Test
 	void 이슈_내용을_수정한다() {
@@ -385,6 +386,21 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Given 라벨, 마일스톤, 회원, 이슈를 생성하고
+	 * When 이슈를 삭제하면
+	 * Then 이슈 상세 조회에서 삭제 되었는지 확인할 수 있다.
+	 */
+	@Test
+	void 이슈를_삭제한다() {
+		// when
+		var response = 이슈_삭제_요청(ISSUE1.getId());
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		이슈_상세_조회에서_삭제_되었는지_검증(ISSUE1.getId());
 	}
 
 	private static Stream<Arguments> providerIssueSearchRequest() {
@@ -524,5 +540,11 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		Object actual = 이슈_상세_조회_요청(id).jsonPath().getObject(column, expected.getClass());
 
 		assertThat(actual).isEqualTo(expected);
+	}
+
+	private void 이슈_상세_조회에서_삭제_되었는지_검증(Long id) {
+		var response = 이슈_상세_조회_요청(id);
+
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
 	}
 }

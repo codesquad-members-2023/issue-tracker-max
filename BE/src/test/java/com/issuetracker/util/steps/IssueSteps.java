@@ -108,4 +108,11 @@ public class IssueSteps {
 			.when().patch("/api/issues/{id}/content", id)
 			.then().log().all().extract();
 	}
+
+	public static ExtractableResponse<Response> 이슈_삭제_요청(Long id) {
+		return RestAssured.given().log().all()
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().delete("/api/issues/{id}", id)
+			.then().log().all().extract();
+	}
 }

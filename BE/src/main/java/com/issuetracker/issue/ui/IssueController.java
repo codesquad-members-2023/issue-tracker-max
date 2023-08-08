@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,21 +83,27 @@ public class IssueController {
 		return ResponseEntity.ok().body(issueDetailResponse);
 	}
 
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteIssue(@PathVariable long id) {
+		issueService.deleteIssue(id);
+		return ResponseEntity.noContent().build();
+	}
+
 	@PatchMapping("/{id}/open")
-	public ResponseEntity<Void> updateOpen(@PathVariable long id, @RequestBody IssueUpdateRequest issueUpdateRequest) {
-		issueService.updateOpen(issueUpdateRequest.toIssueUpdateDataOpen(id));
+	public ResponseEntity<Void> updateIssueOpen(@PathVariable long id, @RequestBody IssueUpdateRequest issueUpdateRequest) {
+		issueService.updateIssueOpen(issueUpdateRequest.toIssueUpdateDataOpen(id));
 		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping("/{id}/title")
-	public ResponseEntity<Void> updateTitle(@PathVariable long id, @RequestBody IssueUpdateRequest issueUpdateRequest) {
-		issueService.updateTitle(issueUpdateRequest.toIssueUpdateDataTitle(id));
+	public ResponseEntity<Void> updateIssueTitle(@PathVariable long id, @RequestBody IssueUpdateRequest issueUpdateRequest) {
+		issueService.updateIssueTitle(issueUpdateRequest.toIssueUpdateDataTitle(id));
 		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping("/{id}/content")
-	public ResponseEntity<Void> updateContent(@PathVariable long id, @RequestBody IssueUpdateRequest issueUpdateRequest) {
-		issueService.updateContent(issueUpdateRequest.toIssueUpdateDataContent(id));
+	public ResponseEntity<Void> updateIssueContent(@PathVariable long id, @RequestBody IssueUpdateRequest issueUpdateRequest) {
+		issueService.updateIssueContent(issueUpdateRequest.toIssueUpdateDataContent(id));
 		return ResponseEntity.noContent().build();
 	}
 }

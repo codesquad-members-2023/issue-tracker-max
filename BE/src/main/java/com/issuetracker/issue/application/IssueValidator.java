@@ -35,8 +35,8 @@ public class IssueValidator {
 		}
 	}
 
-	public void verifyUpdateIssue(int updatedCount) {
-		if (updatedCount != 1) {
+	public void verifyUpdatedOrDeletedCount(int count) {
+		if (count != 1) {
 			throw new CustomHttpException(ErrorType.ISSUE_NOT_FOUND);
 		}
 	}
