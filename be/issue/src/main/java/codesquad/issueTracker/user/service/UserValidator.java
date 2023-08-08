@@ -15,7 +15,7 @@ public class UserValidator {
 	private final UserRepository userRepository;
 
 	public void validateLoginType(LoginType inputLoginType, LoginType existLoginType) {
-		if (inputLoginType != existLoginType) {
+		if (!inputLoginType.equals(existLoginType)) {
 			throw new CustomException(ErrorCode.FAILED_LOGIN_USER);
 		}
 	}
