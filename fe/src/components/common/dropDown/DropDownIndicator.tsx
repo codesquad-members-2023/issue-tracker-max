@@ -5,7 +5,7 @@ import { Button } from '../Button';
 
 type Props = {
   size: keyof typeof SIZE;
-  indicator: '담당자' | '레이블' | '마일스톤' | '필터';
+  indicator: string;
   children: React.ReactNode;
   isPanelOpen: boolean;
 };
