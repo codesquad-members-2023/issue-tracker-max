@@ -33,13 +33,13 @@ export default function Login() {
       );
 
       if (res.status === 200) {
-        localStorage.setItem('accessToken', res.data.messages.accessToken);
-        localStorage.setItem('refreshToken', res.data.messages.refreshToken);
+        localStorage.setItem('accessToken', res.data.message.accessToken);
+        localStorage.setItem('refreshToken', res.data.message.refreshToken);
         login({
           userId: userId,
           pwd: password,
-          userName: res.data.messages.userName,
-          accessToken: res.data.messages.accessToken,
+          userName: res.data.message.userName,
+          accessToken: res.data.message.accessToken,
         });
       }
 

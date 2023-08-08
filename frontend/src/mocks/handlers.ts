@@ -6,7 +6,7 @@ export const handlers = [
       ctx.status(200),
       ctx.json({
         statusCode: 200,
-        messages: '요청 성공',
+        message: '요청 성공',
       })
     );
   }),
@@ -24,7 +24,7 @@ export const handlers = [
       ctx.status(200),
       ctx.json({
         statusCode: 200,
-        messages: '요청 성공',
+        message: '요청 성공',
       })
     );
   }),
@@ -32,7 +32,7 @@ export const handlers = [
 
 const successLogin = {
   statusCode: 200,
-  messages: {
+  message: {
     accessToken:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
     refreshToken:
@@ -50,7 +50,7 @@ const newAccessToken = {
 
 const successGitHubLogin = {
   statusCode: 200,
-  messages: {
+  message: {
     accessToken:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
     refreshToken:
