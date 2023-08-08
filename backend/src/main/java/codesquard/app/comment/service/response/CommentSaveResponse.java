@@ -8,15 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentSaveResponse {
 
-	private boolean success;
-	private Long commentId;
+	private Long savedCommentId;
 
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public Long getCommentId() {
-		return commentId;
+	public Long getSavedCommentId() {
+		return savedCommentId;
 	}
 
 }

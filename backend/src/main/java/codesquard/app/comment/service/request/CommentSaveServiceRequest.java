@@ -2,8 +2,8 @@ package codesquard.app.comment.service.request;
 
 import java.time.LocalDateTime;
 
+import codesquard.app.api.errors.exception.CommentMaxLengthExceededException;
 import codesquard.app.comment.entity.Comment;
-import codesquard.app.errors.exception.CommentMaxLengthExceededException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

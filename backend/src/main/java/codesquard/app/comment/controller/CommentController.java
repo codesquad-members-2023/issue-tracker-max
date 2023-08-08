@@ -5,15 +5,17 @@ import java.time.LocalDateTime;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquard.app.api.response.ApiResponse;
+import codesquard.app.api.response.ResponseMessage;
 import codesquard.app.comment.controller.request.CommentModifyRequest;
 import codesquard.app.comment.controller.request.CommentSaveRequest;
 import codesquard.app.comment.service.CommentService;
@@ -29,25 +31,24 @@ public class CommentController {
 
 	private final CommentService commentService;
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public ResponseEntity<CommentSaveResponse> saveComment(@Valid @RequestBody CommentSaveRequest request) {
+	public ApiResponse<CommentSaveResponse> saveComment(@Valid @RequestBody CommentSaveRequest request) {
 		LocalDateTime createdAt = LocalDateTime.now();
-		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(commentService.save(request.toServiceRequest(), createdAt));
+		return ApiResponse.of(HttpStatus.CREATED, ResponseMessage.COMMENT_SAVE_SUCCESS,
+			commentService.save(request.toServiceRequest(), createdAt));
 	}
 
 	@PatchMapping("/{id}")
-	public ResponseEntity<CommentModifyResponse> modifyComment(@Valid @RequestBody CommentModifyRequest request,
+	public ApiResponse<CommentModifyResponse> modifyComment(@Valid @RequestBody CommentModifyRequest request,
 		@PathVariable Long id) {
 		LocalDateTime modifiedAt = LocalDateTime.now();
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(commentService.modify(request.toServiceRequest(id), modifiedAt));
+		return ApiResponse.ok(commentService.modify(request.toServiceRequest(id), modifiedAt));
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<CommentDeleteResponse> deleteComment(@PathVariable Long id) {
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(commentService.delete(id));
+	public ApiResponse<CommentDeleteResponse> deleteComment(@PathVariable Long id) {
+		return ApiResponse.ok(commentService.delete(id));
 	}
 
 }
