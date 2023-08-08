@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import com.issuetracker.issue.ui.dto.IssueCreateResponse;
 import com.issuetracker.issue.ui.dto.AssignedLabelResponses;
 import com.issuetracker.issue.ui.dto.IssueDetailResponse;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
+import com.issuetracker.issue.ui.dto.IssueUpdateRequest;
 import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
 import com.issuetracker.member.application.MemberService;
 import com.issuetracker.milestone.application.MilestoneService;
@@ -78,5 +80,23 @@ public class IssueController {
 	public ResponseEntity<IssueDetailResponse> showIssueDetail(@PathVariable Long id) {
 		IssueDetailResponse issueDetailResponse = IssueDetailResponse.from(issueService.findById(id));
 		return ResponseEntity.ok().body(issueDetailResponse);
+	}
+
+	@PatchMapping("/{id}/open")
+	public ResponseEntity<Void> updateOpen(@PathVariable long id, @RequestBody IssueUpdateRequest issueUpdateRequest) {
+		issueService.updateOpen(issueUpdateRequest.toIssueUpdateDataOpen(id));
+		return ResponseEntity.noContent().build();
+	}
+
+	@PatchMapping("/{id}/title")
+	public ResponseEntity<Void> updateTitle(@PathVariable long id, @RequestBody IssueUpdateRequest issueUpdateRequest) {
+		issueService.updateTitle(issueUpdateRequest.toIssueUpdateDataTitle(id));
+		return ResponseEntity.noContent().build();
+	}
+
+	@PatchMapping("/{id}/content")
+	public ResponseEntity<Void> updateContent(@PathVariable long id, @RequestBody IssueUpdateRequest issueUpdateRequest) {
+		issueService.updateContent(issueUpdateRequest.toIssueUpdateDataContent(id));
+		return ResponseEntity.noContent().build();
 	}
 }

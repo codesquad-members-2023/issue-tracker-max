@@ -34,4 +34,10 @@ public class IssueValidator {
 			throw new CustomHttpException(ErrorType.ISSUE_NOT_FOUND);
 		}
 	}
+
+	public void verifyUpdateIssue(int updatedCount) {
+		if (updatedCount != 1) {
+			throw new CustomHttpException(ErrorType.ISSUE_NOT_FOUND);
+		}
+	}
 }

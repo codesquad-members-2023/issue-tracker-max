@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.issuetracker.issue.domain.IssueRead;
-import com.issuetracker.label.application.dto.LabelSearchInformation;
+import com.issuetracker.label.application.dto.LabelInformation;
 import com.issuetracker.milestone.application.dto.MilestoneSearchInformation;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class IssueSearchInformation {
 	private LocalDateTime createAt;
 	private String author;
 	private String authorProfileUrl;
-	private List<LabelSearchInformation> labels;
+	private List<LabelInformation> labels;
 	private MilestoneSearchInformation milestone;
 
 	public static IssueSearchInformation from(IssueRead issueRead) {
@@ -32,7 +32,7 @@ public class IssueSearchInformation {
 			issueRead.getCreateAt(),
 			issueRead.getAuthor().getNickname(),
 			issueRead.getAuthor().getProfileImageUrl(),
-			LabelSearchInformation.from(issueRead.getLabels()),
+			LabelInformation.from(issueRead.getLabels()),
 			MilestoneSearchInformation.from(issueRead.getMilestone())
 		);
 	}

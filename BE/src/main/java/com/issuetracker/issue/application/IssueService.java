@@ -11,6 +11,7 @@ import com.issuetracker.issue.application.dto.IssueCreateInputData;
 import com.issuetracker.issue.application.dto.IssueDetailInformation;
 import com.issuetracker.issue.application.dto.IssueSearchInformation;
 import com.issuetracker.issue.application.dto.IssueSearchInputData;
+import com.issuetracker.issue.application.dto.IssueUpdateData;
 import com.issuetracker.issue.application.dto.IssuesCountInformation;
 import com.issuetracker.issue.domain.AssignedLabelRepository;
 import com.issuetracker.issue.domain.AssigneeRepository;
@@ -65,5 +66,23 @@ public class IssueService {
 		IssueDetailRead issueDetailRead = issueMapper.findById(id);
 		issueValidator.verifyIssueDetail(issueDetailRead);
 		return IssueDetailInformation.from(issueDetailRead);
+	}
+
+	@Transactional
+	public void updateOpen(IssueUpdateData issueUpdateData) {
+		int updatedCount = issueRepository.updateOpen(issueUpdateData.getId(), issueUpdateData.getIsOpen());
+		issueValidator.verifyUpdateIssue(updatedCount);
+	}
+
+	@Transactional
+	public void updateTitle(IssueUpdateData issueUpdateData) {
+		int updatedCount = issueRepository.updateTitle(issueUpdateData.getId(), issueUpdateData.getTitle());
+		issueValidator.verifyUpdateIssue(updatedCount);
+	}
+
+	@Transactional
+	public void updateContent(IssueUpdateData issueUpdateData) {
+		int updatedCount = issueRepository.updateContent(issueUpdateData.getId(), issueUpdateData.getContent());
+		issueValidator.verifyUpdateIssue(updatedCount);
 	}
 }

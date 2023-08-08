@@ -5,7 +5,6 @@ import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL2;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL4;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL7;
-import static com.issuetracker.util.fixture.LabelFixture.findByIssueId;
 import static com.issuetracker.util.fixture.MemberFixture.MEMBER1;
 import static com.issuetracker.util.fixture.MemberFixture.MEMBER2;
 import static com.issuetracker.util.fixture.MemberFixture.MEMBER3;
@@ -14,9 +13,12 @@ import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON1;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON2;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON4;
 import static com.issuetracker.util.steps.IssueSteps.마일스톤_목록_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈_내용_수정_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_목록_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_상세_조회_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈_열림_닫힘_수정_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_작성_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈_제목_수정_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈에_등록_되어있는_담당자_목록_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈에_등록_되어있는_라벨_목록_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.작성자_목록_조회_요청;
@@ -264,7 +266,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 	/**
 	 * Given 라벨, 마일스톤, 회원, 이슈를 생성하고
 	 * When 이슈 상세 조회하면
-	 * THen 이슈에 등록되어 있는 라벨, 마일스톤, 작성자를 조회할 수 있다.
+	 * Then 이슈에 등록되어 있는 라벨, 마일스톤, 작성자를 조회할 수 있다.
 	 */
 	@Test
 	void 이슈_상세를_조회한다() {
@@ -292,18 +294,97 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
 	}
 
-	private void 이슈_상세_조회_검증(ExtractableResponse<Response> response, IssueFixture issue) {
-		IssueDetailResponse issueDetailResponse = response.as(IssueDetailResponse.class);
+	/**
+	 * Given 라벨, 마일스톤, 회원, 이슈를 생성하고
+	 * When 이슈 열림/닫힘 수정하면
+	 * Then 이슈_상세 조회에서 수정된 값을 확인할 수 있다.
+	 */
+	@Test
+	void 이슈_열림_닫힘_수정한다() {
+		// when
+		var response = 이슈_열림_닫힘_수정_요청(ISSUE1.getId(), false);
 
-		Assertions.assertAll(
-			() -> assertThat(issueDetailResponse.getTitle()).isEqualTo(issue.getTitle()),
-			() -> assertThat(issueDetailResponse.getContent()).isEqualTo(issue.getContent()),
-			() -> assertThat(issueDetailResponse.getAuthor().getId()).isEqualTo(issue.getAuthorId()),
-			() -> assertThat(issueDetailResponse.getMilestone().getId()).isEqualTo(issue.getMilestoneId()),
-			() -> assertThat(issueDetailResponse.getLabels()).hasSize(LabelFixture.findByIssueId(issue.getId()).size()),
-			() -> assertThat(issueDetailResponse.getAssignees()).hasSize(MemberFixture.findByIssueId(issue.getId()).size()),
-			() -> assertThat(issueDetailResponse.getComments()).hasSize(IssueCommentFixture.findByIssueId(issue.getId()).size())
-		);
+		// then
+		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		이슈_상세_조회에서_수정한_값_검증(ISSUE1.getId(), "isOpen", false);
+	}
+
+	/**
+	 * When 존재하지 않는 이슈로 열림/닫힘 수정하면
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 존재하지_않는_이슈로_열림_닫힘_수정_시_요청이_실패된다() {
+		// given
+		Long 존재하지_않는_이슈_아이디 = 20L;
+
+		// when
+		var response = 이슈_열림_닫힘_수정_요청(존재하지_않는_이슈_아이디, false);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Given 라벨, 마일스톤, 회원, 이슈를 생성하고
+	 * When 이슈 제목을 수정하면
+	 * Then 이슈_상세 조회에서 수정된 값을 확인할 수 있다.
+	 */
+	@Test
+	void 이슈_제목을_수정한다() {
+		// when
+		var response = 이슈_제목_수정_요청(ISSUE1.getId(), "수정한 제목");
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		이슈_상세_조회에서_수정한_값_검증(ISSUE1.getId(), "title", "수정한 제목");
+	}
+
+	/**
+	 * When 존재하지 않는 이슈로 제목을 수정하면
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 존재하지_않는_이슈로_제목을_수정_시_요청이_실패된다() {
+		// given
+		Long 존재하지_않는_이슈_아이디 = 20L;
+
+		// when
+		var response = 이슈_제목_수정_요청(존재하지_않는_이슈_아이디, "수정한 제목");
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Given 라벨, 마일스톤, 회원, 이슈를 생성하고
+	 * When 이슈 내용을 수정하면
+	 * Then 이슈_상세 조회에서 수정된 값을 확인할 수 있다.
+	 */
+	@Test
+	void 이슈_내용을_수정한다() {
+		// when
+		var response = 이슈_내용_수정_요청(ISSUE1.getId(), "## 수정한 내용");
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		이슈_상세_조회에서_수정한_값_검증(ISSUE1.getId(), "content", "## 수정한 내용");
+	}
+
+	/**
+	 * When 존재하지 않는 이슈로 내용을 수정하면
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 존재하지_않는_이슈로_내용을_수정_시_요청이_실패된다() {
+		// given
+		Long 존재하지_않는_이슈_아이디 = 20L;
+
+		// when
+		var response = 이슈_내용_수정_요청(존재하지_않는_이슈_아이디, "## 수정한 내용");
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
 	}
 
 	private static Stream<Arguments> providerIssueSearchRequest() {
@@ -405,14 +486,14 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
 		assertThat(milestonesSearchResponse.getMilestones()).isNotEmpty();
   }
-  
+
 	private void 작성자_목록_검증(ExtractableResponse<Response> response) {
 		var findResponse = 작성자_목록_조회_요청();
 		AuthorResponses authorResponses = findResponse.as(AuthorResponses.class);
 
 		assertThat(authorResponses.getAuthors()).isNotEmpty();
   }
-  
+
 	private void 이슈에_등록_되어있는_담당자_목록_검증(ExtractableResponse<Response> response) {
 		List<Long> ids = response.jsonPath().getList("assignees.id", Long.class);
 
@@ -423,5 +504,25 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		List<Long> ids = response.jsonPath().getList("labels.id", Long.class);
 
 		assertThat(ids).containsExactly(3L, 4L, 5L, 7L);
+	}
+
+	private void 이슈_상세_조회_검증(ExtractableResponse<Response> response, IssueFixture issue) {
+		IssueDetailResponse issueDetailResponse = response.as(IssueDetailResponse.class);
+
+		Assertions.assertAll(
+			() -> assertThat(issueDetailResponse.getTitle()).isEqualTo(issue.getTitle()),
+			() -> assertThat(issueDetailResponse.getContent()).isEqualTo(issue.getContent()),
+			() -> assertThat(issueDetailResponse.getAuthor().getId()).isEqualTo(issue.getAuthorId()),
+			() -> assertThat(issueDetailResponse.getMilestone().getId()).isEqualTo(issue.getMilestoneId()),
+			() -> assertThat(issueDetailResponse.getLabels()).hasSize(LabelFixture.findByIssueId(issue.getId()).size()),
+			() -> assertThat(issueDetailResponse.getAssignees()).hasSize(MemberFixture.findByIssueId(issue.getId()).size()),
+			() -> assertThat(issueDetailResponse.getComments()).hasSize(IssueCommentFixture.findByIssueId(issue.getId()).size())
+		);
+	}
+
+	private void 이슈_상세_조회에서_수정한_값_검증(Long id, String column, Object expected) {
+		Object actual = 이슈_상세_조회_요청(id).jsonPath().getObject(column, expected.getClass());
+
+		assertThat(actual).isEqualTo(expected);
 	}
 }
