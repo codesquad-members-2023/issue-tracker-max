@@ -22,7 +22,6 @@ public class LabelCreateInputData {
 			.title(title)
 			.description(description)
 			.color(color)
-			.isDeleted(false)
 			.build();
 	}
 }

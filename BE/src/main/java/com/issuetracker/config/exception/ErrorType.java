@@ -13,8 +13,11 @@ public enum ErrorType {
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 멤버가 존재하지 않습니다."),
 	MILESTONE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 마일스톤이 존재하지 않습니다."),
 	ISSUE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이슈가 존재하지 않습니다."),
+	FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 파일을 찾을 수 없습니다."),
 
-	QUERY_STRING_KEY_NOT_MATCH(HttpStatus.BAD_REQUEST, "올바른 QueryString Key가 아닙니다.");
+	QUERY_STRING_KEY_NOT_MATCH(HttpStatus.BAD_REQUEST, "올바른 QueryString Key가 아닙니다."),
+	FILE_UPLOAD_MAX_SIZE(HttpStatus.BAD_REQUEST, "이미지 파일 용량은 5MB 이하만 가능합니다."),
+	FILE_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "이미지 파일만 업로드 가능합니다.");
 
 	private final HttpStatus status;
 	private final String message;

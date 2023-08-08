@@ -8,9 +8,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.issuetracker.config.exception.CustomHttpException;
+import com.issuetracker.config.exception.ErrorType;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -26,9 +28,16 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(CustomHttpException.class)
-	public ResponseEntity<ErrorResponse> apiHandler(CustomHttpException e) {
+	public ResponseEntity<ErrorResponse> customHandler(CustomHttpException e) {
 		return ResponseEntity.status(e.getHttpStatus())
 			.body(new ErrorResponse(e.getHttpStatus(), e.getMessage()));
+	}
+
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public ResponseEntity<ErrorResponse> maxUploadSizeHandler(MaxUploadSizeExceededException e) {
+		ErrorType errorType = ErrorType.FILE_UPLOAD_MAX_SIZE;
+		return ResponseEntity.status(errorType.getStatus())
+			.body(new ErrorResponse(errorType.getStatus(), errorType.getMessage()));
 	}
 
 	@ExceptionHandler(NoHandlerFoundException.class)

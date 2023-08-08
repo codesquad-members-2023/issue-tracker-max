@@ -10,7 +10,7 @@ public class ErrorResponse {
 	private HttpStatus status;
 	private String message;
 
-	public Integer getStatusCode() {
+	public int getStatusCode() {
 		return status.value();
 	}
 
