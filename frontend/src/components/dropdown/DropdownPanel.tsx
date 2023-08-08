@@ -7,6 +7,7 @@ export function DropdownPanel({
   alignment,
   optionTitle,
   options,
+  onOptionClick,
 }: {
   showProfile?: boolean;
   alignment: "Left" | "Right" | "Center";
@@ -18,6 +19,7 @@ export function DropdownPanel({
     selected: boolean;
     onClick: () => void;
   }[];
+  onOptionClick?: () => void;
 }) {
   return (
     <StyledPanel $alignment={alignment}>
@@ -31,7 +33,10 @@ export function DropdownPanel({
               profile={profile}
               background={background}
               selected={selected}
-              onClick={onClick}
+              onClick={() => {
+                onClick();
+                onOptionClick?.();
+              }}
             >
               {name}
             </DropdownOption>

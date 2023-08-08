@@ -175,6 +175,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
               optionTitle={"텍스트 색상"}
               options={fontColorOptions}
               alignment="Left"
+              autoClose
             />
           </ColorSelector>
         </InputWrapper>

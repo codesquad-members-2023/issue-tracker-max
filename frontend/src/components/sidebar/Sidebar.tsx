@@ -205,6 +205,7 @@ export function Sidebar({
           options={milestones}
           type="Long"
           alignment="Center"
+          autoClose
         />
         {selectedMilestone && (
           <ElementContainer direction="Vertical">
