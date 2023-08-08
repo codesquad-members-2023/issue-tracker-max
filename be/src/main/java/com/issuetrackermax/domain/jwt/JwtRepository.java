@@ -32,4 +32,16 @@ public class JwtRepository {
 			.addValue("id", id), keyHolder);
 		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
+
+	public int deleteRefreshToken(String refreshToken, Long id) {
+		String sql = "DELETE FROM token WHERE refresh_token = :refreshToken and id = :id";
+		return jdbcTemplate.update(sql, new MapSqlParameterSource()
+			.addValue("refreshToken", refreshToken)
+			.addValue("id", id));
+	}
+
+	public Boolean existsRefreshToken(String refreshToken) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM token WHERE refresh_token = :refreshToken)";
+		return jdbcTemplate.queryForObject(sql, Map.of("refreshToken", refreshToken), Boolean.class);
+	}
 }
