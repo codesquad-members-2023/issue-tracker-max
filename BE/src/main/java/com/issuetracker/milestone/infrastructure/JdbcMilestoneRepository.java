@@ -22,6 +22,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM milestone WHERE id = :id)";
 	private static final String FIND_ALL_FOR_FILTER = "SELECT id, title FROM milestone ORDER BY is_open DESC";
 	private static final String SAVE_SQL = "INSERT INTO milestone(title, description, deadline) VALUE(:title, :description, :deadline)";
+	private static final String UPDATE_SQL = "UPDATE milestone SET title = :title, description = :description, deadline = :deadline WHERE id = :id";
 	private static final String FIND_ALL_SQL
 		= "SELECT "
 		+ "    milestone.id, "
@@ -69,6 +70,17 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 		jdbcTemplate.update(SAVE_SQL, param, keyHolder);
 		return keyHolder.getKey().longValue();
+	}
+
+	@Override
+	public int update(Milestone milestone) {
+		MapSqlParameterSource param = new MapSqlParameterSource()
+			.addValue("id", milestone.getId())
+			.addValue("title", milestone.getTitle())
+			.addValue("description", milestone.getDescription())
+			.addValue("deadline", milestone.getDeadline());
+
+		return jdbcTemplate.update(UPDATE_SQL, param);
 	}
 
 	@Override

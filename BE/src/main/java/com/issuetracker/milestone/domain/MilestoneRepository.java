@@ -10,5 +10,7 @@ public interface MilestoneRepository {
 
 	Long save(Milestone milestone);
 
+	int update(Milestone milestone);
+
 	List<Milestone> findAll();
 }
