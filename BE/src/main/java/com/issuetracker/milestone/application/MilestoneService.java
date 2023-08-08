@@ -9,6 +9,7 @@ import com.issuetracker.config.exception.CustomHttpException;
 import com.issuetracker.config.exception.ErrorType;
 import com.issuetracker.milestone.application.dto.MilestoneCreateInformation;
 import com.issuetracker.milestone.application.dto.MilestoneCreateInputData;
+import com.issuetracker.milestone.application.dto.MilestoneDeleteInputData;
 import com.issuetracker.milestone.application.dto.MilestoneInformation;
 import com.issuetracker.milestone.application.dto.MilestoneSearchInformation;
 import com.issuetracker.milestone.application.dto.MilestoneUpdateInputData;
@@ -38,6 +39,15 @@ public class MilestoneService {
 		int numberOfUpdatedRow = milestoneRepository.update(milestoneUpdateInputData.toMilestoneForUpdate());
 
 		if (numberOfUpdatedRow == 0) {
+			throw new CustomHttpException(ErrorType.MILESTONE_NOT_FOUND);
+		}
+	}
+
+	@Transactional
+	public void delete(MilestoneDeleteInputData milestoneDeleteInputData) {
+		int numberOfDeleteRow = milestoneRepository.delete(milestoneDeleteInputData.toMilestoneForDelete());
+
+		if (numberOfDeleteRow == 0) {
 			throw new CustomHttpException(ErrorType.MILESTONE_NOT_FOUND);
 		}
 	}

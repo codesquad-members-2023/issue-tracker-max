@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.issuetracker.milestone.application.MilestoneService;
 import com.issuetracker.milestone.ui.dto.MilestoneCreateRequest;
 import com.issuetracker.milestone.ui.dto.MilestoneCreateResponse;
+import com.issuetracker.milestone.ui.dto.MilestoneDeleteRequest;
 import com.issuetracker.milestone.ui.dto.MilestoneUpdateRequest;
 import com.issuetracker.milestone.ui.dto.MilestonesResponse;
 
@@ -47,6 +49,13 @@ public class MilestoneController {
 		@RequestBody @Valid MilestoneUpdateRequest milestoneUpdateRequest) {
 
 		milestoneService.update(milestoneUpdateRequest.toMilestoneUpdateInputData(id));
+		return ResponseEntity.noContent().build();
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteMilestone(@PathVariable Long id) {
+
+		milestoneService.delete(MilestoneDeleteRequest.toMilestoneDeleteInputData(id));
 		return ResponseEntity.noContent().build();
 	}
 
