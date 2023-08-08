@@ -1,7 +1,13 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service;
 
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.comment.repository.CommentRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Comment;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Issue;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.IssueRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueVO;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueCreateCondition;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueStatusCondition;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueUpdateCondition;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterListInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.LabelRepository;
@@ -29,7 +35,9 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final LabelRepository labelRepository;
     private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
     private final MilestoneRepository milestoneRepository;
+
 
     public FilterInformation readOpenIssues() {
         StatVO statVO = statRepository.countOverallStats();
@@ -51,6 +59,38 @@ public class IssueService {
         return FilterInformation.from(statVO, issueVOs, labelVOs, assigneeProfiles);
     }
 
+    public void updateIssuesStatus(IssueStatusCondition condition) {
+        issueRepository.updateIssuesStatus(IssueStatusCondition.to(condition));
+    }
+
+    public void createIssue(IssueCreateCondition condition) {
+        Issue issue = IssueCreateCondition.toIssue(condition);
+        Long createdId = issueRepository.createIssue(issue);
+        Comment comment = IssueCreateCondition.toComment(createdId, condition);
+        Long fileId = null;
+        if (comment.isFileExist()) {
+            fileId = commentRepository.updateFile(comment.getFile());
+        }
+        if (comment.isContentsExist()) {
+            commentRepository.createComment(fileId, comment);
+        }
+        memberRepository.addIssueAssignees(createdId, condition.getAssignees());
+        labelRepository.addIssueLabels(createdId, condition.getLabels());
+    }
+
+    public void deleteIssue(Long issueId) {
+        issueRepository.deleteIssue(issueId);
+    }
+
+    public void updateIssue(IssueUpdateCondition condition) {
+        issueRepository.updateIssue(IssueUpdateCondition.to(condition));
+        if (!condition.getAssignees().isEmpty()) {
+            memberRepository.updateIssueAssignees(condition.getIssueId(), condition.getAssignees());
+        }
+        if (!condition.getLabels().isEmpty()) {
+            labelRepository.updateIssueLabels(condition.getIssueId(), condition.getLabels());
+        }
+      
     public FilterListInformation readFilters() {
         List<MemberDetailsVO> members = memberRepository.findAllFilters();
         List<LabelDetailsVO> labels = labelRepository.findAllFilters();
