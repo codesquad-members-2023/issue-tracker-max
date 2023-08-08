@@ -1,5 +1,21 @@
-type Props = {};
+import { PostInformationHeader } from './PostInformationHeader';
+// import { PostInformationHeaderMeta } from './PostInformationHeaderMeta';
 
-export const PostInformation: React.FC = ({}: Props) => {
-  return <></>;
+type Props = { title: string; id: number };
+
+export const PostInformation: React.FC<Props> = ({ title, id }: Props) => {
+  return (
+    <>
+      <div
+        css={{
+          width: '100%',
+          display: 'flex',
+        }}
+      >
+        <PostInformationHeader title={title} id={id} />
+        {/* <PostInformationHeaderMeta /> */}
+      </div>
+    </>
+  );
 };
+ 
