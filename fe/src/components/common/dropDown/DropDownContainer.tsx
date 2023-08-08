@@ -6,6 +6,7 @@ type Props = {
   indicator: string;
   isPanelOpen: boolean;
   children: React.ReactNode;
+  onClick: () => void;
 };
 
 export const DropDownContainer: React.FC<Props> = ({
@@ -13,6 +14,7 @@ export const DropDownContainer: React.FC<Props> = ({
   indicator,
   isPanelOpen,
   children,
+  onClick,
 }) => {
   const theme = useTheme() as any;
 
@@ -29,7 +31,14 @@ export const DropDownContainer: React.FC<Props> = ({
         ...SIZE[size],
       }}
     >
-      <DropDownIndicator indicator={indicator} size={size} />
+      <div
+        css={{
+          width: '100%',
+        }}
+        onClick={onClick}
+      >
+        <DropDownIndicator indicator={indicator} size={size} />
+      </div>
       {isPanelOpen && <>{children}</>}
     </div>
   );

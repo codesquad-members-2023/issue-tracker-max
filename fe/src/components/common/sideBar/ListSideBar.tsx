@@ -137,11 +137,12 @@ export const ListSideBar: React.FC<Props> = ({
 
   return (
     <>
-      <div css={commonStyles} onClick={() => openPanel(getUsers, 'users')}>
+      <div css={commonStyles}>
         <DropDownContainer
           indicator="담당자"
           size="L"
           isPanelOpen={isPanelOpen === 'users'}
+          onClick={() => openPanel(getUsers, 'users')}
         >
           <DropDownPanel
             panelHeader="담당자 설정"
@@ -160,11 +161,12 @@ export const ListSideBar: React.FC<Props> = ({
         </DropDownContainer>
         <ListAssignee selectedAssigneesData={selectedAssigneesData} />
       </div>
-      <div css={commonStyles} onClick={() => openPanel(getLabels, 'labels')}>
+      <div css={commonStyles}>
         <DropDownContainer
           indicator="레이블"
           size="L"
           isPanelOpen={isPanelOpen === 'labels'}
+          onClick={() => openPanel(getLabels, 'labels')}
         >
           <DropDownPanel
             panelHeader="레이블 설정"
@@ -183,14 +185,12 @@ export const ListSideBar: React.FC<Props> = ({
         </DropDownContainer>
         <ListLabel selectedLabelsData={selectedLabelsData} />
       </div>
-      <div
-        css={commonStyles}
-        onClick={() => openPanel(getMilestones, 'milestones')}
-      >
+      <div css={commonStyles}>
         <DropDownContainer
           indicator="마일스톤"
           size="L"
           isPanelOpen={isPanelOpen === 'milestones'}
+          onClick={() => openPanel(getLabels, 'labels')}
         >
           <DropDownPanel
             panelHeader="마일스톤 설정"
