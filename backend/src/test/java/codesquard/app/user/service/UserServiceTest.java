@@ -11,12 +11,17 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.api.errors.errorcode.UserErrorCode;
 import codesquard.app.api.errors.exception.RestApiException;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
+import codesquard.app.user.service.request.UserLoginServiceRequest;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
-import codesquard.app.user.service.response.UserSaveResponse;
+import codesquard.app.user.service.response.UserSaveServiceResponse;
 
 class UserServiceTest extends IntegrationTestSupport {
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private UserQueryService userQueryService;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -36,14 +41,16 @@ class UserServiceTest extends IntegrationTestSupport {
 	@DisplayName("회원가입 정보가 주어지고 회원가입을 요청할때 회원이 등록된다.")
 	public void signUp() {
 		// given
-		UserSaveServiceRequest userSaveServiceRequest = new UserSaveServiceRequest("hong1234", "hong1234@gmail.com",
+		UserSaveServiceRequest userSaveServiceRequest = new UserSaveServiceRequest("hong1234", "hong1234@naver.com",
 			"hong1234", "hong1234", null);
 		// when
-		UserSaveResponse userSaveResponse = userService.signUp(userSaveServiceRequest);
+		UserSaveServiceResponse userSaveServiceResponse = userService.signUp(userSaveServiceRequest);
 		// then
 		SoftAssertions.assertSoftly(softAssertions -> {
-			softAssertions.assertThat(userSaveResponse).isNotNull();
-			softAssertions.assertThat(userSaveResponse).extracting("success").isEqualTo(true);
+			softAssertions.assertThat(userSaveServiceResponse).isNotNull();
+			softAssertions.assertThat(userSaveServiceResponse).extracting("id").isNotNull();
+			softAssertions.assertThat(userSaveServiceResponse).extracting("loginId").isEqualTo("hong1234");
+			softAssertions.assertThat(userSaveServiceResponse).extracting("email").isEqualTo("hong1234@naver.com");
 			softAssertions.assertAll();
 		});
 	}
@@ -113,4 +120,19 @@ class UserServiceTest extends IntegrationTestSupport {
 		});
 	}
 
+	@Test
+	@DisplayName("유저 로그인 서비스 요청 객체가 주어지고 회원 확인을 요청할때 인증에 성공하여 인증 유저 객체를 반환합니다.")
+	public void verifyUser_givenUserLoginServiceRequest_whenVerifyUser_thenReturnAuthenticateUser() {
+		// sample
+		userService.signUp(new UserSaveServiceRequest("hong1234", "hong1234@gmail.com", "hong1234", "hong1234", null));
+		// given
+		UserLoginServiceRequest userLoginServiceRequest = new UserLoginServiceRequest("hong1234", "hong1234");
+		// when
+		AuthenticateUser authenticateUser = userQueryService.verifyUser(userLoginServiceRequest);
+		// then
+		SoftAssertions.assertSoftly(softAssertions -> {
+			softAssertions.assertThat(authenticateUser).isNotNull();
+			softAssertions.assertThat(authenticateUser).extracting("loginId").isEqualTo("hong1234");
+		});
+	}
 }

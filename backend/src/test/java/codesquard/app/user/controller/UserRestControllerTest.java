@@ -20,10 +20,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
+import codesquard.app.api.errors.errorcode.UserErrorCode;
+import codesquard.app.api.errors.exception.user.UserRestApiException;
 import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.user.controller.request.UserSaveRequest;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
-import codesquard.app.user.service.response.UserSaveResponse;
+import codesquard.app.user.service.response.UserSaveServiceResponse;
 
 class UserRestControllerTest extends ControllerTestSupport {
 
@@ -40,17 +42,23 @@ class UserRestControllerTest extends ControllerTestSupport {
 	@DisplayName("회원정보가 주어지고 회원가입 요청을 했을때 회원이 등록된다")
 	public void createUser() throws Exception {
 		// given
-		UserSaveRequest userSaveRequest = new UserSaveRequest("hong1234", "hong1234@gmail.com", "hong1234", "hong1234");
-		UserSaveResponse userSaveResponse = UserSaveResponse.success();
+		UserSaveRequest userSaveRequest = new UserSaveRequest("hong1234", "hong1234@naver.com", "hong1234", "hong1234");
+		UserSaveServiceResponse userSaveServiceResponse = new UserSaveServiceResponse(1L, "hong1234",
+			"hong1234@naver.com");
 		// mocking
-		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class))).thenReturn(userSaveResponse);
+		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class))).thenReturn(userSaveServiceResponse);
 		// when then
 		mockMvc.perform(post("/api/users")
 				.content(objectMapper.writeValueAsString(userSaveRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isCreated())
-			.andExpect(jsonPath("success").value(equalTo(true)));
+			.andExpect(jsonPath("code").value(equalTo(201)))
+			.andExpect(jsonPath("status").value(equalTo("CREATED")))
+			.andExpect(jsonPath("message").value(equalTo("회원가입에 성공하였습니다.")))
+			.andExpect(jsonPath("data.id").value(equalTo(1)))
+			.andExpect(jsonPath("data.loginId").value(equalTo("hong1234")))
+			.andExpect(jsonPath("data.email").value(equalTo("hong1234@naver.com")));
 	}
 
 	@Test
@@ -58,22 +66,17 @@ class UserRestControllerTest extends ControllerTestSupport {
 	public void createUser_invalidLoginId_response400() throws Exception {
 		// given
 		UserSaveRequest userSaveRequest = new UserSaveRequest("", "hong1234@gmail.com", "hong1234", "hong1234");
-		UserSaveResponse userSaveResponse = UserSaveResponse.success();
-		// mocking
-		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class))).thenReturn(userSaveResponse);
 		// when then
 		mockMvc.perform(post("/api/users")
 				.content(objectMapper.writeValueAsString(userSaveRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("success").value(equalTo(false)))
-			.andExpect(jsonPath("errorCode.name").value(equalTo("INVALID_INPUT_FORMAT")))
-			.andExpect(jsonPath("errorCode.code").value(equalTo(400)))
-			.andExpect(jsonPath("errorCode.httpStatus").value(equalTo("BAD_REQUEST")))
-			.andExpect(jsonPath("errorCode.errorMessage").value(equalTo("유효하지 않은 입력 형식입니다.")))
-			.andExpect(jsonPath("errorCode.errors[0].field").value(equalTo("loginId")))
-			.andExpect(jsonPath("errorCode.errors[0].message").value(equalTo("영문자 대소문자, 숫자를 사용하여 5~20자 이내여야 합니다.")));
+			.andExpect(jsonPath("code").value(equalTo(400)))
+			.andExpect(jsonPath("status").value(equalTo("BAD_REQUEST")))
+			.andExpect(jsonPath("message").value(equalTo("Bad Request")))
+			.andExpect(jsonPath("data[0].field").value(equalTo("loginId")))
+			.andExpect(jsonPath("data[0].defaultMessage").value(equalTo("영문자 대소문자, 숫자를 사용하여 5~20자 이내여야 합니다.")));
 	}
 
 	@DisplayName("유효하지 않은 이메일이 주어지고 회원가입을 요청할때 에러를 응답합니다.")
@@ -82,22 +85,17 @@ class UserRestControllerTest extends ControllerTestSupport {
 	public void givenInvalidEmail_whenCreateUser_thenResponse400(String email) throws Exception {
 		// given
 		UserSaveRequest userSaveRequest = new UserSaveRequest("hong1234", email, "hong1234", "hong1234");
-		UserSaveResponse userSaveResponse = UserSaveResponse.success();
-		// mocking
-		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class))).thenReturn(userSaveResponse);
 		// when then
 		mockMvc.perform(post("/api/users")
 				.content(objectMapper.writeValueAsString(userSaveRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("success").value(equalTo(false)))
-			.andExpect(jsonPath("errorCode.name").value(equalTo("INVALID_INPUT_FORMAT")))
-			.andExpect(jsonPath("errorCode.code").value(equalTo(400)))
-			.andExpect(jsonPath("errorCode.httpStatus").value(equalTo("BAD_REQUEST")))
-			.andExpect(jsonPath("errorCode.errorMessage").value(equalTo("유효하지 않은 입력 형식입니다.")))
-			.andExpect(jsonPath("errorCode.errors[0].field").value(equalTo("email")))
-			.andExpect(jsonPath("errorCode.errors[0].message").value(equalTo("이메일은 '사용자명@도메인주소' 형식이어야 합니다.")));
+			.andExpect(jsonPath("code").value(equalTo(400)))
+			.andExpect(jsonPath("status").value(equalTo("BAD_REQUEST")))
+			.andExpect(jsonPath("message").value(equalTo("Bad Request")))
+			.andExpect(jsonPath("data[0].field").value(equalTo("email")))
+			.andExpect(jsonPath("data[0].defaultMessage").value(equalTo("이메일은 '사용자명@도메인주소' 형식이어야 합니다.")));
 	}
 
 	private static Stream<Arguments> provideInvalidEmail() {
@@ -116,22 +114,37 @@ class UserRestControllerTest extends ControllerTestSupport {
 	public void givenInvalidPassword_whenCreateUser_thenResponse400(String password) throws Exception {
 		// given
 		UserSaveRequest userSaveRequest = new UserSaveRequest("hong1234", "hong1234@gmail.com", password, "hong1234");
-		UserSaveResponse userSaveResponse = UserSaveResponse.success();
-		// mocking
-		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class))).thenReturn(userSaveResponse);
 		// when then
 		mockMvc.perform(post("/api/users")
 				.content(objectMapper.writeValueAsString(userSaveRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("success").value(equalTo(false)))
-			.andExpect(jsonPath("errorCode.name").value(equalTo("INVALID_INPUT_FORMAT")))
-			.andExpect(jsonPath("errorCode.code").value(equalTo(400)))
-			.andExpect(jsonPath("errorCode.httpStatus").value(equalTo("BAD_REQUEST")))
-			.andExpect(jsonPath("errorCode.errorMessage").value(equalTo("유효하지 않은 입력 형식입니다.")))
-			.andExpect(jsonPath("errorCode.errors[0].field").value(equalTo("password")))
-			.andExpect(jsonPath("errorCode.errors[0].message").value(equalTo("8~16자 영문 대 소문자, 숫자, 특수문자만 사용 가능합니다.")));
+			.andExpect(jsonPath("code").value(equalTo(400)))
+			.andExpect(jsonPath("status").value(equalTo("BAD_REQUEST")))
+			.andExpect(jsonPath("message").value(equalTo("Bad Request")))
+			.andExpect(jsonPath("data[0].field").value(equalTo("password")))
+			.andExpect(jsonPath("data[0].defaultMessage").value(equalTo("8~16자 영문 대 소문자, 숫자, 특수문자만 사용 가능합니다.")));
+	}
+
+	@DisplayName("유효하지 않은 비밀번호와 비밀번호 확인이 주어지고 회원가입을 요청할때 에러를 응답합니다.")
+	@ParameterizedTest
+	@MethodSource("provideInvalidPassword")
+	public void givenInvalidPasswordAndPasswordConfirm_whenCreateUser_thenResponse400(String password) throws
+		Exception {
+		// given
+		UserSaveRequest userSaveRequest = new UserSaveRequest("hong1234", "hong1234@gmail.com", password, password);
+		// when then
+		mockMvc.perform(post("/api/users")
+				.content(objectMapper.writeValueAsString(userSaveRequest))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("code").value(equalTo(400)))
+			.andExpect(jsonPath("status").value(equalTo("BAD_REQUEST")))
+			.andExpect(jsonPath("message").value(equalTo("Bad Request")))
+			.andExpect(jsonPath("data[*].field", containsInAnyOrder("password", "passwordConfirm")))
+			.andExpect(jsonPath("data[*].defaultMessage", hasItem("8~16자 영문 대 소문자, 숫자, 특수문자만 사용 가능합니다.")));
 	}
 
 	private static Stream<Arguments> provideInvalidPassword() {
@@ -141,5 +154,82 @@ class UserRestControllerTest extends ControllerTestSupport {
 			Arguments.of("hong"),
 			Arguments.of("honghonghonghonghonghonghonghong")
 		);
+	}
+
+	@DisplayName("유효하지 않은 로그인 아이디와 이메일이 주어지고 회원가입을 요청할때 에러를 응답합니다.")
+	@Test
+	public void givenInvalidLoginIdAndEmail_whenCreateUser_thenResponse400() throws Exception {
+		// given
+		UserSaveRequest userSaveRequest = new UserSaveRequest("", "", "hong1234", "hong1234");
+		// when then
+		mockMvc.perform(post("/api/users")
+				.content(objectMapper.writeValueAsString(userSaveRequest))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("code").value(equalTo(400)))
+			.andExpect(jsonPath("status").value(equalTo("BAD_REQUEST")))
+			.andExpect(jsonPath("message").value(equalTo("Bad Request")))
+			.andExpect(jsonPath("data[*].field", containsInAnyOrder("loginId", "email")))
+			.andExpect(jsonPath("data[*].defaultMessage", hasItem("영문자 대소문자, 숫자를 사용하여 5~20자 이내여야 합니다.")))
+			.andExpect(jsonPath("data[*].defaultMessage", hasItem("이메일은 '사용자명@도메인주소' 형식이어야 합니다.")));
+	}
+
+	@Test
+	@DisplayName("서로 다른 비밀번호와 비밀번호확인이 주어지고 회원가입 요청시 에러 응답을 받는다")
+	public void givenDifferentPassword_whenCreateUser_thenResponse400() throws Exception {
+		// given
+		UserSaveRequest userSaveRequest = new UserSaveRequest("hong1234", "hong1234@naver.com", "hong1234hong1234",
+			"lee1234lee1234");
+		// mocking
+		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class)))
+			.thenThrow(new UserRestApiException(UserErrorCode.NOT_MATCH_PASSWORD));
+		// when then
+		mockMvc.perform(post("/api/users")
+				.content(objectMapper.writeValueAsString(userSaveRequest))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("code").value(equalTo(400)))
+			.andExpect(jsonPath("status").value(equalTo("BAD_REQUEST")))
+			.andExpect(jsonPath("message").value(equalTo("비밀번호가 일치하지 않습니다.")));
+	}
+
+	@Test
+	@DisplayName("중복된 로그인 아이디가 주어지고 회원가입 요청시 에러 응답을 받는다")
+	public void givenDuplicateLoginId_whenCreateUser_thenResponse400() throws Exception {
+		// given
+		UserSaveRequest userSaveRequest = new UserSaveRequest("hong1234", "hong1234@naver.com", "hong1234", "hong1234");
+		// mocking
+		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class)))
+			.thenThrow(new UserRestApiException(UserErrorCode.ALREADY_EXIST_LOGINID));
+		// when then
+		mockMvc.perform(post("/api/users")
+				.content(objectMapper.writeValueAsString(userSaveRequest))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isConflict())
+			.andExpect(jsonPath("code").value(equalTo(409)))
+			.andExpect(jsonPath("status").value(equalTo("CONFLICT")))
+			.andExpect(jsonPath("message").value(equalTo("이미 존재하는 아이디입니다.")));
+	}
+
+	@Test
+	@DisplayName("중복된 이메일이 주어지고 회원가입 요청시 에러 응답을 받는다")
+	public void givenDuplicateEmail_whenCreateUser_thenResponse400() throws Exception {
+		// given
+		UserSaveRequest userSaveRequest = new UserSaveRequest("hong1234", "hong1234@naver.com", "hong1234", "hong1234");
+		// mocking
+		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class)))
+			.thenThrow(new UserRestApiException(UserErrorCode.ALREADY_EXIST_EMAIL));
+		// when then
+		mockMvc.perform(post("/api/users")
+				.content(objectMapper.writeValueAsString(userSaveRequest))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isConflict())
+			.andExpect(jsonPath("code").value(equalTo(409)))
+			.andExpect(jsonPath("status").value(equalTo("CONFLICT")))
+			.andExpect(jsonPath("message").value(equalTo("이미 존재하는 이메일입니다.")));
 	}
 }

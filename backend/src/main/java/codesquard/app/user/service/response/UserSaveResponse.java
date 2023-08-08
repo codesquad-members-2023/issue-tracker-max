@@ -3,18 +3,19 @@ package codesquard.app.user.service.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserSaveResponse {
-	@JsonProperty("success")
-	private boolean success;
+	@JsonProperty("id")
+	private Long id;
+	@JsonProperty("loginId")
+	private String loginId;
+	@JsonProperty("email")
+	private String email;
 
-	private UserSaveResponse(boolean success) {
-		this.success = success;
+	public UserSaveResponse() {
 	}
 
-	public static UserSaveResponse success() {
-		return new UserSaveResponse(true);
-	}
-
-	public static UserSaveResponse fail() {
-		return new UserSaveResponse(false);
+	public UserSaveResponse(Long id, String loginId, String email) {
+		this.id = id;
+		this.loginId = loginId;
+		this.email = email;
 	}
 }
