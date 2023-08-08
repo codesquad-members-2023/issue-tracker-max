@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
+import org.presents.issuetracker.issue.dto.request.IssueUpdateRequest;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 import org.presents.issuetracker.issue.dto.response.IssueSearch;
 import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
@@ -41,6 +42,17 @@ public class IssueService {
 		setMilestone(issueCreateRequest.getMilestoneId(), savedIssueId);
 
 		return savedIssueId;
+	}
+
+	public Long update(IssueUpdateRequest issueUpdateRequest) {
+		validateId(issueUpdateRequest.getId());
+		issueRepository.update(Issue.builder()
+			.id(issueUpdateRequest.getId())
+			.title(issueUpdateRequest.getTitle())
+			.contents(issueUpdateRequest.getContents())
+			.build());
+
+		return issueUpdateRequest.getId();
 	}
 
 	private void addAssignees(List<Long> assigneeIds, Long issueId) {
@@ -80,10 +92,14 @@ public class IssueService {
 	}
 
 	public IssueDetailResponse getIssueDetail(Long issueId) {
+		validateId(issueId);
+		return IssueDetailResponse.from(issueMapper.getIssueDetail(issueId));
+	}
+
+	private void validateId(Long issueId) {
 		if (!issueRepository.existsById(issueId)) {
 			// todo: 커스텀 예외 생성 후 변경
 			throw new RuntimeException("이슈를 찾을 수 없습니다.");
 		}
-		return IssueDetailResponse.from(issueMapper.getIssueDetail(issueId));
 	}
 }

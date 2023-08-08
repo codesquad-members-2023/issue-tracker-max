@@ -101,4 +101,13 @@ public class IssueRepository {
 		return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
 			Map.of("issueId", issueId), Integer.class)).orElse(0) > 0;
 	}
+
+	public void update(Issue issue) {
+		final String sql = "UPDATE issue SET title = :title, contents = :contents WHERE issue_id = :issueId";
+
+		SqlParameterSource params = new MapSqlParameterSource().addValue("title", issue.getTitle())
+			.addValue("contents", issue.getContents());
+
+		jdbcTemplate.update(sql, params);
+	}
 }

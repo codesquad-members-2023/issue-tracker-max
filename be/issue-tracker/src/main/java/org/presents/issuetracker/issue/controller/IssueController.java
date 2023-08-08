@@ -3,12 +3,14 @@ package org.presents.issuetracker.issue.controller;
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
+import org.presents.issuetracker.issue.dto.request.IssueUpdateRequest;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
 import org.presents.issuetracker.issue.service.IssueService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,5 +50,14 @@ public class IssueController {
 	@GetMapping("/{issueId}")
 	public IssueDetailResponse getIssueDetail(@PathVariable Long issueId) {
 		return issueService.getIssueDetail(issueId);
+	}
+
+	@PatchMapping
+	public ResponseEntity<IdResponseDto> update(@RequestBody IssueUpdateRequest issueUpdateRequest) {
+		IdResponseDto idResponseDto = IdResponseDto.builder()
+			.id(issueService.update(issueUpdateRequest))
+			.build();
+
+		return ResponseEntity.ok().body(idResponseDto);
 	}
 }
