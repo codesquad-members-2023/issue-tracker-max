@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { styled } from "styled-components";
 import { getProgress } from "../../utils/getProgress";
 import { InformationTag } from "../InformationTag";
@@ -37,6 +37,27 @@ type MilestoneData = {
 };
 
 type OptionData = AssigneeData | LabelData | MilestoneData;
+type ResponseData =
+  | {
+      id: number;
+      loginId: string;
+      avatarUrl: string;
+    }
+  | {
+      id: number;
+      name: string;
+      color: "LIGHT" | "DARK";
+      background: IconColor;
+    }
+  | {
+      id: number;
+      name: string;
+      issues: {
+        openedIssueCount: number;
+        closedIssueCount: number;
+      };
+    };
+
 export type SidebarProps = {
   onAssigneeClick: (id: number) => void;
   onLabelClick: (id: number) => void;
@@ -68,83 +89,47 @@ export function Sidebar({
     id: number,
     multiSelect: boolean,
   ) => {
-    const updatedData = data.map((d) => ({
+    return data.map((d) => ({
       ...d,
-      selected: d.id === id ? !d.selected : multiSelect ? d.selected : false,
+      selected: multiSelect
+        ? d.id === id
+          ? !d.selected
+          : d.selected
+        : d.id === id,
     }));
-    return updatedData;
   };
 
-  const mapToAssigneeData = (assignee: {
-    id: number;
-    loginId: string;
-    avatarUrl: string;
-  }) => ({
-    id: assignee.id,
-    name: assignee.loginId,
-    profile: assignee.avatarUrl,
-    selected: false,
-    onClick: () => {
-      setAssignees((a) => onOptionMapper(a, assignee.id, true));
-      onAssigneeClick(assignee.id);
-    },
-  });
-
-  const mapToLabelData = (label: {
-    id: number;
-    name: string;
-    color: "LIGHT" | "DARK";
-    background: IconColor;
-  }) => ({
-    ...label,
-    selected: false,
-    onClick: () => {
-      setLabels((l) => onOptionMapper(l, label.id, true));
-      onLabelClick(label.id);
-    },
-  });
-
-  const mapToMilestoneData = (milestone: {
-    id: number;
-    name: string;
-    issues: {
-      openedIssueCount: number;
-      closedIssueCount: number;
+  const mapToData = <T extends ResponseData, U extends OptionData>(
+    data: T,
+    multiSelect: boolean,
+    setFunction: Dispatch<SetStateAction<U[]>>,
+    onClickCallback: (id: number) => void,
+  ) => {
+    return {
+      id: data.id,
+      name: "name" in data ? data.name : data.loginId,
+      profile: "avatarUrl" in data ? data.avatarUrl : undefined,
+      color: "color" in data ? data.color : undefined,
+      background: "background" in data ? data.background : undefined,
+      issues: "issues" in data ? data.issues : undefined,
+      selected: false,
+      onClick: () => {
+        setFunction((l) => onOptionMapper(l, data.id, multiSelect));
+        onClickCallback(data.id);
+      },
     };
-  }) => ({
-    ...milestone,
-    selected: false,
-    onClick: () => {
-      setMilestones((m) => onOptionMapper(m, milestone.id, false));
-      onMilestoneClick(milestone.id);
-    },
-  });
-
-  const onAssigneeDivHover = async () => {
-    if (assignees.length > 0) return;
-
-    const data = await fetchData(`${url}/api/assignees`);
-    const assigneesData = data.map(mapToAssigneeData);
-
-    setAssignees(assigneesData);
   };
 
-  const onLabelDivHover = async () => {
-    if (labels.length > 0) return;
+  const onDivHover = async <T extends OptionData, U extends ResponseData>(
+    keyword: string,
+    multiSelect: boolean,
+    setFunction: Dispatch<SetStateAction<T[]>>,
+    onClickCallback: (id: number) => void,
+  ) => {
+    const data = await fetchData(`${url}/api/${keyword}`);
+    const mappedData = data[keyword].map((d: U) => mapToData(d, multiSelect, setFunction, onClickCallback));
 
-    const data = await fetchData(`${url}/api/labels`);
-    const labelsData = data.labels.map(mapToLabelData);
-
-    setLabels(labelsData);
-  };
-
-  const onMilestoneDivHover = async () => {
-    if (milestones.length > 0) return;
-
-    const data = await fetchData(`${url}/api/milestones`);
-    const milestonesData = data.milestones.map(mapToMilestoneData);
-
-    setMilestones(milestonesData);
+    setFunction(mappedData);
   };
 
   const getMilestoneProgress = (issues?: {
@@ -155,7 +140,12 @@ export function Sidebar({
 
   return (
     <Div>
-      <OptionDiv onMouseEnter={onAssigneeDivHover}>
+      <OptionDiv
+        onMouseEnter={() =>
+          !(assignees.length > 0) &&
+          onDivHover("assignees", true, setAssignees, onAssigneeClick)
+        }
+      >
         <DropdownContainer
           key="assignees"
           name="담당자"
@@ -172,7 +162,12 @@ export function Sidebar({
           </ElementContainer>
         )}
       </OptionDiv>
-      <OptionDiv onMouseEnter={onLabelDivHover}>
+      <OptionDiv
+        onMouseEnter={() => {
+          !(labels.length > 0) &&
+            onDivHover("labels", true, setLabels, onLabelClick);
+        }}
+      >
         <DropdownContainer
           key="labels"
           name="레이블 "
@@ -195,7 +190,12 @@ export function Sidebar({
           </ElementContainer>
         )}
       </OptionDiv>
-      <OptionDiv onMouseEnter={onMilestoneDivHover}>
+      <OptionDiv
+        onMouseEnter={() => {
+          !(milestones.length > 0) &&
+            onDivHover("milestones", false, setMilestones, onMilestoneClick);
+        }}
+      >
         <DropdownContainer
           key="milestones"
           name="마일스톤 "
