@@ -7,13 +7,10 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquard.app.milestone.entity.Milestone;
-import codesquard.app.milestone.entity.MilestoneStatus;
 
 public class MilestonesResponse {
 	@JsonProperty("id")
 	private Long id; // 등록번호
-	@JsonProperty("status")
-	private MilestoneStatus status; // OPEN, CLOSE
 	@JsonProperty("name")
 	private String name; // 이름
 	@JsonProperty("description")
@@ -27,11 +24,10 @@ public class MilestonesResponse {
 	@JsonProperty("issues")
 	private Map<String, Long> issues; // 이슈 카운트
 
-	private MilestonesResponse(final Long id, final MilestoneStatus status, final String name, final String description,
+	private MilestonesResponse(final Long id, final String name, final String description,
 		final LocalDateTime createdAt, final LocalDateTime modifiedAt, final LocalDate deadline,
 		final Map<String, Long> issues) {
 		this.id = id;
-		this.status = status;
 		this.name = name;
 		this.description = description;
 		this.createdAt = createdAt;
@@ -41,7 +37,7 @@ public class MilestonesResponse {
 	}
 
 	public static MilestonesResponse fromEntity(final Milestone milestone, final Map<String, Long> issues) {
-		return new MilestonesResponse(milestone.getId(), milestone.getStatus(), milestone.getName(),
+		return new MilestonesResponse(milestone.getId(), milestone.getName(),
 			milestone.getDescription(), milestone.getCreatedAt(), milestone.getModifiedAt(), milestone.getDeadline(),
 			issues);
 	}
