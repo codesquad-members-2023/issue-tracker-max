@@ -1,5 +1,4 @@
 import { useTheme } from '@emotion/react';
-import React, { useState } from 'react';
 
 export const Title: React.FC = () => {
   const theme = useTheme() as any;

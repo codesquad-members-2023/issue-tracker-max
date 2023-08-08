@@ -1,5 +1,3 @@
-import { css, useTheme } from '@emotion/react';
-
 type Props = {
   children?: React.ReactNode;
 };

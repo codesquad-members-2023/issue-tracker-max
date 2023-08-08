@@ -1,45 +1,49 @@
 import { useTheme } from '@emotion/react';
-import { DropDownList } from './DropDownList';
 import { DropDownHeader } from './DropDownHeader';
-
-type DropDownItem = {
-  id?: number;
-  image?: string;
-  name?: string;
-  backgroundColor?: string;
-  textColor?: string;
-  progress?: number;
-};
+import { useEffect } from 'react';
 
 type Props = {
-  options: DropDownItem[];
-  alignment: string;
+  position: keyof typeof POSITION;
   panelHeader: string;
-  selectedItems: { [key: number]: boolean };
-  onSelected: (index: number) => void;
+  children: React.ReactNode;
+  onOutsideClick: () => void;
 };
 
 export const DropDownPanel: React.FC<Props> = ({
-  options,
-  alignment,
+  position,
   panelHeader,
-  selectedItems,
-  onSelected,
+  children,
+  onOutsideClick,
 }) => {
   const theme = useTheme() as any;
+
+  useEffect(() => {
+    const onClick = ({ target }: MouseEvent) => {
+      if (target instanceof HTMLElement && target?.closest('.dropdown-panel')) {
+        return;
+      }
+
+      onOutsideClick();
+    };
+
+    window.addEventListener('click', onClick);
+
+    return () => {
+      window.removeEventListener('click', onClick);
+    };
+  }, []);
 
   return (
     <div
       css={{
         position: 'absolute',
         top: '100%',
-        [alignment]: '0',
-        marginLeft: alignment === 'center' ? '-8px' : '0',
         zIndex: 50,
         width: '240px',
         borderRadius: theme.radius.l,
         border: `${theme.border.default} ${theme.neutral.border.default}`,
         background: theme.neutral.surface.default,
+        ...POSITION[position],
       }}
     >
       <DropDownHeader panelHeader={panelHeader} />
@@ -50,28 +54,22 @@ export const DropDownPanel: React.FC<Props> = ({
           overflowY: 'auto',
         }}
       >
-        {options.length > 0 ? (
-          options.map((item, index: number) => (
-            <DropDownList
-              key={index}
-              item={item}
-              onSelected={() => onSelected(index)}
-              isSelected={selectedItems[index]}
-              index={index}
-            />
-          ))
-        ) : (
-          <span
-            css={{
-              marginLeft: '16px',
-              font: theme.fonts.displayMedium12,
-              color: theme.neutral.text.strong,
-            }}
-          >
-            데이터가 없습니다
-          </span>
-        )}
+        {children}
       </ul>
     </div>
   );
+};
+
+const POSITION = {
+  left: {
+    left: 0,
+  },
+
+  right: {
+    right: 0,
+  },
+
+  center: {
+    left: 'calc(-120px + 50%)',
+  },
 };

@@ -3,10 +3,12 @@ import { SubNav } from '@components/issueListPage/SubNav';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
+const INITIAL_FILTER_VALUE = 'status:open';
+
 export const IssueListPage: React.FC = ({}) => {
   const [pageData, setPageData] = useState<IssuePageData>(initialPageData);
+  const [filterValue, setFilterValue] = useState(INITIAL_FILTER_VALUE);
   const location = useLocation();
-  const [filterValue, setFilterValue] = useState('status:open');
 
   const onChangeFilterValue = (value: string) => {
     setFilterValue(value);
@@ -32,7 +34,7 @@ export const IssueListPage: React.FC = ({}) => {
       '',
     );
 
-    setFilterValue(searchValue || 'status:open');
+    setFilterValue(searchValue || INITIAL_FILTER_VALUE);
   };
 
   useEffect(() => {
