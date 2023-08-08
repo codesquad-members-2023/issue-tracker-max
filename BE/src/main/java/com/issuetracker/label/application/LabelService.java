@@ -1,5 +1,7 @@
 package com.issuetracker.label.application;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,6 +10,7 @@ import com.issuetracker.config.exception.ErrorType;
 import com.issuetracker.label.application.dto.LabelCreateInformation;
 import com.issuetracker.label.application.dto.LabelCreateInputData;
 import com.issuetracker.label.application.dto.LabelDeleteInputData;
+import com.issuetracker.label.application.dto.LabelInformation;
 import com.issuetracker.label.application.dto.LabelUpdateInputData;
 import com.issuetracker.label.domain.LabelRepository;
 
@@ -42,5 +45,9 @@ public class LabelService {
 		if (numberOfDeleteRow == 0) {
 			throw new CustomHttpException(ErrorType.LABEL_NOT_FOUND);
 		}
+	}
+
+	public List<LabelInformation> search() {
+		return LabelInformation.from(labelRepository.findAll());
 	}
 }

@@ -12,4 +12,5 @@ public interface LabelRepository {
 
 	int delete(Label label);
 
+	List<Label> findAll();
 }
