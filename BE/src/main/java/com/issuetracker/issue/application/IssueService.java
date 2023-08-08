@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetracker.issue.application.dto.AssigneesForIssueUpdateInformation;
 import com.issuetracker.issue.application.dto.IssueCommentCreateData;
 import com.issuetracker.issue.application.dto.IssueCommentCreateInformation;
 import com.issuetracker.issue.application.dto.IssueCommentUpdateData;
@@ -101,7 +102,8 @@ public class IssueService {
 
 	@Transactional
 	public IssueCommentCreateInformation createIssueComment(IssueCommentCreateData issueCommentCreateData) {
-		issueValidator.verifyCreateIssueComment(issueCommentCreateData.getIssueId(), issueCommentCreateData.getAuthorId());
+		issueValidator.verifyCreateIssueComment(issueCommentCreateData.getIssueId(),
+			issueCommentCreateData.getAuthorId());
 		Long savedId = issueCommentRepository.save(issueCommentCreateData.toIssueComment(LocalDateTime.now()));
 		return IssueCommentCreateInformation.from(savedId);
 	}
@@ -109,7 +111,17 @@ public class IssueService {
 	@Transactional
 	public void updateIssueCommentContent(IssueCommentUpdateData issueCommentUpdateData) {
 		issueValidator.verifyNonNullUpdateData(issueCommentUpdateData.getContent());
-		int updatedCount = issueCommentRepository.updateContent(issueCommentUpdateData.getIssueCommentId(), issueCommentUpdateData.getContent());
+		int updatedCount = issueCommentRepository.updateContent(issueCommentUpdateData.getIssueCommentId(),
+			issueCommentUpdateData.getContent());
 		issueValidator.verifyCommentUpdatedOrDeletedCount(updatedCount);
+	}
+
+	public AssigneesForIssueUpdateInformation searchAssigneesForIssueUpdate(long issueId) {
+
+		return AssigneesForIssueUpdateInformation
+			.from(
+				assigneeRepository.findAllAssignedToIssue(issueId),
+				assigneeRepository.findAllUnassignedToIssue(issueId)
+			);
 	}
 }

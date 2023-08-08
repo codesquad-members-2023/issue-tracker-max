@@ -16,13 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.issuetracker.issue.application.IssueService;
 import com.issuetracker.issue.application.dto.IssueCommentCreateData;
-import com.issuetracker.issue.domain.IssueComment;
 import com.issuetracker.issue.ui.dto.AssignedLabelResponses;
+import com.issuetracker.issue.ui.dto.AssigneesForIssueUpdateResponse;
 import com.issuetracker.issue.ui.dto.AssigneesResponses;
 import com.issuetracker.issue.ui.dto.AuthorResponses;
 import com.issuetracker.issue.ui.dto.IssueCommentCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueCommentCreateResponse;
-import com.issuetracker.issue.ui.dto.IssueCommentResponse;
 import com.issuetracker.issue.ui.dto.IssueCommentUpdateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateResponse;
@@ -56,12 +55,13 @@ public class IssueController {
 
 	@PostMapping
 	public ResponseEntity<IssueCreateResponse> createIssue(@RequestBody @Valid IssueCreateRequest issueCreateRequest) {
-		IssueCreateResponse issueCreateResponse = IssueCreateResponse.from(issueService.create(issueCreateRequest.toIssueCreateData(1L)));
+		IssueCreateResponse issueCreateResponse = IssueCreateResponse.from(
+			issueService.create(issueCreateRequest.toIssueCreateData(1L)));
 		return ResponseEntity.created(URI.create("/issues/" + issueCreateResponse.getId()))
 			.body(issueCreateResponse);
 	}
-  
-  	@GetMapping("/milestones")
+
+	@GetMapping("/milestones")
 	public ResponseEntity<MilestonesSearchResponse> showMilestonesForFilter() {
 		return ResponseEntity.ok().body(MilestonesSearchResponse.from(milestoneService.searchMilestonesForFilter()));
 	}
@@ -69,8 +69,8 @@ public class IssueController {
 	@GetMapping("/authors")
 	public ResponseEntity<AuthorResponses> showAuthors() {
 		return ResponseEntity.ok().body(AuthorResponses.from(memberService.searchAuthors()));
-  }
-  
+	}
+
 	@GetMapping("/assignees")
 	public ResponseEntity<AssigneesResponses> showAssignees() {
 		AssigneesResponses assigneesResponses = AssigneesResponses.from(issueService.searchAssignee());
@@ -96,35 +96,52 @@ public class IssueController {
 	}
 
 	@PatchMapping("/{id}/open")
-	public ResponseEntity<Void> updateIssueOpen(@PathVariable Long id, @RequestBody IssueUpdateRequest issueUpdateRequest) {
+	public ResponseEntity<Void> updateIssueOpen(@PathVariable Long id,
+		@RequestBody IssueUpdateRequest issueUpdateRequest) {
 		issueService.updateIssueOpen(issueUpdateRequest.toIssueUpdateDataOpen(id));
 		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping("/{id}/title")
-	public ResponseEntity<Void> updateIssueTitle(@PathVariable Long id, @RequestBody @Valid IssueUpdateRequest issueUpdateRequest) {
+	public ResponseEntity<Void> updateIssueTitle(@PathVariable Long id,
+		@RequestBody @Valid IssueUpdateRequest issueUpdateRequest) {
 		issueService.updateIssueTitle(issueUpdateRequest.toIssueUpdateDataTitle(id));
 		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping("/{id}/content")
-	public ResponseEntity<Void> updateIssueContent(@PathVariable Long id, @RequestBody @Valid IssueUpdateRequest issueUpdateRequest) {
+	public ResponseEntity<Void> updateIssueContent(@PathVariable Long id,
+		@RequestBody @Valid IssueUpdateRequest issueUpdateRequest) {
 		issueService.updateIssueContent(issueUpdateRequest.toIssueUpdateDataContent(id));
 		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/{id}/comments")
 	public ResponseEntity<IssueCommentCreateResponse> createIssueComment(@PathVariable Long id, @RequestBody @Valid
-		IssueCommentCreateRequest issueCommentCreateRequest) {
+	IssueCommentCreateRequest issueCommentCreateRequest) {
 		IssueCommentCreateData issueCommentCreateData = issueCommentCreateRequest.toIssueCommentCreateData(id, 1L);
-		IssueCommentCreateResponse issueCommentCreateResponse = IssueCommentCreateResponse.from(issueService.createIssueComment(issueCommentCreateData));
-		return ResponseEntity.created(URI.create("/"+ id)).body(issueCommentCreateResponse);
+		IssueCommentCreateResponse issueCommentCreateResponse = IssueCommentCreateResponse.from(
+			issueService.createIssueComment(issueCommentCreateData));
+		return ResponseEntity.created(URI.create("/" + id)).body(issueCommentCreateResponse);
 	}
 
 	@PatchMapping("/{id}/comments/{comment-id}")
-	public ResponseEntity<Void> updateIssueCommentContent(@PathVariable Long id, @PathVariable("comment-id") Long commentId,
+	public ResponseEntity<Void> updateIssueCommentContent(@PathVariable Long id,
+		@PathVariable("comment-id") Long commentId,
 		@RequestBody @Valid IssueCommentUpdateRequest issueCommentUpdateRequest) {
 		issueService.updateIssueCommentContent(issueCommentUpdateRequest.toIssueCommentUpdateData(id, commentId));
 		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/{id}/assignee-candidates")
+	public ResponseEntity<AssigneesForIssueUpdateResponse> showAssigneesForIssueUpdate(
+		@PathVariable Long id) {
+
+		return ResponseEntity.ok()
+			.body(
+				AssigneesForIssueUpdateResponse.from(
+					issueService.searchAssigneesForIssueUpdate(id)
+				)
+			);
 	}
 }

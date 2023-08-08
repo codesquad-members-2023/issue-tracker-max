@@ -9,4 +9,8 @@ public interface AssigneeRepository {
 	int[] saveAll(List<Assignee> assignees);
 
 	List<Member> findAll();
+
+	List<Member> findAllAssignedToIssue(long issueId);
+
+	List<Member> findAllUnassignedToIssue(long issueId);
 }
