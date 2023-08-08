@@ -6,6 +6,7 @@ import { useTheme } from '@emotion/react';
 import { DropDownIndicator } from '@components/common/dropDown/DropDownIndicator';
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 import { useNavigate } from 'react-router-dom';
+import { generateEncodedQuery } from '@utils/generateEncodedQuery';
 
 type Props = {
   openIssueCount: number;
@@ -19,11 +20,10 @@ export const TableHeader: React.FC<Props> = ({
   const theme = useTheme() as any;
   const navigate = useNavigate();
 
-  const onIssueFilterClick = (filter: 'open' | 'closed') => {
-    const query = `status:${filter} ` + getFilteredQuery();
-    const trimmedQuery = removeDuplicateSpaces(query);
+  const onIssueFilterClick = (queryValue: 'open' | 'closed') => {
+    const query = generateEncodedQuery('status', queryValue);
 
-    navigate('?query=' + encodeURIComponent(trimmedQuery));
+    navigate(query);
   };
 
   return (
@@ -89,14 +89,4 @@ export const TableHeader: React.FC<Props> = ({
       </div>
     </div>
   );
-};
-
-const getFilteredQuery = () => {
-  return decodeURIComponent(location.search)
-    .replace('?query=', '')
-    .replace(/status:[^\s]+/g, '');
-};
-
-const removeDuplicateSpaces = (str: string) => {
-  return str.replace(/\s+/g, ' ').trim();
 };

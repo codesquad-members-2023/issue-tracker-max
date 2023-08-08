@@ -3,16 +3,9 @@ import { SubNav } from '@components/issueListPage/SubNav';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const INITIAL_FILTER_VALUE = 'status:open';
-
 export const IssueListPage: React.FC = ({}) => {
   const [pageData, setPageData] = useState<IssuePageData>(initialPageData);
-  const [filterValue, setFilterValue] = useState(INITIAL_FILTER_VALUE);
   const location = useLocation();
-
-  const onChangeFilterValue = (value: string) => {
-    setFilterValue(value);
-  };
 
   const fetchPageData = async () => {
     const response = await fetch(
@@ -28,17 +21,7 @@ export const IssueListPage: React.FC = ({}) => {
     setPageData(data);
   };
 
-  const updateFilterValue = () => {
-    const searchValue = decodeURIComponent(location.search).replace(
-      '?query=',
-      '',
-    );
-
-    setFilterValue(searchValue || INITIAL_FILTER_VALUE);
-  };
-
   useEffect(() => {
-    updateFilterValue();
     fetchPageData();
   }, [location]);
 
@@ -48,8 +31,6 @@ export const IssueListPage: React.FC = ({}) => {
         {...{
           labelCount: pageData.labelCount,
           milestoneCount: pageData.milestoneCount,
-          filterValue,
-          onChangeFilterValue,
         }}
       />
       <IssueTable

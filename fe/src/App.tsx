@@ -6,13 +6,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { AppRoutes } from 'routes';
 
 export const App: React.FC = () => {
-  const [userId, setUserId] = useState();
-  const [accessToken, setAccessToken] = useState();
   const [currentTheme, setCurrentTheme] = useState<ThemeType>('light');
   const theme = currentTheme === 'light' ? lightMode : darkMode;
 
-  const resetUserId = () => {};
-  const resetAccessToken = () => {};
   const toggleTheme = () => {
     setCurrentTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };

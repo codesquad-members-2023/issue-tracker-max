@@ -8,16 +8,9 @@ import { useNavigate } from 'react-router-dom';
 type Props = {
   labelCount: IssuePageData['labelCount'];
   milestoneCount: IssuePageData['milestoneCount'];
-  filterValue: string;
-  onChangeFilterValue: (value: string) => void;
 };
 
-export const SubNav: React.FC<Props> = ({
-  labelCount,
-  milestoneCount,
-  filterValue,
-  onChangeFilterValue,
-}) => {
+export const SubNav: React.FC<Props> = ({ labelCount, milestoneCount }) => {
   const theme = useTheme() as any;
   const navigate = useNavigate();
 
@@ -30,7 +23,7 @@ export const SubNav: React.FC<Props> = ({
       }}
     >
       <div css={{ width: '560px' }}>
-        <FilterBar {...{ filterValue, onChangeFilterValue }} />
+        <FilterBar />
       </div>
 
       <div
