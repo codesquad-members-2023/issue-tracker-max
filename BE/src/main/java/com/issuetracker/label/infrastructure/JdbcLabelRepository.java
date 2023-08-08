@@ -1,6 +1,7 @@
 package com.issuetracker.label.infrastructure;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,6 +20,7 @@ public class JdbcLabelRepository implements LabelRepository {
 	private static final String EXIST_BY_IDS_SQL = "SELECT IF(COUNT(id) = :size, TRUE, FALSE) FROM label WHERE id IN(:labelIds)";
 	private static final String SAVE_SQL = "INSERT INTO label(title, description, color) VALUE(:title, :description, :color)";
 	private static final String UPDATE_SQL = "UPDATE label SET title = :title, description = :description, color = :color WHERE id = :id";
+	private static final String DELETE_SQL = "UPDATE label SET is_deleted = true WHERE id = :id";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -57,4 +59,10 @@ public class JdbcLabelRepository implements LabelRepository {
 		return jdbcTemplate.update(UPDATE_SQL, param);
 	}
 
+	@Override
+	public int delete(Label label) {
+		Map<String, Long> param = Map.of("id", label.getId());
+
+		return jdbcTemplate.update(DELETE_SQL, param);
+	}
 }
