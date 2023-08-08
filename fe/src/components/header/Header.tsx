@@ -4,6 +4,7 @@ import { ReactComponent as UserImageLarge } from '@assets/icons/userImageLarge.s
 import { useTheme } from '@emotion/react';
 import { Button } from '@components/common/Button';
 import { ThemeToggle } from './ThemeToggle';
+import { ISSUE_LIST_PAGE } from 'constants/PATH';
 
 type Props = {
   image?: string;
@@ -34,7 +35,7 @@ export const Header: React.FC<Props> = ({
       >
         <MediumLogo
           fill={theme.neutral.text.strong}
-          onClick={() => navigate('/')}
+          onClick={() => navigate(ISSUE_LIST_PAGE)}
           css={{ cursor: 'pointer' }}
         />
 
