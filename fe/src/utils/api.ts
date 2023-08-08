@@ -1,8 +1,8 @@
 export const fetchData = async (path: string) => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_APP_BASE_URL}/${path}`,
-      // `${path}`,
+      // `${import.meta.env.VITE_APP_BASE_URL}/${path}`,
+      `${path}`,
       {
         method: 'GET',
       },
