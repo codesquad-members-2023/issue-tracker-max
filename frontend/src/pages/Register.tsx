@@ -64,6 +64,7 @@ export default function Register() {
           id="password"
           name="password"
           size="tall"
+          type="password"
           labelName="비밀번호"
           placeholder="비밀번호"
         />
