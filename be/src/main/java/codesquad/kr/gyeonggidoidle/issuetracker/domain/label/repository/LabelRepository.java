@@ -68,6 +68,7 @@ public class LabelRepository {
         return new MapSqlParameterSource()
                 .addValue("issue_id", issueId)
                 .addValue("label_id", labelId);
+    }
 
     public List<LabelDetailsVO> findAllFilters() {
         String sql = "SELECT id, name, background_color, text_color " +

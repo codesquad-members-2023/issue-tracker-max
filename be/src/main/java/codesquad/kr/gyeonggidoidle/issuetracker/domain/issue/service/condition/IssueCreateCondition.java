@@ -2,9 +2,10 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Comment;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Issue;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class IssueCreateCondition {

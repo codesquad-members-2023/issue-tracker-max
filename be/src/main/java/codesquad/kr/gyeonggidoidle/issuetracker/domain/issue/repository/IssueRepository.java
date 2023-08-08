@@ -4,8 +4,6 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Issue;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueStatusVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueUpdateVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueVO;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Repository
@@ -95,12 +94,4 @@ public class IssueRepository {
                 .addValue("issueId", vo.getIssueId());
         template.update(sql, params);
     }
-
-    private final RowMapper<IssueVO> issueVOMapper = (rs, rowNum) -> IssueVO.builder()
-            .id(rs.getLong("id"))
-            .author(rs.getString("author_name"))
-            .milestone(rs.getString("milestone_name"))
-            .title(rs.getString("title"))
-            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-            .build();
 }

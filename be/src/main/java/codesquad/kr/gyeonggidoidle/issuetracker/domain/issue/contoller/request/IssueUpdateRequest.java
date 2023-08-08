@@ -1,9 +1,10 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.request;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueUpdateCondition;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class IssueUpdateRequest {

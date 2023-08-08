@@ -1,9 +1,5 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
@@ -61,6 +57,7 @@ public class MemberRepository {
         return new MapSqlParameterSource()
                 .addValue("issue_id", issueId)
                 .addValue("assignee_id", assigneeId);
+    }
 
     public List<MemberDetailsVO> findAllFilters() {
         String sql = "SELECT id, name, profile " +

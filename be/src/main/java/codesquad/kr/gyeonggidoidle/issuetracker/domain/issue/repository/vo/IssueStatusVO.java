@@ -1,8 +1,9 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class IssueStatusVO {

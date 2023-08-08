@@ -38,7 +38,6 @@ public class IssueService {
     private final CommentRepository commentRepository;
     private final MilestoneRepository milestoneRepository;
 
-
     public FilterInformation readOpenIssues() {
         StatVO statVO = statRepository.countOverallStats();
         List<IssueVO> issueVOs = issueRepository.findOpenIssues();
@@ -90,7 +89,8 @@ public class IssueService {
         if (!condition.getLabels().isEmpty()) {
             labelRepository.updateIssueLabels(condition.getIssueId(), condition.getLabels());
         }
-      
+    }
+
     public FilterListInformation readFilters() {
         List<MemberDetailsVO> members = memberRepository.findAllFilters();
         List<LabelDetailsVO> labels = labelRepository.findAllFilters();

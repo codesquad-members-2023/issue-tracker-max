@@ -1,9 +1,10 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.request;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueCreateCondition;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class IssueCreateRequest {
@@ -18,7 +19,7 @@ public class IssueCreateRequest {
 
     @Builder
     private IssueCreateRequest(Long authorId, String title, String comment, List<Long> assignees, List<Long> labels,
-                              Long milestone, String file) {
+                               Long milestone, String file) {
         this.authorId = authorId;
         this.title = title;
         this.comment = comment;
