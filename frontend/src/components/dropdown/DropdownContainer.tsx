@@ -12,6 +12,7 @@ export function DropdownContainer({
   type = "Default",
   alignment,
   disabled = false,
+  autoClose = false
 }: {
   name: string;
   optionTitle: string;
@@ -26,6 +27,7 @@ export function DropdownContainer({
   type?: "Default" | "Long";
   alignment: "Left" | "Right" | "Center";
   disabled?: boolean;
+  autoClose?: boolean;
 }) {
   const [isPanelOpened, setIsPanelOpened] = useState(false);
 
@@ -53,6 +55,7 @@ export function DropdownContainer({
             showProfile={showProfile}
             alignment={alignment}
             options={options}
+            onOptionClick={autoClose ? closePanel : undefined}
           />
         </>
       )}

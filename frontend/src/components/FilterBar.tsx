@@ -41,6 +41,7 @@ export function FilterBar({
         optionTitle={optionTitle}
         options={options}
         alignment="Left"
+        autoClose
       />
       <TextInput icon="Search" {...props} />
     </Div>

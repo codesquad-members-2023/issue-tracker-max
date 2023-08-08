@@ -269,6 +269,7 @@ const TextCount = styled.span<{ $hidden: boolean }>`
   align-self: flex-end;
   margin-right: 28px;
   font: ${({ theme }) => theme.font.displayMedium12};
+  color: ${({ theme }) => theme.color.neutralTextWeak};
   opacity: ${({ $hidden }) => ($hidden ? 0 : 1)};
   animation: ${({ $hidden }) => ($hidden ? fadeOut : fadeIn)} 0.2s ease-in-out;
 `;
