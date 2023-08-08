@@ -7,6 +7,7 @@ import { DropDownIndicator } from '@components/common/dropDown/DropDownIndicator
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 import { useNavigate } from 'react-router-dom';
 import { generateEncodedQuery } from '@utils/generateEncodedQuery';
+import { useState } from 'react';
 
 type Props = {
   openIssueCount: number;
@@ -18,6 +19,12 @@ export const TableHeader: React.FC<Props> = ({
   closedIssueCount = 0,
 }) => {
   const theme = useTheme() as any;
+  const [panelStates, setPanelStates] = useState({
+    assigneesPanel: false,
+    labelPanel: false,
+    milestonePanel: false,
+    authorPanel: false,
+  });
   const navigate = useNavigate();
 
   const onIssueFilterClick = (queryValue: 'open' | 'closed') => {
@@ -74,17 +81,65 @@ export const TableHeader: React.FC<Props> = ({
           marginRight: '32px',
         }}
       >
-        <DropDownIndicator indicator="담당자" size="M">
-          <DropDownPanel></DropDownPanel>
+        <DropDownIndicator
+          size="M"
+          indicator="담당자"
+          isPanelOpen={panelStates.assigneesPanel}
+        >
+          <DropDownPanel
+            position="right"
+            panelHeader="담당자 필터"
+            onOutsideClick={() =>
+              setPanelStates((prev) => ({ ...prev, assigneesPanel: false }))
+            }
+          >
+            <div></div>
+          </DropDownPanel>
         </DropDownIndicator>
-        <DropDownIndicator indicator="레이블" size="M">
-          <DropDownPanel></DropDownPanel>
+        <DropDownIndicator
+          size="M"
+          indicator="레이블"
+          isPanelOpen={panelStates.labelPanel}
+        >
+          <DropDownPanel
+            position="right"
+            panelHeader="레이블 필터"
+            onOutsideClick={() =>
+              setPanelStates((prev) => ({ ...prev, milestonePanel: false }))
+            }
+          >
+            <div></div>
+          </DropDownPanel>
         </DropDownIndicator>
-        <DropDownIndicator indicator="마일스톤" size="M">
-          <DropDownPanel></DropDownPanel>
+        <DropDownIndicator
+          size="M"
+          indicator="마일스톤"
+          isPanelOpen={panelStates.milestonePanel}
+        >
+          <DropDownPanel
+            position="right"
+            panelHeader="마일스톤 필터"
+            onOutsideClick={() =>
+              setPanelStates((prev) => ({ ...prev, milestonePanel: false }))
+            }
+          >
+            <div></div>
+          </DropDownPanel>
         </DropDownIndicator>
-        <DropDownIndicator indicator="작성자" size="M">
-          <DropDownPanel></DropDownPanel>
+        <DropDownIndicator
+          size="M"
+          indicator="작성자"
+          isPanelOpen={panelStates.authorPanel}
+        >
+          <DropDownPanel
+            position="right"
+            panelHeader="작성자 필터"
+            onOutsideClick={() =>
+              setPanelStates((prev) => ({ ...prev, authorPanel: false }))
+            }
+          >
+            <div></div>
+          </DropDownPanel>
         </DropDownIndicator>
       </div>
     </div>
