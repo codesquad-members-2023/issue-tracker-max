@@ -1,4 +1,5 @@
-// import { useState } from 'react';
+import { Body } from '@components/issueDetailPage/Body';
+import { PostInformation } from '@components/issueDetailPage/PostInformation';
 
 type Props = {};
 
