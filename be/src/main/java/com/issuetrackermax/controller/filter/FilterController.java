@@ -31,4 +31,5 @@ public class FilterController {
 			FilterInformation.from(filterRequest, memberId.longValue()));
 		return ApiResponse.success(mainPageIssue);
 	}
+
 }
