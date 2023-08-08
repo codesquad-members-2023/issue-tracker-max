@@ -1,5 +1,5 @@
 import { css, useTheme } from '@emotion/react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { DropDownIndicator } from '../dropDown/DropDownIndicator';
 import { DropDownPanel } from '../dropDown/DropDownPanel';
 import { ListAssignee } from './ListAssignee';
@@ -15,13 +15,18 @@ type SelectionState = {
 };
 
 type FetchPath = 'users' | 'labels' | 'milestones';
-type Indicator = '담당자' | '레이블' | '마일스톤';
 
 type UserData = {
   userId: number;
   loginId: string;
   image: string;
 };
+
+// type ModifiedUserData = {
+//   id: number;
+//   loginId: string;
+//   image: string;
+// };
 
 type LabelData = {
   id: number;
@@ -71,12 +76,6 @@ export const ListSideBar: React.FC<Props> = ({
     milestones: false,
   });
 
-  // setIsFetched((prev) => ({
-  //   ...prev,
-  //   [path]: true,
-  // }));
-  // response.status
-
   const modifiedUserData = listData.users.map((item) => {
     const { userId, ...rest } = item;
     return { id: userId, ...rest };
@@ -85,10 +84,6 @@ export const ListSideBar: React.FC<Props> = ({
   const assigneeOptions = modifiedUserData.slice(1);
   const labelOptions = listData.labels.slice(1);
   const milestoneOptions = listData.milestones.slice(1);
-
-  const getSelectedData = (data: number[], key: keyof SelectionState) => {
-    data.filter((item) => selections[key].includes(item.id));
-  };
 
   const selectedAssigneesData = modifiedUserData.filter((users) =>
     selections.assignees.includes(users.id),
@@ -108,21 +103,25 @@ export const ListSideBar: React.FC<Props> = ({
     >,
     panelName: FetchPath,
   ) => {
-    const data = await fetchDataFunction();
-    setListData((prev) => ({
-      ...prev,
-      [panelName]: data,
-    }));
+    if (!isFetched[panelName]) {
+      const data = await fetchDataFunction();
+
+      setListData((prev) => ({
+        ...prev,
+        [panelName]: data,
+      }));
+
+      setIsFetched((prev) => ({
+        ...prev,
+        [panelName]: true,
+      }));
+    }
+
     setIsPanelOpen(panelName);
   };
 
   const closePanel = () => {
     setIsPanelOpen(null);
-  };
-
-  const handleDimClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    closePanel();
   };
 
   const commonStyles = css`
@@ -142,10 +141,13 @@ export const ListSideBar: React.FC<Props> = ({
         <DropDownIndicator
           indicator="담당자"
           size="L"
-          onDimClick={handleDimClick}
           isPanelOpen={isPanelOpen === 'users'}
         >
-          <DropDownPanel panelHeader="담당자 설정" position="center">
+          <DropDownPanel
+            panelHeader="담당자 설정"
+            position="center"
+            onOutsideClick={closePanel}
+          >
             {assigneeOptions?.map((item) => (
               <DropDownList
                 key={item.id}
@@ -162,10 +164,13 @@ export const ListSideBar: React.FC<Props> = ({
         <DropDownIndicator
           indicator="레이블"
           size="L"
-          onDimClick={handleDimClick}
           isPanelOpen={isPanelOpen === 'labels'}
         >
-          <DropDownPanel panelHeader="레이블 설정" position="center">
+          <DropDownPanel
+            panelHeader="레이블 설정"
+            position="center"
+            onOutsideClick={closePanel}
+          >
             {labelOptions?.map((item) => (
               <DropDownList
                 key={item.id}
@@ -185,10 +190,13 @@ export const ListSideBar: React.FC<Props> = ({
         <DropDownIndicator
           indicator="마일스톤"
           size="L"
-          onDimClick={handleDimClick}
           isPanelOpen={isPanelOpen === 'milestones'}
         >
-          <DropDownPanel panelHeader="마일스톤 설정" position="center">
+          <DropDownPanel
+            panelHeader="마일스톤 설정"
+            position="center"
+            onOutsideClick={closePanel}
+          >
             {milestoneOptions?.map((item) => (
               <DropDownList
                 key={item.id}

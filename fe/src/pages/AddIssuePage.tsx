@@ -1,25 +1,19 @@
 import { useTheme } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Title } from '@components/addIssuePage/Title';
 import { Body } from '@components/addIssuePage/Body';
 import { UserImage } from '@components/addIssuePage/UserImage';
 import { UserImageContainer } from '@components/addIssuePage/UserImageContainer';
 import { InputContainer } from '@components/addIssuePage/InputContainer';
-import { TextArea } from '@components/common/TextArea';
+import { TextArea } from '@components/common/textArea/TextArea';
 import { SideBar } from '@components/common/sideBar/SideBar';
 import { ListSideBar } from '@components/common/sideBar/ListSideBar';
 import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/textInput/TextInput';
-
-type DefaultFileStatusType = {
-  typeError: boolean;
-  sizeError: boolean;
-  isUploading: boolean;
-  uploadFailed: boolean;
-};
+// import { Comment } from '@components/common/comment/Commentt';
 
 type SelectionState = {
   assignees: number[];
@@ -37,82 +31,16 @@ export const AddIssuePage: React.FC = ({}) => {
   const theme = useTheme() as any;
   const navigate = useNavigate();
   const userImage = 'https://avatars.githubusercontent.com/u/57523197?v=4'; //임시 이미지
-  const availableFileSize = 1048576; //1MB
 
   const [selections, setSelections] = useState<SelectionState>({
     assignees: [],
     labels: [],
     milestones: [],
   });
-
   const [titleInput, setTitleInput] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
-  const [fileStatus, setFileStatus] = useState<DefaultFileStatusType>({
-    typeError: false,
-    sizeError: false,
-    isUploading: false,
-    uploadFailed: false,
-  });
-
-  const uploadImage = async (file: File) => {
-    try {
-      setFileStatus((prev) => ({ ...prev, isUploading: true }));
-
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const response = await fetch(`/file-upload`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('File upload failed');
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
-    } finally {
-      setFileStatus((prev) => ({ ...prev, isUploading: false }));
-    }
-  };
-
-  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileStatus((prev) => ({
-      ...prev,
-      sizeError: false,
-      typeError: false,
-      uploadFailed: false,
-    }));
-
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-
-      if (!file) {
-        setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
-        return;
-      }
-
-      const fileName = file.name;
-
-      if (file.size > availableFileSize) {
-        setFileStatus((prev) => ({ ...prev, sizeError: true }));
-        return;
-      }
-
-      if (!file.type.startsWith('image/')) {
-        setFileStatus((prev) => ({ ...prev, typeError: true }));
-        return;
-      }
-
-      const fileUrl = await uploadImage(file);
-      setTextAreaValue(
-        (prevValue) => `${prevValue}![${fileName}](${fileUrl.fileUrl})`,
-      );
-    }
-  };
+  const [isSubmitError, setIsSubmitError] = useState<boolean>(false);
+  const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
   const onSubmit = async () => {
     const bodyData = {
@@ -126,16 +54,15 @@ export const AddIssuePage: React.FC = ({}) => {
     };
 
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/issues/new`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(bodyData),
+      setIsSubmiting(true);
+      setIsSubmitError(false);
+      const response = await fetch(`/issues/new`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify(bodyData),
+      });
 
       if (!response.ok) {
         throw new Error('HTTP error ' + response.status);
@@ -145,7 +72,9 @@ export const AddIssuePage: React.FC = ({}) => {
       navigate('/');
       return data;
     } catch (error) {
-      console.error('이슈가 정상적으로 등록되지 않았습니다.');
+      setIsSubmitError(true);
+    } finally {
+      setIsSubmiting(false);
     }
   };
 
@@ -182,6 +111,10 @@ export const AddIssuePage: React.FC = ({}) => {
     setTextAreaValue(e.target.value);
   };
 
+  const onAddFileUrl = (fileName: string, fileUrl: string) => {
+    setTextAreaValue((prevValue) => `${prevValue}![${fileName}](${fileUrl})`);
+  };
+
   return (
     <div
       css={{
@@ -207,8 +140,7 @@ export const AddIssuePage: React.FC = ({}) => {
           <TextArea
             letterCount={textAreaValue.length}
             textAreaValue={textAreaValue}
-            fileStatus={fileStatus}
-            onFileChange={onFileChange}
+            onAddFileUrl={onAddFileUrl}
             onChangeTextArea={onChangeTextArea}
           />
         </InputContainer>
@@ -222,6 +154,16 @@ export const AddIssuePage: React.FC = ({}) => {
         </SideBar>
       </Body>
       <ButtonContainer>
+        {isSubmitError && (
+          <span
+            css={{
+              color: theme.danger.text.default,
+              font: theme.fonts.displayMedium16,
+            }}
+          >
+            이슈가 정상적으로 등록되지 않았습니다.
+          </span>
+        )}
         <Button
           typeVariant="ghost"
           size="M"
@@ -235,7 +177,7 @@ export const AddIssuePage: React.FC = ({}) => {
         <Button
           typeVariant="contained"
           size="L"
-          disabled={titleInput === ''}
+          disabled={titleInput === '' || isSubmiting}
           onClick={onSubmit}
         >
           완료
