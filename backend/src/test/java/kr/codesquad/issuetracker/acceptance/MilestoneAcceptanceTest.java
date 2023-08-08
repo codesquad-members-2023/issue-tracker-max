@@ -1,9 +1,8 @@
 package kr.codesquad.issuetracker.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,31 +10,30 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import io.restassured.RestAssured;
-import kr.codesquad.issuetracker.fixture.FixtureFactory;
 
-public class IssueAcceptanceTest extends AcceptanceTest {
+public class MilestoneAcceptanceTest extends AcceptanceTest {
 
-	@DisplayName("이슈 등록에 성공한다.")
+	@DisplayName("마일스톤 등록에 성공한다.")
 	@Test
-	void registerIssueSuccess() {
+	void register() {
 		// given
 		var given = RestAssured
 			.given().log().all()
 			.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1").getAccessToken())
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.body(FixtureFactory.createIssueRegisterRequest("테스트코드 작성하기", List.of(1, 2), List.of(1, 2)));
+			.body(Map.of(
+				"milestoneName", "BE 1주차 스프린트",
+				"description", "화이팅!",
+				"dueDate", "2023-09-01 00:00:00"));
 
 		// when
 		var response = given
 			.when()
-			.post("/api/issues")
+			.post("/api/milestones")
 			.then().log().all()
 			.extract();
 
 		// then
-		assertAll(
-			() -> assertThat(response.statusCode()).isEqualTo(200),
-			() -> assertThat(response.body().jsonPath().getInt("issueId")).isNotNull()
-		);
+		assertThat(response.statusCode()).isEqualTo(201);
 	}
 }
