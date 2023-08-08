@@ -2,7 +2,7 @@ package codesquard.app.user.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import codesquard.app.user.entity.AuthenticateUser;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.user.service.request.UserLoginServiceRequest;
 import lombok.ToString;
 

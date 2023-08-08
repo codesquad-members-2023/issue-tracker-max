@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquard.app.api.errors.exception.NoSuchCommentException;
+import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.comment.entity.Comment;
 import codesquard.app.comment.repository.CommentRepository;
 import codesquard.app.comment.service.request.CommentModifyServiceRequest;
@@ -12,36 +14,50 @@ import codesquard.app.comment.service.request.CommentSaveServiceRequest;
 import codesquard.app.comment.service.response.CommentDeleteResponse;
 import codesquard.app.comment.service.response.CommentModifyResponse;
 import codesquard.app.comment.service.response.CommentSaveResponse;
+import codesquard.app.issue.repository.IssueRepository;
 import lombok.RequiredArgsConstructor;
 
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class CommentService {
 
 	private final CommentRepository commentRepository;
+	private final IssueRepository issueRepository;
 
-	@Transactional
 	public CommentSaveResponse save(CommentSaveServiceRequest serviceRequest, LocalDateTime createdAt) {
+		validateIssueId(serviceRequest.getIssueId());
 		Comment comment = serviceRequest.toEntity(createdAt);
 		Long savedCommentId = commentRepository.save(comment);
 
-		return new CommentSaveResponse(true, savedCommentId);
+		return new CommentSaveResponse(savedCommentId);
 	}
 
-	@Transactional
 	public CommentModifyResponse modify(CommentModifyServiceRequest serviceRequest, LocalDateTime modifiedAt) {
+		validateCommentId(serviceRequest.getId());
 		Comment comment = serviceRequest.toEntity(modifiedAt);
 		Long modifiedCommentId = commentRepository.modify(comment);
 
-		return new CommentModifyResponse(true, modifiedCommentId);
+		return new CommentModifyResponse(modifiedCommentId);
 	}
 
-	@Transactional
 	public CommentDeleteResponse delete(Long id) {
-		commentRepository.deleteById(id);
+		validateCommentId(id);
+		Long deletedCommentId = commentRepository.deleteById(id);
 
-		return new CommentDeleteResponse(true);
+		return new CommentDeleteResponse(deletedCommentId);
+	}
+
+	private void validateIssueId(Long issueId) {
+		if (!issueRepository.isExist(issueId)) {
+			throw new NoSuchIssueException();
+		}
+	}
+
+	private void validateCommentId(Long commentId) {
+		if (!commentRepository.isExist(commentId)) {
+			throw new NoSuchCommentException();
+		}
 	}
 
 }

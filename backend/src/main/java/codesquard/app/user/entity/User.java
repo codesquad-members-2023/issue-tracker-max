@@ -2,6 +2,8 @@ package codesquard.app.user.entity;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
+
 public class User {
 
 	private final Long id;
@@ -36,6 +38,10 @@ public class User {
 
 	public String getAvatarUrl() {
 		return avatarUrl;
+	}
+
+	public String getEmail() {
+		return email;
 	}
 
 	public MapSqlParameterSource createSaveParamSource() {

@@ -12,8 +12,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import codesquard.app.errors.errorcode.UserErrorCode;
-import codesquard.app.errors.exception.RestApiException;
+import codesquard.app.api.errors.errorcode.UserErrorCode;
+import codesquard.app.api.errors.exception.user.UserRestApiException;
 import codesquard.app.user.entity.User;
 
 @Repository
@@ -45,7 +45,7 @@ public class JdbcUserRepository implements UserRepository {
 	public User findById(Long id) {
 		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE id = :id";
 		return template.query(sql, new MapSqlParameterSource("id", id), createUserRowMapper())
-			.stream().findAny().orElseThrow(() -> new RestApiException(UserErrorCode.NOT_FOUND_USER));
+			.stream().findAny().orElseThrow(() -> new UserRestApiException(UserErrorCode.NOT_FOUND_USER));
 	}
 
 	private RowMapper<User> createUserRowMapper() {
@@ -89,7 +89,7 @@ public class JdbcUserRepository implements UserRepository {
 		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE login_id = :loginId";
 		return template.query(sql, user.createSaveParamSource(), createUserRowMapper()).stream()
 			.findAny()
-			.orElseThrow(() -> new RestApiException(UserErrorCode.NOT_FOUND_USER));
+			.orElseThrow(() -> new UserRestApiException(UserErrorCode.NOT_FOUND_USER));
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class JdbcUserRepository implements UserRepository {
 		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE login_id = :loginId AND password = :password";
 		return template.query(sql, user.createSaveParamSource(), createUserRowMapper()).stream()
 			.findAny()
-			.orElseThrow(() -> new RestApiException(UserErrorCode.NOT_FOUND_USER));
+			.orElseThrow(() -> new UserRestApiException(UserErrorCode.NOT_FOUND_USER));
 	}
 
 	@Override
@@ -107,6 +107,6 @@ public class JdbcUserRepository implements UserRepository {
 		return template.query(sql, paramSource, createUserRowMapper())
 			.stream()
 			.findAny()
-			.orElseThrow(() -> new RestApiException(UserErrorCode.NOT_FOUND_USER));
+			.orElseThrow(() -> new UserRestApiException(UserErrorCode.NOT_FOUND_USER));
 	}
 }

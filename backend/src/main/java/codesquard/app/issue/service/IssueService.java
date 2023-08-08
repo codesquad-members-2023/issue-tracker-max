@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquard.app.api.errors.errorcode.IssueErrorCode;
+import codesquard.app.api.errors.exception.IllegalIssueStatusException;
+import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.comment.repository.CommentRepository;
-import codesquard.app.errors.errorcode.IssueErrorCode;
-import codesquard.app.errors.exception.IllegalIssueStatusException;
-import codesquard.app.errors.exception.NoSuchIssueException;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -112,9 +112,9 @@ public class IssueService {
 	}
 
 	@Transactional
-	public void existIssue(Long issueId) {
-		if (!issueRepository.exist(issueId)) {
-			throw new NoSuchIssueException(IssueErrorCode.NOT_FOUND_ISSUE);
+	private void existIssue(Long issueId) {
+		if (!issueRepository.isExist(issueId)) {
+			throw new NoSuchIssueException();
 		}
 	}
 

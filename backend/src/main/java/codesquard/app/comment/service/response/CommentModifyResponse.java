@@ -10,10 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentModifyResponse {
 
-	@JsonProperty("success")
-	private boolean success;
-
-	@JsonProperty("commentId")
-	private Long commentId;
+	@JsonProperty("modifiedCommentId")
+	private Long modifiedCommentId;
 
 }
