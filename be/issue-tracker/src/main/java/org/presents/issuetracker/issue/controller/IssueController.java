@@ -48,8 +48,8 @@ public class IssueController {
 	}
 
 	@GetMapping("/{issueId}")
-	public IssueDetailResponse getIssueDetail(@PathVariable Long issueId) {
-		return issueService.getIssueDetail(issueId);
+	public ResponseEntity<IssueDetailResponse> getIssueDetail(@PathVariable Long issueId) {
+		return ResponseEntity.ok().body(issueService.getIssueDetail(issueId));
 	}
 
 	@PatchMapping
