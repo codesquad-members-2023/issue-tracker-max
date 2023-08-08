@@ -1,6 +1,7 @@
 package com.issuetrackermax.domain.comment;
 
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -37,6 +38,6 @@ public class CommentRepository {
 	}
 
 	public List<Comment> findByIssueId(Long id) {
-		return null;
+		return new ArrayList<>();
 	}
 }

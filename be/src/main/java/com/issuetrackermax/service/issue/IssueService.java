@@ -1,6 +1,8 @@
 package com.issuetrackermax.service.issue;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +12,7 @@ import com.issuetrackermax.common.exception.AssigneeCustomException;
 import com.issuetrackermax.common.exception.domain.IssueException;
 import com.issuetrackermax.common.exception.domain.LabelException;
 import com.issuetrackermax.common.exception.domain.MilestoneException;
+import com.issuetrackermax.controller.filter.dto.response.LabelResponse;
 import com.issuetrackermax.controller.issue.dto.request.IssueApplyRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuePostRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssueTitleRequest;
@@ -68,10 +71,26 @@ public class IssueService {
 
 	@Transactional(readOnly = true)
 	public IssueDetailsResponse show(Long id) {
-		IssueResultVO issue = issueRepository.findIssueDetailsById(id);
+		IssueResultVO issueResultVO = issueRepository.findIssueDetailsById(id);
 		History history = historyRepository.findLatestByIssueId(id);
 		List<Comment> comments = commentRepository.findByIssueId(id);
-		return new IssueDetailsResponse(issue, history, comments);
+
+		String[] labelIds = issueResultVO.getLabelIds().split(",");
+		List<LabelResponse> labels = getLabelResponse(labelIds);
+		return IssueDetailsResponse
+			.builder()
+			.resultVO(issueResultVO)
+			.history(history)
+			.comments(comments)
+			.labels(labels)
+			.build();
+	}
+
+	private List<LabelResponse> getLabelResponse(String[] labelIds) {
+		return Arrays.stream(labelIds)
+			.map(labelid -> LabelResponse.from(
+				labelRepository.findbyId(Long.parseLong(labelid))))
+			.collect(Collectors.toList());
 	}
 
 	@Transactional

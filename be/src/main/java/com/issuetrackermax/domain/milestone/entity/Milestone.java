@@ -2,6 +2,9 @@ package com.issuetrackermax.domain.milestone.entity;
 
 import java.time.LocalDateTime;
 
+import com.issuetrackermax.controller.milestone.dto.request.MilestoneModifyRequest;
+import com.issuetrackermax.controller.milestone.dto.request.MilestonePostRequest;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,5 +23,25 @@ public class Milestone {
 		this.description = description;
 		this.duedate = duedate;
 		this.isOpen = isOpen;
+	}
+
+	public static Milestone from(MilestonePostRequest milestonePostRequest) {
+		return Milestone
+			.builder()
+			.title(milestonePostRequest.getName())
+			.description(milestonePostRequest.getDescription())
+			.duedate(milestonePostRequest.getDueDate())
+			.isOpen(true)
+			.build();
+	}
+
+	public static Milestone from(MilestoneModifyRequest milestoneModifyRequest) {
+		return Milestone
+			.builder()
+			.title(milestoneModifyRequest.getName())
+			.description(milestoneModifyRequest.getDescription())
+			.duedate(milestoneModifyRequest.getDueDate())
+			.build();
+
 	}
 }

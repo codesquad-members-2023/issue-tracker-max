@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/issues")
+@RequestMapping("/api/issues")
 public class IssueController {
 	private static final String MEMBER_ID = "memberId";
 	private final IssueService issueService;

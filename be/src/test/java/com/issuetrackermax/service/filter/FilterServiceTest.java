@@ -71,7 +71,7 @@ class FilterServiceTest extends IntegrationTestSupport {
 
 		Label label = makeLabel("label1", "label_description", "0#1111", "0#3333");
 		Long labelId = labelRepository.save(label);
-		Label label2 = makeLabel("label2", "label_description", "02222", "0#4444");
+		Label label2 = makeLabel("label2", "label_description", "0#1111", "0#3332");
 		Long labelId2 = labelRepository.save(label2);
 		Long issueLabelId = issueLabelRepository.save(IssueWithLabel.builder()
 			.labelId(labelId)
@@ -110,8 +110,8 @@ class FilterServiceTest extends IntegrationTestSupport {
 			() -> assertThat(issues.get(0).getLabels().get(0).getBackgroundColor()).isEqualTo("0#3333"),
 			() -> assertThat(issues.get(0).getLabels().get(1).getId()).isEqualTo(labelId2),
 			() -> assertThat(issues.get(0).getLabels().get(1).getTitle()).isEqualTo("label2"),
-			() -> assertThat(issues.get(0).getLabels().get(1).getTextColor()).isEqualTo("0#2222"),
-			() -> assertThat(issues.get(0).getLabels().get(1).getBackgroundColor()).isEqualTo("0#4444"),
+			() -> assertThat(issues.get(0).getLabels().get(1).getTextColor()).isEqualTo("0#1111"),
+			() -> assertThat(issues.get(0).getLabels().get(1).getBackgroundColor()).isEqualTo("0#3332"),
 			() -> assertThat(issues.get(0).getAssignees().get(0).getId()).isEqualTo(juneId),
 			() -> assertThat(issues.get(0).getAssignees().get(0).getName()).isEqualTo("June"),
 			() -> assertThat(issues.get(0).getAssignees().get(1).getId()).isEqualTo(movieId),
