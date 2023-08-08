@@ -11,8 +11,8 @@ import {
   ADD_ISSUE_PAGE,
   ISSUE_DETAIL_PAGE,
   ISSUE_LIST_PAGE,
-  LABEL_LIST_PAGE,
-  MILESTONE_LIST_PAGE,
+  // LABEL_LIST_PAGE,
+  // MILESTONE_LIST_PAGE,
 } from 'constants/PATH';
 
 type Props = {

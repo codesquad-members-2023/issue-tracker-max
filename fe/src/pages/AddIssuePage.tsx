@@ -69,7 +69,7 @@ export const AddIssuePage: React.FC = ({}) => {
       }
 
       const data = await response.json();
-      navigate('/');
+      navigate(`/issue/${data.id}`);
       return data;
     } catch (error) {
       setIsSubmitError(true);
