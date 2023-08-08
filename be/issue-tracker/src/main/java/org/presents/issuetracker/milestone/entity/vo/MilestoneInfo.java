@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class MilestoneVo {
+public class MilestoneInfo {
 	private Long id;
 	private String name;
 	private LocalDateTime deadline;

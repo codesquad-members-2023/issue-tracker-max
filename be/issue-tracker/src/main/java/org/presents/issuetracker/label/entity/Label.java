@@ -1,10 +1,15 @@
 package org.presents.issuetracker.label.entity;
 
+import java.util.Objects;
+
+import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
+
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Label {
     private Long id;
     private String name;

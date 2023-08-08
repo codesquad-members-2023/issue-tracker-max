@@ -1,4 +1,4 @@
 package org.presents.issuetracker.milestone.dto.request;
 
-public class MilestoneRequestDto {
+public class MilestoneRequest {
 }

@@ -1,6 +1,6 @@
 package org.presents.issuetracker.milestone.dto.response;
 
-import org.presents.issuetracker.milestone.entity.vo.MilestonePreviewVo;
+import org.presents.issuetracker.milestone.entity.vo.MilestonePreview;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -12,14 +12,14 @@ public class MilestonePreviewResponse {
 	private String name;
 	private int progress;
 
-	public static MilestonePreviewResponse fromVo(MilestonePreviewVo milestonePreviewVo) {
-		if (milestonePreviewVo == null) {
+	public static MilestonePreviewResponse from(MilestonePreview milestonePreview) {
+		if (milestonePreview == null) {
 			return null;
 		}
 		return MilestonePreviewResponse.builder()
-			.id(milestonePreviewVo.getId())
-			.name(milestonePreviewVo.getName())
-			.progress(milestonePreviewVo.getProgress())
+			.id(milestonePreview.getId())
+			.name(milestonePreview.getName())
+			.progress(milestonePreview.getProgress())
 			.build();
 	}
 }

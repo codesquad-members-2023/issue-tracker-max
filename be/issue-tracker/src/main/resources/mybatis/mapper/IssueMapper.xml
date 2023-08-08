@@ -92,7 +92,7 @@
         </where>
     </select>
 
-    <resultMap id="issueDetailResultMap" type="IssueDetailVo">
+    <resultMap id="issueDetailResultMap" type="IssueDetailInfo">
         <id property="id" column="issue_id"/>
         <result property="title" column="title"/>
         <result property="contents" column="contents"/>
@@ -105,7 +105,7 @@
             <result property="image" column="author_image"/>
         </association>
 
-        <association property="milestone" javaType="MilestonePreviewVo">
+        <association property="milestone" javaType="MilestonePreview">
             <id property="id" column="milestone_id"/>
             <result property="name" column="milestone_name"/>
             <result property="progress" column="progress"/>
@@ -117,14 +117,14 @@
             <result property="image" column="assignee_image"/>
         </collection>
 
-        <collection property="labels" ofType="LabelVo">
+        <collection property="labels" ofType="Label">
             <id property="id" column="label_id"/>
             <result property="name" column="label_name"/>
             <result property="textColor" column="text_color"/>
             <result property="backgroundColor" column="background_color"/>
         </collection>
 
-        <collection property="comments" ofType="CommentVo">
+        <collection property="comments" ofType="CommentWithAuthor">
             <id property="id" column="comment_id"/>
             <result property="contents" column="comment_contents"/>
             <result property="createdAt" column="comment_created_at"/>
@@ -137,25 +137,41 @@
     </resultMap>
 
     <select id="getIssueDetail" parameterType="Long" resultMap="issueDetailResultMap">
-        SELECT i.issue_id, i.title, i.contents, i.created_at, i.status
-        , i.author_id, u.login_id, u.image AS author_image
-        , mis.milestone_id, mis.name AS milestone_name
-        , (SELECT FLOOR(COUNT(CASE WHEN status = 'close' THEN 1 END) / COUNT(*) * 100)
+        SELECT i.issue_id,
+        i.title,
+        i.contents,
+        i.created_at,
+        i.status,
+        i.author_id,
+        author.login_id,
+        author.image AS author_image,
+        m.milestone_id,
+        m.name AS milestone_name,
+        (SELECT FLOOR(COUNT(CASE WHEN status = 'close' THEN 1 END) / COUNT(*) * 100)
         FROM issue
-        WHERE milestone_id = i.milestone_id AND status IN ('open', 'close')) progress
-        , u2.user_id AS assignee_id, u2.login_id AS assignee_login_id, u2.image AS assignee_image
-        , l.label_id, l.name AS label_name, l.text_color, l.background_color
-        , c.comment_id, c.contents AS comment_contents, c.created_at AS comment_created_at
-        , c.author_id AS comment_author_id, u3.login_id AS comment_login_id, u3.image AS comment_author_image
+        WHERE milestone_id = i.milestone_id AND status IN ('open', 'close')) progress,
+        assignee_user.user_id AS assignee_id,
+        assignee_user.login_id AS assignee_login_id,
+        assignee_user.image AS assignee_image,
+        l.label_id,
+        l.name AS label_name,
+        l.text_color,
+        l.background_color,
+        c.comment_id,
+        c.contents AS comment_contents,
+        c.created_at AS comment_created_at,
+        c.author_id AS comment_author_id,
+        comment_user.login_id AS comment_login_id,
+        comment_user.image AS comment_author_image
         FROM issue i
-        JOIN user u ON i.author_id = u.user_id
-        LEFT JOIN milestone mis ON i.milestone_id = mis.milestone_id
+        JOIN user AS author ON i.author_id = author.user_id
+        LEFT JOIN milestone m ON i.milestone_id = m.milestone_id
         LEFT JOIN assignee a ON i.issue_id = a.issue_id
-        LEFT JOIN user u2 ON a.user_id = u2.user_id
+        LEFT JOIN user AS assignee_user ON a.user_id = assignee_user.user_id
         LEFT JOIN issue_label il ON i.issue_id = il.issue_id
         LEFT JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
         LEFT JOIN comment c ON i.issue_id = c.issue_id AND c.is_deleted = false
-        LEFT JOIN user u3 ON c.author_id = u3.user_id
+        LEFT JOIN user comment_user ON c.author_id = comment_user.user_id
         WHERE i.issue_id = #{issueId}
     </select>
 

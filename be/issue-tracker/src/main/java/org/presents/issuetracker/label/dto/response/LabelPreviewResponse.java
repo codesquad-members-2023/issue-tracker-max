@@ -1,8 +1,10 @@
 package org.presents.issuetracker.label.dto.response;
 
+import org.presents.issuetracker.label.entity.Label;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +31,21 @@ public class LabelPreviewResponse {
     public static LabelPreviewResponse getLabelNotAssignedResponse() {
         return LABEL_NOT_ASSIGNED_RESPONSE;
     }
+
+	  @Builder
+	  private LabelPreviewResponse(long id, String name, String textColor, String backgroundColor) {
+  		  this.id = id;
+  		  this.name = name;
+	  	  this.textColor = textColor;
+	  	  this.backgroundColor = backgroundColor;
+	  }
+
+	  public static LabelPreviewResponse from(Label label) {
+	  	  return LabelPreviewResponse.builder()
+		    	.id(label.getId())
+			    .name(label.getName())
+			    .backgroundColor(label.getBackgroundColor())
+			    .textColor(label.getTextColor())
+		  	  .build();
+	  }
 }
