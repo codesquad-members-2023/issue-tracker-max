@@ -41,7 +41,7 @@ export function FilterBar({
         options={options}
         alignment="Left"
       />
-      <TextInput size="S" icon="search" value={value} />
+      <TextInput size="S" icon="Search" value={value} />
     </Div>
   );
 }

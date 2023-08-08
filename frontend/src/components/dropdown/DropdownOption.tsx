@@ -1,25 +1,21 @@
-import { styled, useTheme } from "styled-components";
-import { Icon } from "../Icon";
+import { styled } from "styled-components";
+import { Icon, IconColor } from "../icon/Icon";
 
 export function DropdownOption({
   showProfile = true,
   profile,
   background,
-  color = "LIGHT",
   selected,
   children,
   onClick,
 }: {
   showProfile?: boolean;
   profile?: string;
-  background?: string;
-  color?: "LIGHT" | "DARK";
+  background?: IconColor;
   selected: boolean;
   children: string;
   onClick: () => void;
 }) {
-  const theme = useTheme();
-
   return (
     <StyledDropdownOptionList
       className={selected ? "selected" : ""}
@@ -29,12 +25,12 @@ export function DropdownOption({
         <img style={{ width: "20px" }} src={profile} alt="프로필 이미지" />
       ) : (
         <Icon
-          name="userImageSmall"
-          fill={background ?? theme.color.neutralSurfaceBold}
+          name="UserImageSmall"
+          color={background ?? "neutralSurfaceBold"}
         />
       )}
       <span title={children}>{children}</span>
-      <Icon name={`check${selected ? "On" : "Off"}Circle`} />
+      <Icon name={selected ? "CheckOnCircle" : "CheckOffCircle"} />
     </StyledDropdownOptionList>
   );
 }

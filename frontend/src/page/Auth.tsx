@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { styled, useTheme } from "styled-components";
+import { styled } from "styled-components";
 import { Button } from "../components/Button";
-import { Icon } from "../components/Icon";
 import { TextInput } from "../components/TextInput";
+import { Icon } from "../components/icon/Icon";
 
 type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;
 
 export function Auth() {
-  const theme = useTheme();
   const navigate = useNavigate();
 
   const [isSignUp, setIsSignUp] = useState(false);
@@ -82,11 +81,7 @@ export function Auth() {
     <Div>
       <AuthWrapper>
         <Anchor onClick={() => navigate("/auth")}>
-          <Icon
-            name="logoLarge"
-            fill={theme.color.neutralTextStrong}
-            stroke={theme.color.neutralTextStrong}
-          />
+          <Icon name="LogoLarge" color="neutralTextStrong" />
         </Anchor>
         <AuthPanel>
           <Button size="L" buttonType="Outline" flexible="Flexible">

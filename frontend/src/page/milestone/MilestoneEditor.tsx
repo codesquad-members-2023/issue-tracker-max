@@ -141,7 +141,7 @@ export function MilestoneEditor({
       <Buttons>
         <Button
           size="S"
-          icon="xSquare"
+          icon="XSquare"
           buttonType="Outline"
           onClick={onClickClose}
         >
@@ -149,7 +149,7 @@ export function MilestoneEditor({
         </Button>
         <Button
           size="S"
-          icon="plus"
+          icon="Plus"
           buttonType="Container"
           onClick={submit}
           disabled={isButtonDisabled}

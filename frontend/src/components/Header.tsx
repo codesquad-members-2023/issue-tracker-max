@@ -1,19 +1,14 @@
 import { useNavigate } from "react-router-dom";
-import { styled, useTheme } from "styled-components";
-import { Icon } from "./Icon";
+import { styled } from "styled-components";
+import { Icon } from "./icon/Icon";
 
 export function Header() {
   const navigate = useNavigate();
-  const theme = useTheme();
 
   return (
     <Div>
       <Anchor onClick={() => navigate("/")}>
-        <Icon
-          name="logoMedium"
-          fill={theme.color.neutralTextStrong}
-          stroke={theme.color.neutralTextStrong}
-        />
+        <Icon name="LogoMedium" color="neutralTextStrong" />
       </Anchor>
       <img
         style={{ width: "32px" }}

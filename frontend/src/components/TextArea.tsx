@@ -5,9 +5,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { keyframes, styled, useTheme } from "styled-components";
+import { keyframes, styled } from "styled-components";
 import { Button } from "./Button";
-import { Icon } from "./Icon";
+import { Icon } from "./icon/Icon";
 
 type TextAreaProps = {
   value?: string;
@@ -24,8 +24,6 @@ export function TextArea({
   maxLength,
   onChange,
 }: TextAreaProps) {
-  const theme = useTheme();
-
   const [state, setState] = useState<TextAreaState>(
     disabled ? "Disabled" : "Enabled",
   );
@@ -58,8 +56,6 @@ export function TextArea({
 
     return () => clearTimeout(timer);
   }, [uploadErrorMessage]);
-
-  const gripColor = theme.color.neutralTextWeak;
 
   const onFocus = () => {
     setState("Active");
@@ -160,14 +156,14 @@ export function TextArea({
             <TextCount $hidden={countHidden}>
               띄어쓰기 포함 {inputValue.length}글자
             </TextCount>
-            <Icon name="grip" fill={gripColor} stroke={gripColor} />
+            <Icon name="Grip" color="neutralTextWeak" />
           </ResizableDiv>
         </InputContainer>
         <Footer>
           <Button
             size="S"
             buttonType="Ghost"
-            icon="paperclip"
+            icon="PaperClip"
             onClick={onFileInputClick}
           >
             파일 첨부하기

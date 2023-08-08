@@ -17,7 +17,7 @@ export function NewIssueFooter({
       <Button
         size="M"
         buttonType="Ghost"
-        icon="xSquare"
+        icon="XSquare"
         onClick={onCancelButtonClick}
       >
         작성 취소

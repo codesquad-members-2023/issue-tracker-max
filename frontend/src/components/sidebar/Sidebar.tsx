@@ -5,6 +5,7 @@ import { DropdownContainer } from "../dropdown/DropdownContainer";
 import { AssigneeElement } from "./AssigneeElement";
 import { ElementContainer } from "./ElementContainer";
 import { MilestoneElmeent } from "./MilestoneElement";
+import { IconColor } from "../icon/Icon";
 
 type AssigneeOptionData = {
   id: number;
@@ -17,7 +18,7 @@ type AssigneeOptionData = {
 type LabelOptionData = {
   id: number;
   name: string;
-  background?: string;
+  background?: IconColor;
   color?: "LIGHT" | "DARK";
   selected: boolean;
   onClick: () => void;

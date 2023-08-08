@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import { TextArea } from "../../components/TextArea";
 import { TextInput } from "../../components/TextInput";
 import { Sidebar, SidebarOptionData } from "../../components/sidebar/Sidebar";
+import { useState } from "react";
 
 type NewIssueBodyProps = {
   title: string;
@@ -22,10 +23,14 @@ export function NewIssueBody({
   onTitleChange,
   onContentChange,
 }: NewIssueBodyProps) {
-  const invalidTitle = title.trim().length === 0;
+  const [invalidTitle, setInvalidTitle] = useState(false);
   const titleCaption = invalidTitle
     ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
     : "";
+
+  const onTitleFocus = () => {
+    setInvalidTitle(title.length === 0);
+  }
 
   return (
     <Div>
@@ -43,6 +48,7 @@ export function NewIssueBody({
           isError={invalidTitle}
           caption={titleCaption}
           onChange={onTitleChange}
+          onFocus={onTitleFocus}
         />
         <TextArea
           placeholder="코멘트"

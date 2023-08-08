@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
-import { Icon } from "../../components/Icon";
 import { InformationTag } from "../../components/InformationTag";
 import { TextInput } from "../../components/TextInput";
 import { DropdownContainer } from "../../components/dropdown/DropdownContainer";
+import { Icon } from "../../components/icon/Icon";
 import { LabelData } from "./Label";
 
 const colorDictionary = {
@@ -167,7 +167,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
                 onChange={onChangeBackground}
               />
               <button onClick={setRandomBackground}>
-                <Icon name="refreshCcw" fill="#4E4B66" stroke="#4E4B66" />
+                <Icon name="RefreshCcw" color="#4E4B66" />
               </button>
             </BackgroundSelector>
             <DropdownContainer
@@ -182,7 +182,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
       <Buttons>
         <Button
           size="S"
-          icon="xSquare"
+          icon="XSquare"
           buttonType="Outline"
           onClick={onClickClose}
         >
@@ -190,7 +190,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
         </Button>
         <Button
           size="S"
-          icon="plus"
+          icon="Plus"
           buttonType="Container"
           onClick={submit}
           disabled={isButtonDisabled}
