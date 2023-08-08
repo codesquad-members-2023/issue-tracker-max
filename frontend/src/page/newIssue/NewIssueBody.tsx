@@ -2,26 +2,21 @@ import { useState } from "react";
 import { styled } from "styled-components";
 import { TextArea } from "../../components/TextArea";
 import { TextInput } from "../../components/TextInput";
-import { Sidebar } from "../../components/sidebar/Sidebar";
+import { Sidebar, SidebarProps } from "../../components/sidebar/Sidebar";
 
 type NewIssueBodyProps = {
   title: string;
   content: string;
-  onAssigneeClick: (id: number) => void;
-  onLabelClick: (id: number) => void;
-  onMilestoneClick: (id: number) => void;
   onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onContentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-};
+} & SidebarProps;
 
 export function NewIssueBody({
   title,
   content,
-  onAssigneeClick,
-  onLabelClick,
-  onMilestoneClick,
   onTitleChange,
   onContentChange,
+  ...props
 }: NewIssueBodyProps) {
   const [invalidTitle, setInvalidTitle] = useState(false);
   const titleCaption = invalidTitle
@@ -60,11 +55,7 @@ export function NewIssueBody({
           onChange={onContentChange}
         />
       </NewIssueContent>
-      <Sidebar
-        onAssigneeClick={onAssigneeClick}
-        onLabelClick={onLabelClick}
-        onMilestoneClick={onMilestoneClick}
-      />
+      <Sidebar {...props} />
     </Div>
   );
 }

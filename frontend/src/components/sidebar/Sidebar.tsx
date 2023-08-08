@@ -37,16 +37,17 @@ type MilestoneData = {
 };
 
 type OptionData = AssigneeData | LabelData | MilestoneData;
+export type SidebarProps = {
+  onAssigneeClick: (id: number) => void;
+  onLabelClick: (id: number) => void;
+  onMilestoneClick: (id: number) => void;
+};
 
 export function Sidebar({
   onAssigneeClick,
   onLabelClick,
   onMilestoneClick,
-}: {
-  onAssigneeClick: (id: number) => void;
-  onLabelClick: (id: number) => void;
-  onMilestoneClick: (id: number) => void;
-}) {
+}: SidebarProps) {
   const [assignees, setAssignees] = useState<AssigneeData[]>([]);
   const [labels, setLabels] = useState<LabelData[]>([]);
   const [milestones, setMilestones] = useState<MilestoneData[]>([]);
