@@ -27,7 +27,7 @@ public class IssueSearch {
 			.title(issue.getTitle())
 			.authorLoginId(issue.getAuthorLoginId())
 			.assigneeImages(issue.getGeneratedAssigneeImages())
-			.labels(issue.getLabels().stream().map(LabelSearch::fromEntity).collect(Collectors.toUnmodifiableList()))
+			.labels(LabelSearch.from(issue.getLabels()))
 			.milestone(MilestoneSearch.fromEntity(issue.getMilestone()))
 			.createdAt(issue.getCreatedAt())
 			.status(issue.getStatus()).build();
