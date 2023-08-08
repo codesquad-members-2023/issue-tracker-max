@@ -1,6 +1,7 @@
 import { rest } from 'msw';
 
 import { selectList } from './data/selectList';
+import { issues } from './data/issues';
 
 export const handlers = [
   rest.get('/users/previews', (_, res, ctx) => {
@@ -38,5 +39,20 @@ export const handlers = [
       ctx.status(200),
       ctx.json({ message: '이슈가 성공적으로 등록되었습니다.' }),
     );
+  }),
+
+  rest.get('/issues', (req, res, ctx) => {
+    if (req.url.searchParams.get('query') === 'status:closed') {
+      return res(ctx.status(200), ctx.json(issues.closed));
+    }
+
+    if (
+      !req.url.searchParams.get('query') ||
+      req.url.searchParams.get('query') === 'status:open'
+    ) {
+      return res(ctx.status(200), ctx.json(issues.open));
+    }
+
+    return res(ctx.status(404));
   }),
 ];
