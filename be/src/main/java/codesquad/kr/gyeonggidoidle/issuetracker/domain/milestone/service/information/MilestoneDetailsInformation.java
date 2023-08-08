@@ -1,13 +1,14 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.service.information;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import lombok.Builder;
-import lombok.Getter;
 
 @Getter
 public class MilestoneDetailsInformation {
@@ -21,7 +22,7 @@ public class MilestoneDetailsInformation {
 
     @Builder
     private MilestoneDetailsInformation(Long id, String name, String description, LocalDate dueDate,
-                                       Integer openIssueCount, Integer closedIssuesCount) {
+                                        Integer openIssueCount, Integer closedIssuesCount) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -47,6 +48,5 @@ public class MilestoneDetailsInformation {
                 .openIssueCount(issueByMilestoneVOs.get(milestoneDetailsVO.getId()).getOpenIssueCount())
                 .closedIssuesCount(issueByMilestoneVOs.get(milestoneDetailsVO.getId()).getClosedIssueCount())
                 .build();
-
     }
 }

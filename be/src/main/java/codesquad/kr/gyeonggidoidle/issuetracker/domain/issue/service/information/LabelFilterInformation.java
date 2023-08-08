@@ -1,10 +1,11 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class LabelFilterInformation {

@@ -1,10 +1,11 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.AssigneeFilterInformation;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class AssigneeFilterResponse {

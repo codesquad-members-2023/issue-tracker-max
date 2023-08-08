@@ -1,8 +1,9 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo;
 
-import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDate;
 
 @Getter
 public class MilestoneDetailsVO {
@@ -16,7 +17,7 @@ public class MilestoneDetailsVO {
 
     @Builder
     private MilestoneDetailsVO(Long id, String name, String description, LocalDate dueDate, Integer openIssueCount,
-                              Integer closedIssuesCount) {
+                               Integer closedIssuesCount) {
         this.id = id;
         this.name = name;
         this.description = description;

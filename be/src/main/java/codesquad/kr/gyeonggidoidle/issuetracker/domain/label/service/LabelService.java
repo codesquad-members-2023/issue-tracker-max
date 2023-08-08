@@ -5,9 +5,10 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.Label
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.information.LabelPageInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.StatRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.StatVO;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service

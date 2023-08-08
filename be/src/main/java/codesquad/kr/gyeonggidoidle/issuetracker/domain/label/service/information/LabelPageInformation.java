@@ -2,9 +2,10 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.informatio
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.StatVO;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class LabelPageInformation {
@@ -15,7 +16,7 @@ public class LabelPageInformation {
 
     @Builder
     private LabelPageInformation(Integer milestoneCount, Integer labelCount,
-                                List<LabelDetailsInformation> labelDetailsInformations) {
+                                 List<LabelDetailsInformation> labelDetailsInformations) {
         this.milestoneCount = milestoneCount;
         this.labelCount = labelCount;
         this.labelDetailsInformations = labelDetailsInformations;

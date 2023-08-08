@@ -1,50 +1,56 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.ServiceTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.MilestoneRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.service.information.MilestonePageInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.StatRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.MilestoneStatVO;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.ArgumentMatchers.any;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 @ServiceTest
 class MilestoneServiceTest {
 
     @InjectMocks
     MilestoneService milestoneService;
+
     @Mock
     StatRepository statRepository;
-
     @Mock
     MilestoneRepository milestoneRepository;
 
     @DisplayName("레포지토리에서 열린 마일스톤 정보들을 받고 MilestonePageInformation으로 변환할 수 있다.")
     @Test
-    void testReadOpenMilestonePage() {
+    void transformToMilestonePageInformation() {
+        //given
         given(statRepository.countMilestoneStats()).willReturn(createDummyMilestoneStatVO());
         given(milestoneRepository.findOpenMilestones()).willReturn(createDummyMilestoneDetailsVOs());
         given(statRepository.findIssuesCountByMilestoneIds(any())).willReturn(createDummyIssueByMilestoneVOs());
 
+        //when
         MilestonePageInformation actual = milestoneService.readOpenMilestonePage();
 
-        assertThat(actual.getOpenMilestoneCount()).isEqualTo(1);
-        assertThat(actual.getMilestoneDetailsInformations().get(0).getDueDate()).isEqualTo(LocalDate.now());
-        assertThat(actual.getMilestoneDetailsInformations().get(1).getDueDate()).isEqualTo("1998-10-27");
-        assertThat(actual.getMilestoneDetailsInformations().size()).isEqualTo(3);
-
+        //then
+        assertSoftly(assertions -> {
+            assertions.assertThat(actual.getOpenMilestoneCount()).isEqualTo(1);
+            assertions.assertThat(actual.getMilestoneDetailsInformations().get(0).getDueDate())
+                    .isEqualTo(LocalDate.now());
+            assertions.assertThat(actual.getMilestoneDetailsInformations().get(1).getDueDate())
+                    .isEqualTo("1998-10-27");
+            assertions.assertThat(actual.getMilestoneDetailsInformations().size()).isEqualTo(3);
+        });
     }
 
     private MilestoneStatVO createDummyMilestoneStatVO() {
@@ -68,7 +74,7 @@ class MilestoneServiceTest {
                 .id(2L)
                 .name("tmp2")
                 .description("test")
-                .dueDate(LocalDate.of(1998,10,27))
+                .dueDate(LocalDate.of(1998, 10, 27))
                 .openIssueCount(3)
                 .closedIssuesCount(4)
                 .build();
@@ -80,7 +86,7 @@ class MilestoneServiceTest {
                 .openIssueCount(5)
                 .closedIssuesCount(6)
                 .build();
-        return List.of(tmp1,tmp2,tmp3);
+        return List.of(tmp1, tmp2, tmp3);
     }
 
     private Map<Long, IssueByMilestoneVO> createDummyIssueByMilestoneVOs() {

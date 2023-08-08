@@ -3,9 +3,10 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterListInformation;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class FilterListResponse {

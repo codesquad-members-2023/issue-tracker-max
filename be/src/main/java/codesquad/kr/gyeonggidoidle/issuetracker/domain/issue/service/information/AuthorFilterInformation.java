@@ -1,10 +1,11 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class AuthorFilterInformation {

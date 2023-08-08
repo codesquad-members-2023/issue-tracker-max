@@ -2,26 +2,21 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelVO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Repository
 public class LabelRepository {
 
     private final NamedParameterJdbcTemplate template;
-
-    @Autowired
-    public LabelRepository(DataSource dataSource) {
-        this.template = new NamedParameterJdbcTemplate(dataSource);
-    }
 
     public Map<Long, List<LabelVO>> findAllByIssueIds(List<Long> issueIds) {
         return issueIds.stream()
@@ -32,12 +27,12 @@ public class LabelRepository {
     }
 
     public List<LabelVO> findAllByIssueId(Long issueId) {
-        String sql = "SELECT l.name, l.background_color, l.text_color " +
-                "FROM issue_label AS i " +
-                "LEFT JOIN label AS l " +
-                "ON l.id = i.label_id " +
-                "WHERE i.issue_id = :issueId " +
-                "AND l.is_deleted = FALSE";
+        String sql = "SELECT label.name, label.background_color, label.text_color " +
+                "FROM issue_label " +
+                "LEFT JOIN label " +
+                "ON label.id = issue_label.label_id " +
+                "WHERE issue_label.issue_id = :issueId " +
+                "AND label.is_deleted = FALSE";
 
         return template.query(sql, Map.of("issueId", issueId), labelRowMapper());
     }
@@ -75,7 +70,7 @@ public class LabelRepository {
                 .build());
     }
 
-    private final RowMapper<LabelDetailsVO> labelSimpleVORowMapper(){
+    private final RowMapper<LabelDetailsVO> labelSimpleVORowMapper() {
         return ((rs, rowNum) -> LabelDetailsVO.builder()
                 .id(rs.getLong("id"))
                 .name(rs.getString("name"))

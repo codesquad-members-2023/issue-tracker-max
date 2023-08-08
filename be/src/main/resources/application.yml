@@ -4,11 +4,9 @@ spring:
     username: user
     password: admin
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   sql:
     init:
       mode: always
       schema-locations: classpath*:schema.sql
     encoding: UTF-8
-  jpa:
-    hibernate:
-    ddl-auto: none

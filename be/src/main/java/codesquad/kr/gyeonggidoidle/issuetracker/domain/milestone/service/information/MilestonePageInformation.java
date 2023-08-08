@@ -1,12 +1,13 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.service.information;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.MilestoneStatVO;
-import java.util.List;
-import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.Map;
 
 @Getter
 public class MilestonePageInformation {
@@ -18,7 +19,7 @@ public class MilestonePageInformation {
 
     @Builder
     private MilestonePageInformation(Integer openMilestoneCount, Integer closeMilestoneCount, Integer labelCount,
-                                    List<MilestoneDetailsInformation> milestoneDetailsInformations) {
+                                     List<MilestoneDetailsInformation> milestoneDetailsInformations) {
         this.openMilestoneCount = openMilestoneCount;
         this.closeMilestoneCount = closeMilestoneCount;
         this.labelCount = labelCount;

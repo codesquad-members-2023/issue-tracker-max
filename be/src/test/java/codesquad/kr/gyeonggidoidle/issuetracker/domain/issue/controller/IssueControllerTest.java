@@ -3,13 +3,7 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller;
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.ControllerTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.IssueController;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.AssigneeFilterInformation;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterInformation;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterListInformation;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueInformation;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.LabelFilterInformation;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.AuthorFilterInformation;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.MilestoneFilterInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.*;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.information.LabelInformation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,84 +18,99 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @ControllerTest(IssueController.class)
-public class IssueControllerTest {
+class IssueControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
     @MockBean
     private IssueService issueService;
 
     @DisplayName("열린 이슈에 관한 FilterInformation을 FilterResponse로 변환한다.")
     @Test
-    void readOpenIssuesTest() throws Exception {
+    void readOpenIssues() throws Exception {
+        //given
         given(issueService.readOpenIssues()).willReturn(createDummyFilterInformation());
 
+        //when
         ResultActions resultActions = mockMvc.perform(get("/api/issues/open"));
 
+        //then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.openIssueCount").value(3))
-                .andExpect(jsonPath("$.milestoneCount").value(2))
-                .andExpect(jsonPath("$.issues.length()").value(3))
-                .andExpect(jsonPath("$.issues.[1].title").value("제목 2"))
-                .andExpect(jsonPath("$.issues.[2].labels.length()").value(0))
-                .andDo(print());
+                .andExpectAll(
+                        jsonPath("$.openIssueCount").value(3),
+                        jsonPath("$.milestoneCount").value(2),
+                        jsonPath("$.issues.length()").value(3),
+                        jsonPath("$.issues.[1].title").value("제목 2"),
+                        jsonPath("$.issues.[2].labels.length()").value(0)
+                );
     }
 
     @DisplayName("닫힌 이슈에 관한 FilterInformation을 FilterResponse로 변환한다.")
     @Test
-    void readClosedIssuesTest() throws Exception {
+    void readClosedIssues() throws Exception {
+        //given
         given(issueService.readClosedIssues()).willReturn(createDummyFilterInformation());
 
+        //when
         ResultActions resultActions = mockMvc.perform(get("/api/issues/closed"));
 
+        //then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.closedIssueCount").value(3))
-                .andExpect(jsonPath("$.labelCount").value(4))
-                .andExpect(jsonPath("$.issues.length()").value(3))
-                .andExpect(jsonPath("$.issues.[0].author").value("작성자 1"))
-                .andExpect(jsonPath("$.issues.[1].assigneeProfiles.[0]").value("담당자 3"))
-                .andDo(print());
+                .andExpectAll(
+                        jsonPath("$.closedIssueCount").value(3),
+                        jsonPath("$.labelCount").value(4),
+                        jsonPath("$.issues.length()").value(3),
+                        jsonPath("$.issues.[0].author").value("작성자 1"),
+                        jsonPath("$.issues.[1].assigneeProfiles.[0]").value("담당자 3")
+                );
     }
 
     @DisplayName("메인 화면의 필터 내용을 담은 FilterListInformation을 FilterListResponse으로 변환한다.")
     @Test
-    void testReadFilters() throws Exception {
+    void readFilters() throws Exception {
+        //given
         given(issueService.readFilters()).willReturn(createDummyFilterListInformation());
 
+        //when
         ResultActions resultActions = mockMvc.perform(get("/api/filters"));
 
+        //then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.assignees.length()").value(3))
-                .andExpect(jsonPath("$.authors.length()").value(2))
-                .andExpect(jsonPath("$.authors.[0].name").value("a"))
-                .andExpect(jsonPath("$.labels.length()").value(1))
-                .andExpect(jsonPath("$.milestones.length()").value(0))
-                .andDo(print());
+                .andExpectAll(
+                        jsonPath("$.assignees.length()").value(3),
+                        jsonPath("$.authors.length()").value(2),
+                        jsonPath("$.authors.[0].name").value("a"),
+                        jsonPath("$.labels.length()").value(1),
+                        jsonPath("$.milestones.length()").value(0)
+                );
     }
 
     @DisplayName("이슈 화면의 필터 내용을 담은 FilterListInformation을 FilterListResponse으로 변환한다.")
     @Test
-    void testReadFiltersFromIssue() throws Exception {
+    void readFiltersFromIssue() throws Exception {
+        //given
         given(issueService.readFiltersFromIssue()).willReturn(createDummyFilterListInformationByIssue());
 
+        //when
         ResultActions resultActions = mockMvc.perform(get("/api/issues"));
 
+        //then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.assignees.length()").value(3))
-                .andExpect(jsonPath("$.authors.length()").value(0))
-                .andExpect(jsonPath("$.labels.length()").value(1))
-                .andExpect(jsonPath("$.milestones.length()").value(0))
-                .andDo(print());
+                .andExpectAll(
+                        jsonPath("$.assignees.length()").value(3),
+                        jsonPath("$.authors.length()").value(0),
+                        jsonPath("$.labels.length()").value(1),
+                        jsonPath("$.milestones.length()").value(0)
+                );
     }
 
     private FilterListInformation createDummyFilterListInformation() {
@@ -141,7 +150,7 @@ public class IssueControllerTest {
         return List.of(tmp1, tmp2, tmp3);
     }
 
-    private List<AuthorFilterInformation> createDummyAuthorFilterInformations(){
+    private List<AuthorFilterInformation> createDummyAuthorFilterInformations() {
         AuthorFilterInformation tmp1 = AuthorFilterInformation.builder()
                 .id(1L)
                 .name("a")
@@ -239,6 +248,6 @@ public class IssueControllerTest {
                 .textColor("글자색 5")
                 .build();
 
-        return List.of(labelInformation1,labelInformation2, labelInformation3, labelInformation4, labelInformation5);
+        return List.of(labelInformation1, labelInformation2, labelInformation3, labelInformation4, labelInformation5);
     }
 }

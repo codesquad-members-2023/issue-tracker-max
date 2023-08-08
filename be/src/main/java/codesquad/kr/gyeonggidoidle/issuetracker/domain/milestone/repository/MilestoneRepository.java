@@ -1,23 +1,19 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
-import java.util.List;
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@RequiredArgsConstructor
 @Repository
 public class MilestoneRepository {
 
     private final NamedParameterJdbcTemplate template;
-
-    @Autowired
-    public MilestoneRepository(DataSource dataSource) {
-        this.template = new NamedParameterJdbcTemplate(dataSource);
-    }
 
     public List<MilestoneDetailsVO> findOpenMilestones() {
         String sql = "SELECT id, name, description, due_date " +

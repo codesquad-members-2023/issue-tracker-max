@@ -2,11 +2,12 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.informatio
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import lombok.Builder;
-import lombok.Getter;
 
 @Getter
 public class MilestoneFilterInformation {
@@ -38,7 +39,7 @@ public class MilestoneFilterInformation {
     }
 
     public static List<MilestoneFilterInformation> from(List<MilestoneDetailsVO> milestoneDetailsVOs,
-                                                  Map<Long, IssueByMilestoneVO> issuesCountByMilestoneIds) {
+                                                        Map<Long, IssueByMilestoneVO> issuesCountByMilestoneIds) {
         return milestoneDetailsVOs.stream()
                 .map(milestoneDetailsVO -> from(milestoneDetailsVO, issuesCountByMilestoneIds))
                 .collect(Collectors.toUnmodifiableList());
