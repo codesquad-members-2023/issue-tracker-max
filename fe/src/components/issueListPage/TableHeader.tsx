@@ -19,12 +19,13 @@ export const TableHeader: React.FC<Props> = ({
   closedIssueCount = 0,
 }) => {
   const theme = useTheme() as any;
-  const [panelStates, setPanelStates] = useState({
-    assigneesPanel: false,
-    labelPanel: false,
-    milestonePanel: false,
-    authorPanel: false,
+  const [panelOpenStatus, setPanelOpenStatus] = useState({
+    assignees: false,
+    label: false,
+    milestone: false,
+    author: false,
   });
+
   const navigate = useNavigate();
 
   const onIssueFilterClick = (queryValue: 'open' | 'closed') => {
@@ -84,13 +85,13 @@ export const TableHeader: React.FC<Props> = ({
         <DropDownIndicator
           size="M"
           indicator="담당자"
-          isPanelOpen={panelStates.assigneesPanel}
+          isPanelOpen={panelOpenStatus.assignees}
         >
           <DropDownPanel
             position="right"
             panelHeader="담당자 필터"
             onOutsideClick={() =>
-              setPanelStates((prev) => ({ ...prev, assigneesPanel: false }))
+              setPanelOpenStatus((prev) => ({ ...prev, assignees: false }))
             }
           >
             <div></div>
@@ -99,13 +100,13 @@ export const TableHeader: React.FC<Props> = ({
         <DropDownIndicator
           size="M"
           indicator="레이블"
-          isPanelOpen={panelStates.labelPanel}
+          isPanelOpen={panelOpenStatus.label}
         >
           <DropDownPanel
             position="right"
             panelHeader="레이블 필터"
             onOutsideClick={() =>
-              setPanelStates((prev) => ({ ...prev, milestonePanel: false }))
+              setPanelOpenStatus((prev) => ({ ...prev, label: false }))
             }
           >
             <div></div>
@@ -114,13 +115,13 @@ export const TableHeader: React.FC<Props> = ({
         <DropDownIndicator
           size="M"
           indicator="마일스톤"
-          isPanelOpen={panelStates.milestonePanel}
+          isPanelOpen={panelOpenStatus.milestone}
         >
           <DropDownPanel
             position="right"
             panelHeader="마일스톤 필터"
             onOutsideClick={() =>
-              setPanelStates((prev) => ({ ...prev, milestonePanel: false }))
+              setPanelOpenStatus((prev) => ({ ...prev, milestone: false }))
             }
           >
             <div></div>
@@ -129,13 +130,13 @@ export const TableHeader: React.FC<Props> = ({
         <DropDownIndicator
           size="M"
           indicator="작성자"
-          isPanelOpen={panelStates.authorPanel}
+          isPanelOpen={panelOpenStatus.author}
         >
           <DropDownPanel
             position="right"
             panelHeader="작성자 필터"
             onOutsideClick={() =>
-              setPanelStates((prev) => ({ ...prev, authorPanel: false }))
+              setPanelOpenStatus((prev) => ({ ...prev, author: false }))
             }
           >
             <div></div>
