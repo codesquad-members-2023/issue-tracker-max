@@ -9,6 +9,7 @@ on:
 
 env:
     AWS_REGION: ap-northeast-2
+    PROFILE_RESOURCE_PATH: ./.env
 
 jobs:
   build:
@@ -32,6 +33,12 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
+
+      # .env 파일 생성
+      - name: Create .env file
+        run: touch './.env'
+      - name: Set .env file
+        run: echo '${{ secrets.APPLICATION_URL_ENV }}' > './.env'
 
       # 의존 파일 설치
       - name: Install Dependencies
