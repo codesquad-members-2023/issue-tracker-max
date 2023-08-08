@@ -1,7 +1,6 @@
 package codesquard.app.label.entity;
 
-import codesquard.app.errors.errorcode.LabelErrorCode;
-import codesquard.app.errors.exception.IllegalLabelStatusException;
+import codesquard.app.api.errors.exception.FontColorLabelException;
 
 public enum LabelColor {
 	LIGHT, DARK;
@@ -25,7 +24,7 @@ public enum LabelColor {
 
 	private static void validateColor(final String color) {
 		if (!color.equalsIgnoreCase(LabelColor.DARK_STRING) && !color.equalsIgnoreCase(LabelColor.LIGHT_STRING)) {
-			throw new IllegalLabelStatusException(LabelErrorCode.INVALID_LABEL_COLOR);
+			throw new FontColorLabelException();
 		}
 	}
 }

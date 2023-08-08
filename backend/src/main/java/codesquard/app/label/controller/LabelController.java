@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquard.app.api.response.ApiResponse;
+import codesquard.app.api.response.LabelResponseMessage;
+import codesquard.app.api.response.ResponseMessage;
+import codesquard.app.label.dto.request.LabelSaveRequest;
+import codesquard.app.label.dto.request.LabelUpdateRequest;
 import codesquard.app.label.dto.response.LabelDeleteResponse;
 import codesquard.app.label.dto.response.LabelReadResponse;
-import codesquard.app.label.dto.request.LabelSaveRequest;
 import codesquard.app.label.dto.response.LabelSaveResponse;
-import codesquard.app.label.dto.request.LabelUpdateRequest;
 import codesquard.app.label.dto.response.LabelUpdateResponse;
 import codesquard.app.label.service.LabelService;
 
@@ -31,35 +34,29 @@ public class LabelController {
 	}
 
 	@GetMapping
-	public ResponseEntity<LabelReadResponse> get() {
+	public ApiResponse<LabelReadResponse> get() {
 		LabelReadResponse labelReadResponse = labelService.makeLabelReadResponse();
-
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(labelReadResponse.success());
+		return ApiResponse.of(HttpStatus.OK, LabelResponseMessage.LABEL_GET_SUCCESS,
+			labelReadResponse);
 	}
 
 	@PostMapping
-	public ResponseEntity<LabelSaveResponse> save(@Valid @RequestBody final LabelSaveRequest labelSaveRequest) {
-		Long labelId = labelService.saveLabel(labelSaveRequest);
-
-		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(LabelSaveResponse.success(labelId));
+	public ApiResponse<LabelSaveResponse> save(@Valid @RequestBody final LabelSaveRequest labelSaveRequest) {
+		LabelSaveResponse labelSaveResponse = LabelSaveResponse.success(labelService.saveLabel(labelSaveRequest));
+		return ApiResponse.of(HttpStatus.CREATED, LabelResponseMessage.LABEL_SAVE_SUCCESS,
+			labelSaveResponse);
 	}
 
 	@PutMapping("/{labelId}")
-	public ResponseEntity<LabelUpdateResponse> update(@PathVariable final Long labelId,
+	public ApiResponse<LabelUpdateResponse> update(@PathVariable final Long labelId,
 		@Valid @RequestBody LabelUpdateRequest labelUpdateRequest) {
 		labelService.updateLabel(labelId, labelUpdateRequest);
-
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(LabelUpdateResponse.success());
+		return ApiResponse.of(HttpStatus.OK, LabelResponseMessage.LABEL_UPDATE_SUCCESS, null);
 	}
 
 	@DeleteMapping("/{labelId}")
-	public ResponseEntity<LabelDeleteResponse> delete(@PathVariable final Long labelId) {
+	public ApiResponse<LabelDeleteResponse> delete(@PathVariable final Long labelId) {
 		labelService.deleteLabel(labelId);
-
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(LabelDeleteResponse.success());
+		return ApiResponse.of(HttpStatus.OK, LabelResponseMessage.LABEL_DELETE_SUCCESS, null);
 	}
 }

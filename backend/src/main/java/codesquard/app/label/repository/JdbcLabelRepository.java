@@ -7,15 +7,15 @@ import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import codesquard.app.errors.errorcode.LabelErrorCode;
-import codesquard.app.errors.exception.DuplicateLabelException;
+import codesquard.app.api.errors.exception.DuplicateLabelException;
+import codesquard.app.api.errors.exception.NoSuchLabelException;
+import codesquard.app.api.errors.exception.NoSuchMilestoneException;
 import codesquard.app.label.entity.Label;
 
 @Repository
@@ -33,10 +33,11 @@ public class JdbcLabelRepository implements LabelRepository {
 			+ "VALUES (:name, :color, :background, :description)";
 		SqlParameterSource param = Label.makeParam(label);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
+
 		try {
 			template.update(sql, param, keyHolder);
 		} catch (DataIntegrityViolationException e) {
-			throw new DuplicateLabelException(LabelErrorCode.DUPLICATE_LABEL);
+			throw new DuplicateLabelException();
 		}
 
 		return Optional.ofNullable(keyHolder.getKey()).map(Number::longValue);
@@ -64,19 +65,37 @@ public class JdbcLabelRepository implements LabelRepository {
 
 	@Override
 	public void updateBy(final Long labelId, final Label label) {
+		isExist(labelId);
+
 		String sql = "UPDATE `label` " +
 			"SET `name` = :name, `color` = :color, `background` = :background, `description` = :description " +
 			"WHERE `id` = :id";
 		SqlParameterSource param = Label.makeParam(labelId, label);
 
-		template.update(sql, param);
+		try {
+			template.update(sql, param);
+		} catch (DataIntegrityViolationException e) {
+			throw new DuplicateLabelException();
+		}
 	}
 
 	@Override
 	public void deleteBy(final Long labelId) {
+		isExist(labelId);
+
 		String sql = "DELETE FROM `label` " +
 			"WHERE `id` = :id";
 
+
 		template.update(sql, Map.of("id", labelId));
+	}
+
+	private void isExist(final Long labelId) {
+		String sql = "SELECT COUNT(*) FROM `label` WHERE `id` = :id";
+		Integer count = template.queryForObject(sql, Map.of("id", labelId), Integer.class);
+
+		if (count == null || count == 0) {
+			throw new NoSuchLabelException();
+		}
 	}
 }

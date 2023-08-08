@@ -5,11 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.errors.errorcode.LabelErrorCode;
-import codesquard.app.errors.exception.NoSuchLabelException;
-import codesquard.app.label.dto.response.LabelReadResponse;
+import codesquard.app.api.errors.exception.NoSuchLabelException;
 import codesquard.app.label.dto.request.LabelSaveRequest;
 import codesquard.app.label.dto.request.LabelUpdateRequest;
+import codesquard.app.label.dto.response.LabelReadResponse;
 import codesquard.app.label.dto.response.LabelsResponse;
 import codesquard.app.label.entity.Label;
 import codesquard.app.label.repository.LabelRepository;
@@ -29,7 +28,7 @@ public class LabelService {
 
 	public Long saveLabel(final LabelSaveRequest labelSaveRequest) {
 		Label label = LabelSaveRequest.toEntity(labelSaveRequest);
-		return labelRepository.save(label).orElseThrow(() -> new NoSuchLabelException(LabelErrorCode.NOT_FOUND_LABEL));
+		return labelRepository.save(label).orElseThrow(NoSuchLabelException::new);
 	}
 
 	public void updateLabel(final Long labelId, final LabelUpdateRequest labelUpdateRequest) {
