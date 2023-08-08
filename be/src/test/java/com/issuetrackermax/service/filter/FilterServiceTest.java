@@ -19,7 +19,6 @@ import com.issuetrackermax.domain.assignee.entity.Assignee;
 import com.issuetrackermax.domain.issue.IssueLabelRepository;
 import com.issuetrackermax.domain.issue.IssueRepository;
 import com.issuetrackermax.domain.issue.entity.Issue;
-import com.issuetrackermax.domain.issue.entity.IssueWithLabel;
 import com.issuetrackermax.domain.label.LabelRepository;
 import com.issuetrackermax.domain.label.entity.Label;
 import com.issuetrackermax.domain.member.MemberRepository;
@@ -73,14 +72,8 @@ class FilterServiceTest extends IntegrationTestSupport {
 		Long labelId = labelRepository.save(label);
 		Label label2 = makeLabel("label2", "label_description", "0#1111", "0#3332");
 		Long labelId2 = labelRepository.save(label2);
-		Long issueLabelId = issueLabelRepository.save(IssueWithLabel.builder()
-			.labelId(labelId)
-			.issueId(issueId)
-			.build());
-		Long issueLabelId2 = issueLabelRepository.save(IssueWithLabel.builder()
-			.labelId(labelId2)
-			.issueId(issueId)
-			.build());
+		Long issueLabelId = issueLabelRepository.save(makeIssueWithLabel(labelId, issueId));
+		Long issueLabelId2 = issueLabelRepository.save(makeIssueWithLabel(labelId2, issueId));
 
 		Assignee assignee = makeAssignee(issueId, juneId);
 		Long assigneeId = assigneeRepository.save(assignee);

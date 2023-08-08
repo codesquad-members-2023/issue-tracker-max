@@ -147,15 +147,8 @@ class FilterMapperTest extends IntegrationTestSupport {
 		Issue issue = makeIssue(issueIsOpen, issueTitle, 1L, 1L);
 		Long issueId = issueRepository.save(issue);
 
-		IssueWithLabel issueWithLabel1 = IssueWithLabel.builder()
-			.issueId(issueId)
-			.labelId(labelId1)
-			.build();
-
-		IssueWithLabel issueWithLabel2 = IssueWithLabel.builder()
-			.issueId(issueId)
-			.labelId(labelId2)
-			.build();
+		IssueWithLabel issueWithLabel1 = makeIssueWithLabel(issueId, labelId1);
+		IssueWithLabel issueWithLabel2 = makeIssueWithLabel(issueId, labelId2);
 
 		Long issueLabelId1 = issueLabelRepository.save(issueWithLabel1);
 		Long issueLabelId2 = issueLabelRepository.save(issueWithLabel2);
