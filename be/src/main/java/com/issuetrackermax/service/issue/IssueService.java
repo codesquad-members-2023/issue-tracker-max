@@ -41,6 +41,7 @@ public class IssueService {
 
 	@Transactional
 	public Long post(IssuePostRequest request, Long writerId) {
+		validatePostRequest(request);
 		Long issueId = issueRepository.save(request.toIssue(writerId));
 
 		if (request.getAssigneeIds() != null) {
@@ -143,6 +144,18 @@ public class IssueService {
 		}
 
 		issueRepository.applyMilestone(issueId, milestoneId);
+	}
+
+	public Boolean validatePostRequest(IssuePostRequest request) {
+		Long milestoneId = request.getMilestoneId();
+		List<Long> labelIds = request.getLabelIds();
+		List<Long> assigneeIds = request.getAssigneeIds();
+
+		Boolean validateMilestoneId = milestoneId != null ? milestoneRepository.existById(milestoneId) : true;
+		Boolean validateLabelIds = labelIds != null ? labelRepository.existByIds(labelIds) : true;
+		Boolean validateAssigneeIds = assigneeIds != null ? assigneeRepository.existByIds(assigneeIds) : true;
+
+		return validateMilestoneId && validateLabelIds && validateAssigneeIds;
 	}
 }
 

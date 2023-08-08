@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +22,7 @@ import com.issuetrackermax.domain.issue.entity.IssueResultVO;
 public class IssueRepositoryTest extends IntegrationTestSupport {
 	private IssueRepository issueRepository;
 	private Issue issue;
+	private Long issueId;
 
 	@Autowired
 	public IssueRepositoryTest(JdbcTemplate jdbcTemplate) {
@@ -35,14 +37,12 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 			.writerId(1L)
 			.milestoneId(1L)
 			.build();
+		issueId = issueRepository.save(issue);
 	}
 
 	@DisplayName("이슈 아이디를 통해 이슈를 찾을 수 있다.")
 	@Test
 	void findById() {
-		//given
-		Long issueId = issueRepository.save(issue);
-
 		//when
 		IssueResultVO issue1 = issueRepository.findIssueDetailsById(issueId);
 
@@ -53,10 +53,11 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 	@DisplayName("이슈를 저장하고 새로 생성된 이슈 아이디를 반환받는다.")
 	@Test
 	void save() {
-		//when
-		Long issueId = issueRepository.save(issue);
-
 		//then
+		assertAll(
+			() -> assertThat(issueId).isNotNull()
+		);
+
 		assertThat(issueId).isNotNull();
 	}
 
@@ -70,9 +71,8 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 			.writerId(2L)
 			.milestoneId(1L)
 			.build();
-		Long issue1Id = issueRepository.save(issue);
 		Long issue2Id = issueRepository.save(issue2);
-		List<Long> issueIds = Arrays.asList(issue1Id, issue2Id);
+		List<Long> issueIds = Arrays.asList(issueId, issue2Id);
 
 		//when
 		int count = issueRepository.openByIds(issueIds);
@@ -95,13 +95,12 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 			.writerId(2L)
 			.milestoneId(1L)
 			.build();
-		Long issue1Id = issueRepository.save(issue);
 		Long issue2Id = issueRepository.save(issue2);
-		List<Long> issueIds = Arrays.asList(issue1Id, issue2Id);
+		List<Long> issueIds = Arrays.asList(issueId, issue2Id);
 
 		//when
 		int count = issueRepository.closeByIds(issueIds);
-		IssueResultVO newIssue1 = issueRepository.findIssueDetailsById(issue1Id);
+		IssueResultVO newIssue1 = issueRepository.findIssueDetailsById(issueId);
 		IssueResultVO newIssue2 = issueRepository.findIssueDetailsById(issue2Id);
 
 		//then
@@ -112,12 +111,35 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 		);
 	}
 
+	@DisplayName("이슈를 삭제하고 1을 반환한다")
+	@Test
 	void deleteById() {
+		//when
+		int count = issueRepository.deleteById(issueId);
+
+		//then
+		assertAll(
+			() -> assertThat(issueRepository.existById(issueId)).isFalse(),
+			() -> assertThat(count).isEqualTo(1)
+		);
 
 	}
 
+	@DisplayName("수정된 이슈 제목을 기존 이슈에 적용하고 1를 반환한다.")
+	@Test
 	void modifyTitle() {
+		//given
+		String modifiedTitle = "수정된 제목";
 
+		//when
+		int count = issueRepository.modifyTitle(issueId, modifiedTitle);
+		IssueResultVO modifiedIssue = issueRepository.findIssueDetailsById(issueId);
+
+		//then
+		assertAll(
+			() -> assertThat(modifiedIssue.getTitle()).isEqualTo(modifiedTitle),
+			() -> assertThat(count).isEqualTo(1)
+		);
 	}
 
 	void applyLabels() {
@@ -135,20 +157,95 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 
 	}
 
+	@DisplayName("수정된 마일스톤 번호를 기존 이슈에 적용하고 1을 반환한다.")
+	@Test
 	void applyMilestone() {
+		//given
+		Long newMilestoneId = 2L;
+
+		//when
+		int count = issueRepository.applyMilestone(issueId, newMilestoneId);
+		IssueResultVO modifiedIssue = issueRepository.findIssueDetailsById(issueId);
+
+		//then
+		assertAll(
+			() -> assertThat(modifiedIssue.getMilestoneId()).isEqualTo(newMilestoneId),
+			() -> assertThat(count).isEqualTo(1)
+		);
 
 	}
 
+	@DisplayName("상태가 open인 이슈를 반환한다.")
+	@Test
 	void getOpenIssue() {
+		//given
+		Issue issue2 = Issue.builder()
+			.title("열린 이슈")
+			.isOpen(true)
+			.writerId(2L)
+			.milestoneId(1L)
+			.build();
+		Issue issue3 = Issue.builder()
+			.title("닫힌 이슈")
+			.isOpen(false)
+			.writerId(2L)
+			.milestoneId(1L)
+			.build();
+		Long issue2Id = issueRepository.save(issue2);
+		Long issue3Id = issueRepository.save(issue3);
+
+		//when
+		List<Issue> openIssue = issueRepository.getOpenIssue();
+		List<Long> openIssueIds = openIssue.stream()
+			.map(Issue::getId)
+			.collect(Collectors.toList());
+
+		//then
+		assertAll(
+			() -> assertThat(openIssue.size()).isEqualTo(2),
+			() -> assertThat(openIssueIds).asList().containsExactly(issueId, issue2Id)
+		);
 
 	}
 
+	@DisplayName("상태가 closed인 이슈를 반환한다.")
+	@Test
 	void getClosedIssue() {
+		//given
+		Issue issue2 = Issue.builder()
+			.title("열린 이슈")
+			.isOpen(true)
+			.writerId(2L)
+			.milestoneId(1L)
+			.build();
+		Issue issue3 = Issue.builder()
+			.title("닫힌 이슈")
+			.isOpen(false)
+			.writerId(2L)
+			.milestoneId(1L)
+			.build();
+		Long issue2Id = issueRepository.save(issue2);
+		Long issue3Id = issueRepository.save(issue3);
 
+		//when
+		List<Issue> closedIssue = issueRepository.getClosedIssue();
+		List<Long> closedIssueIds = closedIssue.stream()
+			.map(Issue::getId)
+			.collect(Collectors.toList());
+
+		//then
+		assertAll(
+			() -> assertThat(closedIssue.size()).isEqualTo(1),
+			() -> assertThat(closedIssueIds).asList().containsExactly(issue3Id)
+		);
 	}
 
 	void existById() {
+		//when
+		Boolean isExist = issueRepository.existById(issueId);
 
+		//then
+		assertThat(isExist).isTrue();
 	}
 }
 
