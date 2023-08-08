@@ -94,26 +94,26 @@ public class IssueService {
 	}
 
 	@Transactional
-	public void updateStatus(IssuesStatusRequest request) {
+	public void updateStatus(IssuesStatusRequest request, Long memberId) {
 		String status = request.getIssueStatus();
 		List<Long> ids = request.getIssueIds();
 		if (status.equals(OPEN_ISSUE)) {
-			openIssue(ids);
+			openIssue(ids, memberId);
 		} else if (status.equals(CLOSED_ISSUE)) {
-			closeIssue(ids);
+			closeIssue(ids, memberId);
 		} else {
 			throw new ApiException(IssueException.INVALID_ISSUE_STATUS);
 		}
 	}
 
-	public void openIssue(List<Long> ids) {
+	public void openIssue(List<Long> ids, Long memberId) {
 		int count = issueRepository.openByIds(ids);
 		if (count != ids.size()) {
 			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
 		}
 	}
 
-	public void closeIssue(List<Long> ids) {
+	public void closeIssue(List<Long> ids, Long memberId) {
 		int count = issueRepository.closeByIds(ids);
 		if (count != ids.size()) {
 			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
