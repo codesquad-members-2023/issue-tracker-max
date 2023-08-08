@@ -74,18 +74,20 @@ public class MilestoneService {
 	@Transactional
 	public void update(Long id, MilestoneModifyRequest milestoneModifyRequest) {
 		milestoneRepository.update(id, Milestone.from(milestoneModifyRequest));
-		return;
 	}
 
 	@Transactional
 	public void delete(Long id) {
 		int count = milestoneRepository.deleteById(id);
-		return;
 	}
 
 	@Transactional
 	public void updateStatus(Long id) {
 		milestoneRepository.updateStatus(id);
-		return;
+	}
+
+	@Transactional(readOnly = true)
+	public Boolean existById(Long id) {
+		return milestoneRepository.existById(id);
 	}
 }

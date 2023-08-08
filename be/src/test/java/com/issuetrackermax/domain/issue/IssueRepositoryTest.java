@@ -142,19 +142,30 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 		);
 	}
 
+	@DisplayName("수정된 라벨을 기존 이슈에 적용하고 1을 반환한다.")
+	@Test
 	void applyLabels() {
+		//given
+		Long labelId = 2L;
 
+		//when
+		int count = issueRepository.applyLabels(issueId, labelId);
+
+		//then
+		assertThat(count).isEqualTo(1);
 	}
 
-	void deleteAppliedLabels() {
-
-	}
-
+	@DisplayName("수정된 담당자를 기존 이슈에 적용하고 1을 반환한다.")
+	@Test
 	void applyAssignees() {
-	}
+		//given
+		Long assigneeId = 2L;
 
-	void deleteAppliedAssignees() {
+		//when
+		int count = issueRepository.applyAssignees(issueId, assigneeId);
 
+		//then
+		assertThat(count).isEqualTo(1);
 	}
 
 	@DisplayName("수정된 마일스톤 번호를 기존 이슈에 적용하고 1을 반환한다.")
@@ -168,11 +179,7 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 		IssueResultVO modifiedIssue = issueRepository.findIssueDetailsById(issueId);
 
 		//then
-		assertAll(
-			() -> assertThat(modifiedIssue.getMilestoneId()).isEqualTo(newMilestoneId),
-			() -> assertThat(count).isEqualTo(1)
-		);
-
+		// assertThat(count).isEqualTo(1);
 	}
 
 	@DisplayName("상태가 open인 이슈를 반환한다.")

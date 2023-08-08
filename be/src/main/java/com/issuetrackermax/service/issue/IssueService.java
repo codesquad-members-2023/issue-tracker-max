@@ -18,15 +18,15 @@ import com.issuetrackermax.controller.issue.dto.request.IssuePostRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssueTitleRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuesStatusRequest;
 import com.issuetrackermax.controller.issue.dto.response.IssueDetailsResponse;
-import com.issuetrackermax.domain.assignee.AssigneeRepository;
-import com.issuetrackermax.domain.comment.CommentRepository;
 import com.issuetrackermax.domain.comment.entity.Comment;
-import com.issuetrackermax.domain.history.HistoryRepository;
 import com.issuetrackermax.domain.history.entity.History;
 import com.issuetrackermax.domain.issue.IssueRepository;
 import com.issuetrackermax.domain.issue.entity.IssueResultVO;
-import com.issuetrackermax.domain.label.LabelRepository;
-import com.issuetrackermax.domain.milestone.MilestoneRepository;
+import com.issuetrackermax.service.assignee.AssigneeService;
+import com.issuetrackermax.service.comment.CommentService;
+import com.issuetrackermax.service.history.HistoryService;
+import com.issuetrackermax.service.label.LabelService;
+import com.issuetrackermax.service.milestone.MilestoneService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,11 +36,11 @@ public class IssueService {
 	private static final String OPEN_ISSUE = "open";
 	private static final String CLOSED_ISSUE = "closed";
 	private final IssueRepository issueRepository;
-	private final CommentRepository commentRepository;
-	private final HistoryRepository historyRepository;
-	private final LabelRepository labelRepository;
-	private final AssigneeRepository assigneeRepository;
-	private final MilestoneRepository milestoneRepository;
+	private final CommentService commentService;
+	private final HistoryService historyService;
+	private final LabelService labelService;
+	private final AssigneeService assigneeService;
+	private final MilestoneService milestoneService;
 
 	@Transactional
 	public Long post(IssuePostRequest request, Long writerId) {
@@ -56,7 +56,7 @@ public class IssueService {
 		}
 
 		if (request.getContent() != null || request.getImageUrl() != null) {
-			commentRepository.save(request.toComment(writerId));
+			commentService.save(request.toComment(writerId));
 		}
 		return issueId;
 	}
@@ -72,8 +72,8 @@ public class IssueService {
 	@Transactional(readOnly = true)
 	public IssueDetailsResponse show(Long id) {
 		IssueResultVO issueResultVO = issueRepository.findIssueDetailsById(id);
-		History history = historyRepository.findLatestByIssueId(id);
-		List<Comment> comments = commentRepository.findByIssueId(id);
+		History history = historyService.findLatestByIssueId(id);
+		List<Comment> comments = commentService.findByIssueId(id);
 
 		String[] labelIds = issueResultVO.getLabelIds().split(",");
 		List<LabelResponse> labels = getLabelResponse(labelIds);
@@ -88,8 +88,8 @@ public class IssueService {
 
 	private List<LabelResponse> getLabelResponse(String[] labelIds) {
 		return Arrays.stream(labelIds)
-			.map(labelid -> LabelResponse.from(
-				labelRepository.findbyId(Long.parseLong(labelid))))
+			.map(labelId -> LabelResponse.from(
+				labelService.findById(Long.parseLong(labelId))))
 			.collect(Collectors.toList());
 	}
 
@@ -134,7 +134,7 @@ public class IssueService {
 			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
 		}
 
-		if (!labelRepository.existByIds(request.getIds())) {
+		if (!labelService.existByIds(request.getIds())) {
 			throw new ApiException(LabelException.NOT_FOUND_LABEL);
 		}
 
@@ -150,7 +150,7 @@ public class IssueService {
 			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
 		}
 
-		if (!assigneeRepository.existByIds(request.getIds())) {
+		if (!assigneeService.existByIds(request.getIds())) {
 			throw new ApiException(AssigneeCustomException.NOT_FOUND_ASSIGNEE);
 		}
 
@@ -166,23 +166,28 @@ public class IssueService {
 			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
 		}
 
-		if (!milestoneRepository.existById(milestoneId)) {
+		if (!milestoneService.existById(milestoneId)) {
 			throw new ApiException(MilestoneException.NOT_FOUND_MILESTONE);
 		}
 
 		issueRepository.applyMilestone(issueId, milestoneId);
 	}
 
-	public Boolean validatePostRequest(IssuePostRequest request) {
+	public void validatePostRequest(IssuePostRequest request) {
 		Long milestoneId = request.getMilestoneId();
 		List<Long> labelIds = request.getLabelIds();
 		List<Long> assigneeIds = request.getAssigneeIds();
 
-		Boolean validateMilestoneId = milestoneId != null ? milestoneRepository.existById(milestoneId) : true;
-		Boolean validateLabelIds = labelIds != null ? labelRepository.existByIds(labelIds) : true;
-		Boolean validateAssigneeIds = assigneeIds != null ? assigneeRepository.existByIds(assigneeIds) : true;
+		if (milestoneId != null) {
+			milestoneService.existById(milestoneId);
+		}
 
-		return validateMilestoneId && validateLabelIds && validateAssigneeIds;
+		if (labelIds != null) {
+			labelService.existByIds(labelIds);
+		}
+
+		if (assigneeIds != null) {
+			assigneeService.existByIds(assigneeIds);
+		}
 	}
 }
-

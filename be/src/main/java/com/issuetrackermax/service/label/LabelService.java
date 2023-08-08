@@ -32,12 +32,19 @@ public class LabelService {
 	@Transactional
 	public void update(Long id, LabelModifyRequest labelModifyRequest) {
 		labelRepository.update(id, Label.from(labelModifyRequest));
-		return;
 	}
 
 	@Transactional
 	public void delete(Long id) {
 		int count = labelRepository.deleteById(id);
-		return;
+	}
+
+	@Transactional(readOnly = true)
+	public Label findById(Long id) {
+		return labelRepository.findById(id);
+	}
+
+	public Boolean existByIds(List<Long> ids) {
+		return labelRepository.existByIds(ids);
 	}
 }
