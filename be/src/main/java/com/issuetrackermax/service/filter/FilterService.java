@@ -61,7 +61,7 @@ public class FilterService {
 	private List<LabelResponse> getLabelResponse(String[] labelIds) {
 		return Arrays.stream(labelIds)
 			.map(labelid -> LabelResponse.from(
-				labelRepository.findbyId(Long.parseLong(labelid))))
+				labelRepository.findById(Long.parseLong(labelid))))
 			.collect(Collectors.toList());
 	}
 
