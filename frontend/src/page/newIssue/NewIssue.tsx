@@ -10,12 +10,16 @@ export function NewIssue() {
   const [milestone, setMilestone] = useState<number | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [invalidTitle, setInvalidTitle] = useState(false);
   const navigate = useNavigate();
 
-  const invalidTitle = title.trim().length === 0;
+  const onTitleFocus = () => {
+    setInvalidTitle(title.length === 0);
+  };
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
+    setInvalidTitle(e.target.value.length === 0);
   };
 
   const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -53,28 +57,7 @@ export function NewIssue() {
       milestone: milestone,
     };
 
-    try {
-      const response = await fetch(
-        "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/issues",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(issueData),
-        },
-      );
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error(data.message);
-      }
-    } catch (error) {
-      throw new Error(
-        `${error} : 이슈를 등록하는 과정에서 오류가 발생했습니다.`,
-      );
-    } finally {
-      navigate("/");
-    }
+    console.log("이슈 등록 데이터", issueData);
   };
 
   const onCancelButtonClick = () => {
@@ -88,10 +71,12 @@ export function NewIssue() {
       <NewIssueBody
         title={title}
         content={content}
+        invalidTitle={invalidTitle}
         onAssigneeClick={onAssigneeClick}
         onLabelClick={onLabelClick}
         onMilestoneClick={onMilestoneClick}
         onTitleChange={onTitleChange}
+        onTitleFocus={onTitleFocus}
         onContentChange={onContentChange}
       />
       <Line />

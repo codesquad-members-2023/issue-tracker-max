@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { styled } from "styled-components";
 import { TextArea } from "../../components/TextArea";
 import { TextInput } from "../../components/TextInput";
@@ -7,27 +6,24 @@ import { Sidebar, SidebarProps } from "../../components/sidebar/Sidebar";
 type NewIssueBodyProps = {
   title: string;
   content: string;
+  invalidTitle: boolean;
   onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onTitleFocus: () => void;
   onContentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 } & SidebarProps;
 
 export function NewIssueBody({
   title,
   content,
+  invalidTitle,
   onTitleChange,
+  onTitleFocus,
   onContentChange,
   ...props
 }: NewIssueBodyProps) {
-  const [invalidTitle, setInvalidTitle] = useState(false);
   const titleCaption = invalidTitle
     ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
     : "";
-
-  const onTitleFocus = () => {
-    setInvalidTitle(title.length === 0);
-  };
-
-  // TODO: 제목 에레 상태 안 풀리는 현상 수정
 
   return (
     <Div>
