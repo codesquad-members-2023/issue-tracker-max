@@ -1,5 +1,6 @@
 import { IssueTable } from '@components/issueListPage/IssueTable';
 import { SubNav } from '@components/issueListPage/SubNav';
+import { getIssueListPageData } from '@utils/api';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -7,22 +8,13 @@ export const IssueListPage: React.FC = ({}) => {
   const [pageData, setPageData] = useState<IssuePageData>(initialPageData);
   const location = useLocation();
 
-  const fetchPageData = async () => {
-    const response = await fetch(
-      import.meta.env.VITE_APP_BASE_URL + 'issues' + location.search,
-    );
-
-    if (!response.ok) {
-      throw new Error('이슈 목록 가져오기 요청이 실패했습니다.');
-    }
-
-    const data = await response.json();
-
-    setPageData(data);
-  };
-
   useEffect(() => {
-    fetchPageData();
+    (async () => {
+      const query = location.search;
+      const pageData = await getIssueListPageData(query);
+
+      setPageData(pageData);
+    })();
   }, [location]);
 
   return (

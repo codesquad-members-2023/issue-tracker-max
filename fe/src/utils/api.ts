@@ -1,4 +1,4 @@
-export const onFetchData = async (path: string) => {
+export const fetchData = async (path: string) => {
   try {
     const response = await fetch(
       // `${import.meta.env.VITE_REACT_APP_API_URL}/${path}`,
@@ -7,8 +7,9 @@ export const onFetchData = async (path: string) => {
         method: 'GET',
       },
     );
+
     const data = await response.json();
-    console.log(data);
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -20,13 +21,17 @@ export const onFetchData = async (path: string) => {
 };
 
 export const getUsers = () => {
-  return onFetchData('users/previews');
+  return fetchData('users/previews');
 };
 
 export const getLabels = () => {
-  return onFetchData('labels/previews');
+  return fetchData('labels/previews');
 };
 
 export const getMilestones = () => {
-  return onFetchData('milestones/previews');
+  return fetchData('milestones/previews');
+};
+
+export const getIssueListPageData = (query: string) => {
+  return fetchData('issues' + query);
 };
