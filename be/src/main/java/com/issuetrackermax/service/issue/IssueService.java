@@ -76,18 +76,26 @@ public class IssueService {
 
 	@Transactional
 	public void updateStatus(IssuesStatusRequest request) {
-		int count;
 		String status = request.getIssueStatus();
 		List<Long> ids = request.getIssueIds();
 		if (status.equals(OPEN_ISSUE)) {
-			count = issueRepository.openByIds(ids);
+			openIssue(ids);
 		} else if (status.equals(CLOSED_ISSUE)) {
-			count = issueRepository.closeByIds(ids);
+			closeIssue(ids);
 		} else {
 			throw new ApiException(IssueException.INVALID_ISSUE_STATUS);
 		}
+	}
 
-		// todo : 예외처리 Not Found 괜찮은지?
+	public void openIssue(List<Long> ids) {
+		int count = issueRepository.openByIds(ids);
+		if (count != ids.size()) {
+			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
+		}
+	}
+
+	public void closeIssue(List<Long> ids) {
+		int count = issueRepository.closeByIds(ids);
 		if (count != ids.size()) {
 			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
 		}
