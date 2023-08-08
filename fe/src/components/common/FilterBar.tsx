@@ -85,7 +85,7 @@ export const FilterBar: React.FC = () => {
               }}
             >
               {filterItems.map(({ id, name, onClick }) => (
-                <DropDownList {...{ item: { id, name }, onClick }} />
+                <DropDownList key={id} {...{ item: { id, name }, onClick }} />
               ))}
             </DropDownPanel>
           </DropDownIndicator>
