@@ -51,8 +51,6 @@ public class UserService {
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
 		user.validateLoginUser(loginRequestDto);
 
-		userValidator.validateLoginType(LoginType.LOCAL, user.getLoginType());
-
 		Jwt jwt = jwtProvider.createJwt(Map.of("userId", user.getId()));
 
 		insertOrUpdateToken(user.getId(), jwt);
