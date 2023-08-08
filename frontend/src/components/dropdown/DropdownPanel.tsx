@@ -25,7 +25,7 @@ export function DropdownPanel({
     if (options.length === 0) {
       return (
         <EmptyOption>
-          <Icon name="AlertCircle" color="dangerTextDefault" />
+          <Icon name="AlertCircle" color="neutralTextDefault" />
           No Options
         </EmptyOption>
       );
@@ -119,5 +119,5 @@ const EmptyOption = styled.div`
   font: ${({ theme }) => theme.font.availableMedium16};
   font-style: italic;
   background-color:  ${({ theme }) => theme.color.neutralSurfaceStrong};
-  color: ${({ theme }) => theme.color.dangerTextDefault};
+  color: ${({ theme }) => theme.color.neutralTextDefault};
 `;
