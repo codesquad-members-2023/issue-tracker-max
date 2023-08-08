@@ -101,4 +101,13 @@ class IssueRepositoryTest {
 		// then
 		assertThat(actual).isEqualTo(1);
 	}
+
+	@Test
+	void 이슈_아이디를_입력하면_존재하는_이슈인지_확일할_수_있다() {
+		// when
+		boolean actual = issueRepository.existById(ISSUE1.getId());
+
+		// then
+		assertThat(actual).isTrue();
+	}
 }

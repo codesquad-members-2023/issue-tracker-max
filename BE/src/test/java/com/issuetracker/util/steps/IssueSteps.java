@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.MediaType;
 
+import com.issuetracker.issue.ui.dto.IssueCommentCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 import com.issuetracker.issue.ui.dto.IssueUpdateRequest;
@@ -52,14 +53,14 @@ public class IssueSteps {
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().get("/api/issues/milestones")
 			.then().log().all().extract();
-  }
+  	}
   
 	public static ExtractableResponse<Response> 작성자_목록_조회_요청() {
 		return RestAssured.given().log().all()
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().get("/api/issues/authors")
 			.then().log().all().extract();
-  }
+  	}
   
 	public static ExtractableResponse<Response> 이슈에_등록_되어있는_담당자_목록_조회_요청() {
 		return RestAssured.given().log().all()
@@ -113,6 +114,24 @@ public class IssueSteps {
 		return RestAssured.given().log().all()
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().delete("/api/issues/{id}", id)
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 이슈_댓글_작성_요청(Long id, String content) {
+		return RestAssured.given().log().all()
+			.body(new IssueCommentCreateRequest(content))
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().post("/api/issues/{id}/comments", id)
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 이슈_댓글_내용_수정_요청(Long id, Long issueCommentId, String content) {
+		return RestAssured.given().log().all()
+			.body(new IssueCommentCreateRequest(content))
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().patch("/api/issues/{id}/comments/{comment-id}", id, issueCommentId)
 			.then().log().all().extract();
 	}
 }

@@ -27,6 +27,7 @@ public class JdbcIssueRepository implements IssueRepository {
 	private static final String UPDATE_TITLE_SQL = "UPDATE issue SET title = :title WHERE id = :id";
 	private static final String UPDATE_CONTENT_SQL = "UPDATE issue SET content = :content WHERE id = :id";
 	private static final String DELETE_SQL = "UPDATE issue SET is_deleted = 1 WHERE id = :id";
+	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM issue WHERE id = :id)";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -74,6 +75,11 @@ public class JdbcIssueRepository implements IssueRepository {
 	@Override
 	public int delete(long id) {
 		return jdbcTemplate.update(DELETE_SQL, Map.of("id", id));
+	}
+
+	@Override
+	public boolean existById(long id) {
+		return jdbcTemplate.queryForObject(EXIST_BY_ID_SQL, Map.of("id", id), Boolean.class);
 	}
 
 	private static final RowMapper<IssuesCountData> ISSUE_MAIN_PAGE_COUNT_ROW_MAPPER = (rs, rowNum) ->

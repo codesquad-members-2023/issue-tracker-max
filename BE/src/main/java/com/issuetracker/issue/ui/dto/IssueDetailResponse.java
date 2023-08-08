@@ -24,7 +24,7 @@ public class IssueDetailResponse {
 	private MemberResponse author;
 	private List<MemberResponse> assignees;
 	private List<LabelResponse> labels;
-	private List<CommentResponse> comments;
+	private List<IssueCommentResponse> comments;
 
 	public static IssueDetailResponse from(IssueDetailInformation issueDetailInformation) {
 		return new IssueDetailResponse(
@@ -37,7 +37,7 @@ public class IssueDetailResponse {
 			MemberResponse.from(issueDetailInformation.getAuthor()),
 			MemberResponse.from(issueDetailInformation.getAssignees()),
 			LabelResponse.from(issueDetailInformation.getLabels()),
-			CommentResponse.from(issueDetailInformation.getComments())
+			IssueCommentResponse.from(issueDetailInformation.getComments())
 		);
 	}
 

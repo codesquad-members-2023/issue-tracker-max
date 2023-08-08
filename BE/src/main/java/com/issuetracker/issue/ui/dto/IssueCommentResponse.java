@@ -15,15 +15,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class CommentResponse {
+public class IssueCommentResponse {
 
 	private Long id;
 	private String content;
 	private LocalDateTime createAt;
 	private MemberResponse author;
 
-	public static CommentResponse from(CommentInformation comments) {
-		return new CommentResponse(
+	public static IssueCommentResponse from(CommentInformation comments) {
+		return new IssueCommentResponse(
 			comments.getId(),
 			comments.getContent(),
 			comments.getCreateAt(),
@@ -31,9 +31,9 @@ public class CommentResponse {
 		);
 	}
 
-	public static List<CommentResponse> from(List<CommentInformation> comments) {
+	public static List<IssueCommentResponse> from(List<CommentInformation> comments) {
 		return comments.stream()
-			.map(CommentResponse::from)
+			.map(IssueCommentResponse::from)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }
