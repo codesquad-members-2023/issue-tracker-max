@@ -1,4 +1,5 @@
 import { Comment } from '@components/common/comment/Commentt';
+import { AddNewComment } from './AddNewComment';
 
 type AuthorType = {
   userId: number;
@@ -47,14 +48,8 @@ export const CommentContainer: React.FC<Props> = ({
             placeholder={contents}
           />
         ))}
-      <Comment
-        typeVariant="add"
 
-        // letterCount={textAreaValue.length}
-        // textAreaValue={contents}
-        // onAddFileUrl={onAddFileUrl}
-        // onChangeTextArea={onChangeTextArea}
-      />
+      <AddNewComment />
     </div>
   );
 };
