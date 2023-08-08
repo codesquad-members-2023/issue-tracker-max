@@ -5,7 +5,10 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.issuetracker.milestone.domain.Milestone;
@@ -16,6 +19,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM milestone WHERE id = :id)";
 	private static final String FIND_ALL_FOR_FILTER = "SELECT id, title FROM milestone ORDER BY is_open DESC";
+	private static final String SAVE_SQL = "INSERT INTO milestone(title, description, deadline) VALUE(:title, :description, :deadline)";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -39,5 +43,17 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 					.build();
 
 		return jdbcTemplate.query(FIND_ALL_FOR_FILTER, milestoneRowMapper);
+	}
+
+	@Override
+	public Long save(Milestone milestone) {
+		MapSqlParameterSource param = new MapSqlParameterSource()
+			.addValue("title", milestone.getTitle())
+			.addValue("description", milestone.getDescription())
+			.addValue("deadline", milestone.getDeadline());
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+
+		jdbcTemplate.update(SAVE_SQL, param, keyHolder);
+		return keyHolder.getKey().longValue();
 	}
 }
