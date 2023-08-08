@@ -101,9 +101,7 @@ class IssueServiceTest {
 			assertAll(
 				() -> assertThat(result.getIssueId()).isNotNull(),
 				() -> assertThat(result.getAuthor().getUsername()).isNotNull(),
-				() -> assertThat(result.getAuthor().getProfileUrl()).isNotNull(),
-				() -> assertThat(result.getAssignees()).isNotNull(),
-				() -> assertThat(result.getLabels()).isNotNull()
+				() -> assertThat(result.getAuthor().getProfileUrl()).isNotNull()
 			);
 		}
 
@@ -139,8 +137,7 @@ class IssueServiceTest {
 			// given
 
 			// when
-			issueService.modifyIssue(1, 1,
-				FixtureFactory.createIssueModifyRequest("변경된 제목", null, null));
+			issueService.modifyIssueTitle(1, 1, "변경된 제목");
 
 			// then
 			IssueDetailResponse result = issueService.getIssueDetails(1);
@@ -153,8 +150,7 @@ class IssueServiceTest {
 			// given
 
 			// when
-			issueService.modifyIssue(1, 1,
-				FixtureFactory.createIssueModifyRequest(null, "변경된 내용", null));
+			issueService.modifyIssueContent(1, 1, "변경된 내용");
 
 			// then
 			IssueDetailResponse result = issueService.getIssueDetails(1);
@@ -167,8 +163,7 @@ class IssueServiceTest {
 			// given
 
 			// when
-			issueService.modifyIssue(1, 1,
-				FixtureFactory.createIssueModifyRequest(null, null, false));
+			issueService.modifyIssueOpenStatus(1, 1, false);
 
 			// then
 			IssueDetailResponse result = issueService.getIssueDetails(1);
@@ -187,7 +182,7 @@ class IssueServiceTest {
 		issueService.updateIssueMilestone(issueId, updateMilestoneId);
 
 		//then
-		assertThat(issueService.getIssueDetails(issueId).getMilestone().getMilestoneId()).isEqualTo(updateMilestoneId);
+		assertThat(issueService.getIssueDetailsSidebar(issueId).getMilestoneId()).isEqualTo(updateMilestoneId);
 	}
 
 	@DisplayName("특정 이슈의 등록된 마일스톤을 제거할 수 있다.")
@@ -200,6 +195,6 @@ class IssueServiceTest {
 		issueService.updateIssueMilestone(1, null);
 
 		//then
-		assertThat(issueService.getIssueDetails(issueId).getMilestone()).isNull();
+		assertThat(issueService.getIssueDetailsSidebar(issueId).getMilestoneId()).isNull();
 	}
 }
