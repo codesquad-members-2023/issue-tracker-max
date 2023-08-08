@@ -33,7 +33,7 @@ export default function Login() {
         localStorage.setItem('accessToken', res.data.messages.accessToken);
         localStorage.setItem('refreshToken', res.data.messages.refreshToken);
         login({
-          user: id,
+          userId: id,
           pwd: password,
           accessToken: res.data.messages.accessToken,
         });
