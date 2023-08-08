@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -57,12 +56,12 @@ public class VerifyUserFilter implements Filter {
 				request.setAttribute(AUTHENTICATE_USER, authenticateUser);
 				chain.doFilter(request, response);
 			} catch (RestApiException e) {
-				httpServletResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+				LoginErrorCode errorCode = LoginErrorCode.NOT_MATCH_LOGIN;
+				httpServletResponse.setStatus(errorCode.getHttpStatus().value());
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
-				LoginErrorCode errorCode = LoginErrorCode.NOT_MATCH_LOGIN;
-				ApiResponse<ErrorCode> apiResponse = ApiResponse.of(errorCode.getHttpStatus(), errorCode.getMessage(),
-					errorCode);
+				ApiResponse<ErrorCode> apiResponse =
+					ApiResponse.of(errorCode.getHttpStatus(), errorCode.getMessage(), null);
 				String errorJson = objectMapper.writeValueAsString(apiResponse);
 				response.getWriter().write(errorJson);
 			}

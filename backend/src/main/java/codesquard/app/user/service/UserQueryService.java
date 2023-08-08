@@ -8,6 +8,7 @@ import codesquard.app.user.entity.User;
 import codesquard.app.user.repository.UserRepository;
 import codesquard.app.user.service.request.UserLoginServiceRequest;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
+import codesquard.app.user.service.response.UserSaveServiceResponse;
 
 @Transactional(readOnly = true)
 @Service
@@ -30,5 +31,10 @@ public class UserQueryService {
 
 	public boolean verifyDuplicatedEmail(UserSaveServiceRequest userSaveServiceRequest) {
 		return userRepository.isExistEmail(userSaveServiceRequest.toEntity());
+	}
+
+	public UserSaveServiceResponse findUserById(Long userId) {
+		User findUser = userRepository.findById(userId);
+		return UserSaveServiceResponse.from(findUser);
 	}
 }

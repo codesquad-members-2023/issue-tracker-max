@@ -40,6 +40,10 @@ public class User {
 		return avatarUrl;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
 	public MapSqlParameterSource createSaveParamSource() {
 		return new MapSqlParameterSource()
 			.addValue("id", id)
