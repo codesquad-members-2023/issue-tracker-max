@@ -5,6 +5,7 @@ type TextInputProps = React.HTMLAttributes<HTMLInputElement> & {
   size: 'tall' | 'short';
   id: string;
   name: string;
+  type?: string;
   labelName: string;
   disabled?: boolean;
   placeholder?: string;
@@ -21,6 +22,7 @@ export default function TextInput(props: TextInputProps) {
     id,
     name,
     size,
+    type,
     labelName,
     disabled,
     placeholder,
@@ -51,7 +53,7 @@ export default function TextInput(props: TextInputProps) {
     <InputContainer $size={size} $disabled={disabled} $hasError={isError}>
       {(isFocused || inputValue) && <Label $size={size}>{labelName}</Label>}
       <StyledTextInput
-        type="text"
+        type={type ? type : 'text'}
         id={id}
         name={name}
         placeholder={placeholder}

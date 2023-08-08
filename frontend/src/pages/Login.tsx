@@ -38,6 +38,7 @@ export default function Login() {
         login({
           userId: id,
           pwd: password,
+          userName: res.data.messages.userName,
           accessToken: res.data.messages.accessToken,
         });
       }
@@ -89,6 +90,7 @@ export default function Login() {
           id="password"
           name="password"
           size="tall"
+          type="password"
           labelName="비밀번호"
           placeholder="비밀번호"
         />
