@@ -18,6 +18,7 @@ public class JdbcLabelRepository implements LabelRepository {
 
 	private static final String EXIST_BY_IDS_SQL = "SELECT IF(COUNT(id) = :size, TRUE, FALSE) FROM label WHERE id IN(:labelIds)";
 	private static final String SAVE_SQL = "INSERT INTO label(title, description, color) VALUE(:title, :description, :color)";
+	private static final String UPDATE_SQL = "UPDATE label SET title = :title, description = :description, color = :color WHERE id = :id";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -44,4 +45,16 @@ public class JdbcLabelRepository implements LabelRepository {
 		jdbcTemplate.update(SAVE_SQL, param, keyHolder);
 		return keyHolder.getKey().longValue();
 	}
+
+	@Override
+	public int update(Label label) {
+		MapSqlParameterSource param = new MapSqlParameterSource()
+			.addValue("id", label.getId())
+			.addValue("title", label.getTitle())
+			.addValue("description", label.getDescription())
+			.addValue("color", label.getColor());
+
+		return jdbcTemplate.update(UPDATE_SQL, param);
+	}
+
 }
