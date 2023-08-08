@@ -20,12 +20,14 @@ const useRefreshToken = () => {
       }
 
       const newAuth: AuthUser = {
-        user: prev.user,
+        userId: prev.userId,
         pwd: prev.pwd,
         accessToken: response.data.accessToken,
       };
       return newAuth;
     });
+    localStorage.setItem('accessToken', response.data.accessToken);
+
     return response.data.accessToken;
   };
   return refresh;

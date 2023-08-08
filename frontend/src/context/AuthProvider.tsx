@@ -1,7 +1,7 @@
 import { useState, createContext, ReactElement } from 'react';
 
 export type AuthUser = {
-  user: string;
+  userId: string;
   pwd: string;
   accessToken: string;
 } | null;

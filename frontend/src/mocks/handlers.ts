@@ -36,7 +36,7 @@ const successLogin = {
     accessToken:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
     refreshToken:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyZWZyZXNoIHRva2VuIiwibmFtZSI6IkNvZGVTcXVhZCIsImlhdCI6MTUxNjIzOTAyMn0._VcNtq7pIrC18BZ2OEgkiYosqimrCGzOAwTKPdMR_7g',
     userId: 1,
     userProfileImg: 'https://f1.kina.or.kr/2020/11/jtqgmmu4i3.jpg',
   },
