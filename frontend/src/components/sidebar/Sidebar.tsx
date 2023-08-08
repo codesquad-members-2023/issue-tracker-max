@@ -1,71 +1,145 @@
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { getProgress } from "../../utils/getProgress";
 import { InformationTag } from "../InformationTag";
 import { DropdownContainer } from "../dropdown/DropdownContainer";
+import { IconColor } from "../icon/Icon";
 import { AssigneeElement } from "./AssigneeElement";
 import { ElementContainer } from "./ElementContainer";
 import { MilestoneElmeent } from "./MilestoneElement";
-import { IconColor } from "../icon/Icon";
 
-type AssigneeOptionData = {
+type AssigneeData = {
   id: number;
   name: string;
-  profile?: string;
+  profile: string;
   selected: boolean;
   onClick: () => void;
 };
 
-type LabelOptionData = {
+type LabelData = {
   id: number;
   name: string;
-  background?: IconColor;
-  color?: "LIGHT" | "DARK";
+  color: "LIGHT" | "DARK";
+  background: IconColor;
   selected: boolean;
   onClick: () => void;
 };
 
-type MilestoneOptionData = {
+type MilestoneData = {
   id: number;
   name: string;
-  selected: boolean;
-  issues?: {
+  issues: {
     openedIssueCount: number;
     closedIssueCount: number;
   };
+  selected: boolean;
   onClick: () => void;
 };
 
-export type SidebarOptionData =
-  | AssigneeOptionData
-  | LabelOptionData
-  | MilestoneOptionData;
-
-type SidebarProps = {
-  assigneeOptions: AssigneeOptionData[];
-  labelOptions: LabelOptionData[];
-  milestoneOptions: MilestoneOptionData[];
-};
+type OptionData = AssigneeData | LabelData | MilestoneData;
 
 export function Sidebar({
-  assigneeOptions,
-  labelOptions,
-  milestoneOptions,
-}: SidebarProps) {
-  const collectSelectedOptions = <T extends SidebarOptionData>(
-    options: T[],
-  ): T[] => {
-    return options.filter((option) => option.selected);
+  onAssigneeClick,
+  onLabelClick,
+  onMilestoneClick,
+}: {
+  onAssigneeClick: (id: number) => void;
+  onLabelClick: (id: number) => void;
+  onMilestoneClick: (id: number) => void;
+}) {
+  const [assignees, setAssignees] = useState<AssigneeData[]>([]);
+  const [labels, setLabels] = useState<LabelData[]>([]);
+  const [milestones, setMilestones] = useState<MilestoneData[]>([]);
+
+  const onOptionMapper = <T extends OptionData>(
+    data: T[],
+    id: number,
+    multiSelect: boolean,
+  ) => {
+    const updatedData = data.map((d) => ({
+      ...d,
+      selected: d.id === id ? !d.selected : multiSelect ? d.selected : false,
+    }));
+    return updatedData;
   };
+
+  useEffect(() => {
+    const fetchSidebarLists = async () => {
+      const url = "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io";
+
+      const responses = await Promise.all([
+        fetch(`${url}/api/assignees`),
+        fetch(`${url}/api/labels`),
+        fetch(`${url}/api/milestones`),
+      ]);
+      const dataList = await Promise.all(
+        responses.map((response) => response.json()),
+      );
+
+      const assigneesData = dataList[0].data.map(
+        (assignee: { id: number; loginId: string; avatarUrl: string }) => ({
+          id: assignee.id,
+          name: assignee.loginId,
+          profile: assignee.avatarUrl,
+          selected: false,
+          onClick: () => {
+            setAssignees((a) => onOptionMapper(a, assignee.id, false));
+            onAssigneeClick(assignee.id);
+          },
+        }),
+      );
+
+      const labelsData = dataList[1].data.labels.map(
+        (label: {
+          id: number;
+          name: string;
+          color: "LIGHT" | "DARK";
+          background: IconColor;
+        }) => ({
+          ...label,
+          selected: false,
+          onClick: () => {
+            setLabels((l) => onOptionMapper(l, label.id, true));
+            onLabelClick(label.id);
+          },
+        }),
+      );
+
+      const milestonesData = dataList[2].data.milestones.map(
+        (milestone: {
+          id: number;
+          name: string;
+          issues: {
+            openedIssueCount: number;
+            closedIssueCount: number;
+          };
+        }) => ({
+          ...milestone,
+          selected: false,
+          onClick: () => {
+            setMilestones((m) => onOptionMapper(m, milestone.id, false));
+            onMilestoneClick(milestone.id);
+          },
+        }),
+      );
+
+      setAssignees(assigneesData);
+      setLabels(labelsData);
+      setMilestones(milestonesData);
+    };
+
+    fetchSidebarLists();
+  }, [onAssigneeClick, onLabelClick, onMilestoneClick]);
+
+  const selectedAssignees = assignees.filter((assignee) => assignee.selected);
+  const selectedLabels = labels.filter((label) => label.selected);
+  const selectedMilestone = milestones.find((milestone) => milestone.selected);
 
   const getMilestoneProgress = (issues?: {
     openedIssueCount: number;
     closedIssueCount: number;
   }) =>
     issues ? getProgress(issues.closedIssueCount, issues.openedIssueCount) : 0;
-
-  const selectedAssigneeOptions = collectSelectedOptions(assigneeOptions);
-  const selectedLabelOptions = collectSelectedOptions(labelOptions);
-  const selectedMilestoneOptions = collectSelectedOptions(milestoneOptions);
 
   return (
     <Div>
@@ -74,13 +148,13 @@ export function Sidebar({
           key="assignees"
           name="담당자"
           optionTitle="담당자 설정"
-          options={assigneeOptions}
+          options={assignees}
           type="Long"
           alignment="Center"
         />
-        {selectedAssigneeOptions.length > 0 && (
+        {selectedAssignees.length > 0 && (
           <ElementContainer direction="Vertical">
-            {selectedAssigneeOptions.map(({ id, name, profile }) => (
+            {selectedAssignees.map(({ id, name, profile }) => (
               <AssigneeElement key={id} name={name} profile={profile} />
             ))}
           </ElementContainer>
@@ -91,13 +165,13 @@ export function Sidebar({
           key="labels"
           name="레이블 "
           optionTitle="레이블 설정"
-          options={labelOptions}
+          options={labels}
           type="Long"
           alignment="Center"
         />
-        {selectedLabelOptions.length > 0 && (
+        {selectedLabels.length > 0 && (
           <ElementContainer direction="Horizontal">
-            {selectedLabelOptions.map(({ id, name, background }) => (
+            {selectedLabels.map(({ id, name, background }) => (
               <InformationTag
                 key={id}
                 value={name}
@@ -114,20 +188,20 @@ export function Sidebar({
           key="milestones"
           name="마일스톤 "
           optionTitle="마일스톤 설정"
-          options={milestoneOptions}
+          options={milestones}
           type="Long"
           alignment="Center"
         />
-        {selectedMilestoneOptions.length > 0 && (
+        {selectedMilestone && (
           <ElementContainer direction="Vertical">
-            {selectedMilestoneOptions.map(({ id, name, issues }) => (
+            {selectedMilestone && (
               <MilestoneElmeent
-                key={id}
-                progress={getMilestoneProgress(issues)}
+                key={selectedMilestone.id}
+                progress={getMilestoneProgress(selectedMilestone.issues)}
               >
-                {name}
+                {selectedMilestone.name}
               </MilestoneElmeent>
-            ))}
+            )}
           </ElementContainer>
         )}
       </OptionDiv>

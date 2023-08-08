@@ -1,15 +1,15 @@
+import { useState } from "react";
 import { styled } from "styled-components";
 import { TextArea } from "../../components/TextArea";
 import { TextInput } from "../../components/TextInput";
-import { Sidebar, SidebarOptionData } from "../../components/sidebar/Sidebar";
-import { useState } from "react";
+import { Sidebar } from "../../components/sidebar/Sidebar";
 
 type NewIssueBodyProps = {
   title: string;
   content: string;
-  assignees: SidebarOptionData[];
-  labels: SidebarOptionData[];
-  milestones: SidebarOptionData[];
+  onAssigneeClick: (id: number) => void;
+  onLabelClick: (id: number) => void;
+  onMilestoneClick: (id: number) => void;
   onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onContentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
@@ -17,9 +17,9 @@ type NewIssueBodyProps = {
 export function NewIssueBody({
   title,
   content,
-  assignees,
-  labels,
-  milestones,
+  onAssigneeClick,
+  onLabelClick,
+  onMilestoneClick,
   onTitleChange,
   onContentChange,
 }: NewIssueBodyProps) {
@@ -30,7 +30,9 @@ export function NewIssueBody({
 
   const onTitleFocus = () => {
     setInvalidTitle(title.length === 0);
-  }
+  };
+
+  // TODO: 제목 에레 상태 안 풀리는 현상 수정
 
   return (
     <Div>
@@ -59,9 +61,9 @@ export function NewIssueBody({
         />
       </NewIssueContent>
       <Sidebar
-        assigneeOptions={assignees}
-        labelOptions={labels}
-        milestoneOptions={milestones}
+        onAssigneeClick={onAssigneeClick}
+        onLabelClick={onLabelClick}
+        onMilestoneClick={onMilestoneClick}
       />
     </Div>
   );
