@@ -2,13 +2,17 @@ package codesquad.issueTracker.comment.controller;
 
 import static codesquad.issueTracker.global.exception.SuccessCode.*;
 
+import codesquad.issueTracker.comment.dto.CommentRequestDto;
 import codesquad.issueTracker.comment.dto.CommentResponseDto;
 import codesquad.issueTracker.comment.service.CommentService;
 import codesquad.issueTracker.global.ApiResponse;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,5 +28,14 @@ public class CommentController {
         List<CommentResponseDto> commentResponseDtos = commentService.getComments(issueId);
 
         return ApiResponse.success(SUCCESS.getStatus(), commentResponseDtos);
+    }
+
+    @PostMapping("/issues/{issueId}/comments")
+    public ApiResponse<String> save(@PathVariable Long issueId,
+                                    @RequestBody CommentRequestDto commentRequestDto,
+                                    HttpServletRequest request) {
+        commentService.save(request, issueId, commentRequestDto);
+
+        return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
     }
 }

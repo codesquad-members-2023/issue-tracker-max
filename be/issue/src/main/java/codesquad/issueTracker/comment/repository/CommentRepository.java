@@ -1,12 +1,17 @@
 package codesquad.issueTracker.comment.repository;
 
+import codesquad.issueTracker.comment.dto.CommentRequestDto;
 import codesquad.issueTracker.comment.dto.CommentResponseDto;
 import codesquad.issueTracker.comment.vo.CommentUser;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -40,4 +45,20 @@ public class CommentRepository {
                 .createdAt(rs.getTimestamp("created_At").toLocalDateTime())
                 .build();
     });
+
+    public Optional<Long> create(Long userId, Long issueId, CommentRequestDto commentRequestDto) {
+        String sql = "INSERT INTO comments (user_id, issue_id, content) VALUES (:userId, :issueId, :content)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", userId);
+        params.addValue("issueId", issueId);
+        params.addValue("content", commentRequestDto.getContent());
+
+        int updatedRow = jdbcTemplate.update(sql, params, keyHolder);
+
+        if (updatedRow > 0) {
+            return Optional.ofNullable(keyHolder.getKey().longValue());
+        }
+        return Optional.empty();
+    }
 }
