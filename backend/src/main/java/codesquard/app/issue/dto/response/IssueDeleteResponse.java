@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IssueDeleteResponse {
 
-	@JsonProperty("success")
-	private final boolean success;
+	@JsonProperty("deletedIssueId")
+	private final Long id;
 
-	public static IssueDeleteResponse success() {
-		return new IssueDeleteResponse(true);
+	public static IssueDeleteResponse success(Long issueId) {
+		return new IssueDeleteResponse(issueId);
 	}
 }
