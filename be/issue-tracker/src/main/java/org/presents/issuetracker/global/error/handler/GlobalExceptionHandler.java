@@ -6,6 +6,7 @@ import org.presents.issuetracker.global.error.statuscode.ErrorCode;
 import org.presents.issuetracker.global.error.statuscode.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +39,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(CommonApiResponse.fail(errorCode.getHttpStatus(), errorCode.getMessage()));
 	}
+
+	// 데이터 베이스 오류
+	@ExceptionHandler(DataAccessException.class)
+	protected ResponseEntity<CommonApiResponse> handleDataAccessException(DataAccessException ex) {
+		ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR_DB;
+		log.info("DataAccessException handling: {}", ex.toString());
+		return ResponseEntity.status(errorCode.getHttpStatus())
+			.body(CommonApiResponse.fail(errorCode.getHttpStatus(), errorCode.getMessage()));
+	}
+
+	// 500 에러
 	@ExceptionHandler(Exception.class)
-	protected ResponseEntity<CommonApiResponse> handleServerException(Exception ex) {
-		log.info("Exception handling Message: {}", ex.getMessage());
-		return ResponseEntity.status(ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus())
-			.body(CommonApiResponse.fail(ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus(),
-				ErrorCode.INTERNAL_SERVER_ERROR.getMessage()));
+	protected ResponseEntity<CommonApiResponse> handleException(Exception ex) {
+		ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+		log.info("Exception handling: {}", ex.toString());
+		return ResponseEntity.status(errorCode.getHttpStatus())
+			.body(CommonApiResponse.fail(errorCode.getHttpStatus(), errorCode.getMessage()));
 	}
 
 	// @Valid 예외 처리
