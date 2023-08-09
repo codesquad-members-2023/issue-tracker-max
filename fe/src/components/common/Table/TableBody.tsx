@@ -11,82 +11,49 @@ import { randomColorGenerator } from '@utils/generateRandomColorCode';
 type Props = {
   typeVariant: 'add' | 'edit';
   tableVariant?: 'label' | 'milestone'; //추가할 예정
-  nameInput?: string;
-  descriptionInput?: string;
-  colorCodeInput?: string;
+  nameInput: string;
+  descriptionInput: string;
+  colorCodeInput: string;
   selectedTextColor?: number | null;
-  onNameChange?: (value: string) => void;
-  onDescriptionChange?: (value: string) => void;
-  onPanelOpen?: () => void;
-  onPanelClose?: () => void;
-  onColorCodeChange?: (value: string) => void;
-  onColorCodeRandom?: () => void;
-  onSelectTextColor?: (id: number) => void;
+  displayedTextColor: string;
+  fillColor?: string;
+  textColor?: string;
+  isPanelOpen: boolean;
+  isNameLengthError?: boolean;
+  isColorCodeError?: boolean;
+  onNameChange: (value: string) => void;
+  onDescriptionChange: (value: string) => void;
+  onPanelOpen: () => void;
+  onPanelClose: () => void;
+  onColorCodeChange: (value: string) => void;
+  onColorCodeRandom: () => void;
+  onSelectTextColor: (id: number) => void;
 };
 
-export const TableBody: React.FC<Props> = ({ tableVariant }) => {
+export const TableBody: React.FC<Props> = ({
+  typeVariant,
+  tableVariant,
+  nameInput,
+  descriptionInput,
+  colorCodeInput,
+  selectedTextColor,
+  displayedTextColor,
+  fillColor,
+  textColor,
+  isPanelOpen,
+  isNameLengthError,
+  isColorCodeError,
+
+  onNameChange,
+  onDescriptionChange,
+  onPanelOpen,
+  onPanelClose,
+  onColorCodeChange,
+  onColorCodeRandom,
+  onSelectTextColor,
+}) => {
   const theme = useTheme() as any;
-  const [nameInput, setNameInput] = useState<string>('');
-  const [descriptionInput, setDescriptionInput] = useState<string>('');
-  const [colorCodeInput, setColorCodeInput] = useState<string>(
-    randomColorGenerator(),
-  );
-  const [selectedTextColor, setSelectedTextColor] = useState<number | null>(
-    null,
-  );
 
-  const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false);
-
-  const onNameChange = (value: string) => {
-    if (value.length > 21) return;
-    setNameInput(value);
-  };
-
-  const onDescriptionChange = (value: string) => {
-    setDescriptionInput(value);
-  };
-
-  const onPanelOpen = () => {
-    setIsPanelOpen(true);
-  };
-
-  const onPanelClose = () => {
-    setIsPanelOpen(false);
-  };
-
-  const onSelectTextColor = (id: number) => {
-    setSelectedTextColor(id);
-    onPanelClose();
-  };
-
-  const onColorCodeChange = (value: string) => {
-    setColorCodeInput(value);
-  };
-
-  const onColorCodeRandom = () => {
-    const colorCode = randomColorGenerator();
-
-    setColorCodeInput(colorCode);
-  };
-
-  const fillColor = colorCodeInput ? colorCodeInput : randomColorGenerator();
-
-  const displayedTextColor =
-    selectedTextColor === null
-      ? '텍스트 색상'
-      : selectedTextColor === 1
-      ? '밝은 색'
-      : '어두운 색';
-
-  const isNameLengthError = nameInput.length > 20;
-
-  const textColor = selectedTextColor === 1 ? 'light' : 'dark';
-
-  const isColorCodeError =
-    !colorCodeInput ||
-    colorCodeInput[0] !== '#' ||
-    (colorCodeInput.length !== 7 && colorCodeInput.length !== 4) ||
-    !/^#[0-9A-Fa-f]{3,6}$/.test(colorCodeInput);
   return (
     <>
       <div
