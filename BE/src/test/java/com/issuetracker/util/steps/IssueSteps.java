@@ -87,7 +87,7 @@ public class IssueSteps {
 
 	public static ExtractableResponse<Response> 이슈_열림_닫힘_수정_요청(Long id, boolean isOpen) {
 		return RestAssured.given().log().all()
-			.body(new IssueUpdateRequest(isOpen, null, null))
+			.body(new IssueUpdateRequest(isOpen, null, null, null))
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().patch("/api/issues/{id}/open", id)
@@ -96,7 +96,7 @@ public class IssueSteps {
 
 	public static ExtractableResponse<Response> 이슈_제목_수정_요청(Long id, String title) {
 		return RestAssured.given().log().all()
-			.body(new IssueUpdateRequest(null, title, null))
+			.body(new IssueUpdateRequest(null, title, null, null))
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().patch("/api/issues/{id}/title", id)
@@ -105,10 +105,19 @@ public class IssueSteps {
 
 	public static ExtractableResponse<Response> 이슈_내용_수정_요청(Long id, String content) {
 		return RestAssured.given().log().all()
-			.body(new IssueUpdateRequest(null, null, content))
+			.body(new IssueUpdateRequest(null, null, content, null))
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().patch("/api/issues/{id}/content", id)
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 이슈_마일스톤_수정_요청(Long id, Long milestoneId) {
+		return RestAssured.given().log().all()
+			.body(new IssueUpdateRequest(null, null, null, milestoneId))
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().patch("/api/issues/{id}/milestone", id)
 			.then().log().all().extract();
 	}
 

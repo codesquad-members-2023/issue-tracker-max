@@ -26,6 +26,7 @@ public class JdbcIssueRepository implements IssueRepository {
 	private static final String UPDATE_IS_OPEN_SQL = "UPDATE issue SET is_open = :isOpen WHERE id = :id";
 	private static final String UPDATE_TITLE_SQL = "UPDATE issue SET title = :title WHERE id = :id";
 	private static final String UPDATE_CONTENT_SQL = "UPDATE issue SET content = :content WHERE id = :id";
+	private static final String UPDATE_MILESTONE_SQL = "UPDATE issue SET milestone_id = :milestoneId WHERE id = :id";
 	private static final String DELETE_SQL = "UPDATE issue SET is_deleted = 1 WHERE id = :id";
 	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM issue WHERE id = :id)";
 
@@ -70,6 +71,14 @@ public class JdbcIssueRepository implements IssueRepository {
 			.addValue("id", id)
 			.addValue("content", content);
 		return jdbcTemplate.update(UPDATE_CONTENT_SQL, param);
+	}
+
+	@Override
+	public int updateMilestone(long id, Long milestoneId) {
+		SqlParameterSource param = new MapSqlParameterSource()
+			.addValue("id", id)
+			.addValue("milestoneId", milestoneId);
+		return jdbcTemplate.update(UPDATE_MILESTONE_SQL, param);
 	}
 
 	@Override

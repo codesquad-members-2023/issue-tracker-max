@@ -120,6 +120,13 @@ public class IssueService {
 		issueValidator.verifyCommentUpdatedOrDeletedCount(updatedCount);
 	}
 
+	@Transactional
+	public void updateIssueMilestone(IssueUpdateData issueUpdateData) {
+		issueValidator.verifyUpdateMilestone(issueUpdateData.getMilestoneId());
+		int updatedCount = issueRepository.updateMilestone(issueUpdateData.getId(), issueUpdateData.getMilestoneId());
+		issueValidator.verifyUpdatedOrDeletedCount(updatedCount);
+	}
+
 	public AssigneeCandidatesInformation searchAssigneeCandidates(long issueId) {
 
 		return AssigneeCandidatesInformation

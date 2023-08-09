@@ -12,6 +12,8 @@ public interface IssueRepository {
 
 	int updateContent(long id, String content);
 
+	int updateMilestone(long id, Long milestoneId);
+
 	int delete(long id);
 
 	boolean existById(long id);

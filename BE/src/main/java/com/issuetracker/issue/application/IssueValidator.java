@@ -99,4 +99,8 @@ public class IssueValidator {
 			throw new CustomHttpException(ErrorType.ASSIGNED_LABEL_DUPLICATION);
 		}
 	}
+
+	public void verifyUpdateMilestone(Long milestoneId) {
+		milestoneValidator.verifyMilestone(milestoneId);
+	}
 }

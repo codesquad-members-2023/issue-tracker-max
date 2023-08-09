@@ -13,6 +13,7 @@ import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON1;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON2;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON4;
 import static com.issuetracker.util.steps.IssueSteps.이슈_내용_수정_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈_마일스톤_수정_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_목록_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_삭제_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_상세_조회_요청;
@@ -24,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -364,6 +366,53 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
 	/**
 	 * Given 라벨, 마일스톤, 회원, 이슈를 생성하고
+	 * When 이슈에 마일스톤을 수정하면
+	 * Then 이슈 상세 조회에서 수정된 값을 확인할 수 있다.
+	 */
+	@Test
+	void 이슈에_마일스톤을_등록한다() {
+		// when
+		var response = 이슈_마일스톤_수정_요청(ISSUE1.getId(), MILESTON2.getId());
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		이슈_상세_조회에서_수정한_값_검증(ISSUE1.getId(), "milestone.id", MILESTON2.getId());
+	}
+
+	/**
+	 * Given 라벨, 마일스톤, 회원, 이슈를 생성하고
+	 * When 이슈에 마일스톤을 수정하면
+	 * Then 이슈 상세 조회에서 수정된 값을 확인할 수 있다.
+	 */
+	@Test
+	void 이슈에_등록된_마일스톤_제거한다() {
+		// when
+		var response = 이슈_마일스톤_수정_요청(ISSUE1.getId(), null);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		이슈_상세_조회에서_수정한_값_검증(ISSUE1.getId(), "milestone", null);
+	}
+
+	/**
+	 * When 존재하지 않는 이슈로 마일스톤을 수정하면
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 존재하지_않는_이슈로_마일스톤을_수정_시_요청이_실패된다() {
+		// given
+		Long 존재하지_않는_이슈_아이디 = 20L;
+
+		// when
+		var response = 이슈_마일스톤_수정_요청(존재하지_않는_이슈_아이디, MILESTON2.getId());
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+
+	/**
+	 * Given 라벨, 마일스톤, 회원, 이슈를 생성하고
 	 * When 이슈를 삭제하면
 	 * Then 이슈 상세 조회에서 삭제 되었는지 확인할 수 있다.
 	 */
@@ -501,6 +550,15 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 	}
 
 	private void 이슈_상세_조회에서_수정한_값_검증(Long id, String column, Object expected) {
+		var response = 이슈_상세_조회_요청(id);
+
+		if (Objects.isNull(expected)) {
+			Object actual = response.jsonPath().getObject(column, Object.class);
+
+			assertThat(actual).isNull();
+			return;
+		}
+
 		Object actual = 이슈_상세_조회_요청(id).jsonPath().getObject(column, expected.getClass());
 
 		assertThat(actual).isEqualTo(expected);

@@ -1,7 +1,9 @@
 package com.issuetracker.unit.infrastrucure;
 
+import static com.issuetracker.util.fixture.AssigneeFixture.ASSIGNEE1;
 import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
 import static com.issuetracker.util.fixture.MemberFixture.MEMBER4;
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -76,5 +78,14 @@ class AssigneeRepositoryTest {
 		// then
 		int expected = AssigneeFixture.values().length + 1;
 		assertThat(actual).isEqualTo(expected);
+	}
+
+	@Test
+	void 이슈에_담당자를_삭제한다() {
+		// when
+		int actual = assigneeRepository.delete(ASSIGNEE1.getId());
+
+		// then
+		assertThat(actual).isEqualTo(1);
 	}
 }

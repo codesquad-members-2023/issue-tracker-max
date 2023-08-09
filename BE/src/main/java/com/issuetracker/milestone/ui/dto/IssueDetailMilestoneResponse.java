@@ -1,5 +1,7 @@
 package com.issuetracker.milestone.ui.dto;
 
+import java.util.Objects;
+
 import com.issuetracker.milestone.application.dto.IssueDetailMilestoneInformation;
 
 import lombok.AccessLevel;
@@ -17,6 +19,10 @@ public class IssueDetailMilestoneResponse {
 	private Double progress;
 
 	public static IssueDetailMilestoneResponse from(IssueDetailMilestoneInformation milestone) {
+		if (Objects.isNull(milestone)) {
+			return null;
+		}
+
 		return new IssueDetailMilestoneResponse(
 			milestone.getId(),
 			milestone.getTitle(),

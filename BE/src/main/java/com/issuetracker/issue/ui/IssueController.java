@@ -124,6 +124,14 @@ public class IssueController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@PatchMapping("/{id}/milestone")
+	public ResponseEntity<Void> updateIssueMilestone(@PathVariable Long id,
+		@RequestBody @Valid IssueUpdateRequest issueUpdateRequest) {
+		issueService.updateIssueMilestone(issueUpdateRequest.toIssueUpdateDataMilestone(id));
+		return ResponseEntity.noContent().build();
+	}
+
+
 	@PostMapping("/{id}/comments")
 	public ResponseEntity<IssueCommentCreateResponse> createIssueComment(@PathVariable Long id, @RequestBody @Valid
 	IssueCommentCreateRequest issueCommentCreateRequest) {

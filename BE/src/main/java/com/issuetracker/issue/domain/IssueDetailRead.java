@@ -2,6 +2,7 @@ package com.issuetracker.issue.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import com.issuetracker.issue.domain.comment.IssueCommentRead;
 import com.issuetracker.label.domain.Label;

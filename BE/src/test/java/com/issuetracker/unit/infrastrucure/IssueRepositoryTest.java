@@ -1,6 +1,7 @@
 package com.issuetracker.unit.infrastrucure;
 
 import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
+import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON3;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
@@ -88,6 +89,15 @@ class IssueRepositoryTest {
 	void 이슈_내용을_수정한다() {
 		// when
 		int actual = issueRepository.updateContent(ISSUE1.getId(), "## 수정한 내용");
+
+		// then
+		assertThat(actual).isEqualTo(1);
+	}
+
+	@Test
+	void 이슈_마일스톤을_수정한다() {
+		// when
+		int actual = issueRepository.updateMilestone(ISSUE1.getId(), MILESTON3.getId());
 
 		// then
 		assertThat(actual).isEqualTo(1);

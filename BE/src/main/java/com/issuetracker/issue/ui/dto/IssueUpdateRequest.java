@@ -22,6 +22,8 @@ public class IssueUpdateRequest {
 	@Length(max = 3000, message = "이슈 내용은 최대 3000자 입니다.")
 	private String content;
 
+	private Long milestoneId;
+
 	public IssueUpdateData toIssueUpdateDataOpen(long id) {
 		return IssueUpdateData.createIssueUpdateDataOpen(id, isOpen);
 	}
@@ -32,5 +34,9 @@ public class IssueUpdateRequest {
 
 	public IssueUpdateData toIssueUpdateDataContent(long id) {
 		return IssueUpdateData.createIssueUpdateDataContent(id, content);
+	}
+
+	public IssueUpdateData toIssueUpdateDataMilestone(long id) {
+		return IssueUpdateData.createIssueUpdateDataMilestone(id, milestoneId);
 	}
 }

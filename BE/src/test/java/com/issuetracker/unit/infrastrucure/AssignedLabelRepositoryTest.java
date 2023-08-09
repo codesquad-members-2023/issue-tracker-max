@@ -1,5 +1,7 @@
 package com.issuetracker.unit.infrastrucure;
 
+import static com.issuetracker.util.fixture.AssignedLabelFixture.ASSIGNED_LABEL1;
+import static com.issuetracker.util.fixture.AssigneeFixture.ASSIGNEE1;
 import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
 import static com.issuetracker.util.fixture.MemberFixture.MEMBER4;
@@ -79,5 +81,14 @@ class AssignedLabelRepositoryTest {
 		// then
 		int expected = AssignedLabelFixture.values().length + 1;
 		assertThat(actual).isEqualTo(expected);
+	}
+
+	@Test
+	void 이슈에_라벨을_삭제한다() {
+		// when
+		int actual = assignedLabelRepository.delete(ASSIGNED_LABEL1.getId());
+
+		// then
+		assertThat(actual).isEqualTo(1);
 	}
 }
