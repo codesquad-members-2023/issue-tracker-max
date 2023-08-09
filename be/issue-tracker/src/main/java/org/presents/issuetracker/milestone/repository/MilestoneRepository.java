@@ -1,5 +1,6 @@
 package org.presents.issuetracker.milestone.repository;
 
+import org.presents.issuetracker.milestone.entity.vo.MilestoneInfo;
 import org.presents.issuetracker.milestone.entity.vo.MilestonePreview;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,6 +14,20 @@ import lombok.RequiredArgsConstructor;
 public class MilestoneRepository {
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
+	// 마일스톤 목록 조회용
+	private final RowMapper<MilestoneInfo> milestoneInfoRowMapper =
+		(rs, rowNum) -> MilestoneInfo.builder()
+			.id(rs.getLong("milestone_id"))
+			.name(rs.getString("name"))
+			.deadline(rs.getTimestamp("deadline").toLocalDateTime())
+			.description(rs.getString("description"))
+			.status(rs.getString("status"))
+			.openIssueCount(rs.getInt("open_issue_count"))
+			.closedIssueCount(rs.getInt("closed_issue_count"))
+			.progress(rs.getInt("progress"))
+			.build();
+
+	// 마일스톤 선택용 목록 조회용
 	private final RowMapper<MilestonePreview> milestonePreviewRowMapper =
 		(rs, rowNum) -> MilestonePreview.builder()
 			.id(rs.getLong("milestone_id"))
