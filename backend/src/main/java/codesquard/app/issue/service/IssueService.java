@@ -33,39 +33,39 @@ public class IssueService {
 
 	public void modifyStatus(IssueModifyStatusRequest issueModifyStatusRequest, Long issueId) {
 		IssueStatus issueStatus = IssueStatus.validateIssueStatus(issueModifyStatusRequest.getStatus());
-		issueQueryService.existIssue(issueId);
+		issueQueryService.validateExistIssue(issueId);
 		issueRepository.modifyStatus(issueStatus.name(), issueId);
 	}
 
 	public void modifyTitle(IssueModifyTitleRequest issueModifyTitleRequest, Long issueId) {
-		issueQueryService.existIssue(issueId);
+		issueQueryService.validateExistIssue(issueId);
 		issueRepository.modifyTitle(issueModifyTitleRequest.getTitle(), issueId);
 	}
 
 	public void modifyContent(IssueModifyContentRequest issueModifyTitleRequest, Long issueId) {
-		issueQueryService.existIssue(issueId);
+		issueQueryService.validateExistIssue(issueId);
 		issueRepository.modifyContent(issueModifyTitleRequest.getContent(), issueId);
 	}
 
 	public void modifyAssignees(IssueModifyAssigneesRequest issueModifyAssigneesRequest, Long issueId) {
-		issueQueryService.existIssue(issueId);
+		issueQueryService.validateExistIssue(issueId);
 		issueRepository.deleteIssueAssigneesBy(issueId);
 		issueRepository.saveIssueAssignee(issueId, issueModifyAssigneesRequest.getAssignees());
 	}
 
 	public void modifyMilestone(IssueModifyMilestoneRequest issueModifyMilestoneRequest, Long issueId) {
-		issueQueryService.existIssue(issueId);
+		issueQueryService.validateExistIssue(issueId);
 		issueRepository.modifyMilestone(issueModifyMilestoneRequest.getMilestone(), issueId);
 	}
 
 	public void modifyLabels(IssueModifyLabelsRequest issueModifyLabelsRequest, Long issueId) {
-		issueQueryService.existIssue(issueId);
+		issueQueryService.validateExistIssue(issueId);
 		issueRepository.deleteIssueLabelsBy(issueId);
 		issueRepository.saveIssueLabel(issueId, issueModifyLabelsRequest.getLabels());
 	}
 
 	public void delete(Long issueId) {
-		issueQueryService.existIssue(issueId);
+		issueQueryService.validateExistIssue(issueId);
 		issueRepository.deleteBy(issueId);
 		commentRepository.deleteByIssueId(issueId);
 	}

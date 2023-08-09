@@ -23,7 +23,7 @@ public class IssueQueryService {
 	private final IssueRepository issueRepository;
 
 	public IssueReadResponse get(Long issueId) {
-		existIssue(issueId);
+		validateExistIssue(issueId);
 		IssueReadResponse issueReadResponse = issueRepository.findBy(issueId);
 		List<IssueUserResponse> assignees = IssueUserResponse.from(issueRepository.findAssigneesBy(issueId));
 		List<IssueLabelResponse> labels = IssueLabelResponse.from(issueRepository.findLabelsBy(issueId));
@@ -33,7 +33,7 @@ public class IssueQueryService {
 		return issueReadResponse.from(assignees, labels, issueMilestoneCountResponse, issueCommentsResponse);
 	}
 
-	public void existIssue(Long issueId) {
+	public void validateExistIssue(Long issueId) {
 		if (!issueRepository.isExist(issueId)) {
 			throw new NoSuchIssueException(IssueErrorCode.NOT_FOUND_ISSUE);
 		}
