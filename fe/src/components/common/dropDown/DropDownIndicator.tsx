@@ -14,10 +14,10 @@ export const DropDownIndicator: React.FC<Props> = ({ size, indicator }) => {
   return (
     <div
       css={{
-        width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        ...SIZE[size],
       }}
     >
       <Button
@@ -26,7 +26,6 @@ export const DropDownIndicator: React.FC<Props> = ({ size, indicator }) => {
           display: 'flex',
           justifyContent: 'space-between',
           font: theme.fonts.availableMedium16,
-          width: '100%',
         }}
       >
         {indicator}
