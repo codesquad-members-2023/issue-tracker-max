@@ -41,8 +41,9 @@ public class IssueController {
 	}
 
 	@PatchMapping("/status")
-	public ApiResponse<Void> updateStatus(@RequestBody IssuesStatusRequest request) {
-		issueService.updateStatus(request);
+	public ApiResponse<Void> updateStatus(@RequestBody IssuesStatusRequest request, HttpServletRequest servletRequest) {
+		Integer memberId = (Integer)servletRequest.getAttribute(MEMBER_ID);
+		issueService.updateStatus(request, memberId.longValue());
 		return ApiResponse.success();
 	}
 

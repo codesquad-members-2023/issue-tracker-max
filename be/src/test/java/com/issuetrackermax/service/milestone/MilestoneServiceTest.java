@@ -1,5 +1,6 @@
 package com.issuetrackermax.service.milestone;
 
+import static com.issuetrackermax.fixture.EntityFixture.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +17,6 @@ import com.issuetrackermax.controller.milestone.dto.request.MilestonePostRequest
 import com.issuetrackermax.controller.milestone.dto.response.MilestoneDetailResponse;
 import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.issue.IssueRepository;
-import com.issuetrackermax.domain.issue.entity.Issue;
 import com.issuetrackermax.domain.milestone.MilestoneRepository;
 import com.issuetrackermax.domain.milestone.entity.Milestone;
 import com.issuetrackermax.util.DatabaseCleaner;
@@ -62,6 +62,7 @@ class MilestoneServiceTest extends IntegrationTestSupport {
 	void getOpenMilestone() {
 		// when
 		Long milestoneId = milestoneRepository.save(
+
 			Milestone.builder()
 				.title("milestone_title")
 				.isOpen(true)
@@ -70,28 +71,13 @@ class MilestoneServiceTest extends IntegrationTestSupport {
 				.build()
 		);
 		issueRepository.save(
-			Issue.builder()
-				.isOpen(true)
-				.title("issue_title1")
-				.writerId(1L)
-				.milestoneId(milestoneId)
-				.build()
+			makeIssue(true, "issue_title1", milestoneId, 1L)
 		);
 		issueRepository.save(
-			Issue.builder()
-				.isOpen(true)
-				.title("issue_title2")
-				.writerId(1L)
-				.milestoneId(milestoneId)
-				.build()
+			makeIssue(true, "issue_title2", milestoneId, 1L)
 		);
 		issueRepository.save(
-			Issue.builder()
-				.isOpen(false)
-				.title("issue_title3")
-				.writerId(1L)
-				.milestoneId(milestoneId)
-				.build()
+			makeIssue(false, "issue_title3", milestoneId, 1L)
 		);
 
 		// when
