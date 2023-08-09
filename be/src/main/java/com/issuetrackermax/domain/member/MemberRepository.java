@@ -1,6 +1,7 @@
 package com.issuetrackermax.domain.member;
 
 import java.sql.Types;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -63,5 +64,18 @@ public class MemberRepository {
 	public Boolean existsLoginId(String loginId) {
 		String sql = "SELECT EXISTS (SELECT 1 FROM member WHERE login_id = :loginId)";
 		return jdbcTemplate.queryForObject(sql, Map.of("loginId", loginId), Boolean.class);
+	}
+
+	public Boolean existByIds(List<Long> ids) {
+		String sql = "SELECT COUNT(*) FROM member WHERE id IN (:ids)";
+		Integer count = jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("ids", ids), Integer.class);
+		return count != null && count.equals(ids.size());
+	}
+
+	public Boolean existById(Long id) {
+		String sql = "SELECT EXISTS(SELECT 1 FROM member WHERE id =:id)";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("id", id), Boolean.class);
 	}
 }
