@@ -36,9 +36,9 @@ export default function Login() {
         localStorage.setItem('accessToken', res.data.message.accessToken);
         localStorage.setItem('refreshToken', res.data.message.refreshToken);
         login({
-          userId: userId,
-          pwd: password,
+          userId: res.data.message.userId,
           userName: res.data.message.userName,
+          profileImg: res.data.message.userProfileImg,
           accessToken: res.data.message.accessToken,
         });
       }
@@ -71,9 +71,7 @@ export default function Login() {
         type="button"
         outline
         onClick={() => {
-          window.location.assign(
-            GITHUB_LOGIN_URL + `&redirect_uri=localhost:5173`
-          );
+          window.location.assign(GITHUB_LOGIN_URL);
         }}>
         GitHub 계정으로 로그인
       </GitHubOAuthButton>

@@ -22,8 +22,8 @@ const useRefreshToken = () => {
 
       const newAuth: AuthUser = {
         userId: prev.userId,
-        pwd: prev.pwd,
         userName: prev.userName,
+        profileImg: prev.profileImg,
         accessToken: response.data.message.accessToken,
       };
       return newAuth;

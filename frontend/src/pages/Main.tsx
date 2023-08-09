@@ -15,22 +15,20 @@ export default function Main() {
     }
 
     try {
-      const res = await axiosPrivate.post(
-        '/api/logout',
-        JSON.stringify({ id: auth.userId, password: auth.pwd }),
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        }
-      );
+      const res = await axiosPrivate.post('/api/logout', null, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
 
       if (res.status === 200) {
         localStorage.clear();
         logout();
+        navigate('/login');
+      } else {
+        console.error('로그아웃 실패:', res.status);
       }
-      navigate('/login');
     } catch (err) {
-      console.error(err);
+      console.error('로그아웃 에러:', err);
     }
   };
 
