@@ -11,11 +11,11 @@ import { Container } from "./Container.style";
 export default function AssigneeField({
   assignees,
   onAssigneeChange,
-  onEditIssue,
+  onEditAssignees,
 }: {
   assignees: Set<number>;
   onAssigneeChange: (assignees: Set<number>) => void;
-  onEditIssue?: () => void;
+  onEditAssignees?: () => void;
 }) {
   const { data: userList } = useFetch(getUsers);
 
@@ -59,7 +59,7 @@ export default function AssigneeField({
             dropdownList={assigneeDropdownList}
             dropdownPanelPosition="right"
             dropdownOption="multiple"
-            outsideClickHandler={onEditIssue}
+            outsideClickHandler={onEditAssignees}
           />
         </CheckboxGroup>
       )}

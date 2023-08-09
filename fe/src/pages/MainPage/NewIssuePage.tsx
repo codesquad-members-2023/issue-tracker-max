@@ -2,7 +2,7 @@ import XIcon from "@assets/icon/xSquare.svg";
 import { Avatar } from "@components/common/Avatar";
 import Button from "@components/common/Button";
 import Sidebar from "@components/common/Sidebar/Sidebar";
-import TextArea from "@components/common/TextArea";
+import TextAreaContainer from "@components/common/TextArea/TextAreaContainer";
 import TextInput from "@components/common/TextInput";
 import { postIssue } from "api";
 import { useAuth } from "context/authContext";
@@ -91,7 +91,7 @@ export default function NewIssuePage() {
             helpText="이슈 제목은 필수로 입력해주세요!"
             onChange={onTitleChange}
           />
-          <TextArea
+          <TextAreaContainer
             name="comment"
             placeholder="코멘트를 입력하세요"
             value={newIssueInfo.content}

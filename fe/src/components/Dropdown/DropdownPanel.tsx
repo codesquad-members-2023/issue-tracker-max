@@ -130,4 +130,31 @@ const Header = styled.header`
 
 const DropdownList = styled.ul`
   width: 100%;
+  max-height: 20rem;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+    background-color: ${({ theme: { neutral } }) => neutral.surface.default};
+  }
+
+  &::-webkit-scrollbar-thumb {
+    outline: none;
+    border-radius: 10px;
+    border: 4px solid transparent;
+    box-shadow: ${({ theme: { neutral } }) =>
+      `inset 6px 6px 0 ${neutral.border.default}`};
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    border: 4px solid transparent;
+    box-shadow: ${({ theme: { neutral } }) =>
+      `inset 6px 6px 0 ${neutral.border.defaultActive}`};
+  }
+
+  &::-webkit-scrollbar-track {
+    box-shadow: none;
+    background-color: transparent;
+  }
 `;

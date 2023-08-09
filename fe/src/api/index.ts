@@ -50,6 +50,24 @@ export const putIssueIsOpen = async (
   return await fetcherWithBearer.put(`/issues/${issueId}/isOpen`, body);
 };
 
+export const putIssueContent = async (
+  issueId: number,
+  body: { content: string }
+) => {
+  return await fetcherWithBearer.put(`/issues/${issueId}/content`, body);
+};
+
+export const putIssueComment = async (
+  issueId: number,
+  commentId: number,
+  body: { content: string }
+) => {
+  return await fetcherWithBearer.put(
+    `/issues/${issueId}/comments/${commentId}`,
+    body
+  );
+};
+
 export const getIssueSidebar = async (issueId: number) => {
   return await fetcherWithBearer.get<IssueSidebar>(
     `/issues/${issueId}/sidebar`
@@ -77,7 +95,7 @@ export const postImage = async (file: File) => {
   formData.append("image", file);
 
   return await fetcherFormDataWithBearer.post<{ fileUrl: string }>(
-    "/upload",
+    "/images/upload",
     formData
   );
 };
@@ -88,4 +106,17 @@ export const postEditField = async (
   body: EditAssigneesBody | EditLabelsBody | EditMilestoneBody
 ) => {
   return await fetcherWithBearer.post(`/issues/${issuesId}/${field}`, body);
+};
+
+export const getComments = async (issueId: number, cursor: number) => {
+  return await fetcherWithBearer.get(
+    `/issues/${issueId}/comments?cursor=${cursor}`
+  );
+};
+
+export const postComment = async (
+  issueId: number,
+  body: { content: string }
+) => {
+  return await fetcherWithBearer.post(`/issues/${issueId}/comments`, body);
 };

@@ -1,48 +1,159 @@
 import editIcon from "@assets/icon/edit.svg";
 import smileIcon from "@assets/icon/smile.svg";
+import xSquareIcon from "@assets/icon/xSquare.svg";
+import { convertPastTimestamp } from "@utils/time";
+import { putIssueComment, putIssueContent } from "api";
+import { useAuth } from "context/authContext";
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { styled } from "styled-components";
 import { Avatar } from "./common/Avatar";
 import Button from "./common/Button";
+import FileUploadArea from "./common/TextArea/FileUploadArea";
+import TextAreaWrapper from "./common/TextArea/TextAreaWrapper";
 
 export default function Comment({
-  username,
-  profileUrl,
+  issueNumber,
+  commentId,
+  author,
   createdAt,
   content,
   isIssueAuthor,
+  updateContent,
 }: {
-  username: string;
-  profileUrl: string;
+  issueNumber: number;
+  commentId?: number;
+  author: {
+    username: string;
+    profileUrl: string;
+  };
   createdAt: string;
   content: string;
   isIssueAuthor: boolean;
+  updateContent: (newContent: string, commendId?: number) => void;
 }) {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [prevContent, setPrevContent] = useState<string>(content);
+  const [newContent, setNewContent] = useState<string>(content);
+
+  const { userInfo } = useAuth();
+  const isAuthor = userInfo.username === author.username;
+
+  if (prevContent !== content) {
+    setPrevContent(content);
+    setNewContent(content);
+  }
+
+  const isChangedContent = prevContent !== newContent;
+
+  const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNewContent(e.target.value);
+  };
+
+  const appendContent = (content: string) => {
+    setNewContent((prev) => `${prev} ${content}`);
+  };
+
+  const onCancelEditing = () => {
+    setIsEditing(false);
+    setNewContent(content);
+  };
+
+  const onEditComplete = async () => {
+    setIsEditing(false);
+    const body = { content: newContent };
+
+    try {
+      const { status } = commentId
+        ? await putIssueComment(issueNumber, commentId, body)
+        : await putIssueContent(issueNumber, body);
+
+      if (status === 200) {
+        updateContent(newContent, commentId);
+      }
+    } catch (error) {
+      // TODO: error handling
+      console.log(error);
+    }
+  };
+
   return (
-    <StyledComment>
-      <Header>
-        <div className="left-wrapper">
-          <Avatar src={profileUrl} alt={`${username}-avatar`} $size="M" />
-          <span className="comment-author">{username}</span>
-          <span className="comment-date">{createdAt}</span>
-        </div>
+    <>
+      <StyledComment>
+        <Header>
+          <div className="left-wrapper">
+            <Avatar
+              src={author.profileUrl}
+              alt={`${author.username}-avatar`}
+              $size="M"
+            />
+            <span className="comment-author">{author.username}</span>
+            <span className="comment-date">
+              {createdAt && convertPastTimestamp(createdAt)}
+            </span>
+          </div>
 
-        <div className="right-wrapper">
-          {isIssueAuthor && <AuthorTag>작성자</AuthorTag>}
+          <div className="right-wrapper">
+            {isIssueAuthor && <AuthorTag>작성자</AuthorTag>}
 
-          <Button variant="ghost" size="S">
-            <img src={editIcon} alt="코멘트 편집" />
-            <span>편집</span>
+            {isAuthor && (
+              <Button
+                variant="ghost"
+                size="S"
+                onClick={() => setIsEditing(true)}>
+                <img className="button-icon" src={editIcon} alt="코멘트 편집" />
+                <span className="button-text">편집</span>
+              </Button>
+            )}
+
+            <Button variant="ghost" size="S">
+              <img className="button-icon" src={smileIcon} alt="코멘트 반응" />
+              <span className="button-text">반응</span>
+            </Button>
+          </div>
+        </Header>
+        <Body>
+          {isEditing ? (
+            <>
+              <TextAreaWrapper
+                value={newContent}
+                onChange={onContentChange}
+                rows={5}
+              />
+              <FileUploadArea {...{ appendContent }} />
+            </>
+          ) : (
+            <div className="comment-wrapper">
+              <ReactMarkdown children={content} />
+            </div>
+          )}
+        </Body>
+      </StyledComment>
+      {isEditing && (
+        <ButtonWrapper>
+          <Button variant="outline" size="S" onClick={onCancelEditing}>
+            <img
+              className="button-icon"
+              src={xSquareIcon}
+              alt="코멘트 편집 취소"
+            />
+            <span className="button-text">편집 취소</span>
           </Button>
-
-          <Button variant="ghost" size="S">
-            <img src={smileIcon} alt="코멘트 반응" />
-            <span>반응</span>
+          <Button
+            variant="container"
+            size="S"
+            disabled={!isChangedContent}
+            onClick={onEditComplete}>
+            <img
+              className="button-icon"
+              src={editIcon}
+              alt="코멘트 편집 완료"
+            />
+            <span className="button-text">편집 완료</span>
           </Button>
-        </div>
-      </Header>
-
-      <Body>{content}</Body>
-    </StyledComment>
+        </ButtonWrapper>
+      )}
+    </>
   );
 }
 
@@ -65,6 +176,7 @@ const Header = styled.header`
 
   .left-wrapper {
     display: flex;
+    align-items: center;
     gap: 8px;
 
     .comment-author {
@@ -81,6 +193,15 @@ const Header = styled.header`
   .right-wrapper {
     display: flex;
     gap: 16px;
+
+    .button-icon {
+      filter: ${({ theme: { filter } }) => filter.neutralTextDefault};
+    }
+
+    .button-text {
+      font: ${({ theme: { font } }) => font.displayMD12};
+      color: ${({ theme: { neutral } }) => neutral.text.default};
+    }
   }
 `;
 
@@ -98,10 +219,20 @@ const AuthorTag = styled.span`
 
 const Body = styled.div`
   width: 100%;
-  padding: 16px 24px;
   background-color: ${({ theme: { neutral } }) => neutral.surface.strong};
   border-bottom-left-radius: ${({ theme: { radius } }) => radius.l};
   border-bottom-right-radius: ${({ theme: { radius } }) => radius.l};
   font: ${({ theme: { font } }) => font.displayMD16};
   color: ${({ theme: { neutral } }) => neutral.text.default};
+
+  .comment-wrapper {
+    padding: 16px 24px;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  width: 100%;
 `;

@@ -1,14 +1,9 @@
 export const compareSet = (
   prev: Set<number>,
   current: Set<number>
-): { addUserAccountId: number[]; removeUserAccountId: number[] } => {
+): { addedElements: number[]; removedElements: number[] } => {
   const addedElements = [...current].filter((element) => !prev.has(element));
   const removedElements = [...prev].filter((element) => !current.has(element));
 
-  const result = {
-    addUserAccountId: addedElements,
-    removeUserAccountId: removedElements,
-  };
-
-  return result;
+  return { addedElements, removedElements };
 };

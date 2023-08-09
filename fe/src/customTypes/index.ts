@@ -61,3 +61,11 @@ export type IssueSidebar = {
   labels: number[];
   milestone: number;
 };
+
+export type IssueComment = {
+  commentId: number;
+  username: string;
+  profileUrl: string;
+  content: string;
+  createdAt: string;
+};

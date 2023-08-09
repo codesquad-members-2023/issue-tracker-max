@@ -1,8 +1,8 @@
 import IssueDetailBody from "@components/Issues/IssueDetail/IssueDetailBody";
 import IssueDetailHeader from "@components/Issues/IssueDetail/IssueDetailHeader";
-import { IssueDetails, IssueSidebar } from "@customTypes/index";
+import { IssueDetails } from "@customTypes/index";
 import useFetch from "@hooks/useFetch";
-import { getIssueDetails, getIssueSidebar } from "api";
+import { getIssueDetails } from "api";
 import { useCallback } from "react";
 import { useParams } from "react-router-dom";
 
@@ -14,11 +14,6 @@ export default function IssueDetailPage() {
     useFetch<IssueDetails>(
       useCallback(() => getIssueDetails(issueNumber), [issueNumber])
     );
-  const { data: issueSidebar } = useFetch<IssueSidebar>(
-    useCallback(() => getIssueSidebar(issueNumber), [issueNumber])
-  );
-
-  // TODO: comments useFetch
 
   const updateIssueTitle = (newTitle: string) => {
     setIssueDetails((prev) => {
@@ -32,6 +27,19 @@ export default function IssueDetailPage() {
     });
   };
 
+  const updateIssueContent = (newContent: string) => {
+    setIssueDetails((prev) => {
+      return prev ? { ...prev, content: newContent } : prev;
+    });
+  };
+
+  // TODO: comment 추가 전달
+  // const updateIssueCommentCount = () => {
+  //   setIssueDetails((prev) => {
+  //     return prev ? { ...prev, commentCount: prev.commentCount + 1 } : prev;
+  //   });
+  // };
+
   return (
     <>
       <IssueDetailHeader
@@ -42,10 +50,7 @@ export default function IssueDetailPage() {
           numComments: 0,
         }}
       />
-
-      {issueSidebar && (
-        <IssueDetailBody {...{ issueNumber, ...issueSidebar }} />
-      )}
+      <IssueDetailBody {...{ issueNumber, issueDetails, updateIssueContent }} />
     </>
   );
 }

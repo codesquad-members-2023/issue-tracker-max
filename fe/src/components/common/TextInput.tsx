@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Label } from "./Label";
+import { Label } from "./Label.style";
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
@@ -80,7 +80,7 @@ const InputContainer = styled.div<{
 
 const Input = styled.input`
   display: flex;
-  width: 100%;
+  flex-grow: 1;
   color: ${({ theme: { neutral } }) => neutral.text.default};
   font: ${({ theme: { font } }) => font.displayMD16};
   caret-color: ${({ theme: { palette } }) => palette.blue};

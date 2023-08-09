@@ -1,19 +1,16 @@
+import { faker } from "@faker-js/faker";
+
 export const loginInfo: Record<string, string> = {
   zoeyzoey: "zoeyzoey",
 };
 
-export const users = [
-  {
-    userAccountId: 1,
-    username: "bruni",
-    profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
-  },
-  {
-    userAccountId: 2,
-    username: "bean",
-    profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
-  },
-];
+export const users = Array.from({ length: 50 }, (_, i) => {
+  return {
+    userAccountId: i + 1,
+    username: faker.internet.userName(),
+    profileUrl: faker.image.avatar(),
+  };
+});
 
 export const issueList = [
   {
@@ -121,10 +118,16 @@ export const issueDetails = {
   isOpen: true,
   createdAt: "2023-07-31 11:33:03",
   author: {
-    username: "asdf",
-    profileUrl: "~~~",
+    username: faker.internet.userName(),
+    profileUrl: faker.image.avatar(),
   },
-  content: "~~~~",
+  content: `
+  혹시 차이는 
+  
+  ![autism](https://github.com/issue-tracker-08/issue-tracker-max/assets/111998760/0072a597-4dd1-452d-b881-15ba0b50d47d) 
+  
+  뭐야 이거 왜 지금은 돼
+  `,
 };
 
 export const issueSidebar = {
@@ -186,3 +189,33 @@ export const milestoneList = [
     closedIssueCount: 10,
   },
 ];
+
+const commentIds = Array.from({ length: 20 }, (_, i) => i + 1);
+
+export const comment0 = {
+  data: Array.from({ length: 10 }, (_, i) => {
+    return {
+      commentId: commentIds[i],
+      username: faker.internet.userName(),
+      profileUrl: faker.image.avatar(),
+      content: faker.lorem.sentences(),
+      createdAt: faker.date.recent().toISOString(),
+    };
+  }),
+  hasMore: true,
+  nextCursor: 1,
+};
+
+export const comment1 = {
+  data: Array.from({ length: 10 }, (_, i) => {
+    return {
+      commentId: commentIds[i + 10],
+      username: faker.internet.userName(),
+      profileUrl: faker.image.avatar(),
+      content: faker.lorem.sentences(),
+      createdAt: faker.date.recent().toISOString(),
+    };
+  }),
+  hasMore: false,
+  nextCursor: 2,
+};

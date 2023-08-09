@@ -1,5 +1,7 @@
 import { rest } from "msw";
 import {
+  comment0,
+  comment1,
   issueDetails,
   issueList,
   issueSidebar,
@@ -110,10 +112,13 @@ export const handlers = [
     return res(ctx.status(200), ctx.json({ issueId: issueList.length + 1 }));
   }),
 
-  rest.post("/api/upload", async (_, res, ctx) => {
+  rest.post("/api/images/upload", async (_, res, ctx) => {
     return res(
       ctx.status(200),
-      ctx.json({ fileUrl: "https://i.imgur.com/1.jpg" })
+      ctx.json({
+        fileUrl:
+          "https://github.com/codesquad-members-2023/issue-tracker-max/assets/111998760/6689b9ad-c631-40d8-bda4-180f075abc19",
+      })
     );
   }),
 
@@ -128,6 +133,35 @@ export const handlers = [
   rest.post("/api/issues/:issueId/milestone", async (_, res, ctx) => {
     return res(ctx.status(200));
   }),
-];
 
-// TODO: 만료된 토큰에 대한 응답 처리
+  rest.get("/api/issues/:issueId/comments", async (req, res, ctx) => {
+    const cursor = req.url.searchParams.get("cursor");
+    if (cursor === "0") {
+      return res(ctx.status(200), ctx.json(comment0));
+    }
+    if (cursor === "1") {
+      return res(ctx.status(200), ctx.json(comment1));
+    }
+  }),
+
+  rest.post("/api/issues/:issueId/comments", async (req, res, ctx) => {
+    const { content } = await req.json<{ content: string }>();
+
+    return res(
+      ctx.status(201),
+      ctx.json({
+        commentId: 1000,
+        content: content,
+        createdAt: new Date().toISOString(),
+      })
+    );
+  }),
+
+  rest.put("/api/issues/:issueId/comments/:commentId", async (_, res, ctx) => {
+    return res(ctx.status(200));
+  }),
+
+  rest.put("/api/issues/:issueId/content", async (_, res, ctx) => {
+    return res(ctx.status(200));
+  }),
+];
