@@ -16,7 +16,7 @@
         </association>
 
         <collection property="assignees" ofType="User">
-            <result property="loginId" column="assignee_login_id"/>
+            <result property="userId" column="assignee_user_id"/>
             <result property="image" column="assignee_image"/>
         </collection>
 
@@ -36,7 +36,7 @@
         i.status AS issue_status,
         i.created_at AS issue_created_at,
         author.login_id AS author_login_id,
-        assignee_user.login_id AS assignee_login_id,
+        assignee_user.user_id AS assignee_user_id,
         assignee_user.image AS assignee_image,
         l.label_id AS label_id,
         l.name AS label_name,

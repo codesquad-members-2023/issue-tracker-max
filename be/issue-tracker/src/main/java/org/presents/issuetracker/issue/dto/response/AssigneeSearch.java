@@ -12,11 +12,11 @@ import lombok.Getter;
 @Builder
 public class AssigneeSearch {
 
-	private final String loginId;
+	private final Long userId;
 	private final String image;
 
 	private static AssigneeSearch fromEntity(User assignee) {
-		return AssigneeSearch.builder().loginId(assignee.getLoginId()).image(assignee.getImage()).build();
+		return AssigneeSearch.builder().userId(assignee.getUserId()).image(assignee.getImage()).build();
 	}
 
 	public static List<AssigneeSearch> from(List<User> assignees) {
