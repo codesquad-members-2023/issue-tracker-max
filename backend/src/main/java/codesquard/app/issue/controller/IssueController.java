@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.api.response.ApiResponse;
@@ -25,22 +26,25 @@ import codesquard.app.issue.dto.response.IssueDeleteResponse;
 import codesquard.app.issue.dto.response.IssueModifyResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueSaveResponse;
+import codesquard.app.issue.service.IssueQueryService;
 import codesquard.app.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@RequestMapping(path = "/api/issues")
 @RestController
 public class IssueController {
 
 	private final IssueService issueService;
+	private final IssueQueryService issueQueryService;
 
-	@GetMapping("/api/issues/{issueId}")
+	@GetMapping("/{issueId}")
 	public ApiResponse<IssueReadResponse> get(@PathVariable Long issueId) {
 		return ApiResponse.ok(issueService.get(issueId));
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping("/api/issues")
+	@PostMapping
 	public ApiResponse<IssueSaveResponse> save(
 		@Valid @RequestBody IssueSaveRequest issueSaveRequest) {
 		Long userId = 1L;
@@ -49,49 +53,49 @@ public class IssueController {
 			IssueSaveResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/status")
+	@PatchMapping("/{issueId}/status")
 	public ApiResponse<IssueModifyResponse> modifyStatus(
 		@RequestBody IssueModifyStatusRequest issueModifyStatusRequest, @PathVariable Long issueId) {
 		issueService.modifyStatus(issueModifyStatusRequest, issueId);
 		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/title")
+	@PatchMapping("/{issueId}/title")
 	public ApiResponse<IssueModifyResponse> modifyTitle(
 		@Valid @RequestBody IssueModifyTitleRequest issueModifyTitleRequest, @PathVariable Long issueId) {
 		issueService.modifyTitle(issueModifyTitleRequest, issueId);
 		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/content")
+	@PatchMapping("/{issueId}/content")
 	public ApiResponse<IssueModifyResponse> modifyContent(
 		@Valid @RequestBody IssueModifyContentRequest issueModifyContentRequest, @PathVariable Long issueId) {
 		issueService.modifyContent(issueModifyContentRequest, issueId);
 		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/milestones")
+	@PatchMapping("/{issueId}/milestones")
 	public ApiResponse<IssueModifyResponse> modifyMilestone(
 		@RequestBody IssueModifyMilestoneRequest issueModifyMilestoneRequest, @PathVariable Long issueId) {
 		issueService.modifyMilestone(issueModifyMilestoneRequest, issueId);
 		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/assignees")
+	@PatchMapping("/{issueId}/assignees")
 	public ApiResponse<IssueModifyResponse> modifyAssignees(
 		@RequestBody IssueModifyAssigneesRequest issueModifyAssigneesRequest, @PathVariable Long issueId) {
 		issueService.modifyAssignees(issueModifyAssigneesRequest, issueId);
 		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/labels")
+	@PatchMapping("/{issueId}/labels")
 	public ApiResponse<IssueModifyResponse> modifyLabels(
 		@RequestBody IssueModifyLabelsRequest issueModifyLabelsRequest, @PathVariable Long issueId) {
 		issueService.modifyLabels(issueModifyLabelsRequest, issueId);
 		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@DeleteMapping("/api/issues/{issueId}")
+	@DeleteMapping("/{issueId}")
 	public ApiResponse<IssueDeleteResponse> delete(@PathVariable Long issueId) {
 		issueService.delete(issueId);
 		return ApiResponse.ok(IssueDeleteResponse.success(issueId));

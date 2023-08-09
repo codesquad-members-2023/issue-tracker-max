@@ -26,12 +26,16 @@ import codesquard.app.issue.fixture.FixtureFactory;
 
 class IssueControllerTest extends ControllerTestSupport {
 
+	static final int TITLE_MAX_LENGTH = 50;
+	static final int CONTENT_MAX_LENGTH = 10000;
+	public static final String INVALID_ISSUE_STATUS_NAME = "OPEN";
+
 	@DisplayName("이슈의 상세 내용을 조회한다.")
 	@Test
 	void getIssueDetail() throws Exception {
 		// given
 		int id = 1;
-		given(issueService.get((long)id)).willReturn(FixtureFactory.createIssueReadResponse((long)id));
+		given(issueQueryService.get((long)id)).willReturn(FixtureFactory.createIssueReadResponse((long)id));
 
 		// when & then
 		mockMvc.perform(get("/api/issues/" + id))
@@ -89,7 +93,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	@Test
 	void create_Input51Title_Response400() throws Exception {
 		// given
-		String title = "123456789101112131415161718192021222324252627282930";
+		String title = generateExceedingMaxLengthContent(TITLE_MAX_LENGTH);
 
 		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest(title, "내용", 1L);
 
@@ -120,7 +124,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	@Test
 	void create_Input10000Content_Response400() throws Exception {
 		// given
-		String content = generateExceedingMaxLengthContent(10000);
+		String content = generateExceedingMaxLengthContent(CONTENT_MAX_LENGTH);
 
 		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest("Controller", content, 1L);
 
@@ -153,7 +157,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modifyInvalidStatus_Response400() throws Exception {
 		// given
 		int issueId = 1;
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest("OPEN");
+		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(INVALID_ISSUE_STATUS_NAME);
 		willThrow(new IllegalIssueStatusException(IssueErrorCode.INVALID_ISSUE_STATUS))
 			.given(issueService).modifyStatus(any(IssueModifyStatusRequest.class), anyLong());
 
@@ -202,7 +206,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modify_Input51Title_Response400() throws Exception {
 		// given
 		int issueId = 1;
-		String title = generateExceedingMaxLengthContent(51);
+		String title = generateExceedingMaxLengthContent(TITLE_MAX_LENGTH);
 		IssueModifyTitleRequest issueModifyTitleRequest = new IssueModifyTitleRequest(title);
 
 		// when & then
@@ -250,7 +254,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modify_Input10000Content_Response400() throws Exception {
 		// given
 		int issueId = 1;
-		String title = generateExceedingMaxLengthContent(10000);
+		String title = generateExceedingMaxLengthContent(CONTENT_MAX_LENGTH);
 		IssueModifyContentRequest issueModifyContentRequest = new IssueModifyContentRequest(title);
 
 		// when & then
@@ -266,7 +270,8 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modifyMilestone() throws Exception {
 		// given
 		int issueId = 1;
-		IssueModifyMilestoneRequest issueModifyMilestoneRequest = new IssueModifyMilestoneRequest(2L);
+		Long milestoneId = 2L;
+		IssueModifyMilestoneRequest issueModifyMilestoneRequest = new IssueModifyMilestoneRequest(milestoneId);
 
 		// when & then
 		mockMvc.perform(patch("/api/issues/" + issueId + "/milestones")
@@ -282,7 +287,8 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modifyAssignees() throws Exception {
 		// given
 		int issueId = 1;
-		IssueModifyAssigneesRequest issueModifyAssigneesRequest = new IssueModifyAssigneesRequest(List.of(1L, 2L));
+		List<Long> assigneesId = List.of(1L, 2L);
+		IssueModifyAssigneesRequest issueModifyAssigneesRequest = new IssueModifyAssigneesRequest(assigneesId);
 
 		// when & then
 		mockMvc.perform(patch("/api/issues/" + issueId + "/assignees")
@@ -298,7 +304,8 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modifyLabels() throws Exception {
 		// given
 		int issueId = 1;
-		IssueModifyLabelsRequest issueModifyLabelsRequest = new IssueModifyLabelsRequest(List.of(1L, 2L));
+		List<Long> labelsId = List.of(1L, 2L);
+		IssueModifyLabelsRequest issueModifyLabelsRequest = new IssueModifyLabelsRequest(labelsId);
 
 		// when & then
 		mockMvc.perform(patch("/api/issues/" + issueId + "/labels")

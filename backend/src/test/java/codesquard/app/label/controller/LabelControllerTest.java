@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import codesquard.app.label.entity.Label;
 import codesquard.app.label_milestone.ControllerTestSupport;
 import codesquard.app.label.dto.request.LabelSaveRequest;
 
@@ -17,11 +18,11 @@ class LabelControllerTest extends ControllerTestSupport {
 	@Test
 	void save() throws Exception {
 		// given
-		LabelSaveRequest labelSaveRequest = new LabelSaveRequest("라벨명", "dark", "#ffffff", "라벨 설명");
+		Label label = new Label("라벨명", "dark", "#ffffff", "라벨 설명");
 
 		// when // then
 		mockMvc.perform(post("/api/labels")
-				.content(objectMapper.writeValueAsString(labelSaveRequest))
+				.content(objectMapper.writeValueAsString(label))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isCreated())
