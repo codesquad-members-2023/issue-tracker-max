@@ -190,7 +190,7 @@ export const ListSideBar: React.FC<Props> = ({
           indicator="마일스톤"
           size="L"
           isPanelOpen={isPanelOpen === 'milestones'}
-          onClick={() => openPanel(getLabels, 'labels')}
+          onClick={() => openPanel(getMilestones, 'milestones')}
         >
           <DropDownPanel
             panelHeader="마일스톤 설정"

@@ -34,3 +34,10 @@ type Issue = {
   createdAt: string;
   isOpen: boolean;
 };
+
+type DefaultFileStatusType = {
+  typeError: boolean;
+  sizeError: boolean;
+  isUploading: boolean;
+  uploadFailed: boolean;
+};
