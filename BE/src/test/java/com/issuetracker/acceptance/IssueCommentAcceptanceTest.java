@@ -18,7 +18,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.http.HttpStatus;
 
-import com.issuetracker.issue.ui.dto.IssueCommentResponse;
+import com.issuetracker.issue.ui.dto.comment.IssueCommentResponse;
 import com.issuetracker.util.AcceptanceTest;
 
 public class IssueCommentAcceptanceTest extends AcceptanceTest {

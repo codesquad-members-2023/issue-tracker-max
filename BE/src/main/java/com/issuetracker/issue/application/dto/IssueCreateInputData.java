@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.issuetracker.issue.domain.AssignedLabel;
-import com.issuetracker.issue.domain.Assignee;
+import com.issuetracker.issue.domain.assignedlabel.AssignedLabel;
+import com.issuetracker.issue.domain.assignee.Assignee;
 import com.issuetracker.issue.domain.Issue;
 
 import lombok.AllArgsConstructor;

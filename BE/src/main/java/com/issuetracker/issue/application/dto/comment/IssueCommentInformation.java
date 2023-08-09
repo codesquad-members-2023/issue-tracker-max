@@ -1,10 +1,10 @@
-package com.issuetracker.issue.application.dto;
+package com.issuetracker.issue.application.dto.comment;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.issuetracker.issue.domain.IssueCommentRead;
+import com.issuetracker.issue.domain.comment.IssueCommentRead;
 import com.issuetracker.member.application.dto.MemberInformation;
 
 import lombok.AllArgsConstructor;
@@ -12,15 +12,15 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class CommentInformation {
+public class IssueCommentInformation {
 
 	private Long id;
 	private String content;
 	private LocalDateTime createAt;
 	private MemberInformation author;
 
-	public static CommentInformation from(IssueCommentRead issueCommentRead) {
-		return new CommentInformation(
+	public static IssueCommentInformation from(IssueCommentRead issueCommentRead) {
+		return new IssueCommentInformation(
 			issueCommentRead.getId(),
 			issueCommentRead.getContent(),
 			issueCommentRead.getCreateAt(),
@@ -28,9 +28,9 @@ public class CommentInformation {
 		);
 	}
 
-	public static List<CommentInformation> from(List<IssueCommentRead> comments) {
+	public static List<IssueCommentInformation> from(List<IssueCommentRead> comments) {
 		return comments.stream()
-			.map(CommentInformation::from)
+			.map(IssueCommentInformation::from)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }

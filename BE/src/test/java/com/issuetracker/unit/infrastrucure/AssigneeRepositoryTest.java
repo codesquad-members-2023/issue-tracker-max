@@ -1,5 +1,7 @@
 package com.issuetracker.unit.infrastrucure;
 
+import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
+import static com.issuetracker.util.fixture.MemberFixture.MEMBER4;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -9,12 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.issuetracker.issue.domain.Assignee;
-import com.issuetracker.issue.domain.AssigneeRepository;
+import com.issuetracker.issue.domain.assignee.Assignee;
+import com.issuetracker.issue.domain.assignee.AssigneeRepository;
 import com.issuetracker.issue.infrastrucure.JdbcAssigneeRepository;
 import com.issuetracker.member.domain.Member;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
+import com.issuetracker.util.fixture.AssigneeFixture;
 
 @RepositoryTest
 class AssigneeRepositoryTest {
@@ -57,5 +60,21 @@ class AssigneeRepositoryTest {
 
 		// then
 		assertThat(actual).hasSize(4);
+	}
+
+	@Test
+	void 이슈에_담담자를_등록한다() {
+		// given
+		Assignee assignee = Assignee.builder()
+			.issueId(ISSUE1.getId())
+			.memberId(MEMBER4.getId())
+			.build();
+
+		// when
+		long actual = assigneeRepository.save(assignee);
+
+		// then
+		int expected = AssigneeFixture.values().length + 1;
+		assertThat(actual).isEqualTo(expected);
 	}
 }

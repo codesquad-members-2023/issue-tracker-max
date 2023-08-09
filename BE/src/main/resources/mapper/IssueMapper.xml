@@ -135,6 +135,7 @@
                 </trim>
 
             </if>
+
             <if test="milestoneId != null">
                 <trim prefix="AND">
                     issue.milestone_id = #{milestoneId}

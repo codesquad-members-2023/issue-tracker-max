@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.issuetracker.issue.domain.AssignedLabel;
-import com.issuetracker.issue.domain.AssignedLabelRepository;
+import com.issuetracker.issue.domain.assignedlabel.AssignedLabel;
+import com.issuetracker.issue.domain.assignedlabel.AssignedLabelRepository;
 import com.issuetracker.issue.infrastrucure.JdbcAssignedLabelRepository;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.util.DatabaseInitialization;

@@ -23,4 +23,8 @@ public class Member {
 		this.nickname = nickname;
 		this.profileImageUrl = profileImageUrl;
 	}
+
+	public boolean equalsId(Long id) {
+		return this.id.equals(id);
+	}
 }

@@ -89,8 +89,8 @@ public class IssueValidatorTest {
 	void 이슈_업데이트_시_데이터가_NULL을_검증한다() {
 		// then
 		Assertions.assertAll(
-			() -> Assertions.assertDoesNotThrow(() -> issueValidator.verifyNonNullUpdateData("내용")),
-			() -> Assertions.assertDoesNotThrow(() -> issueValidator.verifyNonNullUpdateData(false))
+			() -> Assertions.assertDoesNotThrow(() -> issueValidator.verifyNonNull("내용")),
+			() -> Assertions.assertDoesNotThrow(() -> issueValidator.verifyNonNull(false))
 		);
 	}
 
@@ -98,7 +98,7 @@ public class IssueValidatorTest {
 	void 이슈_업데이트_시_데이터가_NULL인_경우_에러를_반환한다() {
 		// then
 		Assertions.assertThrows(CustomHttpException.class,
-			() -> issueValidator.verifyNonNullUpdateData(null));
+			() -> issueValidator.verifyNonNull(null));
 	}
 
 	@Test

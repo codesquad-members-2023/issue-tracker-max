@@ -15,21 +15,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.issuetracker.issue.application.IssueService;
-import com.issuetracker.issue.application.dto.IssueCommentCreateData;
-import com.issuetracker.issue.ui.dto.AssignedLabelResponses;
-import com.issuetracker.issue.ui.dto.AssigneeCandidatesResponse;
-import com.issuetracker.issue.ui.dto.AssigneesResponses;
-import com.issuetracker.issue.ui.dto.AuthorResponses;
-import com.issuetracker.issue.ui.dto.IssueCommentCreateRequest;
-import com.issuetracker.issue.ui.dto.IssueCommentCreateResponse;
-import com.issuetracker.issue.ui.dto.IssueCommentUpdateRequest;
+import com.issuetracker.issue.application.dto.comment.IssueCommentCreateData;
+import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelResponses;
+import com.issuetracker.issue.ui.dto.assignee.AssigneeCandidatesResponse;
+import com.issuetracker.issue.ui.dto.assignee.AssigneesResponses;
+import com.issuetracker.issue.ui.dto.assignee.AuthorResponses;
+import com.issuetracker.issue.ui.dto.assignee.AssigneeCreateRequest;
+import com.issuetracker.issue.ui.dto.comment.IssueCommentCreateRequest;
+import com.issuetracker.issue.ui.dto.comment.IssueCommentCreateResponse;
+import com.issuetracker.issue.ui.dto.comment.IssueCommentUpdateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateResponse;
 import com.issuetracker.issue.ui.dto.IssueDetailResponse;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 import com.issuetracker.issue.ui.dto.IssueUpdateRequest;
 import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
-import com.issuetracker.issue.ui.dto.LabelCandidatesResponse;
+import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelCandidatesResponse;
 import com.issuetracker.member.application.MemberService;
 import com.issuetracker.milestone.application.MilestoneService;
 import com.issuetracker.milestone.ui.dto.MilestonesSearchResponse;
@@ -147,14 +148,26 @@ public class IssueController {
 	}
 
 	@GetMapping("/{id}/label-candidates")
-	public ResponseEntity<LabelCandidatesResponse> showLabelsForIssueUpdate(
+	public ResponseEntity<AssignedLabelCandidatesResponse> showLabelsForIssueUpdate(
 		@PathVariable Long id) {
 
 		return ResponseEntity.ok()
 			.body(
-				LabelCandidatesResponse.from(
+				AssignedLabelCandidatesResponse.from(
 					issueService.searchLabelCandidates(id)
 				)
 			);
+	}
+
+	@PostMapping("/{id}/assignees")
+	public ResponseEntity<Void> createAssignee(@PathVariable Long id, @RequestBody AssigneeCreateRequest assigneeCreateRequest) {
+		issueService.createAssignee(assigneeCreateRequest.toAssigneeCreateData(id));
+		return ResponseEntity.ok().build();
+	}
+
+	@DeleteMapping("/{id}/assignees/{assignee-id}")
+	public ResponseEntity<Void> deleteAssignee(@PathVariable("assignee-id") Long assigneeId) {
+		issueService.deleteAssignee(assigneeId);
+		return ResponseEntity.noContent().build();
 	}
 }

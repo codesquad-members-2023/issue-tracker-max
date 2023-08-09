@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.issuetracker.issue.application.dto.IssueDetailInformation;
+import com.issuetracker.issue.ui.dto.comment.IssueCommentResponse;
 import com.issuetracker.label.ui.dto.LabelResponse;
 import com.issuetracker.member.ui.dto.MemberResponse;
 import com.issuetracker.milestone.ui.dto.IssueDetailMilestoneResponse;

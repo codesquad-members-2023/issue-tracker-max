@@ -9,8 +9,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.issuetracker.issue.domain.IssueComment;
-import com.issuetracker.issue.domain.IssueCommentRepository;
+import com.issuetracker.issue.domain.comment.IssueComment;
+import com.issuetracker.issue.domain.comment.IssueCommentRepository;
 
 @Repository
 public class JdbcIssueCommentRepository implements IssueCommentRepository {

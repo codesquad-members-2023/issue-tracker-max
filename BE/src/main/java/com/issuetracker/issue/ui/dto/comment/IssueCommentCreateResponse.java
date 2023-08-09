@@ -1,6 +1,6 @@
-package com.issuetracker.issue.ui.dto;
+package com.issuetracker.issue.ui.dto.comment;
 
-import com.issuetracker.issue.application.dto.IssueCommentCreateInformation;
+import com.issuetracker.issue.application.dto.comment.IssueCommentCreateInformation;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

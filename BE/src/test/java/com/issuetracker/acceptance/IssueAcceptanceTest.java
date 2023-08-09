@@ -12,7 +12,6 @@ import static com.issuetracker.util.fixture.MemberFixture.MEMBER4;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON1;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON2;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON4;
-import static com.issuetracker.util.steps.IssueSteps.마일스톤_목록_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_내용_수정_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_목록_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_삭제_요청;
@@ -20,9 +19,6 @@ import static com.issuetracker.util.steps.IssueSteps.이슈_상세_조회_요청
 import static com.issuetracker.util.steps.IssueSteps.이슈_열림_닫힘_수정_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_작성_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_제목_수정_요청;
-import static com.issuetracker.util.steps.IssueSteps.이슈에_등록_되어있는_담당자_목록_조회_요청;
-import static com.issuetracker.util.steps.IssueSteps.이슈에_등록_되어있는_라벨_목록_조회_요청;
-import static com.issuetracker.util.steps.IssueSteps.작성자_목록_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
@@ -30,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.validation.Valid;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -43,15 +37,12 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.StringUtils;
 
-import com.issuetracker.issue.ui.dto.AuthorResponses;
 import com.issuetracker.issue.ui.dto.IssueCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueDetailResponse;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 import com.issuetracker.issue.ui.dto.IssueSearchResponse;
 import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
-import com.issuetracker.milestone.ui.dto.MilestonesSearchResponse;
 import com.issuetracker.util.AcceptanceTest;
 import com.issuetracker.util.fixture.IssueCommentFixture;
 import com.issuetracker.util.fixture.IssueFixture;

@@ -1,8 +1,8 @@
-package com.issuetracker.issue.ui.dto;
+package com.issuetracker.issue.ui.dto.assignee;
 
 import java.util.List;
 
-import com.issuetracker.issue.application.dto.AssigneeCandidatesInformation;
+import com.issuetracker.issue.application.dto.assignee.AssigneeCandidatesInformation;
 import com.issuetracker.member.ui.dto.MemberResponse;
 
 import lombok.AccessLevel;

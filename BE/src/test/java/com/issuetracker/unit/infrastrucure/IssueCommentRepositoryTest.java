@@ -11,12 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.issuetracker.issue.domain.IssueComment;
-import com.issuetracker.issue.domain.IssueCommentRepository;
+import com.issuetracker.issue.domain.comment.IssueComment;
+import com.issuetracker.issue.domain.comment.IssueCommentRepository;
 import com.issuetracker.issue.infrastrucure.JdbcIssueCommentRepository;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
-import com.issuetracker.util.fixture.IssueCommentFixture;
 
 @RepositoryTest
 public class IssueCommentRepositoryTest {

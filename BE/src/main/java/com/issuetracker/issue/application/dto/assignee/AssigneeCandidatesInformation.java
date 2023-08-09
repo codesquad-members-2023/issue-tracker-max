@@ -1,4 +1,4 @@
-package com.issuetracker.issue.application.dto;
+package com.issuetracker.issue.application.dto.assignee;
 
 import java.util.List;
 import java.util.stream.Collectors;

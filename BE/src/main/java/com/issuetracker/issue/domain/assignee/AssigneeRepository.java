@@ -1,4 +1,4 @@
-package com.issuetracker.issue.domain;
+package com.issuetracker.issue.domain.assignee;
 
 import java.util.List;
 
@@ -13,4 +13,8 @@ public interface AssigneeRepository {
 	List<Member> findAllAssignedToIssue(long issueId);
 
 	List<Member> findAllUnassignedToIssue(long issueId);
+
+	long save(Assignee assignee);
+
+	int delete(Long id);
 }

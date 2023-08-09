@@ -1,8 +1,8 @@
-package com.issuetracker.issue.application.dto;
+package com.issuetracker.issue.application.dto.comment;
 
 import java.time.LocalDateTime;
 
-import com.issuetracker.issue.domain.IssueComment;
+import com.issuetracker.issue.domain.comment.IssueComment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

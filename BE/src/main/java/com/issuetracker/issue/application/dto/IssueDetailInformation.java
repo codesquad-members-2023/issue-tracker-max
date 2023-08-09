@@ -3,6 +3,7 @@ package com.issuetracker.issue.application.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.issuetracker.issue.application.dto.comment.IssueCommentInformation;
 import com.issuetracker.issue.domain.IssueDetailRead;
 import com.issuetracker.label.application.dto.LabelInformation;
 import com.issuetracker.member.application.dto.MemberInformation;
@@ -24,7 +25,7 @@ public class IssueDetailInformation {
 	private MemberInformation author;
 	private List<MemberInformation> assignees;
 	private List<LabelInformation> labels;
-	private List<CommentInformation> comments;
+	private List<IssueCommentInformation> comments;
 
 	public static IssueDetailInformation from(IssueDetailRead issueDetailRead) {
 		return new IssueDetailInformation(
@@ -37,7 +38,7 @@ public class IssueDetailInformation {
 			MemberInformation.from(issueDetailRead.getAuthor()),
 			MemberInformation.from(issueDetailRead.getAssignees()),
 			LabelInformation.from(issueDetailRead.getLabels()),
-			CommentInformation.from(issueDetailRead.getComments())
+			IssueCommentInformation.from(issueDetailRead.getComments())
 		);
 	}
 

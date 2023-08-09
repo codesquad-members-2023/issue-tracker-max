@@ -1,4 +1,4 @@
-package com.issuetracker.issue.domain;
+package com.issuetracker.issue.domain.comment;
 
 import java.time.LocalDateTime;
 

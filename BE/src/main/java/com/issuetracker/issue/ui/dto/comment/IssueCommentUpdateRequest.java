@@ -1,10 +1,10 @@
-package com.issuetracker.issue.ui.dto;
+package com.issuetracker.issue.ui.dto.comment;
 
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.issuetracker.issue.application.dto.IssueCommentUpdateData;
+import com.issuetracker.issue.application.dto.comment.IssueCommentUpdateData;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

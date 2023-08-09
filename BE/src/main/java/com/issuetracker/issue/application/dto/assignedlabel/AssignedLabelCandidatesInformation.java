@@ -1,4 +1,4 @@
-package com.issuetracker.issue.application.dto;
+package com.issuetracker.issue.application.dto.assignedlabel;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,13 +11,13 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class LabelCandidatesInformation {
+public class AssignedLabelCandidatesInformation {
 
 	private List<LabelInformation> assignedLabels;
 	private List<LabelInformation> labels;
 
-	public static LabelCandidatesInformation from(List<Label> assignedLabels, List<Label> labels) {
-		return new LabelCandidatesInformation(
+	public static AssignedLabelCandidatesInformation from(List<Label> assignedLabels, List<Label> labels) {
+		return new AssignedLabelCandidatesInformation(
 			from(assignedLabels),
 			from(labels)
 		);
@@ -34,7 +34,7 @@ public class LabelCandidatesInformation {
 
 	private static List<LabelInformation> from(List<Label> labels) {
 		return labels.stream()
-			.map(LabelCandidatesInformation::from)
+			.map(AssignedLabelCandidatesInformation::from)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }

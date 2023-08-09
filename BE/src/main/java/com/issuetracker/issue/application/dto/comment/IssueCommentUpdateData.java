@@ -1,4 +1,4 @@
-package com.issuetracker.issue.application.dto;
+package com.issuetracker.issue.application.dto.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

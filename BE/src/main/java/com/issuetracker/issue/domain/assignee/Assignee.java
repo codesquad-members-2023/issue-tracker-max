@@ -1,4 +1,4 @@
-package com.issuetracker.issue.domain;
+package com.issuetracker.issue.domain.assignee;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class AssignedLabel {
+public class Assignee {
 
 	private Long issueId;
-	private Long labelId;
+	private Long memberId;
 
 	@Builder
-	private AssignedLabel(Long issueId, Long labelId) {
+	private Assignee(Long issueId, Long memberId) {
 		this.issueId = issueId;
-		this.labelId = labelId;
+		this.memberId = memberId;
 	}
 }

@@ -1,5 +1,6 @@
 package com.issuetracker.issue.application;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.stereotype.Component;
@@ -7,10 +8,12 @@ import org.springframework.stereotype.Component;
 import com.issuetracker.config.exception.CustomHttpException;
 import com.issuetracker.config.exception.ErrorType;
 import com.issuetracker.issue.application.dto.IssueCreateInputData;
+import com.issuetracker.issue.domain.assignee.AssigneeRepository;
 import com.issuetracker.issue.domain.IssueDetailRead;
 import com.issuetracker.issue.domain.IssueRepository;
 import com.issuetracker.label.application.LabelValidator;
 import com.issuetracker.member.application.MemberValidator;
+import com.issuetracker.member.domain.Member;
 import com.issuetracker.milestone.application.MilestoneValidator;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class IssueValidator {
 
 	private final IssueRepository issueRepository;
+	private final AssigneeRepository assigneeRepository;
 	private final MilestoneValidator milestoneValidator;
 	private final MemberValidator memberValidator;
 	private final LabelValidator labelValidator;
@@ -49,7 +53,7 @@ public class IssueValidator {
 		}
 	}
 
-	public void verifyNonNullUpdateData(Object object) {
+	public void verifyNonNull(Object object) {
 		if (Objects.isNull(object)) {
 			throw new CustomHttpException(ErrorType.ISSUE_UPDATE_NULL);
 		}
@@ -61,5 +65,22 @@ public class IssueValidator {
 		}
 
 		memberValidator.verifyMember(authorId);
+	}
+
+	public void verifyCreateAssignee(Long issueId, Long memberId) {
+		verifyIssue(issueId);
+		memberValidator.verifyMember(memberId);
+
+		List<Member> assignees = assigneeRepository.findAllAssignedToIssue(issueId);
+
+		if (assignees.stream().anyMatch(m -> m.equalsId(memberId))) {
+			throw new CustomHttpException(ErrorType.ASSIGNEE_DUPLICATION);
+		}
+	}
+
+	public void verifyIssue(Long id) {
+		if(Objects.nonNull(id) && !issueRepository.existById(id)) {
+			throw new CustomHttpException(ErrorType.ISSUE_NOT_FOUND);
+		}
 	}
 }

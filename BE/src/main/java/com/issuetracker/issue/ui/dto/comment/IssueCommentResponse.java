@@ -1,10 +1,10 @@
-package com.issuetracker.issue.ui.dto;
+package com.issuetracker.issue.ui.dto.comment;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.issuetracker.issue.application.dto.CommentInformation;
+import com.issuetracker.issue.application.dto.comment.IssueCommentInformation;
 import com.issuetracker.member.ui.dto.MemberResponse;
 
 import lombok.AccessLevel;
@@ -22,7 +22,7 @@ public class IssueCommentResponse {
 	private LocalDateTime createAt;
 	private MemberResponse author;
 
-	public static IssueCommentResponse from(CommentInformation comments) {
+	public static IssueCommentResponse from(IssueCommentInformation comments) {
 		return new IssueCommentResponse(
 			comments.getId(),
 			comments.getContent(),
@@ -31,7 +31,7 @@ public class IssueCommentResponse {
 		);
 	}
 
-	public static List<IssueCommentResponse> from(List<CommentInformation> comments) {
+	public static List<IssueCommentResponse> from(List<IssueCommentInformation> comments) {
 		return comments.stream()
 			.map(IssueCommentResponse::from)
 			.collect(Collectors.toUnmodifiableList());

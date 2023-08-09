@@ -3,6 +3,7 @@ package com.issuetracker.issue.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.issuetracker.issue.domain.comment.IssueCommentRead;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.member.domain.Member;
 import com.issuetracker.milestone.domain.Milestone;

@@ -5,7 +5,8 @@ import java.util.Map;
 
 import org.springframework.http.MediaType;
 
-import com.issuetracker.issue.ui.dto.IssueCommentCreateRequest;
+import com.issuetracker.issue.ui.dto.assignee.AssigneeCreateRequest;
+import com.issuetracker.issue.ui.dto.comment.IssueCommentCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 import com.issuetracker.issue.ui.dto.IssueUpdateRequest;
@@ -132,6 +133,29 @@ public class IssueSteps {
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().patch("/api/issues/{id}/comments/{comment-id}", id, issueCommentId)
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 이슈에_등록_및_삭제될_담당자_목록_조회_요청(Long id) {
+		return RestAssured.given().log().all()
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().get("/api/issues/{id}/assignee-candidates", id)
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 이슈에_담당자_등록_요청(Long id, Long memberId) {
+		return RestAssured.given().log().all()
+			.body(new AssigneeCreateRequest(memberId))
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().post("/api/issues/{id}/assignees", id)
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 이슈에_담당자_삭제_요청(Long id, Long assigneeId) {
+		return RestAssured.given().log().all()
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().delete("/api/issues/{id}/assignees/{assignee-id}", id, assigneeId)
 			.then().log().all().extract();
 	}
 }
