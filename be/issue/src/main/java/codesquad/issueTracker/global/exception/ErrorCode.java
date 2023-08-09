@@ -41,8 +41,8 @@ public enum ErrorCode implements StatusCode {
 	// 마일스톤
 	INVALIDATE_DATE(HttpStatus.BAD_REQUEST, "현재 날짜보다 이전 날짜 입니다."),
 	NOT_FOUND_DATE(HttpStatus.BAD_REQUEST, "유효하지 않은 날짜 입니다."),
-
-	NOT_FOUND_MILESTONE(HttpStatus.BAD_REQUEST, "마일스톤을 찾을 수 없습니다.");
+	NOT_FOUND_MILESTONE(HttpStatus.BAD_REQUEST, "마일스톤을 찾을 수 없습니다."),
+	ILLEGAL_STATUS_MILESTONE(HttpStatus.BAD_REQUEST, "올바르지 않은 상태 입력 입니다.");
 
 	private HttpStatus status;
 	private String message;
