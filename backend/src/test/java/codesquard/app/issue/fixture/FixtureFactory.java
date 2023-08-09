@@ -16,9 +16,10 @@ import codesquard.app.user.service.request.UserSaveServiceRequest;
 
 public class FixtureFactory {
 
-	public static IssueSaveRequest createIssueRegisterRequest(String title, String content, Long milestone) {
+	public static IssueSaveRequest createIssueRegisterRequest(String title, String content, Long milestone,
+		Long assigneeId) {
 		List<Long> labels = new ArrayList<>();
-		List<Long> assignees = List.of(1L);
+		List<Long> assignees = List.of(assigneeId);
 		return new IssueSaveRequest(title, content, milestone, labels, assignees);
 	}
 

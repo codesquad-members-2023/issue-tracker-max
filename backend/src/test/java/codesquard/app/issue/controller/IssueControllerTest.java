@@ -63,7 +63,8 @@ class IssueControllerTest extends ControllerTestSupport {
 	@Test
 	void create() throws Exception {
 		// given
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Controller", "내용", 1L);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Controller", "내용", 1L,
+			anyLong());
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
@@ -79,7 +80,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void create_InputZeroTitle_Response400() throws Exception {
 		// given
 		String zeroTitle = "";
-		IssueSaveRequest zero = FixtureFactory.createIssueRegisterRequest(zeroTitle, "내용", 1L);
+		IssueSaveRequest zero = FixtureFactory.createIssueRegisterRequest(zeroTitle, "내용", 1L, anyLong());
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
@@ -95,7 +96,7 @@ class IssueControllerTest extends ControllerTestSupport {
 		// given
 		String title = generateExceedingMaxLengthContent(TITLE_MAX_LENGTH);
 
-		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest(title, "내용", 1L);
+		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest(title, "내용", 1L, anyLong());
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
@@ -110,7 +111,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void create_InputBlankTitle_Response400() throws Exception {
 		// given
 		String blankTitle = " ";
-		IssueSaveRequest blank = FixtureFactory.createIssueRegisterRequest(blankTitle, "내용", 1L);
+		IssueSaveRequest blank = FixtureFactory.createIssueRegisterRequest(blankTitle, "내용", 1L, anyLong());
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
@@ -126,7 +127,7 @@ class IssueControllerTest extends ControllerTestSupport {
 		// given
 		String content = generateExceedingMaxLengthContent(CONTENT_MAX_LENGTH);
 
-		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest("Controller", content, 1L);
+		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest("Controller", content, 1L, anyLong());
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
