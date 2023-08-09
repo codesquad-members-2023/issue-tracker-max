@@ -11,13 +11,13 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class LabelsForIssueUpdateInformation {
+public class LabelCandidatesInformation {
 
 	private List<LabelInformation> assignedLabels;
 	private List<LabelInformation> labels;
 
-	public static LabelsForIssueUpdateInformation from(List<Label> assignedLabels, List<Label> labels) {
-		return new LabelsForIssueUpdateInformation(
+	public static LabelCandidatesInformation from(List<Label> assignedLabels, List<Label> labels) {
+		return new LabelCandidatesInformation(
 			from(assignedLabels),
 			from(labels)
 		);
@@ -34,7 +34,7 @@ public class LabelsForIssueUpdateInformation {
 
 	private static List<LabelInformation> from(List<Label> labels) {
 		return labels.stream()
-			.map(LabelsForIssueUpdateInformation::from)
+			.map(LabelCandidatesInformation::from)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.issuetracker.issue.application.dto.AssigneesForIssueUpdateInformation;
+import com.issuetracker.issue.application.dto.AssigneeCandidatesInformation;
 import com.issuetracker.issue.application.dto.IssueCommentCreateData;
 import com.issuetracker.issue.application.dto.IssueCommentCreateInformation;
 import com.issuetracker.issue.application.dto.IssueCommentUpdateData;
@@ -17,7 +17,7 @@ import com.issuetracker.issue.application.dto.IssueSearchInformation;
 import com.issuetracker.issue.application.dto.IssueSearchInputData;
 import com.issuetracker.issue.application.dto.IssueUpdateData;
 import com.issuetracker.issue.application.dto.IssuesCountInformation;
-import com.issuetracker.issue.application.dto.LabelsForIssueUpdateInformation;
+import com.issuetracker.issue.application.dto.LabelCandidatesInformation;
 import com.issuetracker.issue.domain.AssignedLabelRepository;
 import com.issuetracker.issue.domain.AssigneeRepository;
 import com.issuetracker.issue.domain.Issue;
@@ -117,18 +117,18 @@ public class IssueService {
 		issueValidator.verifyCommentUpdatedOrDeletedCount(updatedCount);
 	}
 
-	public AssigneesForIssueUpdateInformation searchAssigneesForIssueUpdate(long issueId) {
+	public AssigneeCandidatesInformation searchAssigneeCandidates(long issueId) {
 
-		return AssigneesForIssueUpdateInformation
+		return AssigneeCandidatesInformation
 			.from(
 				assigneeRepository.findAllAssignedToIssue(issueId),
 				assigneeRepository.findAllUnassignedToIssue(issueId)
 			);
 	}
 
-	public LabelsForIssueUpdateInformation searchLabelsForIssueUpdate(long issueId) {
+	public LabelCandidatesInformation searchLabelCandidates(long issueId) {
 
-		return LabelsForIssueUpdateInformation
+		return LabelCandidatesInformation
 			.from(
 				assignedLabelRepository.findAllAssignedToIssue(issueId),
 				assignedLabelRepository.findAllUnassignedToIssue(issueId)

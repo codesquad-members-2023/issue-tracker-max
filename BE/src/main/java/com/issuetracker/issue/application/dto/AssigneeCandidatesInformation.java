@@ -11,13 +11,13 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class AssigneesForIssueUpdateInformation {
+public class AssigneeCandidatesInformation {
 
 	private List<MemberInformation> assignees;
 	private List<MemberInformation> members;
 
-	public static AssigneesForIssueUpdateInformation from(List<Member> assignees, List<Member> members) {
-		return new AssigneesForIssueUpdateInformation(
+	public static AssigneeCandidatesInformation from(List<Member> assignees, List<Member> members) {
+		return new AssigneeCandidatesInformation(
 			from(assignees),
 			from(members)
 		);
@@ -33,7 +33,7 @@ public class AssigneesForIssueUpdateInformation {
 
 	private static List<MemberInformation> from(List<Member> assignees) {
 		return assignees.stream()
-			.map(AssigneesForIssueUpdateInformation::from)
+			.map(AssigneeCandidatesInformation::from)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }

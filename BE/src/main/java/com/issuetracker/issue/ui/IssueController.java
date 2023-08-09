@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.issuetracker.issue.application.IssueService;
 import com.issuetracker.issue.application.dto.IssueCommentCreateData;
 import com.issuetracker.issue.ui.dto.AssignedLabelResponses;
-import com.issuetracker.issue.ui.dto.AssigneesForIssueUpdateResponse;
+import com.issuetracker.issue.ui.dto.AssigneeCandidatesResponse;
 import com.issuetracker.issue.ui.dto.AssigneesResponses;
 import com.issuetracker.issue.ui.dto.AuthorResponses;
 import com.issuetracker.issue.ui.dto.IssueCommentCreateRequest;
@@ -29,7 +29,7 @@ import com.issuetracker.issue.ui.dto.IssueDetailResponse;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 import com.issuetracker.issue.ui.dto.IssueUpdateRequest;
 import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
-import com.issuetracker.issue.ui.dto.LabelsForIssueUpdateResponse;
+import com.issuetracker.issue.ui.dto.LabelCandidatesResponse;
 import com.issuetracker.member.application.MemberService;
 import com.issuetracker.milestone.application.MilestoneService;
 import com.issuetracker.milestone.ui.dto.MilestonesSearchResponse;
@@ -135,25 +135,25 @@ public class IssueController {
 	}
 
 	@GetMapping("/{id}/assignee-candidates")
-	public ResponseEntity<AssigneesForIssueUpdateResponse> showAssigneesForIssueUpdate(
+	public ResponseEntity<AssigneeCandidatesResponse> showAssigneesForIssueUpdate(
 		@PathVariable Long id) {
 
 		return ResponseEntity.ok()
 			.body(
-				AssigneesForIssueUpdateResponse.from(
-					issueService.searchAssigneesForIssueUpdate(id)
+				AssigneeCandidatesResponse.from(
+					issueService.searchAssigneeCandidates(id)
 				)
 			);
 	}
 
 	@GetMapping("/{id}/label-candidates")
-	public ResponseEntity<LabelsForIssueUpdateResponse> showLabelsForIssueUpdate(
+	public ResponseEntity<LabelCandidatesResponse> showLabelsForIssueUpdate(
 		@PathVariable Long id) {
 
 		return ResponseEntity.ok()
 			.body(
-				LabelsForIssueUpdateResponse.from(
-					issueService.searchLabelsForIssueUpdate(id)
+				LabelCandidatesResponse.from(
+					issueService.searchLabelCandidates(id)
 				)
 			);
 	}
