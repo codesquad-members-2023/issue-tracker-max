@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
 import org.presents.issuetracker.issue.entity.Assignee;
 import org.presents.issuetracker.issue.entity.Issue;
 import org.presents.issuetracker.issue.entity.IssueLabel;
@@ -18,13 +16,12 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import lombok.RequiredArgsConstructor;
+
 @Repository
+@RequiredArgsConstructor
 public class IssueRepository {
 	private final NamedParameterJdbcTemplate jdbcTemplate;
-
-	public IssueRepository(DataSource dataSource) {
-		this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-	}
 
 	public Long save(Issue issue) {
 		final String sql = "INSERT INTO issue(author_id, title, contents) VALUES (:authorId, :title, :contents)";
