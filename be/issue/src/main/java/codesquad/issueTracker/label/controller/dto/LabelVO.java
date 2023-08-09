@@ -7,12 +7,6 @@ import codesquad.issueTracker.label.domain.Label;
 public class LabelVO {
 	private final Long id;
 	private final String name;
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, name, textColor, backgroundColor, description);
-	}
-
 	private final String textColor;
 	private final String backgroundColor;
 	private final String description;
