@@ -1,5 +1,6 @@
 package codesquad.issueTracker.comment.service;
 
+import codesquad.issueTracker.comment.domain.Comment;
 import codesquad.issueTracker.comment.dto.CommentRequestDto;
 import codesquad.issueTracker.comment.dto.CommentResponseDto;
 import codesquad.issueTracker.comment.repository.CommentRepository;
@@ -30,13 +31,29 @@ public class CommentService {
 
     @Transactional
     public Long modify(Long commentId, CommentRequestDto commentRequestDto) {
+        validateExistComment(commentId);
+        validateCommentStatus(commentId);
         return commentRepository.update(commentId, commentRequestDto)
                     .orElseThrow(() -> new CustomException(ErrorCode.DB_EXCEPTION));
     }
 
     @Transactional
     public Long delete(Long commentId) {
+        validateExistComment(commentId);
+        validateCommentStatus(commentId);
         return commentRepository.deleteById(commentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.DB_EXCEPTION));
+    }
+
+    private Comment validateExistComment(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_COMMENT));
+    }
+
+    private Comment validateCommentStatus(Long commentId) {
+        Comment comment = commentRepository.findExistCommentById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ALREADY_DELETED_COMMENT));
+        System.out.println(comment.getId());
+        return null;
     }
 }

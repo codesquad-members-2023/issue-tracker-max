@@ -31,7 +31,11 @@ public enum ErrorCode implements StatusCode {
 	// -- [USER] -- //
 	ALREADY_EXIST_USER(HttpStatus.BAD_REQUEST, "이미 존재하는 유저입니다."),
 	NOT_FOUND_USER(HttpStatus.BAD_REQUEST, "해당하는 유저가 없습니다."),
-	FAILED_LOGIN_USER(HttpStatus.BAD_REQUEST, "로그인에 실패했습니다. 아이디, 비밀번호를 다시 입력해주세요. ");
+	FAILED_LOGIN_USER(HttpStatus.BAD_REQUEST, "로그인에 실패했습니다. 아이디, 비밀번호를 다시 입력해주세요. "),
+
+	// -- [Comment] -- //
+	NOT_EXIST_COMMENT(HttpStatus.BAD_REQUEST, "존재하지 않는 댓글입니다."),
+	ALREADY_DELETED_COMMENT(HttpStatus.BAD_REQUEST, "이미 삭제된 댓글입니다.");
 
 	private HttpStatus status;
 	private String message;

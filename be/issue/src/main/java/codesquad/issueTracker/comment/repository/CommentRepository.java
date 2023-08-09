@@ -1,11 +1,13 @@
 package codesquad.issueTracker.comment.repository;
 
+import codesquad.issueTracker.comment.domain.Comment;
 import codesquad.issueTracker.comment.dto.CommentRequestDto;
 import codesquad.issueTracker.comment.dto.CommentResponseDto;
 import codesquad.issueTracker.comment.vo.CommentUser;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -29,10 +31,10 @@ public class CommentRepository {
                     + "FROM comments c "
                     + "JOIN users u ON c.user_id = u.id "
                     + "WHERE c.issue_id = :issueId AND c.is_deleted = false";
-        return jdbcTemplate.query(sql, Map.of("issueId", issueId), commentRowMapper);
+        return jdbcTemplate.query(sql, Map.of("issueId", issueId), commentResponseDtoRowMapper);
     }
 
-    private final RowMapper<CommentResponseDto> commentRowMapper = ((rs, rowNum) -> {
+    private final RowMapper<CommentResponseDto> commentResponseDtoRowMapper = ((rs, rowNum) -> {
         CommentUser writer = CommentUser.builder()
                 .name(rs.getString("name"))
                 .profileImg(rs.getString("profile_img"))
@@ -85,4 +87,26 @@ public class CommentRepository {
         }
         return Optional.empty();
     }
+
+    public Optional<Comment> findById(Long commentId) {
+        String sql = "SELECT * FROM comments WHERE id = :commentId";
+        return Optional.ofNullable(
+                DataAccessUtils.singleResult(
+                        jdbcTemplate.query(sql, Map.of("commentId", commentId), commentRowMapper)));
+    }
+
+    public Optional<Comment> findExistCommentById(Long commentId) {
+        String sql = "SELECT * FROM comments WHERE id = :commentId AND is_deleted = false";
+        return Optional.ofNullable(
+                DataAccessUtils.singleResult(
+                        jdbcTemplate.query(sql, Map.of("commentId", commentId), commentRowMapper)));
+    }
+
+    private final RowMapper<Comment> commentRowMapper = ((rs, rowNum) -> Comment.builder()
+            .id(rs.getLong("id"))
+            .userId(rs.getLong("user_id"))
+            .issueId(rs.getLong("issue_id"))
+            .content(rs.getString("content"))
+            .createdAt(rs.getTimestamp("created_At").toLocalDateTime())
+            .build());
 }
