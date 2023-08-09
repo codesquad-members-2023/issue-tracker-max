@@ -26,8 +26,6 @@ public class IssueReadResponse {
 	private final LocalDateTime createdAt;
 	@JsonProperty("modifiedAt")
 	private final LocalDateTime modifiedAt;
-	@JsonProperty("commentCount")
-	private int commentCount;
 	@JsonProperty("content")
 	private final String content;
 	@JsonProperty("assignees")
@@ -48,8 +46,9 @@ public class IssueReadResponse {
 	public IssueReadResponse from(List<IssueUserResponse> assignees, List<IssueLabelResponse> labels,
 		IssueMilestoneCountResponse issueMilestoneCountResponse, List<IssueCommentsResponse> issueCommentsResponse) {
 		return new IssueReadResponse(this.id, this.title, this.status, this.statusModifiedAt, this.createdAt,
-			this.modifiedAt, commentCount, this.content, assignees, labels,
-			new IssueMilestoneResponse(this.milestone.getId(), this.milestone.getName(), issueMilestoneCountResponse),
+			this.modifiedAt, this.content, assignees, labels,
+			milestone == null ? null : new IssueMilestoneResponse(this.milestone.getId(), this.milestone.getName(),
+				issueMilestoneCountResponse),
 			this.writer, issueCommentsResponse);
 	}
 

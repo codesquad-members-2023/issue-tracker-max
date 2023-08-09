@@ -131,7 +131,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		issueRepository.modifyMilestone(null, id);
 
 		// then
-		assertThat(issueRepository.findBy(id).getMilestoneId()).isEqualTo(0L);
+		assertThat(issueRepository.findBy(id).getMilestone()).isNull();
 	}
 
 	@DisplayName("이슈를 등록하고 삭제한다.")

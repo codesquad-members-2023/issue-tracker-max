@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.errors.errorcode.IssueErrorCode;
-import codesquard.app.errors.exception.NoSuchIssueException;
+import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.issue.dto.response.IssueCommentsResponse;
 import codesquard.app.issue.dto.response.IssueLabelResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
+import codesquard.app.issue.dto.response.IssueMilestoneResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueUserResponse;
 import codesquard.app.issue.repository.IssueRepository;
@@ -27,15 +27,22 @@ public class IssueQueryService {
 		IssueReadResponse issueReadResponse = issueRepository.findBy(issueId);
 		List<IssueUserResponse> assignees = IssueUserResponse.from(issueRepository.findAssigneesBy(issueId));
 		List<IssueLabelResponse> labels = IssueLabelResponse.from(issueRepository.findLabelsBy(issueId));
-		IssueMilestoneCountResponse issueMilestoneCountResponse = issueRepository.countIssueBy(
-			issueReadResponse.getMilestone().getId());
+		IssueMilestoneCountResponse issueMilestoneCountResponse = countIssueForMilestone(
+			issueReadResponse.getMilestone());
 		List<IssueCommentsResponse> issueCommentsResponse = issueRepository.findCommentsBy(issueId);
 		return issueReadResponse.from(assignees, labels, issueMilestoneCountResponse, issueCommentsResponse);
 	}
 
+	private IssueMilestoneCountResponse countIssueForMilestone(IssueMilestoneResponse milestone) {
+		if (milestone != null) {
+			return issueRepository.countIssueBy(milestone.getId());
+		}
+		return null;
+	}
+
 	public void validateExistIssue(Long issueId) {
 		if (!issueRepository.isExist(issueId)) {
-			throw new NoSuchIssueException(IssueErrorCode.NOT_FOUND_ISSUE);
+			throw new NoSuchIssueException();
 		}
 	}
 

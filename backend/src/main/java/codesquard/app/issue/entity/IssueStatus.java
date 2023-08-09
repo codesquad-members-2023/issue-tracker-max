@@ -1,7 +1,7 @@
 package codesquard.app.issue.entity;
 
-import codesquard.app.errors.errorcode.IssueErrorCode;
-import codesquard.app.errors.exception.IllegalIssueStatusException;
+import codesquard.app.api.errors.errorcode.IssueErrorCode;
+import codesquard.app.api.errors.exception.IllegalIssueStatusException;
 
 public enum IssueStatus {
 
