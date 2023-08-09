@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import { Icon } from "../../components/icon/Icon";
 import { LabelData } from "./Label";
 import { LabelTableElement } from "./LabelTableElement";
 
@@ -16,6 +17,12 @@ export function LabelTable({
         {labels.map((label, index) => (
           <LabelTableElement fetchData={fetchData} key={index} label={label} />
         ))}
+        {!labels.length && (
+          <NoneElement>
+            <Icon name="AlertCircle" />
+            <span>레이블이 비어 있습니다.</span>
+          </NoneElement>
+        )}
       </TableBody>
     </Div>
   );
@@ -46,4 +53,16 @@ const TableHeader = styled.div`
 
 const TableBody = styled.div`
   width: 100%;
+`;
+
+const NoneElement = styled.div`
+  width: 100%;
+  height: 96px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  font: ${({ theme }) => theme.font.displayBold16};
+  color: ${({ theme }) => theme.color.neutralTextStrong};
+  border-top: solid 1px ${({ theme }) => theme.color.neutralBorderDefault};
 `;
