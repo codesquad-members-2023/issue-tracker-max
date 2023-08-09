@@ -37,7 +37,9 @@ public class JdbcIssueRepository implements IssueRepository {
 		rs.getTimestamp("created_at").toLocalDateTime(),
 		rs.getTimestamp("modified_at") != null ? rs.getTimestamp("modified_at").toLocalDateTime() : null,
 		rs.getString("content"),
-		new IssueMilestoneResponse(rs.getLong("milestone_id"), rs.getString("name"), new IssueMilestoneCountResponse()),
+		rs.getLong("milestone_id") == 0 ? null :
+			new IssueMilestoneResponse(rs.getLong("milestone_id"), rs.getString("name"),
+				new IssueMilestoneCountResponse()),
 		new IssueUserResponse(rs.getLong("writer_id"), rs.getString("login_id"), rs.getString("avatar_url"))));
 	private static final RowMapper<User> userRowMapper = ((rs, rowNum) -> new User(
 		rs.getLong("id"),
