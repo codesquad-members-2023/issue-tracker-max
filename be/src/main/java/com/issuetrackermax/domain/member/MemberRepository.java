@@ -21,6 +21,14 @@ import com.issuetrackermax.domain.member.entity.Member;
 @Repository
 public class MemberRepository {
 
+	private static final RowMapper<Member> MEMBER_ROW_MAPPER = (rs, rowNum) ->
+		Member.builder()
+			.id(rs.getLong("id"))
+			.loginId(rs.getString("login_id"))
+			.password(rs.getString("password"))
+			.nickName(rs.getString("nick_name"))
+			.loginType(LoginType.valueOf(rs.getString("login_type")))
+			.build();
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public MemberRepository(JdbcTemplate jdbcTemplate) {
@@ -31,6 +39,12 @@ public class MemberRepository {
 		String sql = "SELECT id, password, nick_name, login_id, login_type FROM member WHERE login_id = :loginId ";
 		return Optional.ofNullable(
 			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("loginId", loginId), MEMBER_ROW_MAPPER)));
+	}
+
+	public Optional<Member> findById(Long id) {
+		String sql = "SELECT id, password, nick_name, login_id, login_type FROM member WHERE id = :id ";
+		return Optional.ofNullable(
+			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), MEMBER_ROW_MAPPER)));
 	}
 
 	public Long save(Member member) {
@@ -50,13 +64,4 @@ public class MemberRepository {
 		String sql = "SELECT EXISTS (SELECT 1 FROM member WHERE login_id = :loginId)";
 		return jdbcTemplate.queryForObject(sql, Map.of("loginId", loginId), Boolean.class);
 	}
-
-	private static final RowMapper<Member> MEMBER_ROW_MAPPER = (rs, rowNum) ->
-		Member.builder()
-		.id(rs.getLong("id"))
-		.loginId(rs.getString("login_id"))
-		.password(rs.getString("password"))
-		.nickName(rs.getString("nick_name"))
-		.loginType(LoginType.valueOf(rs.getString("login_type")))
-		.build();
 }
