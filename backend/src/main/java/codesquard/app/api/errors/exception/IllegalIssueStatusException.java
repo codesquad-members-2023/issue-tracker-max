@@ -4,13 +4,8 @@ import codesquard.app.api.errors.errorcode.ErrorCode;
 
 public class IllegalIssueStatusException extends RuntimeException {
 
-	private final ErrorCode errorCode;
-
 	public IllegalIssueStatusException(ErrorCode errorCode) {
-		this.errorCode = errorCode;
+		super(errorCode.getMessage());
 	}
 
-	public ErrorCode getErrorCode() {
-		return errorCode;
-	}
 }

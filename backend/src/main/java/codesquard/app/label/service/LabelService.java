@@ -1,20 +1,21 @@
 package codesquard.app.label.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.label.dto.response.LabelReadResponse;
+import codesquard.app.api.errors.exception.NoSuchLabelException;
 import codesquard.app.label.dto.request.LabelSaveRequest;
 import codesquard.app.label.dto.request.LabelUpdateRequest;
+import codesquard.app.label.dto.response.LabelReadResponse;
 import codesquard.app.label.dto.response.LabelsResponse;
 import codesquard.app.label.entity.Label;
 import codesquard.app.label.repository.LabelRepository;
 import codesquard.app.milestone.entity.MilestoneStatus;
 import codesquard.app.milestone.repository.MilestoneRepository;
 
+@Transactional
 @Service
 public class LabelService {
 	private final LabelRepository labelRepository;
@@ -25,26 +26,22 @@ public class LabelService {
 		this.milestoneRepository = milestoneRepository;
 	}
 
-	@Transactional
 	public Long saveLabel(final LabelSaveRequest labelSaveRequest) {
 		Label label = LabelSaveRequest.toEntity(labelSaveRequest);
-		return labelRepository.save(label).orElseThrow(() -> new RuntimeException("임시"));
+		return labelRepository.save(label).orElseThrow(NoSuchLabelException::new);
 	}
 
-	@Transactional
 	public void updateLabel(final Long labelId, final LabelUpdateRequest labelUpdateRequest) {
 		labelRepository.updateBy(labelId, LabelUpdateRequest.toEntity(labelUpdateRequest));
 	}
 
-	@Transactional
 	public void deleteLabel(final Long labelId) {
 		labelRepository.deleteBy(labelId);
 	}
 
-	@Transactional
 	public LabelReadResponse makeLabelReadResponse() {
 		// 1. labels 배열
-		List<LabelsResponse> labels = toDto();
+		List<LabelsResponse> labels = LabelsResponse.toDtoList(labelRepository.findAll());
 
 		// 2. labelCount 가져오기
 		Long labelCount = milestoneRepository.countLabels();
@@ -53,12 +50,5 @@ public class LabelService {
 		Long openedMilestoneCount = milestoneRepository.countMilestonesBy(MilestoneStatus.OPENED);
 
 		return new LabelReadResponse(openedMilestoneCount, labelCount, labels);
-	}
-
-	private List<LabelsResponse> toDto() {
-		return labelRepository.findAll()
-			.stream()
-			.map(LabelsResponse::fromEntity)
-			.collect(Collectors.toUnmodifiableList());
 	}
 }

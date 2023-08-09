@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,6 +20,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import codesquard.app.api.errors.exception.DuplicateMilestoneException;
+import codesquard.app.api.errors.exception.NoSuchMilestoneException;
 import codesquard.app.milestone.entity.Milestone;
 import codesquard.app.milestone.entity.MilestoneStatus;
 
@@ -39,7 +42,11 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(milestone);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
-		template.update(sql, param, keyHolder);
+		try {
+			template.update(sql, param, keyHolder);
+		} catch (DataIntegrityViolationException e) {
+			throw new DuplicateMilestoneException();
+		}
 
 		return Optional.ofNullable(keyHolder.getKey()).map(Number::longValue);
 	}
@@ -104,6 +111,8 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	@Override
 	public void updateBy(final Long milestoneId, final Milestone milestone) {
+		validateExistMilestone(milestoneId);
+
 		String sql = "UPDATE `milestone` " +
 			"SET `name` = :name, `deadline` = :deadline, `description` = :description " +
 			"WHERE `id` = :id";
@@ -114,11 +123,17 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 			.addValue("description", milestone.getDescription())
 			.addValue("id", milestoneId);
 
-		template.update(sql, param);
+		try {
+			template.update(sql, param);
+		} catch (DataIntegrityViolationException e) {
+			throw new DuplicateMilestoneException();
+		}
 	}
 
 	@Override
 	public void updateBy(final Long milestoneId, final MilestoneStatus status) {
+		validateExistMilestone(milestoneId);
+
 		String sql = "UPDATE `milestone` " +
 			"SET `status` = :status " +
 			"WHERE `id` = :id";
@@ -132,9 +147,20 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	@Override
 	public void deleteBy(final Long milestoneId) {
+		validateExistMilestone(milestoneId);
+
 		String sql = "DELETE FROM `milestone` "
 			+ "WHERE `id` = :id";
 
 		template.update(sql, Map.of("id", milestoneId));
+	}
+
+	private void validateExistMilestone(final Long milestoneId) {
+		String sql = "SELECT COUNT(*) FROM `milestone` WHERE `id` = :id";
+		Integer count = template.queryForObject(sql, Map.of("id", milestoneId), Integer.class);
+
+		if (count == null || count == 0) {
+			throw new NoSuchMilestoneException();
+		}
 	}
 }
