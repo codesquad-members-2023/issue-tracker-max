@@ -12,10 +12,14 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberRepository {
 
+    private static final String ID = "id";
+    private static final String NICKNAME = "nickname";
+    private static final String URL = "url";
+
     private final NamedParameterJdbcTemplate template;
 
     @Override
-    public List<MemberFilter> findFilterByOrganizationId(Long organizationId) {
+    public List<MemberFilter> findFiltersBy(Long organizationId) {
         String sql = "SELECT m.id, m.nickname, pi.url FROM member AS m "
                 + "JOIN profile_img AS pi "
                 + "ON m.profile_img_id = pi.id "
@@ -29,9 +33,9 @@ public class MemberRepositoryImpl implements MemberRepository {
     private RowMapper<MemberFilter> memberFilterRowMapper() {
         return (rs, rowNum) ->
                 MemberFilter.builder()
-                        .id(rs.getLong("id"))
-                        .name(rs.getString("nickname"))
-                        .imgUrl(rs.getString("url"))
+                        .id(rs.getLong(ID))
+                        .name(rs.getString(NICKNAME))
+                        .imgUrl(rs.getString(URL))
                         .build();
     }
 }

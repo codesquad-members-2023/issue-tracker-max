@@ -22,41 +22,37 @@ public class MilestoneService {
 
     @Transactional
     public long create(String organizationTitle, MilestoneRequest mileStoneRequest) {
-        Long organizationId = organizationRepository.findIdByTitle(organizationTitle)
-            .orElseThrow();
-        Milestone milestone = MilestoneRequest.toEntity(mileStoneRequest, organizationId);
+        Long organizationId = organizationRepository.findBy(organizationTitle)
+                .orElseThrow();
+        Milestone milestone = mileStoneRequest.toEntityByOrganizationId(organizationId);
         return milestoneRepository.save(milestone)
-            .orElseThrow();
+                .orElseThrow();
     }
 
-    @Transactional(readOnly = true)
     public MilestoneVo read(Long milestoneId) {
-        MilestoneVo milestone = milestoneRepository.findById(milestoneId).orElseThrow();
+        MilestoneVo milestone = milestoneRepository.findBy(milestoneId).orElseThrow();
         return milestone;
     }
 
     @Transactional
+    public MilestonesResponse readAll(String organizationTitle, FilterStatus filterStatus) {
+        Long organizationId = organizationRepository.findBy(organizationTitle)
+                .orElseThrow();
+        List<MilestonesVo> milestones = milestoneRepository.findAllBy(organizationId);
+        return MilestonesResponse.from(milestones, filterStatus);
+    }
+
     public long update(Long milestoneId, MilestoneRequest mileStoneRequest) {
-        Milestone milestone = MilestoneRequest.toEntity(milestoneId, mileStoneRequest);
+        Milestone milestone = mileStoneRequest.toEntityByMilestoneId(milestoneId);
         milestoneRepository.update(milestone);
         return milestoneId;
     }
 
-    @Transactional
+    public void updateStatus(Long milestoneId, Boolean isClosed) {
+        milestoneRepository.update(milestoneId, isClosed);
+    }
+
     public void delete(Long milestoneId) {
-        milestoneRepository.deleteById(milestoneId);
-    }
-
-    @Transactional
-    public MilestonesResponse readAll(String organizationTitle, FilterStatus filterStatus) {
-        Long organizationId = organizationRepository.findIdByTitle(organizationTitle)
-            .orElseThrow();
-        List<MilestonesVo> milestones = milestoneRepository.readAllByOrganizationId(organizationId);
-        return MilestonesResponse.from(milestones, filterStatus);
-    }
-
-    @Transactional
-    public void updateStatus(Long milestoneId, boolean isClosed) {
-        milestoneRepository.updateStatus(milestoneId, isClosed);
+        milestoneRepository.delete(milestoneId);
     }
 }

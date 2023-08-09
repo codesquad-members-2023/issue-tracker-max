@@ -1,9 +1,10 @@
 package com.codesquad.issuetracker.api.label.controller;
 
-import com.codesquad.issuetracker.api.label.dto.LabelCreateRequest;
-import com.codesquad.issuetracker.api.label.dto.LabelResponse;
-import com.codesquad.issuetracker.api.label.dto.LabelUpdateRequest;
+import com.codesquad.issuetracker.api.label.dto.request.LabelCreateRequest;
+import com.codesquad.issuetracker.api.label.dto.request.LabelUpdateRequest;
+import com.codesquad.issuetracker.api.label.dto.response.LabelResponse;
 import com.codesquad.issuetracker.api.label.service.LabelService;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -23,38 +24,38 @@ public class LabelController {
 
     private final LabelService labelService;
 
+    @PostMapping("/api/{organizationTitle}/labels")
+    public ResponseEntity<Map<String, Long>> create(@RequestBody LabelCreateRequest labelCreateRequest,
+                                                    @PathVariable String organizationTitle) {
+        // TODO: 로그인 관련 처리 필요
+        Long labelId = labelService.create(organizationTitle, labelCreateRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Collections.singletonMap("id", labelId));
+    }
+
     @GetMapping("/api/{organizationTitle}/labels")
     public ResponseEntity<List<LabelResponse>> readAll(@PathVariable String organizationTitle) {
         List<LabelResponse> labels = labelService.readAll(organizationTitle);
         return ResponseEntity.ok()
-            .body(labels);
-    }
-
-    @PostMapping("/api/{organizationTitle}/labels")
-    public ResponseEntity<Map<String, Long>> create(
-        @RequestBody LabelCreateRequest labelCreateRequest,
-        @PathVariable String organizationTitle) {
-        // TODO: 로그인 관련 처리 필요
-        Long labelId = labelService.create(organizationTitle, labelCreateRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(Map.of("id", labelId));
+                .body(labels);
     }
 
     @PatchMapping("/api/{organizationTitle}/labels/{labelId}")
-    public ResponseEntity<Map<String, Long>> update(
-        @RequestBody LabelUpdateRequest labelUpdateRequest,
-        @PathVariable Long labelId,
-        @PathVariable String organizationTitle) {
+    public ResponseEntity<Map<String, Long>> update(@RequestBody LabelUpdateRequest labelUpdateRequest,
+                                                    @PathVariable Long labelId,
+                                                    @PathVariable String organizationTitle) {
         // TODO: 로그인 관련 처리 필요
         Long updatedLabelId = labelService.update(organizationTitle, labelUpdateRequest, labelId);
         return ResponseEntity.ok()
-            .body(Map.of("id", updatedLabelId));
+                .body(Collections.singletonMap("id", updatedLabelId));
     }
 
     @DeleteMapping("/api/{organizationTitle}/labels/{labelId}")
     public ResponseEntity<Void> delete(@PathVariable Long labelId) {
         // TODO: 로그인 관련 처리 필요
         labelService.delete(labelId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
