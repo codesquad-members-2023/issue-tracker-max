@@ -128,4 +128,12 @@ public class IssueRepository {
 
 		return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, Integer.class)).orElse(0);
 	}
+
+	public void delete(Long issueId) {
+		final String sql = "UPDATE issue SET status = 'deleted' WHERE issue_id = :issueId";
+
+		MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
+
+		jdbcTemplate.update(sql, params);
+	}
 }

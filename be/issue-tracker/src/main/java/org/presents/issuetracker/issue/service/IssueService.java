@@ -101,6 +101,15 @@ public class IssueService {
 		issueRepository.updateStatus(issueIds, status);
 	}
 
+	@Transactional
+	public void delete(Long issueId) {
+		validateId(issueId);
+		issueRepository.deleteAllLabel(issueId);
+		issueRepository.deleteAllAssignee(issueId);
+		issueRepository.deleteMilestone(issueId);
+		issueRepository.delete(issueId);
+	}
+
 	public IssueSearchResponse getIssues(IssueSearchParam issueSearchParam) {
 		List<IssueSearchInfo> issues = issueMapper.getIssues(issueSearchParam);
 		IssueSearchCountInfo counts = issueMapper.getIssueSearchCounts(issueSearchParam);

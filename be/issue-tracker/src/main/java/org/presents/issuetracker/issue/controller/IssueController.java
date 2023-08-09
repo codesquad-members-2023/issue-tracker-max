@@ -15,6 +15,7 @@ import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse
 import org.presents.issuetracker.user.dto.response.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -89,6 +90,12 @@ public class IssueController {
 	@PutMapping("/status")
 	public ResponseEntity<Void> updateStatus(@RequestBody IssueStatusUpdateRequest issueStatusUpdateRequest) {
 		issueService.updateStatus(issueStatusUpdateRequest.getIssueIds(), issueStatusUpdateRequest.getStatus());
+		return ResponseEntity.noContent().build();
+	}
+
+	@DeleteMapping("/{issueId}")
+	public ResponseEntity<Void> delete(@PathVariable Long issueId) {
+		issueService.delete(issueId);
 		return ResponseEntity.noContent().build();
 	}
 }
