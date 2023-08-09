@@ -20,6 +20,8 @@ import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.label.repository.LabelRepository;
 import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
 import org.presents.issuetracker.milestone.repository.MilestoneRepository;
+import org.presents.issuetracker.user.dto.response.UserResponse;
+import org.presents.issuetracker.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,7 @@ public class IssueService {
 	private final IssueRepository issueRepository;
 	private final LabelRepository labelRepository;
 	private final MilestoneRepository milestoneRepository;
+	private final UserRepository userRepository;
 	private final IssueMapper issueMapper;
 
 	@Transactional
@@ -70,6 +73,17 @@ public class IssueService {
 
 		return labelRepository.findByIssueId(issueId).stream()
 			.map(LabelPreviewResponse::from)
+			.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public List<UserResponse> updateAssignees(List<Long> assigneeIds, Long issueId) {
+		validateId(issueId);
+		issueRepository.deleteAllAssignee(issueId);
+		addAssignees(assigneeIds, issueId);
+
+		return userRepository.findByIssueId(issueId).stream()
+			.map(UserResponse::from)
 			.collect(Collectors.toList());
 	}
 

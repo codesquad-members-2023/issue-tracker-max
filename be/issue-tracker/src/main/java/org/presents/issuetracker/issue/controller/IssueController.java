@@ -11,6 +11,7 @@ import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
 import org.presents.issuetracker.issue.service.IssueService;
 import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
+import org.presents.issuetracker.user.dto.response.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,6 +71,12 @@ public class IssueController {
 	public ResponseEntity<List<LabelPreviewResponse>> updateLabels(@PathVariable Long issueId,
 		@RequestBody List<Long> labelIds) {
 		return ResponseEntity.ok().body(issueService.updateLabels(labelIds, issueId));
+	}
+
+	@PutMapping("/{issueId}/assignees")
+	public ResponseEntity<List<UserResponse>> updateAssignees(@PathVariable Long issueId,
+		@RequestBody List<Long> assigneeIds) {
+		return ResponseEntity.ok().body(issueService.updateAssignees(assigneeIds, issueId));
 	}
 
 	@PutMapping("/{issueId}/milestone")
