@@ -123,8 +123,7 @@ const Div = styled.div<{ $state: TextInputState; $width: string | number }>`
 
 const InputContainer = styled.div<InputContainerProps>`
   display: flex;
-  width: ${({ $width }) =>
-    typeof $width === "number" ? `${$width}px` : $width};
+  width: 100%;
   height: ${({ $size }) => ($size === "L" ? "56px" : "40px")};
   padding: 5px 16px;
   align-self: stretch;

@@ -6,6 +6,7 @@ import { MilestoneData } from "./Milestone";
 
 type MilestoneEditorProps = {
   onClickClose: () => void;
+  fetchData: () => void;
 } & (
   | { type: "add"; milestone?: never }
   | { type: "edit"; milestone: MilestoneData }
@@ -15,6 +16,7 @@ export function MilestoneEditor({
   onClickClose,
   type,
   milestone,
+  fetchData,
 }: MilestoneEditorProps) {
   const isEditMode = type === "edit" && milestone;
 
@@ -93,14 +95,25 @@ export function MilestoneEditor({
     setDescription(value.trim());
   };
 
-  const submit = () => {
+  const submit = async () => {
+    const method = type === "add" ? "POST" : "PUT";
+    const path = type === "add" ? "" : `/${milestone.id}`;
     const obj = {
       name: milestoneName,
       description: description,
       deadline: deadline,
     };
 
-    console.log(obj);
+    await fetch(`/api/milestones${path}`, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    });
+
+    onClickClose();
+    fetchData();
   };
 
   return (
@@ -108,28 +121,32 @@ export function MilestoneEditor({
       <Title>{type === "add" ? "새로운 마일스톤 추가" : "마일스톤 편집"}</Title>
       <Editor>
         <Info>
-          <TextInput
-            width={600}
-            size="S"
-            label="이름"
-            value={milestoneName}
-            fixLabel
-            placeholder="마일스톤의 이름을 입력하세요."
-            onChange={onChangeMilestoneName}
-          />
-          <TextInput
-            width={600}
-            size="S"
-            label="완료일(선택)"
-            value={deadline}
-            fixLabel
-            placeholder="YYYY-MM-DD"
-            onChange={onChangeDeadline}
-            isError={!isValidDeadline}
-          />
+          <div>
+            <TextInput
+              width={"100%"}
+              size="S"
+              label="이름"
+              value={milestoneName}
+              fixLabel
+              placeholder="마일스톤의 이름을 입력하세요."
+              onChange={onChangeMilestoneName}
+            />
+          </div>
+          <div>
+            <TextInput
+              width={"100%"}
+              size="S"
+              label="완료일(선택)"
+              value={deadline}
+              fixLabel
+              placeholder="YYYY-MM-DD"
+              onChange={onChangeDeadline}
+              isError={!isValidDeadline}
+            />
+          </div>
         </Info>
         <TextInput
-          width={1216}
+          width={"100%"}
           size="S"
           label="설명(선택)"
           value={description}
@@ -167,7 +184,6 @@ const Div = styled.div`
   width: 100%;
   align-self: stretch;
   box-sizing: border-box;
-  padding: 32px;
   gap: 24px;
 `;
 
@@ -187,6 +203,9 @@ const Info = styled.div`
   width: 100%;
   display: flex;
   gap: 16px;
+  & > div {
+    width: 100%;
+  }
 `;
 
 const Buttons = styled.div`

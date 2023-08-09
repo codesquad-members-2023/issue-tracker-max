@@ -16,9 +16,15 @@ const colorDictionary = {
 
 type LabelEditorProps = {
   onClickClose: () => void;
+  fetchData: () => void;
 } & ({ type: "add"; label?: never } | { type: "edit"; label: LabelData });
 
-export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
+export function LabelEditor({
+  onClickClose,
+  fetchData,
+  type,
+  label,
+}: LabelEditorProps) {
   const isEditMode = type === "edit" && label;
 
   const [selectedFontColor, setSelectedFontColor] = useState<string>(
@@ -34,6 +40,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
   const [labelDescription, setLabelDescription] = useState(
     isEditMode && label.description ? label.description : "",
   );
+
   const [isColorValid, setIsColorValid] = useState(true);
   const [isFocus, setIsFocus] = useState(false);
   const [fontColorOptions, setFontColorOptions] = useState([
@@ -57,12 +64,14 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
     },
   ]);
 
+  const isSameLabelData =
+    labelName === label?.name &&
+    background === label?.background &&
+    color === label?.color &&
+    labelDescription === label?.description;
+
   const isButtonDisabled = isEditMode
-    ? !isColorValid ||
-      (labelName === label.name &&
-        background === label.background &&
-        color === label.color) ||
-      labelName === ""
+    ? !isColorValid || isSameLabelData || labelName === ""
     : !isColorValid || labelName === "";
 
   const updateOptions = (selectedName: string) => {
@@ -113,15 +122,26 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
     setLabelDescription(description);
   };
 
-  const submit = () => {
+  const submit = async () => {
+    const method = type === "add" ? "POST" : "PUT";
+    const path = type === "add" ? "" : `/${label.id}`;
     const obj = {
       name: labelName,
       description: labelDescription,
       background: background,
-      fontColor: color,
+      color: color,
     };
 
-    console.log(obj);
+    await fetch(`/api/labels${path}`, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    });
+
+    onClickClose();
+    fetchData();
   };
 
   return (
@@ -138,7 +158,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
         </Preview>
         <InputWrapper>
           <TextInput
-            width={904}
+            width={"100%"}
             size="S"
             label="이름"
             placeholder="레이블의 이름을 입력하세요"
@@ -147,7 +167,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
             onChange={onChangeName}
           />
           <TextInput
-            width={904}
+            width={"100%"}
             size="S"
             label="설명(선택)"
             placeholder="레이블에 대한 설명을 입력하세요"
@@ -207,10 +227,8 @@ const Div = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 337px;
   align-self: stretch;
   box-sizing: border-box;
-  padding: 32px;
   gap: 24px;
 `;
 

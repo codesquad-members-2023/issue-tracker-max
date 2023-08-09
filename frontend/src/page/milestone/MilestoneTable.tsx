@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TabButton } from "../../components/TabButton";
-import { IconType } from "../../components/icon/Icon";
+import { Icon, IconType } from "../../components/icon/Icon";
 import { MilestoneData } from "./Milestone";
 import { MilestoneTableElement } from "./MilestoneTableElement";
 
@@ -11,6 +11,7 @@ type MilestoneTableProps = {
   openCount: number;
   closeCount: number;
   status: "OPENED" | "CLOSED";
+  fetchData: () => void;
 };
 
 type Tab = {
@@ -25,6 +26,7 @@ export function MilestoneTable({
   openCount,
   closeCount,
   status,
+  fetchData,
 }: MilestoneTableProps) {
   const navigate = useNavigate();
 
@@ -72,8 +74,15 @@ export function MilestoneTable({
             key={index}
             milestone={milestone}
             status={status}
+            fetchData={fetchData}
           />
         ))}
+        {!milestones.length && (
+          <NoneElement>
+            <Icon name="AlertCircle" />
+            <span>마일스톤이 비어 있습니다.</span>
+          </NoneElement>
+        )}
       </TableBody>
     </Div>
   );
@@ -104,4 +113,16 @@ const TableHeader = styled.div`
 
 const TableBody = styled.div`
   width: 100%;
+`;
+
+const NoneElement = styled.div`
+  width: 100%;
+  height: 96px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  font: ${({ theme }) => theme.font.displayBold16};
+  color: ${({ theme }) => theme.color.neutralTextStrong};
+  border-top: solid 1px ${({ theme }) => theme.color.neutralBorderDefault};
 `;

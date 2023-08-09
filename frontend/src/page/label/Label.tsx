@@ -31,14 +31,18 @@ export function Label() {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("/api/labels");
-
-      setLabelsRes(await res.json());
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    const res = await fetch("/api/labels");
+    const labelsData = await res.json();
+
+    if (labelsData.code === 200) {
+      setLabelsRes(labelsData.data);
+    }
+    // TODO : 에러 예외 처리
+  };
 
   return (
     <Div>
@@ -52,10 +56,16 @@ export function Label() {
       )}
       {isAdding && (
         <EditorWrapper>
-          <LabelEditor onClickClose={closeAddLabel} type="add" />
+          <LabelEditor
+            fetchData={fetchData}
+            onClickClose={closeAddLabel}
+            type="add"
+          />
         </EditorWrapper>
       )}
-      {labelsRes && <LabelTable labels={labelsRes.labels} />}
+      {labelsRes && (
+        <LabelTable fetchData={fetchData} labels={labelsRes.labels} />
+      )}
     </Div>
   );
 }
@@ -69,6 +79,7 @@ const Div = styled.div`
 const EditorWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
   border-radius: ${({ theme }) => theme.radius.large};
-  margin-bottom: 24px;
   background: ${({ theme }) => theme.color.neutralSurfaceStrong};
+  margin-bottom: 24px;
+  padding: 32px;
 `;

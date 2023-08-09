@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import { MilestoneEditor } from "./MilestoneEditor";
@@ -36,22 +36,23 @@ export function Milestone() {
   const [milestonesRes, setMilestonesRes] = useState<MilestonesResData>();
   const [isAdding, setIsAdding] = useState(false);
 
+  const fetchData = useCallback(async () => {
+    const res = await fetch(`/api/milestones?state=${state}`);
+    const milestonesData = await res.json();
+
+    if (milestonesData.code === 200) {
+      setMilestonesRes(milestonesData.data);
+    }
+    // TODO : 에러 예외 처리
+  }, [state]);
+
   useEffect(() => {
     if (state !== "opened" && state !== "closed") {
       navigate("/404");
       return;
     }
-
-    const fetchData = async () => {
-      const res = await fetch(
-        `https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/milestones?state=${state}`,
-      );
-
-      setMilestonesRes(await res.json());
-    };
-
     fetchData();
-  }, [state, navigate]);
+  }, [state, navigate, fetchData]);
 
   const openAddMilestone = () => {
     setIsAdding(true);
@@ -73,7 +74,11 @@ export function Milestone() {
           />
           {isAdding && (
             <EditorWrapper>
-              <MilestoneEditor onClickClose={closeAddLabel} type="add" />
+              <MilestoneEditor
+                fetchData={fetchData}
+                onClickClose={closeAddLabel}
+                type="add"
+              />
             </EditorWrapper>
           )}
           <MilestoneTable
@@ -81,6 +86,7 @@ export function Milestone() {
             openCount={milestonesRes.openedMilestoneCount}
             closeCount={milestonesRes.closedMilestoneCount}
             status={milestonesRes.status}
+            fetchData={fetchData}
           />
         </>
       )}
@@ -97,6 +103,7 @@ const Div = styled.div`
 const EditorWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
   border-radius: ${({ theme }) => theme.radius.large};
-  margin-bottom: 24px;
   background: ${({ theme }) => theme.color.neutralSurfaceStrong};
+  margin-bottom: 24px;
+  padding: 32px;
 `;
