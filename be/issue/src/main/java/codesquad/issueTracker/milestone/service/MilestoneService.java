@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class MilestoneService {
 	private final MilestoneRepository milestoneRepository;
+	private final MilestoneValidator milestoneValidator;
 
 	public Long save(ModifyMilestoneRequestDto request) {
 		Milestone milestone = ModifyMilestoneRequestDto.toEntity(request);
@@ -19,8 +20,14 @@ public class MilestoneService {
 	}
 
 	public Long update(Long id, ModifyMilestoneRequestDto request) {
+		milestoneValidator.existValidate(id);
 		Milestone milestone = ModifyMilestoneRequestDto.toEntity(request);
 		milestone.validateDate();
 		return milestoneRepository.update(id,milestone);
+	}
+
+	public Long delete(Long id) {
+		milestoneValidator.existValidate(id);
+		return milestoneRepository.delete(id);
 	}
 }
