@@ -27,4 +27,12 @@ public class CommentService {
         return commentRepository.create(userId, issueId, commentRequestDto)
                 .orElseThrow(() -> new CustomException(ErrorCode.DB_EXCEPTION));
     }
+
+    @Transactional
+    public Long modify(HttpServletRequest request, Long commentId, CommentRequestDto commentRequestDto) {
+        Long userId = Long.parseLong(String.valueOf(request.getAttribute("userId")));
+
+        return commentRepository.update(userId, commentId, commentRequestDto)
+                    .orElseThrow(() -> new CustomException(ErrorCode.DB_EXCEPTION));
+    }
 }

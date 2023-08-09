@@ -11,6 +11,10 @@ public enum ErrorCode implements StatusCode {
 
 	REQUEST_VALIDATION_FAIL(HttpStatus.BAD_REQUEST),
 
+	// -- [Common] -- ]
+	DB_EXCEPTION(HttpStatus.SERVICE_UNAVAILABLE, "DB 서버 오류"),
+
+
 	// -- [OAuth] -- //
 	NOT_SUPPORTED_PROVIDER(HttpStatus.BAD_REQUEST, "지원하지 않는 로그인 방식입니다."),
 	GITHUB_LOGIN_USER(HttpStatus.BAD_REQUEST, "이미 깃허브로 로그인한 유저입니다"),
@@ -27,8 +31,7 @@ public enum ErrorCode implements StatusCode {
 	// -- [USER] -- //
 	ALREADY_EXIST_USER(HttpStatus.BAD_REQUEST, "이미 존재하는 유저입니다."),
 	NOT_FOUND_USER(HttpStatus.BAD_REQUEST, "해당하는 유저가 없습니다."),
-	FAILED_LOGIN_USER(HttpStatus.BAD_REQUEST, "로그인에 실패했습니다. 아이디, 비밀번호를 다시 입력해주세요. "),
-	DB_EXCEPTION(HttpStatus.SERVICE_UNAVAILABLE, "DB 서버 오류");
+	FAILED_LOGIN_USER(HttpStatus.BAD_REQUEST, "로그인에 실패했습니다. 아이디, 비밀번호를 다시 입력해주세요. ");
 
 	private HttpStatus status;
 	private String message;

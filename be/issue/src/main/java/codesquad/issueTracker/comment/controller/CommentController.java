@@ -10,6 +10,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +37,14 @@ public class CommentController {
                                     HttpServletRequest request) {
         commentService.save(request, issueId, commentRequestDto);
 
+        return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+    }
+
+    @PatchMapping("/issues/comments/{commentId}")
+    public ApiResponse<String> modify(@PathVariable Long commentId,
+                                      @RequestBody CommentRequestDto commentRequestDto,
+                                      HttpServletRequest request) {
+        commentService.modify(request, commentId, commentRequestDto);
         return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
     }
 }
