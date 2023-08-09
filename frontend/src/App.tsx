@@ -5,14 +5,22 @@ import { Header } from "./components/Header";
 import { designSystem } from "./constants/designSystem";
 import { Auth } from "./page/Auth";
 import { Error404 } from "./page/Error404";
+import { IssueDetail } from "./page/issueDetail/IssueDetail";
 import { Label } from "./page/label/Label";
 import { Main } from "./page/main/Main";
 import { Milestone } from "./page/milestone/Milestone";
 import { NewIssue } from "./page/newIssue/NewIssue";
-import { IssueDetail } from "./page/issueDetail/IssueDetail";
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<"LIGHT" | "DARK">("LIGHT");
+
+  const onClickThemeMode = () => {
+    if (themeMode === "LIGHT") {
+      setThemeMode("DARK");
+    } else {
+      setThemeMode("LIGHT");
+    }
+  }
 
   return (
     <ThemeProvider theme={designSystem[themeMode]}>
@@ -20,7 +28,7 @@ export default function App() {
         <Router>
           <Routes>
             <Route path="/auth" element={<Auth />} />
-            <Route path="*" element={<MainRoutes />} />
+            <Route path="*" element={<MainRoutes themeMode={themeMode} onClickThemeMode={onClickThemeMode} />} />
           </Routes>
         </Router>
       </Div>
@@ -28,10 +36,10 @@ export default function App() {
   );
 }
 
-function MainRoutes() {
+function MainRoutes({ themeMode, onClickThemeMode }: { themeMode: "LIGHT" | "DARK", onClickThemeMode: () => void }) {
   return (
     <>
-      <Header />
+      <Header themeMode={themeMode} onClickThemeMode={onClickThemeMode}/>
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/issues/new" element={<NewIssue />} />

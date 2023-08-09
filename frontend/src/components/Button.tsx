@@ -1,17 +1,23 @@
 import { ButtonHTMLAttributes } from "react";
 import { styled } from "styled-components";
+import { getColorCode } from "../utils/getColorCode";
 import { Icon, IconColor, IconType, ThemeColorKeys } from "./icon/Icon";
 
 type ButtonProps = {
+  width?: string | number;
+  height?: string | number;
   size: "S" | "M" | "L";
   buttonType: "Container" | "Outline" | "Ghost";
   flexible?: "Flexible" | "Fixed";
   icon?: keyof IconType;
   selected?: boolean;
   color?: IconColor;
+  background?: IconColor;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
+  width,
+  height,
   size,
   buttonType,
   flexible,
@@ -19,6 +25,7 @@ export function Button({
   selected,
   children,
   color,
+  background,
   ...props
 }: ButtonProps) {
   const buttonMap = {
@@ -41,10 +48,13 @@ export function Button({
   return (
     <ButtonComponent
       className={selected ? "selected" : ""}
+      $width={width}
+      $height={height}
       $size={size}
       $flexible={flexible === "Flexible"}
       $selected={selected}
       $color={color}
+      $background={background}
       {...props}
     >
       <div>
@@ -56,11 +66,17 @@ export function Button({
 }
 
 const StyledButton = styled.button<{
+  $width?: string | number;
+  $height?: string | number;
   $size: "S" | "M" | "L";
   $flexible?: boolean;
   $color?: string;
+  $background?: string;
 }>`
-  width: ${({ $size, $flexible }) => {
+  width: ${({ $size, $width, $flexible }) => {
+    if ($width) {
+      return typeof $width === "number" ? `${$width}px` : $width;
+    }
     if ($flexible) {
       return "fit-content";
     }
@@ -75,7 +91,11 @@ const StyledButton = styled.button<{
         return "";
     }
   }};
-  height: ${({ $size }) => {
+  height: ${({ $size, $height }) => {
+    if ($height) {
+      return typeof $height === "number" ? `${$height}px` : $height;
+    }
+
     switch ($size) {
       case "L":
         return "56px";
@@ -128,7 +148,10 @@ const StyledButton = styled.button<{
 `;
 
 const ContainerButton = styled(StyledButton)`
-  background-color: ${({ theme }) => theme.color.brandSurfaceDefault};
+  background-color: ${({ theme, $background }) =>
+    $background
+      ? getColorCode($background, theme)
+      : theme.color.brandSurfaceDefault};
   color: ${({ theme, $color }) => $color || theme.color.brandTextDefault};
 `;
 
