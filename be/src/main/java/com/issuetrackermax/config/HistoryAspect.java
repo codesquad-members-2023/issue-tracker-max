@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 import com.issuetrackermax.controller.history.dto.HistoryRequest;
+import com.issuetrackermax.controller.issue.dto.response.IssuePostResponse;
 import com.issuetrackermax.domain.member.MemberRepository;
 import com.issuetrackermax.service.history.HistoryService;
 
@@ -22,7 +23,8 @@ public class HistoryAspect {
 
 	@Around("execution(* com.issuetrackermax.service.issue.IssueService.post(..))")
 	public Object save(ProceedingJoinPoint joinPoint) throws Throwable {
-		Long issueId = (Long)joinPoint.proceed();
+		IssuePostResponse issuePostResponse = (IssuePostResponse)joinPoint.proceed();
+		Long issueId = issuePostResponse.getId();
 		Long writerId = (Long)joinPoint.getArgs()[1];
 
 		historyService.save(HistoryRequest.builder()
@@ -30,7 +32,7 @@ public class HistoryAspect {
 			.editor(memberRepository.findById(writerId).get().getNickName())
 			.issueIsOpen(true)
 			.build());
-		return issueId;
+		return issuePostResponse;
 	}
 
 	@Around("execution(* com.issuetrackermax.service.issue.IssueService.openIssue(..))")
@@ -64,5 +66,5 @@ public class HistoryAspect {
 				.build());
 		}
 	}
-	
+
 }

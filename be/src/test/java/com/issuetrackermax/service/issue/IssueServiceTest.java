@@ -28,8 +28,6 @@ import com.issuetrackermax.controller.issue.dto.request.IssueTitleRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuesStatusRequest;
 import com.issuetrackermax.controller.issue.dto.response.IssueDetailsResponse;
 import com.issuetrackermax.domain.IntegrationTestSupport;
-import com.issuetrackermax.domain.history.HistoryRepository;
-import com.issuetrackermax.domain.history.entity.History;
 import com.issuetrackermax.domain.issue.IssueRepository;
 import com.issuetrackermax.domain.label.LabelRepository;
 import com.issuetrackermax.domain.label.entity.Label;
@@ -40,7 +38,6 @@ import com.issuetrackermax.domain.milestone.MilestoneRepository;
 import com.issuetrackermax.domain.milestone.entity.Milestone;
 import com.issuetrackermax.util.DatabaseCleaner;
 
-// todo : history aspect 적용 시 history 객체 삭제
 @Transactional
 public class IssueServiceTest extends IntegrationTestSupport {
 	@Autowired
@@ -55,8 +52,6 @@ public class IssueServiceTest extends IntegrationTestSupport {
 	private MilestoneRepository milestoneRepository;
 	@Autowired
 	private MemberRepository memberRepository;
-	@Autowired
-	private HistoryRepository historyRepository;
 	private Long labelId;
 	private Long memberId;
 	private Long memberId2;
@@ -110,14 +105,6 @@ public class IssueServiceTest extends IntegrationTestSupport {
 			.build();
 
 		issueId = issueService.post(request, memberId).getId();
-
-		History history = History.builder()
-			.editor("june")
-			.issueId(issueId)
-			.issueIsOpen(true)
-			.build();
-
-		historyRepository.save(history);
 	}
 
 	@DisplayName("새로운 이슈를 등록하고 id를 반환한다.")
@@ -205,14 +192,6 @@ public class IssueServiceTest extends IntegrationTestSupport {
 			.build();
 
 		Long issueId2 = issueService.post(issuePostRequest, memberId2).getId();
-
-		History history = History.builder()
-			.editor("movie")
-			.issueId(issueId2)
-			.issueIsOpen(true)
-			.build();
-
-		historyRepository.save(history);
 		List<Long> ids = Arrays.asList(issueId, issueId2);
 		issueRepository.openByIds(ids);
 
@@ -222,7 +201,7 @@ public class IssueServiceTest extends IntegrationTestSupport {
 			.build();
 
 		//when
-		issueService.updateStatus(request);
+		issueService.updateStatus(request, memberId2);
 		IssueDetailsResponse modifiedIssue1 = issueService.show(issueId);
 		IssueDetailsResponse modifiedIssue2 = issueService.show(issueId2);
 
@@ -247,14 +226,6 @@ public class IssueServiceTest extends IntegrationTestSupport {
 			.build();
 
 		Long issueId2 = issueService.post(issuePostRequest, memberId2).getId();
-
-		History history = History.builder()
-			.editor("movie")
-			.issueId(issueId2)
-			.issueIsOpen(true)
-			.build();
-
-		historyRepository.save(history);
 		List<Long> ids = Arrays.asList(issueId, issueId2);
 
 		IssuesStatusRequest request = IssuesStatusRequest.builder()
@@ -263,7 +234,7 @@ public class IssueServiceTest extends IntegrationTestSupport {
 			.build();
 
 		//when
-		issueService.updateStatus(request);
+		issueService.updateStatus(request, memberId2);
 		IssueDetailsResponse modifiedIssue1 = issueService.show(issueId);
 		IssueDetailsResponse modifiedIssue2 = issueService.show(issueId2);
 
@@ -288,7 +259,7 @@ public class IssueServiceTest extends IntegrationTestSupport {
 			.build();
 
 		//when & then
-		assertThatThrownBy(() -> issueService.updateStatus(request))
+		assertThatThrownBy(() -> issueService.updateStatus(request, memberId2))
 			.isInstanceOf(ApiException.class)
 			.hasMessageContaining(IssueException.INVALID_ISSUE_STATUS.getMessage());
 	}

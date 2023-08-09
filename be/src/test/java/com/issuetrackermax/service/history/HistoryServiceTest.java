@@ -48,7 +48,7 @@ class HistoryServiceTest extends IntegrationTestSupport {
 
 		Member member = memberRepository.findById(writerId).get();
 		// when
-		Long issueId = issueService.post(issuePostRequest, writerId);
+		Long issueId = issueService.post(issuePostRequest, writerId).getId();
 
 		// then
 		History history = historyRepository.findLatestByIssueId(issueId);
@@ -72,8 +72,8 @@ class HistoryServiceTest extends IntegrationTestSupport {
 			.title("title2")
 			.content("content2")
 			.build();
-		Long issueId1 = issueService.post(issuePostRequest, writerId);
-		Long issueId2 = issueService.post(issuePostRequest2, writerId);
+		Long issueId1 = issueService.post(issuePostRequest, writerId).getId();
+		Long issueId2 = issueService.post(issuePostRequest2, writerId).getId();
 
 		// when
 		issueService.openIssue(List.of(issueId1, issueId2), writerId);
@@ -108,8 +108,8 @@ class HistoryServiceTest extends IntegrationTestSupport {
 			.title("title2")
 			.content("content2")
 			.build();
-		Long issueId1 = issueService.post(issuePostRequest, writerId);
-		Long issueId2 = issueService.post(issuePostRequest2, writerId);
+		Long issueId1 = issueService.post(issuePostRequest, writerId).getId();
+		Long issueId2 = issueService.post(issuePostRequest2, writerId).getId();
 
 		// when
 		issueService.closeIssue(List.of(issueId1, issueId2), writerId);
