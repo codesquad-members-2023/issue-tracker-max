@@ -37,7 +37,7 @@ class MilestoneServiceTest extends IntegrationTestSupport {
 	}
 
 	@Test
-	void getMilstoneCount() {
+	void getMilestoneCount() {
 		// given
 		milestoneService.save(MilestonePostRequest
 			.builder()

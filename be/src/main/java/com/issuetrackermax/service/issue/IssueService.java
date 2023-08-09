@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetrackermax.common.exception.ApiException;
-import com.issuetrackermax.common.exception.AssigneeCustomException;
+import com.issuetrackermax.common.exception.domain.AssigneeException;
 import com.issuetrackermax.common.exception.domain.IssueException;
 import com.issuetrackermax.common.exception.domain.LabelException;
 import com.issuetrackermax.common.exception.domain.MilestoneException;
@@ -18,10 +18,14 @@ import com.issuetrackermax.controller.issue.dto.request.IssuePostRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssueTitleRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuesStatusRequest;
 import com.issuetrackermax.controller.issue.dto.response.IssueDetailsResponse;
+import com.issuetrackermax.controller.issue.dto.response.IssuePostResponse;
 import com.issuetrackermax.domain.comment.entity.Comment;
 import com.issuetrackermax.domain.history.entity.History;
+import com.issuetrackermax.domain.issue.IssueCommentRepository;
+import com.issuetrackermax.domain.issue.IssueLabelRepository;
 import com.issuetrackermax.domain.issue.IssueRepository;
 import com.issuetrackermax.domain.issue.entity.IssueResultVO;
+import com.issuetrackermax.domain.issue.entity.IssueWithComment;
 import com.issuetrackermax.service.assignee.AssigneeService;
 import com.issuetrackermax.service.comment.CommentService;
 import com.issuetrackermax.service.history.HistoryService;
@@ -36,6 +40,8 @@ public class IssueService {
 	private static final String OPEN_ISSUE = "open";
 	private static final String CLOSED_ISSUE = "closed";
 	private final IssueRepository issueRepository;
+	private final IssueLabelRepository issueLabelRepository;
+	private final IssueCommentRepository issueCommentRepository;
 	private final CommentService commentService;
 	private final HistoryService historyService;
 	private final LabelService labelService;
@@ -43,8 +49,7 @@ public class IssueService {
 	private final MilestoneService milestoneService;
 
 	@Transactional
-	public Long post(IssuePostRequest request, Long writerId) {
-		validatePostRequest(request);
+	public IssuePostResponse post(IssuePostRequest request, Long writerId) {
 		Long issueId = issueRepository.save(request.toIssue(writerId));
 
 		if (request.getAssigneeIds() != null) {
@@ -56,17 +61,10 @@ public class IssueService {
 		}
 
 		if (request.getContent() != null || request.getImageUrl() != null) {
-			commentService.save(request.toComment(writerId));
+			Long commentId = commentService.save(request.toComment(writerId));
+			issueCommentRepository.save(IssueWithComment.builder().issueId(issueId).commentId(commentId).build());
 		}
-		return issueId;
-	}
-
-	@Transactional
-	public void delete(Long id) {
-		int count = issueRepository.deleteById(id);
-		if (count == 0) {
-			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
-		}
+		return IssuePostResponse.from(issueId);
 	}
 
 	@Transactional(readOnly = true)
@@ -84,6 +82,14 @@ public class IssueService {
 			.comments(comments)
 			.labels(labels)
 			.build();
+	}
+
+	@Transactional
+	public void delete(Long id) {
+		int count = issueRepository.deleteById(id);
+		if (count == 0) {
+			throw new ApiException(IssueException.NOT_FOUND_ISSUE);
+		}
 	}
 
 	private List<LabelResponse> getLabelResponse(String[] labelIds) {
@@ -138,9 +144,9 @@ public class IssueService {
 			throw new ApiException(LabelException.NOT_FOUND_LABEL);
 		}
 
-		issueRepository.deleteAppliedLabels(issueId);
+		issueLabelRepository.deleteAppliedLabels(issueId);
 		for (Long labelId : request.getIds()) {
-			issueRepository.applyLabels(issueId, labelId);
+			issueLabelRepository.applyLabels(issueId, labelId);
 		}
 	}
 
@@ -151,12 +157,12 @@ public class IssueService {
 		}
 
 		if (!assigneeService.existByIds(request.getIds())) {
-			throw new ApiException(AssigneeCustomException.NOT_FOUND_ASSIGNEE);
+			throw new ApiException(AssigneeException.NOT_FOUND_ASSIGNEE);
 		}
 
-		issueRepository.deleteAppliedAssignees(issueId);
+		assigneeService.deleteAppliedAssignees(issueId);
 		for (Long memberId : request.getIds()) {
-			issueRepository.applyAssignees(issueId, memberId);
+			assigneeService.applyAssigneesToIssue(issueId, memberId);
 		}
 	}
 
@@ -170,24 +176,6 @@ public class IssueService {
 			throw new ApiException(MilestoneException.NOT_FOUND_MILESTONE);
 		}
 
-		issueRepository.applyMilestone(issueId, milestoneId);
-	}
-
-	public void validatePostRequest(IssuePostRequest request) {
-		Long milestoneId = request.getMilestoneId();
-		List<Long> labelIds = request.getLabelIds();
-		List<Long> assigneeIds = request.getAssigneeIds();
-
-		if (milestoneId != null) {
-			milestoneService.existById(milestoneId);
-		}
-
-		if (labelIds != null) {
-			labelService.existByIds(labelIds);
-		}
-
-		if (assigneeIds != null) {
-			assigneeService.existByIds(assigneeIds);
-		}
+		milestoneService.applyMilestoneToIssue(issueId, milestoneId);
 	}
 }

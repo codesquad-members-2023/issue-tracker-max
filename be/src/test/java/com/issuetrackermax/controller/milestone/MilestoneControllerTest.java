@@ -70,7 +70,7 @@ class MilestoneControllerTest extends ControllerTestSupport {
 			.andExpect(jsonPath("$.data.milestones[1].closedIssueCount").value(4L));
 	}
 
-	@DisplayName("title, dueDate, , description 입력하면 등록된다.")
+	@DisplayName("title, dueDate, description 입력하면 등록된다.")
 	@Test
 	void postLabel() throws Exception {
 

@@ -30,4 +30,17 @@ public class IssueLabelRepository {
 		jdbcTemplate.update(sql, parameters, keyHolder);
 		return (Long)Objects.requireNonNull(keyHolder.getKey());
 	}
+
+	public int deleteAppliedLabels(Long issueId) {
+		String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
+		return jdbcTemplate.update(sql, new MapSqlParameterSource("issueId", issueId));
+	}
+
+	public int applyLabels(Long issueId, Long labelId) {
+		String sql = "INSERT INTO issue_label(issue_id, label_id) VALUES (:issueId, :labelId)";
+		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+		return jdbcTemplate.update(sql, new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("labelId", labelId), keyHolder);
+	}
 }

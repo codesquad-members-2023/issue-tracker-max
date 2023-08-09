@@ -37,7 +37,7 @@ public class IssueController {
 		@RequestBody
 		@Valid IssuePostRequest request, HttpServletRequest servletRequest) {
 		Integer memberId = (Integer)servletRequest.getAttribute(MEMBER_ID);
-		return ApiResponse.success(IssuePostResponse.from(issueService.post(request, memberId.longValue())));
+		return ApiResponse.success(issueService.post(request, memberId.longValue()));
 	}
 
 	@PatchMapping("/status")
