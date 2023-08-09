@@ -3,15 +3,18 @@ package codesquard.app.issue.controller;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquard.app.api.response.ApiResponse;
+import codesquard.app.api.response.ResponseMessage;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -23,74 +26,78 @@ import codesquard.app.issue.dto.response.IssueDeleteResponse;
 import codesquard.app.issue.dto.response.IssueModifyResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueSaveResponse;
+import codesquard.app.issue.service.IssueQueryService;
 import codesquard.app.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@RequestMapping(path = "/api/issues")
 @RestController
 public class IssueController {
 
 	private final IssueService issueService;
+	private final IssueQueryService issueQueryService;
 
-	@GetMapping("/api/issues/{issueId}")
-	public ResponseEntity<IssueReadResponse> get(@PathVariable Long issueId) {
-		IssueReadResponse issueReadResponse = issueService.get(issueId);
-		return ResponseEntity.status(HttpStatus.OK).body(issueReadResponse);
+	@GetMapping("/{issueId}")
+	public ApiResponse<IssueReadResponse> get(@PathVariable Long issueId) {
+		return ApiResponse.ok(issueQueryService.get(issueId));
 	}
 
-	@PostMapping("/api/issues")
-	public ResponseEntity<IssueSaveResponse> save(
+	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping
+	public ApiResponse<IssueSaveResponse> save(
 		@Valid @RequestBody IssueSaveRequest issueSaveRequest) {
 		Long userId = 1L;
-		Long id = issueService.save(issueSaveRequest, userId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(IssueSaveResponse.success(id));
+		Long issueId = issueService.save(issueSaveRequest, userId);
+		return ApiResponse.of(HttpStatus.CREATED, ResponseMessage.ISSUE_SAVE_SUCCESS,
+			IssueSaveResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/status")
-	public ResponseEntity<IssueModifyResponse> modifyStatus(
+	@PatchMapping("/{issueId}/status")
+	public ApiResponse<IssueModifyResponse> modifyStatus(
 		@RequestBody IssueModifyStatusRequest issueModifyStatusRequest, @PathVariable Long issueId) {
 		issueService.modifyStatus(issueModifyStatusRequest, issueId);
-		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
+		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/title")
-	public ResponseEntity<IssueModifyResponse> modifyTitle(
+	@PatchMapping("/{issueId}/title")
+	public ApiResponse<IssueModifyResponse> modifyTitle(
 		@Valid @RequestBody IssueModifyTitleRequest issueModifyTitleRequest, @PathVariable Long issueId) {
 		issueService.modifyTitle(issueModifyTitleRequest, issueId);
-		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
+		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/content")
-	public ResponseEntity<IssueModifyResponse> modifyContent(
+	@PatchMapping("/{issueId}/content")
+	public ApiResponse<IssueModifyResponse> modifyContent(
 		@Valid @RequestBody IssueModifyContentRequest issueModifyContentRequest, @PathVariable Long issueId) {
 		issueService.modifyContent(issueModifyContentRequest, issueId);
-		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
+		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/milestones")
-	public ResponseEntity<IssueModifyResponse> modifyMilestone(
+	@PatchMapping("/{issueId}/milestones")
+	public ApiResponse<IssueModifyResponse> modifyMilestone(
 		@RequestBody IssueModifyMilestoneRequest issueModifyMilestoneRequest, @PathVariable Long issueId) {
 		issueService.modifyMilestone(issueModifyMilestoneRequest, issueId);
-		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
+		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/assignees")
-	public ResponseEntity<IssueModifyResponse> modifyAssignees(
+	@PatchMapping("/{issueId}/assignees")
+	public ApiResponse<IssueModifyResponse> modifyAssignees(
 		@RequestBody IssueModifyAssigneesRequest issueModifyAssigneesRequest, @PathVariable Long issueId) {
 		issueService.modifyAssignees(issueModifyAssigneesRequest, issueId);
-		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
+		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@PatchMapping("/api/issues/{issueId}/labels")
-	public ResponseEntity<IssueModifyResponse> modifyLabels(
+	@PatchMapping("/{issueId}/labels")
+	public ApiResponse<IssueModifyResponse> modifyLabels(
 		@RequestBody IssueModifyLabelsRequest issueModifyLabelsRequest, @PathVariable Long issueId) {
 		issueService.modifyLabels(issueModifyLabelsRequest, issueId);
-		return ResponseEntity.status(HttpStatus.OK).body(IssueModifyResponse.success());
+		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
-	@DeleteMapping("/api/issues/{issueId}")
-	public ResponseEntity<IssueDeleteResponse> delete(@PathVariable Long issueId) {
+	@DeleteMapping("/{issueId}")
+	public ApiResponse<IssueDeleteResponse> delete(@PathVariable Long issueId) {
 		issueService.delete(issueId);
-		return ResponseEntity.status(HttpStatus.OK).body(IssueDeleteResponse.success());
+		return ApiResponse.ok(IssueDeleteResponse.success(issueId));
 	}
 }
