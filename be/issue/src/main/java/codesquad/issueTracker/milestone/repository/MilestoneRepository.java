@@ -62,4 +62,12 @@ public class MilestoneRepository {
 		return jdbcTemplate.queryForObject(sql, parameterSource, Boolean.class);
 	}
 
+	public Long updateStatus(Long id, int status) {
+		String sql = "UPDATE milestones SET is_closed = :status  where id = :id AND is_deleted = 0";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("id",id)
+			.addValue("status",status);
+		jdbcTemplate.update(sql,parameterSource);
+		return id;
+	}
 }

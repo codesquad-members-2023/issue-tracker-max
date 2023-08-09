@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.issueTracker.global.ApiResponse;
 import codesquad.issueTracker.milestone.dto.ModifyMilestoneRequestDto;
+import codesquad.issueTracker.milestone.dto.UpdateMilestoneStatusDto;
 import codesquad.issueTracker.milestone.service.MilestoneService;
 import lombok.RequiredArgsConstructor;
 
@@ -40,6 +41,12 @@ public class MilestoneController {
 	@DeleteMapping("/milestones/{id}")
 	public ApiResponse<Long> deleteMilestone(@PathVariable Long id) {
 		Long milestoneId = milestoneService.delete(id);
+		return ApiResponse.success(SUCCESS.getStatus(), milestoneId);
+	}
+
+	@PatchMapping("/milestones/status/{id}")
+	public ApiResponse<Long> patchMilestoneStatus(@RequestBody UpdateMilestoneStatusDto request,@PathVariable Long id ) {
+		Long milestoneId = milestoneService.updateStatus(id,request);
 		return ApiResponse.success(SUCCESS.getStatus(), milestoneId);
 	}
 
