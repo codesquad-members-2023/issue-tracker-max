@@ -1,4 +1,4 @@
-package codesquard.app.assignee.service.response;
+package codesquard.app.assignee.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

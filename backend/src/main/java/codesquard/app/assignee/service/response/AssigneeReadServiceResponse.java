@@ -1,5 +1,6 @@
 package codesquard.app.assignee.service.response;
 
+import codesquard.app.assignee.controller.response.AssigneeReadResponse;
 import codesquard.app.user.entity.User;
 
 public class AssigneeReadServiceResponse {

@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.IntegrationTestSupport;
-import codesquard.app.assignee.service.response.AssigneeReadResponse;
+import codesquard.app.assignee.service.response.AssigneeReadServiceResponse;
 import codesquard.app.user.service.UserService;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
 
@@ -44,7 +44,7 @@ class AssigneeQueryServiceTest extends IntegrationTestSupport {
 		// sample
 		userService.signUp(new UserSaveServiceRequest("hong1234", "hong1234@gmail.com", "hong1234", "hong1234", null));
 		// when
-		List<AssigneeReadResponse> assignees = assigneeQueryService.findAll();
+		List<AssigneeReadServiceResponse> assignees = assigneeQueryService.findAll();
 		// then
 		SoftAssertions.assertSoftly(softAssertions -> {
 			softAssertions.assertThat(assignees.size()).isEqualTo(1);
