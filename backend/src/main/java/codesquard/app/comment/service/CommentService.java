@@ -54,7 +54,7 @@ public class CommentService {
 		}
 	}
 
-	private void validateCommentId(Long commentId) {
+	public void validateCommentId(Long commentId) {
 		if (!commentRepository.isExist(commentId)) {
 			throw new NoSuchCommentException();
 		}
