@@ -8,7 +8,6 @@ type Props = {
   labelCount: IssuePageData['labelCount'];
   labelList: Label[];
   isAddTableOpen?: boolean;
-  onEditLabelClick?: (id: number) => void;
   onAddTableClose?: () => void;
 };
 
@@ -16,7 +15,6 @@ export const Body: React.FC<Props> = ({
   labelCount,
   labelList,
   isAddTableOpen,
-  onEditLabelClick,
   onAddTableClose,
 }) => {
   const theme = useTheme() as any;
@@ -36,7 +34,7 @@ export const Body: React.FC<Props> = ({
           typeVariant="add"
           onAddTableClose={onAddTableClose}
           header={<TableHeader title="새로운  레이블 추가" />}
-        ></TableContainer>
+        />
       )}
 
       <Box
@@ -59,7 +57,6 @@ export const Body: React.FC<Props> = ({
             textColor={label.textColor}
             backgroundColor={label.backgroundColor}
             description={label.description}
-            // onEditLabelClick={onEditLabelClick}
           />
         ))}
       </Box>

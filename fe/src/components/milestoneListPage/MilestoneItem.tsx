@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { useTheme } from '@emotion/react';
-import { InformationTag } from '@components/common/InformationTag';
 import { Button } from '@components/common/Button';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { ReactComponent as Trash } from '@assets/icons/trash.svg';
@@ -20,7 +19,6 @@ type Props = {
   openIssueCount: number;
   closedIssueCount: number;
   deadline: string;
-  // onEditLabelClick?: (id: number) => void;
 };
 
 export const MilestoneItem: React.FC<Props> = ({
@@ -30,8 +28,6 @@ export const MilestoneItem: React.FC<Props> = ({
   openIssueCount,
   closedIssueCount,
   deadline,
-
-  // onEditLabelClick,
 }) => {
   const theme = useTheme() as any;
   const [isEditing, setIsEditing] = useState(false);
@@ -47,7 +43,6 @@ export const MilestoneItem: React.FC<Props> = ({
   return (
     <li
       css={{
-        // height: '96px',
         width: '100%',
         display: 'flex',
         alignItems: 'center',
@@ -59,10 +54,10 @@ export const MilestoneItem: React.FC<Props> = ({
     >
       {isEditing ? (
         <TableContainer
+          header={<TableHeader title="마일스톤 편집" />}
           tableVariant="milestone"
           typeVariant="edit"
           onAddTableClose={onEditMilestoneClose}
-          header={<TableHeader title="마일스톤 편집" />}
         ></TableContainer>
       ) : (
         <>
@@ -108,6 +103,7 @@ export const MilestoneItem: React.FC<Props> = ({
             <span
               css={{
                 width: '100%',
+                height: '24px',
                 color: theme.neutral.text.weak,
                 font: theme.fonts.displayMedium16,
               }}

@@ -39,9 +39,9 @@ export const TableContainer: React.FC<Props> = ({
       css={{
         width: '100%',
         boxSizing: 'border-box',
-        height: tableVariant === 'milestone' ? '284px' : '337px', //왜 적용안되는..?
+        height: 'fit-content',
         display: 'flex',
-
+        backgroundColor: theme.neutral.surface.strong,
         flexDirection: 'column',
         gap: '24px',
         ...(typeVariant === 'add' ? addTypeStyle : {}),

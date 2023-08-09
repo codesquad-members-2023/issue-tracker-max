@@ -13,7 +13,6 @@ type Props = {
   textColor: ThemeType;
   backgroundColor: string;
   description: string;
-  // onEditLabelClick?: (id: number) => void;
 };
 
 export const LabelItem: React.FC<Props> = ({
@@ -21,7 +20,6 @@ export const LabelItem: React.FC<Props> = ({
   textColor,
   backgroundColor,
   description,
-  // onEditLabelClick,
 }) => {
   const theme = useTheme() as any;
   const [isEditing, setIsEditing] = useState(false);

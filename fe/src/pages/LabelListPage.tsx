@@ -5,21 +5,21 @@ type Props = {};
 
 const mockData: Label[] = [
   {
-    labelId: 1,
+    id: 1,
     name: 'feat',
     textColor: 'light',
     backgroundColor: '#FF0000',
     description: '새로운 기능을 추가한다.',
   },
   {
-    labelId: 2,
+    id: 2,
     name: 'fix',
     textColor: 'dark',
     backgroundColor: '#800000',
     description: '버그를 고친다.',
   },
   {
-    labelId: 3,
+    id: 3,
     name: 'BE',
     textColor: 'dark',
     backgroundColor: '#600000',
@@ -29,7 +29,6 @@ const mockData: Label[] = [
 
 export const LabelListPage: React.FC<Props> = ({}) => {
   const [isAddTableOpen, setIsAddTableOpen] = useState(false);
-  const [isEditLabelOpen, setIsEditLabelOpen] = useState(false);
 
   const onAddTableOpen = () => {
     setIsAddTableOpen(true);
@@ -37,7 +36,6 @@ export const LabelListPage: React.FC<Props> = ({}) => {
   const onAddTableClose = () => {
     setIsAddTableOpen(false);
   };
-  const onEditLabelClick = () => {};
 
   return (
     <div
@@ -58,7 +56,6 @@ export const LabelListPage: React.FC<Props> = ({}) => {
         isAddTableOpen={isAddTableOpen}
         labelList={mockData}
         labelCount={mockData.length}
-        onEditLabelClick={onEditLabelClick}
         onAddTableClose={onAddTableClose}
       />
     </div>

@@ -32,7 +32,6 @@ const mockData: MilestonePageData = {
 
 export const MileStoneListPage: React.FC<Props> = ({}) => {
   const [isAddTableOpen, setIsAddTableOpen] = useState(false);
-  const [isEditMilestoneOpen, setIsEditMilestoneOpen] = useState(false);
 
   const onAddTableOpen = () => {
     setIsAddTableOpen(true);
@@ -40,7 +39,6 @@ export const MileStoneListPage: React.FC<Props> = ({}) => {
   const onAddTableClose = () => {
     setIsAddTableOpen(false);
   };
-  const onEditMilestoneClick = () => {};
 
   return (
     <div
@@ -62,7 +60,6 @@ export const MileStoneListPage: React.FC<Props> = ({}) => {
         milestoneList={mockData.milestones}
         openMilestonesCount={mockData.openMilestonesCount}
         closedMilestoneCount={mockData.closedMilestoneCount}
-        onEditLabelClick={onEditMilestoneClick}
         onAddTableClose={onAddTableClose}
       />
     </div>
