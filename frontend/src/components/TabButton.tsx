@@ -1,28 +1,20 @@
-import {Children, cloneElement, ReactElement} from "react";
-import {styled} from "styled-components";
+import { Children, ReactElement, cloneElement } from "react";
+import { styled } from "styled-components";
 
 export function TabButton({
-                            type = "Outline",
-                            children,
-                            onClick,
-                          }: {
+  type = "Outline",
+  children,
+}: {
   type?: "Ghost" | "Outline";
   children: ReactElement[];
-  onClick: (name: string) => void;
 }) {
   const TabButtonDiv =
-      type === "Ghost" ? GhostTabButtonDiv : OutlineTabButtonDiv;
+    type === "Ghost" ? GhostTabButtonDiv : OutlineTabButtonDiv;
 
   return (
-      <TabButtonDiv>
-        {Children.map(children, (child) =>
-            cloneElement(child, {
-              onClick: () => {
-                onClick(child.props.children);
-              },
-            }),
-        )}
-      </TabButtonDiv>
+    <TabButtonDiv>
+      {Children.map(children, (child) => cloneElement(child))}
+    </TabButtonDiv>
   );
 }
 
@@ -51,30 +43,30 @@ const GhostTabButtonDiv = styled(BaseTabButtonDiv)`
 `;
 
 const OutlineTabButtonDiv = styled(BaseTabButtonDiv)`
-  border: ${({theme}) =>
+  border: ${({ theme }) =>
     `${theme.border.default} ${theme.color.neutralBorderDefault}`};
-  border-radius: ${({theme}) => theme.radius.medium};
-  background-color: ${({theme}) => theme.color.neutralSurfaceDefault};
+  border-radius: ${({ theme }) => theme.radius.medium};
+  background-color: ${({ theme }) => theme.color.neutralSurfaceDefault};
 
   & button {
     &:not(:last-child) {
-      border-right: ${({theme}) =>
-    `${theme.border.default} ${theme.color.neutralBorderDefault}`};
+      border-right: ${({ theme }) =>
+        `${theme.border.default} ${theme.color.neutralBorderDefault}`};
       border-radius: 0;
     }
 
     &:first-child {
-      border-radius: ${({theme}) =>
-    `${theme.radius.medium} 0 0 ${theme.radius.medium}`};
+      border-radius: ${({ theme }) =>
+        `${theme.radius.medium} 0 0 ${theme.radius.medium}`};
     }
 
     &:last-child {
-      border-radius: ${({theme}) =>
-    `0 ${theme.radius.medium} ${theme.radius.medium} 0`};
+      border-radius: ${({ theme }) =>
+        `0 ${theme.radius.medium} ${theme.radius.medium} 0`};
     }
 
     &.selected {
-      background-color: ${({theme}) => theme.color.neutralSurfaceBold};
+      background-color: ${({ theme }) => theme.color.neutralSurfaceBold};
     }
   }
 `;

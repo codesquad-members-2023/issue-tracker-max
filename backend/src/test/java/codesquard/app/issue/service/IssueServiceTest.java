@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import codesquard.app.IntegrationTestSupport;
-import codesquard.app.errors.exception.IllegalIssueStatusException;
-import codesquard.app.errors.exception.NoSuchIssueException;
+import codesquard.app.api.errors.exception.IllegalIssueStatusException;
+import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -25,6 +25,7 @@ import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.fixture.FixtureFactory;
 import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.label.dto.request.LabelSaveRequest;
+import codesquard.app.label.entity.Label;
 import codesquard.app.label.service.LabelService;
 import codesquard.app.milestone.service.MilestoneService;
 import codesquard.app.user.repository.UserRepository;

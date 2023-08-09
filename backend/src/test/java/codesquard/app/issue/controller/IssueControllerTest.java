@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import codesquard.app.ControllerTestSupport;
-import codesquard.app.errors.errorcode.IssueErrorCode;
-import codesquard.app.errors.exception.IllegalIssueStatusException;
+import codesquard.app.api.errors.errorcode.IssueErrorCode;
+import codesquard.app.api.errors.exception.IllegalIssueStatusException;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;

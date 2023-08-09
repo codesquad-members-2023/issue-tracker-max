@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquard.app.api.errors.exception.NoSuchMilestoneException;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
 import codesquard.app.milestone.dto.request.MilestoneStatusRequest;
 import codesquard.app.milestone.dto.request.MilestoneUpdateRequest;
@@ -17,6 +18,7 @@ import codesquard.app.milestone.entity.Milestone;
 import codesquard.app.milestone.entity.MilestoneStatus;
 import codesquard.app.milestone.repository.MilestoneRepository;
 
+@Transactional
 @Service
 public class MilestoneService {
 	private final MilestoneRepository milestoneRepository;
@@ -25,28 +27,24 @@ public class MilestoneService {
 		this.milestoneRepository = milestoneRepository;
 	}
 
-	@Transactional
 	public Long saveMilestone(final MilestoneSaveRequest milestoneSaveRequest) {
 		Milestone milestone = MilestoneSaveRequest.toEntity(milestoneSaveRequest);
-		return milestoneRepository.save(milestone).orElseThrow(() -> new RuntimeException("임시"));
+		return milestoneRepository.save(milestone)
+			.orElseThrow(NoSuchMilestoneException::new);
 	}
 
-	@Transactional
 	public void updateMilestone(final Long milestoneId, final MilestoneUpdateRequest milestoneUpdateRequest) {
 		milestoneRepository.updateBy(milestoneId, MilestoneUpdateRequest.toEntity(milestoneUpdateRequest));
 	}
 
-	@Transactional
 	public void updateMilestoneStatus(final Long milestoneId, final MilestoneStatusRequest milestoneStatusRequest) {
 		milestoneRepository.updateBy(milestoneId, MilestoneStatusRequest.toStatus(milestoneStatusRequest));
 	}
 
-	@Transactional
 	public void deleteMilestone(final Long milestoneId) {
 		milestoneRepository.deleteBy(milestoneId);
 	}
 
-	@Transactional
 	public MilestoneReadResponse makeMilestoneResponse(final MilestoneStatus status) {
 		// 1. milestones 배열 (이 List가 여러개 있는 2차원 배열이라고 생각하면 됨)
 		// makeIssues(): issues를 `countIssuesBy()`로 milestoneStatus별로 각각 1번씩 가져오기
