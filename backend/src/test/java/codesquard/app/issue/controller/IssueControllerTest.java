@@ -51,7 +51,7 @@ class IssueControllerTest extends ControllerTestSupport {
 		// given
 		int id = 1;
 		willThrow(new NoSuchIssueException())
-			.given(issueService).get((long)id);
+			.given(issueQueryService).get((long)id);
 
 		// when & then
 		mockMvc.perform(get("/api/issues/" + id))

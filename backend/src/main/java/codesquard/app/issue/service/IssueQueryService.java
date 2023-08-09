@@ -5,8 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.errors.errorcode.IssueErrorCode;
-import codesquard.app.errors.exception.NoSuchIssueException;
+import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.issue.dto.response.IssueCommentsResponse;
 import codesquard.app.issue.dto.response.IssueLabelResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
@@ -35,7 +34,7 @@ public class IssueQueryService {
 
 	public void validateExistIssue(Long issueId) {
 		if (!issueRepository.isExist(issueId)) {
-			throw new NoSuchIssueException(IssueErrorCode.NOT_FOUND_ISSUE);
+			throw new NoSuchIssueException();
 		}
 	}
 
