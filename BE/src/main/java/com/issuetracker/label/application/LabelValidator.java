@@ -17,6 +17,12 @@ public class LabelValidator {
 
 	private final LabelRepository labelRepository;
 
+	public void verifyLabel(Long id) {
+		if (Objects.isNull(id) || !labelRepository.existById(id)) {
+			throw new CustomHttpException(ErrorType.LABEL_NOT_FOUND);
+		}
+	}
+
 	public void verifyLabels(List<Long> ids) {
 		if (Objects.isNull(ids) || ids.isEmpty()) {
 			return;

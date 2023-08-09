@@ -7,6 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.issuetracker.issue.domain.assignedlabel.AssignedLabel;
@@ -16,16 +19,17 @@ import com.issuetracker.label.domain.Label;
 @Repository
 public class JdbcAssignedLabelRepository implements AssignedLabelRepository {
 
-	private static final String SAVE_ALL_SQL = "INSERT INTO assigned_label(issue_id, label_id) VALUES(:issueId, :labelId)";
-	private static final String FIND_ALL_SEARCH_SQL = "SELECT DISTINCT label.id, label.title, label.color FROM label INNER JOIN assigned_label ON label.id = assigned_label.label_id ORDER BY label.id";
+	private static final String SAVE_SQL = "INSERT INTO assigned_label(issue_id, label_id) VALUES(:issueId, :labelId)";
+	private static final String DELETE_SQL = "DELETE FROM assigned_label WHERE id = :id";
+	private static final String FIND_ALL_SEARCH_SQL = "SELECT DISTINCT label.id, label.title, label.color, label.description FROM label INNER JOIN assigned_label ON label.id = assigned_label.label_id ORDER BY label.id";
 	private static final String FIND_ALL_ASSIGNED_TO_ISSUE
-		= "SELECT label.id, label.title, label.color "
+		= "SELECT label.id, label.title, label.color, label.description "
 		+ "FROM assigned_label "
 		+ "LEFT JOIN label "
 		+ "ON assigned_label.label_id = label.id "
 		+ "WHERE assigned_label.issue_id = :issueId";
 	private static final String FIND_ALL_UNASSIGNED_TO_ISSUE
-		= "SELECT label.id, label.title, label.color "
+		= "SELECT label.id, label.title, label.color, label.description "
 		+ "FROM label "
 		+ "WHERE label.id NOT IN( "
 		+ "    SELECT assigned_label.label_id "
@@ -39,11 +43,19 @@ public class JdbcAssignedLabelRepository implements AssignedLabelRepository {
 	}
 
 	@Override
+	public long save(AssignedLabel assignedLabel) {
+		SqlParameterSource param = new BeanPropertySqlParameterSource(assignedLabel);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(SAVE_SQL, param, keyHolder);
+		return keyHolder.getKey().longValue();
+	}
+
+	@Override
 	public int[] saveAll(List<AssignedLabel> assignedLabels) {
 		BeanPropertySqlParameterSource[] params = assignedLabels.stream()
 			.map(BeanPropertySqlParameterSource::new)
 			.toArray(BeanPropertySqlParameterSource[]::new);
-		return jdbcTemplate.batchUpdate(SAVE_ALL_SQL, params);
+		return jdbcTemplate.batchUpdate(SAVE_SQL, params);
 	}
 
 	@Override
@@ -61,10 +73,16 @@ public class JdbcAssignedLabelRepository implements AssignedLabelRepository {
 		return jdbcTemplate.query(FIND_ALL_UNASSIGNED_TO_ISSUE, Map.of("issueId", issueId), LABEL_ROW_MAPPER);
 	}
 
+	@Override
+	public int delete(Long id) {
+		return jdbcTemplate.update(DELETE_SQL, Map.of("id", id));
+	}
+
 	private static final RowMapper<Label> LABEL_ROW_MAPPER = (rs, rowNum) ->
 		Label.builder()
 			.id(rs.getLong("id"))
 			.title(rs.getString("title"))
 			.color(rs.getString("color"))
+			.description(rs.getString("description"))
 			.build();
 }

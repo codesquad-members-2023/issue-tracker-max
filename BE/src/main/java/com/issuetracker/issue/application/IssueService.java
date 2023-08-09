@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetracker.issue.application.dto.assignedlabel.AssignedLabelCreateData;
 import com.issuetracker.issue.application.dto.assignee.AssigneeCandidatesInformation;
 import com.issuetracker.issue.application.dto.assignee.AssigneeCreateData;
+import com.issuetracker.issue.application.dto.assignee.AssigneeCreateInformation;
 import com.issuetracker.issue.application.dto.comment.IssueCommentCreateData;
 import com.issuetracker.issue.application.dto.comment.IssueCommentCreateInformation;
 import com.issuetracker.issue.application.dto.comment.IssueCommentUpdateData;
@@ -137,13 +139,24 @@ public class IssueService {
 	}
 
 	@Transactional
-	public void createAssignee(AssigneeCreateData assigneeCreateData) {
-		issueValidator.verifyCreateAssignee(assigneeCreateData.getIssueId(), assigneeCreateData.getMemberId());
-		assigneeRepository.save(assigneeCreateData.toAssignee());
+	public AssigneeCreateInformation createAssignee(AssigneeCreateData assigneeCreateData) {
+		issueValidator.verifyCreateAssignee(assigneeCreateData);
+		return AssigneeCreateInformation.from(assigneeRepository.save(assigneeCreateData.toAssignee()));
 	}
 
 	@Transactional
 	public int deleteAssignee(Long assigneeId) {
 		return assigneeRepository.delete(assigneeId);
+	}
+
+	@Transactional
+	public AssigneeCreateInformation createAssignedLabel(AssignedLabelCreateData assignedLabelCreateData) {
+		issueValidator.verifyCreateAssignedLabel(assignedLabelCreateData);
+		return AssigneeCreateInformation.from(assignedLabelRepository.save(assignedLabelCreateData.toAssignedLabel()));
+	}
+
+	@Transactional
+	public int deleteAssignedLabel(Long assignedLabelId) {
+		return assignedLabelRepository.delete(assignedLabelId);
 	}
 }

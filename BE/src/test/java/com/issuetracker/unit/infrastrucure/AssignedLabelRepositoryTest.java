@@ -1,5 +1,8 @@
 package com.issuetracker.unit.infrastrucure;
 
+import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
+import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
+import static com.issuetracker.util.fixture.MemberFixture.MEMBER4;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -11,10 +14,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.issuetracker.issue.domain.assignedlabel.AssignedLabel;
 import com.issuetracker.issue.domain.assignedlabel.AssignedLabelRepository;
+import com.issuetracker.issue.domain.assignee.Assignee;
 import com.issuetracker.issue.infrastrucure.JdbcAssignedLabelRepository;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.util.DatabaseInitialization;
 import com.issuetracker.util.RepositoryTest;
+import com.issuetracker.util.fixture.AssignedLabelFixture;
+import com.issuetracker.util.fixture.AssigneeFixture;
 
 @RepositoryTest
 class AssignedLabelRepositoryTest {
@@ -57,5 +63,21 @@ class AssignedLabelRepositoryTest {
 
 		// then
 		assertThat(actual).hasSize(4);
+	}
+
+	@Test
+	void 이슈에_라벨을_등록한다() {
+		// given
+		AssignedLabel assignedLabel = AssignedLabel.builder()
+			.issueId(ISSUE1.getId())
+			.labelId(LABEL1.getId())
+			.build();
+
+		// when
+		long actual = assignedLabelRepository.save(assignedLabel);
+
+		// then
+		int expected = AssignedLabelFixture.values().length + 1;
+		assertThat(actual).isEqualTo(expected);
 	}
 }

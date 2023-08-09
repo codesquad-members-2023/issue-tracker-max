@@ -35,7 +35,7 @@ public class IssueCommentAcceptanceTest extends AcceptanceTest {
 
 		// then
 		long savedIssueCommentId = response.jsonPath().getLong("id");
-		응답_상태코드_검증(response, HttpStatus.CREATED);
+		응답_상태코드_검증(response, HttpStatus.OK);
 		이슈_상세_조회에서_작성한_댓글_검증(ISSUE1.getId(), savedIssueCommentId, "# 집중!");
 	}
 

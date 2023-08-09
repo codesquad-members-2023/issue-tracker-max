@@ -21,4 +21,8 @@ public class Label {
 		this.description = description;
 		this.color = color;
 	}
+
+	public boolean equalsId(Long id) {
+		return this.id == id;
+	}
 }

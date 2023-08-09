@@ -13,4 +13,8 @@ public interface AssignedLabelRepository {
 	List<Label> findAllAssignedToIssue(long issueId);
 
 	List<Label> findAllUnassignedToIssue(long issueId);
+
+	long save(AssignedLabel assignedLabel);
+
+	int delete(Long id);
 }

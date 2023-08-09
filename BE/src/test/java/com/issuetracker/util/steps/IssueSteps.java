@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.MediaType;
 
+import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelCreateRequest;
 import com.issuetracker.issue.ui.dto.assignee.AssigneeCreateRequest;
 import com.issuetracker.issue.ui.dto.comment.IssueCommentCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateRequest;
@@ -156,6 +157,29 @@ public class IssueSteps {
 		return RestAssured.given().log().all()
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().delete("/api/issues/{id}/assignees/{assignee-id}", id, assigneeId)
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 이슈에_등록_및_삭제될_라벨_목록_조회_요청(Long id) {
+		return RestAssured.given().log().all()
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().get("/api/issues/{id}/label-candidates", id)
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 이슈에_라벨_등록_요청(Long id, Long labelId) {
+		return RestAssured.given().log().all()
+			.body(new AssignedLabelCreateRequest(labelId))
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().post("/api/issues/{id}/assigned-labels", id)
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 이슈에_라벨_삭제_요청(Long id, Long assignedLabelId) {
+		return RestAssured.given().log().all()
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().delete("/api/issues/{id}/assigned-labels/{assigned-label-id}", id, assignedLabelId)
 			.then().log().all().extract();
 	}
 }
