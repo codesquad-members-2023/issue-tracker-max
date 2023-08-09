@@ -1,5 +1,3 @@
-import Table from "./Table";
-import TableBodyIssues from "./TableBodyIssues";
-import TableHeaderIssues from "./TableHeaderIssues";
-
-export { Table, TableBodyIssues, TableHeaderIssues };
+export { default as Table } from "./Table";
+export * from "./TableBody";
+export * from "./TableHeader";
