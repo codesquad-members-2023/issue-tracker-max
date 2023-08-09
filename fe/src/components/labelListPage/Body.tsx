@@ -33,7 +33,7 @@ export const Body: React.FC<Props> = ({
           tableVariant="label"
           typeVariant="add"
           onAddTableClose={onAddTableClose}
-          header={<TableHeader title="새로운  레이블 추가" />}
+          header={<TableHeader title="새로운 레이블 추가" />}
         />
       )}
 

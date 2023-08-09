@@ -6,12 +6,14 @@ import { Button } from '@components/common/Button';
 type Props = {
   labelCount: IssuePageData['labelCount'];
   milestoneCount: IssuePageData['milestoneCount'];
+  isAddTableOpen?: boolean;
   onAddTableOpen?: () => void;
 };
 
 export const SubNav: React.FC<Props> = ({
   labelCount,
   milestoneCount,
+  isAddTableOpen,
   onAddTableOpen,
 }) => {
   const theme = useTheme() as any;
@@ -25,7 +27,12 @@ export const SubNav: React.FC<Props> = ({
       }}
     >
       <TabButton {...{ labelCount, milestoneCount }} />
-      <Button typeVariant="contained" size="S" onClick={onAddTableOpen}>
+      <Button
+        typeVariant="contained"
+        size="S"
+        disabled={isAddTableOpen}
+        onClick={onAddTableOpen}
+      >
         <Plus stroke={theme.brand.text.default} />
         레이블 추가
       </Button>

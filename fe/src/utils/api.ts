@@ -35,3 +35,7 @@ export const getMilestones = () => {
 export const getIssueListPageData = (query: string) => {
   return fetchData('issues' + query);
 };
+
+export const getLabelListPageData = () => {
+  return fetchData('labels');
+};

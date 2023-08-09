@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SubNav } from '@components/labelListPage/SubNav';
 import { Body } from '@components/labelListPage/Body';
+import { getLabelListPageData } from '@utils/api';
 type Props = {};
 
 const mockData: Label[] = [
@@ -29,6 +30,14 @@ const mockData: Label[] = [
 
 export const LabelListPage: React.FC<Props> = ({}) => {
   const [isAddTableOpen, setIsAddTableOpen] = useState(false);
+  const [labelListData, setLabelListData] = useState<Label[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const pageData = await getLabelListPageData();
+      setLabelListData(pageData);
+    })();
+  }, [location]);
 
   const onAddTableOpen = () => {
     setIsAddTableOpen(true);
@@ -49,13 +58,14 @@ export const LabelListPage: React.FC<Props> = ({}) => {
     >
       <SubNav
         onAddTableOpen={onAddTableOpen}
-        labelCount={mockData.length}
+        labelCount={labelListData.length}
         milestoneCount={13}
+        isAddTableOpen={isAddTableOpen}
       />
       <Body
         isAddTableOpen={isAddTableOpen}
-        labelList={mockData}
-        labelCount={mockData.length}
+        labelList={labelListData}
+        labelCount={labelListData.length}
         onAddTableClose={onAddTableClose}
       />
     </div>

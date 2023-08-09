@@ -1,30 +1,23 @@
 import { useTheme } from '@emotion/react';
-import { TableHeader } from './TableHeader';
-import { InformationTag } from '../InformationTag';
-import { TextInput } from '../textInput/TextInput';
-import { ColorCodeInput } from '../ColorCodeInput';
-import { DropDownContainer } from '../dropDown/DropDownContainer';
-import { DropDownPanel } from '../dropDown/DropDownPanel';
-import { DropDownList } from '../dropDown/DropDownList';
-import { textColors } from '../dropDown/types';
+
 import { Button } from '../Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
-import { InputContainer } from '../textInput/InputContainer';
+
 import { TableBody } from './TableBody';
 type Props = {
   typeVariant: 'add' | 'edit';
   tableVariant: 'label' | 'milestone';
-  onAddTableClose?: () => void;
   header: React.ReactNode;
+  onAddTableClose?: () => void;
 };
 
 export const TableContainer: React.FC<Props> = ({
   typeVariant,
   tableVariant,
-  onAddTableClose,
   header,
+  onAddTableClose,
 }) => {
   const theme = useTheme() as any;
 
@@ -74,6 +67,7 @@ export const TableContainer: React.FC<Props> = ({
           css={{
             color: theme.brand.text.default,
           }}
+          // onClick={}
         >
           {typeVariant === 'edit' ? (
             <Edit stroke={theme.brand.text.default} />
