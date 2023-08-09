@@ -20,7 +20,7 @@ public class SaveMilestoneRequestDto {
 		return Milestone.builder()
 			.name(request.getName())
 			.description(request.getDescription())
-			.doneDate(LocalDate.parse(request.getDoneDate()))
+			.doneDate(request.getDoneDate()!=null?LocalDate.parse(request.getDoneDate()):null)
 			.isClosed(request.getIsClosed())
 			.build();
 	}

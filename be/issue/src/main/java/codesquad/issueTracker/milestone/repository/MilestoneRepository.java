@@ -19,7 +19,6 @@ public class MilestoneRepository {
 	}
 
 	public Long insert(Milestone milestone) {
-
 		String sql = "INSERT INTO milestones(name, description,done_date) VALUES (:name,:description,:doneDate)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		SqlParameterSource parameters = new MapSqlParameterSource()

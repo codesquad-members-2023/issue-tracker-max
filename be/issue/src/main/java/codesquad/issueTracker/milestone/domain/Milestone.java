@@ -27,7 +27,7 @@ public class Milestone {
 
 	public void validateDate() {
 		LocalDate currentDate = LocalDate.now();
-		if (doneDate.isBefore(currentDate)) {
+		if (doneDate!=null &&doneDate.isBefore(currentDate)) {
 			throw new CustomException(ErrorCode.INVALIDATE_DATE);
 		}
 	}
