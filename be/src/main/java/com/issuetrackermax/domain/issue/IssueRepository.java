@@ -85,6 +85,13 @@ public class IssueRepository {
 			.addValue("title", title));
 	}
 
+	public int applyMilestoneToIssue(Long issueId, Long milestoneId) {
+		String sql = "UPDATE issue SET milestone_id = :milestoneId WHERE id = :issueId";
+		return jdbcTemplate.update(sql, new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("milestoneId", milestoneId));
+	}
+
 	public List<Issue> getOpenIssue() {
 		String sql = "SELECT id, title, is_open, writer_id, milestone_id,created_at FROM issue WHERE is_open = :isOpen";
 		return jdbcTemplate.query(sql, Map.of("isOpen", 1), ISSUE_ROW_MAPPER);
@@ -99,6 +106,13 @@ public class IssueRepository {
 		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id)";
 		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
 			.addValue("id", id), Boolean.class);
+	}
+
+	public Boolean existByIds(List<Long> ids) {
+		String sql = "SELECT COUNT(*) FROM issue WHERE id IN (:ids)";
+		Integer count = jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("ids", ids), Integer.class);
+		return count != null && count.equals(ids.size());
 	}
 
 	private static final RowMapper<Issue> ISSUE_ROW_MAPPER = (rs, rowNum) ->
