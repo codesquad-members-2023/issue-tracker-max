@@ -29,4 +29,17 @@ public class MilestoneRepository {
 		return keyHolder.getKey().longValue();
 
 	}
+
+
+	public Long update(Long id,Milestone milestone){
+		String sql = "UPDATE milestones SET name = :name , description = :description ,done_date = :doneDate WHERE id = :id";
+		SqlParameterSource parameters = new MapSqlParameterSource()
+			.addValue("id",id)
+			.addValue("name", milestone.getName())
+			.addValue("description", milestone.getDescription())
+			.addValue("doneDate", milestone.getDoneDate());
+		jdbcTemplate.update(sql, parameters);
+		return id;
+
+	}
 }
