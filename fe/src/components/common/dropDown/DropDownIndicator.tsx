@@ -14,7 +14,6 @@ export const DropDownIndicator: React.FC<Props> = ({ size, indicator }) => {
   return (
     <div
       css={{
-        // width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',

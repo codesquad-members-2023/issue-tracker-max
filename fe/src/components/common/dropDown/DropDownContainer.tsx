@@ -23,7 +23,6 @@ export const DropDownContainer: React.FC<Props> = ({
       className="dropdown-panel"
       css={{
         position: 'relative',
-        // boxSizing: 'border-box',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
