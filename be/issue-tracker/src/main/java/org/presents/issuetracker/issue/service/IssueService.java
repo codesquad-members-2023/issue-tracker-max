@@ -76,7 +76,7 @@ public class IssueService {
 	@Transactional
 	public MilestonePreviewResponse updateMilestone(Long milestoneId, Long issueId) {
 		validateId(issueId);
-		issueRepository.setMilestone(issueId, milestoneId);
+		setMilestone(issueId, milestoneId);
 
 		return MilestonePreviewResponse.from(milestoneRepository.findByIssueId(issueId));
 	}
