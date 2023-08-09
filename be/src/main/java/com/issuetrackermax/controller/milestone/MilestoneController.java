@@ -72,7 +72,7 @@ public class MilestoneController {
 		return ApiResponse.success(response);
 	}
 
-	@PutMapping("/id")
+	@PutMapping("/{id}")
 	public ApiResponse<Void> modify(@PathVariable Long id, @RequestBody MilestoneModifyRequest milestoneModifyRequest) {
 		milestoneService.update(id, milestoneModifyRequest);
 		return ApiResponse.success();

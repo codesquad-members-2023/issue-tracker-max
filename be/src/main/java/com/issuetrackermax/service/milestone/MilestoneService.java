@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetrackermax.common.exception.ApiException;
+import com.issuetrackermax.common.exception.domain.MilestoneException;
 import com.issuetrackermax.controller.milestone.dto.request.MilestoneModifyRequest;
 import com.issuetrackermax.controller.milestone.dto.request.MilestonePostRequest;
 import com.issuetrackermax.controller.milestone.dto.response.MilestoneDetailResponse;
@@ -64,23 +67,37 @@ public class MilestoneService {
 		return response;
 	}
 
+	@Transactional
 	public Long save(MilestonePostRequest milestonePostRequest) {
 		Milestone milestone = Milestone.from(milestonePostRequest);
 		return milestoneRepository.save(milestone);
 	}
 
+	@Transactional
 	public void update(Long id, MilestoneModifyRequest milestoneModifyRequest) {
 		milestoneRepository.update(id, Milestone.from(milestoneModifyRequest));
-		return;
 	}
 
+	@Transactional
 	public void delete(Long id) {
 		int count = milestoneRepository.deleteById(id);
-		return;
 	}
 
+	@Transactional
+	public void applyMilestoneToIssue(Long issueId, Long milestoneId) {
+		int count = milestoneRepository.applyMilestoneToIssue(issueId, milestoneId);
+		if (count != 1) {
+			throw new ApiException(MilestoneException.NOT_FOUND_MILESTONE);
+		}
+	}
+
+	@Transactional
 	public void updateStatus(Long id) {
 		milestoneRepository.updateStatus(id);
-		return;
+	}
+
+	@Transactional(readOnly = true)
+	public Boolean existById(Long id) {
+		return milestoneRepository.existById(id);
 	}
 }

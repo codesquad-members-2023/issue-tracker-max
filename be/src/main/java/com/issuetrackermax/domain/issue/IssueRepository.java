@@ -85,39 +85,6 @@ public class IssueRepository {
 			.addValue("title", title));
 	}
 
-	public int applyLabels(Long issueId, Long labelId) {
-		String sql = "INSERT INTO issue_label(issue_id, label_id) VALUES (:issueId, :labelId)";
-		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-		return jdbcTemplate.update(sql, new MapSqlParameterSource()
-			.addValue("issueId", issueId)
-			.addValue("labelId", labelId), keyHolder);
-	}
-
-	public int deleteAppliedLabels(Long issueId) {
-		String sql = "DELETE FROM issue_label WHERE issue_id = :issueId";
-		return jdbcTemplate.update(sql, new MapSqlParameterSource("issueId", issueId));
-	}
-
-	public int applyAssignees(Long issueId, Long memberId) {
-		String sql = "INSERT INTO assignee(issue_id, member_id) VALUES (:issueId, :memberId)";
-		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-		return jdbcTemplate.update(sql, new MapSqlParameterSource()
-			.addValue("issueId", issueId)
-			.addValue("memberId", memberId), keyHolder);
-	}
-
-	public int deleteAppliedAssignees(Long issueId) {
-		String sql = "DELETE FROM assignee WHERE issue_id = :issueId";
-		return jdbcTemplate.update(sql, new MapSqlParameterSource("issueId", issueId));
-	}
-
-	public int applyMilestone(Long issueId, Long milestoneId) {
-		String sql = "UPDATE issue SET milestone_id = :milestoneId WHERE id = :issueId";
-		return jdbcTemplate.update(sql, new MapSqlParameterSource()
-			.addValue("issueId", issueId)
-			.addValue("milestoneId", milestoneId));
-	}
-
 	public List<Issue> getOpenIssue() {
 		String sql = "SELECT id, title, is_open, writer_id, milestone_id,created_at FROM issue WHERE is_open = :isOpen";
 		return jdbcTemplate.query(sql, Map.of("isOpen", 1), ISSUE_ROW_MAPPER);

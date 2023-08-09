@@ -22,7 +22,7 @@ public class JwtService {
 	private final JwtProvider jwtProvider;
 
 	@Transactional
-	public Jwt login(String email, String password)  {
+	public Jwt login(String email, String password) {
 		Member member = memberRepository.findByMemberLoginId(email).get();
 
 		if (!verifyPassword(member, password)) {
@@ -41,6 +41,15 @@ public class JwtService {
 		Long memberId = jwtRepository.findByRefreshToken(refreshToken);
 
 		return jwtProvider.reissueAccessToken(generateMemberClaims(memberId), refreshToken);
+	}
+
+	@Transactional
+	public void logout(String refreshToken) {
+		jwtProvider.getClaims(refreshToken);
+		Long memberId = jwtRepository.findByRefreshToken(refreshToken);
+
+		jwtRepository.deleteRefreshToken(refreshToken, memberId);
+		return;
 	}
 
 	private Map<String, Object> generateMemberClaims(Long memberId) {

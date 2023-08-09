@@ -8,10 +8,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetrackermax.controller.auth.AuthController;
 import com.issuetrackermax.controller.filter.FilterController;
+import com.issuetrackermax.controller.issue.IssueController;
 import com.issuetrackermax.controller.label.LabelController;
 import com.issuetrackermax.controller.member.MemberController;
 import com.issuetrackermax.controller.milestone.MilestoneController;
 import com.issuetrackermax.service.filter.FilterService;
+import com.issuetrackermax.service.issue.IssueService;
 import com.issuetrackermax.service.jwt.JwtService;
 import com.issuetrackermax.service.label.LabelService;
 import com.issuetrackermax.service.member.MemberService;
@@ -22,7 +24,8 @@ import com.issuetrackermax.service.milestone.MilestoneService;
 	MemberController.class,
 	FilterController.class,
 	MilestoneController.class,
-	LabelController.class
+	LabelController.class,
+	IssueController.class
 })
 public abstract class ControllerTestSupport {
 	@Autowired
@@ -30,6 +33,9 @@ public abstract class ControllerTestSupport {
 
 	@Autowired
 	protected ObjectMapper objectMapper;
+
+	@MockBean
+	protected IssueService issueService;
 
 	@MockBean
 	protected MemberService memberService;

@@ -68,7 +68,7 @@ public class LabelRepository {
 		return count != null && count.equals(ids.size());
 	}
 
-	public Label findbyId(Long id) {
+	public Label findById(Long id) {
 		String sql = "SELECT id, title, description, text_color, background_color FROM label WHERE id = :id ";
 		return Optional.ofNullable(
 			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), LABEL_ROW_MAPPER))).get();
