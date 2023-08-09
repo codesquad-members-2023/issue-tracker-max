@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import codesquard.app.ControllerTestSupport;
 import codesquard.app.api.errors.errorcode.IssueErrorCode;
 import codesquard.app.api.errors.exception.IllegalIssueStatusException;
+import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -25,18 +26,36 @@ import codesquard.app.issue.fixture.FixtureFactory;
 
 class IssueControllerTest extends ControllerTestSupport {
 
+	static final int TITLE_MAX_LENGTH = 50;
+	static final int CONTENT_MAX_LENGTH = 10000;
+	public static final String INVALID_ISSUE_STATUS_NAME = "OPEN";
+
 	@DisplayName("이슈의 상세 내용을 조회한다.")
 	@Test
 	void getIssueDetail() throws Exception {
 		// given
 		int id = 1;
-		given(issueService.get((long)id)).willReturn(FixtureFactory.createIssueReadResponse((long)id));
+		given(issueQueryService.get((long)id)).willReturn(FixtureFactory.createIssueReadResponse((long)id));
 
 		// when & then
 		mockMvc.perform(get("/api/issues/" + id))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.title").exists())
-			.andExpect(jsonPath("$.content").exists())
+			.andExpect(jsonPath("$.data.title").exists())
+			.andExpect(jsonPath("$.data.content").exists())
+			.andDo(print());
+	}
+
+	@DisplayName("이슈의 상세 내용 조회에 실패한다.")
+	@Test
+	void getIssueDetail_Fail() throws Exception {
+		// given
+		int id = 1;
+		willThrow(new NoSuchIssueException())
+			.given(issueQueryService).get((long)id);
+
+		// when & then
+		mockMvc.perform(get("/api/issues/" + id))
+			.andExpect(status().isNotFound())
 			.andDo(print());
 	}
 
@@ -51,7 +70,7 @@ class IssueControllerTest extends ControllerTestSupport {
 				.content(objectMapper.writeValueAsString(issueSaveRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.savedIssueId").exists())
 			.andDo(print());
 	}
 
@@ -74,7 +93,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	@Test
 	void create_Input51Title_Response400() throws Exception {
 		// given
-		String title = "123456789101112131415161718192021222324252627282930";
+		String title = generateExceedingMaxLengthContent(TITLE_MAX_LENGTH);
 
 		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest(title, "내용", 1L);
 
@@ -105,7 +124,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	@Test
 	void create_Input10000Content_Response400() throws Exception {
 		// given
-		String content = generateExceedingMaxLengthContent(10000);
+		String content = generateExceedingMaxLengthContent(CONTENT_MAX_LENGTH);
 
 		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest("Controller", content, 1L);
 
@@ -129,7 +148,7 @@ class IssueControllerTest extends ControllerTestSupport {
 				.content(objectMapper.writeValueAsString(issueModifyStatusRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -138,7 +157,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modifyInvalidStatus_Response400() throws Exception {
 		// given
 		int issueId = 1;
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest("OPEN");
+		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(INVALID_ISSUE_STATUS_NAME);
 		willThrow(new IllegalIssueStatusException(IssueErrorCode.INVALID_ISSUE_STATUS))
 			.given(issueService).modifyStatus(any(IssueModifyStatusRequest.class), anyLong());
 
@@ -162,7 +181,7 @@ class IssueControllerTest extends ControllerTestSupport {
 				.content(objectMapper.writeValueAsString(issueModifyTitleRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -187,7 +206,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modify_Input51Title_Response400() throws Exception {
 		// given
 		int issueId = 1;
-		String title = generateExceedingMaxLengthContent(51);
+		String title = generateExceedingMaxLengthContent(TITLE_MAX_LENGTH);
 		IssueModifyTitleRequest issueModifyTitleRequest = new IssueModifyTitleRequest(title);
 
 		// when & then
@@ -226,7 +245,7 @@ class IssueControllerTest extends ControllerTestSupport {
 				.content(objectMapper.writeValueAsString(issueModifyContentRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -235,7 +254,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modify_Input10000Content_Response400() throws Exception {
 		// given
 		int issueId = 1;
-		String title = generateExceedingMaxLengthContent(10000);
+		String title = generateExceedingMaxLengthContent(CONTENT_MAX_LENGTH);
 		IssueModifyContentRequest issueModifyContentRequest = new IssueModifyContentRequest(title);
 
 		// when & then
@@ -251,14 +270,15 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modifyMilestone() throws Exception {
 		// given
 		int issueId = 1;
-		IssueModifyMilestoneRequest issueModifyMilestoneRequest = new IssueModifyMilestoneRequest(2L);
+		Long milestoneId = 2L;
+		IssueModifyMilestoneRequest issueModifyMilestoneRequest = new IssueModifyMilestoneRequest(milestoneId);
 
 		// when & then
 		mockMvc.perform(patch("/api/issues/" + issueId + "/milestones")
 				.content(objectMapper.writeValueAsString(issueModifyMilestoneRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -267,14 +287,15 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modifyAssignees() throws Exception {
 		// given
 		int issueId = 1;
-		IssueModifyAssigneesRequest issueModifyAssigneesRequest = new IssueModifyAssigneesRequest(List.of(1L, 2L));
+		List<Long> assigneesId = List.of(1L, 2L);
+		IssueModifyAssigneesRequest issueModifyAssigneesRequest = new IssueModifyAssigneesRequest(assigneesId);
 
 		// when & then
 		mockMvc.perform(patch("/api/issues/" + issueId + "/assignees")
 				.content(objectMapper.writeValueAsString(issueModifyAssigneesRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -283,14 +304,15 @@ class IssueControllerTest extends ControllerTestSupport {
 	void modifyLabels() throws Exception {
 		// given
 		int issueId = 1;
-		IssueModifyLabelsRequest issueModifyLabelsRequest = new IssueModifyLabelsRequest(List.of(1L, 2L));
+		List<Long> labelsId = List.of(1L, 2L);
+		IssueModifyLabelsRequest issueModifyLabelsRequest = new IssueModifyLabelsRequest(labelsId);
 
 		// when & then
 		mockMvc.perform(patch("/api/issues/" + issueId + "/labels")
 				.content(objectMapper.writeValueAsString(issueModifyLabelsRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
 			.andDo(print());
 	}
 
@@ -303,7 +325,7 @@ class IssueControllerTest extends ControllerTestSupport {
 		// when & then
 		mockMvc.perform(delete("/api/issues/" + issueId))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.data.deletedIssueId").value(issueId))
 			.andDo(print());
 	}
 

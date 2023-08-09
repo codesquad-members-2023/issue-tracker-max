@@ -21,9 +21,9 @@ public interface IssueRepository {
 
 	void deleteBy(Long id);
 
-	void saveIssueLabel(Long issueId, Long labelId);
+	void saveIssueLabel(Long issueId, List<Long> labels);
 
-	void saveIssueAssignee(Long issueId, Long userId);
+	void saveIssueAssignee(Long issueId, List<Long> assignees);
 
 	void modifyStatus(String status, Long issueId);
 

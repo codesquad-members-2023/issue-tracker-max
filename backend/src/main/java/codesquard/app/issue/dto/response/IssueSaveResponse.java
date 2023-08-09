@@ -7,12 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IssueSaveResponse {
 
-	@JsonProperty("success")
-	private final boolean success;
-	@JsonProperty("id")
+	@JsonProperty("savedIssueId")
 	private final Long id;
 
-	public static IssueSaveResponse success(Long id) {
-		return new IssueSaveResponse(true, id);
+	public static IssueSaveResponse success(Long issueId) {
+		return new IssueSaveResponse(issueId);
 	}
 }
