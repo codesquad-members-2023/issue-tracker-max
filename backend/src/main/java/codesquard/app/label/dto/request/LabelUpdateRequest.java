@@ -7,7 +7,6 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquard.app.label.entity.Label;
-import codesquard.app.label.entity.LabelColor;
 
 public class LabelUpdateRequest {
 	@NotNull(message = "제목 입력은 필수입니다.")
@@ -26,16 +25,6 @@ public class LabelUpdateRequest {
 	private String description;
 
 	private LabelUpdateRequest() {
-	}
-
-	public LabelUpdateRequest(final String name, final String color, final String background,
-		final String description) {
-		this.name = name;
-		if (LabelColor.validateColor(color)) {
-			this.color = color;
-		}
-		this.background = background;
-		this.description = description;
 	}
 
 	public static Label toEntity(final LabelUpdateRequest labelUpdateRequest) {

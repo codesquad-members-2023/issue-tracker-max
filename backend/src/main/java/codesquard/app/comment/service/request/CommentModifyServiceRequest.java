@@ -2,8 +2,8 @@ package codesquard.app.comment.service.request;
 
 import java.time.LocalDateTime;
 
+import codesquard.app.api.errors.exception.CommentMaxLengthExceededException;
 import codesquard.app.comment.entity.Comment;
-import codesquard.app.errors.exception.CommentMaxLengthExceededException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -12,11 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentModifyServiceRequest {
 
+	private static final int MAX_LENGTH = 10000;
+
 	private Long id;
 	private String content;
 
 	private void validateContentLength(String content) {
-		if (content.length() > 10000) {
+		if (content.length() > MAX_LENGTH) {
 			throw new CommentMaxLengthExceededException();
 		}
 	}

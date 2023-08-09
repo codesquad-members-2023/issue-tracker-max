@@ -18,8 +18,4 @@ public class LabelReadResponse {
 		this.labelCount = labelCount;
 		this.labels = labels;
 	}
-
-	public LabelReadResponse success() {
-		return new LabelReadResponse(openedMilestoneCount, labelCount, labels);
-	}
 }

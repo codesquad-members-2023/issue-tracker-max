@@ -11,9 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquard.app.api.response.ApiResponse;
+import codesquard.app.api.response.LabelResponseMessage;
+import codesquard.app.api.response.MilestoneResponseMessage;
+import codesquard.app.api.response.ResponseMessage;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
 import codesquard.app.milestone.dto.request.MilestoneStatusRequest;
 import codesquard.app.milestone.dto.request.MilestoneUpdateRequest;
@@ -25,6 +30,7 @@ import codesquard.app.milestone.dto.response.MilestoneUpdateResponse;
 import codesquard.app.milestone.entity.MilestoneStatus;
 import codesquard.app.milestone.service.MilestoneService;
 
+@RequestMapping(path = "/api/milestones")
 @RestController
 public class MilestoneController {
 	private final MilestoneService milestoneService;
@@ -33,49 +39,40 @@ public class MilestoneController {
 		this.milestoneService = milestoneService;
 	}
 
-	@GetMapping("/api/milestones")
-	public ResponseEntity<MilestoneReadResponse> get(
+	@GetMapping
+	public ApiResponse<MilestoneReadResponse> get(
 		@RequestParam(name = "state", defaultValue = "opened") final String openedString,
 		@RequestParam(name = "state", defaultValue = "closed") final String closedString) {
 		MilestoneReadResponse milestoneReadResponse = milestoneService.makeMilestoneResponse(
 			MilestoneStatus.chooseStatus(openedString, closedString));
-
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(milestoneReadResponse.success());
+		return ApiResponse.of(HttpStatus.OK, MilestoneResponseMessage.MILESTONE_GET_SUCCESS, milestoneReadResponse);
 	}
 
-	@PostMapping("/api/milestones")
-	public ResponseEntity<MilestoneSaveResponse> save(
+	@PostMapping
+	public ApiResponse<MilestoneSaveResponse> save(
 		@Valid @RequestBody final MilestoneSaveRequest milestoneSaveRequest) {
 		Long milestoneId = milestoneService.saveMilestone(milestoneSaveRequest);
-
-		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(MilestoneSaveResponse.success(milestoneId));
+		MilestoneSaveResponse milestoneSaveResponse = MilestoneSaveResponse.success(milestoneId);
+		return ApiResponse.of(HttpStatus.CREATED, MilestoneResponseMessage.MILESTONE_SAVE_SUCCESS, milestoneSaveResponse);
 	}
 
-	@PutMapping("/api/milestones/{milestoneId}")
-	public ResponseEntity<MilestoneUpdateResponse> update(@PathVariable final Long milestoneId,
+	@PutMapping("/{milestoneId}")
+	public ApiResponse<MilestoneUpdateResponse> update(@PathVariable final Long milestoneId,
 		@Valid @RequestBody final MilestoneUpdateRequest milestoneUpdateRequest) {
 		milestoneService.updateMilestone(milestoneId, milestoneUpdateRequest);
-
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(MilestoneUpdateResponse.success());
+		return ApiResponse.of(HttpStatus.OK, MilestoneResponseMessage.MILESTONE_UPDATE_SUCCESS, null);
 	}
 
-	@PatchMapping("/api/milestones/{milestoneId}/status")
-	public ResponseEntity<MilestoneStatusUpdateResponse> updateStatus(@PathVariable final Long milestoneId,
+	@PatchMapping("/{milestoneId}/status")
+	public ApiResponse<MilestoneStatusUpdateResponse> updateStatus(@PathVariable final Long milestoneId,
 		@Valid @RequestBody final MilestoneStatusRequest milestoneStatusRequest) {
 		milestoneService.updateMilestoneStatus(milestoneId, milestoneStatusRequest);
-
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(MilestoneStatusUpdateResponse.success());
+		return ApiResponse.of(HttpStatus.OK, MilestoneResponseMessage.MILESTONE_UPDATE_STATUS_SUCCESS, null);
 	}
 
-	@DeleteMapping("/api/milestones/{milestoneId}")
-	public ResponseEntity<MilestoneDeleteResponse> delete(@PathVariable final Long milestoneId) {
+	@DeleteMapping("/{milestoneId}")
+	public ApiResponse<MilestoneDeleteResponse> delete(@PathVariable final Long milestoneId) {
 		milestoneService.deleteMilestone(milestoneId);
-
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(MilestoneDeleteResponse.success());
+		return ApiResponse.of(HttpStatus.OK, MilestoneResponseMessage.MILESTONE_DELETE_SUCCESS, null);
 	}
 }
