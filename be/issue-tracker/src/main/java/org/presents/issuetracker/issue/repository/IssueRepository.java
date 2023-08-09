@@ -78,23 +78,6 @@ public class IssueRepository {
 		jdbcTemplate.update(sql, Map.of("issueId", issueId));
 	}
 
-	public List<Issue> findById(Long issueId) {
-		final String sql = "SELECT issue_id, author_id, milestone_id, title, contents, created_at, status "
-			+ "FROM issue WHERE issue_id = :issueId";
-
-		SqlParameterSource params = new MapSqlParameterSource().addValue("issueId", issueId);
-
-		return jdbcTemplate.query(sql, params, (rs, rowNum) -> Issue.builder()
-			.id(rs.getLong("issue_id"))
-			.authorId(rs.getLong("author_id"))
-			.milestoneId(rs.getLong("milestone_id"))
-			.title(rs.getString("title"))
-			.contents(rs.getString("contents"))
-			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-			.status(rs.getString("status"))
-			.build());
-	}
-
 	public boolean existsById(Long issueId) {
 		final String sql = "SELECT COUNT(*) FROM issue WHERE issue_id = :issueId AND status != 'deleted'";
 
