@@ -15,7 +15,7 @@ public class IssueSearch {
 	private Long id;
 	private String title;
 	private String authorLoginId;
-	private List<String> assigneeImages;
+	private List<AssigneeSearch> assignees;
 	private List<LabelSearch> labels;
 	private MilestoneSearch milestone;
 	private LocalDateTime createdAt;
@@ -26,7 +26,7 @@ public class IssueSearch {
 			.id(issue.getId())
 			.title(issue.getTitle())
 			.authorLoginId(issue.getAuthorLoginId())
-			.assigneeImages(issue.getGeneratedAssigneeImages())
+			.assignees(AssigneeSearch.from(issue.getAssignees()))
 			.labels(LabelSearch.from(issue.getLabels()))
 			.milestone(MilestoneSearch.fromEntity(issue.getMilestone()))
 			.createdAt(issue.getCreatedAt())
