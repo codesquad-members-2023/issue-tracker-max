@@ -8,9 +8,11 @@ import { MilestoneEditor } from "./MilestoneEditor";
 export function MilestoneTableElement({
   milestone,
   status,
+  fetchData,
 }: {
   milestone: MilestoneData;
   status: "OPENED" | "CLOSED";
+  fetchData: () => void;
 }) {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -32,10 +34,12 @@ export function MilestoneTableElement({
     }
   };
 
-  const deleteMilestone = () => {
-    const id = milestone.id;
+  const deleteMilestone = async () => {
+    await fetch(`/api/milestones/${milestone.id}`, {
+      method: "DELETE",
+    });
 
-    console.log(`delete id: ${id}`);
+    fetchData();
   };
 
   const theme = useTheme();
@@ -49,6 +53,7 @@ export function MilestoneTableElement({
           onClickClose={closeEditor}
           type="edit"
           milestone={milestone}
+          fetchData={fetchData}
         />
       ) : (
         <>
@@ -59,8 +64,12 @@ export function MilestoneTableElement({
                 <span>{milestone.name}</span>
               </Title>
               <Deadline>
-                <Icon name="Calendar" color="neutralTextWeak" />
-                <span>{milestone.deadline}</span>
+                {milestone.deadline && (
+                  <>
+                    <Icon name="Calendar" color="neutralTextWeak" />
+                    <span>{milestone.deadline}</span>
+                  </>
+                )}
               </Deadline>
             </div>
             <Description>{milestone.description}</Description>
@@ -96,7 +105,12 @@ export function MilestoneTableElement({
             <Progress value={issues.closedIssueCount} max={totalIssueCount} />
             <ProgressInfo>
               <span>
-                {Math.floor((issues.closedIssueCount / totalIssueCount) * 100)}%
+                {totalIssueCount === 0
+                  ? 0
+                  : Math.floor(
+                      (issues.closedIssueCount / totalIssueCount) * 100,
+                    )}
+                %
               </span>
               <span>
                 열린 이슈 {issues.openedIssueCount} 닫힌 이슈{" "}
@@ -113,7 +127,7 @@ export function MilestoneTableElement({
 const Div = styled.div`
   width: 100%;
   min-height: 96px;
-  padding: 0 32px;
+  padding: 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;

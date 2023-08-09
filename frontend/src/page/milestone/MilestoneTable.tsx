@@ -11,6 +11,7 @@ type MilestoneTableProps = {
   openCount: number;
   closeCount: number;
   status: "OPENED" | "CLOSED";
+  fetchData: () => void;
 };
 
 type Tab = {
@@ -25,6 +26,7 @@ export function MilestoneTable({
   openCount,
   closeCount,
   status,
+  fetchData,
 }: MilestoneTableProps) {
   const navigate = useNavigate();
 
@@ -72,6 +74,7 @@ export function MilestoneTable({
             key={index}
             milestone={milestone}
             status={status}
+            fetchData={fetchData}
           />
         ))}
       </TableBody>
