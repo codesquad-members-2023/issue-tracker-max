@@ -63,7 +63,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 		HttpHeaders headers, HttpStatus status, WebRequest request) {
 		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
-		log.info("MethodArgumentNotValidException handling: {}", errorCode.getMessage());
+		log.info("MethodArgumentNotValidException handling: {}", ex.getMessage());
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(CommonApiResponse.fail(errorCode.getHttpStatus(), errorCode.getMessage()));
 	}
