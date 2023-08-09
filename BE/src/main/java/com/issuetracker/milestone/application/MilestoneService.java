@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetracker.config.exception.CustomHttpException;
 import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.milestone.application.dto.MilestoneCandidatesInformation;
 import com.issuetracker.milestone.application.dto.MilestoneCreateInformation;
 import com.issuetracker.milestone.application.dto.MilestoneCreateInputData;
 import com.issuetracker.milestone.application.dto.MilestoneDeleteInputData;
@@ -65,5 +66,14 @@ public class MilestoneService {
 
 	public List<MilestoneInformation> search() {
 		return MilestoneInformation.from(milestoneRepository.findAll());
+	}
+
+	public MilestoneCandidatesInformation searchMilestoneCandidates(long issueId) {
+
+		return MilestoneCandidatesInformation
+			.from(
+				milestoneRepository.findAllAssignedToIssue(issueId),
+				milestoneRepository.findAllUnassignedToIssue(issueId)
+			);
 	}
 }

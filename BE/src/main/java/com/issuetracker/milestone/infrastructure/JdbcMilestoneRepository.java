@@ -37,6 +37,30 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "ON milestone.id = issue.milestone_id "
 		+ "WHERE milestone.is_deleted = false "
 		+ "GROUP BY milestone.id";
+	private static final String FIND_ALL_ASSIGNED_TO_ISSUE
+		= "SELECT "
+		+ "    milestone.id, "
+		+ "    milestone.title, "
+		+ "    milestone.description, "
+		+ "    milestone.deadline, "
+		+ "    ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 2 ) AS progress "
+		+ "FROM milestone "
+		+ "RIGHT JOIN issue "
+		+ "ON milestone.id = issue.milestone_id "
+		+ "WHERE milestone_id = (SELECT sub_issue.milestone_id FROM issue sub_issue WHERE sub_issue.id = :issueId) "
+		+ "GROUP BY milestone.id";
+	private static final String FIND_ALL_UNASSIGNED_TO_ISSUE
+		= "SELECT "
+		+ "    milestone.id, "
+		+ "    milestone.title, "
+		+ "    milestone.description, "
+		+ "    milestone.deadline, "
+		+ "    ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 2 ) AS progress "
+		+ "FROM milestone "
+		+ "LEFT JOIN issue "
+		+ "ON milestone.id = issue.milestone_id "
+		+ "WHERE milestone.id NOT IN (SELECT sub_issue.milestone_id FROM issue sub_issue WHERE sub_issue.id = :issueId) "
+		+ "GROUP BY milestone.id";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -109,6 +133,16 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	private static LocalDate convertFrom(String dateString) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		return LocalDate.parse(dateString, formatter);
+	}
+
+	@Override
+	public List<Milestone> findAllAssignedToIssue(long issueId) {
+		return jdbcTemplate.query(FIND_ALL_ASSIGNED_TO_ISSUE, Map.of("issueId", issueId), MILESTONE_ROW_MAPPER);
+	}
+
+	@Override
+	public List<Milestone> findAllUnassignedToIssue(long issueId) {
+		return jdbcTemplate.query(FIND_ALL_UNASSIGNED_TO_ISSUE, Map.of("issueId", issueId), MILESTONE_ROW_MAPPER);
 	}
 
 	private static final RowMapper<Milestone> MILESTONE_ROW_MAPPER = (rs, rowNum) ->

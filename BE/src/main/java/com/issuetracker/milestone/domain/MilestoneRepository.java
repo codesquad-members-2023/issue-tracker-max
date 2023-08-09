@@ -17,4 +17,8 @@ public interface MilestoneRepository {
 	int delete(Milestone milestone);
 
 	List<Milestone> findAll();
+
+	List<Milestone> findAllAssignedToIssue(long issueId);
+
+	List<Milestone> findAllUnassignedToIssue(long issueId);
 }

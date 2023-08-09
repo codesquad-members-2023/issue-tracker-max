@@ -19,17 +19,6 @@ import com.issuetracker.issue.application.dto.IssueCreateInputData;
 import com.issuetracker.issue.application.dto.assignedlabel.AssignedLabelCreateData;
 import com.issuetracker.issue.application.dto.assignee.AssigneeCreateData;
 import com.issuetracker.issue.application.dto.comment.IssueCommentCreateData;
-import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelCreateRequest;
-import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelCreateResponse;
-import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelResponses;
-import com.issuetracker.issue.ui.dto.assignee.AssigneeCandidatesResponse;
-import com.issuetracker.issue.ui.dto.assignee.AssigneesCreateResponse;
-import com.issuetracker.issue.ui.dto.assignee.AssigneesResponses;
-import com.issuetracker.issue.ui.dto.assignee.AuthorResponses;
-import com.issuetracker.issue.ui.dto.assignee.AssigneeCreateRequest;
-import com.issuetracker.issue.ui.dto.comment.IssueCommentCreateRequest;
-import com.issuetracker.issue.ui.dto.comment.IssueCommentCreateResponse;
-import com.issuetracker.issue.ui.dto.comment.IssueCommentUpdateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateResponse;
 import com.issuetracker.issue.ui.dto.IssueDetailResponse;
@@ -37,6 +26,18 @@ import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 import com.issuetracker.issue.ui.dto.IssueUpdateRequest;
 import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
 import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelCandidatesResponse;
+import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelCreateRequest;
+import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelCreateResponse;
+import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelResponses;
+import com.issuetracker.issue.ui.dto.assignee.AssigneeCandidatesResponse;
+import com.issuetracker.issue.ui.dto.assignee.AssigneeCreateRequest;
+import com.issuetracker.issue.ui.dto.assignee.AssigneesCreateResponse;
+import com.issuetracker.issue.ui.dto.assignee.AssigneesResponses;
+import com.issuetracker.issue.ui.dto.assignee.AuthorResponses;
+import com.issuetracker.issue.ui.dto.comment.IssueCommentCreateRequest;
+import com.issuetracker.issue.ui.dto.comment.IssueCommentCreateResponse;
+import com.issuetracker.issue.ui.dto.comment.IssueCommentUpdateRequest;
+import com.issuetracker.issue.ui.dto.milestone.MilestoneCandidatesResponse;
 import com.issuetracker.member.application.MemberService;
 import com.issuetracker.milestone.application.MilestoneService;
 import com.issuetracker.milestone.ui.dto.MilestonesSearchResponse;
@@ -173,10 +174,24 @@ public class IssueController {
 			);
 	}
 
+	@GetMapping("/{id}/milestone-candidates")
+	public ResponseEntity<MilestoneCandidatesResponse> showMilestonesForIssueUpdate(
+		@PathVariable Long id) {
+
+		return ResponseEntity.ok()
+			.body(
+				MilestoneCandidatesResponse.from(
+					milestoneService.searchMilestoneCandidates(id)
+				)
+			);
+	}
+
 	@PostMapping("/{id}/assignees")
-	public ResponseEntity<AssigneesCreateResponse> createAssignee(@PathVariable Long id, @RequestBody AssigneeCreateRequest assigneeCreateRequest) {
+	public ResponseEntity<AssigneesCreateResponse> createAssignee(@PathVariable Long id,
+		@RequestBody AssigneeCreateRequest assigneeCreateRequest) {
 		AssigneeCreateData assigneeCreateData = assigneeCreateRequest.toAssigneeCreateData(id);
-		AssigneesCreateResponse assigneesCreateResponse =  AssigneesCreateResponse.from(issueService.createAssignee(assigneeCreateData));
+		AssigneesCreateResponse assigneesCreateResponse = AssigneesCreateResponse.from(
+			issueService.createAssignee(assigneeCreateData));
 		return ResponseEntity.ok().body(assigneesCreateResponse);
 	}
 
@@ -187,9 +202,11 @@ public class IssueController {
 	}
 
 	@PostMapping("/{id}/assigned-labels")
-	public ResponseEntity<AssignedLabelCreateResponse> createAssignedLabel(@PathVariable Long id, @RequestBody AssignedLabelCreateRequest assignedLabelCreateRequest) {
+	public ResponseEntity<AssignedLabelCreateResponse> createAssignedLabel(@PathVariable Long id,
+		@RequestBody AssignedLabelCreateRequest assignedLabelCreateRequest) {
 		AssignedLabelCreateData assignedLabelCreateData = assignedLabelCreateRequest.toAssignedLabelCreateData(id);
-		AssignedLabelCreateResponse assignedLabelCreateResponse = AssignedLabelCreateResponse.from(issueService.createAssignedLabel(assignedLabelCreateData));
+		AssignedLabelCreateResponse assignedLabelCreateResponse = AssignedLabelCreateResponse.from(
+			issueService.createAssignedLabel(assignedLabelCreateData));
 		return ResponseEntity.ok().body(assignedLabelCreateResponse);
 	}
 
