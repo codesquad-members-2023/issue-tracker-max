@@ -1,10 +1,9 @@
-import {styled} from "styled-components";
-
-import {useNavigate} from "react-router-dom";
-import {Button} from "../../components/Button";
-import {FilterBar} from "../../components/FilterBar";
-import {TabButton} from "../../components/TabButton";
-import {SingleFilterData} from "./Main";
+import { useNavigate } from "react-router-dom";
+import { styled } from "styled-components";
+import { Button } from "../../components/Button";
+import { FilterBar } from "../../components/FilterBar";
+import { TabButton } from "../../components/TabButton";
+import { SingleFilterData } from "./Main";
 
 type MainHeaderProps = {
   singleFilters: SingleFilterData[];
@@ -13,10 +12,10 @@ type MainHeaderProps = {
 };
 
 export function MainHeader({
-                             singleFilters,
-                             milestoneCount,
-                             labelCount,
-                           }: MainHeaderProps) {
+  singleFilters,
+  milestoneCount,
+  labelCount,
+}: MainHeaderProps) {
   const navigate = useNavigate();
 
   const tabs = [
@@ -56,42 +55,42 @@ export function MainHeader({
   };
 
   return (
-      <Div>
-        <div>
-          <FilterBar
-              name="필터"
-              optionTitle={`이슈 필터`}
-              options={setDropdownOptions(singleFilters)}
-              value="is:issue is:open"
-          />
-        </div>
-        <div style={{display: "flex", gap: "16px"}}>
-          <TabButton onClick={onTabClick}>
-            {tabs.map(({name, icon, selected}, index) => (
-                <Button
-                    key={`tab-${index}`}
-                    icon={icon}
-                    size="M"
-                    buttonType="Ghost"
-                    flexible="Flexible"
-                    selected={selected}
-                >
-                  {name}
-                </Button>
-            ))}
-          </TabButton>
-          <Button
-              icon="plus"
-              size="S"
-              buttonType="Container"
-              selected
-              onClick={() => {
-              }}
-          >
-            이슈 작성
-          </Button>
-        </div>
-      </Div>
+    <Div>
+      <div>
+        <FilterBar
+          name="필터"
+          optionTitle={`이슈 필터`}
+          options={setDropdownOptions(singleFilters)}
+          value="is:issue is:open"
+        />
+      </div>
+      <div style={{ display: "flex", gap: "16px" }}>
+        <TabButton>
+          {tabs.map(({ name, icon, selected }, index) => (
+            <Button
+              key={`tab-${index}`}
+              icon={icon}
+              size="M"
+              buttonType="Ghost"
+              flexible="Flexible"
+              selected={selected}
+              onClick={() => onTabClick(name)}
+            >
+              {name}
+            </Button>
+          ))}
+        </TabButton>
+        <Button
+          icon="plus"
+          size="S"
+          buttonType="Container"
+          selected
+          onClick={() => navigate("/issues/new")}
+        >
+          이슈 작성
+        </Button>
+      </div>
+    </Div>
   );
 }
 

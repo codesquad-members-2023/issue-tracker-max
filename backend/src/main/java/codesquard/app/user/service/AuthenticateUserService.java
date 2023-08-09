@@ -9,15 +9,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquard.app.api.errors.errorcode.JwtTokenErrorCode;
+import codesquard.app.api.errors.exception.jwt.JwtRestApiException;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
+import codesquard.app.authenticate_user.repository.AuthenticateUserRepository;
 import codesquard.app.authenticate_user.service.RefreshTokenServiceRequest;
 import codesquard.app.jwt.Jwt;
 import codesquard.app.jwt.JwtProvider;
 import codesquard.app.jwt.filter.VerifyUserFilter;
-import codesquard.app.user.entity.AuthenticateUser;
 import codesquard.app.user.entity.User;
-import codesquard.app.user.repository.AuthenticateUserRepository;
 import codesquard.app.user.repository.UserRepository;
 
+@Transactional
 @Service
 public class AuthenticateUserService {
 
@@ -36,22 +39,19 @@ public class AuthenticateUserService {
 		this.objectMapper = objectMapper;
 	}
 
-	@Transactional
 	public void updateRefreshToken(AuthenticateUser authenticateUser, Jwt jwt) {
 		User findUser = userRepository.findByLoginId(authenticateUser.toEntity());
-		if (authenticateUserRepository.existRefreshToken(findUser)) {
+		if (authenticateUserRepository.isExistRefreshToken(findUser)) {
 			authenticateUserRepository.updateRefreshToken(findUser, jwt);
 			return;
 		}
 		saveRefreshToken(findUser, jwt);
 	}
 
-	@Transactional
 	public void saveRefreshToken(User user, Jwt jwt) {
 		authenticateUserRepository.saveRefreshToken(user, jwt);
 	}
 
-	@Transactional
 	public Jwt refreshToken(RefreshTokenServiceRequest refreshTokenServiceRequest) {
 		try {
 			// 1. 토큰이 유효한지 확인합니다. 유효하지 않은 경우 예외가 발생합니다.
@@ -69,7 +69,7 @@ public class AuthenticateUserService {
 			return jwt;
 		} catch (Exception e) {
 			logger.error("refreshToken error : {}", e.getMessage());
-			return null;
+			throw new JwtRestApiException(JwtTokenErrorCode.NOT_MATCH_REFRESHTOKEN);
 		}
 	}
 }

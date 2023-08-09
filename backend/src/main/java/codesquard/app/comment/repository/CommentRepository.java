@@ -1,6 +1,5 @@
 package codesquard.app.comment.repository;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -35,14 +34,6 @@ public class CommentRepository {
 		return parameterSource;
 	}
 
-	public List<Comment> findAll() {
-		return null;
-	}
-
-	public Comment findById(Long id) {
-		return null;
-	}
-
 	public Long modify(Comment comment) {
 		String sql = "UPDATE comment SET content = :content, modified_at = :modifiedAt WHERE id = :id";
 		template.update(sql,
@@ -60,4 +51,10 @@ public class CommentRepository {
 		String sql = "UPDATE comment SET is_deleted = true WHERE issue_id = :issueId";
 		template.update(sql, Map.of("issueId", issueId));
 	}
+
+	public boolean isExist(Long id) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM comment WHERE id = :id AND is_deleted = false)";
+		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", id), Boolean.class));
+	}
+
 }

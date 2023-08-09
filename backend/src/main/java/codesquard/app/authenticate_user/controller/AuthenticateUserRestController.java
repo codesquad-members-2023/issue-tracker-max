@@ -1,19 +1,21 @@
 package codesquard.app.authenticate_user.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import static codesquard.app.api.response.ResponseMessage.*;
+import static org.springframework.http.HttpStatus.*;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquard.app.api.errors.errorcode.LoginErrorCode;
+import codesquard.app.api.errors.exception.RestApiException;
+import codesquard.app.api.response.ApiResponse;
 import codesquard.app.authenticate_user.controller.request.RefreshTokenRequest;
 import codesquard.app.authenticate_user.controller.response.RefreshTokenResponse;
-import codesquard.app.errors.errorcode.LoginErrorCode;
-import codesquard.app.errors.exception.RestApiException;
 import codesquard.app.jwt.Jwt;
 import codesquard.app.user.service.AuthenticateUserService;
 
@@ -29,8 +31,8 @@ public class AuthenticateUserRestController {
 	}
 
 	@PostMapping("/api/auth/refresh/token")
-	public ResponseEntity<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest,
-		HttpServletRequest request, HttpServletResponse response) {
+	public ApiResponse<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest,
+		HttpServletResponse response) {
 		logger.info("refreshTokenRequest : {}", refreshTokenRequest);
 		Jwt jwt = authenticateUserService.refreshToken(refreshTokenRequest.toRefreshTokenServiceRequest());
 		if (jwt == null) {
@@ -38,6 +40,6 @@ public class AuthenticateUserRestController {
 		}
 		response.addHeader("Authorization", jwt.createAccessTokenHeaderValue());
 		response.addCookie(jwt.createRefreshTokenCookie());
-		return ResponseEntity.ok(new RefreshTokenResponse(jwt));
+		return ApiResponse.of(OK, REFRESHTOKEN_UPDATE_SUCCESS, new RefreshTokenResponse(jwt));
 	}
 }
