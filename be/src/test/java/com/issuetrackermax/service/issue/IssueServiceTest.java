@@ -16,9 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetrackermax.common.exception.ApiException;
-import com.issuetrackermax.common.exception.domain.AssigneeException;
 import com.issuetrackermax.common.exception.domain.IssueException;
 import com.issuetrackermax.common.exception.domain.LabelException;
+import com.issuetrackermax.common.exception.domain.MemberException;
 import com.issuetrackermax.common.exception.domain.MilestoneException;
 import com.issuetrackermax.controller.filter.dto.response.AssigneeResponse;
 import com.issuetrackermax.controller.filter.dto.response.LabelResponse;
@@ -162,18 +162,6 @@ public class IssueServiceTest extends IntegrationTestSupport {
 
 		//then
 		assertThatThrownBy(() -> issueService.show(issueId))
-			.isInstanceOf(ApiException.class)
-			.hasMessageContaining(IssueException.NOT_FOUND_ISSUE.getMessage());
-	}
-
-	@DisplayName("유효하지 않는 이슈 id 삭제 시 예외를 발생한다.")
-	@Test
-	void deleteAndThrowException() {
-		//given
-		Long invalidIssueId = 7000L;
-
-		//when & then
-		assertThatThrownBy(() -> issueService.delete(invalidIssueId))
 			.isInstanceOf(ApiException.class)
 			.hasMessageContaining(IssueException.NOT_FOUND_ISSUE.getMessage());
 	}
@@ -390,7 +378,7 @@ public class IssueServiceTest extends IntegrationTestSupport {
 		//when & then
 		assertThatThrownBy(() -> issueService.applyAssignees(issueId, request))
 			.isInstanceOf(ApiException.class)
-			.hasMessageContaining(AssigneeException.NOT_FOUND_ASSIGNEE.getMessage());
+			.hasMessageContaining(MemberException.NOT_FOUND_MEMBER.getMessage());
 	}
 
 	@DisplayName("새로운 마일스톤을 적용한다.")

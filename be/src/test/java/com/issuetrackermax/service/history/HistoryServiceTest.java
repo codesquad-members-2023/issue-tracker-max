@@ -1,5 +1,6 @@
 package com.issuetrackermax.service.history;
 
+import static com.issuetrackermax.domain.issue.IssueStatus.*;
 import static com.issuetrackermax.fixture.EntityFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.issuetrackermax.controller.issue.dto.request.IssuePostRequest;
+import com.issuetrackermax.controller.issue.dto.request.IssuesStatusRequest;
 import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.history.HistoryRepository;
 import com.issuetrackermax.domain.history.entity.History;
@@ -76,7 +78,11 @@ class HistoryServiceTest extends IntegrationTestSupport {
 		Long issueId2 = issueService.post(issuePostRequest2, writerId).getId();
 
 		// when
-		issueService.openIssue(List.of(issueId1, issueId2), writerId);
+		issueService.updateStatus(
+			IssuesStatusRequest.builder()
+				.issueIds(List.of(issueId1, issueId2))
+				.issueStatus(OPEN_ISSUE.getStatus())
+				.build(), writerId);
 
 		// then
 		History history = historyRepository.findLatestByIssueId(issueId1);
@@ -112,8 +118,11 @@ class HistoryServiceTest extends IntegrationTestSupport {
 		Long issueId2 = issueService.post(issuePostRequest2, writerId).getId();
 
 		// when
-		issueService.closeIssue(List.of(issueId1, issueId2), writerId);
-
+		issueService.updateStatus(
+			IssuesStatusRequest.builder()
+				.issueIds(List.of(issueId1, issueId2))
+				.issueStatus(CLOSED_ISSUE.getStatus())
+				.build(), writerId);
 		// then
 		History history = historyRepository.findLatestByIssueId(issueId1);
 		History history2 = historyRepository.findLatestByIssueId(issueId2);

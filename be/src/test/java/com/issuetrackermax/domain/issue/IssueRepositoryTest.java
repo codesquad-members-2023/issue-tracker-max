@@ -216,7 +216,7 @@ public class IssueRepositoryTest extends IntegrationTestSupport {
 		Long milestoneId = milestoneRepository.save(milestone);
 
 		//when
-		int count = milestoneRepository.applyMilestoneToIssue(issueId, milestoneId);
+		int count = issueRepository.applyMilestoneToIssue(issueId, milestoneId);
 		IssueResultVO modifiedIssue = issueRepository.findIssueDetailsById(issueId);
 
 		//then

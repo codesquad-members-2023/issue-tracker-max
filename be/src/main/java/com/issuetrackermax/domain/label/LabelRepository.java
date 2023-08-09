@@ -68,10 +68,21 @@ public class LabelRepository {
 		return count != null && count.equals(ids.size());
 	}
 
+	public Boolean existById(Long id) {
+		String sql = "SELECT EXISTS(SELECT 1 FROM label WHERE id =:id)";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("id", id), Boolean.class);
+	}
+
 	public Label findById(Long id) {
 		String sql = "SELECT id, title, description, text_color, background_color FROM label WHERE id = :id ";
 		return Optional.ofNullable(
 			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), LABEL_ROW_MAPPER))).get();
+	}
+
+	public int deleteById(Long id) {
+		String sql = "DELETE FROM label WHERE id = :id";
+		return jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
 	}
 
 	private static final RowMapper<Label> LABEL_ROW_MAPPER = (rs, rowNum) ->
@@ -82,9 +93,4 @@ public class LabelRepository {
 			.textColor(rs.getString("text_color"))
 			.backgroundColor(rs.getString("background_color"))
 			.build();
-
-	public int deleteById(Long id) {
-		String sql = "DELETE FROM label WHERE id = :id";
-		return jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
-	}
 }
