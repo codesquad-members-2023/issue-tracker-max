@@ -51,9 +51,7 @@ public class CommentService {
     }
 
     private Comment validateCommentStatus(Long commentId) {
-        Comment comment = commentRepository.findExistCommentById(commentId)
+        return commentRepository.findExistCommentById(commentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ALREADY_DELETED_COMMENT));
-        System.out.println(comment.getId());
-        return null;
     }
 }
