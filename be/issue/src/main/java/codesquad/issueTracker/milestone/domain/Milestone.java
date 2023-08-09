@@ -15,15 +15,20 @@ public class Milestone {
 	private String description;
 	private LocalDate doneDate;
 	private Boolean isClosed;
+	private Boolean isDeleted;
+
 
 	@Builder
-	public Milestone(Long id, String name, String description, LocalDate doneDate, Boolean isClosed) {
+	public Milestone(Long id, String name, String description, LocalDate doneDate, Boolean isClosed,
+		Boolean isDeleted) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.doneDate = doneDate;
 		this.isClosed = isClosed;
+		this.isDeleted = isDeleted;
 	}
+
 
 	public void validateDate() {
 		LocalDate currentDate = LocalDate.now();

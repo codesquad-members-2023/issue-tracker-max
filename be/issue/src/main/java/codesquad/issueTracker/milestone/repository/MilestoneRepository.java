@@ -1,6 +1,11 @@
 package codesquad.issueTracker.milestone.repository;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -42,4 +47,19 @@ public class MilestoneRepository {
 		return id;
 
 	}
+	public Long delete(Long id) {
+		String sql = "UPDATE milestones SET is_deleted = 1 where id = :id";
+		SqlParameterSource parameters = new MapSqlParameterSource()
+			.addValue("id",id);
+		jdbcTemplate.update(sql,parameters);
+		return id;
+	}
+
+	public Boolean isExist(Long id) {
+		String sql = "SELECT COUNT(*) FROM milestones WHERE id = :id AND is_deleted = 0";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("id",id);
+		return jdbcTemplate.queryForObject(sql, parameterSource, Boolean.class);
+	}
+
 }

@@ -4,6 +4,7 @@ import static codesquad.issueTracker.global.exception.SuccessCode.*;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,12 @@ public class MilestoneController {
 	public ApiResponse<Long> patchMilestone(@Valid @RequestBody ModifyMilestoneRequestDto request,
 		@PathVariable Long id) {
 		Long milestoneId = milestoneService.update(id,request);
+		return ApiResponse.success(SUCCESS.getStatus(), milestoneId);
+	}
+
+	@DeleteMapping("/milestones/{id}")
+	public ApiResponse<Long> deleteMilestone(@PathVariable Long id) {
+		Long milestoneId = milestoneService.delete(id);
 		return ApiResponse.success(SUCCESS.getStatus(), milestoneId);
 	}
 
