@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
@@ -28,7 +29,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			statusCode.getMessage()));
 	}
 
-	// 서버 에러 처리
+	// 404 PAGE_NOT_FOUND 예외
+	@Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
+		HttpStatus status, WebRequest request) {
+		ErrorCode errorCode = ErrorCode.PAGE_NOT_FOUND;
+		log.info("NoHandlerFoundException handling: {}", ex.toString());
+		return ResponseEntity.status(errorCode.getHttpStatus())
+			.body(CommonApiResponse.fail(errorCode.getHttpStatus(), errorCode.getMessage()));
+	}
 	@ExceptionHandler(Exception.class)
 	protected ResponseEntity<CommonApiResponse> handleServerException(Exception ex) {
 		log.info("Exception handling Message: {}", ex.getMessage());
@@ -42,6 +51,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 		HttpHeaders headers, HttpStatus status, WebRequest request) {
 		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
+		log.info("MethodArgumentNotValidException handling: {}", errorCode.getMessage());
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(CommonApiResponse.fail(errorCode.getHttpStatus(), errorCode.getMessage()));
 	}
