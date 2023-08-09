@@ -118,6 +118,6 @@ export const milestones = [
 ];
 
 export const textColors = [
-  { textColorsId: 1, name: '밝은색' },
-  { textColorsId: 2, name: '어두운 색' },
+  { id: 1, name: '밝은색' },
+  { id: 2, name: '어두운 색' },
 ];
