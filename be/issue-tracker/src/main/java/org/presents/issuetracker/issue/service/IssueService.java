@@ -18,6 +18,8 @@ import org.presents.issuetracker.issue.mapper.IssueMapper;
 import org.presents.issuetracker.issue.repository.IssueRepository;
 import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.label.repository.LabelRepository;
+import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
+import org.presents.issuetracker.milestone.repository.MilestoneRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +30,10 @@ import lombok.RequiredArgsConstructor;
 public class IssueService {
 	private final IssueRepository issueRepository;
 	private final LabelRepository labelRepository;
+	private final MilestoneRepository milestoneRepository;
 	private final IssueMapper issueMapper;
 
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional
 	public Long create(IssueCreateRequest issueCreateRequest) {
 		Long savedIssueId = issueRepository.save(
 			Issue.builder()
@@ -47,6 +50,7 @@ public class IssueService {
 		return savedIssueId;
 	}
 
+	@Transactional
 	public Long update(IssueUpdateRequest issueUpdateRequest) {
 		validateId(issueUpdateRequest.getId());
 		issueRepository.update(Issue.builder()
@@ -67,6 +71,14 @@ public class IssueService {
 		return labelRepository.findByIssueId(issueId).stream()
 			.map(LabelPreviewResponse::from)
 			.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public MilestonePreviewResponse updateMilestone(Long milestoneId, Long issueId) {
+		validateId(issueId);
+		issueRepository.setMilestone(issueId, milestoneId);
+
+		return MilestonePreviewResponse.from(milestoneRepository.findByIssueId(issueId));
 	}
 
 	private void addAssignees(List<Long> assigneeIds, Long issueId) {
