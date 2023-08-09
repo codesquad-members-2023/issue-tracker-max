@@ -102,7 +102,7 @@ public class IssueRepository {
 	}
 
 	public int countByIssueIds(List<Long> issueIds) {
-		final String sql = "SELECT COUNT(*) FROM issue WHERE issue_id IN (:issueIds)";
+		final String sql = "SELECT COUNT(*) FROM issue WHERE issue_id IN (:issueIds) AND status != 'deleted'";
 
 		MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);
 
@@ -115,5 +115,22 @@ public class IssueRepository {
 		MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
 
 		jdbcTemplate.update(sql, params);
+	}
+
+	public Issue findById(Long issueId) {
+		final String sql = "SELECT issue_id, author_id, milestone_id, title, contents, created_at, status "
+			+ "FROM issue WHERE issue_id = :issueId";
+
+		SqlParameterSource params = new MapSqlParameterSource().addValue("issueId", issueId);
+
+		return jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> Issue.builder()
+			.id(rs.getLong("issue_id"))
+			.authorId(rs.getLong("author_id"))
+			.milestoneId(rs.getLong("milestone_id"))
+			.title(rs.getString("title"))
+			.contents(rs.getString("contents"))
+			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+			.status(rs.getString("status"))
+			.build());
 	}
 }
