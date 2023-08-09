@@ -10,21 +10,29 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.presents.issuetracker.annotation.ControllerTest;
 import org.presents.issuetracker.issue.controller.IssueController;
+import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 import org.presents.issuetracker.issue.service.IssueService;
 import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
 import org.presents.issuetracker.user.dto.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ControllerTest(IssueController.class)
 public class IssueControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@MockBean
 	private IssueService issueService;
@@ -63,6 +71,22 @@ public class IssueControllerTest {
 			.andExpect(jsonPath("$.milestone.name", is("마일스톤")))
 			.andExpect(jsonPath("$.milestone.progress", is(0)))
 			.andExpect(jsonPath("$.assignees", hasSize(2)))
+			.andDo(print());
+	}
+
+	@Test
+	@DisplayName("새로운 이슈를 생성하고 생성된 이슈 아이디를 반환한다.")
+	public void create() throws Exception {
+		//given
+		IssueCreateRequest issueCreateRequest = new IssueCreateRequest("제목1", "내용1", 1L, null, null, null);
+		given(issueService.create(BDDMockito.any())).willReturn(7L);
+
+		//when then
+		mockMvc.perform(post("/issues/new")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(issueCreateRequest)))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.id", is(7)))
 			.andDo(print());
 	}
 }

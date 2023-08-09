@@ -40,7 +40,7 @@ public class IssueController {
 			.id(issueService.create(issueCreateRequest))
 			.build();
 
-		return ResponseEntity.status(HttpStatus.OK).body(issueCreateResponse);
+		return ResponseEntity.status(HttpStatus.CREATED).body(issueCreateResponse);
 	}
 
 	/*
