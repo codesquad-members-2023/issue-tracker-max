@@ -1,5 +1,6 @@
 package com.issuetrackermax.controller.milestone;
 
+import static com.issuetrackermax.fixture.EntityFixture.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -16,6 +17,7 @@ import com.issuetrackermax.controller.ControllerTestSupport;
 import com.issuetrackermax.controller.label.dto.response.LabelDetailResponse;
 import com.issuetrackermax.controller.milestone.dto.request.MilestonePostRequest;
 import com.issuetrackermax.controller.milestone.dto.response.MilestoneDetailResponse;
+import com.issuetrackermax.domain.milestone.entity.Milestone;
 
 class MilestoneControllerTest extends ControllerTestSupport {
 
@@ -23,22 +25,19 @@ class MilestoneControllerTest extends ControllerTestSupport {
 	@Test
 	void show() throws Exception {
 		// given
+		Milestone milestone = makeMilestone(true, "title", "description");
+		Milestone milestone2 = makeMilestone(true, "title2", "description2");
+
 		MilestoneDetailResponse milestoneDetailResponse = MilestoneDetailResponse.builder()
-			.id(1L)
-			.name("title")
-			.description("description")
+			.milestone(milestone)
 			.openIssueCount(1L)
 			.closedIssueCount(2L)
-			.dueDate(LocalDateTime.now())
 			.build();
 
 		MilestoneDetailResponse milestoneDetailResponse2 = MilestoneDetailResponse.builder()
-			.id(2L)
-			.name("title2")
-			.description("description2")
+			.milestone(milestone2)
 			.openIssueCount(3L)
 			.closedIssueCount(4L)
-			.dueDate(LocalDateTime.now())
 			.build();
 
 		when(labelService.getLabelList()).thenReturn(List.of(
@@ -58,12 +57,10 @@ class MilestoneControllerTest extends ControllerTestSupport {
 			.andExpect(jsonPath("$.success").value("true"))
 			.andExpect(jsonPath("$.data.labelCount").value(2L))
 			.andExpect(jsonPath("$.data.closedMilestoneCount").value(2L))
-			.andExpect(jsonPath("$.data.milestones[0].id").value(1L))
 			.andExpect(jsonPath("$.data.milestones[0].name").value("title"))
 			.andExpect(jsonPath("$.data.milestones[0].description").value("description"))
 			.andExpect(jsonPath("$.data.milestones[0].openIssueCount").value(1L))
 			.andExpect(jsonPath("$.data.milestones[0].closedIssueCount").value(2L))
-			.andExpect(jsonPath("$.data.milestones[1].id").value(2L))
 			.andExpect(jsonPath("$.data.milestones[1].name").value("title2"))
 			.andExpect(jsonPath("$.data.milestones[1].description").value("description2"))
 			.andExpect(jsonPath("$.data.milestones[1].openIssueCount").value(3L))
