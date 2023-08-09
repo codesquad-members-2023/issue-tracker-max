@@ -3,6 +3,7 @@ package org.presents.issuetracker.issue.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.presents.issuetracker.comment.repository.CommentRepository;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
 import org.presents.issuetracker.issue.dto.request.IssueUpdateRequest;
@@ -34,6 +35,7 @@ public class IssueService {
 	private final LabelRepository labelRepository;
 	private final MilestoneRepository milestoneRepository;
 	private final UserRepository userRepository;
+	private final CommentRepository commentRepository;
 	private final IssueMapper issueMapper;
 
 	@Transactional
@@ -104,6 +106,7 @@ public class IssueService {
 	@Transactional
 	public void delete(Long issueId) {
 		validateId(issueId);
+		commentRepository.deleteByIssueId(issueId);
 		issueRepository.deleteAllLabel(issueId);
 		issueRepository.deleteAllAssignee(issueId);
 		issueRepository.deleteMilestone(issueId);
