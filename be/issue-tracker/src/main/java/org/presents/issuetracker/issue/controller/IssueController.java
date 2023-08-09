@@ -60,7 +60,7 @@ public class IssueController {
 	}
 
 	@PatchMapping
-	public ResponseEntity<IdResponseDto> update(@RequestBody IssueUpdateRequest issueUpdateRequest) {
+	public ResponseEntity<IdResponseDto> updateDetail(@RequestBody IssueUpdateRequest issueUpdateRequest) {
 		IdResponseDto idResponseDto = IdResponseDto.builder()
 			.id(issueService.update(issueUpdateRequest))
 			.build();
