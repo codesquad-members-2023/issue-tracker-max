@@ -62,14 +62,23 @@ public class CommentRepository {
         return Optional.empty();
     }
 
-    public Optional<Long> update(Long userId, Long commentId, CommentRequestDto commentRequestDto) {
-        String sql = "UPDATE comments SET content = :content WHERE user_id = :userId AND id = :commentId";
+    public Optional<Long> update(Long commentId, CommentRequestDto commentRequestDto) {
+        String sql = "UPDATE comments SET content = :content WHERE id = :commentId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("content", commentRequestDto.getContent());
-        params.addValue("userId", userId);
         params.addValue("commentId", commentId);
 
         int updatedRow = jdbcTemplate.update(sql, params);
+
+        if (updatedRow > 0) {
+            return Optional.ofNullable(commentId);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Long> deleteById(Long commentId) {
+        String sql = "UPDATE comments SET is_deleted = true WHERE id = :commentId";
+        int updatedRow = jdbcTemplate.update(sql, Map.of("commentId", commentId));
 
         if (updatedRow > 0) {
             return Optional.ofNullable(commentId);

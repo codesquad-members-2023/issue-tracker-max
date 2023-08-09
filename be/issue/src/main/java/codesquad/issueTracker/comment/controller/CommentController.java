@@ -9,6 +9,7 @@ import codesquad.issueTracker.global.ApiResponse;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,9 +43,14 @@ public class CommentController {
 
     @PatchMapping("/issues/comments/{commentId}")
     public ApiResponse<String> modify(@PathVariable Long commentId,
-                                      @RequestBody CommentRequestDto commentRequestDto,
-                                      HttpServletRequest request) {
-        commentService.modify(request, commentId, commentRequestDto);
+                                      @RequestBody CommentRequestDto commentRequestDto) {
+        commentService.modify(commentId, commentRequestDto);
+        return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+    }
+
+    @DeleteMapping("issues/comments/{commentId}")
+    public ApiResponse<String> delete(@PathVariable Long commentId) {
+        commentService.delete(commentId);
         return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
     }
 }

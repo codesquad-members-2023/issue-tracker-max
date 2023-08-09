@@ -29,10 +29,14 @@ public class CommentService {
     }
 
     @Transactional
-    public Long modify(HttpServletRequest request, Long commentId, CommentRequestDto commentRequestDto) {
-        Long userId = Long.parseLong(String.valueOf(request.getAttribute("userId")));
-
-        return commentRepository.update(userId, commentId, commentRequestDto)
+    public Long modify(Long commentId, CommentRequestDto commentRequestDto) {
+        return commentRepository.update(commentId, commentRequestDto)
                     .orElseThrow(() -> new CustomException(ErrorCode.DB_EXCEPTION));
+    }
+
+    @Transactional
+    public Long delete(Long commentId) {
+        return commentRepository.deleteById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.DB_EXCEPTION));
     }
 }
