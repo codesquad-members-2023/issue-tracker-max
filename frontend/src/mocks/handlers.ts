@@ -115,6 +115,29 @@ export const handlers = [
       return res(ctx.status(200), ctx.json(openedMilestones));
     }
   }),
+  rest.get("/api/issues/:issueId", (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(issue));
+  }),
+  rest.patch("/api/issues/:issueId/title", async (req, res, ctx) => {
+    const { issueId } = req.params;
+    const { title } = await req.json();
+
+    issue.data.title = title;
+
+    return res(ctx.status(200), ctx.json(issue));
+  }),
+  rest.patch("/api/issues/:issueId/status", async (req, res, ctx) => {
+    const { issueId } = req.params;
+    const { status } = await req.json();
+
+    issue.data = {
+      ...issue.data,
+      status,
+      statusModifiedAt: new Date().toISOString(),
+    }
+
+    return res(ctx.status(200), ctx.json(issue));
+  })
 ];
 
 const labels = {
@@ -247,6 +270,59 @@ const closedMilestones = {
           openedIssueCount: 0,
           closedIssueCount: 0,
         },
+      },
+    ],
+  },
+};
+
+const issue = {
+  code: 200,
+  status: "OK",
+  message: "OK",
+  data: {
+    id: 2,
+    title: "제목1",
+    status: "OPENED",
+    statusModifiedAt: "2023-08-09T06:01:37",
+    createdAt: "2023-08-09T06:01:37",
+    modifiedAt: null,
+    content: "이슈 내용1",
+    assignees: [
+      {
+        id: 1,
+        name: "wis730",
+        avatarUrl: null,
+      },
+    ],
+    labels: [
+      {
+        id: 1,
+        name: "testdd",
+        background: "#000000",
+        color: "LIGHT",
+      },
+    ],
+    milestone: {
+      id: 1,
+      name: "Sprint#1",
+      issues: {
+        openedIssueCount: 1,
+        closedIssueCount: 0,
+      },
+    },
+    writer: {
+      id: 1,
+      name: "wis730",
+      avatarUrl: null,
+    },
+    comments: [
+      {
+        id: 1,
+        userId: "wis730",
+        avatarUrl: null,
+        content: "이 댓글을 읽은 당신은 앞으로 모든 일이 신기하게 잘풀립니다!",
+        createdAt: "2023-08-09T15:21:09",
+        modifiedAt: null,
       },
     ],
   },

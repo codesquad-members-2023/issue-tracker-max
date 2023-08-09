@@ -9,6 +9,7 @@ import { Label } from "./page/label/Label";
 import { Main } from "./page/main/Main";
 import { Milestone } from "./page/milestone/Milestone";
 import { NewIssue } from "./page/newIssue/NewIssue";
+import { IssueDetail } from "./page/issueDetail/IssueDetail";
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<"LIGHT" | "DARK">("LIGHT");
@@ -34,6 +35,7 @@ function MainRoutes() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/issues/new" element={<NewIssue />} />
+        <Route path="/issues/:issueId" element={<IssueDetail />} />
         <Route path="/label" element={<Label />} />
         <Route path="/milestone" element={<Milestone />} />
         <Route path="/milestone/:state" element={<Milestone />} />

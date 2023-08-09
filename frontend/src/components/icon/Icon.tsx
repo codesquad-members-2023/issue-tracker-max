@@ -1,15 +1,9 @@
-import { DefaultTheme, styled, useTheme } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { designSystem } from "../../constants/designSystem";
+import { getColorCode } from "../../utils/getColorCode";
 import { fillTypeComponents, iconComponents } from "./SvgIcons";
 
 const DefaultIconColor = "neutralTextDefault";
-
-const getColor = (color: ThemeColorKeys | string, theme: DefaultTheme) => {
-  if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
-    return color;
-  }
-  return theme.color[color as ThemeColorKeys];
-};
 
 type DarkThemeColorKeys = keyof typeof designSystem.DARK.color;
 type LightThemeColorKeys = keyof typeof designSystem.LIGHT.color;
@@ -36,7 +30,7 @@ export function Icon({
   }
 
   const isFillType = fillTypeComponents.includes(IconComponent);
-  const iconColor = getColor(color, theme);
+  const iconColor = getColorCode(color, theme);
 
   return (
     <IconWrapper>
