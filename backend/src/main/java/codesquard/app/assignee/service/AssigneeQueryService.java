@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.assignee.service.response.AssigneeReadResponse;
+import codesquard.app.assignee.service.response.AssigneeReadServiceResponse;
 import codesquard.app.user.repository.UserRepository;
 
 @Transactional(readOnly = true)
@@ -19,10 +19,10 @@ public class AssigneeQueryService {
 		this.userRepository = userRepository;
 	}
 
-	public List<AssigneeReadResponse> findAll() {
+	public List<AssigneeReadServiceResponse> findAll() {
 		return userRepository.findAll()
 			.stream()
-			.map(AssigneeReadResponse::from)
+			.map(AssigneeReadServiceResponse::fromWithNoSelected)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }
