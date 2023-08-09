@@ -95,6 +95,23 @@ public class IssueService {
 		return MilestonePreviewResponse.from(milestoneRepository.findByIssueId(issueId));
 	}
 
+	@Transactional
+	public void updateStatus(List<Long> issueIds, String status) {
+		validateIds(issueIds);
+		issueRepository.updateStatus(issueIds, status);
+	}
+
+	public IssueSearchResponse getIssues(IssueSearchParam issueSearchParam) {
+		List<IssueSearchInfo> issues = issueMapper.getIssues(issueSearchParam);
+		IssueSearchCountInfo counts = issueMapper.getIssueSearchCounts(issueSearchParam);
+		return IssueSearchResponse.of(counts, IssueSearch.from(issues));
+	}
+
+	public IssueDetailResponse getIssueDetail(Long issueId) {
+		validateId(issueId);
+		return IssueDetailResponse.from(issueMapper.getIssueDetail(issueId));
+	}
+
 	private void addAssignees(List<Long> assigneeIds, Long issueId) {
 		issueRepository.addAssignees(
 			assigneeIds.stream()
@@ -125,19 +142,16 @@ public class IssueService {
 		issueRepository.setMilestone(issueId, milestoneId);
 	}
 
-	public IssueSearchResponse getIssues(IssueSearchParam issueSearchParam) {
-		List<IssueSearchInfo> issues = issueMapper.getIssues(issueSearchParam);
-		IssueSearchCountInfo counts = issueMapper.getIssueSearchCounts(issueSearchParam);
-		return IssueSearchResponse.of(counts, IssueSearch.from(issues));
-	}
-
-	public IssueDetailResponse getIssueDetail(Long issueId) {
-		validateId(issueId);
-		return IssueDetailResponse.from(issueMapper.getIssueDetail(issueId));
-	}
-
 	private void validateId(Long issueId) {
 		if (!issueRepository.existsById(issueId)) {
+			// todo: 커스텀 예외 생성 후 변경
+			throw new RuntimeException("이슈를 찾을 수 없습니다.");
+		}
+	}
+
+	private void validateIds(List<Long> issueIds) {
+		int count = issueRepository.countByIssueIds(issueIds);
+		if (count != issueIds.size()) {
 			// todo: 커스텀 예외 생성 후 변경
 			throw new RuntimeException("이슈를 찾을 수 없습니다.");
 		}

@@ -111,4 +111,21 @@ public class IssueRepository {
 
 		jdbcTemplate.update(sql, params);
 	}
+
+	public void updateStatus(List<Long> issueIds, String status) {
+		final String sql = "UPDATE issue SET status = :status WHERE issue_id IN (:issueIds)";
+
+		MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds)
+			.addValue("status", status);
+
+		jdbcTemplate.update(sql, params);
+	}
+
+	public int countByIssueIds(List<Long> issueIds) {
+		final String sql = "SELECT COUNT(*) FROM issue WHERE issue_id IN (:issueIds)";
+
+		MapSqlParameterSource params = new MapSqlParameterSource("issueIds", issueIds);
+
+		return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, Integer.class)).orElse(0);
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
+import org.presents.issuetracker.issue.dto.request.IssueStatusUpdateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueUpdateRequest;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
@@ -83,5 +84,11 @@ public class IssueController {
 	public ResponseEntity<MilestonePreviewResponse> updateMilestone(@PathVariable Long issueId,
 		@RequestBody Long milestoneId) {
 		return ResponseEntity.ok().body(issueService.updateMilestone(milestoneId, issueId));
+	}
+
+	@PutMapping("/status")
+	public ResponseEntity<Void> updateStatus(@RequestBody IssueStatusUpdateRequest issueStatusUpdateRequest) {
+		issueService.updateStatus(issueStatusUpdateRequest.getIssueIds(), issueStatusUpdateRequest.getStatus());
+		return ResponseEntity.noContent().build();
 	}
 }
