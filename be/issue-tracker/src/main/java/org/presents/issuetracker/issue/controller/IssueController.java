@@ -1,5 +1,7 @@
 package org.presents.issuetracker.issue.controller;
 
+import java.util.List;
+
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
@@ -7,12 +9,14 @@ import org.presents.issuetracker.issue.dto.request.IssueUpdateRequest;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
 import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
 import org.presents.issuetracker.issue.service.IssueService;
+import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,5 +63,11 @@ public class IssueController {
 			.build();
 
 		return ResponseEntity.ok().body(idResponseDto);
+	}
+
+	@PutMapping("/{issueId}/labels")
+	public ResponseEntity<List<LabelPreviewResponse>> updateLabels(@PathVariable Long issueId,
+		@RequestBody List<Long> labelIds) {
+		return ResponseEntity.ok().body(issueService.updateLabels(labelIds, issueId));
 	}
 }

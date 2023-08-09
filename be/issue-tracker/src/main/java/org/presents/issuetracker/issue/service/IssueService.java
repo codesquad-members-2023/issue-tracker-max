@@ -16,6 +16,8 @@ import org.presents.issuetracker.issue.entity.vo.IssueSearchCountInfo;
 import org.presents.issuetracker.issue.entity.vo.IssueSearchInfo;
 import org.presents.issuetracker.issue.mapper.IssueMapper;
 import org.presents.issuetracker.issue.repository.IssueRepository;
+import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
+import org.presents.issuetracker.label.repository.LabelRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IssueService {
 	private final IssueRepository issueRepository;
+	private final LabelRepository labelRepository;
 	private final IssueMapper issueMapper;
 
 	@Transactional(rollbackFor = Exception.class)
@@ -53,6 +56,17 @@ public class IssueService {
 			.build());
 
 		return issueUpdateRequest.getId();
+	}
+
+	@Transactional
+	public List<LabelPreviewResponse> updateLabels(List<Long> labelIds, Long issueId) {
+		validateId(issueId);
+		issueRepository.deleteAllLabel(issueId);
+		addLabels(labelIds, issueId);
+
+		return labelRepository.findByIssueId(issueId).stream()
+			.map(LabelPreviewResponse::from)
+			.collect(Collectors.toList());
 	}
 
 	private void addAssignees(List<Long> assigneeIds, Long issueId) {
