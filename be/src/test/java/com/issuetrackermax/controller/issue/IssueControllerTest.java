@@ -12,8 +12,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import com.issuetrackermax.common.exception.ApiException;
@@ -26,12 +24,8 @@ import com.issuetrackermax.controller.issue.dto.response.IssueDetailsResponse;
 import com.issuetrackermax.controller.issue.dto.response.IssuePostResponse;
 import com.issuetrackermax.domain.history.entity.History;
 import com.issuetrackermax.domain.issue.entity.IssueResultVO;
-import com.issuetrackermax.service.issue.IssueService;
 
-@WebMvcTest(IssueController.class)
 public class IssueControllerTest extends ControllerTestSupport {
-	@MockBean
-	private IssueService issueService;
 
 	@DisplayName("새로운 이슈를 생성한다.")
 	@Test
