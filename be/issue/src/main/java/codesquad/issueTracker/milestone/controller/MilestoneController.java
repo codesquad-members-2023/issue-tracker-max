@@ -4,15 +4,15 @@ import static codesquad.issueTracker.global.exception.SuccessCode.*;
 
 import javax.validation.Valid;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.issueTracker.global.ApiResponse;
-import codesquad.issueTracker.milestone.dto.SaveMilestoneRequestDto;
+import codesquad.issueTracker.milestone.dto.ModifyMilestoneRequestDto;
 import codesquad.issueTracker.milestone.service.MilestoneService;
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +24,15 @@ public class MilestoneController {
 	private final MilestoneService milestoneService;
 
 	@PostMapping("/milestones")
-	public ApiResponse<Long> milestones(@Valid @RequestBody SaveMilestoneRequestDto request) {
+	public ApiResponse<Long> postMilestones(@Valid @RequestBody ModifyMilestoneRequestDto request) {
 		Long milestoneId = milestoneService.save(request);
+		return ApiResponse.success(SUCCESS.getStatus(), milestoneId);
+	}
+
+	@PatchMapping("/milestones/{id}")
+	public ApiResponse<Long> patchMilestone(@Valid @RequestBody ModifyMilestoneRequestDto request,
+		@PathVariable Long id) {
+		Long milestoneId = milestoneService.update(id,request);
 		return ApiResponse.success(SUCCESS.getStatus(), milestoneId);
 	}
 
