@@ -32,7 +32,7 @@ dependencies {
     // Database
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     runtimeOnly 'com.mysql:mysql-connector-j'
-    
+
     annotationProcessor 'org.projectlombok:lombok'
     // jwt 라이브러리
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -53,6 +53,11 @@ dependencies {
     // AWS
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
 
+    // annotation configuration processor
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    // Oauth 서버와 통신하기 위해서 추가
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 tasks.named('test') {
