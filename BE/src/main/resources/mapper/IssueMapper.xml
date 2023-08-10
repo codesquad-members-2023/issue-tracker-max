@@ -34,6 +34,7 @@
         <id property="id" column="issue_comment_id" />
         <result property="content" column="issue_comment_content" />
         <result property="description" column="issue_comment_description" />
+        <result property="createAt" column="issue_comment_create_at"/>
         <association property="author" column="issue_comment_author" javaType="Member">
             <id property="id" column="issue_comment_author_id" />
             <result property="nickname" column="issue_comment_author_nickname" />

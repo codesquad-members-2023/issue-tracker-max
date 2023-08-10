@@ -36,6 +36,6 @@ dependencies {
 	testImplementation 'io.rest-assured:rest-assured:4.5.1'
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
 }
