@@ -37,7 +37,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Output application information
-        run: echo ${{ secrets.APPLICATION }} > ${{ env.APPLICATION_YML_FILE_PATH }}
+        run: echo '${{ secrets.APPLICATION }}' > '${{ env.APPLICATION_YML_FILE_PATH }}'
 
       - name: Build with Gradle
         run: |
@@ -86,7 +86,7 @@ jobs:
           node-version: '18'
 
       - name: Output Client Environment
-        run: echo ${{ secrets.CLIENT_SECRET }} > ${{ env.CLIENT_SECRET_PATH }}
+        run: echo '${{ secrets.CLIENT_SECRET }}' > '${{ env.CLIENT_SECRET_PATH }}'
 
       - name: Build with npm and Vite
         run: |
