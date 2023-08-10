@@ -18,7 +18,7 @@ export default function useFetch<T>(fetchFn: () => Promise<AxiosResponse<T>>): {
       try {
         const res = await fetchFn();
 
-        if (res.statusText === "OK") {
+        if (res.status === 200) {
           setData(res.data);
           return;
         }
