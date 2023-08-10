@@ -34,10 +34,8 @@ export default function IssuesTableItem({ issue }: { issue: IssueItemType }) {
             <Link to={`/issues/${issueNumber}`}>
               <IssueTitle>{title}</IssueTitle>
             </Link>
-            {labels.map(({ labelId, name, fontColor, backgroundColor }) => (
-              <LabelTag
-                {...{ key: labelId, name, fontColor, backgroundColor }}
-              />
+            {labels.map(({ name, fontColor, backgroundColor }) => (
+              <LabelTag {...{ key: name, name, fontColor, backgroundColor }} />
             ))}
           </div>
         </IssueHeader>
