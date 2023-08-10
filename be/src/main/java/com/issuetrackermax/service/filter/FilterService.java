@@ -60,8 +60,8 @@ public class FilterService {
 
 	private List<LabelResponse> getLabelResponse(String[] labelIds) {
 		return Arrays.stream(labelIds)
-			.map(labelid -> LabelResponse.from(
-				labelRepository.findById(Long.parseLong(labelid))))
+			.map(labelId -> LabelResponse.from(
+				labelRepository.findById(Long.parseLong(labelId))))
 			.collect(Collectors.toList());
 	}
 

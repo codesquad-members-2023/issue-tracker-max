@@ -2,13 +2,13 @@ package com.issuetrackermax.common.exception.domain;
 
 import org.springframework.http.HttpStatus;
 
-public enum AssigneeException implements CustomException {
-	NOT_FOUND_ASSIGNEE(HttpStatus.NOT_FOUND, "존재하지 않는 담당자입니다.");
+public enum MemberException implements CustomException {
+	NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
 
-	AssigneeException(HttpStatus httpStatus, String message) {
+	MemberException(HttpStatus httpStatus, String message) {
 		this.httpStatus = httpStatus;
 		this.message = message;
 	}

@@ -2,6 +2,8 @@ package com.issuetrackermax.controller.milestone.dto.response;
 
 import java.time.LocalDateTime;
 
+import com.issuetrackermax.domain.milestone.entity.Milestone;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,12 +17,12 @@ public class MilestoneDetailResponse {
 	private Long closedIssueCount;
 
 	@Builder
-	public MilestoneDetailResponse(Long id, String name, String description, LocalDateTime dueDate,
+	public MilestoneDetailResponse(Milestone milestone,
 		Long openIssueCount, Long closedIssueCount) {
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.dueDate = dueDate;
+		this.id = milestone.getId();
+		this.name = milestone.getTitle();
+		this.description = milestone.getDescription();
+		this.dueDate = milestone.getDuedate();
 		this.openIssueCount = openIssueCount;
 		this.closedIssueCount = closedIssueCount;
 	}

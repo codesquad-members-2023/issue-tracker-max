@@ -85,13 +85,6 @@ public class MilestoneRepository {
 		return jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
 	}
 
-	public int applyMilestoneToIssue(Long issueId, Long milestoneId) {
-		String sql = "UPDATE issue SET milestone_id = :milestoneId WHERE id = :issueId";
-		return jdbcTemplate.update(sql, new MapSqlParameterSource()
-			.addValue("issueId", issueId)
-			.addValue("milestoneId", milestoneId));
-	}
-
 	private static final RowMapper<Milestone> MILESTONE_ROW_MAPPER = (rs, rowNum) ->
 		Milestone.builder()
 			.id(rs.getLong("id"))
