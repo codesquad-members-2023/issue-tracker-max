@@ -9,6 +9,7 @@ type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
   flexible?: boolean;
   outline?: boolean;
   ghost?: boolean;
+  selected?: boolean;
   onClick?: () => void;
 };
 
@@ -21,6 +22,7 @@ export default function Button(props: ButtonProps) {
     flexible,
     outline,
     ghost,
+    selected,
     ...rest
   } = props;
   const hasIcon = iconName !== undefined;
@@ -33,6 +35,7 @@ export default function Button(props: ButtonProps) {
       $flexible={flexible}
       $outline={outline}
       $ghost={ghost}
+      $selected={selected}
       {...rest}>
       {hasIcon && <Icon />}
       <TextLabel>{children}</TextLabel>
@@ -44,6 +47,7 @@ type StyledButtonProps = {
   $flexible?: boolean;
   $outline?: boolean;
   $ghost?: boolean;
+  $selected?: boolean;
 };
 
 const RealButton = styled.button<StyledButtonProps>`
@@ -102,22 +106,35 @@ const RealButton = styled.button<StyledButtonProps>`
     }
     `}
 
-  ${({ theme, $ghost, $flexible }) =>
+  ${({ theme, $ghost, $flexible, $selected }) =>
     $ghost &&
     `
     padding: ${$flexible ? '0' : '0 16px'};
     background-color: transparent;
     border: none;
     border-radius: 0;
-    color: ${theme.color.neutral.text.default};
+    color: ${
+      $selected
+        ? theme.color.neutral.text.strong
+        : theme.color.neutral.text.default
+    };
+    ${$selected && theme.font.selected.bold[16]};
 
     svg {
       path {
-        stroke: ${theme.color.neutral.text.default};
+        stroke: ${
+          $selected
+            ? theme.color.neutral.text.strong
+            : theme.color.neutral.text.default
+        };
       }
 
       rect {
-        fill: ${theme.color.neutral.text.default};
+        fill: ${
+          $selected
+            ? theme.color.neutral.text.strong
+            : theme.color.neutral.text.default
+        };
       }
     }
     `}

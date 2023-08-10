@@ -36,9 +36,11 @@ export default function Comment(props: CommentProps) {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (isEdit) {
-      setTextValue(e.target.value);
+    if (!isEdit) {
+      return;
     }
+    setTextValue(e.target.value);
+
     return;
   };
 
@@ -72,12 +74,13 @@ export default function Comment(props: CommentProps) {
         </InfoRight>
       </Header>
       <Body>
-        {!isEdit && <TextBox>{textValue}</TextBox>}
-        {isEdit && (
+        {isEdit ? (
           <TextArea
             $isEdit={isEdit}
             value={textValue}
             onChange={handleChange}></TextArea>
+        ) : (
+          <TextBox>{textValue}</TextBox>
         )}
       </Body>
       {isEdit && (

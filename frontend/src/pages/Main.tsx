@@ -15,34 +15,44 @@ export default function Main() {
     }
 
     try {
-      const res = await axiosPrivate.post(
-        '/api/logout',
-        JSON.stringify({ id: auth.userId, password: auth.pwd }),
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        }
-      );
+      const res = await axiosPrivate.post('/api/logout', null, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
 
       if (res.status === 200) {
         localStorage.clear();
         logout();
+        navigate('/login');
+      } else {
+        console.error('로그아웃 실패:', res.status);
       }
-      navigate('/login');
     } catch (err) {
-      console.error(err);
+      console.error('로그아웃 에러:', err);
     }
   };
 
   return (
     <>
       <h1>main</h1>
+      <button
+        onClick={() => {
+          navigate('/login');
+        }}>
+        로그인 화면 이동
+      </button>
       <button onClick={handleLogout}>logout</button>
       <button
         onClick={() => {
           navigate('/addIssue');
         }}>
         새로운 이슈작성
+      </button>
+      <button
+        onClick={() => {
+          navigate('/options');
+        }}>
+        옵션들
       </button>
       <button onClick={refresh}>refresh</button>
     </>
