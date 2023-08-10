@@ -4,15 +4,22 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class ApiResponse {
+public class ApiResponse<T> {
 
     private final int statusCode;
+    private final T data;
 
-    public ApiResponse(int statusCode) {
+    private ApiResponse(int statusCode, T data) {
         this.statusCode = statusCode;
+        this.data = data;
     }
 
     public static ApiResponse success(HttpStatus status) {
-        return new ApiResponse(status.value());
+        return new ApiResponse(status.value(), null);
+    }
+
+    public static ApiResponse exception(HttpStatus status, String data) {
+        return new ApiResponse<>(status.value(), data);
+
     }
 }

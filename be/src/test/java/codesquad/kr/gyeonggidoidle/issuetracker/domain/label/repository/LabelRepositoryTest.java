@@ -1,14 +1,15 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.RepositoryTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelVO;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
-import java.util.List;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 

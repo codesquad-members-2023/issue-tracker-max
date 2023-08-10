@@ -1,5 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.member;
 
+import codesquad.kr.gyeonggidoidle.issuetracker.exception.IllegalEmailException;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,5 +20,13 @@ public class Member {
         this.name = name;
         this.password = password;
         this.profile = profile;
+    }
+
+    public static String findUserName(String email) {
+        int idx = email.indexOf('@');
+        if (idx == -1) {
+            throw new IllegalEmailException();
+        }
+        return email.substring(0,idx);
     }
 }

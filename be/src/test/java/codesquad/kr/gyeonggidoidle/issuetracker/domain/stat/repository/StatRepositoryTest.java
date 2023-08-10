@@ -1,9 +1,13 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.RepositoryTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.MilestoneStatVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.StatVO;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

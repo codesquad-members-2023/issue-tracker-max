@@ -4,6 +4,7 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Issue;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueStatusVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueUpdateVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueVO;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class IssueRepository {
 
     private final NamedParameterJdbcTemplate template;
+
     private final RowMapper<IssueVO> issueVOMapper = (rs, rowNum) -> IssueVO.builder()
             .id(rs.getLong("id"))
             .author(rs.getString("author_name"))

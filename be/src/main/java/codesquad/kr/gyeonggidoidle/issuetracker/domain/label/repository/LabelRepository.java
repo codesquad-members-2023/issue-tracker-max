@@ -2,6 +2,7 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelVO;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
