@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import { IssueData } from "../../page/main/Main";
 import { getElapsedSince } from "../../utils/getElapsedSince";
+import { Avatar } from "../Avatar";
 import { InformationTag } from "../InformationTag";
 import { Icon, ThemeColorKeys } from "../icon/Icon";
 
@@ -49,8 +50,8 @@ export function Issue({ issue }: { issue: IssueData }) {
         </IssueInfo>
       </IssueContent>
       <AssigneesDiv>
-        <img
-          style={{ width: "20px" }}
+        <Avatar
+          size="S"
           src="https://avatars.githubusercontent.com/u/41321198?v=4"
         />
       </AssigneesDiv>
