@@ -131,14 +131,17 @@ public class IssueRepository {
 
 		SqlParameterSource params = new MapSqlParameterSource().addValue("issueId", issueId);
 
-		return jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> Issue.builder()
-			.id(rs.getLong("issue_id"))
-			.authorId(rs.getLong("author_id"))
-			.milestoneId(rs.getLong("milestone_id"))
-			.title(rs.getString("title"))
-			.contents(rs.getString("contents"))
-			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-			.status(rs.getString("status"))
-			.build());
+		return jdbcTemplate.query(sql, params, (rs, rowNum) -> Issue.builder()
+				.id(rs.getLong("issue_id"))
+				.authorId(rs.getLong("author_id"))
+				.milestoneId(rs.getLong("milestone_id"))
+				.title(rs.getString("title"))
+				.contents(rs.getString("contents"))
+				.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+				.status(rs.getString("status"))
+				.build())
+			.stream()
+			.findFirst()
+			.orElseThrow(() -> new RuntimeException("이슈를 찾을 수 없습니다."));
 	}
 }
