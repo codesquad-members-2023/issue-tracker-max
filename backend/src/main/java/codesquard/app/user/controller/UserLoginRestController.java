@@ -6,6 +6,7 @@ import static org.springframework.http.HttpStatus.*;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +43,14 @@ public class UserLoginRestController {
 
 	@PostMapping("/login")
 	public ApiResponse<AuthenticateUserLoginResponse> login(HttpServletRequest request,
-		@Login AuthenticateUser user) throws
+		HttpServletResponse response, @Login AuthenticateUser user) throws
 		IOException {
 		AuthenticateUserLoginServiceResponse loginServiceResponse = authenticateUserService.login(user);
 		request.setAttribute("loginServiceResponse", loginServiceResponse);
-
+		// Authroization 헤더에 액세스 토큰 저장
+		response.addHeader("Authorization", loginServiceResponse.createAccessTokenHeaderValue());
+		// 쿠키에 key=refreshToken, value=갱신토큰 값 저장
+		response.addCookie(loginServiceResponse.createRefreshTokenCookie());
 		return ApiResponse.of(OK, USER_LOGIN_SUCCESS, loginServiceResponse.toAuthenticateUserLoginResponse());
 	}
 }

@@ -9,26 +9,18 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import codesquard.app.authenticate_user.resolver.LoginUserArgumentResolver;
 import codesquard.app.user.interceptor.UserLoginInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-	private final ObjectMapper objectMapper;
-
-	public WebConfig(ObjectMapper objectMapper) {
-		this.objectMapper = objectMapper;
-	}
-
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 			.allowedOriginPatterns("*")
 			.allowedHeaders("*")
-			.allowCredentials(true)
+			.allowCredentials(true) // 쿠키 인증 요청 허용
 			.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS");
 	}
 
@@ -40,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new UserLoginInterceptor(objectMapper))
+		registry.addInterceptor(new UserLoginInterceptor())
 			.order(Ordered.HIGHEST_PRECEDENCE)
 			.addPathPatterns("/api/login");
 	}
