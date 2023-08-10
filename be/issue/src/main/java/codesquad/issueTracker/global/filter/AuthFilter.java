@@ -16,7 +16,7 @@ import org.springframework.util.PatternMatchUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import codesquad.issueTracker.global.ApiResponse;
+import codesquad.issueTracker.global.common.ApiResponse;
 import codesquad.issueTracker.global.exception.ErrorCode;
 import codesquad.issueTracker.global.exception.StatusCode;
 import codesquad.issueTracker.jwt.util.JwtProvider;

@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 
 import codesquad.issueTracker.global.exception.CustomException;
 import codesquad.issueTracker.global.exception.ErrorCode;
-import codesquad.issueTracker.label.controller.dto.CreateLabelResponseDto;
-import codesquad.issueTracker.label.controller.dto.LabelRequestDto;
-import codesquad.issueTracker.label.controller.dto.LabelResponseDto;
-import codesquad.issueTracker.label.controller.dto.LabelVO;
 import codesquad.issueTracker.label.domain.Label;
+import codesquad.issueTracker.label.dto.CreateLabelResponseDto;
+import codesquad.issueTracker.label.dto.LabelRequestDto;
+import codesquad.issueTracker.label.dto.LabelResponseDto;
 import codesquad.issueTracker.label.repository.LabelRepository;
+import codesquad.issueTracker.label.vo.LabelVo;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -33,11 +33,12 @@ public class LabelService {
 	}
 
 	public LabelResponseDto findAll() {
-		List<LabelVO> labels = new ArrayList<>();
+		List<LabelVo> labels = new ArrayList<>();
 		labelRepository.findAll()
 			.orElseThrow(() -> new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION))
 			.forEach(label ->
-				labels.add(LabelVO.from(label)));
-		return LabelResponseDto.of(labels, labelRepository.findMilestonesCount().orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER)));
+				labels.add(LabelVo.from(label)));
+		return LabelResponseDto.of(labels,
+			labelRepository.findMilestonesCount().orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER)));
 	}
 }

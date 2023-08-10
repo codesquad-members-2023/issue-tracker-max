@@ -16,7 +16,6 @@ public enum ErrorCode implements StatusCode {
 	// -- [Common] -- ]
 	DB_EXCEPTION(HttpStatus.SERVICE_UNAVAILABLE, "DB 서버 오류"),
 
-
 	// -- [OAuth] -- //
 	NOT_SUPPORTED_PROVIDER(HttpStatus.BAD_REQUEST, "지원하지 않는 로그인 방식입니다."),
 	GITHUB_LOGIN_USER(HttpStatus.BAD_REQUEST, "이미 깃허브로 로그인한 유저입니다"),
@@ -36,7 +35,7 @@ public enum ErrorCode implements StatusCode {
 
 	// -- [Comment] -- //
 	NOT_EXIST_COMMENT(HttpStatus.BAD_REQUEST, "존재하지 않는 댓글입니다."),
-	ALREADY_DELETED_COMMENT(HttpStatus.BAD_REQUEST, "이미 삭제된 댓글입니다.");
+	ALREADY_DELETED_COMMENT(HttpStatus.BAD_REQUEST, "이미 삭제된 댓글입니다."),
 
 	// 마일스톤
 	INVALIDATE_DATE(HttpStatus.BAD_REQUEST, "현재 날짜보다 이전 날짜 입니다."),

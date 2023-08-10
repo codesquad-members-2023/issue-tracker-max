@@ -1,17 +1,17 @@
-package codesquad.issueTracker.label.controller.dto;
+package codesquad.issueTracker.label.vo;
 
 import codesquad.issueTracker.label.domain.Label;
 import lombok.Getter;
 
 @Getter
-public class LabelVO {
+public class LabelVo {
 	private final Long id;
 	private final String name;
 	private final String textColor;
 	private final String backgroundColor;
 	private final String description;
 
-	public LabelVO(Long id, String name, String textColor, String backgroundColor, String description) {
+	public LabelVo(Long id, String name, String textColor, String backgroundColor, String description) {
 		this.id = id;
 		this.name = name;
 		this.textColor = textColor;
@@ -19,8 +19,8 @@ public class LabelVO {
 		this.description = description;
 	}
 
-	public static LabelVO from(Label label){
-		return new LabelVO(label.getId(), label.getName(), label.getTextColor(), label.getBackgroundColor(),
+	public static LabelVo from(Label label) {
+		return new LabelVo(label.getId(), label.getName(), label.getTextColor(), label.getBackgroundColor(),
 			label.getDescription());
 	}
 }

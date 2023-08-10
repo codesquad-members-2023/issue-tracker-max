@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import codesquad.issueTracker.global.ApiResponse;
+import codesquad.issueTracker.global.common.ApiResponse;
 import codesquad.issueTracker.milestone.dto.MileStoneStatusDto;
 import codesquad.issueTracker.milestone.dto.MilestoneResponseDto;
 import codesquad.issueTracker.milestone.dto.ModifyMilestoneRequestDto;

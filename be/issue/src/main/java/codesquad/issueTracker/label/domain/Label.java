@@ -1,16 +1,16 @@
 package codesquad.issueTracker.label.domain;
 
-import codesquad.issueTracker.label.controller.dto.LabelRequestDto;
+import codesquad.issueTracker.label.dto.LabelRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class Label {
-	Long id;
-	String name;
-	String textColor;
-	String backgroundColor;
-	String description;
+	private Long id;
+	private String name;
+	private String textColor;
+	private String backgroundColor;
+	private String description;
 
 	@Builder
 	public Label(Long id, String name, String textColor, String backgroundColor, String description) {
