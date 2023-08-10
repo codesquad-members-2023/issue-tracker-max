@@ -13,13 +13,16 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import codesquard.app.issue.dto.request.IssueFilterRequest;
 import codesquard.app.issue.dto.response.IssueCommentsResponse;
+import codesquard.app.issue.dto.response.IssueFilterResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueUserResponse;
 import codesquard.app.issue.entity.Issue;
 import codesquard.app.issue.entity.IssueStatus;
+import codesquard.app.issue.mapper.IssueMapper;
 import codesquard.app.label.entity.Label;
 import codesquard.app.user.entity.User;
 
@@ -28,6 +31,7 @@ public class JdbcIssueRepository implements IssueRepository {
 
 	private final NamedParameterJdbcTemplate template;
 	private final SimpleJdbcInsert simpleJdbcInsert;
+	private final IssueMapper issueMapper;
 
 	private static final RowMapper<IssueReadResponse> issueReadResponseRowMapper = ((rs, rowNum) -> new IssueReadResponse(
 		rs.getLong("id"),
@@ -67,6 +71,7 @@ public class JdbcIssueRepository implements IssueRepository {
 			.withTableName("issue")
 			.usingColumns("title", "content", "milestone_id", "user_id")
 			.usingGeneratedKeyColumns("id");
+		this.issueMapper = issueMapper;
 	}
 
 	@Override
@@ -212,4 +217,5 @@ public class JdbcIssueRepository implements IssueRepository {
 			+ "WHERE c.issue_id = :issueId";
 		return template.query(sql, Map.of("issueId", issueId), issueCommentsResponseRowMapper);
 	}
+
 }

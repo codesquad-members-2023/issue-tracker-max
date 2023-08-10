@@ -1,10 +1,13 @@
 package codesquard.app.issue.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.api.response.ApiResponse;
 import codesquard.app.api.response.ResponseMessage;
+import codesquard.app.issue.dto.request.IssueFilterRequest;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -26,6 +30,7 @@ import codesquard.app.issue.dto.response.IssueDeleteResponse;
 import codesquard.app.issue.dto.response.IssueModifyResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueSaveResponse;
+import codesquard.app.issue.dto.response.IssuesResponse;
 import codesquard.app.issue.service.IssueQueryService;
 import codesquard.app.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +42,11 @@ public class IssueController {
 
 	private final IssueService issueService;
 	private final IssueQueryService issueQueryService;
+
+	@GetMapping()
+	public ApiResponse<List<IssuesResponse>> listIssues(@ModelAttribute IssueFilterRequest request) {
+		return ApiResponse.ok(issueQueryService.findFilterIssues(request));
+	}
 
 	@GetMapping("/{issueId}")
 	public ApiResponse<IssueReadResponse> get(@PathVariable Long issueId) {
