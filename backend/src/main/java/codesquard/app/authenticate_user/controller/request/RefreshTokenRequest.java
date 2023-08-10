@@ -2,7 +2,7 @@ package codesquard.app.authenticate_user.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import codesquard.app.authenticate_user.service.RefreshTokenServiceRequest;
+import codesquard.app.authenticate_user.service.request.RefreshTokenServiceRequest;
 import lombok.ToString;
 
 @ToString

@@ -16,8 +16,8 @@ import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.api.response.ApiResponse;
 import codesquard.app.authenticate_user.controller.request.RefreshTokenRequest;
 import codesquard.app.authenticate_user.controller.response.RefreshTokenResponse;
+import codesquard.app.authenticate_user.service.AuthenticateUserService;
 import codesquard.app.jwt.Jwt;
-import codesquard.app.user.service.AuthenticateUserService;
 
 @RestController
 public class AuthenticateUserRestController {

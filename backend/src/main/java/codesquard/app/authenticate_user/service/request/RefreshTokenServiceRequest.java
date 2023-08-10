@@ -1,4 +1,4 @@
-package codesquard.app.authenticate_user.service;
+package codesquard.app.authenticate_user.service.request;
 
 public class RefreshTokenServiceRequest {
 	private String refreshToken;
