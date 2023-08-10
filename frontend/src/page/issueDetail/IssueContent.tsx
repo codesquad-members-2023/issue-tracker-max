@@ -80,7 +80,15 @@ export function IssueContent({
         onChange={onContentChange}
       >
         <WriterInfo>
-          {writer.avatarUrl && <img src={writer.avatarUrl} alt="아바타" />}
+          {writer.avatarUrl && (
+            <img
+              width="32"
+              height="32"
+              style={{ borderRadius: "50%" }}
+              src={writer.avatarUrl}
+              alt="아바타"
+            />
+          )}
           <h3>{writer.name}</h3>
           <TimeStamp>{getElapsedSince(writtenAt)} 전</TimeStamp>
         </WriterInfo>

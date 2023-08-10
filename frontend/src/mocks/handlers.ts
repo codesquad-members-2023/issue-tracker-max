@@ -384,13 +384,15 @@ const issue = {
     writer: {
       id: 1,
       name: "wis730",
-      avatarUrl: null,
+      avatarUrl:
+        "https://i.namu.wiki/i/2KCzxN-etRYFHRQVHH9-ROMgsOvyU3X4y7A2wuqNV5apHBn8APhnhPuapmrXewTuRcVtgos2UIAdHOCDkKVOFQ.webp",
     },
     comments: [
       {
         id: 1,
         userId: "wis730",
-        avatarUrl: null,
+        avatarUrl:
+          "https://i.namu.wiki/i/2KCzxN-etRYFHRQVHH9-ROMgsOvyU3X4y7A2wuqNV5apHBn8APhnhPuapmrXewTuRcVtgos2UIAdHOCDkKVOFQ.webp",
         content: "이 댓글을 읽은 당신은 앞으로 모든 일이 신기하게 잘풀립니다!",
         createdAt: "2023-08-09T15:21:09",
         modifiedAt: "2023-08-09T20:21:09",
@@ -398,8 +400,9 @@ const issue = {
       {
         id: 2,
         userId: "hjsong123",
-        avatarUrl: null,
-        content: "웃어보세요! 오늘 하루가 달라질 겁에요!",
+        avatarUrl:
+          "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
+        content: "웃어보세요! 오늘 하루가 달라질 거에요!",
         createdAt: "2023-08-10T10:21:09",
         modifiedAt: "2023-08-10T13:21:09",
       },

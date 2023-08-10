@@ -84,7 +84,15 @@ export function CommentItem({
         onChange={onContentChange}
       >
         <WriterInfo>
-          {avatarUrl && <img src={avatarUrl} alt="아바타" />}
+          {avatarUrl && (
+            <img
+              width="32"
+              height="32"
+              style={{ borderRadius: "50%" }}
+              src={avatarUrl}
+              alt="아바타"
+            />
+          )}
           <h3>{userId}</h3>
           <TimeStamp>{getElapsedSince(writtenAt)} 전</TimeStamp>
         </WriterInfo>
