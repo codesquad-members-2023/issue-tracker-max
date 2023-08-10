@@ -18,7 +18,7 @@ import codesquard.app.api.errors.errorcode.JwtTokenErrorCode;
 import codesquard.app.api.errors.exception.jwt.JwtRestApiException;
 import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.authenticate_user.controller.request.RefreshTokenRequest;
-import codesquard.app.authenticate_user.service.RefreshTokenServiceRequest;
+import codesquard.app.authenticate_user.service.request.RefreshTokenServiceRequest;
 import codesquard.app.jwt.Jwt;
 import codesquard.app.jwt.filter.JwtAuthorizationFilter;
 
