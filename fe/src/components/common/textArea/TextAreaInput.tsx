@@ -10,10 +10,11 @@ type Props = {
 export const TextAreaInput: React.FC<Props> = ({
   textAreaValue,
   isDisabled,
+  placeholder,
   onChangeTextArea,
 }) => {
   const theme = useTheme() as any;
-  const placeholderText = textAreaValue ? textAreaValue : '코멘트를 입력하세요';
+  const placeholderText = placeholder ? placeholder : '코멘트를 입력하세요';
 
   return (
     <textarea

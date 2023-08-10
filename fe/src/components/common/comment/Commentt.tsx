@@ -21,7 +21,8 @@ type Props = {
   typeVariant: 'default' | 'edit' | 'add';
   isDisabled?: boolean;
   letterCount?: number;
-  textAreaValue: string;
+  // textAreaValue?: string;
+  placeholder?: string;
   onChangeTextArea: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onAddFileUrl: (fileName: string, fileUrl: string) => void;
 };
@@ -30,13 +31,15 @@ export const Comment: React.FC<Props> = ({
   typeVariant = 'default',
   isDisabled = false,
   letterCount,
-  textAreaValue,
+  // textAreaValue,
+  placeholder,
   onChangeTextArea,
   onAddFileUrl,
 }) => {
   const theme = useTheme() as any;
   const availableFileSize = 1048576; //1MB
 
+  const [textAreaValue, setTextAreaValue] = useState<string>('');
   const [isDisplayingCount, setIsDisplayingCount] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [fileStatus, setFileStatus] = useState<DefaultFileStatusType>({
@@ -117,6 +120,8 @@ export const Comment: React.FC<Props> = ({
     setIsEditing(true);
   };
 
+  console.log('나옴?', textAreaValue);
+
   const isTyping = textAreaValue.length > 0;
 
   const wrapperStyle = {
@@ -173,6 +178,7 @@ export const Comment: React.FC<Props> = ({
                     textAreaValue={textAreaValue}
                     onChangeTextArea={onChangeTextArea}
                     isDisabled={isDisabled}
+                    placeholder={placeholder}
                   ></TextAreaInput>
                   <Caption
                     isDisplayingCount={isDisplayingCount}
@@ -216,9 +222,9 @@ export const Comment: React.FC<Props> = ({
                   </div>
                 )}
                 <TextAreaInput
-                  textAreaValue={textAreaValue}
+                  // textAreaValue={textAreaValue}
                   // onChangeTextArea={onChangeTextArea}
-                  // placeholder={textAreaValue}
+                  placeholder={textAreaValue}
                   isDisabled={true}
                 ></TextAreaInput>
               </div>
