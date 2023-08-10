@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -113,7 +114,7 @@ public class IssueControllerTest {
 	@DisplayName("레이블 아이디 리스트를 입력받아 이슈의 레이블을 수정하고 이슈의 레이블 목록을 반환한다.")
 	public void updateLabels() throws Exception {
 		//given
-		List<Long> labelIds = List.of(1L, 2L);
+		Map<String, List<Long>> labelIds = Map.of("labelIds", List.of(1L, 2L));
 		List<LabelPreviewResponse> labels = List.of(LabelPreviewResponse.builder().id(1L).name("레이블1").build(),
 			LabelPreviewResponse.builder().id(2L).name("레이블2").build());
 		given(issueService.updateLabels(BDDMockito.any(), BDDMockito.anyLong())).willReturn(labels);
@@ -134,7 +135,7 @@ public class IssueControllerTest {
 	@DisplayName("담당자 아이디 리스트를 입력받아 이슈의 담당자를 수정하고 이슈의 담당자 목록을 반환한다.")
 	public void updateAssignees() throws Exception {
 		//given
-		List<Long> assigneeIds = List.of(1L, 2L);
+		Map<String, List<Long>> assigneeIds = Map.of("assigneeIds", List.of(1L, 2L));
 		List<UserResponse> userResponses = List.of(UserResponse.builder().userId(1L).loginId("id1").build(),
 			UserResponse.builder().userId(2L).loginId("id2").build());
 		given(issueService.updateAssignees(BDDMockito.any(), BDDMockito.anyLong())).willReturn(userResponses);
@@ -156,7 +157,7 @@ public class IssueControllerTest {
 	public void updateMilestone() throws Exception {
 		//given
 		Long issueId = 1L;
-		Long milestoneId = 2L;
+		Map<String, Long> milestoneId = Map.of("milestoneId", 2L);
 		MilestonePreviewResponse milestone = MilestonePreviewResponse.builder().id(2L).name("마일스톤").progress(0).build();
 		given(issueService.updateMilestone(BDDMockito.anyLong(), BDDMockito.anyLong())).willReturn(milestone);
 
