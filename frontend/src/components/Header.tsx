@@ -1,19 +1,31 @@
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import { clearAuthInfo } from "../utils/localStorage";
+import { Button } from "./Button";
 import { Icon } from "./icon/Icon";
 
 export function Header() {
   const navigate = useNavigate();
+
+  const logOut = () => {
+    clearAuthInfo();
+    navigate("/auth");
+  };
 
   return (
     <Div>
       <Anchor onClick={() => navigate("/")}>
         <Icon name="LogoMedium" color="neutralTextStrong" />
       </Anchor>
-      <img
-        style={{ width: "32px" }}
-        src="https://avatars.githubusercontent.com/u/41321198?v=4"
-      />
+      <HeaderRight>
+        <img
+          style={{ width: "32px" }}
+          src="https://avatars.githubusercontent.com/u/41321198?v=4"
+        />
+        <Button size="S" buttonType="Ghost" onClick={logOut}>
+          로그아웃
+        </Button>
+      </HeaderRight>
     </Div>
   );
 }
@@ -28,4 +40,11 @@ const Div = styled.div`
 
 const Anchor = styled.a`
   cursor: pointer;
+`;
+
+const HeaderRight = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 `;

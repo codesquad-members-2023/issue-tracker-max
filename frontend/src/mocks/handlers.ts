@@ -13,6 +13,33 @@ type MilestoneRequestBody = {
   description: string;
 };
 
+type UserRequestBody = {
+  loginId: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+};
+
+type LoginRequestBody = {
+  loginId: string;
+  password: string;
+};
+
+type UsersData = {
+  user: {
+    id: number;
+    loginId: string;
+    password: string;
+    passwordConfirm: string;
+    email: string;
+    avatarUrl: string | null;
+  };
+  jwt: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}[];
+
 export const handlers = [
   rest.get("/api/labels", (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(labels));
@@ -113,6 +140,89 @@ export const handlers = [
           return milestone.id !== Number(id);
         });
       return res(ctx.status(200), ctx.json(openedMilestones));
+    }
+  }),
+  rest.post("/api/users", (req, res, ctx) => {
+    const body: UserRequestBody =
+      typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    const user = users.find(({ user }) => {
+      {
+        return user.loginId === body.loginId || user.email === body.email;
+      }
+    });
+    console.log(body.loginId, body.password, user);
+    if (!user) {
+      const obj = {
+        user: { id: users.length, avatarUrl: null, ...body },
+        jwt: {
+          accessToken: `${body.loginId}AccessToken`,
+          refreshToken: `${body.loginId}RefreshToken`,
+        },
+      };
+
+      const userRes = {
+        code: 201,
+        status: "CREATED",
+        message: "회원가입에 성공하였습니다.",
+        data: {
+          id: obj.user.id,
+          loginId: obj.user.loginId,
+          email: obj.user.email,
+        },
+      };
+
+      users.push(obj);
+
+      return res(ctx.status(200), ctx.json(userRes));
+    } else {
+      const errorResponse = {
+        code: 409,
+        status: "CONFLICT",
+        message: "이미 존재하는 아이디 또는 이메일입니다.",
+        data: null,
+      };
+
+      return res(ctx.status(409), ctx.json(errorResponse));
+    }
+  }),
+  rest.post("/api/login", (req, res, ctx) => {
+    const body: LoginRequestBody =
+      typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+
+    const user = users.find(({ user }) => {
+      {
+        return user.loginId === body.loginId && user.password === body.password;
+      }
+    });
+
+    if (user) {
+      const response = {
+        code: 200,
+        status: "OK",
+        message: "로그인에 성공하였습니다.",
+        data: {
+          user: {
+            id: user.user.id,
+            loginId: user.user.loginId,
+            email: user.user.email,
+            avatarUrl: user.user.avatarUrl,
+          },
+          jwt: {
+            ...user.jwt,
+          },
+        },
+      };
+
+      return res(ctx.status(200), ctx.json(response));
+    } else {
+      const errorResponse = {
+        code: 400,
+        status: "BAD_REQUEST",
+        message: "아이디 또는 비밀번호가 일치하지 않습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(400), ctx.json(errorResponse));
     }
   }),
 ];
@@ -251,3 +361,20 @@ const closedMilestones = {
     ],
   },
 };
+
+const users: UsersData = [
+  {
+    user: {
+      id: 0,
+      loginId: "test123",
+      password: "12341234",
+      passwordConfirm: "12341234",
+      email: "test123@test.com",
+      avatarUrl: "https://avatars.githubusercontent.com/u/41321198?v=4",
+    },
+    jwt: {
+      accessToken: "test123AccessToken",
+      refreshToken: "test123RefreshToken",
+    },
+  },
+];

@@ -1,14 +1,20 @@
 import { useState } from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 import { ThemeProvider, styled } from "styled-components";
 import { Header } from "./components/Header";
 import { designSystem } from "./constants/designSystem";
-import { Auth } from "./page/Auth";
 import { Error404 } from "./page/Error404";
+import { Auth } from "./page/auth/Auth";
 import { Label } from "./page/label/Label";
 import { Main } from "./page/main/Main";
 import { Milestone } from "./page/milestone/Milestone";
 import { NewIssue } from "./page/newIssue/NewIssue";
+import { getAccessToken } from "./utils/localStorage";
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<"LIGHT" | "DARK">("LIGHT");
@@ -18,7 +24,7 @@ export default function App() {
       <Div>
         <Router>
           <Routes>
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={<AuthRoute />} />
             <Route path="*" element={<MainRoutes />} />
           </Routes>
         </Router>
@@ -29,7 +35,7 @@ export default function App() {
 
 function MainRoutes() {
   return (
-    <>
+    <PrivateRoute>
       <Header />
       <Routes>
         <Route path="/" element={<Main />} />
@@ -39,8 +45,20 @@ function MainRoutes() {
         <Route path="/milestone/:state" element={<Milestone />} />
         <Route path="*" element={<Error404 />} />
       </Routes>
-    </>
+    </PrivateRoute>
   );
+}
+
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const accessToken = getAccessToken();
+
+  return accessToken ? children : <Navigate to="/auth" />;
+}
+
+function AuthRoute() {
+  const accessToken = getAccessToken();
+
+  return accessToken ? <Navigate to="/" /> : <Auth />;
 }
 
 const Div = styled.div`
