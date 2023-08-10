@@ -98,10 +98,10 @@ public class IssueControllerTest {
 	public void updateDetail() throws Exception {
 		//given
 		IssueUpdateRequest issueUpdateRequest = new IssueUpdateRequest(1L, "제목 수정", "내용 수정");
-		given(issueService.update(BDDMockito.any())).willReturn(1L);
+		given(issueService.updateTitle(BDDMockito.any())).willReturn(1L);
 
 		//when then
-		mockMvc.perform(patch("/issues")
+		mockMvc.perform(patch("/issues/title")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(issueUpdateRequest)))
 			.andExpect(status().isOk())

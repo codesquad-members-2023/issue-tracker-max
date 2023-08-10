@@ -194,19 +194,32 @@ public class IssueRepositoryTest {
 		Issue issue = Issue.builder()
 			.id(issueId)
 			.title("수정된 제목")
+			.build();
+
+		//when
+		issueRepository.updateTitle(issue);
+
+		//then
+		Issue updatedIssue = issueRepository.findById(issueId);
+		assertThat(updatedIssue.getTitle()).isEqualTo(issue.getTitle());
+	}
+
+	@Test
+	@DisplayName("이슈의 정보를 수정한다.")
+	public void updateContents() {
+		//given
+		Long issueId = 1L;
+		Issue issue = Issue.builder()
+			.id(issueId)
 			.contents("수정된 내용")
 			.build();
 
 		//when
-		issueRepository.update(issue);
+		issueRepository.updateContents(issue);
 
 		//then
 		Issue updatedIssue = issueRepository.findById(issueId);
-		SoftAssertions.assertSoftly(softAssertions -> {
-			softAssertions.assertThat(updatedIssue.getTitle()).isEqualTo(issue.getTitle());
-			softAssertions.assertThat(updatedIssue.getContents()).isEqualTo(issue.getContents());
-			softAssertions.assertAll();
-		});
+		assertThat(updatedIssue.getContents()).isEqualTo(issue.getContents());
 	}
 
 	@Test

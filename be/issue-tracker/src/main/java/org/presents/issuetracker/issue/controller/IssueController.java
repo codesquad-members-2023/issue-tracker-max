@@ -60,10 +60,19 @@ public class IssueController {
 		return ResponseEntity.ok().body(issueService.getIssueDetail(issueId));
 	}
 
-	@PatchMapping
-	public ResponseEntity<IdResponseDto> updateDetail(@RequestBody IssueUpdateRequest issueUpdateRequest) {
+	@PatchMapping("/title")
+	public ResponseEntity<IdResponseDto> updateTitle(@RequestBody IssueUpdateRequest issueUpdateRequest) {
 		IdResponseDto idResponseDto = IdResponseDto.builder()
-			.id(issueService.update(issueUpdateRequest))
+			.id(issueService.updateTitle(issueUpdateRequest))
+			.build();
+
+		return ResponseEntity.ok().body(idResponseDto);
+	}
+
+	@PatchMapping("/contents")
+	public ResponseEntity<IdResponseDto> updateContents(@RequestBody IssueUpdateRequest issueUpdateRequest) {
+		IdResponseDto idResponseDto = IdResponseDto.builder()
+			.id(issueService.updateContents(issueUpdateRequest))
 			.build();
 
 		return ResponseEntity.ok().body(idResponseDto);

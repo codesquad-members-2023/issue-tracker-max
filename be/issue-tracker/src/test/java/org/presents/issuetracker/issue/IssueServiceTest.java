@@ -72,14 +72,14 @@ public class IssueServiceTest {
 
 	@Test
 	@DisplayName("수정할 이슈 데이터를 입력 받아서 이슈를 수정하고 이슈 아이디를 반환한다.")
-	public void update() {
+	public void updateTitle() {
 		//given
 		IssueUpdateRequest issueUpdateRequest = new IssueUpdateRequest(1L, "수정할 제목", "수정할 내용");
 		given(issueRepository.existsById(anyLong())).willReturn(true);
-		doNothing().when(issueRepository).update(any(Issue.class));
+		doNothing().when(issueRepository).updateTitle(any(Issue.class));
 
 		//when
-		Long issueId = issueService.update(issueUpdateRequest);
+		Long issueId = issueService.updateTitle(issueUpdateRequest);
 
 		//then
 		assertThat(issueId).isEqualTo(issueUpdateRequest.getId());

@@ -56,11 +56,21 @@ public class IssueService {
 	}
 
 	@Transactional
-	public Long update(IssueUpdateRequest issueUpdateRequest) {
+	public Long updateTitle(IssueUpdateRequest issueUpdateRequest) {
 		validateId(issueUpdateRequest.getId());
-		issueRepository.update(Issue.builder()
+		issueRepository.updateTitle(Issue.builder()
 			.id(issueUpdateRequest.getId())
 			.title(issueUpdateRequest.getTitle())
+			.build());
+
+		return issueUpdateRequest.getId();
+	}
+
+	@Transactional
+	public Long updateContents(IssueUpdateRequest issueUpdateRequest) {
+		validateId(issueUpdateRequest.getId());
+		issueRepository.updateContents(Issue.builder()
+			.id(issueUpdateRequest.getId())
 			.contents(issueUpdateRequest.getContents())
 			.build());
 

@@ -82,11 +82,19 @@ public class IssueRepository {
 			Map.of("issueId", issueId), Integer.class)).orElse(0) > 0;
 	}
 
-	public void update(Issue issue) {
-		final String sql = "UPDATE issue SET title = :title, contents = :contents WHERE issue_id = :issueId";
+	public void updateTitle(Issue issue) {
+		final String sql = "UPDATE issue SET title = :title WHERE issue_id = :issueId";
 
 		SqlParameterSource params = new MapSqlParameterSource().addValue("issueId", issue.getId())
-			.addValue("title", issue.getTitle())
+			.addValue("title", issue.getTitle());
+
+		jdbcTemplate.update(sql, params);
+	}
+
+	public void updateContents(Issue issue) {
+		final String sql = "UPDATE issue SET contents = :contents WHERE issue_id = :issueId";
+
+		SqlParameterSource params = new MapSqlParameterSource().addValue("issueId", issue.getId())
 			.addValue("contents", issue.getContents());
 
 		jdbcTemplate.update(sql, params);
