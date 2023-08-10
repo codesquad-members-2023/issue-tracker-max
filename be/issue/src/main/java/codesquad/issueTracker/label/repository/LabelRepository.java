@@ -3,7 +3,6 @@ package codesquad.issueTracker.label.repository;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -20,8 +19,9 @@ import codesquad.issueTracker.label.domain.Label;
 public class LabelRepository {
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
-	public LabelRepository(NamedParameterJdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
+
+	public LabelRepository(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
 	public Long insert(Label label) {
@@ -35,7 +35,7 @@ public class LabelRepository {
 		params.addValue("description", label.getDescription());
 
 		int result = jdbcTemplate.update(sql, params, keyHolder);
-		if(result == 0){
+		if (result == 0) {
 			throw new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION);
 		}
 		return keyHolder.getKey().longValue();
@@ -50,7 +50,7 @@ public class LabelRepository {
 		params.addValue("backgroundColor", label.getBackgroundColor());
 		params.addValue("description", label.getDescription());
 		int result = jdbcTemplate.update(sql, params);
-		if(result == 0){
+		if (result == 0) {
 			throw new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION);
 		}
 		return result;
@@ -60,7 +60,7 @@ public class LabelRepository {
 		String sql = "UPDATE labels SET is_deleted = TRUE where id = :id";
 		int result = jdbcTemplate.update(sql, new MapSqlParameterSource()
 			.addValue("id", id));
-		if(result == 0){
+		if (result == 0) {
 			throw new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION);
 		}
 		return result;
@@ -73,7 +73,7 @@ public class LabelRepository {
 		return Optional.of(jdbcTemplate.query(sql, labelRowMapper));
 	}
 
-	public Optional<Integer> findMilestonesCount(){
+	public Optional<Integer> findMilestonesCount() {
 		String sql = "SELECT COUNT(*) FROM milestones WHERE is_deleted = false";
 		MapSqlParameterSource params = new MapSqlParameterSource();
 

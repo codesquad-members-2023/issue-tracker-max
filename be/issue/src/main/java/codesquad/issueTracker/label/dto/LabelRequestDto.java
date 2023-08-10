@@ -1,7 +1,6 @@
-package codesquad.issueTracker.label.controller.dto;
+package codesquad.issueTracker.label.dto;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

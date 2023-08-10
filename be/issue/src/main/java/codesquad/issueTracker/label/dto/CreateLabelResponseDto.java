@@ -1,4 +1,4 @@
-package codesquad.issueTracker.label.controller.dto;
+package codesquad.issueTracker.label.dto;
 
 import lombok.Getter;
 
@@ -10,7 +10,7 @@ public class CreateLabelResponseDto {
 		this.labelId = labelId;
 	}
 
-	public static CreateLabelResponseDto from(Long id){
+	public static CreateLabelResponseDto from(Long id) {
 		return new CreateLabelResponseDto(id);
 	}
 }

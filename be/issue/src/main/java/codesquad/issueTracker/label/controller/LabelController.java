@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import codesquad.issueTracker.global.ApiResponse;
-import codesquad.issueTracker.label.controller.dto.LabelRequestDto;
-import codesquad.issueTracker.label.controller.dto.CreateLabelResponseDto;
-import codesquad.issueTracker.label.controller.dto.LabelResponseDto;
+import codesquad.issueTracker.global.common.ApiResponse;
+import codesquad.issueTracker.label.dto.CreateLabelResponseDto;
+import codesquad.issueTracker.label.dto.LabelRequestDto;
+import codesquad.issueTracker.label.dto.LabelResponseDto;
 import codesquad.issueTracker.label.service.LabelService;
 import lombok.RequiredArgsConstructor;
 
@@ -44,7 +44,7 @@ public class LabelController {
 	}
 
 	@GetMapping("labels")
-	public ApiResponse<LabelResponseDto> findAll(){
+	public ApiResponse<LabelResponseDto> findAll() {
 		LabelResponseDto labelResponseDto = labelService.findAll();
 		return ApiResponse.success(SUCCESS.getStatus(), labelResponseDto);
 	}

@@ -1,16 +1,16 @@
-package codesquad.issueTracker.global.filter;
+package codesquad.issueTracker.global.common;
 
 import codesquad.issueTracker.global.exception.CustomException;
 import codesquad.issueTracker.global.exception.ErrorCode;
 
-public enum StatusFilter {
+public enum Status {
 	OPEN("open", false),
 	CLOSED("closed", true);
 
 	private final String type;
 	private final boolean value;
 
-	StatusFilter(String type, boolean value) {
+	Status(String type, boolean value) {
 		this.type = type;
 		this.value = value;
 	}
@@ -19,8 +19,8 @@ public enum StatusFilter {
 		return value;
 	}
 
-	public static StatusFilter from(String type) {
-		for (StatusFilter status : StatusFilter.values()) {
+	public static Status from(String type) {
+		for (Status status : Status.values()) {
 			if (status.type.equalsIgnoreCase(type)) {
 				return status;
 			}
