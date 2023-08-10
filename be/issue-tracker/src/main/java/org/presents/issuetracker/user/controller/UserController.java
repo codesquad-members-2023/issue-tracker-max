@@ -19,6 +19,9 @@ public class UserController {
 
 	@GetMapping("/previews")
 	public ResponseEntity<List<UserResponse>> getUserPreviews() {
-		return ResponseEntity.ok().body(userService.getUserPreviews());
+		List<UserResponse> userPreviews = userService.getUserPreviews();
+		// 필터링 뷰에서 '담당자가 없는 이슈'를 표시하기 위해서 0번째에 객체 추가
+		userPreviews.add(0, UserResponse.getUserNotAssignedResponse());
+		return ResponseEntity.ok().body(userPreviews);
 	}
 }
