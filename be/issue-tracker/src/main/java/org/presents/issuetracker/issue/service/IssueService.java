@@ -92,7 +92,11 @@ public class IssueService {
 	@Transactional
 	public MilestonePreviewResponse updateMilestone(Long milestoneId, Long issueId) {
 		validateId(issueId);
-		setMilestone(issueId, milestoneId);
+		if (milestoneId == 0) {
+			issueRepository.deleteMilestone(issueId);
+		} else {
+			setMilestone(milestoneId, issueId);
+		}
 
 		return MilestonePreviewResponse.from(milestoneRepository.findByIssueId(issueId));
 	}

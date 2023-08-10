@@ -37,14 +37,17 @@ public class MilestoneRepository {
 
 	public MilestonePreview findByIssueId(Long issueId) {
 		final String sql = "SELECT m.milestone_id, m.name, "
-			+ "(SELECT FLOOR(COUNT(CASE WHEN status = 'close' THEN 1 END) / COUNT(*) * 100) "
+			+ "(SELECT FLOOR(COUNT(CASE WHEN status = 'closed' THEN 1 END) / COUNT(*) * 100) "
 			+ "FROM issue "
-			+ "WHERE milestone_id = i.milestone_id AND status IN ('open', 'close')) progress "
+			+ "WHERE milestone_id = i.milestone_id AND status IN ('open', 'closed')) progress "
 			+ "FROM milestone m JOIN issue i ON m.milestone_id = i.milestone_id "
 			+ "WHERE i.issue_id = :issueId";
 
 		MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
 
-		return jdbcTemplate.queryForObject(sql, params, milestonePreviewRowMapper);
+		return jdbcTemplate.query(sql, params, milestonePreviewRowMapper)
+			.stream()
+			.findFirst()
+			.orElse(null);
 	}
 }
