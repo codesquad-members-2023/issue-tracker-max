@@ -28,28 +28,28 @@ public class MilestoneController {
 	private final MilestoneService milestoneService;
 
 	@PostMapping("/milestones")
-	public ApiResponse<Long> postMilestones(@Valid @RequestBody ModifyMilestoneRequestDto request) {
-		Long milestoneId = milestoneService.save(request);
-		return ApiResponse.success(SUCCESS.getStatus(), milestoneId);
+	public ApiResponse<String> postMilestones(@Valid @RequestBody ModifyMilestoneRequestDto request) {
+		milestoneService.save(request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 
 	@PatchMapping("/milestones/{id}")
-	public ApiResponse<Long> patchMilestone(@Valid @RequestBody ModifyMilestoneRequestDto request,
+	public ApiResponse<String> patchMilestone(@Valid @RequestBody ModifyMilestoneRequestDto request,
 		@PathVariable Long id) {
-		Long milestoneId = milestoneService.update(id, request);
-		return ApiResponse.success(SUCCESS.getStatus(), milestoneId);
+		milestoneService.update(id, request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 
 	@DeleteMapping("/milestones/{id}")
-	public ApiResponse<Long> deleteMilestone(@PathVariable Long id) {
-		Long milestoneId = milestoneService.delete(id);
-		return ApiResponse.success(SUCCESS.getStatus(), milestoneId);
+	public ApiResponse<String> deleteMilestone(@PathVariable Long id) {
+		milestoneService.delete(id);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 
 	@PatchMapping("/milestones/status/{id}")
-	public ApiResponse<Long> patchMilestoneStatus(@RequestBody MileStoneStatusDto request, @PathVariable Long id) {
-		Long milestoneId = milestoneService.updateStatus(id, request);
-		return ApiResponse.success(SUCCESS.getStatus(), milestoneId);
+	public ApiResponse<String> patchMilestoneStatus(@RequestBody MileStoneStatusDto request, @PathVariable Long id) {
+		milestoneService.updateStatus(id, request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 
 	@GetMapping("/milestones")
