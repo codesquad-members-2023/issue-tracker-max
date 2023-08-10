@@ -1,38 +1,27 @@
 import { styled } from "styled-components";
 import UserProfileButton from "../UserProfileButton/UserProfileButton";
-import { useNavigate, useParams } from "react-router-dom";
 
 type Props = {
   id: number;
   userImg?: string;
   itemName: string;
-  closeDropdown(): void;
+  onClick(): void;
 };
 
 export default function DropdownItem({
   id,
   userImg = "/logo/profile.jpg",
   itemName,
-  closeDropdown,
+  onClick,
 }: Props) {
-  const navigate = useNavigate();
-  const { filter } = useParams();
-  const checkAssignee = () => {
-    navigate(`/issues/${filter}&assigneeIds=${id}`);
-    closeDropdown();
-  };
-
   return (
-    <Container>
+    <Container onClick={onClick}>
       <Info>
-        {userImg && (
-          <UserProfileButton
-            src={userImg}
-            size={"small"}
-            onClick={checkAssignee}
-          />
-        )}
-        <Label>{itemName}</Label>
+        {userImg && <UserProfileButton src={userImg} size={"small"} />}
+        <Label>
+          {itemName}
+          {id}
+        </Label>
       </Info>
       <Checkbox type={"checkbox"}></Checkbox>
     </Container>

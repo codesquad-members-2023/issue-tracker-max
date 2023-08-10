@@ -19,13 +19,13 @@ export default function DropdownPanel({
         <Title>{title}</Title>
       </Header>
       {assigneesList &&
-        assigneesList.assignees.map((assignee, key) => (
+        assigneesList.assignees.map((assignee) => (
           <DropdownItem
-            key={key}
+            key={assignee.id}
             id={assignee.id}
-            userImg={assignee.profile_image_url}
+            userImg={assignee.profileImageUrl}
             itemName={assignee.nickname}
-            closeDropdown={closeDropdown}
+            onClick={closeDropdown}
           />
         ))}
     </Container>

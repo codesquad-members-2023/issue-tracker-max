@@ -8,6 +8,7 @@ type Props = {
   handleBlur?(): void;
   onChange?(e: React.ChangeEvent<HTMLInputElement>): void;
   value?: string;
+  maxLength?: number;
   handleEnterFilter?(): void;
 };
 
@@ -19,6 +20,7 @@ export default function Input({
   handleBlur,
   onChange,
   value,
+  maxLength,
   handleEnterFilter,
 }: Props) {
   const enterKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -37,6 +39,7 @@ export default function Input({
       onFocus={handleFocus}
       onBlur={handleBlur}
       value={value}
+      maxLength={maxLength}
       onKeyPress={enterKeyPress}
     />
   );

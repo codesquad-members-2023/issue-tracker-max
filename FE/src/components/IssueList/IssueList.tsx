@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import Button from "../common/Button/Button";
 import { IssueListProps } from "../../type";
 import LabelItem from "../SideBar/LabelItem";
+import { calculateTime } from "../../utils/calculateTime";
 
 type Props = {
   issue: IssueListProps;
@@ -18,7 +19,9 @@ export default function IssueList({ issue }: Props) {
           <InfoContents>
             <Title>
               <IssueIcon src={"/icons/alertCircle.svg"} alt="" />
-              <IssueTitle>{issue.title}</IssueTitle>
+              <IssueTitle href={`/detail/${issue.id}`}>
+                {issue.title}
+              </IssueTitle>
               {issue.labels &&
                 issue.labels.map((label, key) => (
                   <LabelItem
@@ -31,7 +34,8 @@ export default function IssueList({ issue }: Props) {
             <Caption>
               <span>#{issue.id}</span>
               <span>
-                이 이슈가 8분 전, {issue.author}님에 의해 작성되었습니다
+                이 이슈가 {calculateTime(issue.createAt)}, {issue.author}
+                님에 의해 작성되었습니다
               </span>
               {issue.milestone !== null && (
                 <Button
@@ -126,7 +130,7 @@ const IssueIcon = styled.img`
   filter: ${({ theme }) => theme.filter.brand.text.weak};
 `;
 
-const IssueTitle = styled.span`
+const IssueTitle = styled.a`
   font: ${({ theme }) => theme.font.availableMedium20};
   color: ${({ theme }) => theme.colorSystem.neutral.text.strong};
 `;

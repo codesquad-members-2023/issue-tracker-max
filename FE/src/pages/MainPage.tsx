@@ -21,6 +21,14 @@ export default function MainPage() {
     navigate("/new");
   };
 
+  const goLabelsPage = () => {
+    navigate("/labels");
+  };
+
+  const goMilestonesPage = () => {
+    navigate("/milestones");
+  };
+
   const showOpenIssue = () => {
     navigate("/issues/isOpen=true");
   };
@@ -78,15 +86,15 @@ export default function MainPage() {
               type={"ghost"}
               size={"medium"}
               width={"50%"}
-              onClick={() => {}}
+              onClick={goLabelsPage}
             />
             <Button
               icon={"milestone"}
-              label={`레이블(${data && data.metadata.milestoneCount})`}
+              label={`마일스톤(${data && data.metadata.milestoneCount})`}
               type={"ghost"}
               size={"medium"}
               width={"50%"}
-              onClick={() => {}}
+              onClick={goMilestonesPage}
             />
           </TapButtonWrapper>
           <Button
@@ -96,6 +104,17 @@ export default function MainPage() {
           />
         </Taps>
       </FilterSection>
+      {filter !== "isOpen=true" && (
+        <RemoveFilterWrapper>
+          <Button
+            icon={"xSquare"}
+            label={"현재의 검색 필터 및 정렬 지우기"}
+            type={"ghost"}
+            height={"32px"}
+            onClick={showOpenIssue}
+          />
+        </RemoveFilterWrapper>
+      )}
       <IssueTable>
         <TableHeader>
           <CheckboxWrapper>
@@ -120,7 +139,7 @@ export default function MainPage() {
               />
             </IssueTap>
             <FilterTap>
-              <DropdownIndicator label={"담당자"} hasDropdown={true} />
+              <DropdownIndicator label={"담당자"} />
               <DropdownIndicator label={"레이블"} />
               <DropdownIndicator label={"마일스톤"} />
               <DropdownIndicator label={"작성자"} />
@@ -130,8 +149,8 @@ export default function MainPage() {
         <IssueContents>
           {data &&
             (data.issues.length !== 0 ? (
-              data.issues.map((issue, key) => (
-                <IssueList key={key} issue={issue} />
+              data.issues.map((issue) => (
+                <IssueList key={issue.id} issue={issue} />
               ))
             ) : (
               <EmptyList>
@@ -145,17 +164,16 @@ export default function MainPage() {
 }
 
 const Main = styled.div`
-  padding-top: 32px;
+  padding: 32px 0px;
   display: flex;
+  width: 1280px;
+  gap: 24px;
   flex-direction: column;
   align-items: center;
-  min-width: 100vw;
-  min-height: 100vh;
-  background-color: ${({ theme }) => theme.colorSystem.neutral.surface.default};
 `;
 
 const FilterSection = styled.section`
-  width: 1280px;
+  width: 100%;
   display: flex;
   justify-content: space-between;
 `;
@@ -200,14 +218,14 @@ const TapButtonWrapper = styled.div`
 `;
 
 const IssueTable = styled.section`
-  margin: 24px 0px;
+  z-index: 10;
   border: ${({ theme }) =>
     `${theme.border.default} ${theme.colorSystem.neutral.border.default}`};
   border-radius: ${({ theme }) => theme.radius.large};
 `;
 
 const TableHeader = styled.div`
-  width: 1280px;
+  width: 100%;
   height: 64px;
   display: flex;
   padding: 16px 32px;
@@ -240,7 +258,7 @@ const CheckboxLabel = styled.label`
 `;
 
 const TapWrapper = styled.div`
-  width: 1168px;
+  width: 100%;
   display: flex;
   justify-content: space-between;
 `;
@@ -290,4 +308,11 @@ const EmptyContent = styled.span`
   text-align: center;
   font: ${({ theme }) => theme.font.displayMedium16};
   color: ${({ theme }) => theme.colorSystem.neutral.text.weak};
+`;
+
+const RemoveFilterWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
 `;
