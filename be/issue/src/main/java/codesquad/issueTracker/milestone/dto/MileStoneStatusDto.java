@@ -3,7 +3,7 @@ package codesquad.issueTracker.milestone.dto;
 import lombok.Getter;
 
 @Getter
-public class UpdateMilestoneStatusDto {
+public class MileStoneStatusDto {
 
 	String status;
 
