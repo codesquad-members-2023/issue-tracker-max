@@ -1,7 +1,6 @@
 package com.issuetracker.milestone.ui.dto;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,10 +24,6 @@ public class MilestoneResponse {
 	@JsonProperty(value = "isOpen")
 	private boolean open;
 	private Double progress;
-
-	public String makeStringDeadline() {
-		return deadline.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
-	}
 
 	public static MilestoneResponse from(MilestoneInformation milestoneInformation) {
 		return new MilestoneResponse(

@@ -32,7 +32,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		MilestoneCreateRequest milestoneCreateRequest = new MilestoneCreateRequest(
 			"마일스톤 제목",
 			"마일스톤 설명",
-			"2023.08.09"
+			"2023-08-09"
 		);
 
 		// when
@@ -54,7 +54,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		MilestoneCreateRequest milestoneCreateRequest = new MilestoneCreateRequest(
 			"",
 			"마일스톤 설명",
-			"2023.08.09"
+			"2023-08-09"
 		);
 
 		// when
@@ -75,7 +75,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		MilestoneCreateRequest milestoneCreateRequest = new MilestoneCreateRequest(
 			"마일스톤 제목",
 			null,
-			"2023.08.09"
+			"2023-08-09"
 		);
 
 		// when
@@ -97,7 +97,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		MilestoneCreateRequest milestoneCreateRequest = new MilestoneCreateRequest(
 			"마일스톤 제목",
 			"마일스톤 설명",
-			"2023-09-09"
+			"2023.09.09"
 		);
 
 		// when
@@ -119,7 +119,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		MilestoneUpdateRequest milestoneUpdateRequest = new MilestoneUpdateRequest(
 			"수정된 마일스톤 제목",
 			"수정된 마일스톤 설명",
-			"2023.10.10"
+			"2023-10-10"
 		);
 
 		// when
@@ -142,7 +142,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		MilestoneUpdateRequest milestoneUpdateRequest = new MilestoneUpdateRequest(
 			"",
 			"수정된 마일스톤 설명",
-			"2023.10.10"
+			"2023-10-10"
 		);
 
 		// when
@@ -164,7 +164,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		MilestoneUpdateRequest milestoneUpdateRequest = new MilestoneUpdateRequest(
 			"수정된 마일스톤 제목",
 			null,
-			"2023.10.10"
+			"2023-10-10"
 		);
 
 		// when
@@ -187,7 +187,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		MilestoneUpdateRequest milestoneUpdateRequest = new MilestoneUpdateRequest(
 			"수정된 마일스톤 제목",
 			"수정된 마일스톤 설명",
-			"2023-10-10"
+			"2023.10.10"
 		);
 
 		// when
@@ -243,7 +243,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		softAssertions.assertThat(lastMilestoneResponse.getTitle()).isEqualTo(milestoneCreateRequest.getTitle());
 		softAssertions.assertThat(lastMilestoneResponse.getDescription())
 			.isEqualTo(milestoneCreateRequest.getDescription());
-		softAssertions.assertThat(lastMilestoneResponse.makeStringDeadline())
+		softAssertions.assertThat(lastMilestoneResponse.getDeadline())
 			.isEqualTo(milestoneCreateRequest.getDeadline());
 		softAssertions.assertAll();
 	}
@@ -259,7 +259,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		softAssertions.assertThat(lastMilestoneResponse.getTitle()).isEqualTo(milestoneUpdateRequest.getTitle());
 		softAssertions.assertThat(lastMilestoneResponse.getDescription())
 			.isEqualTo(milestoneUpdateRequest.getDescription());
-		softAssertions.assertThat(lastMilestoneResponse.makeStringDeadline())
+		softAssertions.assertThat(lastMilestoneResponse.getDeadline())
 			.isEqualTo(milestoneUpdateRequest.getDeadline());
 		softAssertions.assertAll();
 	}

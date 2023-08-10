@@ -24,7 +24,7 @@ public class MilestoneUpdateRequest {
 	@Length(max = 100, message = "설명은 최대 100글자 입니다.")
 	private String description;
 
-	@Pattern(regexp = "\\d{4}\\.\\d{2}\\.\\d{2}", message = "데드라인은 YYYY.MM.DD 형식으로 입력해 주세요.")
+	@Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "데드라인은 YYYY-MM-DD 형식으로 입력해 주세요.")
 	private String deadline;
 
 	public MilestoneUpdateInputData toMilestoneUpdateInputData(Long id) {

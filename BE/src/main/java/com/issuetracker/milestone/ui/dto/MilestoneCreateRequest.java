@@ -27,7 +27,7 @@ public class MilestoneCreateRequest {
 	@Length(max = 100, message = "설명은 최대 100글자 입니다.")
 	private String description;
 
-	@Pattern(regexp = "\\d{4}\\.\\d{2}\\.\\d{2}", message = "데드라인은 YYYY.MM.DD 형식으로 입력해 주세요.")
+	@Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "데드라인은 YYYY-MM-DD 형식으로 입력해 주세요.")
 	private String deadline;
 
 	public MilestoneCreateInputData toMilestoneCreateInputData() {
@@ -39,7 +39,7 @@ public class MilestoneCreateRequest {
 	}
 
 	private LocalDate convertFrom(String dateString) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		return LocalDate.parse(dateString, formatter);
 	}
 }
