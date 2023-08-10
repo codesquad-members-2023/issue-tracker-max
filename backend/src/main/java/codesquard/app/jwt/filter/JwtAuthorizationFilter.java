@@ -36,7 +36,8 @@ public class JwtAuthorizationFilter implements Filter {
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
-	private static final String[] whiteListUris = {"/api/login", "/api/users", "/api/auth/refresh/token"};
+	private static final String[] whiteListUris = {"/api/login", "/api/login/oauth/*", "/api/users",
+		"/api/auth/refresh/token"};
 
 	private final JwtProvider jwtProvider;
 	private final ObjectMapper objectMapper;
