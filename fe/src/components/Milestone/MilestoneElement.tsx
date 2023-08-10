@@ -8,6 +8,7 @@ import { Button } from "../common/Button";
 import { useContext, useEffect, useState } from "react";
 import { MilestoneDetail } from "./MilestoneDetail";
 import { AlertContext } from "../../contexts/AlertContext";
+import { MILESTONE_URL, SERVER } from "../../constants/url";
 
 const elementContainer = (color: ColorScheme) => css`
   display: flex;
@@ -88,7 +89,15 @@ const issueCount = css`
   height: 16px;
 `;
 
-export function MilestoneElement({ milestones }: { milestones: Milestone }) {
+export function MilestoneElement({
+  milestones,
+  isOpenSelected,
+  onStatusChange,
+}: {
+  milestones: Milestone;
+  isOpenSelected: boolean;
+  onStatusChange: () => void;
+}) {
   const [isEditMode, setIsEditMode] = useState(false);
 
   const AlertContextValue = useContext(AlertContext)!;
@@ -124,11 +133,31 @@ export function MilestoneElement({ milestones }: { milestones: Milestone }) {
     setDeleteElementId(milestones.id!);
   };
 
-  const percentage = Math.floor(
-    (milestones.issueClosedCount /
-      (milestones.issueOpenedCount + milestones.issueClosedCount)) *
-      100
-  );
+  const onClickCloseButton = () => {
+    try {
+      fetch(`${SERVER}${MILESTONE_URL}/${milestones.id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          isClosed: isOpenSelected ? true : false,
+        }),
+      });
+      onStatusChange();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const percentage =
+    milestones.issueClosedCount === 0
+      ? 0
+      : Math.floor(
+          (milestones.issueClosedCount /
+            (milestones.issueOpenedCount + milestones.issueClosedCount)) *
+            100
+        );
 
   if (isEditMode) {
     return (
@@ -154,7 +183,7 @@ export function MilestoneElement({ milestones }: { milestones: Milestone }) {
           <div css={dueDay}>
             <Icon type="calendar" color={color.neutral.text.weak} />
             <Txt typography="medium12" color={color.neutral.text.weak}>
-              {milestones.dueDay}
+              {milestones.dueDate}
             </Txt>
           </div>
         </div>
@@ -165,9 +194,10 @@ export function MilestoneElement({ milestones }: { milestones: Milestone }) {
       <div css={rightArea}>
         <div css={{ display: "flex", gap: "24px", height: "32px" }}>
           <Button
+            onClick={onClickCloseButton}
             type="ghost"
             size="S"
-            text="닫기"
+            text={isOpenSelected ? "닫기" : "열기"}
             icon="archive"
             textColor={color.neutral.text.default}
           />
