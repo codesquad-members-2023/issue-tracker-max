@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import { Avatar } from "../../components/Avatar";
 import { TextArea } from "../../components/TextArea";
 import { TextInput } from "../../components/TextInput";
 import { Sidebar, SidebarProps } from "../../components/sidebar/Sidebar";
@@ -27,8 +28,8 @@ export function NewIssueBody({
 
   return (
     <Div>
-      <img
-        style={{ width: "32px" }}
+      <Avatar
+        size="L"
         src="https://avatars.githubusercontent.com/u/41321198?v=4"
       />
       <NewIssueContent>
