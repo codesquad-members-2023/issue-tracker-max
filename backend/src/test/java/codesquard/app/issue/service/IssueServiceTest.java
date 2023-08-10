@@ -25,7 +25,6 @@ import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.fixture.FixtureFactory;
 import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.label.dto.request.LabelSaveRequest;
-import codesquard.app.label.entity.Label;
 import codesquard.app.label.service.LabelService;
 import codesquard.app.milestone.service.MilestoneService;
 import codesquard.app.user.repository.UserRepository;
@@ -82,7 +81,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 		// given
 		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId,
+			loginId);
 
 		// when
 		Long id = issueService.save(issueSaveRequest, loginId);
@@ -174,7 +174,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId1 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		Long milestoneId2 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("수정된 마일스톤"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId1);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId1,
+			loginId);
 		Long id = issueService.save(issueSaveRequest, loginId);
 
 		IssueModifyMilestoneRequest issueModifyMilestoneRequest = new IssueModifyMilestoneRequest(milestoneId2);
@@ -211,7 +212,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 		String color = "light";
 		String background = "#111111";
 		Long labelId = labelService.saveLabel(new LabelSaveRequest(name, color, background, "기능 구현"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId,
+			loginId);
 		Long id = issueService.save(issueSaveRequest, loginId);
 
 		IssueModifyLabelsRequest issueModifyLabelsRequest = new IssueModifyLabelsRequest(List.of(labelId));
@@ -258,7 +260,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 	private Long createIssue() {
 		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId,
+			loginId);
 		return issueService.save(issueSaveRequest, loginId);
 	}
 }
