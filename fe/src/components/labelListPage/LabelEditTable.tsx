@@ -163,7 +163,6 @@ export const LabelEditTable: React.FC<Props> = ({
     >
       {header}
       <LabelEditBody
-        //컨텍스트로..?
         nameInput={nameInput}
         descriptionInput={descriptionInput}
         colorCodeInput={colorCodeInput}
