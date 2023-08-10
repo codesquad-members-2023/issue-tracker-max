@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.issuetracker.milestone.application.dto.MilestoneInformation;
 
 import lombok.AccessLevel;
@@ -20,6 +21,8 @@ public class MilestoneResponse {
 	private String title;
 	private String description;
 	private LocalDate deadline;
+	@JsonProperty(value = "isOpen")
+	private boolean open;
 	private Double progress;
 
 	public static MilestoneResponse from(MilestoneInformation milestoneInformation) {
@@ -28,6 +31,7 @@ public class MilestoneResponse {
 			milestoneInformation.getTitle(),
 			milestoneInformation.getDescription(),
 			milestoneInformation.getDeadline(),
+			milestoneInformation.isOpen(),
 			milestoneInformation.getProgress()
 		);
 	}

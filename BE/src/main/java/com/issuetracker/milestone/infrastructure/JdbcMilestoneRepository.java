@@ -31,6 +31,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "    milestone.title, "
 		+ "    milestone.description, "
 		+ "    milestone.deadline, "
+		+ "    milestone.is_open, "
 		+ "    ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 2 ) AS progress "
 		+ "FROM milestone "
 		+ "LEFT JOIN issue "
@@ -151,6 +152,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 			.title(rs.getString("title"))
 			.description(rs.getString("description"))
 			.deadline(convertFrom(rs.getString("deadline")))
+			.isOpen(rs.getBoolean("is_open"))
 			.progress(rs.getDouble("progress"))
 			.build();
 }

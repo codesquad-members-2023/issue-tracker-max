@@ -17,6 +17,7 @@ public class MilestoneInformation {
 	private String title;
 	private String description;
 	private LocalDate deadline;
+	private boolean isOpen;
 	private Double progress;
 
 	public static MilestoneInformation from(Milestone milestone) {
@@ -25,6 +26,7 @@ public class MilestoneInformation {
 			milestone.getTitle(),
 			milestone.getDescription(),
 			milestone.getDeadline(),
+			milestone.getIsOpen(),
 			milestone.getProgress()
 		);
 	}
