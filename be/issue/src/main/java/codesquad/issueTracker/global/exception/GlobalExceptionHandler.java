@@ -1,5 +1,6 @@
 package codesquad.issueTracker.global.exception;
 
+import java.time.DateTimeException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,13 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ApiResponse<String>> handleExpiredJwtException(ExpiredJwtException e) {
 		StatusCode statusCode = ErrorCode.from(e);
 
+		return ResponseEntity.status(statusCode.getStatus())
+			.body(ApiResponse.fail(statusCode.getStatus(), statusCode.getMessage()));
+	}
+
+	@ExceptionHandler(DateTimeException.class)
+	public ResponseEntity<ApiResponse<String>> handleDateTimeException(DateTimeException e) {
+		StatusCode statusCode = ErrorCode.from(e);
 		return ResponseEntity.status(statusCode.getStatus())
 			.body(ApiResponse.fail(statusCode.getStatus(), statusCode.getMessage()));
 	}
