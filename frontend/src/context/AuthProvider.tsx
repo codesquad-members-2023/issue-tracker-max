@@ -2,8 +2,8 @@ import { useState, createContext, ReactElement } from 'react';
 
 export type AuthUser = {
   userId: string;
-  pwd: string;
   userName: string;
+  profileImg: string;
   accessToken: string;
 } | null;
 

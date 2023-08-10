@@ -33,13 +33,13 @@ export default function Login() {
       );
 
       if (res.status === 200) {
-        localStorage.setItem('accessToken', res.data.messages.accessToken);
-        localStorage.setItem('refreshToken', res.data.messages.refreshToken);
+        localStorage.setItem('accessToken', res.data.message.accessToken);
+        localStorage.setItem('refreshToken', res.data.message.refreshToken);
         login({
-          userId: userId,
-          pwd: password,
-          userName: res.data.messages.userName,
-          accessToken: res.data.messages.accessToken,
+          userId: res.data.message.userId,
+          userName: res.data.message.userName,
+          profileImg: res.data.message.userProfileImg,
+          accessToken: res.data.message.accessToken,
         });
       }
 
@@ -71,9 +71,7 @@ export default function Login() {
         type="button"
         outline
         onClick={() => {
-          window.location.assign(
-            GITHUB_LOGIN_URL + `&redirect_uri=localhost:5173`
-          );
+          window.location.assign(GITHUB_LOGIN_URL);
         }}>
         GitHub 계정으로 로그인
       </GitHubOAuthButton>
@@ -85,6 +83,12 @@ export default function Login() {
           size="tall"
           labelName="아이디"
           placeholder="아이디"
+          helpText="아이디는 이메일 형식으로 입력해주세요."
+          validationFunc={(value) => {
+            const emailRegex =
+              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailRegex.test(value);
+          }}
         />
         <TextInput
           id="password"
@@ -93,6 +97,11 @@ export default function Login() {
           type="password"
           labelName="비밀번호"
           placeholder="비밀번호"
+          helpText="비밀번호는 6자 이상 12자 이하로 입력해주세요."
+          validationFunc={(value) => {
+            const formatRegex = /^[a-zA-Z0-9!@#$%^&*|'"~;:₩\\?]{6,12}$/;
+            return formatRegex.test(value);
+          }}
         />
         <LoginButton type="submit">아이디로 로그인</LoginButton>
       </LoginForm>
@@ -118,7 +127,7 @@ const Container = styled.article`
   }
 
   fieldset {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
   }
 `;
 

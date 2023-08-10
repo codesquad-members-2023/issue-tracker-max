@@ -10,6 +10,7 @@ const useRefreshToken = () => {
       '/api/reissue/token',
       JSON.stringify({ refreshToken: localStorage.getItem('refreshToken') }),
       {
+        headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       }
     );
@@ -21,13 +22,13 @@ const useRefreshToken = () => {
 
       const newAuth: AuthUser = {
         userId: prev.userId,
-        pwd: prev.pwd,
         userName: prev.userName,
-        accessToken: response.data.accessToken,
+        profileImg: prev.profileImg,
+        accessToken: response.data.message.accessToken,
       };
       return newAuth;
     });
-    localStorage.setItem('accessToken', response.data.accessToken);
+    localStorage.setItem('accessToken', response.data.message.accessToken);
 
     return response.data.accessToken;
   };
