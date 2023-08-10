@@ -31,4 +31,10 @@ public class UserRepository {
 
 		return jdbcTemplate.query(sql, params, userPreviewRowMapper);
 	}
+
+	public List<User> findAll() {
+		final String sql = "SELECT user_id, login_id, image FROM user";
+
+		return jdbcTemplate.query(sql, userPreviewRowMapper);
+	}
 }
