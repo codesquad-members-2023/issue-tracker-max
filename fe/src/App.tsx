@@ -7,6 +7,7 @@ import LabelPage from "@pages/MainPage/LabelPage";
 import MainPage from "@pages/MainPage/MainPage";
 import MilestonePage from "@pages/MainPage/MilestonePage";
 import NewIssuePage from "@pages/MainPage/NewIssuePage";
+import NotFoundPage from "@pages/NotFoundPage";
 import GlobalStyle from "@styles/GlobalStyle";
 import { darkMode, lightMode } from "@styles/designSystem";
 import { ProtectedRoute } from "ProtectedRoute";
@@ -26,6 +27,7 @@ const router = createBrowserRouter(
       <Route path="/auth" element={<AuthPage />}>
         <Route index element={<LoginPage />} />
         <Route path="signup" element={<SignupPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
 
       <Route
@@ -40,6 +42,7 @@ const router = createBrowserRouter(
         <Route path="labels" element={<LabelPage />} />
         <Route path="milestones" element={<MilestonePage />} />
         <Route path="issues/new" element={<NewIssuePage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </>
   )
