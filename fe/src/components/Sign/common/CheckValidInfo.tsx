@@ -3,13 +3,13 @@ import { font } from '../../../styles/styles';
 
 type Props = {
   valid: boolean;
-  children: string;
+  text: string;
 };
 
-export default function CheckValidInfo({ valid, children }: Props) {
+export default function CheckValidInfo({ valid, text }: Props) {
   const theme = useTheme();
 
-  return <div css={checkValid(theme)}>{!valid && children}</div>;
+  return <div css={checkValid(theme)}>{!valid && text}</div>;
 }
 
 const checkValid = (theme: Theme) => css`
