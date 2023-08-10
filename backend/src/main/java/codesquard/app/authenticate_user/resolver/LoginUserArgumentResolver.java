@@ -1,4 +1,4 @@
-package codesquard.app.user.resolver;
+package codesquard.app.authenticate_user.resolver;
 
 import static codesquard.app.jwt.filter.VerifyUserFilter.*;
 

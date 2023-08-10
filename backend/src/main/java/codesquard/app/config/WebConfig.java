@@ -7,7 +7,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import codesquard.app.user.resolver.LoginUserArgumentResolver;
+import codesquard.app.authenticate_user.resolver.LoginUserArgumentResolver;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
