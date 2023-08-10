@@ -21,6 +21,7 @@ public class IssueDetailResponse {
 	private String contents;
 	private LocalDateTime createdAt;
 	private String status;
+	private int commentCount;
 	private UserResponse author;
 	private MilestonePreviewResponse milestone;
 	private List<UserResponse> assignees;
@@ -34,6 +35,7 @@ public class IssueDetailResponse {
 			.contents(issueDetailInfo.getContents())
 			.createdAt(issueDetailInfo.getCreatedAt())
 			.status(issueDetailInfo.getStatus())
+			.commentCount(issueDetailInfo.getComments().size())
 			.author(UserResponse.from(issueDetailInfo.getAuthor()))
 			.milestone(MilestonePreviewResponse.from(issueDetailInfo.getMilestone()))
 			.assignees(issueDetailInfo.getAssignees().stream()
