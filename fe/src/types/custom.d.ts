@@ -39,12 +39,3 @@ type UserInfo = {
   loginId: string;
   image: string;
 };
-
-type FilterState = {
-  status: 'initialStatus' | 'open' | 'closed';
-  author: string;
-  label: string;
-  milestone: string;
-  assignee: string;
-  commentAuthor: string;
-};
