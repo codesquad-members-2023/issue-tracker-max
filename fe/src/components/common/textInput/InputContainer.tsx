@@ -45,7 +45,9 @@ export const InputContainer: React.FC<Props> = ({
 
         '&:focus-within': {
           backgroundColor: theme.neutral.surface.strong,
-          border: `${theme.border.default} ${theme.neutral.border.defaultActive}`,
+          border: isError
+            ? `${theme.border.default} ${theme.danger.border.default}`
+            : `${theme.border.default} ${theme.neutral.border.defaultActive}`,
         },
       }}
     >

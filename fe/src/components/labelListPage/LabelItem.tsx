@@ -1,26 +1,18 @@
 import { useState } from 'react';
-
 import { useTheme } from '@emotion/react';
 import { InformationTag } from '@components/common/InformationTag';
 import { Button } from '@components/common/Button';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { ReactComponent as Trash } from '@assets/icons/trash.svg';
-import { TableContainer } from '@components/common/Table/TableContainer';
 import { TableHeader } from '@components/common/Table/TableHeader';
+import { LabelEditTable } from './LabelEditTable';
 
 type Props = {
-  name: string;
-  textColor: ThemeType;
-  backgroundColor: string;
-  description: string;
+  label: Label;
+  fetchLabelList: () => Promise<void>;
 };
 
-export const LabelItem: React.FC<Props> = ({
-  name,
-  textColor,
-  backgroundColor,
-  description,
-}) => {
+export const LabelItem: React.FC<Props> = ({ label, fetchLabelList }) => {
   const theme = useTheme() as any;
   const [isEditing, setIsEditing] = useState(false);
 
@@ -32,26 +24,32 @@ export const LabelItem: React.FC<Props> = ({
     setIsEditing(false);
   };
 
+  const onDeleteLabel = async () => {
+    await fetch(`${import.meta.env.VITE_APP_BASE_URL}/labels/${label.id}`, {
+      method: 'DELETE',
+    });
+    fetchLabelList();
+  };
+
   return (
     <li
       css={{
-        // height: '96px',
         width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '32px',
-
         boxSizing: 'border-box',
       }}
     >
       {isEditing ? (
-        <TableContainer
-          tableVariant="label"
+        <LabelEditTable
+          header={<TableHeader title="레이블 편집" />}
+          fetchLabelList={fetchLabelList}
+          label={label}
           typeVariant="edit"
           onAddTableClose={onEditLabelClose}
-          header={<TableHeader title="레이블 편집" />}
-        ></TableContainer>
+        />
       ) : (
         <>
           <div
@@ -64,10 +62,10 @@ export const LabelItem: React.FC<Props> = ({
             <InformationTag
               size="S"
               typeVariant="filled"
-              fillColor={backgroundColor}
-              textColor={textColor}
+              fillColor={label.backgroundColor}
+              textColor={label.textColor}
             >
-              {name}
+              {label.name}
             </InformationTag>
           </div>
 
@@ -78,7 +76,7 @@ export const LabelItem: React.FC<Props> = ({
               font: theme.fonts.displayMedium16,
             }}
           >
-            {description}
+            {label.description}
           </span>
           <div
             css={{
@@ -107,6 +105,7 @@ export const LabelItem: React.FC<Props> = ({
                 padding: '0',
                 color: theme.danger.text.default,
               }}
+              onClick={onDeleteLabel}
             >
               <Trash stroke={theme.danger.text.default} />
               삭제

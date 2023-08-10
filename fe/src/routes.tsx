@@ -33,7 +33,7 @@ export const AppRoutes: React.FC<Props> = ({ currentTheme, toggleTheme }) => {
           element={<IssueDetailPage />}
         />
         <Route path={LABEL_LIST_PAGE} element={<LabelListPage />} />
-        <Route path={MILESTONE_LIST_PAGE} element={<MileStoneListPage />} />
+        {/* <Route path={MILESTONE_LIST_PAGE} element={<MileStoneListPage />} /> */}
         <Route path="/*" element={<NotFoundPage />} />
       </Route>
     </Routes>

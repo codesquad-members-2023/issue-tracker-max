@@ -1,14 +1,15 @@
 import { useTheme } from '@emotion/react';
 import { Box } from '@components/common/box/Box';
 import { LabelItem } from './LabelItem';
-import { TableContainer } from '@components/common/Table/TableContainer';
 import { TableHeader } from '@components/common/Table/TableHeader';
+import { LabelEditTable } from './LabelEditTable';
 
 type Props = {
   labelCount: IssuePageData['labelCount'];
   labelList: Label[];
   isAddTableOpen?: boolean;
-  onAddTableClose?: () => void;
+  onAddTableClose: () => void;
+  fetchLabelList: () => Promise<void>;
 };
 
 export const Body: React.FC<Props> = ({
@@ -16,6 +17,7 @@ export const Body: React.FC<Props> = ({
   labelList,
   isAddTableOpen,
   onAddTableClose,
+  fetchLabelList,
 }) => {
   const theme = useTheme() as any;
 
@@ -29,11 +31,11 @@ export const Body: React.FC<Props> = ({
       }}
     >
       {isAddTableOpen && (
-        <TableContainer
-          tableVariant="label"
+        <LabelEditTable
+          header={<TableHeader title="새로운 레이블 추가" />}
           typeVariant="add"
           onAddTableClose={onAddTableClose}
-          header={<TableHeader title="새로운  레이블 추가" />}
+          fetchLabelList={fetchLabelList}
         />
       )}
 
@@ -50,15 +52,32 @@ export const Body: React.FC<Props> = ({
           </span>
         }
       >
-        {labelList.map((label) => (
-          <LabelItem
-            key={label.id}
-            name={label.name}
-            textColor={label.textColor}
-            backgroundColor={label.backgroundColor}
-            description={label.description}
-          />
-        ))}
+        {labelList.length > 0 ? (
+          <>
+            {labelList.map((label) => (
+              <LabelItem
+                key={label.id}
+                label={label}
+                fetchLabelList={fetchLabelList}
+              />
+            ))}
+          </>
+        ) : (
+          <li
+            css={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '32px',
+              boxSizing: 'border-box',
+              color: theme.neutral.text.weak,
+              font: theme.fonts.displayMedium16,
+            }}
+          >
+            레이블이 없습니다.
+          </li>
+        )}
       </Box>
     </div>
   );
