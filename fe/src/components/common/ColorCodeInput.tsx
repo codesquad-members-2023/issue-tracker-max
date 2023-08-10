@@ -21,29 +21,45 @@ export const ColorCodeInput: React.FC<Props> = ({
   const theme = useTheme() as any;
 
   return (
-    <div css={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <div
+      css={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+        minWidth: '240px',
+      }}
+    >
       <InputContainer height={40} isError={isError}>
         <div
           css={{
-            minWidth: '64px',
-            font: theme.fonts.displayMedium12,
-            color: theme.neutral.text.weak,
-            userSelect: 'none',
+            width: '100%',
+            padding: '16px',
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
-          배경 색상
+          <div
+            css={{
+              minWidth: '64px',
+              font: theme.fonts.displayMedium12,
+              color: theme.neutral.text.weak,
+              userSelect: 'none',
+            }}
+          >
+            배경 색상
+          </div>
+
+          <Input {...{ value, onChange }} />
+
+          <RefreshCcw
+            stroke={theme.neutral.text.default}
+            onClick={onRandomButtonClick}
+            css={{
+              minWidth: '16px',
+              cursor: 'pointer',
+            }}
+          />
         </div>
-
-        <Input {...{ value, onChange }} />
-
-        <RefreshCcw
-          stroke={theme.neutral.text.default}
-          onClick={onRandomButtonClick}
-          css={{
-            minWidth: '16px',
-            cursor: 'pointer',
-          }}
-        />
       </InputContainer>
       <div css={{ height: '16px' }}>
         {isError && (

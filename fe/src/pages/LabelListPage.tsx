@@ -4,44 +4,23 @@ import { Body } from '@components/labelListPage/Body';
 import { getLabelListPageData } from '@utils/api';
 type Props = {};
 
-const mockData: Label[] = [
-  {
-    id: 1,
-    name: 'feat',
-    textColor: 'light',
-    backgroundColor: '#FF0000',
-    description: '새로운 기능을 추가한다.',
-  },
-  {
-    id: 2,
-    name: 'fix',
-    textColor: 'dark',
-    backgroundColor: '#800000',
-    description: '버그를 고친다.',
-  },
-  {
-    id: 3,
-    name: 'BE',
-    textColor: 'dark',
-    backgroundColor: '#600000',
-    description: '',
-  },
-];
-
 export const LabelListPage: React.FC<Props> = ({}) => {
   const [isAddTableOpen, setIsAddTableOpen] = useState(false);
   const [labelListData, setLabelListData] = useState<Label[]>([]);
 
+  const fetchLabelList = async () => {
+    const pageData = await getLabelListPageData();
+    setLabelListData(pageData);
+  };
+
   useEffect(() => {
-    (async () => {
-      const pageData = await getLabelListPageData();
-      setLabelListData(pageData);
-    })();
-  }, [location]);
+    fetchLabelList();
+  }, []);
 
   const onAddTableOpen = () => {
     setIsAddTableOpen(true);
   };
+
   const onAddTableClose = () => {
     setIsAddTableOpen(false);
   };
@@ -67,6 +46,7 @@ export const LabelListPage: React.FC<Props> = ({}) => {
         labelList={labelListData}
         labelCount={labelListData.length}
         onAddTableClose={onAddTableClose}
+        fetchLabelList={fetchLabelList}
       />
     </div>
   );
