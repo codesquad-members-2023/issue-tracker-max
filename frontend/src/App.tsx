@@ -7,6 +7,7 @@ import { Routes, Route } from 'react-router-dom';
 import Components from './pages/Components';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Callback from './pages/GitHubCallback';
 import Main from './pages/Main';
 import AddIssue from './pages/AddIssue';
 
@@ -42,6 +43,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/component" element={<Components />} />
+        <Route path="/callback" element={<Callback />} />
 
         {/* protected routes */}
         <Route element={<RequireAuth />}>

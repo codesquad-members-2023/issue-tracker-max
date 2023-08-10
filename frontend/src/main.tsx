@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
-import { worker } from './mocks/browser';
+// import { worker } from './mocks/browser';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider.tsx';
 
-if (import.meta.env.DEV) {
-  worker.start({
-    onUnhandledRequest: 'bypass',
-  });
-}
+// if (import.meta.env.DEV) {
+//   worker.start({
+//     onUnhandledRequest: 'bypass',
+//   });
+// }
 
 const appContext = {
   util: {} as Record<string, () => unknown>,

@@ -35,6 +35,12 @@ export default function Main() {
   return (
     <>
       <h1>main</h1>
+      <button
+        onClick={() => {
+          navigate('/login');
+        }}>
+        로그인 화면 이동
+      </button>
       <button onClick={handleLogout}>logout</button>
       <button
         onClick={() => {
