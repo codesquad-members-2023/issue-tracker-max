@@ -3,7 +3,7 @@ export type Label = {
   name: string;
   fontColor: string;
   backgroundColor: string;
-  description: string;
+  description?: string;
 };
 
 export type Milestone = {
