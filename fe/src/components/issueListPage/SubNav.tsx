@@ -6,11 +6,20 @@ import { useTheme } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
+  filterValue: string;
+  onChangeFilterValue: (value: string) => void;
   labelCount: IssuePageData['labelCount'];
   milestoneCount: IssuePageData['milestoneCount'];
+  goToFilteredPage: (filterValue: string) => void;
 };
 
-export const SubNav: React.FC<Props> = ({ labelCount, milestoneCount }) => {
+export const SubNav: React.FC<Props> = ({
+  filterValue,
+  onChangeFilterValue,
+  labelCount,
+  milestoneCount,
+  goToFilteredPage,
+}) => {
   const theme = useTheme() as any;
   const navigate = useNavigate();
 
@@ -23,7 +32,13 @@ export const SubNav: React.FC<Props> = ({ labelCount, milestoneCount }) => {
       }}
     >
       <div css={{ width: '560px' }}>
-        <FilterBar />
+        <FilterBar
+          {...{
+            filterValue,
+            onChangeFilterValue,
+            goToFilteredPage,
+          }}
+        />
       </div>
 
       <div

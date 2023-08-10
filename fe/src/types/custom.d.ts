@@ -13,7 +13,10 @@ type Issue = {
   id: number;
   title: string;
   authorLoginId: string;
-  assigneeImages: string[];
+  assignees: {
+    userId: string;
+    image: string;
+  }[];
 
   labels: {
     id: number;
@@ -35,4 +38,13 @@ type UserInfo = {
   userId: number;
   loginId: string;
   image: string;
+};
+
+type FilterState = {
+  status: 'initialStatus' | 'open' | 'closed';
+  author: string;
+  label: string;
+  milestone: string;
+  assignee: string;
+  commentAuthor: string;
 };

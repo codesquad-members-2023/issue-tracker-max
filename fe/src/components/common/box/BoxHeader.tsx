@@ -9,6 +9,7 @@ export const BoxHeader: React.FC<Props> = ({ children }) => {
 
   return (
     <div
+      className="box-header"
       css={{
         minHeight: '64px',
         borderBottom: `${theme.border.default} ${theme.neutral.border.default}`,

@@ -14,14 +14,18 @@ export const Box: React.FC<Props> = ({ header, children, customStyle }) => {
     ...customStyle,
     borderRadius: theme.radius.l,
     border: `${theme.border.default} ${theme.neutral.border.default}`,
-    overflow: 'hidden',
+    backgroundColor: theme.neutral.surface.strong,
 
-    li: {
-      backgroundColor: theme.neutral.surface.strong,
+    '.box-header': {
+      backgroundColor: theme.neutral.surface.default,
     },
 
-    'li:not(:last-child)': {
+    '& > :not(:last-child)': {
       borderBottom: `${theme.border.default} ${theme.neutral.border.default}`,
+    },
+
+    '& > :last-child': {
+      borderRadius: `0px 0px ${theme.radius.l} ${theme.radius.l}`,
     },
   };
 
@@ -29,7 +33,7 @@ export const Box: React.FC<Props> = ({ header, children, customStyle }) => {
     <div css={boxStyle}>
       <BoxHeader>{header}</BoxHeader>
 
-      <ul>{children}</ul>
+      {children}
     </div>
   );
 };

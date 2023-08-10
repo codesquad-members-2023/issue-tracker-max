@@ -17,7 +17,7 @@ export const IssueList: React.FC<Props> = ({ issue }) => {
     id,
     title,
     authorLoginId,
-    assigneeImages,
+    assignees,
     labels,
     milestone,
     createdAt,
@@ -126,8 +126,9 @@ export const IssueList: React.FC<Props> = ({ issue }) => {
           },
         }}
       >
-        {assigneeImages.map((image) => (
+        {assignees?.map(({ userId, image }) => (
           <div
+            key={userId}
             css={{
               width: '16px',
               display: 'flex',

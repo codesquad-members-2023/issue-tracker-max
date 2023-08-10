@@ -44,6 +44,10 @@ export const handlers = [
   }),
 
   rest.get('/issues', (req, res, ctx) => {
+    if (req.url.searchParams.get('query') === 'status:open assignee:bono1234') {
+      return res(ctx.status(200), ctx.json(issues.assigneeFiltered));
+    }
+
     if (req.url.searchParams.get('query') === 'status:closed') {
       return res(ctx.status(200), ctx.json(issues.closed));
     }
