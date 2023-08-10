@@ -35,7 +35,7 @@ export const IssueListPage: React.FC = () => {
     setPageData(pageData);
   };
 
-  useEffect(() => {
+  const initPageWithFilter = () => {
     if (location.search === '') {
       setFilterValue('status:open');
     } else {
@@ -44,6 +44,10 @@ export const IssueListPage: React.FC = () => {
     }
 
     fetchPageData();
+  };
+
+  useEffect(() => {
+    initPageWithFilter();
   }, [window.location.search]);
 
   return (
@@ -83,6 +87,7 @@ export const IssueListPage: React.FC = () => {
           closedIssueCount: pageData.closedIssueCount,
           issues: pageData.issues,
           goToFilteredPage,
+          initPageWithFilter,
         }}
       />
     </>
