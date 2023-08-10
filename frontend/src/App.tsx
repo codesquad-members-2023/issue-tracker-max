@@ -8,7 +8,6 @@ import Components from './pages/Components';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Callback from './pages/GitHubCallback';
-import Main from './pages/Main';
 import AddIssue from './pages/AddIssue';
 
 import LogoDarkLarge from './asset/logo/logo_dark_large.svg';
@@ -17,6 +16,8 @@ import LogoLightLarge from './asset/logo/logo_light_large.svg';
 import LogoLightMedium from './asset/logo/logo_light_medium.svg';
 import { AppContext } from './main';
 import RequireAuth from './routes/RequireAuth';
+import Options from './pages/Options';
+import Main from './pages/Main';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -40,6 +41,7 @@ function App() {
       <GlobalStyle />
       <Routes>
         {/* public routes */}
+        <Route path="/Options" element={<Options />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/component" element={<Components />} />

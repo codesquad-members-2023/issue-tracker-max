@@ -10,6 +10,8 @@ import { ReactComponent as PaperClip } from '../asset/icons/paperclip.svg';
 import { ReactComponent as Edit } from '../asset/icons/edit.svg';
 import { ReactComponent as Smile } from '../asset/icons/smile.svg';
 import { ReactComponent as Search } from '../asset/icons/search.svg';
+import { ReactComponent as Label } from '../asset/icons/label.svg';
+import { ReactComponent as MileStone } from '../asset/icons/milestone.svg';
 
 const Icons = {
   plus: Plus,
@@ -21,6 +23,8 @@ const Icons = {
   checkOnCircle: CheckOnCircle,
   checkOffCircle: CheckOffCircle,
   paperClip: PaperClip,
+  label: Label,
+  milestone: MileStone,
   edit: Edit,
   smile: Smile,
   search: Search,

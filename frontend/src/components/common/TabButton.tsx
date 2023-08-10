@@ -1,66 +1,65 @@
 import { styled } from 'styled-components';
 import { useState } from 'react';
 import Button from './button/BaseButton';
+import { v4 as uuidV4 } from 'uuid';
+import Icons from '../../design/Icons';
 
-enum ButtonActive {
-  Default,
-  Left,
-  Right,
-}
-
-const { Default, Left, Right } = ButtonActive;
-
-export default function TabButton() {
-  const [buttonActive, setButtonActive] = useState<ButtonActive>(Default);
+export default function TabButton({
+  tabs,
+}: {
+  tabs: {
+    iconName: keyof typeof Icons;
+    text: string;
+    event: () => void;
+  }[];
+}) {
+  const [buttonActive, setButtonActive] = useState<number | undefined>();
   return (
     <Tab $buttonActive={buttonActive}>
-      <Button
-        type="button"
-        flexible
-        ghost={true}
-        iconName="plus"
-        onClick={() => setButtonActive(Left)}>
-        BUTTON
-      </Button>
-      <Vertical />
-      <Button
-        type="button"
-        ghost={true}
-        flexible
-        iconName="plus"
-        onClick={() => setButtonActive(Right)}>
-        BUTTON
-      </Button>
+      {tabs.map(({ iconName, text, event }, index) => (
+        <Button
+          key={uuidV4()}
+          type="button"
+          flexible
+          ghost
+          iconName={iconName}
+          // selected={index === buttonActive}
+          onClick={() => {
+            setButtonActive(index + 1);
+            event();
+          }}>
+          {text}
+        </Button>
+      ))}
     </Tab>
   );
 }
 
-const Tab = styled.div<{ $buttonActive: ButtonActive }>`
+const Tab = styled.div<{ $buttonActive: number | undefined }>`
   display: inline-flex;
   border: 1px solid ${({ theme }) => theme.color.neutral.border.default};
   border-radius: ${({ theme }) => theme.objectStyles.radius.medium};
   overflow: hidden;
+  width: 320px;
 
   button {
+    width: 100%;
     box-sizing: content-box;
+    border-right: 1px solid ${({ theme }) => theme.color.neutral.border.default};
   }
-  button:first-child {
-    background-color: ${({ theme, $buttonActive }) => {
-      return $buttonActive === Left
-        ? theme.color.neutral.surface.bold
-        : theme.color.neutral.surface.default;
-    }};
-  }
-  button:last-child {
-    background-color: ${({ theme, $buttonActive }) => {
-      return $buttonActive === Right
-        ? theme.color.neutral.surface.bold
-        : theme.color.neutral.surface.default;
-    }};
-  }
-`;
 
-const Vertical = styled.div`
-  width: 1px;
-  background-color: ${({ theme }) => theme.color.neutral.border.default};
+  button:last-child {
+    border: 0;
+  }
+  
+  ${({ theme, $buttonActive }) => {
+    if (!$buttonActive) {
+      return ``;
+    }
+    return `
+      button:nth-child(${$buttonActive}) {
+        background: ${theme.color.neutral.surface.bold};
+      }
+    `;
+  }}
 `;
