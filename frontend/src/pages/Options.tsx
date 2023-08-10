@@ -9,6 +9,7 @@ import TabButtonComponent from '../components/common/TabButton';
 import Layout from '../components/Layout';
 import axios from '../api/axios';
 import Button from '../components/common/button/BaseButton';
+import Labels from '../components/Labels';
 
 enum Option {
   labels,
@@ -22,7 +23,15 @@ const TabButton = React.memo(TabButtonComponent);
 export default function Options() {
   const { util } = useContext(AppContext);
   const [activeOption, setActiveOption] = useState<Option>(labels);
-  // const [labels, setLabels] = useState([]);
+  const [labelData, setLabelDatas] = useState([
+    {
+      id: 1,
+      textColor: 'AAA333',
+      backgroundColor: 'FFF3FF',
+      name: 'feat',
+      description: '설명임',
+    },
+  ]);
   // const [milestones, setMilestones] = useState([]);
 
   useEffect(() => {
@@ -79,7 +88,7 @@ export default function Options() {
             레이블 추가
           </Button>
         </Toolbar>
-        {activeOption === labels ? <>라벨</> : <>마일스톤</>}
+        {activeOption === labels ? <Labels data={labelData} /> : <>마일스톤</>}
       </Main>
     </Layout>
   );

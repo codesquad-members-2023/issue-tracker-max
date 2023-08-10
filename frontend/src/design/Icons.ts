@@ -16,6 +16,7 @@ import { ReactComponent as CheckBoxInitial } from '../asset/icons/check_box/init
 import { ReactComponent as CheckBoxDisable } from '../asset/icons/check_box/disable.svg';
 import { ReactComponent as CheckBoxActive } from '../asset/icons/check_box/active.svg';
 import { ReactComponent as Archive } from '../asset/icons/archive.svg';
+import { ReactComponent as Trash } from '../asset/icons/trash.svg';
 import CheckBox from '../constant/CheckBox';
 
 const { initial, disable, active } = CheckBox;
@@ -37,6 +38,7 @@ const Icons = {
   search: Search,
   default: Plus,
   archive: Archive,
+  trash: Trash,
   checkBox: {
     [initial]: CheckBoxInitial,
     [disable]: CheckBoxDisable,

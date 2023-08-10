@@ -42,13 +42,14 @@ const Tab = styled.div<{ $buttonActive: number | undefined }>`
   overflow: hidden;
   width: 320px;
 
-  button {
+  & > button {
     width: 100%;
+    height: 40px;
     box-sizing: content-box;
     border-right: 1px solid ${({ theme }) => theme.color.neutral.border.default};
   }
 
-  button:last-child {
+  & > button:last-child {
     border: 0;
   }
 

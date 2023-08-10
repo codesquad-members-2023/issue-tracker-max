@@ -58,5 +58,6 @@ export default function Issues() {
 
 const ActionGroup = styled.div`
   display: flex;
+  align-items: center;
   gap: 16px;
 `;
