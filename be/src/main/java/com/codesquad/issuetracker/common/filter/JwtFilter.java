@@ -27,13 +27,14 @@ public class JwtFilter implements Filter {
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String MEMBER_ID = "memberId";
     private static final String[] whiteListUris = {
-            "/api/sign-up/{provider}",
+            "/api/sign-up/github",
+            "/api/sign-up/local",
             "/api/oauth/**",
             "/api/sign-In",
             "/api/reissue-access-token",
-            //테스트용으로 풀어놓음
             "/"
     };
+    public static final String OPTIONS = "OPTIONS";
 
     private final JwtProvider jwtProvider;
     private final ObjectMapper objectMapper;
@@ -43,6 +44,10 @@ public class JwtFilter implements Filter {
             throws ServletException, IOException {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+
+        if (httpServletRequest.getMethod().equals(OPTIONS)) {
+            return;
+        }
 
         if (whiteListCheck(httpServletRequest.getRequestURI())) {
             chain.doFilter(request, response);
