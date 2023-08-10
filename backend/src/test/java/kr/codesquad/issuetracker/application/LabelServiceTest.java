@@ -12,14 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import kr.codesquad.issuetracker.ApplicationTest;
-import kr.codesquad.issuetracker.acceptance.DatabaseInitializer;
 import kr.codesquad.issuetracker.presentation.response.LabelResponse;
 
 @ApplicationTest
 class LabelServiceTest {
-
-	@Autowired
-	private DatabaseInitializer databaseInitializer;
 
 	@Autowired
 	private LabelService labelService;
@@ -30,8 +26,14 @@ class LabelServiceTest {
 	@DisplayName("label 목록 조회시 이름순으로 정렬이 된다.")
 	@Test
 	void findLabelsSortedNameAscending() {
+		// given
+		labelService.register("feat", "기능 개발", "#FFF", "#EDE");
+		labelService.register("setting", "기능 개발", "#FFF", "#EDE");
+		labelService.register("backend", "기능 개발", "#FFF", "#EDE");
+
+		// when & then
 		assertThat(labelService.findAll())
-			.isSortedAccordingTo(Comparator.comparing(LabelResponse::getLabelName));
+			.isSortedAccordingTo(Comparator.comparing(LabelResponse::getName));
 	}
 
 	@DisplayName("label 수정에 성공한다.")
