@@ -9,7 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import codesquad.issueTracker.global.ApiResponse;
+import codesquad.issueTracker.global.common.ApiResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 
 @RestControllerAdvice

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import codesquad.issueTracker.global.ApiResponse;
+import codesquad.issueTracker.global.common.ApiResponse;
 import codesquad.issueTracker.jwt.dto.RequestRefreshTokenDto;
 import codesquad.issueTracker.jwt.dto.ResponseAccessToken;
 import codesquad.issueTracker.oauth.service.OAuthService;
