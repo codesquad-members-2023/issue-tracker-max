@@ -14,9 +14,12 @@ type TextAreaProps = {
   value?: string;
   label?: string;
   width?: string | number;
+  height?: string | number;
   children?: ReactNode;
   isEditing?: boolean;
-} & TextareaHTMLAttributes<HTMLTextAreaElement>;
+  onChange?: (value: string) => void;
+  onTextAreaFocus?: () => void;
+} & Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange">;
 
 type TextAreaState = "Active" | "Enabled" | "Disabled";
 
@@ -24,12 +27,14 @@ export function TextArea({
   value = "",
   label,
   width,
+  height,
   children,
   isEditing = false,
   disabled,
   placeholder,
   maxLength,
   onChange,
+  onTextAreaFocus,
 }: TextAreaProps) {
   const [state, setState] = useState<TextAreaState>(
     disabled ? "Disabled" : isEditing ? "Active" : "Enabled",
@@ -79,6 +84,7 @@ export function TextArea({
 
   const onFocus = () => {
     setState("Active");
+    onTextAreaFocus?.();
   };
 
   const onBlur = () => {
@@ -91,7 +97,7 @@ export function TextArea({
   const onTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
     setCountHidden(false);
-    onChange?.(e);
+    onChange?.(e.target.value);
   };
 
   const onFileInputClick = () => {
@@ -104,7 +110,7 @@ export function TextArea({
     if (file && isImageTypeFile(file)) {
       const data = await fetchImageText(file);
 
-      setInputValue((i) => {
+      const dataIntoTextArea = (i: string) => {
         const start = textArea.current?.selectionStart;
         const end = textArea.current?.selectionEnd;
 
@@ -116,7 +122,11 @@ export function TextArea({
         const textAfter = i.slice(end);
 
         return `${textBefore}![image](${data})${textAfter}`;
-      });
+      };
+
+      setInputValue(dataIntoTextArea);
+      setCountHidden(false);
+      onChange?.(dataIntoTextArea(inputValue));
     } else {
       setUploadErrorMessage("이미지 파일만 업로드 가능합니다.");
     }
@@ -173,7 +183,7 @@ export function TextArea({
       >
         {children && <Header>{children}</Header>}
         {children && state !== "Active" ? (
-          <ContentContainer>{value}</ContentContainer>
+          <TextViewer>{value}</TextViewer>
         ) : (
           <>
             <InputContainer>
@@ -181,7 +191,7 @@ export function TextArea({
               <ResizableDiv $children={children}>
                 <Input
                   $children={children}
-                  $height={textArea.current?.scrollHeight}
+                  $height={height}
                   placeholder={placeholder}
                   value={inputValue}
                   maxLength={maxLength}
@@ -260,8 +270,9 @@ const Header = styled.div`
   background-color: ${({ theme }) => theme.color.neutralSurfaceDefault};
 `;
 
-const ContentContainer = styled.div`
-  flex: 1 0 0;
+const TextViewer = styled.div`
+  max-height: 200px;
+  overflow-y: auto;
   align-self: stretch;
   display: flex;
   align-items: flex-start;
@@ -311,11 +322,18 @@ const ResizableDiv = styled.div<{ $children: ReactNode }>`
   }
 `;
 
-const Input = styled.textarea<{ $children: ReactNode; $height?: number }>`
+const Input = styled.textarea<{
+  $children: ReactNode;
+  $height?: string | number;
+}>`
   box-sizing: border-box;
   width: 100%;
   height: ${({ $children, $height }) =>
-    $children ? ($height ? `${Math.min($height, 461)}px` : "120px") : "461px"};
+    typeof $height === "number"
+      ? `${Math.min($height, 461)}px`
+      : $children
+      ? "200px"
+      : "461px"};
   resize: none;
   border: none;
   background: none;

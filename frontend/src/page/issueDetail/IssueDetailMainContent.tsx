@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import { CommentEditor } from "../../components/comment/CommentEditor";
 import { CommentList } from "../../components/comment/CommentList";
 import { IssueContent } from "./IssueContent";
 
@@ -24,9 +25,6 @@ type IssueDetailMainContentProps = {
 };
 
 export function IssueDetailMainContent(props: IssueDetailMainContentProps) {
-  // 댓글 내용 조회/수정
-  // 댓글 작성
-
   return (
     <Div>
       <IssueContent {...props} />
@@ -37,7 +35,7 @@ export function IssueDetailMainContent(props: IssueDetailMainContentProps) {
           fetchIssue: props.fetchIssue,
         }}
       />
-      {/* <CommentEditor /> */}
+      <CommentEditor {...{issueId: props.id, fetchIssue: props.fetchIssue}} />
     </Div>
   );
 }

@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { InformationTag } from "../../components/InformationTag";
@@ -29,6 +29,8 @@ export function IssueContent({
 }: IssueContentProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(initialContent);
+  const [invalidContent, setInvalidContent] = useState(false);
+  const [errorDescription, setErrorDescription] = useState("");
 
   useEffect(() => {
     setContent(initialContent);
@@ -36,17 +38,24 @@ export function IssueContent({
 
   const maxContentLength = 10000;
   const writtenAt = modifiedAt ?? createdAt;
-  const sameContent = content === initialContent;
-  const overflowContent = content.length > maxContentLength;
-  const invalidContent = sameContent || overflowContent;
-  const errorDescription = invalidContent
-    ? sameContent
-      ? "기존 내용과 동일합니다"
-      : `내용은 ${addCommasToNumber(maxContentLength)}자 이내로 입력해주세요`
-    : "";
+
+  const validateContent = (value: string) => {
+    const sameContent = value === initialContent;
+    const overflowContent = value.length > maxContentLength;
+
+    setInvalidContent(sameContent || overflowContent);
+    setErrorDescription(
+      sameContent
+        ? "기존 내용과 동일합니다"
+        : overflowContent
+        ? `내용은 ${addCommasToNumber(maxContentLength)}자 이내로 입력해주세요`
+        : "",
+    );
+  };
 
   const onEditButtonClick = () => {
     setIsEditing(true);
+    validateContent(content);
   };
 
   const onEditCancelButtonClick = () => {
@@ -54,8 +63,9 @@ export function IssueContent({
     setIsEditing(false);
   };
 
-  const onContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+  const onContentChange = (value: string) => {
+    setContent(value);
+    validateContent(value);
   };
 
   const onEditConfirmClick = async () => {
@@ -68,6 +78,8 @@ export function IssueContent({
 
     setContent(initialContent);
     setIsEditing(false);
+    setInvalidContent(false);
+    setErrorDescription("");
     fetchIssue();
   };
 

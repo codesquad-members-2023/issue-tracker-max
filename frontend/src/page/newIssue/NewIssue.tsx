@@ -22,8 +22,8 @@ export function NewIssue() {
     setInvalidTitle(e.target.value.length === 0);
   };
 
-  const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+  const onContentChange = (value: string) => {
+    setContent(value);
   };
 
   const onAssigneeClick = useCallback((id: number) => {

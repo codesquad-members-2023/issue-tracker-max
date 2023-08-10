@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
@@ -33,6 +33,8 @@ export function CommentItem({
 }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(initialContent);
+  const [invalidContent, setInvalidContent] = useState(false);
+  const [errorDescription, setErrorDescription] = useState("");
 
   useEffect(() => {
     setContent(initialContent);
@@ -40,17 +42,27 @@ export function CommentItem({
 
   const maxContentLength = 10000;
   const writtenAt = modifiedAt ?? createdAt;
-  const sameContent = content === initialContent;
-  const overflowContent = content.length > maxContentLength;
-  const invalidContent = sameContent || overflowContent;
-  const errorDescription = invalidContent
-    ? sameContent
-      ? "기존 내용과 동일합니다"
-      : `내용은 ${addCommasToNumber(maxContentLength)}자 이내로 입력해주세요`
-    : "";
+
+  const validateContent = (value: string) => {
+    const emptyContent = value.length === 0;
+    const sameContent = value === initialContent;
+    const overflowContent = value.length > maxContentLength;
+
+    setInvalidContent(emptyContent || sameContent || overflowContent);
+    setErrorDescription(
+      emptyContent
+        ? "내용을 입력해주세요"
+        : sameContent
+        ? "기존 내용과 동일합니다"
+        : overflowContent
+        ? `내용은 ${addCommasToNumber(maxContentLength)}자 이내로 입력해주세요`
+        : "",
+    );
+  };
 
   const onEditButtonClick = () => {
     setIsEditing(true);
+    validateContent(content);
   };
 
   const onEditCancelButtonClick = () => {
@@ -58,8 +70,9 @@ export function CommentItem({
     setIsEditing(false);
   };
 
-  const onContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+  const onContentChange = (value: string) => {
+    setContent(value);
+    validateContent(value);
   };
 
   const onEditConfirmClick = async () => {
@@ -72,6 +85,8 @@ export function CommentItem({
 
     setContent(initialContent);
     setIsEditing(false);
+    setInvalidContent(false);
+    setErrorDescription("");
     fetchIssue();
   };
 

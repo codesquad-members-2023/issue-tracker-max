@@ -205,6 +205,36 @@ export const handlers = [
       }),
     );
   }),
+  rest.post("/api/comments", async (req, res, ctx) => {
+    const { issueId, content, userId } = await req.json();
+
+    const comment = {
+      id: issue.data.comments.length + 1,
+      userId,
+      avatarUrl: "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
+      content,
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString(),
+      reactions: [],
+    };
+
+    issue.data = {
+      ...issue.data,
+      comments: [...issue.data.comments, comment],
+    };
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        code: 201,
+        status: "CREATED",
+        message: "댓글 등록에 성공했습니다.",
+        data: {
+          savedCommentId: comment.id,
+        },
+      }),
+    );
+  }),
 ];
 
 const labels = {
@@ -396,15 +426,27 @@ const issue = {
         content: "이 댓글을 읽은 당신은 앞으로 모든 일이 신기하게 잘풀립니다!",
         createdAt: "2023-08-09T15:21:09",
         modifiedAt: "2023-08-09T20:21:09",
+        reactions: [
+          {
+            unicode: "&#128077",
+            users: [],
+            selected: null,
+          },
+          {
+            unicode: "&#128078",
+            users: [1],
+            selected: 3,
+          },
+        ],
       },
       {
         id: 2,
         userId: "hjsong123",
-        avatarUrl:
-          "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
+        avatarUrl: "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
         content: "웃어보세요! 오늘 하루가 달라질 거에요!",
         createdAt: "2023-08-10T10:21:09",
         modifiedAt: "2023-08-10T13:21:09",
+        reactions: [],
       },
     ],
   },

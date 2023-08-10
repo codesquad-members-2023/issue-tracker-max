@@ -9,7 +9,7 @@ type NewIssueBodyProps = {
   invalidTitle: boolean;
   onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onTitleFocus: () => void;
-  onContentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onContentChange: (value: string) => void;
 } & SidebarProps;
 
 export function NewIssueBody({
