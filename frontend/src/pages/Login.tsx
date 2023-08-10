@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { styled } from 'styled-components';
 import axios from '../api/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -10,6 +10,9 @@ import ButtonLarge from '../components/common/button/ButtonLarge';
 import Button from '../components/common/button/BaseButton';
 
 export default function Login() {
+  const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
+
   const { login } = useAuth();
   const { util } = useContext(AppContext);
   const logo = (util.getLogoByTheme() as ContextLogo).large;
@@ -20,6 +23,19 @@ export default function Login() {
   const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${
     import.meta.env.VITE_CLIENT_ID
   }`;
+
+  const validateUserEmail = (value: string) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(value);
+  };
+
+  const validateUserPassword = (value: string) => {
+    const passwordRegex = /^[a-zA-Z0-9!@#$%^&*|'"~;:₩\\?]{6,12}$/;
+    return passwordRegex.test(value);
+  };
+
+  const isValidate =
+    validateUserEmail(userId) && validateUserPassword(password);
 
   const handleLogin = async (userId: string, password: string) => {
     try {
@@ -60,6 +76,15 @@ export default function Login() {
     handleLogin(userId, password);
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === 'userId') {
+      setUserId(value);
+    } else if (name === 'password') {
+      setPassword(value);
+    }
+  };
+
   return (
     <Container>
       <h1 className="blind">로그인 페이지</h1>
@@ -78,32 +103,31 @@ export default function Login() {
       <span>or</span>
       <LoginForm onSubmit={handleSubmit}>
         <TextInput
-          id="id"
+          id="userId"
           name="userId"
           size="tall"
           labelName="아이디"
+          value={userId}
+          onChange={handleChange}
           placeholder="아이디"
           helpText="아이디는 이메일 형식으로 입력해주세요."
-          validationFunc={(value) => {
-            const emailRegex =
-              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            return emailRegex.test(value);
-          }}
+          hasError={userId !== '' && !validateUserEmail(userId)}
         />
         <TextInput
           id="password"
           name="password"
           size="tall"
           type="password"
+          value={password}
+          onChange={handleChange}
           labelName="비밀번호"
           placeholder="비밀번호"
           helpText="비밀번호는 6자 이상 12자 이하로 입력해주세요."
-          validationFunc={(value) => {
-            const formatRegex = /^[a-zA-Z0-9!@#$%^&*|'"~;:₩\\?]{6,12}$/;
-            return formatRegex.test(value);
-          }}
+          hasError={password !== '' && !validateUserPassword(password)}
         />
-        <LoginButton type="submit">아이디로 로그인</LoginButton>
+        <LoginButton type="submit" disabled={isValidate ? false : true}>
+          아이디로 로그인
+        </LoginButton>
       </LoginForm>
       <RegisterButton type="button" ghost onClick={() => navigate('/register')}>
         회원가입
