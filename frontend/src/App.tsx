@@ -18,6 +18,7 @@ import { AppContext } from './main';
 import RequireAuth from './routes/RequireAuth';
 import Options from './pages/Options';
 import Main from './pages/Main';
+import Issues from './pages/Issues';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -46,7 +47,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/component" element={<Components />} />
         <Route path="/callback" element={<Callback />} />
-
+        <Route path="/issues" element={<Issues />} />
         {/* protected routes */}
         <Route element={<RequireAuth />}>
           <Route path="/" element={<Main />} />

@@ -12,6 +12,13 @@ import { ReactComponent as Smile } from '../asset/icons/smile.svg';
 import { ReactComponent as Search } from '../asset/icons/search.svg';
 import { ReactComponent as Label } from '../asset/icons/label.svg';
 import { ReactComponent as MileStone } from '../asset/icons/milestone.svg';
+import { ReactComponent as CheckBoxInitial } from '../asset/icons/check_box/initial.svg';
+import { ReactComponent as CheckBoxDisable } from '../asset/icons/check_box/disable.svg';
+import { ReactComponent as CheckBoxActive } from '../asset/icons/check_box/active.svg';
+import { ReactComponent as Archive } from '../asset/icons/archive.svg';
+import CheckBox from '../constant/CheckBox';
+
+const { initial, disable, active } = CheckBox;
 
 const Icons = {
   plus: Plus,
@@ -29,6 +36,12 @@ const Icons = {
   smile: Smile,
   search: Search,
   default: Plus,
+  archive: Archive,
+  checkBox: {
+    [initial]: CheckBoxInitial,
+    [disable]: CheckBoxDisable,
+    [active]: CheckBoxActive,
+  },
 } as const;
 
 export default Icons;
