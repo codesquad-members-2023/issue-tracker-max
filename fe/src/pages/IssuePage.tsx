@@ -83,7 +83,7 @@ export function IssuePage() {
   const [loading, setLoading] = useState(true);
   const [isAddIssueOpen, setIsAddIssueOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filterSelected, setFilterSelected] = useState<string>(OPEN_ISSUE);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [isOpenSelected, setIsOpenSelected] = useState(true);
   const [selectedIssues, setSelectedIssues] = useState<number[]>([]);
 
@@ -148,7 +148,7 @@ export function IssuePage() {
     icon: string | null;
     color: string | null;
   }) => {
-    setFilterSelected(item.title);
+    setSelectedOptions([item.title]);
     setIsFilterOpen(false);
   };
 
@@ -195,7 +195,7 @@ export function IssuePage() {
         <MainArea>
           <div css={{ display: "flex", justifyContent: "space-between" }}>
             <FilterBar
-              filterSelected={filterSelected}
+              selectedOptions={selectedOptions}
               isFilterOpen={isFilterOpen}
               filterItems={filterItems}
               onClickFilterOpenButton={onClickFilterOpenButton}
@@ -230,7 +230,14 @@ export function IssuePage() {
                     <Txt typography="bold16" color={color.neutral.text.default}>
                       {selectedIssues.length}개 이슈 선택
                     </Txt>
-                    <div>
+                    <div
+                      css={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        width: "80px",
+                        height: "32px",
+                      }}>
                       <Txt
                         typography="medium16"
                         color={color.neutral.text.default}>
@@ -246,6 +253,12 @@ export function IssuePage() {
               ) : (
                 <div css={tableHeaderStyle(color)}>
                   <div css={openTabContainer}>
+                    <div onClick={onClickAllSelect}>
+                      <Icon
+                        type="checkBoxInitial"
+                        color={color.neutral.border.default}
+                      />
+                    </div>
                     <Button
                       onClick={onClickOpenTab}
                       status={isOpenSelected ? "selected" : "enabled"}
@@ -282,11 +295,6 @@ export function IssuePage() {
   }
 }
 
-// const totalCount = {
-//   labelsCount: 3,
-//   milestonesCount: 4,
-// };
-
 const issue = {
   openedIssueCount: 1,
   closedIssueCount: 2,
@@ -313,35 +321,35 @@ const issue = {
           backgroundColor: "#FBCA04",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 2,
         },
         {
           title: "label3",
           backgroundColor: "#0E8A16",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 3,
         },
         {
           title: "label4",
           backgroundColor: "#1D76DB",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 4,
         },
         {
           title: "label5",
           backgroundColor: "#0052CC",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 5,
         },
         {
           title: "label6",
           backgroundColor: "#1D76DB",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 6,
         },
       ],
     },
@@ -360,35 +368,35 @@ const issue = {
           backgroundColor: "#FEF2C0",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 12,
         },
         {
           title: "label3",
           backgroundColor: "#E99695",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 13,
         },
         {
           title: "label4",
           backgroundColor: "#F9D0C4",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 14,
         },
         {
           title: "label5",
           backgroundColor: "#FBCA04",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 15,
         },
         {
           title: "label7",
           backgroundColor: "#0052CC",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 16,
         },
         {
           title: "label8",
@@ -414,42 +422,42 @@ const issue = {
           backgroundColor: "#D4C4FB",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 17,
         },
         {
           title: "label2",
           backgroundColor: "#BED3F3",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 18,
         },
         {
           title: "label3",
           backgroundColor: "#C4DEF6",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 19,
         },
         {
           title: "label9",
           backgroundColor: "#006B75",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 111,
         },
         {
           title: "label10",
           backgroundColor: "#1D76DB",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 112,
         },
         {
           title: "label11",
           backgroundColor: "#5319E7",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 113,
         },
       ],
     },
@@ -468,42 +476,42 @@ const issue = {
           backgroundColor: "#C4DEF6",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 1134,
         },
         {
           title: "label2",
           backgroundColor: "#C2E0C6",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 145,
         },
         {
           title: "label15",
           backgroundColor: "#0052CC",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 136,
         },
         {
           title: "label17",
           backgroundColor: "#0E8A16",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 13456,
         },
         {
           title: "label18",
           backgroundColor: "#990000",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 12345,
         },
         {
           title: "label6",
           backgroundColor: "#ffbfbf",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 1231,
         },
       ],
     },
@@ -522,42 +530,42 @@ const issue = {
           backgroundColor: "#1D76DB",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 11234,
         },
         {
           title: "label14",
           backgroundColor: "#5319E7",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 16758,
         },
         {
           title: "label17",
           backgroundColor: "#FEF2C0",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 1876,
         },
         {
           title: "label12",
           backgroundColor: "#C4DEF6",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 187,
         },
         {
           title: "label20",
           backgroundColor: "#FEF2C0",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 154,
         },
         {
           title: "label15",
           backgroundColor: "#BED3F3",
           textColor: 1,
           description: "레이블 설명",
-          id: 1,
+          id: 15678,
         },
       ],
     },

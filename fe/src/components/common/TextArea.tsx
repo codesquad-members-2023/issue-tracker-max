@@ -1,6 +1,6 @@
 import { css, useTheme } from "@emotion/react";
 import { ColorScheme } from "../../contexts/ThemeContext";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { InputState } from "./TextInput";
 import { fonts } from "../../constants/fonts";
 import { Icon } from "./Icon";
@@ -75,6 +75,7 @@ const paperclipContainer = css`
   gap: 4px;
   height: 32px;
   align-items: center;
+  cursor: pointer;
 `;
 
 export function TextArea({
@@ -89,8 +90,10 @@ export function TextArea({
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }) {
   const [inputState, setInputState] = useState<InputState>("enabled");
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
   const color = useTheme() as ColorScheme;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onFocus = () => {
     setInputState("active");
@@ -98,6 +101,16 @@ export function TextArea({
 
   const onBlur = () => {
     setInputState("enabled");
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFileName(e.target.files[0].name);
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -113,11 +126,18 @@ export function TextArea({
           />
         </div>
         <div css={fileInsertArea(color)}>
-          <div css={paperclipContainer}>
+          <div css={paperclipContainer} onClick={triggerFileInput}>
             <Icon type="paperclip" color={color.neutral.text.default} />
             <Txt typography="medium12" color={color.neutral.text.default}>
               파일 첨부하기
             </Txt>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+            {selectedFileName && <div>{selectedFileName}</div>}
           </div>
         </div>
       </div>

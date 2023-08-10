@@ -5,7 +5,6 @@ import { useState } from "react";
 import { fonts } from "../../constants/fonts";
 
 type Props = {
-  multiSelect: boolean;
   item: { title: string; icon: string | null; color: string | null };
   isSelected: boolean;
   onClick?: (item: {
@@ -37,14 +36,20 @@ const imageStyle = css`
   border-radius: 50%;
   object-fit: cover;
 `;
-const colorCircleStyle = (item: {
-  title: string;
-  icon: string | null;
-  color: string | null;
-}) => css`
+const colorCircleStyle = (
+  item: {
+    title: string;
+    icon: string | null;
+    color: string | null;
+  },
+  color: ColorScheme
+) => css`
   width: 20px;
   height: 20px;
   border-radius: 50%;
+  box-sizing: border-box;
+  border: 1.6px solid
+    ${item.color === "#FEFEFE" ? color.neutral.border.default : "none"};
   background-color: ${item.color};
 `;
 
@@ -74,7 +79,7 @@ export function DropdownItems({ item, isSelected, onClick }: Props) {
   };
 
   const onClickItem = () => {
-    if (!isSelected) onClick && onClick(item);
+    if (onClick) onClick(item);
   };
 
   return (
@@ -87,7 +92,7 @@ export function DropdownItems({ item, isSelected, onClick }: Props) {
       {(item.icon || item.color) && (
         <>
           {item.icon && <img css={imageStyle} src={item.icon} alt="icon" />}
-          {item.color && <div css={colorCircleStyle(item)} />}
+          {item.color && <div css={colorCircleStyle(item, color)} />}
         </>
       )}
       <div title={item.title} css={textContentStyle(color, isSelected)}>

@@ -1,34 +1,15 @@
 import { createContext, useState, ReactNode } from "react";
 
-type AssigneeType = {
-  id: number;
-  nickName: string;
-  imgUrl: string;
-}[];
-
-type LabelType = {
-  id: number;
-  title: string;
-  description: string;
-  backgroundColor: string;
-  textColor: string;
-}[];
-
-type MilestoneType =
-  | {
-      id: number;
-      issueClosedCount: number;
-      issueOpenedCount: number;
-    }
-  | undefined;
-
 type IssueContextType = {
-  assigneeList: AssigneeType;
-  setAssigneeList: React.Dispatch<React.SetStateAction<AssigneeType>>;
-  labelList: LabelType;
-  setLabelList: React.Dispatch<React.SetStateAction<LabelType>>;
-  milestone: MilestoneType;
-  setMilestone: React.Dispatch<React.SetStateAction<MilestoneType>>;
+  assigneeList: number[];
+  setAssigneeList: React.Dispatch<React.SetStateAction<number[]>>;
+  labelList: number[];
+  setLabelList: React.Dispatch<React.SetStateAction<number[]>>;
+  milestoneList: number[];
+  setMilestoneList: React.Dispatch<React.SetStateAction<number[]>>;
+  handleSetAssigneeList: (id: number[]) => void;
+  handleSetLabelList: (id: number[]) => void;
+  handleSetMilestoneList: (id: number[]) => void;
 };
 
 type IssueProviderProps = {
@@ -40,17 +21,32 @@ export const IssueContext = createContext<IssueContextType | undefined>(
 );
 
 export function IssueProvider({ children }: IssueProviderProps) {
-  const [assigneeList, setAssigneeList] = useState<AssigneeType>([]);
-  const [labelList, setLabelList] = useState<LabelType>([]);
-  const [milestone, setMilestone] = useState<MilestoneType>();
+  const [assigneeList, setAssigneeList] = useState<number[]>([]);
+  const [labelList, setLabelList] = useState<number[]>([]);
+  const [milestoneList, setMilestoneList] = useState<number[]>([]);
+
+  const handleSetAssigneeList = (id: number[]) => {
+    setAssigneeList(id);
+  };
+
+  const handleSetLabelList = (id: number[]) => {
+    setLabelList(id);
+  };
+
+  const handleSetMilestoneList = (id: number[]) => {
+    setMilestoneList(id);
+  };
 
   const value: IssueContextType = {
     assigneeList,
     setAssigneeList,
     labelList,
     setLabelList,
-    milestone,
-    setMilestone,
+    milestoneList,
+    setMilestoneList,
+    handleSetAssigneeList,
+    handleSetLabelList,
+    handleSetMilestoneList,
   };
 
   return (

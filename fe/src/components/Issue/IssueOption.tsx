@@ -31,7 +31,7 @@ export function IssueOption({
   items: { title: string; icon: string | null; color: string | null }[];
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [filterSelected, setFilterSelected] = useState("");
+  const [selectedOptions, setFilterSelected] = useState<string[]>([]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLDivElement>(null);
@@ -45,7 +45,7 @@ export function IssueOption({
     icon: string | null;
     color: string | null;
   }) => {
-    setFilterSelected(item.title);
+    setFilterSelected([item.title]);
   };
 
   const onClickDropdownOpen = () => {
@@ -74,11 +74,10 @@ export function IssueOption({
         <Dropdown
           ref={dropdownRef}
           onClick={onClickFilterOption}
-          filterSelected={filterSelected}
+          selectedOptions={selectedOptions}
           isDropdownOpen={isDropdownOpen}
           title={title}
           items={items}
-          multiSelect={false}
         />
       </div>
     </div>

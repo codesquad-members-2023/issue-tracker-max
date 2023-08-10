@@ -118,6 +118,7 @@ export function TabButton({
   return (
     <div css={{ ...buttonsContainer }}>
       <div
+        onClick={onClickLeftTab}
         css={{
           ...buttonWrapper,
           ...getBackgroundColorFrom({ isLeft: true, isLeftSelected, color }),
@@ -125,7 +126,6 @@ export function TabButton({
         }}>
         <Button
           status={getStatusFrom({ isLeftSelected, isLeft: true })}
-          onClick={onClickLeftTab}
           textColor={leftTextColor}
           icon={leftIcon}
           type="ghost"
@@ -134,13 +134,13 @@ export function TabButton({
         />
       </div>
       <div
+        onClick={onClickRightTab}
         css={{
           ...buttonWrapper,
           ...getBackgroundColorFrom({ isLeft: false, isLeftSelected, color }),
         }}>
         <Button
           status={getStatusFrom({ isLeftSelected, isLeft: false })}
-          onClick={onClickRightTab}
           textColor={rightTextColor}
           icon={rightIcon}
           type="ghost"
