@@ -5,13 +5,12 @@ import { ColorCodeInput } from '@components/common/ColorCodeInput';
 import { DropDownContainer } from '@components/common/dropDown/DropDownContainer';
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 import { DropDownList } from '@components/common/dropDown/DropDownList';
-import { textColors } from '@components/common/dropDown/types';
 
 type Props = {
   nameInput: string;
   descriptionInput: string;
   colorCodeInput: string;
-  selectedTextColor?: number | null;
+  selectedTextColor?: string | null;
   displayedTextColor: string;
   fillColor?: string;
   textColor?: string;
@@ -24,7 +23,7 @@ type Props = {
   onPanelClose: () => void;
   onColorCodeChange: (value: string) => void;
   onColorCodeRandom: () => void;
-  onSelectTextColor: (id: number) => void;
+  onSelectTextColor: (color: string) => void;
 };
 
 export const LabelEditBody: React.FC<Props> = ({
@@ -47,6 +46,11 @@ export const LabelEditBody: React.FC<Props> = ({
   onSelectTextColor,
 }) => {
   const theme = useTheme() as any;
+
+  const textColors = [
+    { id: 1, color: 'light', name: '밝은 색' },
+    { id: 2, color: 'dark', name: '어두운 색' },
+  ];
 
   return (
     <div
@@ -129,8 +133,8 @@ export const LabelEditBody: React.FC<Props> = ({
                 <DropDownList
                   key={item.id}
                   item={item}
-                  onClick={() => onSelectTextColor(item.id)}
-                  isSelected={selectedTextColor === item.id}
+                  onClick={() => onSelectTextColor(item.color)}
+                  isSelected={selectedTextColor === item.color}
                 />
               ))}
             </DropDownPanel>

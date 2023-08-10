@@ -37,8 +37,8 @@ export const LabelEditTable: React.FC<Props> = ({
   const [colorCodeInput, setColorCodeInput] = useState<string>(
     label?.backgroundColor ?? randomColorGenerator(),
   );
-  const [selectedTextColor, setSelectedTextColor] = useState<number | null>(
-    label ? (label.textColor === 'light' ? 1 : 2) : null,
+  const [selectedTextColor, setSelectedTextColor] = useState<string | null>(
+    label ? (label.textColor === 'light' ? 'light' : 'dark') : null,
   );
   const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false);
 
@@ -59,8 +59,8 @@ export const LabelEditTable: React.FC<Props> = ({
     setIsPanelOpen(false);
   };
 
-  const onSelectTextColor = (id: number) => {
-    setSelectedTextColor(id);
+  const onSelectTextColor = (color: string) => {
+    setSelectedTextColor(color);
     onPanelClose();
   };
 
@@ -120,7 +120,7 @@ export const LabelEditTable: React.FC<Props> = ({
     descriptionInput === (label ? label.description : '') &&
     colorCodeInput === (label ? label.backgroundColor : '') &&
     selectedTextColor ===
-      (label ? (label.textColor === 'light' ? 1 : 2) : null);
+      (label ? (label.textColor === 'light' ? 'light' : 'dark') : null);
 
   const isColorCodeError =
     !colorCodeInput ||
@@ -133,13 +133,13 @@ export const LabelEditTable: React.FC<Props> = ({
   const displayedTextColor =
     selectedTextColor === null
       ? '텍스트 색상'
-      : selectedTextColor === 1
+      : selectedTextColor === 'light'
       ? '밝은 색'
       : '어두운 색';
 
   const isNameLengthError = nameInput.length > 20;
 
-  const textColor = selectedTextColor === 1 ? 'light' : 'dark';
+  const textColor = selectedTextColor === 'light' ? 'light' : 'dark';
 
   const addTypeStyle = {
     border: `${theme.border.default}  ${theme.neutral.border.default}`,
