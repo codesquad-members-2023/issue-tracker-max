@@ -48,6 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const onLogout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("userInfo");
     localStorage.removeItem("expirationTime");
 
     setUserInfo({ username: "", profileUrl: "" });

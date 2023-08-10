@@ -28,7 +28,7 @@ export default function SignupPage() {
       const response = await postSignup(username.value, password.value);
       if (response.status === 201) {
         alert("회원가입이 완료되었습니다. 가입하신 계정으로 로그인해주세요 :)");
-        navigate("/auth");
+        navigate("/");
       }
     } catch (error) {
       if (error instanceof AxiosError && error.response) {

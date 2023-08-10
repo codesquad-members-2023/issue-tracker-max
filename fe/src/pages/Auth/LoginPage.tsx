@@ -78,7 +78,7 @@ export default function LoginPage() {
           아이디로 로그인
         </Button>
       </AuthForm>
-      <Link to="/auth/signup">
+      <Link to="/signup">
         <Button variant="ghost" size="XL" className="change-auth-btn">
           아직 계정이 없으신가요? 회원가입
         </Button>
