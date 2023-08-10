@@ -1,4 +1,4 @@
-import { decToHex } from "@utils/style";
+import { decToHexOpacity } from "@utils/style";
 
 const colors = {
   grey50: "#FEFEFE",
@@ -38,6 +38,7 @@ const border = {
 const font = {
   displayBold32: "700 32px Pretendard, sans-serif",
   displayBold24: "700 24px Pretendard, sans-serif",
+  displayBold20: "700 20px Pretendard, sans-serif",
   displayBold16: "700 16px Pretendard, sans-serif",
   displayBold14: "700 14px Pretendard, sans-serif",
   displayBold12: "700 12px Pretendard, sans-serif",
@@ -95,7 +96,7 @@ export const lightMode = {
     navy: colors.navy,
     red: colors.red,
   },
-  boxShadow: `0px 0px 8px 0px ${colors.grey900}${decToHex(
+  boxShadow: `0px 0px 8px 0px ${colors.grey900}${decToHexOpacity(
     opacity.transparent
   )}`,
   colors,
@@ -160,7 +161,9 @@ export const darkMode = {
     navy: colors.navy,
     red: colors.red,
   },
-  boxShadow: `0px 0px 16px 0px ${colors.grey900}${decToHex(opacity.hover)}`,
+  boxShadow: `0px 0px 16px 0px ${colors.grey900}${decToHexOpacity(
+    opacity.hover
+  )}`,
   colors,
   border,
   radius,
