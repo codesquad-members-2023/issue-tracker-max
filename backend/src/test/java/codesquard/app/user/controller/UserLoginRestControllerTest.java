@@ -31,8 +31,7 @@ class UserLoginRestControllerTest extends ControllerTestSupport {
 
 	@BeforeEach
 	void beforeEach() {
-		mockMvc = MockMvcBuilders.standaloneSetup(
-				new UserLoginRestController(jwtProvider, objectMapper, authenticateUserService))
+		mockMvc = MockMvcBuilders.standaloneSetup()
 			.setControllerAdvice(new GlobalExceptionHandler())
 			.addFilter(new VerifyUserFilter(objectMapper, userQueryService))
 			.build();

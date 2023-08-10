@@ -92,7 +92,7 @@ public class JwtAuthorizationFilter implements Filter {
 		httpServletResponse.setStatus(errorCode.getHttpStatus().value());
 		httpServletResponse.setContentType("application/json");
 		httpServletResponse.setCharacterEncoding("UTF-8");
-		ApiResponse<Object> body = ApiResponse.of(errorCode.getHttpStatus(), errorCode.getMessage(), null);
+		ApiResponse<Object> body = ApiResponse.error(errorCode);
 		httpServletResponse.getWriter().write(objectMapper.writeValueAsString(body));
 	}
 

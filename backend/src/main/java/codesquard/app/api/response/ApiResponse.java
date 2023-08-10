@@ -2,6 +2,8 @@ package codesquard.app.api.response;
 
 import org.springframework.http.HttpStatus;
 
+import codesquard.app.api.errors.errorcode.ErrorCode;
+
 public class ApiResponse<T> {
 
 	private int code;
@@ -22,6 +24,10 @@ public class ApiResponse<T> {
 
 	public static <T> ApiResponse<T> ok(T data) {
 		return new ApiResponse<>(HttpStatus.OK, HttpStatus.OK.name(), data);
+	}
+
+	public static <T> ApiResponse<T> error(ErrorCode errorCode) {
+		return new ApiResponse<>(errorCode.getHttpStatus(), errorCode.getMessage(), null);
 	}
 
 	public int getCode() {
