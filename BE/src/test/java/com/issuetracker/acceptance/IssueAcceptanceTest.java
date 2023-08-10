@@ -22,6 +22,7 @@ import static com.issuetracker.util.steps.IssueSteps.이슈_작성_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_제목_수정_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +125,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 			"제목",
 			"내용",
 			List.of(MEMBER1.getId()),
-			List.of(LABEL1.getId()),
+			List.of(LABEL2.getId(), LABEL7.getId()),
 			MILESTON1.getId()
 		);
 		var response = 이슈_작성_요청(issueCreateRequest);
@@ -529,10 +530,20 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		List<IssueSearchResponse> issueSearchResponses = findResponse.as(IssuesSearchResponse.class).getIssues();
 		IssueSearchResponse lastIssueSearchResponse = issueSearchResponses.get(0);
 
-		assertThat(lastIssueSearchResponse.getId()).isEqualTo(response.jsonPath().getLong("id"));
-		assertThat(lastIssueSearchResponse.getTitle()).isEqualTo(issueCreateRequest.getTitle());
-		assertThat(lastIssueSearchResponse.getIsOpen()).isTrue();
-		assertThat(lastIssueSearchResponse.getLabels().size()).isEqualTo(issueCreateRequest.getLabelIds().size());
+		Assertions.assertAll(
+			() -> assertThat(lastIssueSearchResponse.getId()).isEqualTo(response.jsonPath().getLong("id")),
+			() -> assertThat(lastIssueSearchResponse.getTitle()).isEqualTo(issueCreateRequest.getTitle()),
+			() -> assertThat(lastIssueSearchResponse.getIsOpen()).isTrue(),
+			() -> assertThat(lastIssueSearchResponse.getLabels()).hasSize(issueCreateRequest.getLabelIds().size()),
+			() -> {
+					if (Objects.isNull(issueCreateRequest.getMilestoneId())) {
+						assertThat(lastIssueSearchResponse.getMilestone()).isNull();
+						return;
+					}
+
+					assertThat(lastIssueSearchResponse.getMilestone().getId()).isEqualTo(issueCreateRequest.getMilestoneId());
+			}
+		);
 	}
 
 	private void 이슈_상세_조회_검증(ExtractableResponse<Response> response, IssueFixture issue) {

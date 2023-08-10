@@ -18,12 +18,12 @@ import com.issuetracker.label.domain.LabelRepository;
 @Repository
 public class JdbcLabelRepository implements LabelRepository {
 
-	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM label WHERE id = :id)";
-	private static final String EXIST_BY_IDS_SQL = "SELECT IF(COUNT(id) = :size, TRUE, FALSE) FROM label WHERE id IN(:labelIds)";
+	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM label WHERE id = :id AND is_deleted = false)";
+	private static final String EXIST_BY_IDS_SQL = "SELECT IF(COUNT(id) = :size, TRUE, FALSE) FROM label WHERE is_deleted = false AND id IN(:labelIds)";
 	private static final String SAVE_SQL = "INSERT INTO label(title, description, color) VALUE(:title, :description, :color)";
 	private static final String UPDATE_SQL = "UPDATE label SET title = :title, description = :description, color = :color WHERE id = :id";
 	private static final String DELETE_SQL = "UPDATE label SET is_deleted = true WHERE id = :id";
-	private static final String FIND_ALL_SQL = "SELECT id, title, description, color FROM label WHERE is_deleted = false";
+	private static final String FIND_ALL_SQL = "SELECT id, title, description, color FROM label WHERE is_deleted = false ORDER BY id desc";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 

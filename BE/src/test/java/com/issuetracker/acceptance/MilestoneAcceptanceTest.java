@@ -3,6 +3,7 @@ package com.issuetracker.acceptance;
 import static com.issuetracker.util.steps.MilestoneSteps.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
@@ -236,7 +237,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		MilestoneCreateRequest milestoneCreateRequest) {
 		var findResponse = 마일스톤_목록_조회_요청();
 		List<MilestoneResponse> milestoneResponse = findResponse.as(MilestonesResponse.class).getMilestones();
-		MilestoneResponse lastMilestoneResponse = milestoneResponse.get(milestoneResponse.size() - 1);
+		MilestoneResponse lastMilestoneResponse = milestoneResponse.get(0);
 
 		SoftAssertions softAssertions = new SoftAssertions();
 		softAssertions.assertThat(lastMilestoneResponse.getId()).isEqualTo(response.jsonPath().getLong("id"));
@@ -252,7 +253,10 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 		MilestoneUpdateRequest milestoneUpdateRequest, Long milestoneId) {
 		var findResponse = 마일스톤_목록_조회_요청();
 		List<MilestoneResponse> milestoneResponse = findResponse.as(MilestonesResponse.class).getMilestones();
-		MilestoneResponse lastMilestoneResponse = milestoneResponse.get(Long.valueOf(milestoneId - 1L).intValue());
+		MilestoneResponse lastMilestoneResponse = milestoneResponse.stream()
+			.filter(m -> Objects.equals(m.getId(), milestoneId))
+			.findAny()
+			.orElseThrow();
 
 		SoftAssertions softAssertions = new SoftAssertions();
 		softAssertions.assertThat(lastMilestoneResponse.getId()).isEqualTo(milestoneId);

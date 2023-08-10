@@ -21,20 +21,24 @@ public class JdbcAssignedLabelRepository implements AssignedLabelRepository {
 
 	private static final String SAVE_SQL = "INSERT INTO assigned_label(issue_id, label_id) VALUES(:issueId, :labelId)";
 	private static final String DELETE_SQL = "DELETE FROM assigned_label WHERE id = :id";
-	private static final String FIND_ALL_SEARCH_SQL = "SELECT DISTINCT label.id, label.title, label.color, label.description FROM label INNER JOIN assigned_label ON label.id = assigned_label.label_id ORDER BY label.id";
+	private static final String FIND_ALL_SEARCH_SQL = "SELECT DISTINCT label.id, label.title, label.color, label.description FROM label INNER JOIN assigned_label ON label.id = assigned_label.label_id WHERE label.is_deleted = 0 ORDER BY label.id";
 	private static final String FIND_ALL_ASSIGNED_TO_ISSUE
 		= "SELECT label.id, label.title, label.color, label.description "
 		+ "FROM assigned_label "
 		+ "LEFT JOIN label "
 		+ "ON assigned_label.label_id = label.id "
-		+ "WHERE assigned_label.issue_id = :issueId";
+		+ "WHERE assigned_label.issue_id = :issueId "
+		+ "AND label.is_deleted = false "
+		+ "ORDER BY label.title ";
 	private static final String FIND_ALL_UNASSIGNED_TO_ISSUE
 		= "SELECT label.id, label.title, label.color, label.description "
 		+ "FROM label "
-		+ "WHERE label.id NOT IN( "
+		+ "WHERE label.is_deleted = false "
+		+ "AND label.id NOT IN( "
 		+ "    SELECT assigned_label.label_id "
 		+ "    FROM assigned_label "
-		+ "    WHERE assigned_label.issue_id = :issueId)";
+		+ "    WHERE assigned_label.issue_id = :issueId) "
+		+ "ORDER BY label.title ";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 

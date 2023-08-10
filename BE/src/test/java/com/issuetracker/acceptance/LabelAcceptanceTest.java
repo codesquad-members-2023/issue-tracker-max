@@ -3,6 +3,7 @@ package com.issuetracker.acceptance;
 import static com.issuetracker.util.steps.LabelSteps.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
@@ -235,7 +236,7 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelCreateRequest labelCreateRequest) {
 		var findResponse = 레이블_목록_조회_요청();
 		List<LabelResponse> labelResponse = findResponse.as(LabelsResponse.class).getLabels();
-		LabelResponse lastLabelResponse = labelResponse.get(labelResponse.size() - 1);
+		LabelResponse lastLabelResponse = labelResponse.get(0);
 
 		SoftAssertions softAssertions = new SoftAssertions();
 		softAssertions.assertThat(lastLabelResponse.getId()).isEqualTo(response.jsonPath().getLong("id"));
@@ -248,7 +249,10 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelUpdateRequest labelUpdateRequest, Long labelId) {
 		var findResponse = 레이블_목록_조회_요청();
 		List<LabelResponse> labelResponse = findResponse.as(LabelsResponse.class).getLabels();
-		LabelResponse lastLabelResponse = labelResponse.get(Long.valueOf(labelId - 1L).intValue());
+		LabelResponse lastLabelResponse = labelResponse.stream()
+			.filter(l -> Objects.equals(l.getId(), labelId))
+			.findAny()
+			.orElseThrow();
 
 		SoftAssertions softAssertions = new SoftAssertions();
 		softAssertions.assertThat(lastLabelResponse.getId()).isEqualTo(labelId);

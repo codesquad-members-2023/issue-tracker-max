@@ -19,8 +19,8 @@ import com.issuetracker.milestone.domain.MilestoneRepository;
 @Repository
 public class JdbcMilestoneRepository implements MilestoneRepository {
 
-	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM milestone WHERE id = :id)";
-	private static final String FIND_ALL_FOR_FILTER = "SELECT id, title FROM milestone ORDER BY is_open DESC";
+	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM milestone WHERE is_deleted = false AND id = :id)";
+	private static final String FIND_ALL_FOR_FILTER = "SELECT id, title FROM milestone WHERE milestone.is_deleted = false ORDER BY is_open DESC";
 	private static final String SAVE_SQL = "INSERT INTO milestone(title, description, deadline, is_open) VALUE(:title, :description, :deadline, true)";
 	private static final String UPDATE_SQL = "UPDATE milestone SET title = :title, description = :description, deadline = :deadline WHERE id = :id";
 	private static final String UPDATE_OPEN_STATUS_SQL = "UPDATE milestone SET is_open = :isOpen WHERE id = :id";
@@ -37,7 +37,8 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "LEFT JOIN issue "
 		+ "ON milestone.id = issue.milestone_id "
 		+ "WHERE milestone.is_deleted = false "
-		+ "GROUP BY milestone.id";
+		+ "GROUP BY milestone.id "
+		+ "ORDER BY milestone.id DESC ";
 	private static final String FIND_ALL_ASSIGNED_TO_ISSUE
 		= "SELECT "
 		+ "    milestone.id, "
@@ -48,8 +49,10 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "FROM milestone "
 		+ "RIGHT JOIN issue "
 		+ "ON milestone.id = issue.milestone_id "
-		+ "WHERE milestone_id = (SELECT sub_issue.milestone_id FROM issue sub_issue WHERE sub_issue.id = :issueId) "
-		+ "GROUP BY milestone.id";
+		+ "WHERE milestone.is_deleted = false "
+		+ "AND milestone_id = (SELECT sub_issue.milestone_id FROM issue sub_issue WHERE sub_issue.id = :issueId) "
+		+ "GROUP BY milestone.id "
+		+ "ORDER BY milestone.title ";
 	private static final String FIND_ALL_UNASSIGNED_TO_ISSUE
 		= "SELECT "
 		+ "    milestone.id, "
@@ -60,8 +63,10 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "FROM milestone "
 		+ "LEFT JOIN issue "
 		+ "ON milestone.id = issue.milestone_id "
-		+ "WHERE milestone.id NOT IN (SELECT sub_issue.milestone_id FROM issue sub_issue WHERE sub_issue.id = :issueId) "
-		+ "GROUP BY milestone.id";
+		+ "WHERE milestone.is_deleted = false "
+		+ "AND milestone.id NOT IN (SELECT sub_issue.milestone_id FROM issue sub_issue WHERE sub_issue.id = :issueId) "
+		+ "GROUP BY milestone.id "
+		+ "ORDER BY milestone.title ";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
