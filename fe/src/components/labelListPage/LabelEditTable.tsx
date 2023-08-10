@@ -107,7 +107,7 @@ export const LabelEditTable: React.FC<Props> = ({
       }
 
       onAddTableClose();
-      await fetchLabelList();
+      fetchLabelList();
     } catch (error) {
       console.error('There was a problem with the fetch operation:');
       // todo 에러처리
