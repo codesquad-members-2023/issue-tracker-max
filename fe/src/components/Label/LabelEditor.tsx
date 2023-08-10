@@ -51,7 +51,7 @@ export default function LabelEditor({
 
   const [newLabel, setNewLabel] = useState({
     newName: label ? label.name : "",
-    newDescription: label ? label.description : "",
+    newDescription: label ? (label.description ? label.description : "") : "",
     newBackgroundColor: label ? label.backgroundColor : "#FEFEFE",
     newFontColor: label ? label.fontColor : FontColor.dark,
   });
@@ -62,19 +62,19 @@ export default function LabelEditor({
 
   const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNewLabel((prev) => {
-      return { ...prev, newName: e.target.value.trim() };
+      return { ...prev, newName: e.target.value };
     });
   };
 
   const onDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNewLabel((prev) => {
-      return { ...prev, newDescription: e.target.value.trim() };
+      return { ...prev, newDescription: e.target.value };
     });
   };
 
   const onBackgroundColorChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNewLabel((prev) => {
-      return { ...prev, newBackgroundColor: e.target.value.trim() };
+      return { ...prev, newBackgroundColor: e.target.value };
     });
   };
 
@@ -108,9 +108,9 @@ export default function LabelEditor({
 
     try {
       const newLabel = {
-        name: newName,
-        description: newDescription,
-        backgroundColor: newBackgroundColor,
+        name: newName.trim(),
+        description: newDescription.trim(),
+        backgroundColor: newBackgroundColor.trim(),
         fontColor: newFontColor,
       };
 
