@@ -62,8 +62,15 @@ const loginButton = (color: ColorScheme, isFormValid: boolean) => css`
   border-radius: 16px;
 `;
 
-const GITHUB_CLIENT_ID = "a2c2a003c21c55bf1c3c";
-const REDIRECT_URI = "http://localhost:5173/login";
+// const GITHUB_CLIENT_ID = "a2c2a003c21c55bf1c3c";
+
+// 찰리 client ID
+const GITHUB_CLIENT_ID = "f3baa022e59aef7557ea";
+
+// const REDIRECT_URI = "http://localhost:5173/login";
+const REDIRECT_URI = "http://54.180.146.130/login/oauth2/code/github";
+// const REDIRECT_URI =
+//   "http://issue-tracker-team3.s3-website.ap-northeast-2.amazonaws.com/login";
 
 export function LoginPage() {
   const [id, setId] = useState("");
@@ -84,6 +91,7 @@ export function LoginPage() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
+    console.log(code);
     if (code) {
       sendCodeToServer(code);
     }
@@ -95,6 +103,7 @@ export function LoginPage() {
 
   const onGitHubLoginCLick = () => {
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=user`;
+    // window.location.href = `https://github.com/login/oauth/authorize?client_id=f3baa022e59aef7557ea&scope=id,name,email,avatar_url`;
   };
 
   const onClickLogo = () => {
@@ -114,6 +123,7 @@ export function LoginPage() {
   };
 
   const sendCodeToServer = async (code: string) => {
+    console.log(code);
     try {
       const response = await fetch(`${SERVER}${LOGIN_CODE_URL}/${code}`, {
         method: "POST",
@@ -128,6 +138,7 @@ export function LoginPage() {
         localStorage.setItem("token", data.token);
         navigate("/issues");
       }
+      navigate("/issues");
     } catch (error) {
       console.log(error);
     }

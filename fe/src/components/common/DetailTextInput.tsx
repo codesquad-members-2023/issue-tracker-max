@@ -6,6 +6,7 @@ import { fonts } from "../../constants/fonts";
 import { textInputTitle } from "../../styles/commonStyles";
 
 type Props = {
+  isDate?: boolean;
   mode: string;
   title: string;
   inputText: string;
@@ -62,6 +63,7 @@ export function DetailTextInput({
   icon,
   onChange,
   placeholder,
+  isDate,
 }: Props) {
   const color = useTheme() as ColorScheme;
   const [isFocused, setIsFocused] = useState(false);
@@ -79,6 +81,10 @@ export function DetailTextInput({
       <div css={textInputTitle(color)}>{title}</div>
       <div className="contentWrapper" css={contentWrapper(widthType)}>
         <input
+          pattern={isDate ? "^d{4}[-.]?d{2}[-.]?d{2}$" : ""}
+          title={
+            isDate ? "YYYY.MM.DD 또는 YYYY-MM-DD 형식으로 입력하세요." : ""
+          }
           css={input(color)}
           onChange={onChange}
           onFocus={onFocusInput}

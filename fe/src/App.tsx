@@ -20,13 +20,13 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route
-              path="/*"
+              path="/issues/*"
               element={
                 <IssueProvider>
                   <Routes>
-                    <Route path="/issues" element={<IssuePage />} />
-                    <Route path="/issues/new" element={<NewIssuePage />} />
-                    <Route path="/issues/:id" element={<IssueDetailPage />} />
+                    <Route path="/" element={<IssuePage />} />{" "}
+                    <Route path="new" element={<NewIssuePage />} />
+                    <Route path=":id" element={<IssueDetailPage />} />
                   </Routes>
                 </IssueProvider>
               }

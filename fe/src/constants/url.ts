@@ -15,4 +15,4 @@ export const FILTER_URL = `?type=filter`;
 export const FILTER_OPEN_URL = `?filter=open`;
 export const FILTER_CLOSED_URL = `?filter=closed`;
 
-export const LOGIN_CODE_URL = `/api/oauth/sign-in/`;
+export const LOGIN_CODE_URL = `/api/oauth/sign-in`;
