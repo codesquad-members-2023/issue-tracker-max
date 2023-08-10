@@ -19,6 +19,8 @@ public class MilestoneInformation {
 	private LocalDate deadline;
 	private boolean isOpen;
 	private Integer progress;
+	private Integer openIssueCount;
+	private Integer closeIssueCount;
 
 	public static MilestoneInformation from(Milestone milestone) {
 		return new MilestoneInformation(
@@ -27,7 +29,9 @@ public class MilestoneInformation {
 			milestone.getDescription(),
 			milestone.getDeadline(),
 			milestone.getIsOpen(),
-			milestone.getProgress()
+			milestone.getProgress(),
+			milestone.getOpenIssueCount(),
+			milestone.getCloseIssueCount()
 		);
 	}
 

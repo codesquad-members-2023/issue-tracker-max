@@ -33,7 +33,9 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "    milestone.description, "
 		+ "    milestone.deadline, "
 		+ "    milestone.is_open, "
-		+ "    COALESCE( ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 0 ), 0 ) AS progress "
+		+ "    COALESCE( ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 0 ), 0 ) AS progress, "
+		+ "    COUNT( CASE WHEN issue.is_open = true THEN 1 ELSE null END ) AS open_issue_count, "
+		+ "    COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) AS close_issue_count "
 		+ "FROM milestone "
 		+ "LEFT JOIN issue "
 		+ "ON milestone.id = issue.milestone_id "
@@ -47,6 +49,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "    milestone.title, "
 		+ "    milestone.description, "
 		+ "    milestone.deadline, "
+		+ "    milestone.is_open, "
 		+ "    COALESCE( ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 0 ), 0 ) AS progress "
 		+ "FROM milestone "
 		+ "RIGHT JOIN issue "
@@ -61,6 +64,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "    milestone.title, "
 		+ "    milestone.description, "
 		+ "    milestone.deadline, "
+		+ "    milestone.is_open, "
 		+ "    COALESCE( ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 0 ), 0 ) AS progress "
 		+ "FROM milestone "
 		+ "LEFT JOIN issue "
@@ -141,7 +145,8 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	@Override
 	public List<Milestone> findAll(Milestone milestone) {
-		return jdbcTemplate.query(FIND_ALL_SQL, Map.of("isOpen", milestone.getIsOpen()), MILESTONE_ROW_MAPPER);
+		return jdbcTemplate.query(FIND_ALL_SQL, Map.of("isOpen", milestone.getIsOpen()),
+			MILESTONE_WITH_ISSUE_COUNT_ROW_MAPPER);
 	}
 
 	private static LocalDate convertFrom(String dateString) {
@@ -174,6 +179,17 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 			.progress(rs.getInt("progress"))
 			.build();
 
+	private static final RowMapper<Milestone> MILESTONE_WITH_ISSUE_COUNT_ROW_MAPPER = (rs, rowNum) ->
+		Milestone.builder()
+			.id(rs.getLong("id"))
+			.title(rs.getString("title"))
+			.description(rs.getString("description"))
+			.deadline(convertFrom(rs.getString("deadline")))
+			.isOpen(rs.getBoolean("is_open"))
+			.progress(rs.getInt("progress"))
+			.openIssueCount(rs.getInt("open_issue_count"))
+			.closeIssueCount(rs.getInt("close_issue_count"))
+			.build();
 	private static final RowMapper<MilestoneCountMetadata> MILESTONE_METADATA_MAPPER = (rs, rowNum) ->
 		MilestoneCountMetadata.builder()
 			.totalLabelCount(rs.getInt("total_label_count"))

@@ -24,6 +24,8 @@ public class MilestoneResponse {
 	@JsonProperty(value = "isOpen")
 	private boolean open;
 	private Integer progress;
+	private Integer openIssueCount;
+	private Integer closeIssueCount;
 
 	public static MilestoneResponse from(MilestoneInformation milestoneInformation) {
 		return new MilestoneResponse(
@@ -32,7 +34,9 @@ public class MilestoneResponse {
 			milestoneInformation.getDescription(),
 			milestoneInformation.getDeadline(),
 			milestoneInformation.isOpen(),
-			milestoneInformation.getProgress()
+			milestoneInformation.getProgress(),
+			milestoneInformation.getOpenIssueCount(),
+			milestoneInformation.getCloseIssueCount()
 		);
 	}
 

@@ -30,7 +30,9 @@ public class MilestoneCandidatesInformation {
 			milestone.getDescription(),
 			milestone.getDeadline(),
 			milestone.getIsOpen(),
-			milestone.getProgress()
+			milestone.getProgress(),
+			milestone.getOpenIssueCount(),
+			milestone.getCloseIssueCount()
 		);
 	}
 
