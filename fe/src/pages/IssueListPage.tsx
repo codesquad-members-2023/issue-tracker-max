@@ -1,11 +1,15 @@
+import { Button } from '@components/common/Button';
 import { IssueTable } from '@components/issueListPage/IssueTable';
 import { SubNav } from '@components/issueListPage/SubNav';
 import { getIssueListPageData } from '@utils/api';
 import { processFilterString } from '@utils/processFilterString';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
+import { useTheme } from '@emotion/react';
 
 export const IssueListPage: React.FC = () => {
+  const theme = useTheme() as any;
   const [filterValue, setFilterValue] = useState('');
   const [pageData, setPageData] = useState<IssuePageData>(initialPageData);
   const navigate = useNavigate();
@@ -53,6 +57,26 @@ export const IssueListPage: React.FC = () => {
           goToFilteredPage,
         }}
       />
+
+      {hasFilter && (
+        <Button
+          {...{ typeVariant: 'ghost', size: 'S' }}
+          onClick={() => {
+            navigate('/issues');
+          }}
+          css={{
+            display: 'flex',
+            alignItems: 'center',
+            width: '200px',
+            whiteSpace: 'nowrap',
+            marginBottom: '20px',
+          }}
+        >
+          <XSquare stroke={theme.neutral.text.default} />
+          <span>현재의 검색 필터 및 정렬 지우기</span>
+        </Button>
+      )}
+
       <IssueTable
         {...{
           openIssueCount: pageData.openIssueCount,
