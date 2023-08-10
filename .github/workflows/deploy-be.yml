@@ -11,7 +11,8 @@ on:
 env:
   S3_BUCKET_NAME: room-number7-presents
   AWS_REGION: ap-northeast-2
-  PROFILE_RESOURCE_PATH: ./src/main/resources/application-prodDB.yml
+  PROD_PROFILE_RESOURCE_PATH: ./src/main/resources/application-prodDB.yml
+  CLOUD_PROFILE_RESOURCE_PATH: ./src/main/resources/application-cloud.yml
   CODE_DEPLOY_APPLICATION_NAME: codedeploy-app
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: issue-tracker-deploy-group
 
@@ -38,11 +39,16 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      # 3. application-prodDB.yml 생성
+      # 3. application-prodDB.yml, application-cloud.yml 생성
       - name: Create application-prodDB.yml file
-        run: touch '${{ env.PROFILE_RESOURCE_PATH }}'
+        run: touch '${{ env.PROD_PROFILE_RESOURCE_PATH }}'
       - name: Set application-prodDB.yml file
-        run: echo '${{ secrets.APPLICATION_PROPERTIES }}' > '${{ env.PROFILE_RESOURCE_PATH }}'
+        run: echo '${{ secrets.APPLICATION_PROPERTIES }}' > '${{ env.PROD_PROFILE_RESOURCE_PATH }}'
+
+      - name: Create application-cloud.yml file
+        run: touch '${{ env.CLOUD_PROFILE_RESOURCE_PATH }}'
+      - name: Set application-cloud.yml file
+        run: echo '${{ secrets.APPLICATION_CLOUD_PROPERTIES }}' > '${{ env.CLOUD_PROFILE_RESOURCE_PATH }}'
 
       # 4. gradle 빌드
       - name: Grant execute permission for gradlew
