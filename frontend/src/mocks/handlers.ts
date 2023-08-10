@@ -124,7 +124,17 @@ export const handlers = [
 
     issue.data.title = title;
 
-    return res(ctx.status(200), ctx.json(issue));
+    return res(
+      ctx.status(200),
+      ctx.json({
+        code: 200,
+        status: "OK",
+        message: "OK",
+        data: {
+          modifiedIssueId: Number(issueId),
+        },
+      }),
+    );
   }),
   rest.patch("/api/issues/:issueId/status", async (req, res, ctx) => {
     const { issueId } = req.params;
@@ -136,7 +146,17 @@ export const handlers = [
       statusModifiedAt: new Date().toISOString(),
     };
 
-    return res(ctx.status(200), ctx.json(issue));
+    return res(
+      ctx.status(200),
+      ctx.json({
+        code: 200,
+        status: "OK",
+        message: "OK",
+        data: {
+          modifiedIssueId: Number(issueId),
+        },
+      }),
+    );
   }),
   rest.patch("/api/issues/:issueId/content", async (req, res, ctx) => {
     const { issueId } = req.params;
@@ -148,7 +168,42 @@ export const handlers = [
       modifiedAt: new Date().toISOString(),
     };
 
-    return res(ctx.status(200), ctx.json(issue));
+    return res(
+      ctx.status(200),
+      ctx.json({
+        code: 200,
+        status: "OK",
+        message: "OK",
+        data: {
+          modifiedIssueId: Number(issueId),
+        },
+      }),
+    );
+  }),
+  rest.patch("/api/comments/:commentId", async (req, res, ctx) => {
+    const { commentId } = req.params;
+    const { content } = await req.json();
+
+    issue.data = {
+      ...issue.data,
+      comments: issue.data.comments.map((comment) => {
+        return comment.id === Number(commentId)
+          ? { ...comment, content, modifiedAt: new Date().toISOString() }
+          : comment;
+      }),
+    };
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        code: 200,
+        status: "OK",
+        message: "OK",
+        data: {
+          modifiedCommentId: Number(commentId),
+        },
+      }),
+    );
   }),
 ];
 
@@ -338,7 +393,15 @@ const issue = {
         avatarUrl: null,
         content: "이 댓글을 읽은 당신은 앞으로 모든 일이 신기하게 잘풀립니다!",
         createdAt: "2023-08-09T15:21:09",
-        modifiedAt: null,
+        modifiedAt: "2023-08-09T20:21:09",
+      },
+      {
+        id: 2,
+        userId: "hjsong123",
+        avatarUrl: null,
+        content: "웃어보세요! 오늘 하루가 달라질 겁에요!",
+        createdAt: "2023-08-10T10:21:09",
+        modifiedAt: "2023-08-10T13:21:09",
       },
     ],
   },

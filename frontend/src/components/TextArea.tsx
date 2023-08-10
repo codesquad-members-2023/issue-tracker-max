@@ -315,7 +315,7 @@ const Input = styled.textarea<{ $children: ReactNode; $height?: number }>`
   box-sizing: border-box;
   width: 100%;
   height: ${({ $children, $height }) =>
-    $children && $height ? `${Math.min($height, 461)}px` : "461px"};
+    $children ? ($height ? `${Math.min($height, 461)}px` : "120px") : "461px"};
   resize: none;
   border: none;
   background: none;

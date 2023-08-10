@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import { CommentList } from "../../components/comment/CommentList";
 import { IssueContent } from "./IssueContent";
 
 type IssueDetailMainContentProps = {
@@ -29,7 +30,13 @@ export function IssueDetailMainContent(props: IssueDetailMainContentProps) {
   return (
     <Div>
       <IssueContent {...props} />
-      {/* <CommentList /> */}
+      <CommentList
+        {...{
+          comments: props.comments,
+          writer: props.writer,
+          fetchIssue: props.fetchIssue,
+        }}
+      />
       {/* <CommentEditor /> */}
     </Div>
   );
