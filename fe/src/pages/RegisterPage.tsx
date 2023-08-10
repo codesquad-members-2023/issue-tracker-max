@@ -8,6 +8,7 @@ import { ColorScheme } from "../contexts/ThemeContext";
 import { useTheme } from "@emotion/react";
 import { Icon } from "../components/common/Icon";
 import { fonts } from "../constants/fonts";
+import { REGISTER_URL, SERVER } from "../constants/url";
 
 export function RegisterPage() {
   const color = useTheme() as ColorScheme;
@@ -22,6 +23,10 @@ export function RegisterPage() {
   const onClickLogo = () => {
     navigate("/issues");
   };
+
+  const onClickLogin = () => {
+    navigate("/login")
+  }
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -39,12 +44,32 @@ export function RegisterPage() {
     setCheckPassword(e.target.value);
   };
 
-  const onClickRegisterButton = () => {
+  const onClickRegisterButton = async () => {
     if (isFormValid) {
       console.log("가입정보", email, id, password, checkPassword); //API 연결전 임시 사용
-      navigate("/");
+      try {
+        fetch(`${SERVER}${REGISTER_URL}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            nickname: id,
+            password: password,
+          }),
+        });
+      } catch (error) {
+        console.log(`error: ${error}
+        `);
+      }
+      // navigate("/issues");
     }
   };
+
+  const isEmailValid = email.includes("@");
+
+  const isPasswordValid = password.length >= 6 && password.length <= 12;
 
   useEffect(() => {
     if (password !== checkPassword) {
@@ -88,6 +113,9 @@ export function RegisterPage() {
             gap: "16px",
           }}>
           <TextInput
+            isFormValid={isEmailValid}
+            inputValue={email}
+            caption="올바른 이메일 형식이 아닙니다"
             width="100%"
             height={56}
             placeholder="이메일"
@@ -100,6 +128,9 @@ export function RegisterPage() {
             onChange={onChangeId}
           />
           <TextInput
+            isFormValid={isPasswordValid}
+            inputValue={password}
+            caption="비밀번호는 6자 이상 12자 이하로 입력해주세요."
             width="100%"
             isPassword={true}
             height={56}
@@ -107,6 +138,8 @@ export function RegisterPage() {
             onChange={onChangePassword}
           />
           <TextInput
+            isFormValid={isPasswordValid}
+            inputValue={id}
             width="100%"
             isPassword={true}
             height={56}
@@ -136,7 +169,7 @@ export function RegisterPage() {
         </div>
 
         <div
-          onClick={onClickLogo}
+          onClick={onClickLogin}
           css={{
             cursor: "pointer",
             display: "flex",
@@ -157,7 +190,7 @@ export function RegisterPage() {
               justifyContent: "center",
 
               position: "relative",
-              top: "48px",
+              top: "52px",
               ...fonts.medium16,
               color: color.danger.border.default,
             }}>
