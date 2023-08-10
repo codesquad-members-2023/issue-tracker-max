@@ -178,7 +178,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 
 	/**
 	 * Given 마일스톤 제목, 마일스톤 설명, 마일스톤 데드라인을 생성하고
-	 * When 마일스톤을 수정시 데드라인이 yyyy.MM.dd 형식이 아니면
+	 * When 마일스톤을 수정시 데드라인이 yyyy-MM-dd 형식이 아니면
 	 * Then 400에러를 반환한다.
 	 */
 	@Test
