@@ -41,8 +41,9 @@ public class IssueSearchArgumentResolver implements HandlerMethodArgumentResolve
 				}
 		});
 
+		String isOpen = webRequest.getParameter("isOpen");
 		return new IssueSearchRequest(
-			Boolean.valueOf(webRequest.getParameter("isOpen")),
+			Objects.isNull(isOpen) ? null : Boolean.valueOf(isOpen),
 			converterListLong(webRequest.getParameterValues("assigneeIds")),
 			converterListLong(webRequest.getParameterValues("labelIds")),
 			converterLong(webRequest.getParameter("milestoneId")),
