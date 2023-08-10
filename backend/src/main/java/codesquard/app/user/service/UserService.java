@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.api.errors.errorcode.UserErrorCode;
-import codesquard.app.api.errors.exception.user.UserRestApiException;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.user.repository.UserRepository;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
 import codesquard.app.user.service.response.UserSaveServiceResponse;
@@ -34,19 +34,19 @@ public class UserService {
 
 	private void validatePasswordMatching(UserSaveServiceRequest userSaveServiceRequest) {
 		if (!userSaveServiceRequest.matchPasswordAndPasswordConfirm()) {
-			throw new UserRestApiException(UserErrorCode.NOT_MATCH_PASSWORD);
+			throw new RestApiException(UserErrorCode.NOT_MATCH_PASSWORD);
 		}
 	}
 
 	private void validateDuplicatedLoginId(UserSaveServiceRequest userSaveServiceRequest) {
 		if (userQueryService.verifyDuplicatedLoginId(userSaveServiceRequest)) {
-			throw new UserRestApiException(UserErrorCode.ALREADY_EXIST_LOGINID);
+			throw new RestApiException(UserErrorCode.ALREADY_EXIST_LOGINID);
 		}
 	}
 
 	private void validateDuplicatedEmail(UserSaveServiceRequest userSaveServiceRequest) {
 		if (userQueryService.verifyDuplicatedEmail(userSaveServiceRequest)) {
-			throw new UserRestApiException(UserErrorCode.ALREADY_EXIST_EMAIL);
+			throw new RestApiException(UserErrorCode.ALREADY_EXIST_EMAIL);
 		}
 	}
 }

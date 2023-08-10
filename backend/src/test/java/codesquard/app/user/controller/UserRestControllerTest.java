@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
 import codesquard.app.api.errors.errorcode.UserErrorCode;
-import codesquard.app.api.errors.exception.user.UserRestApiException;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.user.controller.request.UserSaveRequest;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
@@ -183,7 +183,7 @@ class UserRestControllerTest extends ControllerTestSupport {
 			"lee1234lee1234");
 		// mocking
 		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class)))
-			.thenThrow(new UserRestApiException(UserErrorCode.NOT_MATCH_PASSWORD));
+			.thenThrow(new RestApiException(UserErrorCode.NOT_MATCH_PASSWORD));
 		// when then
 		mockMvc.perform(post("/api/users")
 				.content(objectMapper.writeValueAsString(userSaveRequest))
@@ -202,7 +202,7 @@ class UserRestControllerTest extends ControllerTestSupport {
 		UserSaveRequest userSaveRequest = new UserSaveRequest("hong1234", "hong1234@naver.com", "hong1234", "hong1234");
 		// mocking
 		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class)))
-			.thenThrow(new UserRestApiException(UserErrorCode.ALREADY_EXIST_LOGINID));
+			.thenThrow(new RestApiException(UserErrorCode.ALREADY_EXIST_LOGINID));
 		// when then
 		mockMvc.perform(post("/api/users")
 				.content(objectMapper.writeValueAsString(userSaveRequest))
@@ -221,7 +221,7 @@ class UserRestControllerTest extends ControllerTestSupport {
 		UserSaveRequest userSaveRequest = new UserSaveRequest("hong1234", "hong1234@naver.com", "hong1234", "hong1234");
 		// mocking
 		when(userService.signUp(Mockito.any(UserSaveServiceRequest.class)))
-			.thenThrow(new UserRestApiException(UserErrorCode.ALREADY_EXIST_EMAIL));
+			.thenThrow(new RestApiException(UserErrorCode.ALREADY_EXIST_EMAIL));
 		// when then
 		mockMvc.perform(post("/api/users")
 				.content(objectMapper.writeValueAsString(userSaveRequest))

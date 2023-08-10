@@ -13,9 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquard.app.api.errors.errorcode.JwtTokenErrorCode;
 import codesquard.app.api.errors.errorcode.LoginErrorCode;
-import codesquard.app.api.errors.exception.jwt.JwtRestApiException;
-import codesquard.app.api.errors.exception.user.LoginRestApiException;
-import codesquard.app.api.errors.exception.user.UserRestApiException;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.authenticate_user.repository.AuthenticateUserRepository;
 import codesquard.app.authenticate_user.service.request.RefreshTokenServiceRequest;
@@ -76,12 +74,12 @@ public class AuthenticateUserService {
 			// 4. refreshToken을 갱신합니다.
 			updateRefreshToken(authenticateUser, jwt);
 			return jwt;
-		} catch (UserRestApiException e) {
+		} catch (RestApiException e) {
 			logger.error("userRestApiException : {}", e.getMessage());
-			throw new JwtRestApiException(JwtTokenErrorCode.NOT_MATCH_REFRESHTOKEN);
+			throw new RestApiException(JwtTokenErrorCode.NOT_MATCH_REFRESHTOKEN);
 		} catch (Exception e) {
 			logger.error("refreshToken error : {}", e.getMessage());
-			throw new JwtRestApiException(JwtTokenErrorCode.NOT_MATCH_REFRESHTOKEN);
+			throw new RestApiException(JwtTokenErrorCode.NOT_MATCH_REFRESHTOKEN);
 		}
 	}
 
@@ -101,7 +99,8 @@ public class AuthenticateUserService {
 		try {
 			authenticateUserJson = objectMapper.writeValueAsString(authenticateUser);
 		} catch (JsonProcessingException e) {
-			throw new LoginRestApiException(LoginErrorCode.NOT_MATCH_LOGIN);
+			logger.error("로그인 오류 : {}", e.getMessage());
+			throw new RestApiException(LoginErrorCode.NOT_MATCH_LOGIN);
 		}
 		// 2. key="authenticateUser" value=인증 객체의 json 데이터를 claims 맵에 저장
 		claims.put(VerifyUserFilter.AUTHENTICATE_USER, authenticateUserJson);

@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
 import codesquard.app.api.errors.errorcode.JwtTokenErrorCode;
-import codesquard.app.api.errors.exception.jwt.JwtRestApiException;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.authenticate_user.service.request.RefreshTokenServiceRequest;
 import codesquard.app.jwt.Jwt;
@@ -64,7 +64,7 @@ class AuthenticateUserRestControllerTest extends ControllerTestSupport {
 		String refreshToken = "";
 		// mocking
 		when(authenticateUserService.refreshToken(any(RefreshTokenServiceRequest.class)))
-			.thenThrow(new JwtRestApiException(JwtTokenErrorCode.NOT_MATCH_REFRESHTOKEN));
+			.thenThrow(new RestApiException(JwtTokenErrorCode.NOT_MATCH_REFRESHTOKEN));
 		// when & then
 		mockMvc.perform(post("/api/auth/refresh/token")
 				.cookie(new Cookie("refreshToken", refreshToken)))

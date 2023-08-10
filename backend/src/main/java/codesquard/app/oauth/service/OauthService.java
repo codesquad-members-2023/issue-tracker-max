@@ -21,8 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquard.app.api.errors.errorcode.LoginErrorCode;
 import codesquard.app.api.errors.errorcode.OauthErrorCode;
-import codesquard.app.api.errors.exception.oauth.OauthRestApiException;
-import codesquard.app.api.errors.exception.user.LoginRestApiException;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.authenticate_user.service.AuthenticateUserService;
 import codesquard.app.jwt.Jwt;
@@ -78,7 +77,8 @@ public class OauthService {
 			String authenticateUserJson = objectMapper.writeValueAsString(authenticateUser);
 			claims.put(VerifyUserFilter.AUTHENTICATE_USER, authenticateUserJson);
 		} catch (JsonProcessingException e) {
-			throw new LoginRestApiException(LoginErrorCode.NOT_MATCH_LOGIN);
+			logger.error("로그인 오류 : {}", e.getMessage());
+			throw new RestApiException(LoginErrorCode.NOT_MATCH_LOGIN);
 		}
 		Jwt jwt = jwtProvider.createJwt(claims);
 		authenticateUserService.updateSocialUserRefreshToken(authenticateUser, jwt);
@@ -123,7 +123,7 @@ public class OauthService {
 			return requestUserAttributes(oauthProvider, oauthAccessTokenResponse);
 		} catch (WebClientResponseException.Unauthorized e) {
 			logger.error("소셜 사용자의 정보 요청 인가 오류 : {}", e.getMessage());
-			throw new OauthRestApiException(OauthErrorCode.BAD_AUTHORIZATION_CODE);
+			throw new RestApiException(OauthErrorCode.BAD_AUTHORIZATION_CODE);
 		}
 	}
 
