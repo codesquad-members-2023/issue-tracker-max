@@ -89,7 +89,7 @@ export function IssueDetail() {
     <Div>
       <IssueDetailHeader fetchIssue={fetchIssue} {...issue} />
       <Line />
-      <IssueDetailBody {...issue} />
+      <IssueDetailBody fetchIssue={fetchIssue} {...issue} />
     </Div>
   );
 }

@@ -39,6 +39,7 @@ type IssueDetailBodyProps = {
       closedIssueCount: number;
     };
   } | null;
+  fetchIssue: () => void;
 };
 
 export function IssueDetailBody(props: IssueDetailBodyProps) {

@@ -17,10 +17,12 @@ export type IconType = {
 export function Icon({
   name,
   color = DefaultIconColor,
+  pointer = true,
   onClick
 }: {
   name: keyof IconType;
   color?: IconColor;
+  pointer?: boolean;
   onClick?: () => void;
 }) {
   const theme = useTheme();
@@ -35,7 +37,7 @@ export function Icon({
   const iconColor = getColorCode(color, theme);
 
   return (
-    <IconWrapper onClick={onClick}>
+    <IconWrapper $pointer={pointer} onClick={onClick}>
       <IconComponent
         fill={isFillType ? iconColor : "none"}
         stroke={isFillType ? "none" : iconColor}
@@ -44,12 +46,12 @@ export function Icon({
   );
 }
 
-const IconWrapper = styled.div`
+const IconWrapper = styled.div<{$pointer: boolean}>`
   display: flex;
   align-items: center;
 
   &:hover {
-    cursor: pointer;
+    cursor: ${({$pointer}) => $pointer ? "pointer" : "default"};
     opacity: ${({theme}) => theme.opacity.hover};
   }
 `;

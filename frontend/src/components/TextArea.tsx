@@ -1,5 +1,6 @@
 import {
   ChangeEvent,
+  ReactNode,
   TextareaHTMLAttributes,
   useEffect,
   useRef,
@@ -12,6 +13,9 @@ import { Icon } from "./icon/Icon";
 type TextAreaProps = {
   value?: string;
   label?: string;
+  width?: string | number;
+  children?: ReactNode;
+  isEditing?: boolean;
 } & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 type TextAreaState = "Active" | "Enabled" | "Disabled";
@@ -19,19 +23,35 @@ type TextAreaState = "Active" | "Enabled" | "Disabled";
 export function TextArea({
   value = "",
   label,
+  width,
+  children,
+  isEditing = false,
   disabled,
   placeholder,
   maxLength,
   onChange,
 }: TextAreaProps) {
   const [state, setState] = useState<TextAreaState>(
-    disabled ? "Disabled" : "Enabled",
+    disabled ? "Disabled" : isEditing ? "Active" : "Enabled",
   );
   const [inputValue, setInputValue] = useState(value);
   const [countHidden, setCountHidden] = useState(true);
   const [uploadErrorMessage, setUploadErrorMessage] = useState("");
+  const componentRef = useRef<HTMLDivElement>(null);
   const textArea = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
+  useEffect(() => {
+    if (isEditing) {
+      textArea.current?.focus();
+    } else {
+      setState("Enabled");
+    }
+  }, [isEditing]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -62,13 +82,16 @@ export function TextArea({
   };
 
   const onBlur = () => {
+    if (isEditing) {
+      return;
+    }
     setState("Enabled");
   };
 
   const onTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
     setCountHidden(false);
-    onChange && onChange(e);
+    onChange?.(e);
   };
 
   const onFileInputClick = () => {
@@ -140,62 +163,80 @@ export function TextArea({
   };
 
   return (
-    <Wrapper>
-      <Div $state={state} onFocus={onFocus} onBlur={onBlur}>
-        <InputContainer>
-          {inputValue && label && <Label>{label}</Label>}
-          <ResizableDiv>
-            <Input
-              placeholder={placeholder}
-              value={inputValue}
-              maxLength={maxLength}
-              onChange={onTextChange}
-              disabled={disabled}
-              ref={textArea}
-            />
-            <TextCount $hidden={countHidden}>
-              띄어쓰기 포함 {inputValue.length}글자
-            </TextCount>
-            <Icon name="Grip" color="neutralTextWeak" />
-          </ResizableDiv>
-        </InputContainer>
-        <Footer>
-          <Button
-            size="S"
-            buttonType="Ghost"
-            icon="PaperClip"
-            onClick={onFileInputClick}
-          >
-            파일 첨부하기
-          </Button>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={onFileInputChange}
-            ref={fileInput}
-            hidden
-          />
-        </Footer>
+    <Wrapper $width={width}>
+      <Div
+        $state={state}
+        $children={children}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        ref={componentRef}
+      >
+        {children && <Header>{children}</Header>}
+        {children && state !== "Active" ? (
+          <ContentContainer>{value}</ContentContainer>
+        ) : (
+          <>
+            <InputContainer>
+              {inputValue && label && <Label>{label}</Label>}
+              <ResizableDiv $children={children}>
+                <Input
+                  $children={children}
+                  $height={textArea.current?.scrollHeight}
+                  placeholder={placeholder}
+                  value={inputValue}
+                  maxLength={maxLength}
+                  onChange={onTextChange}
+                  disabled={disabled}
+                  ref={textArea}
+                />
+                <TextCount $hidden={countHidden}>
+                  띄어쓰기 포함 {inputValue.length}글자
+                </TextCount>
+                <Icon name="Grip" color="neutralTextWeak" pointer={false} />
+              </ResizableDiv>
+            </InputContainer>
+            <Footer>
+              <Button
+                size="S"
+                buttonType="Ghost"
+                icon="PaperClip"
+                onClick={onFileInputClick}
+              >
+                파일 첨부하기
+              </Button>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onFileInputChange}
+                ref={fileInput}
+                hidden
+              />
+            </Footer>
+          </>
+        )}
       </Div>
       {uploadErrorMessage && <ErrorMessage>{uploadErrorMessage}</ErrorMessage>}
     </Wrapper>
   );
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $width?: string | number }>`
   display: flex;
   flex-direction: column;
+  width: ${({ $width }) =>
+    typeof $width === "number" ? `${$width}px` : $width};
 `;
 
-const Div = styled.div<{ $state: TextAreaState }>`
+const Div = styled.div<{ $state: TextAreaState; $children: ReactNode }>`
   display: flex;
   min-width: 340px;
-  min-height: 184px;
   flex-direction: column;
-  border: ${({ theme, $state }) =>
+  border: ${({ theme, $state, $children }) =>
     `${theme.border.default} ${
       $state === "Active"
         ? theme.color.neutralBorderDefaultActive
+        : $children
+        ? theme.color.neutralBorderDefault
         : "transparent"
     }`};
   border-radius: ${({ theme }) => theme.radius.large};
@@ -208,9 +249,33 @@ const Div = styled.div<{ $state: TextAreaState }>`
   pointer-events: ${({ $state }) => $state === "Disabled" && "none"};
 `;
 
+const Header = styled.div`
+  align-self: stretch;
+  display: flex;
+  padding: 16px 24px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: ${({ theme }) =>
+    `${theme.radius.large} ${theme.radius.large} 0px 0px`};
+  background-color: ${({ theme }) => theme.color.neutralSurfaceDefault};
+`;
+
+const ContentContainer = styled.div`
+  flex: 1 0 0;
+  align-self: stretch;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px 24px 24px 24px;
+  border-radius: ${({ theme }) =>
+    `0px 0px ${theme.radius.large} ${theme.radius.large}`};
+  font: ${({ theme }) => theme.font.displayMedium16};
+  color: ${({ theme }) => theme.color.neutralTextDefault};
+  background-color: ${({ theme }) => theme.color.neutralSurfaceStrong};
+`;
+
 const InputContainer = styled.div`
   align-self: stretch;
-  min-height: 200px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -227,8 +292,9 @@ const Label = styled.span`
   font: ${({ theme }) => theme.font.displayMedium12};
 `;
 
-const ResizableDiv = styled.div`
+const ResizableDiv = styled.div<{ $children: ReactNode }>`
   position: relative;
+  min-height: ${({ $children }) => ($children ? "120px" : "200px")};
   display: flex;
   flex-direction: column;
   resize: vertical;
@@ -245,10 +311,11 @@ const ResizableDiv = styled.div`
   }
 `;
 
-const Input = styled.textarea`
+const Input = styled.textarea<{ $children: ReactNode; $height?: number }>`
   box-sizing: border-box;
   width: 100%;
-  height: 461px;
+  height: ${({ $children, $height }) =>
+    $children && $height ? `${Math.min($height, 461)}px` : "461px"};
   resize: none;
   border: none;
   background: none;

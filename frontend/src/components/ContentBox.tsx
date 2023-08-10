@@ -42,7 +42,6 @@ const Header = styled.div`
 const Body = styled.div`
   align-self: stretch;
   display: flex;
-  padding: 16px 24px 24px 24px;
   align-items: flex-start;
   gap: 10px;
   border-radius: ${({ theme }) =>

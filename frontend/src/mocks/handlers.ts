@@ -134,10 +134,22 @@ export const handlers = [
       ...issue.data,
       status,
       statusModifiedAt: new Date().toISOString(),
-    }
+    };
 
     return res(ctx.status(200), ctx.json(issue));
-  })
+  }),
+  rest.patch("/api/issues/:issueId/content", async (req, res, ctx) => {
+    const { issueId } = req.params;
+    const { content } = await req.json();
+
+    issue.data = {
+      ...issue.data,
+      content,
+      modifiedAt: new Date().toISOString(),
+    };
+
+    return res(ctx.status(200), ctx.json(issue));
+  }),
 ];
 
 const labels = {
@@ -285,8 +297,12 @@ const issue = {
     status: "OPENED",
     statusModifiedAt: "2023-08-09T06:01:37",
     createdAt: "2023-08-09T06:01:37",
-    modifiedAt: null,
-    content: "이슈 내용1",
+    modifiedAt: "2023-08-10T06:01:37",
+    content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas fringilla phasellus faucibus scelerisque eleifend donec. Ultricies mi quis hendrerit dolor magna eget. Purus ut faucibus pulvinar elementum integer. Suspendisse ultrices gravida dictum fusce ut placerat orci. Auctor elit sed vulputate mi sit. Egestas fringilla phasellus faucibus scelerisque eleifend donec. Egestas pretium aenean pharetra magna ac placerat vestibulum lectus. Nunc sed blandit libero volutpat. Elementum eu facilisis sed odio morbi quis commodo. Sed augue lacus viverra vitae congue eu consequat ac felis.
+
+      Eu volutpat odio facilisis mauris sit amet massa vitae. Ut eu sem integer vitae. Id leo in vitae turpis massa sed elementum tempus. Arcu non sodales neque sodales ut etiam. Arcu non odio euismod lacinia at quis risus sed. Eget mauris pharetra et ultrices neque ornare. Neque vitae tempus quam pellentesque nec nam. Nulla at volutpat diam ut venenatis tellus in metus. Faucibus in ornare quam viverra orci sagittis. Leo in vitae turpis massa sed elementum tempus. Augue mauris augue neque gravida in fermentum et sollicitudin ac. Lobortis elementum nibh tellus molestie nunc non blandit massa. Suspendisse in est ante in nibh mauris cursus. Sed lectus vestibulum mattis ullamcorper velit sed. Lectus proin nibh nisl condimentum id venenatis a condimentum vitae. At lectus urna duis convallis convallis tellus id. Scelerisque eleifend donec pretium vulputate. Est pellentesque elit ullamcorper dignissim cras tincidunt. Leo a diam sollicitudin tempor id eu nisl nunc mi.
+      
+      Magna sit amet purus gravida. Duis convallis convallis tellus id interdum velit laoreet id. Interdum consectetur libero id faucibus nisl tincidunt. Hac habitasse platea dictumst quisque sagittis purus sit amet. Tempus urna et pharetra pharetra massa. Egestas erat imperdiet sed euismod nisi porta lorem. Mauris pellentesque pulvinar pellentesque habitant morbi. Nibh ipsum consequat nisl vel pretium lectus quam. Purus sit amet luctus venenatis lectus magna fringilla urna porttitor. Vulputate sapien nec sagittis aliquam malesuada bibendum arcu. Imperdiet nulla malesuada pellentesque elit eget gravida cum sociis. Convallis posuere morbi leo urna molestie at elementum. Accumsan tortor posuere ac ut consequat semper viverra nam libero. Non tellus orci ac auctor augue mauris augue. Vulputate ut pharetra sit amet aliquam id. Id interdum velit laoreet id. Ut venenatis tellus in metus vulputate. Egestas sed tempus urna et pharetra pharetra massa massa ultricies. Tristique senectus et netus et malesuada fames ac turpis. A iaculis at erat pellentesque adipiscing commodo elit at.`,
     assignees: [
       {
         id: 1,

@@ -19,6 +19,7 @@ type IssueDetailMainContentProps = {
     createdAt: Date;
     modifiedAt: Date | null;
   }[];
+  fetchIssue: () => void;
 };
 
 export function IssueDetailMainContent(props: IssueDetailMainContentProps) {
