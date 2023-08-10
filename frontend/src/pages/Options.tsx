@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Header from '../components/landmark/Header';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../main';
@@ -6,25 +6,24 @@ import ContextLogo from '../types/ContextLogo';
 import Main from '../components/landmark/Main';
 import Toolbar from '../components/landmark/Toolbar';
 import TabButtonComponent from '../components/common/TabButton';
-import Button from '../components/BaseButton';
 import Layout from '../components/Layout';
-import LabelList from '../components/LabelList';
 import axios from '../api/axios';
+import Button from '../components/common/button/BaseButton';
 
 enum Option {
-  label,
-  milestone,
+  labels,
+  milestones,
 }
 
-const { label, milestone } = Option;
+const { labels, milestones } = Option;
 
 const TabButton = React.memo(TabButtonComponent);
 
 export default function Options() {
   const { util } = useContext(AppContext);
-  const [activeOption, setActiveOption] = useState<Option>(label);
-  const [labels, setLabels] = useState([]);
-  const [milestones, setMilestones] = useState([]);
+  const [activeOption, setActiveOption] = useState<Option>(labels);
+  // const [labels, setLabels] = useState([]);
+  // const [milestones, setMilestones] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -32,16 +31,17 @@ export default function Options() {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       };
       const fetch =
-        activeOption === label
-          ? () => axios.get('api/label', { headers })
-          : () => axios.get('api/milestone', { headers });
+        activeOption === labels
+          ? () => axios.get('api/labels', { headers })
+          : () => axios.get('api/milestones', { headers });
 
       const res = await fetch();
-      if (activeOption === label) {
-        setLabels(res.data);
-      } else {
-        setMilestones(res.data);
-      }
+      console.log(res.data);
+      // if (activeOption === label) {
+      //   setLabels(res.data);
+      // } else {
+      //   setMilestones(res.data);
+      // }
     })();
   }, [activeOption]);
 
@@ -66,12 +66,12 @@ export default function Options() {
               {
                 iconName: 'label',
                 text: '레이블',
-                event: () => setActiveOption(label),
+                event: () => setActiveOption(labels),
               },
               {
                 iconName: 'milestone',
                 text: '마일스톤',
-                event: () => setActiveOption(milestone),
+                event: () => setActiveOption(milestones),
               },
             ]}
           />
@@ -79,7 +79,7 @@ export default function Options() {
             레이블 추가
           </Button>
         </Toolbar>
-        {activeOption === label ? <>라벨</> : <>마일스톤</>}
+        {activeOption === labels ? <>라벨</> : <>마일스톤</>}
       </Main>
     </Layout>
   );

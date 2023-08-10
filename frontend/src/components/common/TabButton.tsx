@@ -13,7 +13,7 @@ export default function TabButton({
     event: () => void;
   }[];
 }) {
-  const [buttonActive, setButtonActive] = useState<number | undefined>();
+  const [buttonActive, setButtonActive] = useState<number>(1);
   return (
     <Tab $buttonActive={buttonActive}>
       {tabs.map(({ iconName, text, event }, index) => (
@@ -23,7 +23,7 @@ export default function TabButton({
           flexible
           ghost
           iconName={iconName}
-          // selected={index === buttonActive}
+          selected={index + 1 === buttonActive}
           onClick={() => {
             setButtonActive(index + 1);
             event();
@@ -51,7 +51,7 @@ const Tab = styled.div<{ $buttonActive: number | undefined }>`
   button:last-child {
     border: 0;
   }
-  
+
   ${({ theme, $buttonActive }) => {
     if (!$buttonActive) {
       return ``;

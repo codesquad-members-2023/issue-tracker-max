@@ -48,6 +48,12 @@ export default function Main() {
         }}>
         새로운 이슈작성
       </button>
+      <button
+        onClick={() => {
+          navigate('/options');
+        }}>
+        옵션들
+      </button>
       <button onClick={refresh}>refresh</button>
     </>
   );
