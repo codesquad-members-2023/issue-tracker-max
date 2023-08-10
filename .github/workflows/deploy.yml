@@ -9,7 +9,8 @@ env:
   AWS_REGION: ap-northeast-2
   S3_BUCKET_NAME: issue-tracker-s3-bucket
   CODE_DEPLOY_APPLICATION_NAME: issue-tracker-codedeploy-app
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: issuetracker-codedeploy-deployment-group
+  CODE_DEPLOY_DEPLOYMENT_GROUP_APP: app-issuetracker-codedeploy-group
+  CODE_DEPLOY_DEPLOYMENT_GROUP_WEB: web-issuetracker-codedeploy-group
 
 permissions:
   contents: read
@@ -61,7 +62,7 @@ jobs:
         run: aws deploy create-deployment
           --application-name $CODE_DEPLOY_APPLICATION_NAME
           --deployment-config-name CodeDeployDefault.AllAtOnce
-          --deployment-group-name $CODE_DEPLOY_DEPLOYMENT_GROUP_NAME
+          --deployment-group-name $CODE_DEPLOY_DEPLOYMENT_GROUP_APP
           --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=Build/$GITHUB_SHA.zip
 
   web-build-and-deploy:
@@ -83,10 +84,10 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Build with npm
+      - name: Build with npm and Vite
         run: |
-          npm install
-          npm run build
+          npm install vite
+          npx vite build
 
       - name: Make zip file
         run: zip -r ./react-build.zip .
@@ -107,5 +108,5 @@ jobs:
         run: aws deploy create-deployment
           --application-name $CODE_DEPLOY_APPLICATION_NAME
           --deployment-config-name CodeDeployDefault.AllAtOnce
-          --deployment-group-name $CODE_DEPLOY_DEPLOYMENT_GROUP_NAME
+          --deployment-group-name $CODE_DEPLOY_DEPLOYMENT_GROUP_WEB
           --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=Build/react-build.zip
