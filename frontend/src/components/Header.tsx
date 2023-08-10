@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import { Button } from "./Button";
 import { Icon } from "./icon/Icon";
 
 export function Header({
@@ -18,20 +17,19 @@ export function Header({
         <Icon name="LogoMedium" color="neutralTextStrong" />
       </Anchor>
       <UtilityMenu>
-        <Button
-          width={40}
-          height={40}
-          size="L"
-          buttonType="Container"
-          background="neutralTextStrong"
-          onClick={onClickThemeMode}
-        >
-          {themeMode === "LIGHT" ? (
-            <Icon name="Moon" color="neutralSurfaceDefault" />
-          ) : (
-            <Icon name="Sun" color="neutralSurfaceDefault" />
-          )}
-        </Button>
+        {themeMode === "LIGHT" ? (
+          <Icon
+            name="Moon"
+            color="neutralTextStrong"
+            onClick={onClickThemeMode}
+          />
+        ) : (
+          <Icon
+            name="Sun"
+            color="neutralTextStrong"
+            onClick={onClickThemeMode}
+          />
+        )}
         <img
           style={{ width: "32px" }}
           src="https://avatars.githubusercontent.com/u/41321198?v=4"
@@ -56,5 +54,5 @@ const Anchor = styled.a`
 const UtilityMenu = styled.div`
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 40px;
 `;

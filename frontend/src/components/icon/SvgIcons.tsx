@@ -63,4 +63,6 @@ export const fillTypeComponents = [
   Comment,
   LogoMedium,
   LogoLarge,
+  Moon,
+  Sun
 ];
