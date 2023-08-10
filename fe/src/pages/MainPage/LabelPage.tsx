@@ -2,7 +2,9 @@ import labelIcon from "@assets/icon/label.svg";
 import milestoneIcon from "@assets/icon/milestone.svg";
 import plusIcon from "@assets/icon/plus.svg";
 import LabelEditor from "@components/Label/LabelEditor";
-import { Table, TableBodyLabels, TableHeaderLabels } from "@components/Table";
+import LabelsTableBody from "@components/Table/LabelsTable/LabelsTableBody";
+import LabelsTableHeader from "@components/Table/LabelsTable/LabelsTableHeader";
+import { Table } from "@components/Table/Table.style";
 import Button from "@components/common/Button";
 import TabBar from "@components/common/TabBar";
 import useFetch from "@hooks/useFetch";
@@ -43,6 +45,7 @@ export default function LabelPage() {
     <StyledLabelPage>
       <LabelNav>
         <TabBar
+          currentTabName="레이블"
           left={tabBarLeftInfo}
           right={tabBarRightInfo}
           borderStyle="outline"
@@ -65,8 +68,8 @@ export default function LabelPage() {
       )}
 
       <Table>
-        <TableHeaderLabels numLabels={labelsList ? labelsList.length : 0} />
-        <TableBodyLabels labelsList={labelsList} />
+        <LabelsTableHeader numLabels={labelsList ? labelsList.length : 0} />
+        <LabelsTableBody labelsList={labelsList} />
       </Table>
     </StyledLabelPage>
   );

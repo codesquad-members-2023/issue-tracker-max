@@ -9,9 +9,9 @@ import { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import TableBodyItem from "./TableBodyItem";
+import { TableBodyItem } from "../Table.style";
 
-export default function TableBodyItemLabel({ label }: { label: Label }) {
+export default function LabelsTableItem({ label }: { label: Label }) {
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);

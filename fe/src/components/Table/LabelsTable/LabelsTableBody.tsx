@@ -1,8 +1,8 @@
 import { Label } from "@customTypes/index";
-import TableBody from "../TableBody/TableBody";
-import { EmptyTableBodyItem, TableBodyItemLabel } from "../TableBodyItem";
+import { EmptyTableBodyItem, TableBody } from "../Table.style";
+import LabelsTableItem from "./LabelsTableItem";
 
-export default function TableBodyLabels({
+export default function LabelsTableBody({
   labelsList,
 }: {
   labelsList: Label[] | null;
@@ -12,7 +12,7 @@ export default function TableBodyLabels({
       {labelsList ? (
         <ul>
           {labelsList.map((label) => (
-            <TableBodyItemLabel key={label.labelId} label={label} />
+            <LabelsTableItem key={label.labelId} label={label} />
           ))}
         </ul>
       ) : (

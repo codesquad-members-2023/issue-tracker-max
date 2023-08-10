@@ -7,11 +7,7 @@ import { IssueItem as IssueItemType } from "@customTypes/index";
 import { convertPastTimestamp } from "@utils/time";
 import { styled } from "styled-components";
 
-export default function TableBodyItemIssue({
-  issue,
-}: {
-  issue: IssueItemType;
-}) {
+export default function IssuesTableItem({ issue }: { issue: IssueItemType }) {
   const {
     issueNumber,
     isOpen,

@@ -1,5 +1,6 @@
 import { rest } from "msw";
 import {
+  closedMilestoneList,
   comment0,
   comment1,
   comment2,
@@ -8,7 +9,7 @@ import {
   issueSidebar,
   labelList,
   loginInfo,
-  milestoneList,
+  openMilestoneList,
   users,
 } from "./data";
 
@@ -101,8 +102,16 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(labelList));
   }),
 
-  rest.get("/api/milestones", async (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(milestoneList));
+  rest.get("/api/milestones", async (req, res, ctx) => {
+    const state = req.url.searchParams.get("state");
+    if (state === "open") {
+      return res(ctx.status(200), ctx.json(openMilestoneList));
+    }
+    if (state === "closed") {
+      return res(ctx.status(200), ctx.json(closedMilestoneList));
+    }
+
+    return res(ctx.status(200), ctx.json(openMilestoneList));
   }),
 
   rest.get("/api/users", async (_, res, ctx) => {

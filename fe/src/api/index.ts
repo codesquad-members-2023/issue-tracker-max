@@ -103,8 +103,8 @@ export const deleteLabel = async (labelId: number) => {
   return await fetcherWithBearer.delete(`/labels/${labelId}`);
 };
 
-export const getMilestones = async () => {
-  return await fetcherWithBearer.get<Milestone[]>("/milestones");
+export const getMilestones = async (state: "open" | "closed" = "open") => {
+  return await fetcherWithBearer.get<Milestone[]>(`/milestones?state=${state}`);
 };
 
 export const getUsers = async () => {

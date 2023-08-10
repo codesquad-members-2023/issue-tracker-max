@@ -182,20 +182,29 @@ export const labelList = [
   },
 ];
 
-export const milestoneList = [
-  {
-    milestoneId: 1,
-    milestoneName: "Sprint #1",
-    openIssueCount: 5,
-    closedIssueCount: 1,
-  },
-  {
-    milestoneId: 2,
-    milestoneName: "Sprint #2",
-    openIssueCount: 4,
-    closedIssueCount: 10,
-  },
-];
+export const openMilestoneList = Array.from({ length: 10 }, (_, i) => {
+  return {
+    milestoneId: i + 1,
+    milestoneName: faker.lorem.words(),
+    openIssueCount: faker.number.int(),
+    closedIssueCount: faker.number.int(),
+    description: faker.lorem.sentence(),
+    dueDate: faker.date.future().toISOString().slice(0, 10),
+    isOpen: true,
+  };
+});
+
+export const closedMilestoneList = Array.from({ length: 3 }, (_, i) => {
+  return {
+    milestoneId: i + 10,
+    milestoneName: faker.lorem.words(),
+    openIssueCount: faker.number.int(),
+    closedIssueCount: faker.number.int(),
+    description: faker.lorem.sentence(),
+    dueDate: faker.date.future().toISOString().slice(0, 10),
+    isOpen: false,
+  };
+});
 
 export const comment0 = {
   data: Array.from({ length: 10 }, (_, i) => {

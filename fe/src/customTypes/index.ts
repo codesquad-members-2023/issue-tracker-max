@@ -11,6 +11,9 @@ export type Milestone = {
   milestoneName: string;
   openIssueCount: number;
   closedIssueCount: number;
+  description: string;
+  dueDate: string;
+  isOpen: boolean;
 };
 
 export type Assignee = {

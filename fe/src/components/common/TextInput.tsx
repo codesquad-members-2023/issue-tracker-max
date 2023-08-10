@@ -11,6 +11,7 @@ interface TextInputProps extends React.HTMLAttributes<HTMLElement> {
   hasError?: boolean;
   helpText?: string;
   children?: ReactNode;
+  type?: string;
 }
 
 export default function TextInput({
@@ -22,6 +23,7 @@ export default function TextInput({
   hasError,
   helpText,
   children,
+  type = "text",
   ...props
 }: TextInputProps) {
   const isTallType = variant === "tall";
@@ -37,6 +39,7 @@ export default function TextInput({
             value,
             placeholder,
             onChange,
+            type,
           }}
         />
         {children}

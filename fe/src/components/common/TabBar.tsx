@@ -10,15 +10,17 @@ type TabBarInfo = {
 };
 
 export default function TabBar({
+  currentTabName,
   left,
   right,
   borderStyle,
 }: {
+  currentTabName: string;
   left: TabBarInfo;
   right: TabBarInfo;
   borderStyle: "outline" | "none";
 }) {
-  const [selectedTab, setSelectedTab] = useState<string | null>(null);
+  const [selectedTab, setSelectedTab] = useState<string>(currentTabName);
 
   const isRightSelected = selectedTab === right.name;
   const isLeftSelected = selectedTab === left.name;
@@ -68,24 +70,27 @@ const StyledTabBar = styled.div<{ $hasOutline: boolean }>`
   display: flex;
 
   ${({ $hasOutline }) =>
-    $hasOutline &&
-    css`
-      width: 320px;
-      height: 40px;
-      border: ${({ theme: { border, neutral } }) =>
-        `${border.default} ${neutral.border.default}`};
-      border-radius: ${({ theme: { radius } }) => radius.m};
+    $hasOutline
+      ? css`
+          width: 320px;
+          height: 40px;
+          border: ${({ theme: { border, neutral } }) =>
+            `${border.default} ${neutral.border.default}`};
+          border-radius: ${({ theme: { radius } }) => radius.m};
 
-      & > div:first-child {
-        border-radius: 11px 0 0 11px;
-      }
+          & > div:first-child {
+            border-radius: 11px 0 0 11px;
+          }
 
-      & > div:last-child {
-        border-radius: 0 11px 11px 0;
-        border-left: ${({ theme: { border, neutral } }) =>
-          `${border.default} ${neutral.border.default}`};
-      }
-    `}
+          & > div:last-child {
+            border-radius: 0 11px 11px 0;
+            border-left: ${({ theme: { border, neutral } }) =>
+              `${border.default} ${neutral.border.default}`};
+          }
+        `
+      : css`
+          gap: 24px;
+        `}
 `;
 
 const TabButtonWrapper = styled.div<{
