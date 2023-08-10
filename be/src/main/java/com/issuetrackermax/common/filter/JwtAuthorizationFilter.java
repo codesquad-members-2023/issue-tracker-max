@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.PatternMatchUtils;
+import org.springframework.web.cors.CorsUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetrackermax.common.exception.domain.JwtException;
