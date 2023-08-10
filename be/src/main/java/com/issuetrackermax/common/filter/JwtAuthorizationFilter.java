@@ -42,7 +42,10 @@ public class JwtAuthorizationFilter implements Filter {
 		throws ServletException, IOException {
 
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-
+		if (CorsUtils.isPreFlightRequest(httpServletRequest)) {
+			chain.doFilter(request, response);
+			return;
+		}
 		if (whiteListCheck(httpServletRequest.getRequestURI())) {
 			chain.doFilter(request, response);
 			return;
