@@ -1,26 +1,5 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.integration;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.annotation.IntegrationTest;
-
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.Jwt;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.JwtProvider;
-import java.util.Map;
-
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.request.IssueCreateRequest;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.request.IssueStatusRequest;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.request.IssueUpdateRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
-import java.util.List;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
@@ -30,6 +9,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import codesquad.kr.gyeonggidoidle.issuetracker.annotation.IntegrationTest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.request.IssueCreateRequest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.request.IssueStatusRequest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.request.IssueUpdateRequest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.Jwt;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.JwtProvider;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+
 @IntegrationTest
 class IssueIntegrationTest {
 
@@ -38,6 +34,9 @@ class IssueIntegrationTest {
 
     @Autowired
     private JwtProvider jwtProvider;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @DisplayName("열린 이슈의 모든 정보를 다 가지고 온다.")
     @Test
@@ -195,6 +194,7 @@ class IssueIntegrationTest {
     @DisplayName("이슈의 내용을 수정한다.")
     @Test
     void testUpdateIssue() throws Exception {
+        // given
         IssueUpdateRequest request = IssueUpdateRequest.builder()
                 .title("수정된 제목")
                 .assignees(List.of(1L,2L))
@@ -202,10 +202,14 @@ class IssueIntegrationTest {
                 .milestone(1L)
                 .build();
 
+        // when
+        Jwt jwt = makeToken();
         ResultActions resultActions = mockMvc.perform(put("/api/issues/1")
+                .header("Authorization", "Bearer " + jwt.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)));
 
+        // then
         resultActions.andExpect(status().isOk())
                 .andDo(print());
     }

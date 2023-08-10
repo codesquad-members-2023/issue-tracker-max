@@ -1,8 +1,10 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.RepositoryTest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.Label;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelVO;
 import java.util.List;
@@ -10,8 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @RepositoryTest
 class LabelRepositoryTest {
@@ -51,5 +51,62 @@ class LabelRepositoryTest {
             assertions.assertThat(actual.get(1).getName()).isEqualTo("라벨 1");
             assertions.assertThat(actual.get(3).getName()).isEqualTo("라벨 3");
         });
+    }
+
+    @DisplayName("Label을 받아서 db에 저장하고 성공하면 true를 반환한다.")
+    @Test
+    void save() {
+        // given
+        Label label = Label.builder()
+                .name("label")
+                .description("test")
+                .backgroundColor("##")
+                .textColor("#")
+                .build();
+        // when
+        boolean actual = repository.save(label);
+        // then
+        assertThat(actual).isTrue();
+    }
+
+    @DisplayName("라벨id를 입력받아 라벨을 반환한다.")
+    @Test
+    void findById() {
+        // when
+        LabelDetailsVO actual = repository.findById(1L);
+
+        // then
+        assertSoftly(assertions -> {
+            assertions.assertThat(actual.getId()).isEqualTo(1L);
+            assertions.assertThat(actual.getName()).isEqualTo("라벨 1");
+            assertions.assertThat(actual.getDescription()).isEqualTo(null);
+            assertions.assertThat(actual.getBackgroundColor()).isEqualTo("#F08080");
+        });
+    }
+
+    @DisplayName("라벨 내용을 수정하고 성공하면 true를 반환한다.")
+    @Test
+    void update() {
+        // given
+        Label label = Label.builder()
+                .id(1L)
+                .name("update title")
+                .description("tmp")
+                .backgroundColor("##")
+                .textColor("##")
+                .build();
+        // when
+        boolean actual = repository.update(label);
+        // then
+        assertThat(actual).isTrue();
+    }
+
+    @DisplayName("라벨 아이디를 받아 is_deleted를 true로 바꾸고 성공하면 true를 반환한다")
+    @Test
+    void delete() {
+        // when
+        boolean actual = repository.delete(2L);
+        // then
+        assertThat(actual).isTrue();
     }
 }
