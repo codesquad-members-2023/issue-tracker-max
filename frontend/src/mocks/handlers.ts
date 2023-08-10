@@ -16,8 +16,14 @@ export const handlers = [
   rest.post('/api/reissue/token', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(newAccessToken));
   }),
-  rest.post('/api/login/github?code={}', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(successGitHubLogin));
+  rest.get('/api/login/github', (req, res, ctx) => {
+    const code = req.url.searchParams.get('code');
+
+    if (code) {
+      return res(ctx.status(200), ctx.json(successGitHubLogin));
+    } else {
+      return res(ctx.status(400), ctx.json({ message: '잘못된 코드 값' }));
+    }
   }),
   rest.post('/api/logout', (req, res, ctx) => {
     return res(
