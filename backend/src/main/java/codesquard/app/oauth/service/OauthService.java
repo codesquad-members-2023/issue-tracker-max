@@ -14,11 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquard.app.api.errors.errorcode.LoginErrorCode;
+import codesquard.app.api.errors.errorcode.OauthErrorCode;
+import codesquard.app.api.errors.exception.oauth.OauthRestApiException;
 import codesquard.app.api.errors.exception.user.LoginRestApiException;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.authenticate_user.service.AuthenticateUserService;
@@ -115,6 +118,16 @@ public class OauthService {
 
 	// Oauth 서버에서 유저 정보 map으로 가져오기
 	private Map<String, Object> getUserAttributes(OauthProvider oauthProvider,
+		OauthAccessTokenResponse oauthAccessTokenResponse) {
+		try {
+			return requestUserAttributes(oauthProvider, oauthAccessTokenResponse);
+		} catch (WebClientResponseException.Unauthorized e) {
+			logger.error("소셜 사용자의 정보 요청 인가 오류 : {}", e.getMessage());
+			throw new OauthRestApiException(OauthErrorCode.BAD_AUTHORIZATION_CODE);
+		}
+	}
+
+	private Map<String, Object> requestUserAttributes(OauthProvider oauthProvider,
 		OauthAccessTokenResponse oauthAccessTokenResponse) {
 		return WebClient.create()
 			.get()
