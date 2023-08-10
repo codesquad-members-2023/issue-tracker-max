@@ -1,25 +1,37 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import { Button } from "../components/Button";
-import { TextInput } from "../components/TextInput";
-import { Icon } from "../components/icon/Icon";
+import { Button } from "../../components/Button";
+import { TextInput } from "../../components/TextInput";
+import { Icon } from "../../components/icon/Icon";
+import { setAccessToken, setUserInfo } from "../../utils/localStorage";
+import { SignUpSuccessModal } from "./SignUpSuccessModal";
 
 type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;
+
+export type UserInfoData = {
+  id: number;
+  loginId: string;
+  email: string;
+  avatarUrl: string | null;
+};
 
 export function Auth() {
   const navigate = useNavigate();
 
+  const [errorMessage, setErrorMessage] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
-  const [id, setId] = useState("");
+  const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordCheck, setPasswordCheck] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [email, setEmail] = useState("");
+
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const [isValidId, setIsValidId] = useState(false);
   const [isValidPassword, setIsValidPassword] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(false);
-  const isPasswordMatch = isValidPassword && password === passwordCheck;
+  const isPasswordMatch = isValidPassword && password === passwordConfirm;
 
   const isValidLogin = isValidId && isValidPassword;
   const isValidSingUp = isValidId && isPasswordMatch && isValidEmail;
@@ -28,22 +40,31 @@ export function Auth() {
 
   const onChangeId = (event: InputChangeEvent) => {
     const value = event.target.value;
-    setId(value);
-    setIsValidId(value.length >= 6 && value.length <= 16);
+    const isValid = /^[A-Za-z0-9]{5,20}$/.test(value);
+
+    setErrorMessage("");
+    setLoginId(value);
+    setIsValidId(isValid);
   };
 
   const onChangePassword = (event: InputChangeEvent) => {
     const value = event.target.value;
+    const isValid = /^[A-Za-z0-9]{8,16}$/.test(value);
+
+    setErrorMessage("");
     setPassword(value);
-    setIsValidPassword(value.length >= 6 && value.length <= 12);
+    setIsValidPassword(isValid);
   };
 
   const onChangePasswordCheck = (event: InputChangeEvent) => {
-    setPasswordCheck(event.target.value);
+    setErrorMessage("");
+    setPasswordConfirm(event.target.value);
   };
 
   const onChangeEmail = (event: InputChangeEvent) => {
     const value = event.target.value;
+
+    setErrorMessage("");
     setEmail(value);
     setIsValidEmail(validateEmail(value));
   };
@@ -54,10 +75,11 @@ export function Auth() {
   };
 
   const resetInput = () => {
-    setId("");
+    setLoginId("");
     setPassword("");
-    setPasswordCheck("");
+    setPasswordConfirm("");
     setEmail("");
+    setIsOpenModal(false);
   };
 
   const togglesIsSignUp = () => {
@@ -67,14 +89,61 @@ export function Auth() {
 
   const submit = () => {
     if (isSignUp) {
-      console.log("회원가입", id, password, passwordCheck, email);
+      console.log("회원가입", loginId, password, passwordConfirm, email);
+      signUp();
     } else {
-      console.log("로그인", id, password);
+      console.log("로그인", loginId, password);
+      login();
     }
   };
 
   const checkInputValid = (value: string, isValid: boolean) => {
     return !(value === "") && !isValid;
+  };
+
+  const signUp = async () => {
+    const res = await fetch("/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        loginId: loginId,
+        email: email,
+        password: password,
+        passwordConfirm: passwordConfirm,
+      }),
+    });
+
+    const { code, message } = await res.json();
+    if (code === 201) {
+      setIsOpenModal(true);
+    } else {
+      setErrorMessage(message);
+    }
+  };
+
+  const login = async () => {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        loginId: loginId,
+        password: password,
+      }),
+    });
+
+    const { code, message, data } = await res.json();
+    if (code === 200) {
+      setAccessToken(data.jwt.accessToken);
+      setUserInfo(data.user as UserInfoData);
+
+      navigate("/");
+    } else {
+      setErrorMessage(message);
+    }
   };
 
   return (
@@ -95,11 +164,11 @@ export function Auth() {
             size="L"
             label="아이디"
             placeholder="아이디"
-            value={id}
-            isError={checkInputValid(id, isValidId)}
+            value={loginId}
+            isError={checkInputValid(loginId, isValidId)}
             caption={
-              checkInputValid(id, isValidId)
-                ? "6자리에서 16자리 까지 입력해주세요"
+              checkInputValid(loginId, isValidId)
+                ? "5자리에서 20자리 까지 입력해주세요"
                 : ""
             }
             onChange={onChangeId}
@@ -114,7 +183,7 @@ export function Auth() {
             isError={checkInputValid(password, isValidPassword)}
             caption={
               checkInputValid(password, isValidPassword)
-                ? "6자리에서 12자리 까지 입력해주세요"
+                ? "8자리에서 16자리 까지 입력해주세요"
                 : ""
             }
             onChange={onChangePassword}
@@ -126,11 +195,11 @@ export function Auth() {
                 size="L"
                 label="비밀번호 확인"
                 placeholder={"비밀번호 확인"}
-                value={passwordCheck}
+                value={passwordConfirm}
                 type="password"
-                isError={checkInputValid(passwordCheck, isPasswordMatch)}
+                isError={checkInputValid(passwordConfirm, isPasswordMatch)}
                 caption={
-                  checkInputValid(passwordCheck, isPasswordMatch)
+                  checkInputValid(passwordConfirm, isPasswordMatch)
                     ? "비밀번호를 확인해 주세요"
                     : ""
                 }
@@ -152,6 +221,12 @@ export function Auth() {
               />
             </>
           )}
+          {errorMessage !== "" && (
+            <ErrorMessage>
+              {isSignUp ? "회원가입" : "로그인"} 실패 : {errorMessage}
+            </ErrorMessage>
+          )}
+
           <Button
             size="L"
             buttonType="Container"
@@ -165,6 +240,7 @@ export function Auth() {
             {isSignUp ? "로그인" : "회원가입"}
           </Button>
         </AuthPanel>
+        {isOpenModal && <SignUpSuccessModal onClick={togglesIsSignUp} />}
       </AuthWrapper>
     </Div>
   );
@@ -197,4 +273,9 @@ const AuthPanel = styled.div`
 
 const ButtonText = styled.div`
   width: 254px;
+`;
+
+const ErrorMessage = styled.span`
+  color: ${({ theme }) => theme.color.dangerTextDefault};
+  font: ${({ theme }) => theme.font.displayBold16};
 `;

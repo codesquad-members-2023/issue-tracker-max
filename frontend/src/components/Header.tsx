@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import { clearAuthInfo } from "../utils/localStorage";
+import { Avatar } from "./Avatar";
+import { Button } from "./Button";
 import { Icon } from "./icon/Icon";
 
 export function Header({
@@ -11,12 +14,17 @@ export function Header({
 }) {
   const navigate = useNavigate();
 
+  const logOut = () => {
+    clearAuthInfo();
+    navigate("/auth");
+  };
+
   return (
     <Div>
       <Anchor onClick={() => navigate("/")}>
         <Icon name="LogoMedium" color="neutralTextStrong" />
       </Anchor>
-      <UtilityMenu>
+      <HeaderRight>
         {themeMode === "LIGHT" ? (
           <Icon
             name="Moon"
@@ -30,11 +38,14 @@ export function Header({
             onClick={onClickThemeMode}
           />
         )}
-        <img
-          style={{ width: "32px" }}
+        <Avatar
+          size="L"
           src="https://avatars.githubusercontent.com/u/41321198?v=4"
         />
-      </UtilityMenu>
+        <Button size="S" buttonType="Ghost" onClick={logOut}>
+          로그아웃
+        </Button>
+      </HeaderRight>
     </Div>
   );
 }
@@ -51,8 +62,9 @@ const Anchor = styled.a`
   cursor: pointer;
 `;
 
-const UtilityMenu = styled.div`
+const HeaderRight = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 40px;
+  gap: 8px;
 `;
