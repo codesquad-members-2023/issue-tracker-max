@@ -17,6 +17,7 @@ import codesquard.app.issue.service.IssueService;
 import codesquard.app.jwt.JwtProvider;
 import codesquard.app.label.controller.LabelController;
 import codesquard.app.label.service.LabelService;
+import codesquard.app.oauth.service.OauthService;
 import codesquard.app.user.controller.UserRestController;
 import codesquard.app.user.service.UserQueryService;
 import codesquard.app.user.service.UserService;
@@ -65,4 +66,7 @@ public abstract class ControllerTestSupport {
 
 	@MockBean
 	protected UserReactionService userReactionService;
+
+	@MockBean
+	protected OauthService oauthService;
 }
