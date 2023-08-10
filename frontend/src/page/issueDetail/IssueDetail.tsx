@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import { IssueDetailHeader } from "./IssueDetailHeader";
+import { IssueDetailBody } from "./IssueDetailBody";
 
 type IssueData = {
   id: number;
@@ -9,6 +10,7 @@ type IssueData = {
   content: string;
   status: "OPENED" | "CLOSED";
   statusModifiedAt: Date;
+  createdAt: Date;
   modifiedAt: Date | null;
   writer: {
     id: number;
@@ -52,6 +54,7 @@ export function IssueDetail() {
     content: "",
     status: "OPENED",
     statusModifiedAt: new Date(),
+    createdAt: new Date(),
     modifiedAt: null,
     writer: {
       id: 0,
@@ -85,7 +88,8 @@ export function IssueDetail() {
   return (
     <Div>
       <IssueDetailHeader fetchIssue={fetchIssue} {...issue} />
-      {/* <IssueDetailBody /> */}
+      <Line />
+      <IssueDetailBody {...issue} />
     </Div>
   );
 }
@@ -97,4 +101,11 @@ const Div = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;
+`;
+
+const Line = styled.hr`
+  width: 100%;
+  border: none;
+  border-top: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
+  margin: 0;
 `;
