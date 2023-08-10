@@ -15,7 +15,7 @@ export const LabelListPage: React.FC<Props> = ({}) => {
 
   useEffect(() => {
     fetchLabelList();
-  }, [labelListData]);
+  }, []);
 
   const onAddTableOpen = () => {
     setIsAddTableOpen(true);

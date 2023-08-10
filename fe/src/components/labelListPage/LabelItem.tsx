@@ -25,19 +25,10 @@ export const LabelItem: React.FC<Props> = ({ label, fetchLabelList }) => {
   };
 
   const onDeleteLabel = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_APP_BASE_URL}/labels/${label.id}`,
-      {
-        method: 'DELETE',
-      },
-    );
-    if (response.ok) {
-      if (response.headers.get('content-type')?.includes('application/json')) {
-        const data = await response.json();
-        console.log(data);
-      }
-      await fetchLabelList();
-    }
+    await fetch(`${import.meta.env.VITE_APP_BASE_URL}/labels/${label.id}`, {
+      method: 'DELETE',
+    });
+    fetchLabelList();
   };
 
   return (

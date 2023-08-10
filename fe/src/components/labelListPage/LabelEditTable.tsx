@@ -105,15 +105,13 @@ export const LabelEditTable: React.FC<Props> = ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const data = await response.json();
-      return data;
+
+      onAddTableClose();
+      await fetchLabelList();
     } catch (error) {
       console.error('There was a problem with the fetch operation:');
       // todo 에러처리
     }
-
-    onAddTableClose();
-    await fetchLabelList();
   };
 
   const isDataMissing = !nameInput || !colorCodeInput || !selectedTextColor;
