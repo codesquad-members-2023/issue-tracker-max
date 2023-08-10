@@ -30,17 +30,16 @@ export const LabelEditTable: React.FC<Props> = ({
   fetchLabelList,
 }) => {
   const theme = useTheme() as any;
-  const [nameInput, setNameInput] = useState<string>(label ? label.name : '');
+  const [nameInput, setNameInput] = useState<string>(label?.name ?? '');
   const [descriptionInput, setDescriptionInput] = useState<string>(
-    label ? label.description : '',
+    label?.description ?? '',
   );
   const [colorCodeInput, setColorCodeInput] = useState<string>(
-    label ? label.backgroundColor : randomColorGenerator(),
+    label?.backgroundColor ?? randomColorGenerator(),
   );
   const [selectedTextColor, setSelectedTextColor] = useState<number | null>(
     label ? (label.textColor === 'light' ? 1 : 2) : null,
   );
-
   const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false);
 
   const onNameChange = (value: string) => {
@@ -129,7 +128,7 @@ export const LabelEditTable: React.FC<Props> = ({
     (colorCodeInput.length !== 7 && colorCodeInput.length !== 4) ||
     !/^#[0-9A-Fa-f]{3,6}$/.test(colorCodeInput);
 
-  const fillColor = colorCodeInput ? colorCodeInput : randomColorGenerator();
+  const fillColor = colorCodeInput || randomColorGenerator();
 
   const displayedTextColor =
     selectedTextColor === null
