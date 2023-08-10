@@ -5,7 +5,6 @@ import { TextInput } from "components/Common/Input/TextInput";
 
 import { TabButton, Tab } from "components/Common/Button/TabButton";
 import { FilterBar } from "components/Common/FilterBar/FilterBar";
-import { ProgressBar } from "components/Common/Bar/ProgressBar";
 
 export const ComponentTest = () => {
   const handleIndecatorClick = () => {};
@@ -138,7 +137,6 @@ export const ComponentTest = () => {
           <TabButton icon="Milestone" text="마일스톤" count={2} />
         </Tab>
         <FilterBar onIndicatorClick={handleIndecatorClick}></FilterBar>
-        <ProgressBar openIssues={2} closedIssues={4}></ProgressBar>
       </div>
     </div>
   );

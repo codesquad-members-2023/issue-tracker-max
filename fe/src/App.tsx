@@ -6,6 +6,7 @@ import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "styles/GlobalStyles";
 import { theme } from "styles/Theme";
 import { ThemeModeProvider, useThemeMode } from "contexts/ThemeModeContext.tsx";
+import { Loading } from "pages/Loading";
 
 // import { ComponentTest } from "./ComponentTest";
 
@@ -23,7 +24,7 @@ export const App = () => {
     <ThemeModeProvider>
       <ThemedApp>
         <GlobalStyles />
-        <RouterProvider router={router} />
+        <RouterProvider router={router} fallbackElement={<Loading />} />
         {/* <ComponentTest></ComponentTest> */}
       </ThemedApp>
     </ThemeModeProvider>

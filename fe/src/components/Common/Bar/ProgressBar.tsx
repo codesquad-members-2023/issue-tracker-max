@@ -2,17 +2,17 @@ import React from "react";
 import styled from "styled-components";
 
 type ProgressBarProps = {
-  openIssues: number;
-  closedIssues: number;
+  openIssueCount: number;
+  closedIssuesCount: number;
 };
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
-  openIssues,
-  closedIssues,
+  openIssueCount,
+  closedIssuesCount,
 }) => {
-  const totalIssues = openIssues + closedIssues;
+  const totalIssues = openIssueCount + closedIssuesCount;
   const closedPercentage =
-    totalIssues !== 0 ? Math.floor((closedIssues / totalIssues) * 100) : 0;
+    totalIssues !== 0 ? Math.floor((closedIssuesCount / totalIssues) * 100) : 0;
 
   return (
     <BarLayout>
@@ -22,8 +22,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       <BarDetail>
         <p>{closedPercentage}%</p>
         <div>
-          <span>열린 이슈 {openIssues}</span>
-          <span>닫힌 이슈 {closedIssues}</span>
+          <span>열린 이슈 {openIssueCount}</span>
+          <span>닫힌 이슈 {closedIssuesCount}</span>
         </div>
       </BarDetail>
     </BarLayout>
@@ -49,6 +49,7 @@ const ProgressBox = styled.div<{ percentage: number }>`
 
 const BarDetail = styled.div`
   display: flex;
+  margin-top: 8px;
   justify-content: space-between;
   font: ${({ theme: { font } }) => font.displayM12};
   color: ${({ theme: { color } }) => color.nuetralTextWeak};

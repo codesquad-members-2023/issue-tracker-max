@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FilterBar } from "components/Common/FilterBar/FilterBar";
 import { TabButton, Tab } from "components/Common/Button/TabButton";
@@ -13,16 +14,27 @@ export const IssueListHeader: React.FC<IssueListHeaderProps> = ({
   labelCount,
   milestoneCount,
 }) => {
+  const navigate = useNavigate();
   const handleIndecatorClick = () => {};
   return (
     <HeaderLayout>
       <FilterBar onIndicatorClick={handleIndecatorClick} />
       <RightSideActions>
         <Tab>
-          <TabButton icon="Label" text="레이블" count={labelCount} />
-          <TabButton icon="Milestone" text="마일스톤" count={milestoneCount} />
+          <TabButton
+            icon="Label"
+            text="레이블"
+            count={labelCount}
+            onClick={() => navigate("/labels")}
+          />
+          <TabButton
+            icon="Milestone"
+            text="마일스톤"
+            count={milestoneCount}
+            onClick={() => navigate("/milestones/open")}
+          />
         </Tab>
-        <Button size="S" variant="contained">
+        <Button size="S" variant="contained" onClick={() => navigate("/new")}>
           <Icon icon="Plus" size="M" stroke="brandTextDefault" />
           이슈 작성
         </Button>

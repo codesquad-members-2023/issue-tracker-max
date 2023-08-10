@@ -18,7 +18,7 @@ interface CommentProps {
 }
 
 /* 접속자가 작성자인지 아닌지 추가하기 */
-/* 사진 마크다운 관련 추가하기 */
+/* 이미지 나중에 손보기, 사진 마크다운 관련 추가하기 */
 /* 이미지 파일 여러개일 경우 처리 안되있음 */
 export const Comment: React.FC<CommentProps> = ({ comment }) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -77,10 +77,12 @@ export const Comment: React.FC<CommentProps> = ({ comment }) => {
           <img src={comment.file} onError={handleImageError} />
         ) : null}
       </CommnentBodyBox>
-      <FileButton size="S" variant="ghost">
-        <Icon icon="Paperclip" size="S" stroke="nuetralTextDefault" />
-        <p>파일 첨부하기</p>
-      </FileButton>
+      {isEdit ? (
+        <FileButton size="S" variant="ghost">
+          <Icon icon="Paperclip" size="S" stroke="nuetralTextDefault" />
+          <p>파일 첨부하기</p>
+        </FileButton>
+      ) : null}
     </Layout>
   );
 };
@@ -95,7 +97,6 @@ const Layout = styled.div<{
     $isEdit === false
       ? color.nuetralBorderDefault
       : color.nuetralBorderDefaultActive};
-  flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;

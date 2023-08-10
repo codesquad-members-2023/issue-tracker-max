@@ -97,7 +97,6 @@ const Layout = styled.div<{
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-
   :focus-within label {
     transform: translate(0, 0) scale(0.8);
   }
@@ -135,7 +134,6 @@ const TextAreaBox = styled.div<{
     outline: none;
     padding: 0 16px 40px 16px;
     resize: none;
-    flex: 1;
     transition: all 0.3s;
 
     &::-webkit-scrollbar {

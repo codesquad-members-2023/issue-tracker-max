@@ -11,6 +11,8 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   $state?: "enabled" | "active" | "disabled" | "error";
   placeholder?: string;
   helperText?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
 }
 
 export const TextInput: React.FC<InputProps> = ({
@@ -19,8 +21,10 @@ export const TextInput: React.FC<InputProps> = ({
   placeholder,
   helperText,
   $labelText,
+  value = "",
+  onValueChange,
 }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(value);
   const [currentState, setCurrentState] = useState($state);
   const [typingState, setTypingState] = useState<
     "placeholder" | "onFocus" | "onTyping" | "typed"
@@ -50,6 +54,7 @@ export const TextInput: React.FC<InputProps> = ({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
     if (inputValue) {
+      onValueChange?.(event.target.value);
       setCurrentState("active");
       setTypingState("onTyping");
     } else {
@@ -126,6 +131,7 @@ const InputLayout = styled.div<{
 }>`
   ${({ theme, $state }) => $stateStyle(theme)[$state]}
   position: relative;
+  flex-grow: 1;
   font: ${({ theme: { font } }) => font.displayM16};
   height: ${({ $heightSize }) => ($heightSize === "S" ? "40px" : "56px")};
   display: ${({ $heightSize }) => ($heightSize === "S" ? "flex" : "")};
@@ -179,8 +185,8 @@ const Input = styled.input<{
   font: ${({ theme: { font } }) => font.displayM16};
   color: ${({ $typingState, theme: { color } }) =>
     $typingState === "typed"
-      ? color.nuetralTextDefault
-      : color.nuetralTextWeak};
+      ? color.nuetralTextWeak
+      : color.nuetralTextDefault};
   ${({ $heightSize, $labelText, $typingState }) =>
     $heightSize === "M" && $labelText && $typingState !== "placeholder"
       ? `position: relative; top: 8px;`

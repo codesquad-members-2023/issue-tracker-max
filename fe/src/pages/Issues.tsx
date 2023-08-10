@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { IssueTableHeader } from "components/Table/IssueTableHeader";
 import { IssueListHeader } from "components/Header/IssueListHeader";
 import { IssueTableList } from "components/Table/IssueTableList";
+import { useLoaderData } from "react-router-dom";
 
 interface IssueItem {
   id: number;
@@ -20,6 +21,8 @@ export const IssuesPage = () => {
   const [openIssueCount, setOpenIssueCount] = useState(0);
   const [closedIssueCount, setClosedIssueCount] = useState(0);
   const [issuesListData, setIssuesListData] = useState<IssueItem[]>();
+  const dd = useLoaderData();
+  console.log(dd);
 
   useEffect(() => {
     fetch("http://43.200.169.143:8080/api/issues/open")

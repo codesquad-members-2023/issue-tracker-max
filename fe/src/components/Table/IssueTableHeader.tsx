@@ -1,8 +1,9 @@
+import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+
 import { Icon } from "components/Common/Icon/Icon";
 import { Button } from "components/Common/Button/Button";
-import { useState, useEffect, useCallback } from "react";
-
 import { DropdownTap } from "components/Dropdown/DropdownTap";
 
 const initialData = [
@@ -97,14 +98,18 @@ export const IssueTableHeader: React.FC<IssueTableProps> = ({
           <Icon icon="CheckBoxInitial" stroke="paletteBlue" />
         </CheckBox>
         <TapBox>
-          <Button size="M" variant="ghost" states="selected">
-            <Icon icon="AlertCircle" stroke="paletteBlue" />
-            <p>열린 이슈({openIssueCount})</p>
-          </Button>
-          <Button size="M" variant="ghost">
-            <Icon icon="Archive" stroke="paletteBlue" />
-            <p>닫힌 이슈({closedIssueCount})</p>
-          </Button>
+          <Link to="/issues/open">
+            <Button size="M" variant="ghost" states="selected">
+              <Icon icon="AlertCircle" stroke="paletteBlue" />
+              <p>열린 이슈({openIssueCount})</p>
+            </Button>
+          </Link>
+          <Link to="/issues/closed">
+            <Button size="M" variant="ghost">
+              <Icon icon="Archive" stroke="paletteBlue" />
+              <p>닫힌 이슈({closedIssueCount})</p>
+            </Button>
+          </Link>
         </TapBox>
       </div>
       <DropdownTap
