@@ -132,9 +132,9 @@ export const issueDetails = {
 };
 
 export const issueSidebar = {
-  assignees: [1, 5],
-  labels: [1, 2],
-  milestone: 1,
+  assigneeIds: [1, 5],
+  labelIds: [1, 2],
+  milestoneId: 1,
 };
 
 export const labelList = [

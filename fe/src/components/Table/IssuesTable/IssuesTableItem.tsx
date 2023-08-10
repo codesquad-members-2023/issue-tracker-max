@@ -5,6 +5,7 @@ import LabelTag from "@components/Label/LabelTag";
 import InputCheckbox from "@components/common/Input/InputCheckbox";
 import { IssueItem as IssueItemType } from "@customTypes/index";
 import { convertPastTimestamp } from "@utils/time";
+import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 
 export default function IssuesTableItem({ issue }: { issue: IssueItemType }) {
@@ -30,9 +31,13 @@ export default function IssuesTableItem({ issue }: { issue: IssueItemType }) {
             ) : (
               <img className="alert-icon" src={archiveIcon} alt="닫힌 이슈" />
             )}
-            <IssueTitle href={`/issues/${issueNumber}`}>{title}</IssueTitle>
-            {labels.map(({ name, fontColor, backgroundColor }) => (
-              <LabelTag {...{ key: name, name, fontColor, backgroundColor }} />
+            <Link to={`/issues/${issueNumber}`}>
+              <IssueTitle>{title}</IssueTitle>
+            </Link>
+            {labels.map(({ labelId, name, fontColor, backgroundColor }) => (
+              <LabelTag
+                {...{ key: labelId, name, fontColor, backgroundColor }}
+              />
             ))}
           </div>
         </IssueHeader>
@@ -121,7 +126,7 @@ const IssueHeader = styled.div`
   }
 `;
 
-const IssueTitle = styled.a`
+const IssueTitle = styled.span`
   color: ${({ theme: { neutral } }) => neutral.text.strong};
   font: ${({ theme: { font } }) => font.availableMD20};
 

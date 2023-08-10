@@ -50,7 +50,7 @@ export default function IssueDetailHeader({
         title: newTitle,
       });
 
-      if (res.statusText === "OK") {
+      if (res.status === 200) {
         updateIssueTitle(newTitle);
         setIsEditTitle(false);
       }
@@ -66,7 +66,7 @@ export default function IssueDetailHeader({
         isOpen: !isOpen,
       });
 
-      if (res.statusText === "OK") {
+      if (res.status === 200) {
         updateIssueIsOpen();
       }
     } catch (error) {

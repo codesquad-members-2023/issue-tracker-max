@@ -46,7 +46,7 @@ export default function DropdownPanel({
               {dropdownList.map((item) => {
                 return (
                   <DropdownItem
-                    {...{ key: item.content, option: dropdownOption, item }}
+                    {...{ key: item.id, option: dropdownOption, item }}
                   />
                 );
               })}
@@ -63,7 +63,7 @@ export default function DropdownPanel({
               {dropdownList.map((item) => {
                 return (
                   <DropdownItem
-                    {...{ key: item.content, option: dropdownOption, item }}
+                    {...{ key: item.id, option: dropdownOption, item }}
                   />
                 );
               })}
@@ -80,7 +80,7 @@ export default function DropdownPanel({
               {dropdownList.map((item) => {
                 return (
                   <DropdownItem
-                    {...{ key: item.content, option: dropdownOption, item }}
+                    {...{ key: item.id, option: dropdownOption, item }}
                   />
                 );
               })}

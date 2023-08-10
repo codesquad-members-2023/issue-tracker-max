@@ -24,13 +24,13 @@ export default function IssueDetailBody({
     );
 
   const [newIssueSidebar, setNewIssueSidebar] = useState<{
-    assignees: Set<number>;
-    labels: Set<number>;
-    milestone: number;
+    assigneeIds: Set<number>;
+    labelIds: Set<number>;
+    milestoneId: number;
   }>({
-    assignees: new Set<number>(issueSidebar?.assignees),
-    labels: new Set<number>(issueSidebar?.labels),
-    milestone: issueSidebar?.milestone || 0,
+    assigneeIds: new Set<number>(issueSidebar?.assigneeIds),
+    labelIds: new Set<number>(issueSidebar?.labelIds),
+    milestoneId: issueSidebar?.milestoneId || 0,
   });
 
   const prevIssueSidebar = useRef(newIssueSidebar);
@@ -38,66 +38,65 @@ export default function IssueDetailBody({
   useEffect(() => {
     if (issueSidebar) {
       prevIssueSidebar.current = {
-        assignees: new Set<number>(issueSidebar.assignees),
-        labels: new Set<number>(issueSidebar.labels),
-        milestone: issueSidebar.milestone,
+        assigneeIds: new Set<number>(issueSidebar.assigneeIds),
+        labelIds: new Set<number>(issueSidebar.labelIds),
+        milestoneId: issueSidebar.milestoneId,
       };
 
       setNewIssueSidebar({
-        assignees: new Set<number>(issueSidebar.assignees),
-        labels: new Set<number>(issueSidebar.labels),
-        milestone: issueSidebar.milestone,
+        assigneeIds: new Set<number>(issueSidebar.assigneeIds),
+        labelIds: new Set<number>(issueSidebar.labelIds),
+        milestoneId: issueSidebar.milestoneId,
       });
     }
   }, [issueSidebar]);
 
-  const updateIssueAssignee = (assignees: number[]) => {
+  const updateIssueAssignee = (assigneeIds: number[]) => {
     updateIssueSidebar((prev) => {
-      return prev ? { ...prev, assignees } : prev;
+      return prev ? { ...prev, assigneeIds } : prev;
     });
   };
 
-  const updateIssueLabels = (labels: number[]) => {
+  const updateIssueLabels = (labelIds: number[]) => {
     updateIssueSidebar((prev) => {
-      return prev ? { ...prev, labels } : prev;
+      return prev ? { ...prev, labelIds } : prev;
     });
   };
 
-  const updateIssueMilestone = (milestone: number) => {
+  const updateIssueMilestone = (milestoneId: number) => {
     updateIssueSidebar((prev) => {
-      return prev ? { ...prev, milestone } : prev;
+      return prev ? { ...prev, milestoneId } : prev;
     });
   };
 
-  const onAssigneeChange = (assignees: Set<number>) => {
-    setNewIssueSidebar((prev) => ({ ...prev, assignees }));
+  const onAssigneeChange = (assigneeIds: Set<number>) => {
+    setNewIssueSidebar((prev) => ({ ...prev, assigneeIds }));
   };
 
-  const onLabelChange = (labels: Set<number>) => {
-    setNewIssueSidebar((prev) => ({ ...prev, labels }));
+  const onLabelChange = (labelIds: Set<number>) => {
+    setNewIssueSidebar((prev) => ({ ...prev, labelIds }));
   };
 
-  const onMilestoneChange = (milestone: number) => {
-    setNewIssueSidebar((prev) => ({ ...prev, milestone }));
+  const onMilestoneChange = (milestoneId: number) => {
+    setNewIssueSidebar((prev) => ({ ...prev, milestoneId }));
   };
 
   const onEditAssignees = async () => {
     try {
       const { addedElements, removedElements } = compareSet(
-        prevIssueSidebar.current.assignees,
-        newIssueSidebar.assignees
+        prevIssueSidebar.current.assigneeIds,
+        newIssueSidebar.assigneeIds
       );
 
       const isNotModified = !addedElements.length && !removedElements.length;
       if (isNotModified) return;
 
-      const { statusText } = await postEditField(issueNumber, "assignees", {
+      const { status } = await postEditField(issueNumber, "assignees", {
         addUserAccountId: addedElements,
         removeUserAccountId: removedElements,
       });
 
-      statusText === "OK" &&
-        updateIssueAssignee([...newIssueSidebar.assignees]);
+      status === 200 && updateIssueAssignee([...newIssueSidebar.assigneeIds]);
     } catch (e) {
       // TODO: error handling
       console.log(e);
@@ -107,19 +106,19 @@ export default function IssueDetailBody({
   const onEditLabels = async () => {
     try {
       const { addedElements, removedElements } = compareSet(
-        prevIssueSidebar.current.labels,
-        newIssueSidebar.labels
+        prevIssueSidebar.current.labelIds,
+        newIssueSidebar.labelIds
       );
 
       const isNotModified = !addedElements.length && !removedElements.length;
       if (isNotModified) return;
 
-      const { statusText } = await postEditField(issueNumber, "labels", {
+      const { status } = await postEditField(issueNumber, "labels", {
         addLabelsId: addedElements,
         removeLabelsId: removedElements,
       });
 
-      statusText === "OK" && updateIssueLabels([...newIssueSidebar.labels]);
+      status === 200 && updateIssueLabels([...newIssueSidebar.labelIds]);
     } catch (e) {
       // TODO: error handling
       console.log(e);
@@ -130,15 +129,15 @@ export default function IssueDetailBody({
   const onEditMilestone = async () => {
     try {
       const isNotModified =
-        prevIssueSidebar.current.milestone === newIssueSidebar.milestone;
+        prevIssueSidebar.current.milestoneId === newIssueSidebar.milestoneId;
 
       if (isNotModified) return;
 
-      const { statusText } = await postEditField(issueNumber, "milestone", {
-        milestoneId: newIssueSidebar.milestone,
+      const { status } = await postEditField(issueNumber, "milestone", {
+        milestoneId: newIssueSidebar.milestoneId,
       });
 
-      statusText === "OK" && updateIssueMilestone(newIssueSidebar.milestone);
+      status === 200 && updateIssueMilestone(newIssueSidebar.milestoneId);
     } catch (e) {
       // TODO: error handling
       console.log(e);
@@ -157,9 +156,9 @@ export default function IssueDetailBody({
       />
       <Sidebar
         {...{
-          assignees: newIssueSidebar.assignees,
-          labels: newIssueSidebar.labels,
-          milestone: newIssueSidebar.milestone,
+          assignees: newIssueSidebar.assigneeIds,
+          labels: newIssueSidebar.labelIds,
+          milestone: newIssueSidebar.milestoneId,
           onAssigneeChange,
           onLabelChange,
           onMilestoneChange,

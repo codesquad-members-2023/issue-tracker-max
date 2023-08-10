@@ -30,7 +30,11 @@ export default function LoginPage() {
       const {
         data: { token, user },
       } = await postLogin(username.value, password.value);
-      onLogin({ accessToken: token.accessToken, userInfo: user });
+      onLogin({
+        accessToken: token.accessToken,
+        userInfo: user,
+        expirationTime: token.expirationTime,
+      });
       navigate("/");
     } catch (error) {
       if (error instanceof AxiosError && error.response) {

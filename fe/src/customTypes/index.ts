@@ -61,9 +61,9 @@ export type IssueDetails = {
 };
 
 export type IssueSidebar = {
-  assignees: number[];
-  labels: number[];
-  milestone: number;
+  assigneeIds: number[];
+  labelIds: number[];
+  milestoneId: number;
 };
 
 export type IssueComment = {

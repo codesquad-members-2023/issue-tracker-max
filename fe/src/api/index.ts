@@ -31,9 +31,7 @@ export const getIssues = async () => {
 };
 
 export const getIssueDetails = async (issueId: number) => {
-  return await fetcherWithBearer.get<IssueDetails>(
-    `/issues/${issueId}/details`
-  );
+  return await fetcherWithBearer.get<IssueDetails>(`/issues/${issueId}`);
 };
 
 export const putIssueTitle = async (

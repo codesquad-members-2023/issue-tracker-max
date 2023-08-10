@@ -68,7 +68,7 @@ export const handlers = [
         token: {
           tokenType: "bearer",
           accessToken: "q13t302hv2ht0",
-          expiresIn: 48000000,
+          expirationTime: 1691531693098,
         },
         user: {
           username: username,
@@ -82,7 +82,7 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(issueList));
   }),
 
-  rest.get("/api/issues/:issueId/details", async (_, res, ctx) => {
+  rest.get("/api/issues/:issueId", async (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(issueDetails));
   }),
 
