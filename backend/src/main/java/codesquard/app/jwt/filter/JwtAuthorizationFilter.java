@@ -1,5 +1,7 @@
 package codesquard.app.jwt.filter;
 
+import static codesquard.app.jwt.filter.VerifyUserFilter.*;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -68,7 +70,7 @@ public class JwtAuthorizationFilter implements Filter {
 			AuthenticateUser authenticateUser = getAuthenticateUser(token);
 			logger.info("authenticateUser : {}", authenticateUser);
 			// 3. Request user 속성에 AuthenticateUser 객체 저장
-			httpServletRequest.setAttribute("user", authenticateUser);
+			httpServletRequest.setAttribute(AUTHENTICATE_USER, authenticateUser);
 			chain.doFilter(request, response);
 		} catch (JsonParseException e) {
 			logger.error("JsonParseException");
@@ -113,7 +115,7 @@ public class JwtAuthorizationFilter implements Filter {
 	// 토큰을 비밀키로 복호화하고 복호화한 데이터를 기반으로 AuthenticateUser 객체로 읽습니다.
 	private AuthenticateUser getAuthenticateUser(String token) throws JsonProcessingException {
 		Claims claims = jwtProvider.getClaims(token);
-		String authenticateUserJson = claims.get(VerifyUserFilter.AUTHENTICATE_USER, String.class);
+		String authenticateUserJson = claims.get(AUTHENTICATE_USER, String.class);
 		return objectMapper.readValue(authenticateUserJson, AuthenticateUser.class);
 	}
 }
