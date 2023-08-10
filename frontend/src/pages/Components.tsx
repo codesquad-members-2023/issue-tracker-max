@@ -31,7 +31,7 @@ export default function Components() {
         <Button type="submit" ghost flexible iconName="plus">
           This is Flexible BUTTON
         </Button>
-        <ButtonSmall type="submit" ghost iconName="plus">
+        <ButtonSmall type="submit" ghost selected iconName="plus">
           BUTTON
         </ButtonSmall>
         <ButtonSmall type="submit" ghost iconName="plus" onClick={changeTheme}>
