@@ -2,6 +2,8 @@ package org.presents.issuetracker.issue.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
@@ -35,7 +37,7 @@ public class IssueController {
 	private final IssueService issueService;
 
 	@PostMapping("/new")
-	public ResponseEntity<IdResponseDto> create(@RequestBody IssueCreateRequest issueCreateRequest) {
+	public ResponseEntity<IdResponseDto> create(@Valid @RequestBody IssueCreateRequest issueCreateRequest) {
 		IdResponseDto issueCreateResponse = IdResponseDto.builder()
 			.id(issueService.create(issueCreateRequest))
 			.build();
