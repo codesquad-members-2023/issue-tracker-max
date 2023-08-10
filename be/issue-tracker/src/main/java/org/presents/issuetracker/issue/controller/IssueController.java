@@ -1,6 +1,7 @@
 package org.presents.issuetracker.issue.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -82,20 +83,20 @@ public class IssueController {
 
 	@PutMapping("/{issueId}/labels")
 	public ResponseEntity<List<LabelPreviewResponse>> updateLabels(@PathVariable Long issueId,
-		@RequestBody List<Long> labelIds) {
-		return ResponseEntity.ok().body(issueService.updateLabels(labelIds, issueId));
+		@RequestBody Map<String, List<Long>> request) {
+		return ResponseEntity.ok().body(issueService.updateLabels(request.get("labelIds"), issueId));
 	}
 
 	@PutMapping("/{issueId}/assignees")
 	public ResponseEntity<List<UserResponse>> updateAssignees(@PathVariable Long issueId,
-		@RequestBody List<Long> assigneeIds) {
-		return ResponseEntity.ok().body(issueService.updateAssignees(assigneeIds, issueId));
+		@RequestBody Map<String, List<Long>> request) {
+		return ResponseEntity.ok().body(issueService.updateAssignees(request.get("assigneeIds"), issueId));
 	}
 
 	@PutMapping("/{issueId}/milestone")
 	public ResponseEntity<MilestonePreviewResponse> updateMilestone(@PathVariable Long issueId,
-		@RequestBody Long milestoneId) {
-		return ResponseEntity.ok().body(issueService.updateMilestone(milestoneId, issueId));
+		@RequestBody Map<String, Long> request) {
+		return ResponseEntity.ok().body(issueService.updateMilestone(request.get("milestoneId"), issueId));
 	}
 
 	@PutMapping("/status")
