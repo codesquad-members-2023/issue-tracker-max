@@ -38,6 +38,6 @@ public class LabelService {
 			.orElseThrow(() -> new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION))
 			.forEach(label ->
 				labels.add(LabelVO.from(label)));
-		return LabelResponseDto.of(labels, labelRepository.findMilestonesCount());
+		return LabelResponseDto.of(labels, labelRepository.findMilestonesCount().orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER)));
 	}
 }

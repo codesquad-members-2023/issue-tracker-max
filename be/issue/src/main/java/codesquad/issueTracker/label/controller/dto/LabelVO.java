@@ -1,9 +1,9 @@
 package codesquad.issueTracker.label.controller.dto;
 
-import java.util.Objects;
-
 import codesquad.issueTracker.label.domain.Label;
+import lombok.Getter;
 
+@Getter
 public class LabelVO {
 	private final Long id;
 	private final String name;

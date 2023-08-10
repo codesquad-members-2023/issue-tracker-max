@@ -12,6 +12,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import codesquad.issueTracker.global.exception.CustomException;
+import codesquad.issueTracker.global.exception.ErrorCode;
 import codesquad.issueTracker.label.domain.Label;
 
 @Repository
@@ -32,7 +34,10 @@ public class LabelRepository {
 		params.addValue("background_color", label.getBackgroundColor());
 		params.addValue("description", label.getDescription());
 
-		jdbcTemplate.update(sql, params, keyHolder);
+		int result = jdbcTemplate.update(sql, params, keyHolder);
+		if(result == 0){
+			throw new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION);
+		}
 		return keyHolder.getKey().longValue();
 	}
 
@@ -44,13 +49,21 @@ public class LabelRepository {
 		params.addValue("textColor", label.getTextColor());
 		params.addValue("backgroundColor", label.getBackgroundColor());
 		params.addValue("description", label.getDescription());
-		return jdbcTemplate.update(sql, params);
+		int result = jdbcTemplate.update(sql, params);
+		if(result == 0){
+			throw new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION);
+		}
+		return result;
 	}
 
 	public int delete(Long id) {
 		String sql = "UPDATE labels SET is_deleted = TRUE where id = :id";
-		return jdbcTemplate.update(sql, new MapSqlParameterSource()
+		int result = jdbcTemplate.update(sql, new MapSqlParameterSource()
 			.addValue("id", id));
+		if(result == 0){
+			throw new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION);
+		}
+		return result;
 	}
 
 	public Optional<List<Label>> findAll() {
@@ -60,11 +73,11 @@ public class LabelRepository {
 		return Optional.of(jdbcTemplate.query(sql, labelRowMapper));
 	}
 
-	public int findMilestonesCount(){
+	public Optional<Integer> findMilestonesCount(){
 		String sql = "SELECT COUNT(*) FROM milestones WHERE is_deleted = false";
 		MapSqlParameterSource params = new MapSqlParameterSource();
 
-		return jdbcTemplate.queryForObject(sql, params, Integer.class);
+		return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, Integer.class));
 	}
 
 	private final RowMapper<Label> labelRowMapper = (rs, rowNum) -> Label.builder()
