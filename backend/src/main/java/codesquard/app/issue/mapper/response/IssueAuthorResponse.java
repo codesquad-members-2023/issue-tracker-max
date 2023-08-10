@@ -1,4 +1,4 @@
-package codesquard.app.issue.dto.response;
+package codesquard.app.issue.mapper.response;
 
 import lombok.NoArgsConstructor;
 

@@ -1,14 +1,17 @@
-package codesquard.app.issue.dto.response;
+package codesquard.app.issue.mapper.response.filters.response;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class IssueLabelsResponse {
+@AllArgsConstructor
+public class MultiFiltersLabels {
 
 	private Long id;
 	private String name;
 	private String color;
 	private String background;
+	private boolean selected;
 
 	public Long getId() {
 		return id;
@@ -24,6 +27,10 @@ public class IssueLabelsResponse {
 
 	public String getBackground() {
 		return background;
+	}
+
+	public boolean isSelected() {
+		return selected;
 	}
 
 }

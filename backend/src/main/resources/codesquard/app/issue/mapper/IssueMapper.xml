@@ -3,7 +3,7 @@
 
 <mapper namespace="codesquard.app.issue.mapper.IssueMapper">
 
-    <resultMap id="issuesResponse" type="codesquard.app.issue.dto.response.IssuesResponse">
+    <resultMap id="issuesResponse" type="codesquard.app.issue.mapper.response.IssuesResponse">
         <result property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="status" column="status"/>
@@ -11,23 +11,23 @@
         <result property="createdAt" column="created_at"/>
         <result property="modifiedAt" column="modified_at"/>
         <result property="commentCount" column="comment_count"/>
-        <association property="milestone" javaType="codesquard.app.issue.dto.response.MilestoneResponse">
+        <association property="milestone" javaType="codesquard.app.issue.mapper.response.IssueMilestoneResponse">
             <result property="id" column="milestone_id"/>
             <result property="name" column="milestone_name"/>
         </association>
-        <association property="author" javaType="codesquard.app.issue.dto.response.IssueAuthorResponse">
+        <association property="author" javaType="codesquard.app.issue.mapper.response.IssueAuthorResponse">
             <result property="id" column="user_id"/>
             <result property="name" column="login_id"/>
         </association>
         <collection property="assignees" column="id" javaType="List"
-                    ofType="codesquard.app.issue.dto.response.IssueAssigneeResponse"
+                    ofType="codesquard.app.issue.mapper.response.IssueAssigneeResponse"
                     select="getAssignees"/>
         <collection property="labels" column="id" javaType="List"
-                    ofType="codesquard.app.issue.dto.response.IssueLabelResponse"
+                    ofType="codesquard.app.issue.mapper.response.IssueLabelResponse"
                     select="getLabels"/>
     </resultMap>
 
-    <select id="getIssues" parameterType="codesquard.app.issue.dto.request.IssueFilterRequest"
+    <select id="getIssues" parameterType="codesquard.app.issue.mapper.request.IssueFilterRequest"
             resultMap="issuesResponse">
         SELECT
         issue.`id`, issue.`title`, issue.`status`, issue.`status_modified_at`, issue.`created_at`, issue.`modified_at`,
@@ -75,7 +75,7 @@
         </where>
     </select>
 
-    <resultMap id="issueAssigneeResponse" type="codesquard.app.issue.dto.response.IssueUserResponse">
+    <resultMap id="issueAssigneeResponse" type="codesquard.app.issue.mapper.response.IssueAssigneeResponse">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="avatarUrl" column="avatar_url"/>
@@ -89,7 +89,7 @@
         WHERE assignee.`issue_id` = #{id}
     </select>
 
-    <resultMap id="issueLabelsResponse" type="codesquard.app.issue.dto.response.IssueLabelsResponse">
+    <resultMap id="issueLabelsResponse" type="codesquard.app.issue.mapper.response.IssueLabelResponse">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="color" column="color"/>
@@ -103,6 +103,58 @@
         LEFT OUTER JOIN label AS label
         ON issue_label.`label_id` = label.`id`
         WHERE issue_label.`issue_id` = #{id}
+    </select>
+
+    <select id="getMultiFiltersAssignees" parameterType="java.util.Map"
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersAssignees">
+        SELECT id, login_id, password, avatar_url
+        <if test="check = true">
+            , (SELECT IF(login_id = #{request.assignee}, true, false)) AS `selected`
+        </if>
+        <if test="check = false">
+            , (SELECT false) AS `selected`
+        </if>
+        FROM `user`
+    </select>
+
+    <select id="getMultiFiltersAuthors" parameterType="java.util.Map"
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersAuthors">
+        SELECT id, login_id, password, avatar_url
+        <if test="check = true">
+            , (SELECT IF(login_id = #{request.author}, true, false)) AS `selected`
+        </if>
+        <if test="check = false">
+            , (SELECT false) AS `selected`
+        </if>
+        FROM `user`
+    </select>
+    
+    <select id="getMultiFiltersLabels" parameterType="java.util.Map"
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersLabels">
+        SELECT id, name, color, background
+        <if test="check = true">
+            , (SELECT IF(name IN
+            <foreach item="name" index="index" collection="request.label" open="(" separator="," close=")">
+                #{name}
+            </foreach>
+            , true, false)) AS `selected`
+        </if>
+        <if test="check = false">
+            , (SELECT false) AS `selected`
+        </if>
+        FROM label
+    </select>
+
+    <select id="getMultiFiltersMilestones" parameterType="java.util.Map"
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersMilestones">
+        SELECT id, name
+        <if test="check = true">
+            , (SELECT IF(name = #{request.milestone}, true, false)) AS `selected`
+        </if>
+        <if test="check = false">
+            , (SELECT false) AS `selected`
+        </if>
+        FROM milestone
     </select>
 
 </mapper>

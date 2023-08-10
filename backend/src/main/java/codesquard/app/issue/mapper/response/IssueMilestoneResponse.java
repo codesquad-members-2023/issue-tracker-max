@@ -1,9 +1,9 @@
-package codesquard.app.issue.dto.response;
+package codesquard.app.issue.mapper.response;
 
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class MilestoneResponse {
+public class IssueMilestoneResponse {
 
 	private Long id;
 	private String name;

@@ -2,9 +2,7 @@ package codesquard.app.issue.repository;
 
 import java.util.List;
 
-import codesquard.app.issue.dto.request.IssueFilterRequest;
 import codesquard.app.issue.dto.response.IssueCommentsResponse;
-import codesquard.app.issue.dto.response.IssueFilterResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.entity.Issue;
@@ -49,5 +47,4 @@ public interface IssueRepository {
 
 	List<IssueCommentsResponse> findCommentsBy(Long issueId);
 
-	IssueFilterResponse findByFilter(IssueFilterRequest request);
 }

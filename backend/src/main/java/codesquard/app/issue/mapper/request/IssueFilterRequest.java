@@ -1,4 +1,4 @@
-package codesquard.app.issue.dto.request;
+package codesquard.app.issue.mapper.request;
 
 import java.util.List;
 
