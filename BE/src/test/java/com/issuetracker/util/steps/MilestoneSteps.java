@@ -1,5 +1,7 @@
 package com.issuetracker.util.steps;
 
+import java.util.Map;
+
 import org.springframework.http.MediaType;
 
 import com.issuetracker.milestone.ui.dto.MilestoneCreateRequest;
@@ -11,8 +13,23 @@ import io.restassured.response.Response;
 
 public class MilestoneSteps {
 
-	public static ExtractableResponse<Response> 마일스톤_목록_조회_요청() {
+	public static ExtractableResponse<Response> 열린_마일스톤_목록_조회_요청() {
+
+		Map<String, Object> params = Map.of("isOpen", "true");
+
 		return RestAssured.given().log().all()
+			.queryParams(params)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().get("/api/milestones")
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 닫힌_마일스톤_목록_조회_요청() {
+
+		Map<String, Object> params = Map.of("isOpen", "false");
+
+		return RestAssured.given().log().all()
+			.queryParams(params)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().get("/api/milestones")
 			.then().log().all().extract();

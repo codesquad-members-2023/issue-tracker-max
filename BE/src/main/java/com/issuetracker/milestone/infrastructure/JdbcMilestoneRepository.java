@@ -14,11 +14,14 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.issuetracker.milestone.domain.Milestone;
+import com.issuetracker.milestone.domain.MilestoneCountMetadata;
 import com.issuetracker.milestone.domain.MilestoneRepository;
 
 @Repository
 public class JdbcMilestoneRepository implements MilestoneRepository {
 
+	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM milestone WHERE id = :id)";
+	private static final String FIND_ALL_FOR_FILTER = "SELECT id, title FROM milestone ORDER BY is_open DESC";
 	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM milestone WHERE is_deleted = false AND id = :id)";
 	private static final String FIND_ALL_FOR_FILTER = "SELECT id, title FROM milestone WHERE milestone.is_deleted = false ORDER BY is_open DESC";
 	private static final String SAVE_SQL = "INSERT INTO milestone(title, description, deadline, is_open) VALUE(:title, :description, :deadline, true)";
@@ -32,12 +35,13 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "    milestone.description, "
 		+ "    milestone.deadline, "
 		+ "    milestone.is_open, "
-		+ "    ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 2 ) AS progress "
+		+ "    COALESCE( ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 0 ), 0 ) AS progress "
 		+ "FROM milestone "
 		+ "LEFT JOIN issue "
 		+ "ON milestone.id = issue.milestone_id "
 		+ "WHERE milestone.is_deleted = false "
-		+ "GROUP BY milestone.id "
+		+ "AND milestone.is_open = :isOpen "
+		+ "GROUP BY milestone.id"
 		+ "ORDER BY milestone.id DESC ";
 	private static final String FIND_ALL_ASSIGNED_TO_ISSUE
 		= "SELECT "
@@ -45,7 +49,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "    milestone.title, "
 		+ "    milestone.description, "
 		+ "    milestone.deadline, "
-		+ "    ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 2 ) AS progress "
+		+ "    COALESCE( ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 0 ), 0 ) AS progress "
 		+ "FROM milestone "
 		+ "RIGHT JOIN issue "
 		+ "ON milestone.id = issue.milestone_id "
@@ -59,14 +63,20 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "    milestone.title, "
 		+ "    milestone.description, "
 		+ "    milestone.deadline, "
-		+ "    ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 2 ) AS progress "
+		+ "    COALESCE( ROUND( COUNT( CASE WHEN issue.is_open = false THEN 1 ELSE null END ) / COUNT(issue.id) * 100, 0 ), 0 ) AS progress "
 		+ "FROM milestone "
 		+ "LEFT JOIN issue "
 		+ "ON milestone.id = issue.milestone_id "
 		+ "WHERE milestone.is_deleted = false "
 		+ "AND milestone.id NOT IN (SELECT sub_issue.milestone_id FROM issue sub_issue WHERE sub_issue.id = :issueId) "
 		+ "GROUP BY milestone.id "
-		+ "ORDER BY milestone.title ";
+		+ "ORDER BY milestone.title";
+	private static final String CALCULATE_COUNT_METADATA
+		= "SELECT "
+		+ "    (SELECT COUNT(id) FROM label WHERE is_deleted = false) AS total_label_count, "
+		+ "    (SELECT COUNT(id) FROM milestone WHERE is_deleted = false) AS total_milestone_count, "
+		+ "    (SELECT COUNT(id) FROM milestone WHERE is_deleted = false AND is_open = true) open_milestone_count, "
+		+ "    (SELECT COUNT(id) FROM milestone WHERE is_deleted = false AND is_open = false) close_milestone_count";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -132,8 +142,8 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public List<Milestone> findAll() {
-		return jdbcTemplate.query(FIND_ALL_SQL, MILESTONE_ROW_MAPPER);
+	public List<Milestone> findAll(Milestone milestone) {
+		return jdbcTemplate.query(FIND_ALL_SQL, Map.of("isOpen", milestone.getIsOpen()), MILESTONE_ROW_MAPPER);
 	}
 
 	private static LocalDate convertFrom(String dateString) {
@@ -151,6 +161,11 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		return jdbcTemplate.query(FIND_ALL_UNASSIGNED_TO_ISSUE, Map.of("issueId", issueId), MILESTONE_ROW_MAPPER);
 	}
 
+	@Override
+	public MilestoneCountMetadata calculateMetadata() {
+		return jdbcTemplate.queryForObject(CALCULATE_COUNT_METADATA, Map.of(), MILESTONE_METADATA_MAPPER);
+	}
+
 	private static final RowMapper<Milestone> MILESTONE_ROW_MAPPER = (rs, rowNum) ->
 		Milestone.builder()
 			.id(rs.getLong("id"))
@@ -158,6 +173,14 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 			.description(rs.getString("description"))
 			.deadline(convertFrom(rs.getString("deadline")))
 			.isOpen(rs.getBoolean("is_open"))
-			.progress(rs.getDouble("progress"))
+			.progress(rs.getInt("progress"))
+			.build();
+
+	private static final RowMapper<MilestoneCountMetadata> MILESTONE_METADATA_MAPPER = (rs, rowNum) ->
+		MilestoneCountMetadata.builder()
+			.totalLabelCount(rs.getInt("total_label_count"))
+			.totalMilestoneCount(rs.getInt("total_milestone_count"))
+			.openMilestoneCount(rs.getInt("open_milestone_count"))
+			.closeMilestoneCount(rs.getInt("close_milestone_count"))
 			.build();
 }

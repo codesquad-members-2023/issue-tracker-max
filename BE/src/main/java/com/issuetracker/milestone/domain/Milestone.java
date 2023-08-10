@@ -17,10 +17,10 @@ public class Milestone {
 	private String description;
 	private LocalDate deadline;
 	private boolean isOpen;
-	private Double progress;
+	private Integer progress;
 
 	@Builder
-	public Milestone(Long id, String title, String description, LocalDate deadline, boolean isOpen, Double progress) {
+	public Milestone(Long id, String title, String description, LocalDate deadline, boolean isOpen, Integer progress) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
@@ -30,7 +30,7 @@ public class Milestone {
 	}
 
 	@Builder
-	public Milestone(Long id, String title, String description, String deadline, boolean isOpen, Double progress) {
+	public Milestone(Long id, String title, String description, String deadline, boolean isOpen, Integer progress) {
 		this.id = id;
 		this.title = title;
 		this.description = description;

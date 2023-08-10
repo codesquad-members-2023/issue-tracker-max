@@ -11,10 +11,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +19,7 @@ import com.issuetracker.milestone.application.MilestoneService;
 import com.issuetracker.milestone.ui.dto.MilestoneCreateRequest;
 import com.issuetracker.milestone.ui.dto.MilestoneCreateResponse;
 import com.issuetracker.milestone.ui.dto.MilestoneDeleteRequest;
+import com.issuetracker.milestone.ui.dto.MilestoneSearchByOpenStatusRequest;
 import com.issuetracker.milestone.ui.dto.MilestoneUpdateOpenStatusRequest;
 import com.issuetracker.milestone.ui.dto.MilestoneUpdateRequest;
 import com.issuetracker.milestone.ui.dto.MilestonesResponse;
@@ -73,8 +70,11 @@ public class MilestoneController {
 	}
 
 	@GetMapping
-	public ResponseEntity<MilestonesResponse> showMilestones() {
+	public ResponseEntity<MilestonesResponse> showMilestones(
+		MilestoneSearchByOpenStatusRequest milestoneSearchByOpenStatusRequest) {
+
 		return ResponseEntity.ok()
-			.body(MilestonesResponse.from(milestoneService.search()));
+			.body(MilestonesResponse.from(milestoneService.search(
+				milestoneSearchByOpenStatusRequest.toMilestoneSearchByOpenStatusInputData())));
 	}
 }

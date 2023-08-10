@@ -16,7 +16,7 @@ public class IssueDetailMilestoneInformation {
 
 	private Long id;
 	private String title;
-	private Double progress;
+	private Integer progress;
 
 	public static IssueDetailMilestoneInformation from(Milestone milestone) {
 		if (Objects.isNull(milestone)) {

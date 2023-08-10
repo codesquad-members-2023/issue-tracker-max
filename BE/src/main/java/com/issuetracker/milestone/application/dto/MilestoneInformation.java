@@ -18,7 +18,7 @@ public class MilestoneInformation {
 	private String description;
 	private LocalDate deadline;
 	private boolean isOpen;
-	private Double progress;
+	private Integer progress;
 
 	public static MilestoneInformation from(Milestone milestone) {
 		return new MilestoneInformation(

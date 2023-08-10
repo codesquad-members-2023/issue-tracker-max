@@ -1,17 +1,17 @@
 package com.issuetracker.label.application;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetracker.config.exception.CustomHttpException;
 import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.label.application.dto.LabelCountMetadataInformation;
 import com.issuetracker.label.application.dto.LabelCreateInformation;
 import com.issuetracker.label.application.dto.LabelCreateInputData;
 import com.issuetracker.label.application.dto.LabelDeleteInputData;
 import com.issuetracker.label.application.dto.LabelInformation;
 import com.issuetracker.label.application.dto.LabelUpdateInputData;
+import com.issuetracker.label.application.dto.LabelsInformation;
 import com.issuetracker.label.domain.LabelRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -47,7 +47,11 @@ public class LabelService {
 		}
 	}
 
-	public List<LabelInformation> search() {
-		return LabelInformation.from(labelRepository.findAll());
+	public LabelsInformation search() {
+
+		return LabelsInformation.from(
+			LabelCountMetadataInformation.from(labelRepository.calculateMetadata()),
+			LabelInformation.from(labelRepository.findAll())
+		);
 	}
 }

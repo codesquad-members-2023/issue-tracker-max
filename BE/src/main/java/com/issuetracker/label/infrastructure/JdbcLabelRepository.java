@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.issuetracker.label.domain.Label;
+import com.issuetracker.label.domain.LabelCountMetadata;
 import com.issuetracker.label.domain.LabelRepository;
 
 @Repository
@@ -24,6 +25,10 @@ public class JdbcLabelRepository implements LabelRepository {
 	private static final String UPDATE_SQL = "UPDATE label SET title = :title, description = :description, color = :color WHERE id = :id";
 	private static final String DELETE_SQL = "UPDATE label SET is_deleted = true WHERE id = :id";
 	private static final String FIND_ALL_SQL = "SELECT id, title, description, color FROM label WHERE is_deleted = false ORDER BY id desc";
+	private static final String CALCULATE_COUNT_METADATA
+		= "SELECT "
+		+ "    (SELECT COUNT(id) FROM label WHERE is_deleted = false) AS total_label_count, "
+		+ "    (SELECT COUNT(id) FROM milestone WHERE is_deleted = false) AS total_milestone_count";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -79,11 +84,22 @@ public class JdbcLabelRepository implements LabelRepository {
 		return jdbcTemplate.query(FIND_ALL_SQL, LABEL_ROW_MAPPER);
 	}
 
+	@Override
+	public LabelCountMetadata calculateMetadata() {
+		return jdbcTemplate.queryForObject(CALCULATE_COUNT_METADATA, Map.of(), LABEL_METADATA_MAPPER);
+	}
+
 	private static final RowMapper<Label> LABEL_ROW_MAPPER = (rs, rowNum) ->
 		Label.builder()
 			.id(rs.getLong("id"))
 			.title(rs.getString("title"))
 			.description(rs.getString("description"))
 			.color(rs.getString("color"))
+			.build();
+
+	private static final RowMapper<LabelCountMetadata> LABEL_METADATA_MAPPER = (rs, rowNum) ->
+		LabelCountMetadata.builder()
+			.totalLabelCount(rs.getInt("total_label_count"))
+			.totalMilestoneCount(rs.getInt("total_milestone_count"))
 			.build();
 }

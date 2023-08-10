@@ -2,7 +2,7 @@ package com.issuetracker.label.ui.dto;
 
 import java.util.List;
 
-import com.issuetracker.label.application.dto.LabelInformation;
+import com.issuetracker.label.application.dto.LabelsInformation;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,9 +14,13 @@ import lombok.NoArgsConstructor;
 @Getter
 public class LabelsResponse {
 
+	private LabelCountMetadataResponse metadata;
 	private List<LabelResponse> labels;
 
-	public static LabelsResponse from(List<LabelInformation> labelInformations) {
-		return new LabelsResponse(LabelResponse.from(labelInformations));
+	public static LabelsResponse from(LabelsInformation labelsInformation) {
+		return new LabelsResponse(
+			LabelCountMetadataResponse.from(labelsInformation.getMetadata()),
+			LabelResponse.from(labelsInformation.getLabels())
+		);
 	}
 }

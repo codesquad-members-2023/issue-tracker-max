@@ -8,13 +8,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.issuetracker.config.exception.CustomHttpException;
 import com.issuetracker.config.exception.ErrorType;
 import com.issuetracker.milestone.application.dto.MilestoneCandidatesInformation;
+import com.issuetracker.milestone.application.dto.MilestoneCountMetadataInformation;
 import com.issuetracker.milestone.application.dto.MilestoneCreateInformation;
 import com.issuetracker.milestone.application.dto.MilestoneCreateInputData;
 import com.issuetracker.milestone.application.dto.MilestoneDeleteInputData;
 import com.issuetracker.milestone.application.dto.MilestoneInformation;
+import com.issuetracker.milestone.application.dto.MilestoneSearchByOpenStatusInputData;
 import com.issuetracker.milestone.application.dto.MilestoneSearchInformation;
 import com.issuetracker.milestone.application.dto.MilestoneUpdateInputData;
 import com.issuetracker.milestone.application.dto.MilestoneUpdateOpenStatusInputData;
+import com.issuetracker.milestone.application.dto.MilestonesInformation;
 import com.issuetracker.milestone.domain.MilestoneRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -64,8 +67,13 @@ public class MilestoneService {
 		}
 	}
 
-	public List<MilestoneInformation> search() {
-		return MilestoneInformation.from(milestoneRepository.findAll());
+	public MilestonesInformation search(
+		MilestoneSearchByOpenStatusInputData milestoneSearchByOpenStatusInputData) {
+		return MilestonesInformation.from(
+			MilestoneCountMetadataInformation.from(milestoneRepository.calculateMetadata()),
+			MilestoneInformation.from(
+				milestoneRepository.findAll(milestoneSearchByOpenStatusInputData.toMilestoneForSearchByOpenStatus()))
+		);
 	}
 
 	public MilestoneCandidatesInformation searchMilestoneCandidates(long issueId) {

@@ -23,7 +23,7 @@ public class MilestoneResponse {
 	private LocalDate deadline;
 	@JsonProperty(value = "isOpen")
 	private boolean open;
-	private Double progress;
+	private Integer progress;
 
 	public static MilestoneResponse from(MilestoneInformation milestoneInformation) {
 		return new MilestoneResponse(
