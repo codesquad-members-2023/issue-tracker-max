@@ -62,7 +62,7 @@ public class OauthService {
 		OauthProvider oauthProvider = inMemoryProviderRepository.findByProviderName(provider);
 		logger.info("oauthProvider : {}", oauthProvider);
 		// 2. accessToken 가져오기
-		OauthAccessTokenResponse accessTokenResponse = getToken(oauthProvider, code);
+		OauthAccessTokenResponse accessTokenResponse = requestAccessTokenByAuthorizationCode(oauthProvider, code);
 		logger.info("OauthAcessTokenResponse : {}", accessTokenResponse);
 		// 3. 유저 정보 가져오기
 		UserProfile userProfile = getUserProfile(provider, accessTokenResponse, oauthProvider);
@@ -85,7 +85,7 @@ public class OauthService {
 		return new OauthLoginServiceResponse(authenticateUser, jwt, "Bearer");
 	}
 
-	private OauthAccessTokenResponse getToken(OauthProvider provider, String code) {
+	private OauthAccessTokenResponse requestAccessTokenByAuthorizationCode(OauthProvider provider, String code) {
 		return WebClient.create()
 			.post()
 			.uri(provider.getTokenUri())
@@ -95,17 +95,17 @@ public class OauthService {
 				header.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 				header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
 			})
-			.bodyValue(tokenRequest(provider, code))
+			.bodyValue(tokenRequest(provider.getRedirectUri(), code))
 			.retrieve()// ResponseEntity를 받아 디코딩
 			.bodyToMono(OauthAccessTokenResponse.class) // 주어진 타입으로 디코딩
 			.block();
 	}
 
-	private MultiValueMap<String, String> tokenRequest(OauthProvider provider, String code) {
+	private MultiValueMap<String, String> tokenRequest(String redirectUri, String code) {
 		MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 		formData.add("code", code);
 		formData.add("grant_type", "authorization_code");
-		formData.add("redirect_uri", provider.getRedirectUri());
+		formData.add("redirect_uri", redirectUri);
 		return formData;
 	}
 
