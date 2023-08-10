@@ -1,13 +1,16 @@
 package codesquad.issueTracker.milestone.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import codesquad.issueTracker.global.exception.CustomException;
-import codesquad.issueTracker.global.exception.ErrorCode;
+import codesquad.issueTracker.global.filter.StatusFilter;
 import codesquad.issueTracker.milestone.domain.Milestone;
+import codesquad.issueTracker.milestone.dto.MileStoneStatusDto;
+import codesquad.issueTracker.milestone.dto.MilestoneResponseDto;
 import codesquad.issueTracker.milestone.dto.ModifyMilestoneRequestDto;
-import codesquad.issueTracker.milestone.dto.UpdateMilestoneStatusDto;
 import codesquad.issueTracker.milestone.repository.MilestoneRepository;
+import codesquad.issueTracker.milestone.vo.MilestoneVo;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -26,7 +29,7 @@ public class MilestoneService {
 		milestoneValidator.existValidate(id);
 		Milestone milestone = ModifyMilestoneRequestDto.toEntity(request);
 		milestone.validateDate();
-		return milestoneRepository.update(id,milestone);
+		return milestoneRepository.update(id, milestone);
 	}
 
 	public Long delete(Long id) {
@@ -34,17 +37,17 @@ public class MilestoneService {
 		return milestoneRepository.delete(id);
 	}
 
-	public Long updateStatus(Long id , UpdateMilestoneStatusDto request) {
-		int status = convertStatusToValue(request.getStatus());
-		return milestoneRepository.updateStatus(id,status);
+	public Long updateStatus(Long id, MileStoneStatusDto request) {
+		Boolean status = StatusFilter.from(request.getStatus()).getStatus();
+		return milestoneRepository.updateStatus(id, status);
 	}
 
-	private int convertStatusToValue(String status) {
-		if ("open".equals(status)) {
-			return 0;
-		} else if ("close".equals(status)) {
-			return 1;
-		}
-		throw new CustomException(ErrorCode.ILLEGAL_STATUS_MILESTONE);
+	public MilestoneResponseDto findAll(MileStoneStatusDto request) {
+		Boolean status = StatusFilter.from(request.getStatus()).getStatus();
+		List<MilestoneVo> milestones = milestoneRepository.findAll(status);
+		int anotherCount = milestoneRepository.countAnother(!status);
+		MilestoneResponseDto milestoneResponseDto = new MilestoneResponseDto(anotherCount, milestones);
+		return milestoneResponseDto;
 	}
+
 }
