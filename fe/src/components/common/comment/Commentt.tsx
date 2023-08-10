@@ -120,8 +120,6 @@ export const Comment: React.FC<Props> = ({
     setIsEditing(true);
   };
 
-  console.log('나옴?', textAreaValue);
-
   const isTyping = textAreaValue.length > 0;
 
   const wrapperStyle = {

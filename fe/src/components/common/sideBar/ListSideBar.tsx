@@ -84,7 +84,8 @@ export const ListSideBar: React.FC<Props> = ({
   const assigneeOptions = modifiedUserData.slice(1);
   const labelOptions = listData.labels.slice(1);
   const milestoneOptions = listData.milestones.slice(1);
-
+  console.log(listData.milestones);
+  console.log(milestoneOptions);
   const selectedAssigneesData = modifiedUserData.filter((users) =>
     selections.assignees.includes(users.id),
   );
@@ -190,7 +191,7 @@ export const ListSideBar: React.FC<Props> = ({
           indicator="마일스톤"
           size="L"
           isPanelOpen={isPanelOpen === 'milestones'}
-          onClick={() => openPanel(getLabels, 'labels')}
+          onClick={() => openPanel(getMilestones, 'milestones')}
         >
           <DropDownPanel
             panelHeader="마일스톤 설정"
