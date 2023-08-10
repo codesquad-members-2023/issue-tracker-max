@@ -25,13 +25,17 @@ export default function Options() {
   const [activeOption, setActiveOption] = useState<Option>(label);
   const [labels, setLabels] = useState([]);
   const [milestones, setMilestones] = useState([]);
-  const labelFetch = () => axios.get('api/label');
-
-  const milestoneFetch = () => axios.get('api/milestone');
 
   useEffect(() => {
     (async () => {
-      const fetch = activeOption === label ? labelFetch : milestoneFetch;
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      };
+      const fetch =
+        activeOption === label
+          ? () => axios.get('api/label', { headers })
+          : () => axios.get('api/milestone', { headers });
+
       const res = await fetch();
       if (activeOption === label) {
         setLabels(res.data);
