@@ -24,7 +24,10 @@ function App() {
             <Route path="" element={<LoginPage />}></Route>
             <Route path="/new" element={<AddIssuePage />}></Route>
             <Route path="/labels" element={<LabelsPage />}></Route>
-            <Route path="/milestones" element={<MilestonesPage />}></Route>
+            <Route
+              path="/milestones/:state"
+              element={<MilestonesPage />}
+            ></Route>
             <Route path="/issues/:filter" element={<MainPage />}></Route>
             <Route path="/detail/:id" element={<IssueDetail />}></Route>
           </Routes>
