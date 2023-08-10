@@ -13,10 +13,12 @@ export default function IssueCommentContainer({
   issueNumber,
   issueDetails,
   updateIssueContent,
+  updateIssueCommentCount,
 }: {
   issueNumber: number;
   issueDetails: IssueDetails | null;
   updateIssueContent: (newContent: string) => void;
+  updateIssueCommentCount: () => void;
 }) {
   const [cursor, setCursor] = useState<number>(0);
   const [allComments, setAllComments] = useState<IssueComment[]>([]); // TODO: comment 자료 구조 개선
@@ -82,6 +84,7 @@ export default function IssueCommentContainer({
   };
 
   const onCommentAdd = (newComment: IssueComment) => {
+    updateIssueCommentCount();
     setAllComments((prev) => [...prev, newComment]);
   };
 

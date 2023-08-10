@@ -33,12 +33,11 @@ export default function IssueDetailPage() {
     });
   };
 
-  // TODO: comment 추가 전달
-  // const updateIssueCommentCount = () => {
-  //   setIssueDetails((prev) => {
-  //     return prev ? { ...prev, commentCount: prev.commentCount + 1 } : prev;
-  //   });
-  // };
+  const updateIssueCommentCount = () => {
+    setIssueDetails((prev) => {
+      return prev ? { ...prev, commentCount: prev.commentCount + 1 } : prev;
+    });
+  };
 
   return (
     <>
@@ -47,10 +46,16 @@ export default function IssueDetailPage() {
           issueDetails,
           updateIssueTitle,
           updateIssueIsOpen,
-          numComments: 0,
         }}
       />
-      <IssueDetailBody {...{ issueNumber, issueDetails, updateIssueContent }} />
+      <IssueDetailBody
+        {...{
+          issueNumber,
+          issueDetails,
+          updateIssueContent,
+          updateIssueCommentCount,
+        }}
+      />
     </>
   );
 }

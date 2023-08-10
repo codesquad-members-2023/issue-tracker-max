@@ -14,20 +14,20 @@ export default function IssueDetailHeader({
   issueDetails,
   updateIssueTitle,
   updateIssueIsOpen,
-  numComments,
 }: {
   issueDetails: IssueDetails | null;
   updateIssueTitle: (newTitle: string) => void;
   updateIssueIsOpen: () => void;
-  numComments: number;
 }) {
-  const { issueId, author, title, createdAt, isOpen } = issueDetails || {
-    issueId: 0,
-    author: { username: "", profileURl: "" },
-    title: "",
-    createdAt: new Date().toISOString(),
-    isOpen: true,
-  };
+  const { issueId, author, title, createdAt, isOpen, commentCount } =
+    issueDetails || {
+      issueId: 0,
+      author: { username: "", profileURl: "" },
+      title: "",
+      createdAt: new Date().toISOString(),
+      isOpen: true,
+      commentCount: 0,
+    };
 
   const [isEditTitle, setIsEditTitle] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
@@ -137,7 +137,7 @@ export default function IssueDetailHeader({
 
         <p>
           이 이슈는 {convertPastTimestamp(createdAt)}에 {author?.username}에
-          의해 열렸습니다 ∙ 코멘트 {numComments}개
+          의해 열렸습니다 ∙ 코멘트 {commentCount}개
         </p>
       </IssueInfo>
     </Header>

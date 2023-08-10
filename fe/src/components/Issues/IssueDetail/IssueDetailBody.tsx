@@ -11,10 +11,12 @@ export default function IssueDetailBody({
   issueNumber,
   issueDetails,
   updateIssueContent,
+  updateIssueCommentCount,
 }: {
   issueNumber: number;
   issueDetails: IssueDetails | null;
   updateIssueContent: (newContent: string) => void;
+  updateIssueCommentCount: () => void;
 }) {
   const { data: issueSidebar, setData: updateIssueSidebar } =
     useFetch<IssueSidebar>(
@@ -146,7 +148,12 @@ export default function IssueDetailBody({
   return (
     <Body>
       <IssueCommentContainer
-        {...{ issueNumber, issueDetails, updateIssueContent }}
+        {...{
+          issueNumber,
+          issueDetails,
+          updateIssueContent,
+          updateIssueCommentCount,
+        }}
       />
       <Sidebar
         {...{

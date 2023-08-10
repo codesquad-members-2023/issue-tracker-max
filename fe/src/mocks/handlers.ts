@@ -2,6 +2,7 @@ import { rest } from "msw";
 import {
   comment0,
   comment1,
+  comment2,
   issueDetails,
   issueList,
   issueSidebar,
@@ -141,6 +142,9 @@ export const handlers = [
     }
     if (cursor === "1") {
       return res(ctx.status(200), ctx.json(comment1));
+    }
+    if (cursor === "2") {
+      return res(ctx.status(200), ctx.json(comment2));
     }
   }),
 
