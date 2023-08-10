@@ -5,71 +5,64 @@ type TextInputProps = React.HTMLAttributes<HTMLInputElement> & {
   size: 'tall' | 'short';
   id: string;
   name: string;
-  type?: string;
+  value: string;
   labelName: string;
+  type?: string;
   disabled?: boolean;
   placeholder?: string;
   helpText?: string;
-  validationFunc?: (value: string) => boolean;
+  hasError?: boolean;
 };
 
 export default function TextInput(props: TextInputProps) {
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>('');
 
   const {
     id,
     name,
     size,
     type,
+    value,
     labelName,
     disabled,
     placeholder,
     helpText,
-    validationFunc,
+    hasError,
+    ...rest
   } = props;
   const hasHelpText = !!helpText;
 
   const handleBlur = () => {
     setIsFocused(false);
-
-    if (validationFunc && !validationFunc(inputValue) && inputValue) {
-      setIsError(true);
-    } else {
-      setIsError(false);
-    }
   };
 
   const handleFocus = () => {
     setIsFocused(true);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
   return (
-    <InputContainer $size={size} $disabled={disabled} $hasError={isError}>
-      {(isFocused || inputValue) && <Label $size={size}>{labelName}</Label>}
+    <InputContainer $size={size} $disabled={disabled} $hasError={hasError}>
+      {(isFocused || value) && <Label $size={size}>{labelName}</Label>}
       <StyledTextInput
         type={type ? type : 'text'}
         id={id}
         name={name}
         placeholder={placeholder}
-        value={inputValue}
         disabled={disabled}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        onChange={handleChange}></StyledTextInput>
-      {hasHelpText && <Caption $hasError={isError}>{helpText}</Caption>}
+        {...rest}></StyledTextInput>
+      {hasHelpText && (
+        <Caption $isFocused={isFocused} $hasError={hasError}>
+          {helpText}
+        </Caption>
+      )}
     </InputContainer>
   );
 }
 
 type InputContainerProps = {
   $size: 'tall' | 'short';
-  $focused?: boolean;
   $disabled?: boolean;
   $hasError?: boolean;
 };
@@ -119,7 +112,7 @@ const Label = styled.label<{ $size: 'tall' | 'short' }>`
   ${({ theme }) => theme.font.display.medium[12]}
 `;
 
-const StyledTextInput = styled.input<{ $focused?: boolean }>`
+const StyledTextInput = styled.input`
   padding: 0;
   border: none;
   outline: none;
@@ -133,12 +126,12 @@ const StyledTextInput = styled.input<{ $focused?: boolean }>`
   }
 `;
 
-const Caption = styled.span<{ $hasError: boolean }>`
+const Caption = styled.span<{ $isFocused: boolean; $hasError?: boolean }>`
   position: absolute;
   bottom: -18px;
   left: 16px;
-  color: ${({ theme, $hasError }) =>
-    $hasError
+  color: ${({ theme, $isFocused, $hasError }) =>
+    !$isFocused && $hasError
       ? theme.color.danger.text.default
       : theme.color.neutral.text.weak};
   ${({ theme }) => theme.font.display.medium[12]}

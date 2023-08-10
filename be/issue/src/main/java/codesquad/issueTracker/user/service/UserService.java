@@ -13,8 +13,8 @@ import codesquad.issueTracker.global.exception.ErrorCode;
 import codesquad.issueTracker.jwt.domain.Jwt;
 import codesquad.issueTracker.jwt.domain.Token;
 import codesquad.issueTracker.jwt.dto.RequestRefreshTokenDto;
+import codesquad.issueTracker.jwt.dto.ResponseAccessToken;
 import codesquad.issueTracker.jwt.util.JwtProvider;
-import codesquad.issueTracker.user.domain.LoginType;
 import codesquad.issueTracker.user.domain.User;
 import codesquad.issueTracker.user.dto.LoginRequestDto;
 import codesquad.issueTracker.user.dto.LoginResponseDto;
@@ -50,8 +50,6 @@ public class UserService {
 		User user = userRepository.findByEmail(loginRequestDto.getEmail())
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
 		user.validateLoginUser(loginRequestDto);
-
-		userValidator.validateLoginType(LoginType.LOCAL, user.getLoginType());
 
 		Jwt jwt = jwtProvider.createJwt(Map.of("userId", user.getId()));
 
@@ -89,18 +87,19 @@ public class UserService {
 	 * 2. DB에 없는 리프레시 토큰이면 예외처리
 	 */
 	@Transactional(readOnly = true)
-	public String reissueAccessToken(RequestRefreshTokenDto refreshTokenDto) {
+	public ResponseAccessToken reissueAccessToken(RequestRefreshTokenDto refreshTokenDto) {
 		jwtProvider.getClaims(refreshTokenDto.getRefreshToken());
 
 		Token token = userRepository.findTokenByUserToken(refreshTokenDto.getRefreshToken())
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REFRESH_TOKEN));
-		return jwtProvider.reissueAccessToken(Map.of("userId", token.getUserId()));
+		return new ResponseAccessToken(jwtProvider.reissueAccessToken(Map.of("userId", token.getUserId())));
+
 	}
 
 	public void logout(HttpServletRequest request) {
 		Long userId = Long.parseLong(String.valueOf(request.getAttribute("userId")));
 		userRepository.deleteTokenByUserId(userId)
-			.orElseThrow(() -> new CustomException(ErrorCode.DELETE_FAIL));
+			.orElseThrow(() -> new CustomException(ErrorCode.DB_EXCEPTION));
 	}
 
 }

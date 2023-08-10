@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
 import Icons from '../../design/Icons';
+import { v4 as uuidV4 } from 'uuid';
 
 enum Option {
   Available,
@@ -17,15 +18,16 @@ export default function DropdownPanel({ label }: { label: string }) {
       <Header>{label}</Header>
       <DropdownElements>
         {dummy.map(([text, option]) => {
+          const key = uuidV4()
           const Icon = Icons.userImageSmall;
           return (
-            <li key={text}>
-              <Element htmlFor={text} $option={option}>
+            <li key={key}>
+              <Element htmlFor={key} $option={option}>
                 <Icon />
                 <Text>{text}</Text>
                 <input
                   type="checkbox"
-                  id={text}
+                  id={key}
                   checked={option ? true : false}
                 />
                 {option ? <Icons.checkOnCircle /> : <Icons.checkOffCircle />}
