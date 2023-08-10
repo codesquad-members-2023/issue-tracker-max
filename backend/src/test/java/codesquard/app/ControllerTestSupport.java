@@ -20,12 +20,15 @@ import codesquard.app.label.service.LabelService;
 import codesquard.app.user.controller.UserRestController;
 import codesquard.app.user.service.UserQueryService;
 import codesquard.app.user.service.UserService;
+import codesquard.app.user_reaction.controller.UserReactionController;
+import codesquard.app.user_reaction.service.UserReactionService;
 
 @WebMvcTest(controllers = {
 	CommentController.class,
 	UserRestController.class,
 	IssueController.class,
-	LabelController.class
+	LabelController.class,
+	UserReactionController.class
 })
 @Import(value = {JwtProvider.class})
 public abstract class ControllerTestSupport {
@@ -59,4 +62,7 @@ public abstract class ControllerTestSupport {
 
 	@MockBean
 	protected AuthenticateUserService authenticateUserService;
+
+	@MockBean
+	protected UserReactionService userReactionService;
 }
