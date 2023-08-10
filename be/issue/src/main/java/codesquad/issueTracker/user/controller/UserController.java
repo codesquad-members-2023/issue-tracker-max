@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.issueTracker.global.ApiResponse;
 import codesquad.issueTracker.jwt.dto.RequestRefreshTokenDto;
+import codesquad.issueTracker.jwt.dto.ResponseAccessToken;
 import codesquad.issueTracker.oauth.service.OAuthService;
 import codesquad.issueTracker.user.dto.LoginRequestDto;
 import codesquad.issueTracker.user.dto.LoginResponseDto;
@@ -44,8 +45,8 @@ public class UserController {
 	}
 
 	@PostMapping("/reissue/token")
-	public ApiResponse<String> reissueToken(@RequestBody RequestRefreshTokenDto requestRefreshTokenDto) {
-		String accessToken = userService.reissueAccessToken(requestRefreshTokenDto);
+	public ApiResponse<ResponseAccessToken> reissueToken(@RequestBody RequestRefreshTokenDto requestRefreshTokenDto) {
+		ResponseAccessToken accessToken = userService.reissueAccessToken(requestRefreshTokenDto);
 		return ApiResponse.success(SUCCESS.getStatus(), accessToken);
 	}
 

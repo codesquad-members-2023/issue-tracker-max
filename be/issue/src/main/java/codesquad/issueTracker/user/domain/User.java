@@ -30,7 +30,7 @@ public class User {
 	}
 
 	public void validateLoginUser(LoginRequestDto loginRequestDto) {
-		if (password == null) {
+		if (password == null || !loginType.equals(LoginType.LOCAL)) {
 			throw new CustomException(ErrorCode.GITHUB_LOGIN_USER);
 		}
 		if (!loginRequestDto.getEmail().equals(email)
