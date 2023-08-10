@@ -60,7 +60,9 @@ public class JdbcUserRepository implements UserRepository {
 
 	@Override
 	public Long modify(User user) {
-		return null;
+		String sql = "UPDATE user SET email = :email, avatar_url = :avatarUrl WHERE id = :id";
+		template.update(sql, user.createSaveParamSource());
+		return user.getId();
 	}
 
 	@Override
@@ -85,14 +87,6 @@ public class JdbcUserRepository implements UserRepository {
 	}
 
 	@Override
-	public User findByLoginId(User user) {
-		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE login_id = :loginId";
-		return template.query(sql, user.createSaveParamSource(), createUserRowMapper()).stream()
-			.findAny()
-			.orElseThrow(() -> new UserRestApiException(UserErrorCode.NOT_FOUND_USER));
-	}
-
-	@Override
 	public User findByLoginIdAndPassword(User user) {
 		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE login_id = :loginId AND password = :password";
 		return template.query(sql, user.createSaveParamSource(), createUserRowMapper()).stream()
@@ -108,5 +102,14 @@ public class JdbcUserRepository implements UserRepository {
 			.stream()
 			.findAny()
 			.orElseThrow(() -> new UserRestApiException(UserErrorCode.NOT_FOUND_USER));
+	}
+
+	@Override
+	public User findByEmail(User user) {
+		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE email = :email";
+		return template.query(sql, user.createSaveParamSource(), createUserRowMapper())
+			.stream()
+			.findAny()
+			.orElse(null);
 	}
 }
