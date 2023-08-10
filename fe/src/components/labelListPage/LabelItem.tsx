@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import { useTheme } from '@emotion/react';
 import { InformationTag } from '@components/common/InformationTag';
 import { Button } from '@components/common/Button';
@@ -49,7 +48,6 @@ export const LabelItem: React.FC<Props> = ({ label, fetchLabelList }) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '32px',
-
         boxSizing: 'border-box',
       }}
     >

@@ -1,5 +1,4 @@
 import { useTheme } from '@emotion/react';
-import { useState } from 'react';
 import { InformationTag } from '@components/common/InformationTag';
 import { TextInput } from '@components/common/textInput/TextInput';
 import { ColorCodeInput } from '@components/common/ColorCodeInput';
@@ -7,7 +6,6 @@ import { DropDownContainer } from '@components/common/dropDown/DropDownContainer
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 import { DropDownList } from '@components/common/dropDown/DropDownList';
 import { textColors } from '@components/common/dropDown/types';
-import { randomColorGenerator } from '@utils/generateRandomColorCode';
 
 type Props = {
   nameInput: string;
@@ -40,7 +38,6 @@ export const LabelEditBody: React.FC<Props> = ({
   isPanelOpen,
   isNameLengthError,
   isColorCodeError,
-
   onNameChange,
   onDescriptionChange,
   onPanelOpen,

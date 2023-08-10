@@ -1,7 +1,6 @@
 import { useTheme } from '@emotion/react';
 import { Box } from '@components/common/box/Box';
 import { LabelItem } from './LabelItem';
-
 import { TableHeader } from '@components/common/Table/TableHeader';
 import { LabelEditTable } from './LabelEditTable';
 
@@ -53,13 +52,32 @@ export const Body: React.FC<Props> = ({
           </span>
         }
       >
-        {labelList.map((label) => (
-          <LabelItem
-            key={label.id}
-            label={label}
-            fetchLabelList={fetchLabelList}
-          />
-        ))}
+        {labelList.length > 0 ? (
+          <>
+            {labelList.map((label) => (
+              <LabelItem
+                key={label.id}
+                label={label}
+                fetchLabelList={fetchLabelList}
+              />
+            ))}
+          </>
+        ) : (
+          <li
+            css={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '32px',
+              boxSizing: 'border-box',
+              color: theme.neutral.text.weak,
+              font: theme.fonts.displayMedium16,
+            }}
+          >
+            레이블이 없습니다.
+          </li>
+        )}
       </Box>
     </div>
   );

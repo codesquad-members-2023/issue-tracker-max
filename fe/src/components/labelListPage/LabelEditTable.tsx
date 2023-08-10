@@ -106,10 +106,12 @@ export const LabelEditTable: React.FC<Props> = ({
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log(data);
+      return data;
     } catch (error) {
       console.error('There was a problem with the fetch operation:');
+      // todo 에러처리
     }
+
     onAddTableClose();
     await fetchLabelList();
   };
@@ -163,7 +165,7 @@ export const LabelEditTable: React.FC<Props> = ({
     >
       {header}
       <LabelEditBody
-        //컨텍스트로 빼야할듯..
+        //컨텍스트로..?
         nameInput={nameInput}
         descriptionInput={descriptionInput}
         colorCodeInput={colorCodeInput}
