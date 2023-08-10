@@ -1,6 +1,7 @@
 import { ReactComponent as CheckBoxInitial } from '@assets/icons/checkBoxInitial.svg';
-import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
+import { ReactComponent as CheckBoxActive } from '@assets/icons/checkBoxActive.svg';
 import { ReactComponent as CheckOnCircle } from '@assets/icons/checkOnCircle.svg';
+import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
 import { ReactComponent as MilestoneIcon } from '@assets/icons/milestone.svg';
 import { useTheme } from '@emotion/react';
 import { InformationTag } from '@components/common/InformationTag';
@@ -9,9 +10,15 @@ import { Link } from 'react-router-dom';
 
 type Props = {
   issue: Issue;
+  isChecked: boolean;
+  toggleCheckedIssues: (id: number) => void;
 };
 
-export const IssueList: React.FC<Props> = ({ issue }) => {
+export const IssueList: React.FC<Props> = ({
+  issue,
+  isChecked,
+  toggleCheckedIssues,
+}) => {
   const theme = useTheme() as any;
   const {
     id,
@@ -45,10 +52,24 @@ export const IssueList: React.FC<Props> = ({ issue }) => {
           alignItems: 'center',
         }}
       >
-        <CheckBoxInitial
-          stroke={theme.neutral.border.default}
-          css={{ cursor: 'pointer' }}
-        />
+        <div
+          onClick={() => {
+            toggleCheckedIssues(id);
+          }}
+          css={{
+            cursor: 'pointer',
+
+            '&:hover': {
+              opacity: theme.opacity.hover,
+            },
+          }}
+        >
+          {isChecked ? (
+            <CheckBoxActive fill={theme.brand.surface.default} />
+          ) : (
+            <CheckBoxInitial stroke={theme.neutral.border.default} />
+          )}
+        </div>
       </div>
       <div
         css={{

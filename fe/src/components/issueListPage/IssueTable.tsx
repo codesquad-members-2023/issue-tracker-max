@@ -2,6 +2,7 @@ import { TableHeader } from './TableHeader';
 import { IssueList } from './IssueList';
 import { Box } from '@components/common/box/Box';
 import { useTheme } from '@emotion/react';
+import { useState } from 'react';
 
 type Props = {
   openIssueCount: IssuePageData['openIssueCount'];
@@ -17,6 +18,29 @@ export const IssueTable: React.FC<Props> = ({
   goToFilteredPage,
 }) => {
   const theme = useTheme() as any;
+  const [checkedIssues, setCheckedIssues] = useState<number[]>([]);
+
+  const isCheckedIssue = checkedIssues.length > 0;
+
+  const toggleCheckAllIssues = () => {
+    if (checkedIssues.length > 0) {
+      setCheckedIssues([]);
+
+      return;
+    }
+
+    setCheckedIssues(issues.map((issue) => issue.id));
+  };
+
+  const toggleCheckedIssues = (id: number) => {
+    setCheckedIssues((checkedIssues) => {
+      if (checkedIssues.includes(id)) {
+        return checkedIssues.filter((checkedIssue) => checkedIssue !== id);
+      }
+
+      return [...checkedIssues, id];
+    });
+  };
 
   return (
     <Box
@@ -26,13 +50,24 @@ export const IssueTable: React.FC<Props> = ({
             openIssueCount,
             closedIssueCount,
             goToFilteredPage,
+            toggleCheckAllIssues,
+            isCheckedIssue,
           }}
         />
       }
     >
       <ul>
         {issues.length !== 0 ? (
-          issues.map((issue) => <IssueList key={issue.id} issue={issue} />)
+          issues.map((issue) => (
+            <IssueList
+              key={issue.id}
+              {...{
+                issue,
+                isChecked: checkedIssues.includes(issue.id),
+                toggleCheckedIssues,
+              }}
+            />
+          ))
         ) : (
           <li
             css={{

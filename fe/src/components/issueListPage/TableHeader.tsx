@@ -1,4 +1,5 @@
 import { ReactComponent as CheckBoxInitial } from '@assets/icons/checkBoxInitial.svg';
+import { ReactComponent as CheckBoxDisable } from '@assets/icons/checkBoxDisable.svg';
 import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
 import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { Button } from '@components/common/Button';
@@ -13,6 +14,8 @@ type Props = {
   openIssueCount: number;
   closedIssueCount: number;
   goToFilteredPage: (filterValue: string) => void;
+  toggleCheckAllIssues: () => void;
+  isCheckedIssue: boolean;
 };
 
 type PanelOpenStatus = {
@@ -47,6 +50,8 @@ export const TableHeader: React.FC<Props> = ({
   openIssueCount = 0,
   closedIssueCount = 0,
   goToFilteredPage,
+  toggleCheckAllIssues,
+  isCheckedIssue,
 }) => {
   const theme = useTheme() as any;
   const [panelOpenStatus, setPanelOpenStatus] = useState<PanelOpenStatus>({
@@ -76,10 +81,8 @@ export const TableHeader: React.FC<Props> = ({
       css={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
     >
       <div css={{ display: 'flex', alignItems: 'center' }}>
-        <CheckBoxInitial
-          width={16}
-          height={16}
-          stroke={theme.neutral.border.default}
+        <div
+          onClick={toggleCheckAllIssues}
           css={{
             padding: '0px 32px',
             cursor: 'pointer',
@@ -88,7 +91,22 @@ export const TableHeader: React.FC<Props> = ({
               opacity: theme.opacity.hover,
             },
           }}
-        />
+        >
+          {isCheckedIssue ? (
+            <CheckBoxDisable
+              width={16}
+              height={16}
+              fill={theme.brand.surface.default}
+              stroke={theme.brand.surface.default}
+            />
+          ) : (
+            <CheckBoxInitial
+              width={16}
+              height={16}
+              stroke={theme.neutral.border.default}
+            />
+          )}
+        </div>
 
         <div css={{ display: 'flex', gap: '24px', textWrap: 'nowrap' }}>
           <Button
