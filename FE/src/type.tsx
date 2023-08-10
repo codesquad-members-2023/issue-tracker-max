@@ -16,13 +16,16 @@ export type NewIssue = {
 };
 
 export type Label = {
+  id: number;
   title: string;
   color: string;
+  description: string;
 };
 
 export type Milestone = {
   id: number;
   title: string;
+  progress: number;
 };
 
 export type IssueListProps = {
@@ -49,9 +52,37 @@ export type ListDataProps = {
 export type AssigneesList = {
   id: number;
   nickname: string;
-  profile_image_url: string;
+  profileImageUrl: string;
 };
 
 export type AssigneesProps = {
   assignees: AssigneesList[] | [];
+};
+
+export type FetchedLabels = {
+  labels: Label[] | null;
+};
+
+export type Comment = {
+  id: number;
+  author: AssigneesList;
+  content: string;
+  createAt: string;
+};
+
+export type FetchedDetail = {
+  id: number;
+  title: string;
+  content: string;
+  isOpen: boolean;
+  createAt: string;
+  author: {
+    id: number;
+    nickname: string;
+    profileImageUrl: string;
+  };
+  assignees: AssigneesList[] | null;
+  labels: Label[] | null;
+  milestone: Milestone | null;
+  comments: Comment[] | null;
 };
