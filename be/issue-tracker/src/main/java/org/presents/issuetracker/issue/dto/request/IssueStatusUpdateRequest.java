@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class IssueCreateRequest {
-	private String title;
-	private String contents;
-	private Long authorId;
-	private List<Long> assigneeIds;
-	private List<Long> labelIds;
-	private Long milestoneId;
+public class IssueStatusUpdateRequest {
+	private List<Long> issueIds;
+	private String status;
 }

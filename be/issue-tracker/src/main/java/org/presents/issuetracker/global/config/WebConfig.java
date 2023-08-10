@@ -1,4 +1,4 @@
-package org.presents.issuetracker.config;
+package org.presents.issuetracker.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
