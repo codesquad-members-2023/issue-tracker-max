@@ -2,7 +2,7 @@ import { TableHeader } from './TableHeader';
 import { IssueList } from './IssueList';
 import { Box } from '@components/common/box/Box';
 import { useTheme } from '@emotion/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 type Props = {
   openIssueCount: IssuePageData['openIssueCount'];

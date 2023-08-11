@@ -16,10 +16,6 @@ export const Box: React.FC<Props> = ({ header, children, customStyle }) => {
     border: `${theme.border.default} ${theme.neutral.border.default}`,
     backgroundColor: theme.neutral.surface.strong,
 
-    '.box-header': {
-      backgroundColor: theme.neutral.surface.default,
-    },
-
     '& > :not(:last-child)': {
       borderBottom: `${theme.border.default} ${theme.neutral.border.default}`,
     },
@@ -29,11 +25,17 @@ export const Box: React.FC<Props> = ({ header, children, customStyle }) => {
     },
   };
 
+  const boxBodyStyle = {
+    '& > ul > :not(:last-child)': {
+      borderBottom: `${theme.border.default} ${theme.neutral.border.default}`,
+    },
+  };
+
   return (
     <div css={boxStyle}>
       <BoxHeader>{header}</BoxHeader>
 
-      {children}
+      <div css={boxBodyStyle}>{children}</div>
     </div>
   );
 };
