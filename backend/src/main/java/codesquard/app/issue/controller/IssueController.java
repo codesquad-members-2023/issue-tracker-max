@@ -30,7 +30,6 @@ import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueSaveResponse;
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
 import codesquard.app.issue.mapper.response.IssueFilterResponse;
-import codesquard.app.issue.mapper.response.filters.SingleFilters;
 import codesquard.app.issue.service.IssueQueryService;
 import codesquard.app.issue.service.IssueService;
 import codesquard.app.user.annotation.Login;
@@ -44,16 +43,10 @@ public class IssueController {
 	private final IssueService issueService;
 	private final IssueQueryService issueQueryService;
 
-	// TODO: 유효하지 않은 값이 들어왔을 경우 빈 리스트 반환
 	@GetMapping()
 	public ApiResponse<IssueFilterResponse> listIssues(@ModelAttribute IssueFilterRequest request,
 		@Login AuthenticateUser user) {
 		return ApiResponse.ok(issueQueryService.findFilterIssues(user.toEntity().getLoginId(), request));
-	}
-
-	@GetMapping("/test")
-	public ApiResponse<SingleFilters> test(@ModelAttribute IssueFilterRequest request) {
-		return ApiResponse.ok(issueQueryService.checkSingleFilters(request));
 	}
 
 	@GetMapping("/{issueId}")

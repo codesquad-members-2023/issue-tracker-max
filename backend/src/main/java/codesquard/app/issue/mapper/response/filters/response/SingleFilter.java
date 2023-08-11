@@ -65,19 +65,18 @@ public class SingleFilter {
 
 	@JsonProperty("id")
 	private Long id;
-	// "내가 댓글을 남긴 이슈"
+
 	@JsonProperty("name")
 	private String name;
-	// ["is:closed", memtions:@me"]
+
 	@JsonProperty("conditions")
 	private String conditions;
-	// false
-	// conditions에 지정된 형식이 아니라면 false
-	// 지정된 형식이 하나라도 존재한다면 true
+
 	@JsonProperty("selected")
 	private boolean selected;
 
 	public void changeSelected(boolean selected) {
 		this.selected = selected;
 	}
+
 }
