@@ -44,6 +44,9 @@ class UserReactionServiceTest extends IntegrationTestSupport {
 		jdbcTemplate.update("TRUNCATE TABLE user");
 		jdbcTemplate.update("TRUNCATE TABLE label");
 		jdbcTemplate.update("TRUNCATE TABLE user_reaction");
+		jdbcTemplate.update("TRUNCATE TABLE reaction");
+		jdbcTemplate.update(
+			"INSERT INTO reaction(unicode) VALUE('&#128077'), ('&#128078'), ('&#128522'), ('&#128569'), ('&#128149'), ('&#128035')");
 		jdbcTemplate.update("SET FOREIGN_KEY_CHECKS = 1");
 	}
 
