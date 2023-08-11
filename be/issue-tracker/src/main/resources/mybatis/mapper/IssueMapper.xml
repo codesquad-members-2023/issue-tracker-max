@@ -106,6 +106,7 @@
                 </trim>
             </if>
         </where>
+        ORDER BY i.issue_id DESC
     </select>
 
     <select id="getIssueSearchCounts" resultType="IssueSearchCountInfo"
