@@ -273,7 +273,10 @@ export const TableHeader: React.FC<Props> = ({
                     <DropDownList
                       key={id}
                       {...{
-                        item: { id, name },
+                        item: {
+                          id,
+                          name: name !== 'none' ? name : '담당자가 없는 이슈',
+                        },
                         isSelected: location.search.includes(
                           `assignee:${name}`,
                         ),
@@ -321,7 +324,11 @@ export const TableHeader: React.FC<Props> = ({
                     <DropDownList
                       key={id}
                       {...{
-                        item: { id, name, backgroundColor },
+                        item: {
+                          id,
+                          name: name !== 'none' ? name : '레이블이 없는 이슈',
+                          backgroundColor,
+                        },
                         isSelected: location.search.includes(`label:${name}`),
                         onClick: () => {
                           goToFilteredPage(`${location.search} label:${name}`);
@@ -367,7 +374,10 @@ export const TableHeader: React.FC<Props> = ({
                     <DropDownList
                       key={id}
                       {...{
-                        item: { id, name },
+                        item: {
+                          id,
+                          name: name !== 'none' ? name : '마일스톤이 없는 이슈',
+                        },
                         isSelected: location.search.includes(
                           `milestone:${name}`,
                         ),
@@ -411,23 +421,29 @@ export const TableHeader: React.FC<Props> = ({
                 onOutsideClick={onPanelClose}
               >
                 {panelList.users.length > 0 &&
-                  panelList.users.map(({ userId: id, loginId: name }) => (
-                    <DropDownList
-                      key={id}
-                      {...{
-                        item: { id, name },
-                        isSelected: location.search.includes(
-                          `assignee:${name}`,
-                        ),
-                        onClick: () => {
-                          goToFilteredPage(
-                            `${location.search} assignee:${name}`,
-                          );
-                          onPanelClose();
-                        },
-                      }}
-                    />
-                  ))}
+                  panelList.users.map(({ userId: id, loginId: name }) => {
+                    if (name === 'none') {
+                      return <></>;
+                    }
+
+                    return (
+                      <DropDownList
+                        key={id}
+                        {...{
+                          item: { id, name },
+                          isSelected: location.search.includes(
+                            `assignee:${name}`,
+                          ),
+                          onClick: () => {
+                            goToFilteredPage(
+                              `${location.search} assignee:${name}`,
+                            );
+                            onPanelClose();
+                          },
+                        }}
+                      />
+                    );
+                  })}
               </DropDownPanel>
             </DropDownContainer>
           </div>
