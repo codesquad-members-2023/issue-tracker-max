@@ -13,6 +13,7 @@ import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueUserResponse;
+import codesquard.app.issue.dto.response.userReactionResponse;
 import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.issue.mapper.IssueMapper;
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
@@ -24,8 +25,6 @@ import codesquard.app.issue.mapper.response.filters.response.SingleFilter;
 import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.label.repository.LabelRepository;
 import codesquard.app.milestone.repository.MilestoneRepository;
-import codesquard.app.issue.dto.response.userReactionResponse;
-import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.user_reaction.repository.UserReactionRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -37,9 +36,9 @@ public class IssueQueryService {
 	private final IssueRepository issueRepository;
 	private final LabelRepository labelRepository;
 	private final MilestoneRepository milestoneRepository;
+	private final UserReactionRepository userReactionRepository;
 	private final IssueMapper issueMapper;
-  private final UserReactionRepository userReactionRepository;
-  
+
 	private static final String SPACE = " ";
 
 	public IssueReadResponse get(Long issueId, Long userId) {
@@ -105,13 +104,18 @@ public class IssueQueryService {
 			builder.append("mentions:").append(request.getMentions()).append(SPACE);
 		}
 		if (request.getMilestone() != null) {
-			builder.append("milestone:").append(request.getMentions()).append(SPACE);
+			builder.append("milestone:").append(request.getMilestone()).append(SPACE);
 		}
-		if (request.getLabel().size() > 0) {
+		if (request.getLabel() != null && request.getLabel().size() > 0) {
 			for (String label : request.getLabel()) {
 				builder.append("label:").append(label).append(SPACE);
 			}
 		}
+
+		if (builder.length() == 0) {
+			return "";
+		}
+
 		return builder.toString();
 	}
 
@@ -145,13 +149,15 @@ public class IssueQueryService {
 			return singleFilters;
 		}
 
-		if (request.getAssignee() != null && request.getAssignee().equalsIgnoreCase(SingleFilter.ME.ASSIGNEE.getType())) {
+		if (request.getAssignee() != null && request.getAssignee()
+			.equalsIgnoreCase(SingleFilter.ME.ASSIGNEE.getType())) {
 			SingleFilters singleFilters = new SingleFilters();
 			singleFilters.changeBy(true, SingleFilters.ASSIGNEE_ID - 1L);
 			return singleFilters;
 		}
 
-		if (request.getMentions() != null && request.getMentions().equalsIgnoreCase(SingleFilter.ME.MENTIONS.getType())) {
+		if (request.getMentions() != null && request.getMentions()
+			.equalsIgnoreCase(SingleFilter.ME.MENTIONS.getType())) {
 			SingleFilters singleFilters = new SingleFilters();
 			singleFilters.changeBy(true, SingleFilters.MENTIONS_ID - 1L);
 			return singleFilters;
