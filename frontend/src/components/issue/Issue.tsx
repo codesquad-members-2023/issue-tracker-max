@@ -1,14 +1,16 @@
-import { styled, useTheme } from "styled-components";
+import { styled } from "styled-components";
 import { IssueData } from "../../page/main/Main";
 import { getElapsedSince } from "../../utils/getElapsedSince";
-import { Icon } from "../Icon";
+import { Avatar } from "../Avatar";
 import { InformationTag } from "../InformationTag";
+import { Icon, ThemeColorKeys } from "../icon/Icon";
 
 export function Issue({ issue }: { issue: IssueData }) {
-  const theme = useTheme();
-  const iconColors = {
-    issueTitle: theme.color.paletteBlue,
-    issueInfo: theme.color.neutralTextWeak,
+  const iconColors: {
+    [key: string]: ThemeColorKeys;
+  } = {
+    issueTitle: "paletteBlue",
+    issueInfo: "neutralTextWeak",
   };
 
   return (
@@ -20,11 +22,7 @@ export function Issue({ issue }: { issue: IssueData }) {
       </div>
       <IssueContent>
         <IssueTitle>
-          <Icon
-            name="alertCircle"
-            fill={iconColors.issueTitle}
-            stroke={iconColors.issueTitle}
-          />
+          <Icon name="AlertCircle" color={iconColors.issueTitle} />
           <TitleAnchor>{issue.title}</TitleAnchor>
           {issue.labels.map((label, index) => (
             <InformationTag
@@ -45,26 +43,22 @@ export function Issue({ issue }: { issue: IssueData }) {
           </span>
           {issue.milestone && (
             <span>
-              <Icon
-                name="milestone"
-                fill={iconColors.issueInfo}
-                stroke={iconColors.issueInfo}
-              />
+              <Icon name="Milestone" color={iconColors.issueInfo} />
               {issue.milestone.name}
             </span>
           )}
         </IssueInfo>
       </IssueContent>
       <AssigneesDiv>
-        <img
-          style={{ width: "20px" }}
+        <Avatar
+          size="S"
           src="https://avatars.githubusercontent.com/u/41321198?v=4"
         />
       </AssigneesDiv>
       <CommentDiv>
         {issue.commentCount !== 0 && (
           <>
-            <Icon name="comment" fill={iconColors.issueInfo} stroke={iconColors.issueInfo} />
+            <Icon name="Comment" color={iconColors.issueInfo} />
             <span>{issue.commentCount}</span>
           </>
         )}
@@ -95,6 +89,7 @@ const CheckboxLabel = styled.label`
 const TitleAnchor = styled.a`
   cursor: pointer;
   font: ${({ theme }) => theme.font.displayMedium20};
+  color: ${({ theme }) => theme.color.neutralTextStrong};
 `;
 
 const IssueContent = styled.div`
@@ -139,4 +134,8 @@ const CommentDiv = styled.div`
   align-items: center;
   gap: 4px;
   cursor: pointer;
+
+  & span {
+    color: ${({ theme }) => theme.color.neutralTextStrong};
+  }
 `;

@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { styled, useTheme } from "styled-components";
 import { Button } from "../../components/Button";
-import { Icon } from "../../components/Icon";
+import { Icon } from "../../components/icon/Icon";
 import { MilestoneData } from "./Milestone";
 import { MilestoneEditor } from "./MilestoneEditor";
 
 export function MilestoneTableElement({
   milestone,
   status,
+  fetchData,
 }: {
   milestone: MilestoneData;
   status: "OPENED" | "CLOSED";
+  fetchData: () => void;
 }) {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -32,10 +34,12 @@ export function MilestoneTableElement({
     }
   };
 
-  const deleteMilestone = () => {
-    const id = milestone.id;
+  const deleteMilestone = async () => {
+    await fetch(`/api/milestones/${milestone.id}`, {
+      method: "DELETE",
+    });
 
-    console.log(`delete id: ${id}`);
+    fetchData();
   };
 
   const theme = useTheme();
@@ -49,26 +53,23 @@ export function MilestoneTableElement({
           onClickClose={closeEditor}
           type="edit"
           milestone={milestone}
+          fetchData={fetchData}
         />
       ) : (
         <>
           <MilestoneInfo>
             <div>
               <Title>
-                <Icon
-                  name="milestone"
-                  fill={theme.color.paletteBlue}
-                  stroke={theme.color.paletteBlue}
-                />
+                <Icon name="Milestone" color="paletteBlue" />
                 <span>{milestone.name}</span>
               </Title>
               <Deadline>
-                <Icon
-                  name="calendar"
-                  fill={theme.color.neutralTextWeak}
-                  stroke={theme.color.neutralTextWeak}
-                />
-                <span>{milestone.deadline}</span>
+                {milestone.deadline && (
+                  <>
+                    <Icon name="Calendar" color="neutralTextWeak" />
+                    <span>{milestone.deadline}</span>
+                  </>
+                )}
               </Deadline>
             </div>
             <Description>{milestone.description}</Description>
@@ -77,7 +78,7 @@ export function MilestoneTableElement({
             <Buttons>
               <Button
                 size="S"
-                icon="archive"
+                icon="Archive"
                 buttonType="Ghost"
                 onClick={changeStatus}
               >
@@ -85,7 +86,7 @@ export function MilestoneTableElement({
               </Button>
               <Button
                 size="S"
-                icon="edit"
+                icon="Edit"
                 buttonType="Ghost"
                 onClick={onClickEdit}
               >
@@ -93,7 +94,7 @@ export function MilestoneTableElement({
               </Button>
               <Button
                 size="S"
-                icon="trash"
+                icon="Trash"
                 buttonType="Ghost"
                 color={theme.color.dangerSurfaceDefault}
                 onClick={deleteMilestone}
@@ -104,7 +105,12 @@ export function MilestoneTableElement({
             <Progress value={issues.closedIssueCount} max={totalIssueCount} />
             <ProgressInfo>
               <span>
-                {Math.floor((issues.closedIssueCount / totalIssueCount) * 100)}%
+                {totalIssueCount === 0
+                  ? 0
+                  : Math.floor(
+                      (issues.closedIssueCount / totalIssueCount) * 100,
+                    )}
+                %
               </span>
               <span>
                 열린 이슈 {issues.openedIssueCount} 닫힌 이슈{" "}
@@ -121,7 +127,7 @@ export function MilestoneTableElement({
 const Div = styled.div`
   width: 100%;
   min-height: 96px;
-  padding: 0 32px;
+  padding: 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;

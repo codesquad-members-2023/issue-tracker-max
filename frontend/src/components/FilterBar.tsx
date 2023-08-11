@@ -1,14 +1,9 @@
-import {useState} from "react";
-import {styled} from "styled-components";
-import {TextInput} from "./TextInput";
-import {DropdownContainer} from "./dropdown/DropdownContainer";
+import { useState } from "react";
+import { styled } from "styled-components";
+import { TextInput, TextInputProps } from "./TextInput";
+import { DropdownContainer } from "./dropdown/DropdownContainer";
 
-export function FilterBar({
-                            name,
-                            optionTitle,
-                            options,
-                            value,
-                          }: {
+type FilterBarProps = {
   name: string;
   optionTitle: string;
   options: {
@@ -17,8 +12,14 @@ export function FilterBar({
     selected: boolean;
     onClick: () => void;
   }[];
-  value: string;
-}) {
+} & TextInputProps;
+
+export function FilterBar({
+  name,
+  optionTitle,
+  options,
+  ...props
+}: FilterBarProps) {
   const [state, setState] = useState<"Enabled" | "Active">("Enabled");
 
   const handleFilterBarFocus = () => {
@@ -30,19 +31,20 @@ export function FilterBar({
   };
 
   return (
-      <Div
-          onFocus={handleFilterBarFocus}
-          onBlur={handleFilterBarBlur}
-          $state={state}
-      >
-        <DropdownContainer
-            name={name}
-            optionTitle={optionTitle}
-            options={options}
-            alignment="Left"
-        />
-        <TextInput size="S" icon="search" value={value}/>
-      </Div>
+    <Div
+      onFocus={handleFilterBarFocus}
+      onBlur={handleFilterBarBlur}
+      $state={state}
+    >
+      <DropdownContainer
+        name={name}
+        optionTitle={optionTitle}
+        options={options}
+        alignment="Left"
+        autoClose
+      />
+      <TextInput icon="Search" {...props} />
+    </Div>
   );
 }
 
@@ -51,18 +53,18 @@ const Div = styled.div<{ $state: "Enabled" | "Active" }>`
   align-items: center;
   gap: 1px;
   width: 560px;
-  border: ${({theme, $state}) =>
+  border: ${({ theme, $state }) =>
     $state === "Active"
-        ? `${theme.border.default} ${theme.color.neutralBorderDefaultActive}`
-        : `${theme.border.default} ${theme.color.neutralBorderDefault}`};
-  border-radius: ${({theme}) => theme.radius.medium};
-  background-color: ${({theme}) => theme.color.neutralBorderDefault};
+      ? `${theme.border.default} ${theme.color.neutralBorderDefaultActive}`
+      : `${theme.border.default} ${theme.color.neutralBorderDefault}`};
+  border-radius: ${({ theme }) => theme.radius.medium};
+  background-color: ${({ theme }) => theme.color.neutralBorderDefault};
 
   & > div:first-child {
-    border-radius: ${({theme}) =>
-    `${theme.radius.medium} 0 0 ${theme.radius.medium}`};
-    background-color: ${({theme, $state}) =>
-    $state === "Enabled"
+    border-radius: ${({ theme }) =>
+      `${theme.radius.medium} 0 0 ${theme.radius.medium}`};
+    background-color: ${({ theme, $state }) =>
+      $state === "Enabled"
         ? theme.color.neutralSurfaceDefault
         : theme.color.neutralSurfaceStrong};
 
@@ -79,10 +81,10 @@ const Div = styled.div<{ $state: "Enabled" | "Active" }>`
   & > div:last-child > div {
     width: 100%;
     border: none;
-    border-radius: ${({theme}) =>
-    `0 ${theme.radius.medium} ${theme.radius.medium} 0`};
-    background-color: ${({theme, $state}) =>
-    $state === "Enabled"
+    border-radius: ${({ theme }) =>
+      `0 ${theme.radius.medium} ${theme.radius.medium} 0`};
+    background-color: ${({ theme, $state }) =>
+      $state === "Enabled"
         ? theme.color.neutralSurfaceBold
         : theme.color.neutralSurfaceStrong};
 

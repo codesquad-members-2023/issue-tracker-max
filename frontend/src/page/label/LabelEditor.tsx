@@ -1,11 +1,11 @@
-import {useState} from "react";
-import {styled} from "styled-components";
-import {Button} from "../../components/Button";
-import {Icon} from "../../components/Icon";
-import {InformationTag} from "../../components/InformationTag";
-import {TextInput} from "../../components/TextInput";
-import {DropdownContainer} from "../../components/dropdown/DropdownContainer";
-import {LabelData} from "./Label";
+import { useState } from "react";
+import { styled } from "styled-components";
+import { Button } from "../../components/Button";
+import { InformationTag } from "../../components/InformationTag";
+import { TextInput } from "../../components/TextInput";
+import { DropdownContainer } from "../../components/dropdown/DropdownContainer";
+import { Icon } from "../../components/icon/Icon";
+import { LabelData } from "./Label";
 
 const colorDictionary = {
   LIGHT: "밝은 색",
@@ -16,24 +16,31 @@ const colorDictionary = {
 
 type LabelEditorProps = {
   onClickClose: () => void;
+  fetchData: () => void;
 } & ({ type: "add"; label?: never } | { type: "edit"; label: LabelData });
 
-export function LabelEditor({onClickClose, type, label}: LabelEditorProps) {
+export function LabelEditor({
+  onClickClose,
+  fetchData,
+  type,
+  label,
+}: LabelEditorProps) {
   const isEditMode = type === "edit" && label;
 
   const [selectedFontColor, setSelectedFontColor] = useState<string>(
-      isEditMode ? colorDictionary[label.color] : "밝은 색",
+    isEditMode ? colorDictionary[label.color] : "밝은 색",
   );
   const [background, setBackground] = useState(
-      isEditMode ? label.background : "#000000",
+    isEditMode ? label.background : "#000000",
   );
   const [color, setColor] = useState<"LIGHT" | "DARK">(
-      isEditMode ? label.color : "LIGHT",
+    isEditMode ? label.color : "LIGHT",
   );
   const [labelName, setLabelName] = useState(isEditMode ? label.name : "");
   const [labelDescription, setLabelDescription] = useState(
-      isEditMode && label.description ? label.description : "",
+    isEditMode && label.description ? label.description : "",
   );
+
   const [isColorValid, setIsColorValid] = useState(true);
   const [isFocus, setIsFocus] = useState(false);
   const [fontColorOptions, setFontColorOptions] = useState([
@@ -49,21 +56,23 @@ export function LabelEditor({onClickClose, type, label}: LabelEditorProps) {
       name: "어두운 색",
       profile: "",
       selected: isEditMode
-          ? colorDictionary[label.color] === "어두운 색"
-          : false,
+        ? colorDictionary[label.color] === "어두운 색"
+        : false,
       onClick: () => {
         updateOptions("어두운 색");
       },
     },
   ]);
 
+  const isSameLabelData =
+    labelName === label?.name &&
+    background === label?.background &&
+    color === label?.color &&
+    labelDescription === label?.description;
+
   const isButtonDisabled = isEditMode
-      ? !isColorValid ||
-      (labelName === label.name &&
-          background === label.background &&
-          color === label.color) ||
-      labelName === ""
-      : !isColorValid || labelName === "";
+    ? !isColorValid || isSameLabelData || labelName === ""
+    : !isColorValid || labelName === "";
 
   const updateOptions = (selectedName: string) => {
     const fontColor = selectedName === "밝은 색" ? "LIGHT" : "DARK";
@@ -71,9 +80,9 @@ export function LabelEditor({onClickClose, type, label}: LabelEditorProps) {
     setColor(fontColor);
     setSelectedFontColor(selectedName);
     setFontColorOptions(
-        fontColorOptions.map((option) => {
-          return {...option, selected: option.name === selectedName};
-        }),
+      fontColorOptions.map((option) => {
+        return { ...option, selected: option.name === selectedName };
+      }),
     );
   };
 
@@ -113,92 +122,104 @@ export function LabelEditor({onClickClose, type, label}: LabelEditorProps) {
     setLabelDescription(description);
   };
 
-  const submit = () => {
+  const submit = async () => {
+    const method = type === "add" ? "POST" : "PUT";
+    const path = type === "add" ? "" : `/${label.id}`;
     const obj = {
       name: labelName,
       description: labelDescription,
       background: background,
-      fontColor: color,
+      color: color,
     };
 
-    console.log(obj);
+    await fetch(`/api/labels${path}`, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    });
+
+    onClickClose();
+    fetchData();
   };
 
   return (
-      <Div>
-        <Title>{type === "add" ? "새로운 레이블 추가" : "레이블 편집"}</Title>
-        <AddTable>
-          <Preview>
-            <InformationTag
-                value={labelName === "" ? "label" : labelName}
+    <Div>
+      <Title>{type === "add" ? "새로운 레이블 추가" : "레이블 편집"}</Title>
+      <AddTable>
+        <Preview>
+          <InformationTag
+            value={labelName === "" ? "label" : labelName}
+            size="S"
+            fill={background}
+            fontColor={color}
+          />
+        </Preview>
+        <InputWrapper>
+          <TextInput
+            width={"100%"}
+            size="S"
+            label="이름"
+            placeholder="레이블의 이름을 입력하세요"
+            value={labelName}
+            fixLabel
+            onChange={onChangeName}
+          />
+          <TextInput
+            width={"100%"}
+            size="S"
+            label="설명(선택)"
+            placeholder="레이블에 대한 설명을 입력하세요"
+            fixLabel
+            value={labelDescription}
+            onChange={onChangeDescription}
+          />
+          <ColorSelector>
+            <BackgroundSelector $isFocus={isFocus} $isColorValid={isColorValid}>
+              <span>배경 색상</span>
+              <TextInput
                 size="S"
-                fill={background}
-                fontColor={color}
-            />
-          </Preview>
-          <InputWrapper>
-            <TextInput
-                width={904}
-                size="S"
-                label="이름"
-                placeholder="레이블의 이름을 입력하세요"
-                value={labelName}
-                fixLabel
-                onChange={onChangeName}
-            />
-            <TextInput
-                width={904}
-                size="S"
-                label="설명(선택)"
-                placeholder="레이블에 대한 설명을 입력하세요"
-                fixLabel
-                value={labelDescription}
-                onChange={onChangeDescription}
-            />
-            <ColorSelector>
-              <BackgroundSelector $isFocus={isFocus} $isColorValid={isColorValid}>
-                <span>배경 색상</span>
-                <TextInput
-                    size="S"
-                    value={background}
-                    borderNone
-                    onFocus={() => setIsFocus(true)}
-                    onBlur={() => setIsFocus(false)}
-                    onChange={onChangeBackground}
-                />
-                <button onClick={setRandomBackground}>
-                  <Icon name="refreshCcw" fill="#4E4B66" stroke="#4E4B66"/>
-                </button>
-              </BackgroundSelector>
-              <DropdownContainer
-                  name={selectedFontColor}
-                  optionTitle={"텍스트 색상"}
-                  options={fontColorOptions}
-                  alignment="Left"
+                value={background}
+                borderNone
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={onChangeBackground}
               />
-            </ColorSelector>
-          </InputWrapper>
-        </AddTable>
-        <Buttons>
-          <Button
-              size="S"
-              icon="xSquare"
-              buttonType="Outline"
-              onClick={onClickClose}
-          >
-            취소
-          </Button>
-          <Button
-              size="S"
-              icon="plus"
-              buttonType="Container"
-              onClick={submit}
-              disabled={isButtonDisabled}
-          >
-            완료
-          </Button>
-        </Buttons>
-      </Div>
+              <button onClick={setRandomBackground}>
+                <Icon name="RefreshCcw" color="#4E4B66" />
+              </button>
+            </BackgroundSelector>
+            <DropdownContainer
+              name={selectedFontColor}
+              optionTitle={"텍스트 색상"}
+              options={fontColorOptions}
+              alignment="Left"
+              autoClose
+            />
+          </ColorSelector>
+        </InputWrapper>
+      </AddTable>
+      <Buttons>
+        <Button
+          size="S"
+          icon="XSquare"
+          buttonType="Outline"
+          onClick={onClickClose}
+        >
+          취소
+        </Button>
+        <Button
+          size="S"
+          icon="Plus"
+          buttonType="Container"
+          onClick={submit}
+          disabled={isButtonDisabled}
+        >
+          완료
+        </Button>
+      </Buttons>
+    </Div>
   );
 }
 
@@ -206,16 +227,14 @@ const Div = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 337px;
   align-self: stretch;
   box-sizing: border-box;
-  padding: 32px;
   gap: 24px;
 `;
 
 const Title = styled.div`
-  font: ${({theme}) => theme.font.displayBold20};
-  color: ${({theme}) => theme.color.neutralTextStrong};
+  font: ${({ theme }) => theme.font.displayBold20};
+  color: ${({ theme }) => theme.color.neutralTextStrong};
 `;
 
 const AddTable = styled.div`
@@ -232,8 +251,8 @@ const Preview = styled.div`
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  border-radius: ${({theme}) => theme.radius.large};
-  border: 1px solid ${({theme}) => theme.color.neutralBorderDefault};
+  border-radius: ${({ theme }) => theme.radius.large};
+  border: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
 `;
 
 const InputWrapper = styled.div`
@@ -260,25 +279,25 @@ const BackgroundSelector = styled.div<{
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  border-radius: ${({theme}) => theme.radius.medium};
-  background-color: ${({theme, $isFocus}) =>
+  border-radius: ${({ theme }) => theme.radius.medium};
+  background-color: ${({ theme, $isFocus }) =>
     $isFocus ? "none" : theme.color.neutralSurfaceBold};
-  border: ${({theme, $isFocus, $isColorValid}) =>
+  border: ${({ theme, $isFocus, $isColorValid }) =>
     $isColorValid
-        ? $isFocus && `1px solid ${theme.color.neutralBorderDefaultActive}`
-        : `1px solid ${theme.color.dangerBorderDefault}`};
+      ? $isFocus && `1px solid ${theme.color.neutralBorderDefaultActive}`
+      : `1px solid ${theme.color.dangerBorderDefault}`};
 
   & > span {
     width: 64px;
-    font: ${({theme}) => theme.font.displayMedium12};
-    color: ${({theme}) => theme.color.neutralTextWeak};
+    font: ${({ theme }) => theme.font.displayMedium12};
+    color: ${({ theme }) => theme.color.neutralTextWeak};
   }
 
   & > div {
     width: 112px;
     overflow: hidden;
-    font: ${({theme}) => theme.font.displayMedium16};
-    color: ${({theme}) => theme.color.neutralTextDefault};
+    font: ${({ theme }) => theme.font.displayMedium16};
+    color: ${({ theme }) => theme.color.neutralTextDefault};
     text-overflow: ellipsis;
   }
 `;

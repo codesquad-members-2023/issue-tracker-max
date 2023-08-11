@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
-import {styled} from "styled-components";
-import {IssueTableBody} from "../../components/issue/IssueTableBody";
-import {IssueTableHeader} from "../../components/issue/IssueTableHeader";
-import {MainHeader} from "./MainHeader";
+import { useEffect, useState } from "react";
+import { styled } from "styled-components";
+import { IssueTableBody } from "../../components/issue/IssueTableBody";
+import { IssueTableHeader } from "../../components/issue/IssueTableHeader";
+import { MainHeader } from "./MainHeader";
 
 export type SingleFilterData = {
   id: number;
@@ -15,7 +15,7 @@ type IssueDataState = {
   closedIssueCount: number;
   openedIssueCount: number;
   issues: IssueData[];
-  multiFilters: Object;
+  multiFilters: object;
   singleFilters: SingleFilterData[];
 };
 
@@ -57,7 +57,7 @@ export function Main() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(
-          "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/issues",
+        "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/issues",
       );
 
       setIssueData(await res.json());
@@ -67,25 +67,25 @@ export function Main() {
   }, []);
 
   return (
-      <Div>
-        {issueData && (
-            <>
-              <MainHeader
-                  singleFilters={issueData.singleFilters}
-                  milestoneCount={3}
-                  labelCount={2}
-              />
-              <MainBody>
-                <IssueTableHeader
-                    openedIssueCount={issueData.openedIssueCount}
-                    closedIssueCount={issueData.closedIssueCount}
-                    multiFilters={issueData.multiFilters}
-                />
-                <IssueTableBody issues={issueData.issues}/>
-              </MainBody>
-            </>
-        )}
-      </Div>
+    <Div>
+      {issueData && (
+        <>
+          <MainHeader
+            singleFilters={issueData.singleFilters}
+            milestoneCount={3}
+            labelCount={2}
+          />
+          <MainBody>
+            <IssueTableHeader
+              openedIssueCount={issueData.openedIssueCount}
+              closedIssueCount={issueData.closedIssueCount}
+              multiFilters={issueData.multiFilters}
+            />
+            <IssueTableBody issues={issueData.issues} />
+          </MainBody>
+        </>
+      )}
+    </Div>
   );
 }
 
@@ -98,6 +98,7 @@ const MainBody = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid ${({theme}) => theme.color.neutralBorderDefault};
-  border-radius: ${({theme}) => theme.radius.large};
+  border: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
+  border-radius: ${({ theme }) => theme.radius.large};
+  background: ${({ theme }) => theme.color.neutralSurfaceStrong};
 `;
