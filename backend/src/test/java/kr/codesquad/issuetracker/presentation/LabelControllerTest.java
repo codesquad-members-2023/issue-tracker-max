@@ -33,6 +33,7 @@ class LabelControllerTest extends ControllerTest {
 		mockMvc.perform(
 				post("/api/labels")
 					.contentType(MediaType.APPLICATION_JSON)
+					.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken(Map.of("userId", "1")).getAccessToken())
 					.header(HttpHeaders.AUTHORIZATION,
 						"Bearer " + jwtProvider.createToken(Map.of("userId", "1")).getAccessToken())
 					.content(objectMapper.writeValueAsString(request)))

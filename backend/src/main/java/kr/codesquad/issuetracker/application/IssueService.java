@@ -11,17 +11,20 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.codesquad.issuetracker.domain.Issue;
 import kr.codesquad.issuetracker.domain.IssueAssignee;
 import kr.codesquad.issuetracker.domain.IssueLabel;
+import kr.codesquad.issuetracker.domain.IssueSearch;
 import kr.codesquad.issuetracker.exception.ApplicationException;
 import kr.codesquad.issuetracker.exception.ErrorCode;
 import kr.codesquad.issuetracker.infrastructure.persistence.IssueAssigneeRepository;
 import kr.codesquad.issuetracker.infrastructure.persistence.IssueLabelRepository;
 import kr.codesquad.issuetracker.infrastructure.persistence.IssueRepository;
+import kr.codesquad.issuetracker.infrastructure.persistence.mapper.IssueDAO;
 import kr.codesquad.issuetracker.infrastructure.persistence.mapper.IssueSimpleMapper;
 import kr.codesquad.issuetracker.presentation.request.AssigneeRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueLabelRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueRegisterRequest;
 import kr.codesquad.issuetracker.presentation.response.IssueDetailResponse;
 import kr.codesquad.issuetracker.presentation.response.IssueDetailSidebarResponse;
+import kr.codesquad.issuetracker.utils.IssueSearchParser;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -31,6 +34,7 @@ public class IssueService {
 	private final IssueRepository issueRepository;
 	private final IssueAssigneeRepository assigneeRepository;
 	private final IssueLabelRepository issueLabelRepository;
+	private final IssueDAO issueMapper;
 
 	@Transactional
 	public Integer register(Integer authorId, IssueRegisterRequest request) {
@@ -71,7 +75,12 @@ public class IssueService {
 
 	@Transactional(readOnly = true)
 	public List<IssueSimpleMapper> findAll() {
-		return issueRepository.findAll();
+		return issueMapper.findAll(new IssueSearch());
+	}
+
+	@Transactional(readOnly = true)
+	public List<IssueSimpleMapper> findAll(String loginId, String searchBar) {
+		return issueMapper.findAll(IssueSearchParser.parse(loginId, searchBar));
 	}
 
 	@Transactional
