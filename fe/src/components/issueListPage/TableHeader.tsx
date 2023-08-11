@@ -268,7 +268,7 @@ export const TableHeader: React.FC<Props> = ({
                 panelHeader="담당자 필터"
                 onOutsideClick={onPanelClose}
               >
-                {panelList.users.length > 0 &&
+                {panelList.users.length > 0 ? (
                   panelList.users.map(({ userId: id, loginId: name }) => (
                     <DropDownList
                       key={id}
@@ -288,7 +288,22 @@ export const TableHeader: React.FC<Props> = ({
                         },
                       }}
                     />
-                  ))}
+                  ))
+                ) : (
+                  <DropDownList
+                    {...{
+                      item: {
+                        id: 0,
+                        name: '담당자가 없는 이슈',
+                      },
+                      isSelected: location.search.includes(`assignee:none`),
+                      onClick: () => {
+                        goToFilteredPage(`${location.search} assignee:none`);
+                        onPanelClose();
+                      },
+                    }}
+                  />
+                )}
               </DropDownPanel>
             </DropDownContainer>
             <DropDownContainer
@@ -319,7 +334,7 @@ export const TableHeader: React.FC<Props> = ({
                 panelHeader="레이블 필터"
                 onOutsideClick={onPanelClose}
               >
-                {panelList.labels.length > 0 &&
+                {panelList.labels.length > 0 ? (
                   panelList.labels.map(({ id, name, backgroundColor }) => (
                     <DropDownList
                       key={id}
@@ -336,7 +351,22 @@ export const TableHeader: React.FC<Props> = ({
                         },
                       }}
                     />
-                  ))}
+                  ))
+                ) : (
+                  <DropDownList
+                    {...{
+                      item: {
+                        id: 0,
+                        name: '레이블이 없는 이슈',
+                      },
+                      isSelected: location.search.includes(`label:none`),
+                      onClick: () => {
+                        goToFilteredPage(`${location.search} label:none`);
+                        onPanelClose();
+                      },
+                    }}
+                  />
+                )}
               </DropDownPanel>
             </DropDownContainer>
             <DropDownContainer
@@ -369,7 +399,7 @@ export const TableHeader: React.FC<Props> = ({
                   setPanelOpenStatus((prev) => ({ ...prev, milestone: false }))
                 }
               >
-                {panelList.milestones.length > 0 &&
+                {panelList.milestones.length > 0 ? (
                   panelList.milestones.map(({ id, name }) => (
                     <DropDownList
                       key={id}
@@ -389,7 +419,22 @@ export const TableHeader: React.FC<Props> = ({
                         },
                       }}
                     />
-                  ))}
+                  ))
+                ) : (
+                  <DropDownList
+                    {...{
+                      item: {
+                        id: 0,
+                        name: '마일스톤이 없는 이슈',
+                      },
+                      isSelected: location.search.includes(`milestone:none`),
+                      onClick: () => {
+                        goToFilteredPage(`${location.search} milestone:none`);
+                        onPanelClose();
+                      },
+                    }}
+                  />
+                )}
               </DropDownPanel>
             </DropDownContainer>
             <DropDownContainer
@@ -399,7 +444,7 @@ export const TableHeader: React.FC<Props> = ({
               onClick={() => {
                 onPanelOpen('author');
 
-                if (panelList.users.length === 0) {
+                if (panelList.users.length !== 0) {
                   return;
                 }
 
@@ -420,7 +465,7 @@ export const TableHeader: React.FC<Props> = ({
                 panelHeader="작성자 필터"
                 onOutsideClick={onPanelClose}
               >
-                {panelList.users.length > 0 &&
+                {panelList.users.length > 0 ? (
                   panelList.users.map(({ userId: id, loginId: name }) => {
                     if (name === 'none') {
                       return <></>;
@@ -432,18 +477,42 @@ export const TableHeader: React.FC<Props> = ({
                         {...{
                           item: { id, name },
                           isSelected: location.search.includes(
-                            `assignee:${name}`,
+                            `author:${name}`,
                           ),
                           onClick: () => {
                             goToFilteredPage(
-                              `${location.search} assignee:${name}`,
+                              `${location.search} author:${name}`,
                             );
                             onPanelClose();
                           },
                         }}
                       />
                     );
-                  })}
+                  })
+                ) : (
+                  <li
+                    css={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-start',
+                      gap: '8px',
+                      background: theme.neutral.surface.strong,
+                      padding: '8px 16px',
+                      cursor: 'pointer',
+                      font: theme.fonts.availableMedium16,
+                      color: theme.neutral.text.default,
+                      '&:hover': {
+                        background: theme.neutral.surface.bold,
+                      },
+                      '&:last-child': {
+                        borderRadius: `0 0 ${theme.radius.l} ${theme.radius.l}`,
+                        borderBottom: 'none',
+                      },
+                    }}
+                  >
+                    유저 정보를 불러오지 못했습니다.
+                  </li>
+                )}
               </DropDownPanel>
             </DropDownContainer>
           </div>
