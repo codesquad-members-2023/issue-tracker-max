@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: ${db.prod.datasource.url}
+    username: ${db.prod.datasource.username}
+    password: ${db.prod.datasource.password}
+
+  sql:
+    init:
+      mode: always
+
+mybatis:
+  type-aliases-package:
+    kr.codesquad.issuetracker.domain,
+    kr.codesquad.issuetracker.infrastructure.persistence.mapper
+  mapper-locations: classpath:mapper/*.xml
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${aws.access-key}
+      secret-key: ${aws.secret-key}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: ${aws.s3.bucket}

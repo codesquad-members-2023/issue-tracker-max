@@ -1,9 +1,8 @@
 package kr.codesquad.issuetracker.presentation.response;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
+import kr.codesquad.issuetracker.presentation.support.DateTimeFormatterUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,29 +11,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class IssueDetailResponse {
 
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
 	private Integer issueId;
 	private String title;
 	private Boolean isOpen;
 	private String createdAt;
 	private String content;
 	private Author author;
-	private List<Assignee> assignees;
-	private List<LabelResponse> labels;
-	private MilestoneResponse milestone;
+	private Integer commentCount;
 
 	public IssueDetailResponse(Integer issueId, String title, Boolean isOpen, LocalDateTime createdAt, String content,
-		Author author, List<Assignee> assignees, List<LabelResponse> labels, MilestoneResponse milestone) {
+		Author author,
+		Integer commentCount) {
 		this.issueId = issueId;
 		this.title = title;
 		this.isOpen = isOpen;
-		this.createdAt = formatter.format(createdAt);
+		this.createdAt = DateTimeFormatterUtil.toString(createdAt);
 		this.content = content;
 		this.author = author;
-		this.assignees = assignees;
-		this.labels = labels;
-		this.milestone = milestone;
+		this.commentCount = commentCount;
 	}
 
 	@Getter
@@ -42,16 +36,6 @@ public class IssueDetailResponse {
 	@AllArgsConstructor
 	public static class Author {
 
-		private String username;
-		private String profileUrl;
-	}
-
-	@Getter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Assignee {
-
-		private Integer userAccountId;
 		private String username;
 		private String profileUrl;
 	}

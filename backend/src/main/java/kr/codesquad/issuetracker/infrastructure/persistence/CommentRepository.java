@@ -29,8 +29,8 @@ public class CommentRepository {
 			.usingGeneratedKeyColumns("id");
 	}
 
-	public void save(Comment comment) {
-		jdbcInsert.execute(new BeanPropertySqlParameterSource(comment));
+	public int save(Comment comment) {
+		return jdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(comment)).intValue();
 	}
 
 	public Optional<Comment> findById(Integer commentId) {
@@ -51,35 +51,20 @@ public class CommentRepository {
 	}
 
 	public List<CommentsResponse> findAll(Integer issueId, Integer cursor) {
-		String sql = "SELECT c.id, u.login_id, u.profile_url, c.content, c.created_at "
-			+ "FROM comment c "
-			+ "JOIN user_account u ON c.user_account_id = u.id "
-			+ "WHERE c.issue_id = :issueId AND c.is_deleted = false AND c.id > :cursor LIMIT 10 ";
+		String sql =
+			"SELECT comment.id, user_account.login_id, user_account.profile_url, comment.content, comment.created_at "
+				+ "FROM comment "
+				+ "JOIN user_account ON comment.user_account_id = user_account.id "
+				+ "WHERE comment.issue_id = :issueId AND comment.is_deleted = false AND comment.id >= :cursor LIMIT 11";
 		MapSqlParameterSource param = new MapSqlParameterSource()
 			.addValue("issueId", issueId)
 			.addValue("cursor", cursor);
-		return jdbcTemplate.query(sql, param, (rs, rownum) -> new CommentsResponse(
+		return jdbcTemplate.query(sql, param, (rs, rowNum) -> new CommentsResponse(
 			rs.getInt("id"),
 			rs.getString("login_id"),
 			rs.getString("profile_url"),
 			rs.getString("content"),
 			rs.getTimestamp("created_at").toLocalDateTime())
 		);
-	}
-
-	public boolean isExistCommentByIssueId(Integer issueId) {
-		String sql = "SELECT EXISTS (SELECT 1 FROM comment c JOIN issue i ON c.issue_id = i.id "
-			+ "WHERE c.issue_id = :issueId)";
-		MapSqlParameterSource param = new MapSqlParameterSource()
-			.addValue("issueId", issueId);
-		return jdbcTemplate.queryForObject(sql, param, boolean.class);
-	}
-
-	public boolean hasMoreComment(Integer issueId, Integer cursor) {
-		String sql = "SELECT EXISTS (SELECT 1 FROM comment WHERE issue_id = :issueId AND id > :cursor)";
-		MapSqlParameterSource param = new MapSqlParameterSource()
-			.addValue("issueId", issueId)
-			.addValue("cursor", cursor);
-		return jdbcTemplate.queryForObject(sql, param, boolean.class);
 	}
 }

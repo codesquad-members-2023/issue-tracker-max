@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +46,7 @@ class IssueControllerTest extends ControllerTest {
 			mockMvc.perform(
 					post("/api/issues")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1"))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken(Map.of("userId", "1")).getAccessToken())
 						.content(objectMapper.writeValueAsString(request)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("issueId").exists())
@@ -79,7 +80,7 @@ class IssueControllerTest extends ControllerTest {
 			mockMvc.perform(
 					post("/api/issues")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1"))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken(Map.of("userId", "1")).getAccessToken())
 						.content(objectMapper.writeValueAsString(request)))
 				.andExpect(status().isBadRequest())
 				.andDo(print());
@@ -99,7 +100,7 @@ class IssueControllerTest extends ControllerTest {
 			mockMvc.perform(
 					request(HttpMethod.GET, "/api/issues/" + 1)
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1")))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken(Map.of("userId", "1")).getAccessToken()))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.issueId").exists())
 				.andExpect(jsonPath("$.title").exists())
@@ -108,9 +109,6 @@ class IssueControllerTest extends ControllerTest {
 				.andExpect(jsonPath("$.content").exists())
 				.andExpect(jsonPath("$.author.username").exists())
 				.andExpect(jsonPath("$.author.profileUrl").exists())
-				.andExpect(jsonPath("$.assignees").exists())
-				.andExpect(jsonPath("$.labels").exists())
-				.andExpect(jsonPath("$.milestone").exists())
 				.andDo(print());
 		}
 
@@ -125,7 +123,7 @@ class IssueControllerTest extends ControllerTest {
 			mockMvc.perform(
 					request(HttpMethod.GET, "/api/issues/" + 1)
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1")))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken(Map.of("userId","1")).getAccessToken()))
 				.andExpect(status().isNotFound())
 				.andDo(print());
 		}
@@ -138,15 +136,15 @@ class IssueControllerTest extends ControllerTest {
 		@Test
 		void modifyIssue() throws Exception {
 			// given
-			willDoNothing().given(issueService).modifyIssue(anyInt(), anyInt(), any(IssueModifyRequest.class));
+			willDoNothing().given(issueService).modifyIssueTitle(anyInt(), anyInt(), anyString());
 
 			// when & then
 			mockMvc.perform(
-					patch("/api/issues/1")
+					put("/api/issues/1/title")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1"))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken(Map.of("userId", "1")).getAccessToken())
 						.content(objectMapper.writeValueAsString(
-							FixtureFactory.createIssueModifyRequest("", null, null))))
+							new IssueModifyRequest.IssueTitleModifyRequest("변경된 제목"))))
 				.andExpect(status().isOk())
 				.andDo(print());
 		}
@@ -156,15 +154,15 @@ class IssueControllerTest extends ControllerTest {
 		void givenNotAuthor_thenResponse403() throws Exception {
 			// given
 			willThrow(new ApplicationException(ErrorCode.NO_AUTHORIZATION))
-				.given(issueService).modifyIssue(anyInt(), anyInt(), any(IssueModifyRequest.class));
+				.given(issueService).modifyIssueTitle(anyInt(), anyInt(), anyString());
 
 			// when & then
 			mockMvc.perform(
-					patch("/api/issues/1")
+					put("/api/issues/1/title")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken("1"))
+						.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createToken(Map.of("userId", "1")).getAccessToken())
 						.content(objectMapper.writeValueAsString(
-							FixtureFactory.createIssueModifyRequest("", null, null))))
+							new IssueModifyRequest.IssueTitleModifyRequest("변경된 제목"))))
 				.andExpect(status().isForbidden())
 				.andDo(print());
 		}

@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,6 +17,8 @@ import io.jsonwebtoken.security.Keys;
 import kr.codesquad.issuetracker.exception.ApplicationException;
 import kr.codesquad.issuetracker.exception.ErrorCode;
 import kr.codesquad.issuetracker.infrastructure.config.jwt.JwtProperties;
+import kr.codesquad.issuetracker.presentation.auth.Principal;
+import kr.codesquad.issuetracker.presentation.response.LoginSuccessResponse;
 
 @Component
 public class JwtProvider {
@@ -28,14 +31,18 @@ public class JwtProvider {
 		this.expirationMilliseconds = jwt.getExpirationMilliseconds();
 	}
 
-	public String createToken(String payload) {
+	public LoginSuccessResponse.TokenResponse createToken(final Map<String, String> payloads) {
 		Date now = new Date();
-		return Jwts.builder()
+		Date expiration = new Date(now.getTime() + expirationMilliseconds);
+		long expirationMilli = expiration.toInstant().toEpochMilli();
+
+		String token = Jwts.builder()
 			.signWith(secretKey, SignatureAlgorithm.HS256)
 			.setIssuedAt(now)
-			.setExpiration(new Date(now.getTime() + expirationMilliseconds))
-			.setClaims(Map.of("userId", payload))
+			.setExpiration(expiration)
+			.setClaims(payloads)
 			.compact();
+		return new LoginSuccessResponse.TokenResponse(token, expirationMilli);
 	}
 
 	public void validateToken(final String token) {
@@ -51,13 +58,13 @@ public class JwtProvider {
 		}
 	}
 
-	public String extractUserId(final String token) {
-		return Jwts.parserBuilder()
+	public Principal extractPrincipal(final String token) {
+		final Claims claims = Jwts.parserBuilder()
 			.setSigningKey(secretKey)
 			.build()
 			.parseClaimsJws(token)
-			.getBody()
-			.get("userId")
-			.toString();
+			.getBody();
+
+		return Principal.from(claims);
 	}
 }

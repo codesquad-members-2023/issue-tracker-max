@@ -6,7 +6,8 @@ import java.util.Objects;
 import lombok.Getter;
 
 @Getter
-public class Issue {
+public class
+Issue {
 
 	private Integer id;
 	private String title;
@@ -45,7 +46,7 @@ public class Issue {
 		this.content = content;
 	}
 
-	public void modifyOpenStatus(boolean isOpen) {
-		this.isOpen = isOpen;
+	public void modifyOpenStatus(String isOpen) {
+		this.isOpen = Boolean.parseBoolean(isOpen);
 	}
 }

@@ -3,13 +3,11 @@ package kr.codesquad.issuetracker.fixture;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import kr.codesquad.issuetracker.presentation.request.IssueModifyRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueRegisterRequest;
 import kr.codesquad.issuetracker.presentation.request.LoginRequest;
+import kr.codesquad.issuetracker.presentation.request.MilestoneCommonRequest;
 import kr.codesquad.issuetracker.presentation.request.SignupRequest;
 import kr.codesquad.issuetracker.presentation.response.IssueDetailResponse;
-import kr.codesquad.issuetracker.presentation.response.LabelResponse;
-import kr.codesquad.issuetracker.presentation.response.MilestoneResponse;
 
 public class FixtureFactory {
 
@@ -34,16 +32,10 @@ public class FixtureFactory {
 
 	public static IssueDetailResponse createIssueDetailResponse() {
 		return new IssueDetailResponse(1, "이슈 제목", true, LocalDateTime.now(), "이슈 내용",
-			new IssueDetailResponse.Author("작성자", "url"),
-			List.of(new IssueDetailResponse.Assignee(2, "담당자", "url"),
-				new IssueDetailResponse.Assignee(3, "담당자2", "url")),
-
-			List.of(new LabelResponse(1, "feat", "#fff", "#ddd")),
-
-			new MilestoneResponse(1, "BE Sprint #1", 3, 5));
+			new IssueDetailResponse.Author("작성자", "url"), 10);
 	}
 
-	public static IssueModifyRequest createIssueModifyRequest(String title, String content, Boolean isOpen) {
-		return new IssueModifyRequest(title, content, isOpen);
+	public static MilestoneCommonRequest createMilestoneCommonRequest(String title) {
+		return new MilestoneCommonRequest(title, null, null);
 	}
 }

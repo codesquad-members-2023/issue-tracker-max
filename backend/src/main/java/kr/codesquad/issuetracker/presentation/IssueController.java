@@ -5,25 +5,28 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.codesquad.issuetracker.application.IssueService;
 import kr.codesquad.issuetracker.infrastructure.persistence.mapper.IssueSimpleMapper;
 import kr.codesquad.issuetracker.presentation.auth.AuthPrincipal;
+import kr.codesquad.issuetracker.presentation.auth.Principal;
 import kr.codesquad.issuetracker.presentation.request.AssigneeRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueLabelRequest;
-import kr.codesquad.issuetracker.presentation.request.IssueModifyRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueMilestoneRequest;
+import kr.codesquad.issuetracker.presentation.request.IssueModifyRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueRegisterRequest;
 import kr.codesquad.issuetracker.presentation.response.IssueDetailResponse;
+import kr.codesquad.issuetracker.presentation.response.IssueDetailSidebarResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/api/issues")
@@ -34,27 +37,52 @@ public class IssueController {
 	private final IssueService issueService;
 
 	@GetMapping
-	public ResponseEntity<List<IssueSimpleMapper>> findAll() {
+	public ResponseEntity<List<IssueSimpleMapper>> findAll(@AuthPrincipal Principal principal,
+		@RequestParam(value = "q", required = false) String searchBar) {
+		System.out.println(searchBar);
+		if (StringUtils.hasText(searchBar)) {
+			return ResponseEntity.ok(issueService.findAll(principal.getLoginId(), searchBar));
+		}
+
 		return ResponseEntity.ok(issueService.findAll());
 	}
 
 	@PostMapping
-	public ResponseEntity<Map<String, Integer>> register(@AuthPrincipal Integer userId,
+	public ResponseEntity<Map<String, Integer>> register(@AuthPrincipal Principal principal,
 		@Valid @RequestBody IssueRegisterRequest request) {
-		return ResponseEntity.ok(Map.of("issueId", issueService.register(userId, request)));
+		return ResponseEntity.ok(Map.of("issueId", issueService.register(principal.getUserId(), request)));
 	}
 
 	@GetMapping("/{issueId}")
 	public ResponseEntity<IssueDetailResponse> getIssueDetails(@PathVariable Integer issueId) {
-		return ResponseEntity.status(HttpStatus.OK)
+		return ResponseEntity.ok()
 			.body(issueService.getIssueDetails(issueId));
 	}
 
-	@PatchMapping("/{issueId}")
-	public ResponseEntity<Void> modifyIssue(@AuthPrincipal Integer userId,
-		@PathVariable Integer issueId,
-		@Valid @RequestBody IssueModifyRequest request) {
-		issueService.modifyIssue(userId, issueId, request);
+	@GetMapping("/{issueId}/sidebar")
+	public ResponseEntity<IssueDetailSidebarResponse> getIssueDetailsSidebar(@PathVariable Integer issueId) {
+		return ResponseEntity.ok()
+			.body(issueService.getIssueDetailsSidebar(issueId));
+	}
+
+	@PutMapping("/{issueId}/title")
+	public ResponseEntity<Void> modifyIssueTitle(@AuthPrincipal Principal principal,
+		@PathVariable Integer issueId, @RequestBody IssueModifyRequest.IssueTitleModifyRequest request) {
+		issueService.modifyIssueTitle(principal.getUserId(), issueId, request.getTitle());
+		return ResponseEntity.ok().build();
+	}
+
+	@PutMapping("/{issueId}/content")
+	public ResponseEntity<Void> modifyIssueContent(@AuthPrincipal Principal principal,
+		@PathVariable Integer issueId, @RequestBody IssueModifyRequest.IssueContentModifyRequest request) {
+		issueService.modifyIssueContent(principal.getUserId(), issueId, request.getContent());
+		return ResponseEntity.ok().build();
+	}
+
+	@PutMapping("/{issueId}/isOpen")
+	public ResponseEntity<Void> modifyIssueContent(@AuthPrincipal Principal principal,
+		@PathVariable Integer issueId, @RequestBody IssueModifyRequest.IssueIsOpenModifyRequest request) {
+		issueService.modifyIssueOpenStatus(principal.getUserId(), issueId, request.getIsOpen());
 		return ResponseEntity.ok().build();
 	}
 

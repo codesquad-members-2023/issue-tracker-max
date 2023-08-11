@@ -1,27 +1,30 @@
 package kr.codesquad.issuetracker.application;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import kr.codesquad.issuetracker.domain.Issue;
 import kr.codesquad.issuetracker.domain.IssueAssignee;
 import kr.codesquad.issuetracker.domain.IssueLabel;
+import kr.codesquad.issuetracker.domain.IssueSearch;
 import kr.codesquad.issuetracker.exception.ApplicationException;
 import kr.codesquad.issuetracker.exception.ErrorCode;
 import kr.codesquad.issuetracker.infrastructure.persistence.IssueAssigneeRepository;
 import kr.codesquad.issuetracker.infrastructure.persistence.IssueLabelRepository;
 import kr.codesquad.issuetracker.infrastructure.persistence.IssueRepository;
+import kr.codesquad.issuetracker.infrastructure.persistence.mapper.IssueDAO;
 import kr.codesquad.issuetracker.infrastructure.persistence.mapper.IssueSimpleMapper;
 import kr.codesquad.issuetracker.presentation.request.AssigneeRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueLabelRequest;
-import kr.codesquad.issuetracker.presentation.request.IssueModifyRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueRegisterRequest;
 import kr.codesquad.issuetracker.presentation.response.IssueDetailResponse;
+import kr.codesquad.issuetracker.presentation.response.IssueDetailSidebarResponse;
+import kr.codesquad.issuetracker.utils.IssueSearchParser;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -31,6 +34,7 @@ public class IssueService {
 	private final IssueRepository issueRepository;
 	private final IssueAssigneeRepository assigneeRepository;
 	private final IssueLabelRepository issueLabelRepository;
+	private final IssueDAO issueMapper;
 
 	@Transactional
 	public Integer register(Integer authorId, IssueRegisterRequest request) {
@@ -56,19 +60,46 @@ public class IssueService {
 
 	@Transactional(readOnly = true)
 	public IssueDetailResponse getIssueDetails(Integer issueId) {
-		if (!issueRepository.existsById(issueId)) {
-			throw new ApplicationException(ErrorCode.ISSUE_NOT_FOUND);
-		}
-		return issueRepository.findIssueDetailResponseById(issueId);
+		return issueRepository.findIssueDetailResponseById(issueId)
+			.orElseThrow(() -> new ApplicationException(ErrorCode.ISSUE_NOT_FOUND));
+	}
+
+	@Transactional(readOnly = true)
+	public IssueDetailSidebarResponse getIssueDetailsSidebar(Integer issueId) {
+		List<Integer> assigneeIds = assigneeRepository.findIdsByIssueId(issueId);
+		List<Integer> labelIds = issueLabelRepository.findIdsByIssueId(issueId);
+		Integer milestoneId = issueRepository.findMilestoneIdById(issueId);
+
+		return new IssueDetailSidebarResponse(assigneeIds, labelIds, milestoneId);
 	}
 
 	@Transactional(readOnly = true)
 	public List<IssueSimpleMapper> findAll() {
-		return issueRepository.findAll();
+		return issueMapper.findAll(new IssueSearch());
+	}
+
+	@Transactional(readOnly = true)
+	public List<IssueSimpleMapper> findAll(String loginId, String searchBar) {
+		return issueMapper.findAll(IssueSearchParser.parse(loginId, searchBar));
 	}
 
 	@Transactional
-	public void modifyIssue(Integer userId, Integer issueId, IssueModifyRequest request) {
+	public void modifyIssueTitle(Integer userId, Integer issueId, String title) {
+		modifyIssue(userId, issueId, title, Issue::modifyTitle);
+	}
+
+	@Transactional
+	public void modifyIssueContent(Integer userId, Integer issueId, String content) {
+		modifyIssue(userId, issueId, content, Issue::modifyContent);
+	}
+
+	@Transactional
+	public void modifyIssueOpenStatus(Integer userId, Integer issueId, Boolean isOpen) {
+		modifyIssue(userId, issueId, String.valueOf(isOpen), Issue::modifyOpenStatus);
+	}
+
+	private void modifyIssue(Integer userId, Integer issueId, String modifiedData,
+		BiConsumer<Issue, String> modifyFunction) {
 		Issue issue = issueRepository.findById(issueId)
 			.orElseThrow(() -> new ApplicationException(ErrorCode.ISSUE_NOT_FOUND));
 
@@ -76,21 +107,9 @@ public class IssueService {
 			throw new ApplicationException(ErrorCode.NO_AUTHORIZATION);
 		}
 
-		updateIssueAttribute(request, issue);
+		modifyFunction.accept(issue, modifiedData);
 
 		issueRepository.updateIssue(issue);
-	}
-
-	private void updateIssueAttribute(IssueModifyRequest request, Issue issue) {
-		if (request.getIsOpen() != null) {
-			issue.modifyOpenStatus(request.getIsOpen());
-			return;
-		}
-		if (StringUtils.hasText(request.getTitle())) {
-			issue.modifyTitle(request.getTitle());
-			return;
-		}
-		issue.modifyContent(request.getContent());
 	}
 
 	@Transactional
@@ -99,9 +118,9 @@ public class IssueService {
 			throw new ApplicationException(ErrorCode.ISSUE_NOT_FOUND);
 		}
 
-		assigneeRepository.saveAll(toEntityList(request.getAddUserAccountsId(),
+		assigneeRepository.saveAll(toEntityList(request.getAddUserAccountId(),
 			id -> new IssueAssignee(issueId, id)));
-		assigneeRepository.deleteAll(toEntityList(request.getRemoveUserAccountsId(),
+		assigneeRepository.deleteAll(toEntityList(request.getRemoveUserAccountId(),
 			id -> new IssueAssignee(issueId, id)));
 	}
 

@@ -1,5 +1,7 @@
 package kr.codesquad.issuetracker.application;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import kr.codesquad.issuetracker.domain.Comment;
 import kr.codesquad.issuetracker.exception.ApplicationException;
 import kr.codesquad.issuetracker.exception.ErrorCode;
 import kr.codesquad.issuetracker.infrastructure.persistence.CommentRepository;
+import kr.codesquad.issuetracker.presentation.response.CommentRegisterResponse;
 import kr.codesquad.issuetracker.presentation.response.CommentsResponse;
 import kr.codesquad.issuetracker.presentation.response.Slice;
 import lombok.RequiredArgsConstructor;
@@ -20,16 +23,17 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 
 	@Transactional
-	public void register(Integer userId, String content, Integer issueId) {
+	public CommentRegisterResponse register(Integer userId, String content, Integer issueId) {
 		Comment comment = new Comment(content, userId, issueId);
-		commentRepository.save(comment);
+		int commentId = commentRepository.save(comment);
+		return new CommentRegisterResponse(commentId, content, LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 	}
 
 	@Transactional
 	public void modify(String modifiedComment, Integer commentId, Integer userId) {
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new ApplicationException(ErrorCode.COMMENT_NOT_FOUND));
-		if (comment.getUserAccountId() != userId) {
+		if (!comment.isWriter(userId)) {
 			throw new ApplicationException(ErrorCode.NO_AUTHORIZATION);
 		}
 		comment.modifyContent(modifiedComment);
@@ -38,12 +42,12 @@ public class CommentService {
 
 	@Transactional(readOnly = true)
 	public Slice<CommentsResponse> getComments(Integer issueId, Integer cursor) {
-		if (!commentRepository.isExistCommentByIssueId(issueId)) {
+		List<CommentsResponse> comments = commentRepository.findAll(issueId, cursor);
+		if (comments.isEmpty()) {
 			return new Slice<>(List.of(), false, 0);
 		}
-		List<CommentsResponse> comments = commentRepository.findAll(issueId, cursor);
-		cursor = comments.get(comments.size() - 1).getId();
-		boolean hasMore = commentRepository.hasMoreComment(issueId, cursor);
-		return new Slice<>(comments, hasMore, cursor);
+		cursor = comments.get(comments.size() - 1).getCommentId();
+
+		return new Slice<>(comments, cursor);
 	}
 }
