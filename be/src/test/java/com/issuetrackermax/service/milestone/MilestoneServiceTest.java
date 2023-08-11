@@ -12,6 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.issuetrackermax.common.exception.ApiException;
+import com.issuetrackermax.common.exception.domain.MilestoneException;
 import com.issuetrackermax.controller.milestone.dto.request.MilestoneModifyRequest;
 import com.issuetrackermax.controller.milestone.dto.request.MilestonePostRequest;
 import com.issuetrackermax.controller.milestone.dto.response.MilestoneDetailResponse;
@@ -41,13 +43,13 @@ class MilestoneServiceTest extends IntegrationTestSupport {
 		// given
 		milestoneService.save(MilestonePostRequest
 			.builder()
-			.name("title1")
+			.title("title1")
 			.description("description2")
 			.dueDate(LocalDateTime.now())
 			.build());
 		milestoneService.save(MilestonePostRequest
 			.builder()
-			.name("title1")
+			.title("title2")
 			.description("description2")
 			.dueDate(LocalDateTime.now())
 			.build());
@@ -102,7 +104,7 @@ class MilestoneServiceTest extends IntegrationTestSupport {
 		// given
 		MilestonePostRequest milestonePostRequet = MilestonePostRequest
 			.builder()
-			.name("title")
+			.title("title")
 			.description("description")
 			.dueDate(LocalDateTime.now())
 			.build();
@@ -117,7 +119,34 @@ class MilestoneServiceTest extends IntegrationTestSupport {
 			() -> assertThat(milestone.getDescription()).isEqualTo("description"),
 			() -> assertThat(milestone.getIsOpen()).isTrue()
 		);
+	}
 
+	@DisplayName("마일스톨을 저장하고,같은 이름의 마일스톤을 저장하면 오류가 발생한다..")
+	@Test
+	void saveDuplicateTitle() {
+		// given
+		MilestonePostRequest milestonePostRequet = MilestonePostRequest
+			.builder()
+			.title("title")
+			.description("description")
+			.dueDate(LocalDateTime.now())
+			.build();
+		Long id = milestoneService.save(milestonePostRequet);
+
+		// when
+		MilestonePostRequest milestonePostRequet1 = MilestonePostRequest
+			.builder()
+			.title("title")
+			.description("description")
+			.dueDate(LocalDateTime.now())
+			.build();
+		// when & then
+		assertThatThrownBy(() -> milestoneService.save(milestonePostRequet))
+			.isInstanceOf(ApiException.class)
+			.satisfies(exception -> {
+				ApiException apiException = (ApiException)exception;
+				assertThat(apiException.getCustomException()).isInstanceOf(MilestoneException.class);
+			});
 	}
 
 	@DisplayName("저장된 마일스톤을 수정하고, 수정된 값을 확인한다.")
