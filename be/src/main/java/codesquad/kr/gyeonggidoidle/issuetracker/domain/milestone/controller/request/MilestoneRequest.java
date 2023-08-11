@@ -14,7 +14,7 @@ public class MilestoneRequest {
     private final LocalDate dueDate;
 
     @Builder
-    private MilestoneRequest(String name, String description, LocalDate dueDate) {
+    public MilestoneRequest(String name, String description, LocalDate dueDate) {
         this.name = name;
         this.description = description;
         this.dueDate = dueDate;

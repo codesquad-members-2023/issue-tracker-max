@@ -14,7 +14,7 @@ public class LabelRequest {
     private final String textColor;
 
     @Builder
-    private LabelRequest(String name, String description, String backgroundColor, String textColor) {
+    public LabelRequest(String name, String description, String backgroundColor, String textColor) {
         this.name = name;
         this.description = description;
         this.backgroundColor = backgroundColor;

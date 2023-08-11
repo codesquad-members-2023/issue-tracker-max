@@ -17,7 +17,7 @@ public class SignUpRequest {
     private final String profile;
 
     @Builder
-    private SignUpRequest(String email, String password, String profile) {
+    public SignUpRequest(String email, String password, String profile) {
         this.email = email;
         this.password = password;
         this.profile = profile;

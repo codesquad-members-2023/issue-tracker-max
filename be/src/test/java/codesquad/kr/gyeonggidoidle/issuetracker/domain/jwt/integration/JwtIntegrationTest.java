@@ -6,12 +6,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.IntegrationTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller.request.LoginRequest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller.request.RefreshTokenRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller.request.SignUpRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.Jwt;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.JwtProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -71,24 +73,25 @@ public class JwtIntegrationTest {
                 .andExpect(status().isOk());
     }
 
-//    @DisplayName("refreshToken을 받아서 새로운 accessToken이 담긴 JwtResponse를 반환한다.")
-//    @Test
-//    @Order(3)
-//    void reissueAccessToken() throws Exception {
-//        Jwt jwt = makeToken();
-//        RefreshTokenRequest request = new RefreshTokenRequest(jwt.getRefreshToken());
-//        ResultActions resultActions = mockMvc.perform(post("/api/auth/reissue")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(toJson(request)));
-//
-//        resultActions
-//                .andExpect(status().isOk())
-//                .andExpectAll(
-//                        jsonPath("$.length()").value(2),
-//                        jsonPath("$.accessToken").isNotEmpty(),
-//                        jsonPath("$.refreshToken").isNotEmpty()
-//                );
-//    }
+    @DisplayName("refreshToken을 받아서 새로운 accessToken이 담긴 JwtResponse를 반환한다.")
+    @Test
+    @Order(3)
+    @Disabled
+    void reissueAccessToken() throws Exception {
+        Jwt jwt = makeToken();
+        RefreshTokenRequest request = new RefreshTokenRequest(jwt.getRefreshToken());
+        ResultActions resultActions = mockMvc.perform(post("/api/auth/reissue")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(request)));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        jsonPath("$.length()").value(2),
+                        jsonPath("$.accessToken").isNotEmpty(),
+                        jsonPath("$.refreshToken").isNotEmpty()
+                );
+    }
 
     @DisplayName("HttpServletRequest에 담긴 claim의 memberId를 가지고 refreshToken을 삭제한다.")
     @Test
