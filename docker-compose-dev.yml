@@ -12,8 +12,6 @@ services:
     image: yhkim951107/issue_tracker_web_dev:latest
     ports:
       - 5173:5173
-    environment:
-      - NODE_ENV=production
   nginx:
     image: nginx:latest
     container_name: nginx_server
