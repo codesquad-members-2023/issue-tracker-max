@@ -1,8 +1,5 @@
 package codesquard.app.issue.service;
 
-import static codesquard.app.issue.mapper.response.filters.SingleFilters.*;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +20,7 @@ import codesquard.app.issue.mapper.response.IssueFilterResponse;
 import codesquard.app.issue.mapper.response.IssuesResponse;
 import codesquard.app.issue.mapper.response.filters.MultiFilters;
 import codesquard.app.issue.mapper.response.filters.SingleFilters;
-import codesquard.app.issue.mapper.response.filters.response.SingleFiltersList;
+import codesquard.app.issue.mapper.response.filters.response.SingleFilter;
 import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.label.repository.LabelRepository;
 import codesquard.app.milestone.repository.MilestoneRepository;
@@ -39,8 +36,8 @@ public class IssueQueryService {
 	private final MilestoneRepository milestoneRepository;
 	private final IssueMapper issueMapper;
 
-	private static Long id = 0L;
 	private static final String SPACE = " ";
+
 
 	public IssueReadResponse get(Long issueId) {
 		validateExistIssue(issueId);
@@ -81,12 +78,12 @@ public class IssueQueryService {
 	// Issue Filtering
 	public IssueFilterResponse findFilterIssues(String loginId, IssueFilterRequest request) {
 		Map<String, Long> counts = countIssuesByStatus();
-		SingleFiltersList singleFiltersList = checkSingleFilters(request);
-		boolean multiFiltersCheck = singleFiltersList == null;
+		SingleFilters singleFilters = checkSingleFilters(request);
+		boolean multiFiltersCheck = singleFilters == null;
 
 		return new IssueFilterResponse(generateInput(request), counts.get(IssueStatus.OPENED.name()),
 			counts.get(IssueStatus.CLOSED.name()), labelRepository.countAll(), milestoneRepository.countAll(),
-			findIssues(loginId, request), singleFiltersList, checkMultiFilters(multiFiltersCheck, request));
+			findIssues(loginId, request), singleFilters, checkMultiFilters(multiFiltersCheck, request));
 	}
 
 	private String generateInput(IssueFilterRequest request) {
@@ -123,61 +120,37 @@ public class IssueQueryService {
 		return issueMapper.getIssues(request.convertMe(loginId));
 	}
 
-	private SingleFiltersList checkSingleFilters(IssueFilterRequest request) {
-		boolean selectedIsOpened = request.getIs().equalsIgnoreCase(SingleFilters.IS.OPENED.getType());
-		boolean selectedIsClosed = request.getIs().equalsIgnoreCase(SingleFilters.IS.CLOSED.getType());
-		boolean selectedAuthorMe = request.getAuthor().equalsIgnoreCase("@me");
-		boolean selectedAssigneeMe = request.getAssignee().equalsIgnoreCase("@me");
-		boolean selectedMentionsMe = request.getMentions().equalsIgnoreCase("@me");
+	public SingleFilters checkSingleFilters(IssueFilterRequest request) {
+		// TODO: 지금 여러개가 들어왔을 때 싱글필터로 인식되는 문제가 있음 -> 이거 해결하기
 
-		if (selectedIsOpened) {
-			return new SingleFiltersList(new ArrayList<>(List.of(
-				new SingleFilters(id++, IS.OPENED.getName(), IS.OPENED.getType(), true),
-				new SingleFilters(id++, ME.AUTHOR.getName(), ME.AUTHOR.getType(), false),
-				new SingleFilters(id++, ME.ASSIGNEE.getName(), ME.ASSIGNEE.getType(), false),
-				new SingleFilters(id++, ME.MENTIONS.getName(), ME.MENTIONS.getType(), false),
-				new SingleFilters(id++, IS.CLOSED.getName(), IS.CLOSED.getType(), false)
-			)));
+		if (request.getIs() != null && request.getIs().equalsIgnoreCase(SingleFilter.IS.OPENED.getType())) {
+			SingleFilters singleFilters = new SingleFilters();
+			singleFilters.changeBy(true, SingleFilters.OPENED_ID - 1L);
+			return singleFilters;
 		}
 
-		if (selectedIsClosed) {
-			return new SingleFiltersList(new ArrayList<>(List.of(
-				new SingleFilters(id++, IS.OPENED.getName(), IS.OPENED.getType(), false),
-				new SingleFilters(id++, ME.AUTHOR.getName(), ME.AUTHOR.getType(), false),
-				new SingleFilters(id++, ME.ASSIGNEE.getName(), ME.ASSIGNEE.getType(), false),
-				new SingleFilters(id++, ME.MENTIONS.getName(), ME.MENTIONS.getType(), false),
-				new SingleFilters(id++, IS.CLOSED.getName(), IS.CLOSED.getType(), true)
-			)));
+		if (request.getIs() != null && request.getIs().equalsIgnoreCase(SingleFilter.IS.CLOSED.getType())) {
+			SingleFilters singleFilters = new SingleFilters();
+			singleFilters.changeBy(true, SingleFilters.CLOSED_ID - 1L);
+			return singleFilters;
 		}
 
-		if (selectedAuthorMe) {
-			return new SingleFiltersList(new ArrayList<>(List.of(
-				new SingleFilters(id++, IS.OPENED.getName(), IS.OPENED.getType(), false),
-				new SingleFilters(id++, ME.AUTHOR.getName(), ME.AUTHOR.getType(), true),
-				new SingleFilters(id++, ME.ASSIGNEE.getName(), ME.ASSIGNEE.getType(), false),
-				new SingleFilters(id++, ME.MENTIONS.getName(), ME.MENTIONS.getType(), false),
-				new SingleFilters(id++, IS.CLOSED.getName(), IS.CLOSED.getType(), false)
-			)));
+		if (request.getAuthor() != null && request.getAuthor().equalsIgnoreCase(SingleFilter.ME.AUTHOR.getType())) {
+			SingleFilters singleFilters = new SingleFilters();
+			singleFilters.changeBy(true, SingleFilters.AUTHOR_ID - 1L);
+			return singleFilters;
 		}
 
-		if (selectedAssigneeMe) {
-			return new SingleFiltersList(new ArrayList<>(List.of(
-				new SingleFilters(id++, IS.OPENED.getName(), IS.OPENED.getType(), false),
-				new SingleFilters(id++, ME.AUTHOR.getName(), ME.AUTHOR.getType(), false),
-				new SingleFilters(id++, ME.ASSIGNEE.getName(), ME.ASSIGNEE.getType(), true),
-				new SingleFilters(id++, ME.MENTIONS.getName(), ME.MENTIONS.getType(), false),
-				new SingleFilters(id++, IS.CLOSED.getName(), IS.CLOSED.getType(), false)
-			)));
+		if (request.getAssignee() != null && request.getAssignee().equalsIgnoreCase(SingleFilter.ME.ASSIGNEE.getType())) {
+			SingleFilters singleFilters = new SingleFilters();
+			singleFilters.changeBy(true, SingleFilters.ASSIGNEE_ID - 1L);
+			return singleFilters;
 		}
 
-		if (selectedMentionsMe) {
-			return new SingleFiltersList(new ArrayList<>(List.of(
-				new SingleFilters(id++, IS.OPENED.getName(), IS.OPENED.getType(), false),
-				new SingleFilters(id++, ME.AUTHOR.getName(), ME.AUTHOR.getType(), false),
-				new SingleFilters(id++, ME.ASSIGNEE.getName(), ME.ASSIGNEE.getType(), false),
-				new SingleFilters(id++, ME.MENTIONS.getName(), ME.MENTIONS.getType(), true),
-				new SingleFilters(id++, IS.CLOSED.getName(), IS.CLOSED.getType(), false)
-			)));
+		if (request.getMentions() != null && request.getMentions().equalsIgnoreCase(SingleFilter.ME.MENTIONS.getType())) {
+			SingleFilters singleFilters = new SingleFilters();
+			singleFilters.changeBy(true, SingleFilters.MENTIONS_ID - 1L);
+			return singleFilters;
 		}
 
 		return null;
