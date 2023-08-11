@@ -5,7 +5,7 @@ import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { Button } from '@components/common/Button';
 import { useTheme } from '@emotion/react';
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { DropDownContainer } from '@components/common/dropDown/DropDownContainer';
 import { getLabels, getMilestones, getUsers } from '@utils/api';
 import { DropDownList } from '@components/common/dropDown/DropDownList';
@@ -519,7 +519,7 @@ export const TableHeader: React.FC<Props> = ({
                     );
 
                     if (name === 'none') {
-                      return <></>;
+                      return <React.Fragment key={id}></React.Fragment>;
                     }
 
                     return (
