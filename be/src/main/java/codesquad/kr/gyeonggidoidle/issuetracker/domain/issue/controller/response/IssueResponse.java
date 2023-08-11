@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.controller.response.LabelResponse;

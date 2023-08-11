@@ -1,6 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response.ApiResponse;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.ApiResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.JwtProvider;
 import codesquad.kr.gyeonggidoidle.issuetracker.exception.JwtExceptionType;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,15 +1,16 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.request.IssueCreateRequest;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.request.IssueStatusRequest;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.request.IssueUpdateRequest;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response.ApiResponse;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response.FilterListResponse;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response.FilterResponse;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.IssueCreateRequest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.IssueStatusRequest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.IssueUpdateRequest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.ApiResponse;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.FilterListResponse;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.FilterResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriUtils;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,6 +26,14 @@ public class IssueController {
     @GetMapping("/api/issues/closed")
     public FilterResponse readCloseIssues() {
         return FilterResponse.from(issueService.readClosedIssues());
+    }
+    @GetMapping("/api/issues/filtered")
+    public FilterResponse readFiltedIssues(@RequestParam(name = "q", required = false) String encodedQuery) {
+        if (encodedQuery == null || encodedQuery.isEmpty()) {
+            return FilterResponse.from(issueService.readFilteredIssues("is=open"));
+        }
+        String filterCondition = UriUtils.decode(encodedQuery, "UTF-8");
+        return FilterResponse.from(issueService.readFilteredIssues(filterCondition));
     }
 
     @PatchMapping("/api/issues")

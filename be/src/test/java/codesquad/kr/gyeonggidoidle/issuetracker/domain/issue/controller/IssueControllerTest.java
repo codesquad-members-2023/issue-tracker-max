@@ -1,7 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.ControllerTest;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.IssueController;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.*;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.information.LabelInformation;

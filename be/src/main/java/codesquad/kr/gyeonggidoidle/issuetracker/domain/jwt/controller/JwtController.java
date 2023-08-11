@@ -1,6 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response.ApiResponse;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.ApiResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller.request.LoginRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller.request.RefreshTokenRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller.request.SignUpRequest;

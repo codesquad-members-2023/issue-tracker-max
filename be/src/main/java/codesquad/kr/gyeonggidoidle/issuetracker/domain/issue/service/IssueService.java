@@ -2,7 +2,9 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.comment.repository.CommentRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Comment;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Filter;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Issue;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.FilteredIssueRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.IssueRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueCreateCondition;
@@ -37,6 +39,7 @@ public class IssueService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final MilestoneRepository milestoneRepository;
+    private final FilteredIssueRepository filteredIssueRepository;
 
     public FilterInformation readOpenIssues() {
         StatVO statVO = statRepository.countOverallStats();
@@ -51,6 +54,17 @@ public class IssueService {
     public FilterInformation readClosedIssues() {
         StatVO statVO = statRepository.countOverallStats();
         List<IssueVO> issueVOs = issueRepository.findClosedIssues();
+        List<Long> issueIds = getIssueIds(issueVOs);
+        Map<Long, List<LabelVO>> labelVOs = labelRepository.findAllByIssueIds(issueIds);
+        Map<Long, List<String>> assigneeProfiles = memberRepository.findAllProfilesByIssueIds(issueIds);
+
+        return FilterInformation.from(statVO, issueVOs, labelVOs, assigneeProfiles);
+    }
+
+    public FilterInformation readFilteredIssues(String filterCondition) {
+        StatVO statVO = statRepository.countOverallStats();
+        Filter filter = Filter.from(filterCondition);
+        List<IssueVO> issueVOs = filteredIssueRepository.findByFilter(filter);
         List<Long> issueIds = getIssueIds(issueVOs);
         Map<Long, List<LabelVO>> labelVOs = labelRepository.findAllByIssueIds(issueIds);
         Map<Long, List<String>> assigneeProfiles = memberRepository.findAllProfilesByIssueIds(issueIds);

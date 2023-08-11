@@ -1,6 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.exception;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response.ApiResponse;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.ApiResponse;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

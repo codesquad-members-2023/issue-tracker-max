@@ -1,10 +1,10 @@
 INSERT INTO member (email, name, password, profile)
 values ('nag@codesquad.kr', 'nag', '1q2w3e4r!',
-        'https://e7.pngegg.com/pngimages/981/645/png-clipart-default-profile-united-states-computer-icons-desktop-free-high-quality-person-icon-miscellaneous-silhouette.png'),
+        'https://source.boringavatars.com/beam/20/nag'),
        ('joy@codesquad.kr', 'joy', '1q2w3e4r!',
-        'https://e7.pngegg.com/pngimages/981/645/png-clipart-default-profile-united-states-computer-icons-desktop-free-high-quality-person-icon-miscellaneous-silhouette.png'),
+        'https://source.boringavatars.com/beam/20/joy'),
        ('ati@codesquad.kr', 'ati', '1q2w3e4r!',
-        'https://e7.pngegg.com/pngimages/981/645/png-clipart-default-profile-united-states-computer-icons-desktop-free-high-quality-person-icon-miscellaneous-silhouette.png');
+        'https://source.boringavatars.com/beam/20/ati');
 
 INSERT INTO milestone (name, due_date, is_open)
 values ('마일스톤 1', current_date, 1),

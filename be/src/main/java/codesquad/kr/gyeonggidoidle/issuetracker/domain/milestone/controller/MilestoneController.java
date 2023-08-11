@@ -1,6 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response.ApiResponse;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.ApiResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller.request.MilestoneRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller.response.MilestonePageResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.service.MilestoneService;

@@ -1,12 +1,15 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3308/issue-tracker
+    url: jdbc:mysql://localhost:3308/issue-tracker?allowMultiQueries=true
     username: user
     password: admin
     driver-class-name: com.mysql.cj.jdbc.Driver
-
   sql:
     init:
       mode: always
       schema-locations: classpath*:schema.sql
     encoding: UTF-8
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: codesquad.kr.gyeonggidoidle.issuetracker.domain

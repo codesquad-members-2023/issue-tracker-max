@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.FilteredIssueRepository">
+    <select id="findByFilter" resultType="IssueVO" parameterType="Filter">
+        SELECT DISTINCT issue.id,
+                        issue.title,
+                        author.name AS author_name,
+                        milestone.name AS milestone_name,
+                        issue.created_at
+        FROM issue
+            LEFT JOIN member AS author
+                ON issue.author_id = author.id
+            LEFT JOIN issue_assignee
+                ON issue.id = issue_assignee.issue_id
+            LEFT JOIN member AS assignee
+                ON issue_assignee.assignee_id = assignee.id
+            LEFT JOIN issue_label
+                ON issue.id = issue_label.issue_id
+            LEFT JOIN label
+                ON issue_label.label_id = label.id
+            LEFT JOIN milestone
+                ON issue.milestone_id = milestone.id
+        WHERE issue.is_deleted = false
+          AND issue.is_open = #{isOpen}
+        <if test="assignee != null">
+            AND assignee.name = #{assignee}
+        </if>
+        <if test="label != null">
+            AND label.name = #{label}
+        </if>
+        <if test="milestone != null">
+            AND milestone.name = #{milestone}
+        </if>
+        <if test="author != null">
+            AND author.name = #{author}
+        </if>
+        ORDER BY issue.id DESC
+    </select>
+</mapper>

@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterListInformation;
 import com.fasterxml.jackson.annotation.JsonInclude;

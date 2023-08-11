@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

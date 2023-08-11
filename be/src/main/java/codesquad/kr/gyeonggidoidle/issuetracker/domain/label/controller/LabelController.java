@@ -1,6 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.label.controller;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response.ApiResponse;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.ApiResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.controller.request.LabelRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.controller.response.LabelDetailsResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.controller.response.LabelPageResponse;
