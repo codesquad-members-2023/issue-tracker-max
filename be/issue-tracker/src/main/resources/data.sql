@@ -1,9 +1,9 @@
-INSERT INTO user (login_id, password, image) VALUES ('ayaan', '1234', '이안이미지');
-INSERT INTO user (login_id, password, image) VALUES ('jian', '1234', '지안이미지');
-INSERT INTO user (login_id, password, image) VALUES ('bono', '1234', '보노이미지');
-INSERT INTO user (login_id, password, image) VALUES ('hana', '1234', '하나이미지');
-INSERT INTO user (login_id, password, image) VALUES ('khundi', '1234', '쿤디이미지');
-INSERT INTO user (login_id, password, image) VALUES ('puban', '1234', '푸반이미지');
+INSERT INTO user (login_id, password, image) VALUES ('ayaan', '1234', '');
+INSERT INTO user (login_id, password, image) VALUES ('jian', '1234', '');
+INSERT INTO user (login_id, password, image) VALUES ('bono', '1234', '');
+INSERT INTO user (login_id, password, image) VALUES ('hana', '1234', '');
+INSERT INTO user (login_id, password, image) VALUES ('khundi', '1234', '');
+INSERT INTO user (login_id, password, image) VALUES ('puban', '1234', '');
 
 INSERT INTO milestone (name, deadline, description) VALUES ('be-milestone1', '2023-08-04T00:00:00', '백엔드');
 INSERT INTO milestone (name, deadline, description) VALUES ('be-milestone2', '2023-08-11T00:00:00', '백엔드');
