@@ -158,7 +158,7 @@ export const IssueList: React.FC<Props> = ({
             }}
           >
             <img
-              src={image || 'src/assets/icons/base-profile-image.jpeg'}
+              src={image || 'src/assets/icons/basic-profile.jpeg'}
               alt="담당자 프로필 사진"
               css={{
                 width: '32px',

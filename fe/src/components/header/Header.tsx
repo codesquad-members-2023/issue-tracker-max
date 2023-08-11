@@ -47,7 +47,7 @@ export const Header: React.FC<Props> = ({
           </Button>
 
           <img
-            src={image || 'src/assets/icons/base-profile-image.jpeg'}
+            src={image || 'src/assets/icons/basic-profile.jpeg'}
             alt="프로필 사진"
             css={{ width: '32px', borderRadius: theme.radius.half }}
           />
