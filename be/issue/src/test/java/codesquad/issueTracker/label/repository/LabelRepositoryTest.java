@@ -21,9 +21,9 @@ class LabelRepositoryTest {
 	private NamedParameterJdbcTemplate template;
 
 	@Autowired
-	public LabelRepositoryTest(NamedParameterJdbcTemplate jdbcTemplate) {
+	public LabelRepositoryTest(JdbcTemplate jdbcTemplate) {
 		this.labelRepository = new LabelRepository(jdbcTemplate);
-		this.template = jdbcTemplate;
+		template = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
 	@DisplayName("DB에 정상적으로 label 객체를 저장하는지 테스트")
