@@ -49,7 +49,8 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 	@Test
 	void getDetail() {
 		// given
-		Long issueId = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long issueId = createIssue(userId);
 
 		// when
 		IssueReadResponse issueReadResponse = issueRepository.findBy(issueId);
@@ -58,7 +59,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		assertThat(issueReadResponse.getTitle()).isEqualTo("Repository");
 		assertThat(issueRepository.findAssigneesBy(issueId).get(0).getLoginId()).isEqualTo("wis");
 		assertThat(issueRepository.findLabelsBy(issueId)).isEmpty();
-		assertThat(issueRepository.findCommentsBy(issueId)).isEmpty();
+		assertThat(issueRepository.findCommentsBy(issueId, userId)).isEmpty();
 	}
 
 	@DisplayName("이슈를 등록하고 그 등록 번호를 반환한다.")
@@ -86,55 +87,59 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 	@Test
 	void modifyStatus() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		// when
 		IssueStatus issueStatus = IssueStatus.CLOSED;
-		LocalDateTime status_modified_at = LocalDateTime.now();
+		LocalDateTime status_modified_at = LocalDateTime.now().withNano(0);
 		issueRepository.modifyStatus(issueStatus.name(), id, status_modified_at);
 
 		// then
 		assertThat(issueRepository.findBy(id).getStatus()).isEqualTo(issueStatus);
-		assertThat(issueRepository.findBy(id).getStatusModifiedAt()).isEqualTo(status_modified_at.withNano(0));
+		assertThat(issueRepository.findBy(id).getStatusModifiedAt()).isEqualTo(status_modified_at);
 	}
 
 	@DisplayName("이슈를 등록하고 그 등록 번호의 이슈 제목을 수정한다.")
 	@Test
 	void modifyTitle() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		// when
 		String title = "Modified Repository Title";
-		LocalDateTime modified_at = LocalDateTime.now();
+		LocalDateTime modified_at = LocalDateTime.now().withNano(0);
 		issueRepository.modifyTitle(title, id, modified_at);
 
 		// then
 		assertThat(issueRepository.findBy(id).getTitle()).isEqualTo(title);
-		assertThat(issueRepository.findBy(id).getModifiedAt()).isEqualTo(modified_at.withNano(0));
+		assertThat(issueRepository.findBy(id).getModifiedAt()).isEqualTo(modified_at);
 	}
 
 	@DisplayName("이슈를 등록하고 그 등록 번호의 이슈 내용을 수정한다.")
 	@Test
 	void modifyContent() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		// when
 		String content = "Modified Repository Content";
-		LocalDateTime modified_at = LocalDateTime.now();
+		LocalDateTime modified_at = LocalDateTime.now().withNano(0);
 		issueRepository.modifyContent(content, id, modified_at);
 
 		// then
 		assertThat(issueRepository.findBy(id).getContent()).isEqualTo(content);
-		assertThat(issueRepository.findBy(id).getModifiedAt()).isEqualTo(modified_at.withNano(0));
+		assertThat(issueRepository.findBy(id).getModifiedAt()).isEqualTo(modified_at);
 	}
 
 	@DisplayName("이슈를 등록하고 그 등록 번호의 마일스톤을 수정한다.")
 	@Test
 	void modifyMilestone() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		// when
 		issueRepository.modifyMilestone(null, id);
@@ -147,7 +152,8 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 	@Test
 	void deleteIssue() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		// when
 		issueRepository.deleteBy(id);
@@ -156,13 +162,12 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		assertThat(issueRepository.isExist(id)).isFalse();
 	}
 
-	private Long createIssue() {
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+	private Long createIssue(Long userId) {
 		MilestoneSaveRequest milestoneSaveRequest = FixtureFactory.createMilestoneCreateRequest("레포지토리");
 		Long milestoneId = milestoneRepository.save(MilestoneSaveRequest.toEntity(milestoneSaveRequest)).orElseThrow();
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Repository", "내용", milestoneId,
-			loginId);
-		Issue issue = issueSaveRequest.toEntity(loginId);
+			userId);
+		Issue issue = issueSaveRequest.toEntity(userId);
 
 		Long id = issueRepository.save(issue);
 		issueRepository.saveIssueLabel(id, issueSaveRequest.getLabels());

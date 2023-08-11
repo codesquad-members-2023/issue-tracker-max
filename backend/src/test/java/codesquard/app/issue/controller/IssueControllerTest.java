@@ -35,7 +35,8 @@ class IssueControllerTest extends ControllerTestSupport {
 	void getIssueDetail() throws Exception {
 		// given
 		int id = 1;
-		given(issueQueryService.get((long)id)).willReturn(FixtureFactory.createIssueReadResponse((long)id));
+		Long userId = 1L;
+		given(issueQueryService.get((long)id, userId)).willReturn(FixtureFactory.createIssueReadResponse((long)id));
 
 		// when & then
 		mockMvc.perform(get("/api/issues/" + id))
@@ -50,8 +51,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	void getIssueDetail_Fail() throws Exception {
 		// given
 		int id = 1;
+		Long userId = 1L;
 		willThrow(new NoSuchIssueException())
-			.given(issueQueryService).get((long)id);
+			.given(issueQueryService).get((long)id, userId);
 
 		// when & then
 		mockMvc.perform(get("/api/issues/" + id))
