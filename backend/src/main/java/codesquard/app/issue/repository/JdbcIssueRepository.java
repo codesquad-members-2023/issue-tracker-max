@@ -1,5 +1,6 @@
 package codesquard.app.issue.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -137,21 +138,21 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public void modifyStatus(String status, Long issueId) {
-		String sql = "UPDATE issue SET status = :status WHERE id = :id";
-		template.update(sql, Map.of("status", status, "id", issueId));
+	public void modifyStatus(String status, Long issueId, LocalDateTime now) {
+		String sql = "UPDATE issue SET status = :status, status_modified_at = :now WHERE id = :id";
+		template.update(sql, Map.of("status", status, "id", issueId, "now", now));
 	}
 
 	@Override
-	public void modifyTitle(String title, Long issueId) {
-		String sql = "UPDATE issue SET title = :title WHERE id = :id";
-		template.update(sql, Map.of("title", title, "id", issueId));
+	public void modifyTitle(String title, Long issueId, LocalDateTime now) {
+		String sql = "UPDATE issue SET title = :title, modified_at = :now WHERE id = :id";
+		template.update(sql, Map.of("title", title, "id", issueId, "now", now));
 	}
 
 	@Override
-	public void modifyContent(String content, Long issueId) {
-		String sql = "UPDATE issue SET content = :content WHERE id = :id";
-		template.update(sql, Map.of("content", content, "id", issueId));
+	public void modifyContent(String content, Long issueId, LocalDateTime now) {
+		String sql = "UPDATE issue SET content = :content, modified_at = :now WHERE id = :id";
+		template.update(sql, Map.of("content", content, "id", issueId, "now", now));
 	}
 
 	@Override

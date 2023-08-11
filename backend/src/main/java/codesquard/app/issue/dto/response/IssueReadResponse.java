@@ -60,6 +60,14 @@ public class IssueReadResponse {
 		return status;
 	}
 
+	public LocalDateTime getStatusModifiedAt() {
+		return statusModifiedAt;
+	}
+
+	public LocalDateTime getModifiedAt() {
+		return modifiedAt;
+	}
+
 	public String getContent() {
 		return content;
 	}

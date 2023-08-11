@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import codesquard.app.api.errors.exception.NoSuchReactionException;
+import codesquard.app.api.errors.exception.NoSuchUserReactionException;
 import codesquard.app.api.response.ApiResponse;
 
 @RestControllerAdvice
@@ -19,6 +20,17 @@ public class UserReactionExceptionHandler {
 	@ExceptionHandler(NoSuchReactionException.class)
 	public ApiResponse<Object> handleNoSuchReactionException(NoSuchReactionException e) {
 		logger.info("NoSuchReactionException handling : {}", e.toString());
+		return ApiResponse.of(
+			HttpStatus.NOT_FOUND,
+			e.getMessage(),
+			null
+		);
+	}
+
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(NoSuchUserReactionException.class)
+	public ApiResponse<Object> handleNoSuchUserReactionException(NoSuchUserReactionException e) {
+		logger.info("NoSuchUserReactionException handling : {}", e.toString());
 		return ApiResponse.of(
 			HttpStatus.NOT_FOUND,
 			e.getMessage(),

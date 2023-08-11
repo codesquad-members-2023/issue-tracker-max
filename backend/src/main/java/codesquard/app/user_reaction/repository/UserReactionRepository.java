@@ -5,5 +5,9 @@ public interface UserReactionRepository {
 
 	Long saveCommentReaction(Long reactionId, Long userId, Long commentId);
 
-	boolean isExist(Long reactionId);
+	void delete(Long id);
+
+	boolean isExistReaction(Long reactionId);
+
+	boolean isExistUserReaction(Long id);
 }

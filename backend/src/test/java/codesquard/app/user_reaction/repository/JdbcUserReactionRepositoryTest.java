@@ -40,8 +40,12 @@ class JdbcUserReactionRepositoryTest extends IntegrationTestSupport {
 		jdbcTemplate.update("TRUNCATE TABLE issue");
 		jdbcTemplate.update("TRUNCATE TABLE milestone");
 		jdbcTemplate.update("TRUNCATE TABLE user");
+		jdbcTemplate.update("TRUNCATE TABLE comment");
 		jdbcTemplate.update("TRUNCATE TABLE label");
 		jdbcTemplate.update("TRUNCATE TABLE user_reaction");
+		jdbcTemplate.update("TRUNCATE TABLE reaction");
+		jdbcTemplate.update(
+			"INSERT INTO reaction(unicode) VALUE('&#128077'), ('&#128078'), ('&#128522'), ('&#128569'), ('&#128149'), ('&#128035')");
 		jdbcTemplate.update("SET FOREIGN_KEY_CHECKS = 1");
 	}
 
@@ -84,5 +88,26 @@ class JdbcUserReactionRepositoryTest extends IntegrationTestSupport {
 
 		// then
 		assertThat(id).isNotNull();
+	}
+
+	@DisplayName("이슈 사용자 반응을 등록하고 그 등록 번호를 삭제한다.")
+	@Test
+	void delete() {
+		// given
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Repository", "내용", null,
+			loginId);
+		Issue issue = issueSaveRequest.toEntity(loginId);
+		Long issueId = issueRepository.save(issue);
+		issueRepository.saveIssueLabel(issueId, issueSaveRequest.getLabels());
+		issueRepository.saveIssueAssignee(issueId, issueSaveRequest.getAssignees());
+		Long reactionId = 1L;
+		Long id = userReactionRepository.saveIssueReaction(reactionId, loginId, issueId);
+
+		// when
+		userReactionRepository.delete(id);
+
+		// then
+		assertThat(userReactionRepository.isExistUserReaction(id)).isFalse();
 	}
 }
