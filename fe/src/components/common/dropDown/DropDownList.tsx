@@ -36,6 +36,7 @@ export const DropDownList: React.FC<Props> = ({
         gap: '8px',
         background: theme.neutral.surface.strong,
         padding: '8px 16px',
+        cursor: 'pointer',
         font: isSelected
           ? theme.fonts.selectedBold16
           : theme.fonts.availableMedium16,

@@ -13,12 +13,11 @@ type IssuePageData = {
 type Issue = {
   id: number;
   title: string;
-
-  author: {
-    userId: number;
-    loginId: string;
+  authorLoginId: string;
+  assignees: {
+    userId: string;
     image: string;
-  };
+  }[];
 
   labels: {
     id: number;
@@ -33,7 +32,20 @@ type Issue = {
   };
 
   createdAt: string;
-  isOpen: boolean;
+  status: 'open' | 'closed';
+};
+
+type UserInfo = {
+  userId: number;
+  loginId: string;
+  image: string;
+};
+
+type DefaultFileStatusType = {
+  typeError: boolean;
+  sizeError: boolean;
+  isUploading: boolean;
+  uploadFailed: boolean;
 };
 
 type Label = {
