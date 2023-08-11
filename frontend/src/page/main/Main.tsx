@@ -7,7 +7,7 @@ import { MainHeader } from "./MainHeader";
 export type SingleFilterData = {
   id: number;
   name: string;
-  conditions: string[];
+  conditions: string;
   selected: boolean;
 };
 
@@ -17,6 +17,7 @@ type IssueDataState = {
   issues: IssueData[];
   multiFilters: object;
   singleFilters: SingleFilterData[];
+  input: string;
 };
 
 type LabelData = {
@@ -34,7 +35,6 @@ type MilestoneData = {
 type UserData = {
   id: number;
   name: string;
-  avatarUrl: string;
 };
 
 export type IssueData = {
@@ -46,7 +46,7 @@ export type IssueData = {
   statusModifiedAt: Date;
   labels: LabelData[];
   milestone: MilestoneData;
-  writer: UserData;
+  author: UserData;
   assignees: UserData;
   commentCount: number;
 };
@@ -60,7 +60,11 @@ export function Main() {
         "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/issues",
       );
 
-      setIssueData(await res.json());
+      const { code, data } = await res.json();
+
+      if (code === 200) {
+        setIssueData(data);
+      }
     };
 
     fetchData();
@@ -74,6 +78,7 @@ export function Main() {
             singleFilters={issueData.singleFilters}
             milestoneCount={3}
             labelCount={2}
+            input={issueData.input}
           />
           <MainBody>
             <IssueTableHeader
