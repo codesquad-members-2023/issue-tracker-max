@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { Icon } from "components/Common/Icon/Icon";
-
+import { ProfileImg } from "components/Common/Profile/Profile";
 interface SubFilterItem {
   id: number;
   name: string;
@@ -35,9 +35,7 @@ export const DropdownOptions: React.FC<DropdownOptionsProps> = ({
           $isSelected={selectedId === item.id}
         >
           <div>
-            {item.profile && (
-              <Circle style={{ backgroundImage: `url(${item.profile})` }} />
-            )}
+            {item.profile && <ProfileImg size={20} $url={item.profile} />}
             {item.backgroundColor && (
               <Circle style={{ backgroundColor: item.backgroundColor }} />
             )}
@@ -59,7 +57,6 @@ const OptionLists = styled.ul`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme: { color } }) => color.nuetralSurfaceStrong};
-  border-radius: ${({ theme: { radius } }) => radius.large};
 `;
 
 const OptionItem = styled.li<{ $isSelected: boolean }>`

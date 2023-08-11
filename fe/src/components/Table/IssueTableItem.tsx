@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { Icon } from "components/Common/Icon/Icon";
 import { Tag } from "components/Common/Tag/Tag";
-import UserTestProfile from "assets/img/profile_test.svg";
 
 interface IssueItem {
   id: number;
@@ -20,7 +19,6 @@ interface IssueTableItemProps {
 export const IssueTableItem: React.FC<IssueTableItemProps> = ({
   issueItem,
 }) => {
-  console.log(issueItem);
   const getRelativeTime = (timestamp: string) => {
     const now = new Date();
     const time = new Date(timestamp);
@@ -82,18 +80,14 @@ export const IssueTableItem: React.FC<IssueTableItemProps> = ({
           </SummaryBox>
         </InfoBox>
       </div>
-      {issueItem.assigneeProfiles && (
-        <AssigneesProfileBox>
-          <ul>
-            <li>
-              <img src={UserTestProfile} alt="내 프로필 이미지" width={20} />
+      <AssigneesProfileBox>
+        {issueItem.assigneeProfiles &&
+          issueItem.assigneeProfiles.map((url) => (
+            <li key={url}>
+              <img src={url} width={20} />
             </li>
-            <li>
-              <img src={UserTestProfile} alt="내 프로필 이미지" width={20} />
-            </li>
-          </ul>
-        </AssigneesProfileBox>
-      )}
+          ))}
+      </AssigneesProfileBox>
     </TableItem>
   );
 };
@@ -149,16 +143,14 @@ const SummaryBox = styled.div`
   gap: 16px;
 `;
 
-const AssigneesProfileBox = styled.div`
-  ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    li {
-      margin-right: -6px;
-    }
-    &:last-child {
-      margin-right: 0;
-    }
+const AssigneesProfileBox = styled.ul`
+  list-style: none;
+  display: flex;
+  align-items: center;
+  li {
+    margin-right: -6px;
+  }
+  &:last-child {
+    margin-right: 0;
   }
 `;

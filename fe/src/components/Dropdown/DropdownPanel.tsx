@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { DropdownTitle } from "./DropdownTitle";
 import { DropdownOptions } from "./DropdownOptions";
 
 type PositionType = "center" | "left" | "right";
@@ -16,8 +15,8 @@ interface SubFilterItem {
 interface DropdownProps {
   items?: SubFilterItem[];
   title: string;
-  filter: string;
-  position: PositionType;
+  filter?: string;
+  $position: PositionType;
   onClose: () => void;
 }
 
@@ -41,10 +40,10 @@ function useOutsideClick(
   });
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({
+export const DropdownPanel: React.FC<DropdownProps> = ({
   items = [],
   title,
-  position,
+  $position,
   filter,
   onClose,
 }) => {
@@ -67,28 +66,37 @@ export const Dropdown: React.FC<DropdownProps> = ({
   useOutsideClick(dropdownRef, onClose);
 
   return (
-    <DropdownPanel {...{ position }} ref={dropdownRef}>
-      <DropdownTitle title={title} />
+    <Layout {...{ $position }} ref={dropdownRef}>
+      <PanelTitle>{title}</PanelTitle>
       <DropdownOptions items={items} onOptionClick={handleOptionClick} />
-    </DropdownPanel>
+    </Layout>
   );
 };
 
-const DropdownPanel = styled.div<Pick<DropdownProps, "position">>`
+const Layout = styled.div<Pick<DropdownProps, "$position">>`
   position: absolute;
   z-index: 10;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  ${(props) => DropdownPosition[props.position]}
+  ${(props) => DropdownPosition[props.$position]}
   width: 240px;
   border: ${({ theme: { border } }) => border.default};
   border-color: ${({ theme: { color } }) => color.nuetralBorderDefault};
+  overflow: hidden;
   border-radius: ${({ theme: { radius } }) => radius.large};
 `;
 
 const DropdownPosition: Record<PositionType, string> = {
-  left: `left: 0;`,
-  right: `right: 0;`,
+  left: `left: 0; top: 90%;`,
+  right: `right: 0; top: 90%;`,
   center: `left: 50%; transform: translateX(-50%);`,
 };
+
+const PanelTitle = styled.p`
+  width: 100%;
+  padding: 8px 16px;
+  background-color: ${({ theme: { color } }) => color.nuetralSurfaceDefault};
+  color: ${({ theme: { color } }) => color.nuetralTextWeak};
+  font: ${({ theme: { font } }) => font.displayM12};
+`;

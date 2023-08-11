@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Icon } from "components/Common/Icon/Icon";
+import { ProfileImg } from "components/Common/Profile/Profile";
 import logoLight from "assets/img/logo_medium.svg";
 import logoDark from "assets/img/logo_medium-dark.svg";
-import UserTestProfile from "assets/img/profile_test.svg";
 
 import { useThemeMode } from "contexts/ThemeModeContext";
 
@@ -26,7 +26,11 @@ export const MainHeader = () => {
             <Icon icon="Light" size="L" fill="nuetralTextDefault" />
           )}
         </ThemeModeButton>
-        <img src={UserTestProfile} alt="내 프로필 이미지" width={32} />
+        {/* 로그인 된 사람 프로필 넣어야함 */}
+        <ProfileImg
+          size={32}
+          $url={"https://source.boringavatars.com/beam/20/nag"}
+        />
       </div>
     </HeaderLayout>
   );
@@ -45,9 +49,4 @@ const HeaderLayout = styled.div`
   }
 `;
 
-const ThemeModeButton = styled.button`
-  /* position: absolute;
-  bottom: 40px;
-  right: 80px;
-  z-index: 10; */
-`;
+const ThemeModeButton = styled.button``;

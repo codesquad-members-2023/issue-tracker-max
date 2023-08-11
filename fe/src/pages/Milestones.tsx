@@ -25,7 +25,6 @@ interface MilestonesPageData {
 export const MilestonesPage = () => {
   const navigate = useNavigate();
   const data = useLoaderData() as MilestonesPageData;
-  console.log(data);
 
   return (
     <Layout>
@@ -118,7 +117,7 @@ const MilestoneInfoBox = styled.div`
 `;
 const NameBox = styled.div`
   font: ${({ theme: { font } }) => font.availableM16};
-  color: ${({ theme: { color } }) => color.neutralTextStrong};
+  color: ${({ theme: { color } }) => color.nuetralTextStrong};
   margin-right: 8px;
 `;
 const DateBox = styled.div`
