@@ -25,7 +25,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(CustomException.class)
 	protected ResponseEntity<CommonApiResponse> handleCustomException(CustomException ex) {
 		StatusCode statusCode = ex.getStatusCode();
-		log.info("CustomException handling: {}", ex.toString());
+		log.warn("CustomException handling: {}", ex.toString());
 		return ResponseEntity.status(statusCode.getHttpStatus()).body(CommonApiResponse.fail(statusCode.getHttpStatus(),
 			statusCode.getMessage()));
 	}
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
 		HttpStatus status, WebRequest request) {
 		ErrorCode errorCode = ErrorCode.PAGE_NOT_FOUND;
-		log.info("NoHandlerFoundException handling: {}", ex.toString());
+		log.warn("NoHandlerFoundException handling: {}", ex.toString());
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(CommonApiResponse.fail(errorCode.getHttpStatus(), errorCode.getMessage()));
 	}
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(DataAccessException.class)
 	protected ResponseEntity<CommonApiResponse> handleDataAccessException(DataAccessException ex) {
 		ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR_DB;
-		log.info("DataAccessException handling: {}", ex.toString());
+		log.warn("DataAccessException handling: {}", ex.toString());
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(CommonApiResponse.fail(errorCode.getHttpStatus(), errorCode.getMessage()));
 	}
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	protected ResponseEntity<CommonApiResponse> handleException(Exception ex) {
 		ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
-		log.info("Exception handling: {}", ex.toString());
+		log.warn("Exception handling: {}", ex.toString());
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(CommonApiResponse.fail(errorCode.getHttpStatus(), errorCode.getMessage()));
 	}
@@ -63,7 +63,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 		HttpHeaders headers, HttpStatus status, WebRequest request) {
 		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
-		log.info("MethodArgumentNotValidException handling: {}", ex.getMessage());
+		log.warn("MethodArgumentNotValidException handling: {}", ex.getMessage());
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(CommonApiResponse.fail(errorCode.getHttpStatus(), errorCode.getMessage()));
 	}
