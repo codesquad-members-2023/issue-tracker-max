@@ -2,7 +2,7 @@ package org.presents.issuetracker.label.controller;
 
 import java.util.List;
 
-import org.presents.issuetracker.global.dto.response.LabelResponse;
+import org.presents.issuetracker.global.dto.response.LabelIdResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
 import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
+
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -41,19 +43,24 @@ public class LabelController {
 	@GetMapping("/previews")
 	public ResponseEntity<List<LabelPreviewResponse>> getLabelPreviews() {
 		List<LabelPreviewResponse> labelPreviews = labelService.getLabelPreviews();
+
+		// 필터링 뷰에서 `레이블이 없는 이슈`를 표시하기 위해 index 0에 값이 없는 dto 인스턴스를 추가합니다.
+		final int INDEX_LABEL_NOT_ASSIGNED = 0;
+		labelPreviews.add(INDEX_LABEL_NOT_ASSIGNED, LabelPreviewResponse.getLabelNotAssignedResponse());
+
 		return ResponseEntity.ok().body(labelPreviews);
 	}
 
 	@PostMapping
-	public ResponseEntity<LabelResponse> create(@RequestBody LabelCreateRequest labelCreateRequest) {
-		LabelResponse labelResponse = labelService.create(labelCreateRequest);
-		return ResponseEntity.ok().body(labelResponse);
+	public ResponseEntity<LabelIdResponse> create(@Valid @RequestBody LabelCreateRequest labelCreateRequest) {
+		LabelIdResponse labelIdResponse = labelService.create(labelCreateRequest);
+		return ResponseEntity.ok().body(labelIdResponse);
 	}
 
 	@PatchMapping
-	public ResponseEntity<LabelResponse> update(@RequestBody LabelUpdateRequest dto) {
-		LabelResponse labelResponse = labelService.update(dto);
-		return ResponseEntity.ok().body(labelResponse);
+	public ResponseEntity<LabelIdResponse> update(@Valid @RequestBody LabelUpdateRequest dto) {
+		LabelIdResponse labelIdResponse = labelService.update(dto);
+		return ResponseEntity.ok().body(labelIdResponse);
 	}
 
 	@DeleteMapping("/{id}")

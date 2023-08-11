@@ -14,21 +14,23 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class IssueSearchVo {
+public class IssueSearchInfo {
 	private Long id;
 	private String title;
-	private User author;
+	private String authorLoginId;
+	private List<User> assignees;
 	private List<Label> labels;
 	private Milestone milestone;
 	private LocalDateTime createdAt;
 	private String status;
 
 	@Builder
-	public IssueSearchVo(Long id, String title, User author, List<Label> labels, Milestone milestone,
-		LocalDateTime createdAt, String status) {
+	public IssueSearchInfo(Long id, String title, String authorLoginId, List<User> assignees, List<Label> labels,
+		Milestone milestone, LocalDateTime createdAt, String status) {
 		this.id = id;
 		this.title = title;
-		this.author = author;
+		this.authorLoginId = authorLoginId;
+		this.assignees = assignees;
 		this.labels = labels;
 		this.milestone = milestone;
 		this.createdAt = createdAt;

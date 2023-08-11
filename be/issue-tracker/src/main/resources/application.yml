@@ -1,8 +1,8 @@
 spring:
   profiles:
     group:
-      prod: prodDB, common
-      test: testDB, common
+      prod: prodDB, common, cloud
+      test: testDB, common, cloud
     active: prod
 ---
 spring:
@@ -12,6 +12,14 @@ spring:
   mvc:
     path match:
       matching-strategy: ant_path_matcher
+
+---
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
   sql:
     init:
