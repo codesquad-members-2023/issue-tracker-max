@@ -45,12 +45,12 @@ class LabelServiceTest extends IntegrationTestSupport {
 		// when
 		assertAll(
 			() -> assertThat(labelList.get(0).getId()).isEqualTo(labelId1),
-			() -> assertThat(labelList.get(0).getName()).isEqualTo("title1"),
+			() -> assertThat(labelList.get(0).getTitle()).isEqualTo("title1"),
 			() -> assertThat(labelList.get(0).getDescription()).isEqualTo("description1"),
 			() -> assertThat(labelList.get(0).getTextColor()).isEqualTo("0#1111"),
 			() -> assertThat(labelList.get(0).getBackgroundColor()).isEqualTo("0#2222"),
 			() -> assertThat(labelList.get(1).getId()).isEqualTo(labelId2),
-			() -> assertThat(labelList.get(1).getName()).isEqualTo("title2"),
+			() -> assertThat(labelList.get(1).getTitle()).isEqualTo("title2"),
 			() -> assertThat(labelList.get(1).getDescription()).isEqualTo("description2"),
 			() -> assertThat(labelList.get(1).getTextColor()).isEqualTo("0#3333"),
 			() -> assertThat(labelList.get(1).getBackgroundColor()).isEqualTo("0#4444")
