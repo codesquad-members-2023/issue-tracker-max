@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class LabelPostRequest {
-	private String name;
+	private String title;
 	private String description;
 	private String textColor;
 	private String backgroundColor;
 
 	@Builder
-	public LabelPostRequest(String name, String description, String textColor, String backgroundColor) {
-		this.name = name;
+	public LabelPostRequest(String title, String description, String textColor, String backgroundColor) {
+		this.title = title;
 		this.description = description;
 		this.textColor = textColor;
 		this.backgroundColor = backgroundColor;

@@ -68,6 +68,12 @@ public class LabelRepository {
 		return count != null && count.equals(ids.size());
 	}
 
+	public Boolean existByTitle(String title) {
+		String sql = "SELECT EXISTS(SELECT 1 FROM label WHERE title =:title)";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("title", title), Boolean.class);
+	}
+
 	public Boolean existById(Long id) {
 		String sql = "SELECT EXISTS(SELECT 1 FROM label WHERE id =:id)";
 		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()

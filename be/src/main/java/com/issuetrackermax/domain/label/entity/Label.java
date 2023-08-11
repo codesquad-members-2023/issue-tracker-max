@@ -34,7 +34,7 @@ public class Label {
 
 	public static Label from(LabelPostRequest labelPostRequest) {
 		return Label.builder()
-			.title(labelPostRequest.getName())
+			.title(labelPostRequest.getTitle())
 			.description(labelPostRequest.getDescription())
 			.textColor(labelPostRequest.getTextColor())
 			.backgroundColor(labelPostRequest.getBackgroundColor())
