@@ -6,15 +6,15 @@ import { border, font, radius } from '../../styles/styles';
 type Props = {
   openMilestoneCount: number;
   closedMilestoneCount: number;
-  filterState: 'open' | 'close';
-  onClick: (filter: 'open' | 'close') => void;
+  filterState: 'open' | 'closed';
+  onMilestoneFilterClick: (filter: 'open' | 'closed') => void;
 };
 
 export default function MilestoneFilter({
   openMilestoneCount,
   closedMilestoneCount,
   filterState,
-  onClick,
+  onMilestoneFilterClick: onClick,
 }: Props) {
   const theme = useTheme();
 
@@ -28,8 +28,10 @@ export default function MilestoneFilter({
         열린 마일스톤({openMilestoneCount})
       </div>
       <div
-        className={`close-milestone ${filterState === 'close' ? 'active' : ''}`}
-        onClick={() => onClick('close')}
+        className={`close-milestone ${
+          filterState === 'closed' ? 'active' : ''
+        }`}
+        onClick={() => onClick('closed')}
       >
         <ArchiveIcon />
         닫힌 마일스톤({closedMilestoneCount})

@@ -6,11 +6,11 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
 }
 
-export default function Button({ type, value, children }: Props) {
+export default function Button({ type, value, onClick, children }: Props) {
   const theme = useTheme();
 
   return (
-    <button type={type} css={button(theme)}>
+    <button type={type} css={button(theme)} onClick={onClick}>
       {children}
       {value}
     </button>

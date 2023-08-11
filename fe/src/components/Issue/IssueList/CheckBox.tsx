@@ -13,7 +13,7 @@ export default function CheckBoxIcon({ id = '', checked, onChange }: Props) {
         type="checkbox"
         onChange={onChange}
         checked={checked}
-      ></input>
+      />
       <label htmlFor={id} className="label" />
     </div>
   );

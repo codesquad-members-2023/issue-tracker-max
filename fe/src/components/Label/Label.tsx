@@ -1,12 +1,12 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import { border, radius, font } from '../../styles/styles';
 
-export default function Label(label: LabelType) {
+export default function Label(label: Label) {
   const theme = useTheme();
 
   return (
     <div css={labelStyle(theme, label.textColor, label.backgroundColor)}>
-      {label.name}
+      {label.title}
     </div>
   );
 }

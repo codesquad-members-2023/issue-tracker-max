@@ -4,12 +4,13 @@ import { ReactComponent as AlertCircleIcon } from '/src/assets/icon/alertCircle.
 import { ReactComponent as ArchiveIcon } from '/src/assets/icon/Archive.svg';
 import { border, font, radius } from '../../../styles/styles';
 import DropdownIndicator from './DropdownIndicator';
+import { filterType } from '../../../constant/constant';
 
 type Props = {
-  activeIssue: 'open' | 'close';
+  activeIssue: 'open' | 'closed';
   onCheckBoxClick: (checked: boolean) => void;
   isAllItemChecked: boolean;
-  onIssueFilterClick: (filter: 'open' | 'close') => void;
+  onIssueFilterClick: (filter: 'open' | 'closed') => void;
   openIssueCount: number;
   closedIssueCount: number;
   checkedItemLength: number;
@@ -27,12 +28,6 @@ export default function IssueFilter({
   const theme = useTheme();
 
   const isCheckedListEmpty = checkedItemLength === 0;
-  const filterType = [
-    { id: 1, name: '담당자' },
-    { id: 2, name: '레이블' },
-    { id: 3, name: '마일스톤' },
-    { id: 4, name: '작성자' },
-  ];
 
   return (
     <div css={issueFilter(theme)}>
@@ -57,9 +52,9 @@ export default function IssueFilter({
               </div>
               <div
                 className={`close-issue ${
-                  activeIssue === 'close' ? 'active' : ''
+                  activeIssue === 'closed' ? 'active' : ''
                 }`}
-                onClick={() => onIssueFilterClick('close')}
+                onClick={() => onIssueFilterClick('closed')}
               >
                 <ArchiveIcon />
                 {`닫힌 이슈(${closedIssueCount})`}

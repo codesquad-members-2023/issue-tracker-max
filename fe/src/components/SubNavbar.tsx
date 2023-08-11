@@ -9,13 +9,15 @@ type Props = {
   labelCount: number;
   milestoneCount: number;
   buttonValue: string;
+  onClick: () => void;
 };
 
 export default function SubNavBar({
   isIssue,
   labelCount,
   milestoneCount,
-  buttonValue: buttonValue,
+  buttonValue,
+  onClick,
 }: Props) {
   const theme = useTheme();
 
@@ -24,7 +26,7 @@ export default function SubNavBar({
       {isIssue && <FilterBar />}
       <div className="nav-container">
         <Taps labelCount={labelCount} milestoneCount={milestoneCount} />
-        <Button type="button" value={buttonValue}>
+        <Button type="button" value={buttonValue} onClick={onClick}>
           <PlusIcon className="plus" />
         </Button>
       </div>
