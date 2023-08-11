@@ -19,6 +19,7 @@ import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueUserResponse;
+import codesquard.app.issue.dto.response.userReactionResponse;
 import codesquard.app.issue.entity.Issue;
 import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.label.entity.Label;
@@ -54,13 +55,6 @@ public class JdbcIssueRepository implements IssueRepository {
 	private static final RowMapper<IssueMilestoneCountResponse> issueMilestoneCountResponseRowMapper = ((rs, rowNum) -> new IssueMilestoneCountResponse(
 		rs.getInt("openedIssueCount"),
 		rs.getInt("closedIssueCount")));
-	private static final RowMapper<IssueCommentsResponse> issueCommentsResponseRowMapper = ((rs, rowNum) -> new IssueCommentsResponse(
-		rs.getLong("id"),
-		rs.getString("login_id"),
-		rs.getString("avatar_url"),
-		rs.getString("content"),
-		rs.getTimestamp("created_at").toLocalDateTime(),
-		rs.getTimestamp("modified_at") != null ? rs.getTimestamp("modified_at").toLocalDateTime() : null));
 
 	public JdbcIssueRepository(NamedParameterJdbcTemplate template, DataSource dataSource) {
 		this.template = template;
@@ -207,10 +201,44 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public List<IssueCommentsResponse> findCommentsBy(Long issueId) {
+	public List<IssueCommentsResponse> findCommentsBy(Long issueId, Long userId) {
 		String sql = "SELECT c.id, c.content, c.created_at, c.modified_at, u.login_id, u.avatar_url FROM comment as c "
 			+ "JOIN user as u ON u.id = c.user_id "
 			+ "WHERE c.issue_id = :issueId";
-		return template.query(sql, Map.of("issueId", issueId), issueCommentsResponseRowMapper);
+		return template.query(sql, Map.of("issueId", issueId), issueCommentsResponseRowMapper(userId));
+	}
+
+	private RowMapper<IssueCommentsResponse> issueCommentsResponseRowMapper(Long userId) {
+		return ((rs, rowNum) -> new IssueCommentsResponse(
+			rs.getLong("id"),
+			rs.getString("login_id"),
+			rs.getString("avatar_url"),
+			rs.getString("content"),
+			rs.getTimestamp("created_at").toLocalDateTime(),
+			rs.getTimestamp("modified_at") != null ? rs.getTimestamp("modified_at").toLocalDateTime() : null,
+			findCommentReactionBy(rs.getLong("id"), userId)));
+	}
+
+	private List<userReactionResponse> findCommentReactionBy(Long commentId, Long userId) {
+		String sql = "SELECT r.unicode, IF (EXISTS (SELECT 1 FROM user_reaction as ur WHERE ur.user_id = :userId AND "
+			+ "u.id = ur.user_id AND ur.reaction_id = r.id AND ur.comment_id = :commentId), ur.id, null) as selected FROM reaction as r "
+			+ "LEFT JOIN user_reaction as ur ON ur.reaction_id = r.id AND ur.comment_id = :commentId "
+			+ "LEFT JOIN user as u ON u.id = ur.user_id";
+		return template.query(sql, Map.of("commentId", commentId, "userId", userId),
+			userReactionResponseRowMapper(commentId));
+	}
+
+	private RowMapper<userReactionResponse> userReactionResponseRowMapper(Long commentId) {
+		String sql = "SELECT u.login_id FROM user as u "
+			+ "JOIN user_reaction as ur ON ur.comment_id = :commentId AND ur.user_id = u.id "
+			+ "JOIN reaction as r ON r.unicode = :unicode AND r.id = ur.reaction_id";
+		return ((rs, rowNum) -> new userReactionResponse(
+			rs.getString("unicode"),
+			template.query(sql, Map.of("commentId", commentId, "unicode", rs.getString("unicode")), usersRowMapper()),
+			rs.getLong("selected")));
+	}
+
+	private RowMapper<String> usersRowMapper() {
+		return ((rs, rowNum) -> rs.getString("login_id"));
 	}
 }

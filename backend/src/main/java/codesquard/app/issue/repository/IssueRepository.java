@@ -46,5 +46,5 @@ public interface IssueRepository {
 
 	IssueMilestoneCountResponse countIssueBy(Long id);
 
-	List<IssueCommentsResponse> findCommentsBy(Long issueId);
+	List<IssueCommentsResponse> findCommentsBy(Long issueId, Long userId);
 }
