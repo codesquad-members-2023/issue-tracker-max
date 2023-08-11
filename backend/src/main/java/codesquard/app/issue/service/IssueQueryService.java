@@ -12,7 +12,9 @@ import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueUserResponse;
+import codesquard.app.issue.dto.response.userReactionResponse;
 import codesquard.app.issue.repository.IssueRepository;
+import codesquard.app.user_reaction.repository.UserReactionRepository;
 import lombok.RequiredArgsConstructor;
 
 @Transactional(readOnly = true)
@@ -21,16 +23,18 @@ import lombok.RequiredArgsConstructor;
 public class IssueQueryService {
 
 	private final IssueRepository issueRepository;
+	private final UserReactionRepository userReactionRepository;
 
-	public IssueReadResponse get(Long issueId) {
+	public IssueReadResponse get(Long issueId, Long userId) {
 		validateExistIssue(issueId);
 		IssueReadResponse issueReadResponse = issueRepository.findBy(issueId);
+		List<userReactionResponse> users = userReactionRepository.findIssueReactionBy(issueId, userId);
 		List<IssueUserResponse> assignees = IssueUserResponse.from(issueRepository.findAssigneesBy(issueId));
 		List<IssueLabelResponse> labels = IssueLabelResponse.from(issueRepository.findLabelsBy(issueId));
 		IssueMilestoneCountResponse issueMilestoneCountResponse = countIssueForMilestone(
 			issueReadResponse.getMilestone());
-		List<IssueCommentsResponse> issueCommentsResponse = issueRepository.findCommentsBy(issueId);
-		return issueReadResponse.from(assignees, labels, issueMilestoneCountResponse, issueCommentsResponse);
+		List<IssueCommentsResponse> issueCommentsResponse = issueRepository.findCommentsBy(issueId, userId);
+		return issueReadResponse.from(users, assignees, labels, issueMilestoneCountResponse, issueCommentsResponse);
 	}
 
 	private IssueMilestoneCountResponse countIssueForMilestone(IssueMilestoneResponse milestone) {
