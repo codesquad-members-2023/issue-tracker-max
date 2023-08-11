@@ -1,5 +1,7 @@
 package org.presents.issuetracker.milestone.repository;
 
+import java.util.List;
+
 import org.presents.issuetracker.milestone.entity.vo.MilestoneInfo;
 import org.presents.issuetracker.milestone.entity.vo.MilestonePreview;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 public class MilestoneRepository {
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
-	// 마일스톤 목록 조회용
 	private final RowMapper<MilestoneInfo> milestoneInfoRowMapper =
 		(rs, rowNum) -> MilestoneInfo.builder()
 			.id(rs.getLong("milestone_id"))
@@ -27,7 +28,6 @@ public class MilestoneRepository {
 			.progress(rs.getInt("progress"))
 			.build();
 
-	// 마일스톤 선택용 목록 조회용
 	private final RowMapper<MilestonePreview> milestonePreviewRowMapper =
 		(rs, rowNum) -> MilestonePreview.builder()
 			.id(rs.getLong("milestone_id"))
@@ -49,5 +49,16 @@ public class MilestoneRepository {
 			.stream()
 			.findFirst()
 			.orElse(null);
+	}
+
+	public List<MilestonePreview> findPreviews() {
+		final String sql = "SELECT milestone_id, name, "
+			+ "(SELECT IFNULL(FLOOR(COUNT(CASE WHEN status = 'closed' THEN 1 END) / COUNT(*) * 100), 0) "
+			+ "FROM issue i "
+			+ "WHERE i.milestone_id = m.milestone_id AND status IN ('open', 'closed')) progress "
+			+ "FROM milestone m "
+			+ "WHERE status != 'deleted'";
+
+		return jdbcTemplate.query(sql, milestonePreviewRowMapper);
 	}
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.presents.issuetracker.comment.repository.CommentRepository;
+import org.presents.issuetracker.global.error.exception.CustomException;
+import org.presents.issuetracker.global.error.statuscode.IssueErrorCode;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
 import org.presents.issuetracker.issue.dto.request.IssueUpdateRequest;
@@ -170,16 +172,14 @@ public class IssueService {
 
 	private void validateId(Long issueId) {
 		if (!issueRepository.existsById(issueId)) {
-			// todo: 커스텀 예외 생성 후 변경
-			throw new RuntimeException("이슈를 찾을 수 없습니다.");
+			throw new CustomException(IssueErrorCode.NOT_FOUND);
 		}
 	}
 
 	private void validateIds(List<Long> issueIds) {
 		int count = issueRepository.countByIssueIds(issueIds);
 		if (count != issueIds.size()) {
-			// todo: 커스텀 예외 생성 후 변경
-			throw new RuntimeException("이슈를 찾을 수 없습니다.");
+			throw new CustomException(IssueErrorCode.NOT_FOUND);
 		}
 	}
 }

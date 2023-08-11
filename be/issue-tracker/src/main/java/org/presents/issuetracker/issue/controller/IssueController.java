@@ -1,6 +1,9 @@
 package org.presents.issuetracker.issue.controller;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
 
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
@@ -35,7 +38,7 @@ public class IssueController {
 	private final IssueService issueService;
 
 	@PostMapping("/new")
-	public ResponseEntity<IdResponseDto> create(@RequestBody IssueCreateRequest issueCreateRequest) {
+	public ResponseEntity<IdResponseDto> create(@Valid @RequestBody IssueCreateRequest issueCreateRequest) {
 		IdResponseDto issueCreateResponse = IdResponseDto.builder()
 			.id(issueService.create(issueCreateRequest))
 			.build();
@@ -80,20 +83,20 @@ public class IssueController {
 
 	@PutMapping("/{issueId}/labels")
 	public ResponseEntity<List<LabelPreviewResponse>> updateLabels(@PathVariable Long issueId,
-		@RequestBody List<Long> labelIds) {
-		return ResponseEntity.ok().body(issueService.updateLabels(labelIds, issueId));
+		@RequestBody Map<String, List<Long>> request) {
+		return ResponseEntity.ok().body(issueService.updateLabels(request.get("labelIds"), issueId));
 	}
 
 	@PutMapping("/{issueId}/assignees")
 	public ResponseEntity<List<UserResponse>> updateAssignees(@PathVariable Long issueId,
-		@RequestBody List<Long> assigneeIds) {
-		return ResponseEntity.ok().body(issueService.updateAssignees(assigneeIds, issueId));
+		@RequestBody Map<String, List<Long>> request) {
+		return ResponseEntity.ok().body(issueService.updateAssignees(request.get("assigneeIds"), issueId));
 	}
 
 	@PutMapping("/{issueId}/milestone")
 	public ResponseEntity<MilestonePreviewResponse> updateMilestone(@PathVariable Long issueId,
-		@RequestBody Long milestoneId) {
-		return ResponseEntity.ok().body(issueService.updateMilestone(milestoneId, issueId));
+		@RequestBody Map<String, Long> request) {
+		return ResponseEntity.ok().body(issueService.updateMilestone(request.get("milestoneId"), issueId));
 	}
 
 	@PutMapping("/status")
