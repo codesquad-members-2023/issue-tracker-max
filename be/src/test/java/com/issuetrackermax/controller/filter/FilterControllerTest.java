@@ -51,7 +51,7 @@ class FilterControllerTest extends ControllerTestSupport {
 		when(filterService.getMainPageIssue(any())).thenReturn(
 			FilterResponse.builder()
 				.labelCount(1L)
-				.mileStoneCount(1L)
+				.milestoneCount(1L)
 				.closedIssueCount(1L)
 				.openIssueCount(1L)
 				.issues(
@@ -69,7 +69,7 @@ class FilterControllerTest extends ControllerTestSupport {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value("true"))
 			.andExpect(jsonPath("$.data.labelCount").value(1L))
-			.andExpect(jsonPath("$.data.mileStoneCount").value(1L))
+			.andExpect(jsonPath("$.data.milestoneCount").value(1L))
 			.andExpect(jsonPath("$.data.openIssueCount").value(1L))
 			.andExpect(jsonPath("$.data.closedIssueCount").value(1L))
 			.andExpect(jsonPath("$.data.issues[0].id").value(1L))
@@ -100,7 +100,7 @@ class FilterControllerTest extends ControllerTestSupport {
 		when(filterService.getMainPageIssue(any())).thenReturn(
 			FilterResponse.builder()
 				.labelCount(1L)
-				.mileStoneCount(1L)
+				.milestoneCount(1L)
 				.openIssueCount(1L)
 				.closedIssueCount(1L)
 				.issues(null)
@@ -114,7 +114,7 @@ class FilterControllerTest extends ControllerTestSupport {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value("true"))
 			.andExpect(jsonPath("$.data.labelCount").value(1L))
-			.andExpect(jsonPath("$.data.mileStoneCount").value(1L))
+			.andExpect(jsonPath("$.data.milestoneCount").value(1L))
 			.andExpect(jsonPath("$.data.openIssueCount").value(1L))
 			.andExpect(jsonPath("$.data.closedIssueCount").value(1L))
 			.andExpect(jsonPath("$.data.issues").isEmpty());

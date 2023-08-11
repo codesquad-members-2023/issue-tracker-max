@@ -91,7 +91,7 @@ class FilterServiceTest extends IntegrationTestSupport {
 		// then
 		assertAll(
 			() -> assertThat(mainPageIssue.getLabelCount()).isEqualTo(2L),
-			() -> assertThat(mainPageIssue.getMileStoneCount()).isEqualTo(1L),
+			() -> assertThat(mainPageIssue.getMilestoneCount()).isEqualTo(1L),
 			() -> assertThat(mainPageIssue.getOpenIssueCount()).isEqualTo(1L),
 			() -> assertThat(mainPageIssue.getClosedIssueCount()).isEqualTo(0L),
 			() -> assertThat(issues.get(0).getId()).isEqualTo(issueId),
