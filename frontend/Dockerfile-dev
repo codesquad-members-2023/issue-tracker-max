@@ -7,4 +7,4 @@ COPY . ./
 
 RUN npm install
 
-CMD ["npm", "run", "build"]
+CMD ["MSW_BYPASS=true","npm", "run", "dev"]
