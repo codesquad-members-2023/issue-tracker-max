@@ -70,7 +70,12 @@
                     author.login_id = #{authorName}
                 </trim>
             </if>
-            <if test="labelName != null">
+            <if test="labelName == 'none'.toString()">
+                <trim prefix="AND">
+                    il.issue_id IS NULL
+                </trim>
+            </if>
+            <if test="labelName != null and labelName != 'none'.toString()">
                 <trim prefix="AND">
                     i.issue_id IN (
                     SELECT issue_id
@@ -80,12 +85,22 @@
                     )
                 </trim>
             </if>
-            <if test="milestoneName != null">
+            <if test="milestoneName == 'none'.toString()">
+                <trim prefix="AND">
+                    i.milestone_id IS NULL
+                </trim>
+            </if>
+            <if test="milestoneName != null and milestoneName != 'none'.toString()">
                 <trim prefix="AND">
                     mis.name = #{milestoneName}
                 </trim>
             </if>
-            <if test="assigneeName != null">
+            <if test="assigneeName == 'none'.toString()">
+                <trim prefix="AND">
+                    a.issue_id IS NULL
+                </trim>
+            </if>
+            <if test="assigneeName != null and assigneeName != 'none'.toString()">
                 <trim prefix="AND">
                     i.issue_id IN (
                     SELECT issue_id
@@ -136,19 +151,36 @@
                     author.login_id = #{authorName}
                 </trim>
             </if>
-            <if test="labelName != null">
+            <if test="labelName == 'none'.toString()">
                 <trim prefix="AND">
-                    l.name = #{labelName}
+                    il.issue_id IS NULL
                 </trim>
             </if>
-            <if test="milestoneName != null">
+            <if test="labelName != null and labelName != 'none'.toString()">
+                <trim prefix="AND">
+                    l.name = #{labelName}
+                    )
+                </trim>
+            </if>
+            <if test="milestoneName == 'none'.toString()">
+                <trim prefix="AND">
+                    i.milestone_id IS NULL
+                </trim>
+            </if>
+            <if test="milestoneName != null and milestoneName != 'none'.toString()">
                 <trim prefix="AND">
                     mis.name = #{milestoneName}
                 </trim>
             </if>
-            <if test="assigneeName != null">
+            <if test="assigneeName == 'none'.toString()">
+                <trim prefix="AND">
+                    a.issue_id IS NULL
+                </trim>
+            </if>
+            <if test="assigneeName != null and assigneeName != 'none'.toString()">
                 <trim prefix="AND">
                     assignee_user.login_id = #{assigneeName}
+                    )
                 </trim>
             </if>
             <if test="commentAuthorName != null">
