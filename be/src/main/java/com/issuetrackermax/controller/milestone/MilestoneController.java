@@ -15,10 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.issuetrackermax.controller.ApiResponse;
 import com.issuetrackermax.controller.milestone.dto.request.MilestoneModifyRequest;
 import com.issuetrackermax.controller.milestone.dto.request.MilestonePostRequest;
-import com.issuetrackermax.controller.milestone.dto.response.MilestoneCloseResponse;
 import com.issuetrackermax.controller.milestone.dto.response.MilestoneDetailResponse;
-import com.issuetrackermax.controller.milestone.dto.response.MilestoneOpenResponse;
 import com.issuetrackermax.controller.milestone.dto.response.MilestonePostResponse;
+import com.issuetrackermax.controller.milestone.dto.response.MilestonesResponse;
 import com.issuetrackermax.service.label.LabelService;
 import com.issuetrackermax.service.milestone.MilestoneService;
 
@@ -33,30 +32,30 @@ public class MilestoneController {
 	private final LabelService labelService;
 
 	@GetMapping("/open")
-	public ApiResponse<MilestoneOpenResponse> getOpenMilstone() {
+	public ApiResponse<MilestonesResponse> getOpenMilstone() {
 
 		Long labelSize = (long)labelService.getLabelList().size();
 		List<MilestoneDetailResponse> milestones = milestoneService.getOpenMilestone();
 		Long closedMilestoneCount = (long)milestoneService.getClosedMilestone().size();
 
-		MilestoneOpenResponse response = MilestoneOpenResponse.builder()
+		MilestonesResponse response = MilestonesResponse.builder()
 			.labelCount(labelSize)
-			.closedMilestoneCount(closedMilestoneCount)
+			.oppositeCount(closedMilestoneCount)
 			.milestones(milestones)
 			.build();
 		return ApiResponse.success(response);
 	}
 
 	@GetMapping("/closed")
-	public ApiResponse<MilestoneCloseResponse> getClosedilstone() {
+	public ApiResponse<MilestonesResponse> getClosedilstone() {
 
 		Long labelSize = (long)labelService.getLabelList().size();
 		List<MilestoneDetailResponse> milestones = milestoneService.getClosedMilestone();
 		Long openMilestoneCount = (long)milestoneService.getOpenMilestone().size();
 
-		MilestoneCloseResponse response = MilestoneCloseResponse.builder()
+		MilestonesResponse response = MilestonesResponse.builder()
 			.labelCount(labelSize)
-			.openMilestoneCount(openMilestoneCount)
+			.oppositeCount(openMilestoneCount)
 			.milestones(milestones)
 			.build();
 		return ApiResponse.success(response);

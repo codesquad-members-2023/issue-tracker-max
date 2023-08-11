@@ -33,7 +33,7 @@ public class FilterService {
 		List<FilterResultVO> filterResultVOS = getFilterVO(filterInformation);
 		return FilterResponse.builder()
 			.labelCount(getLabelCount())
-			.mileStoneCount(getMilestoneCount())
+			.milestoneCount(getMilestoneCount())
 			.closedIssueCount(getClosedIssueCount())
 			.openIssueCount(getOpenIssueCount())
 			.issues(getIssues(filterResultVOS))
