@@ -1,90 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Theme, css, useTheme } from '@emotion/react';
 import { border, radius } from '../../../styles/styles';
 import IssueItem from './IssueItem';
 import TableContainer from '../../TableContainer';
 import SubNavBar from '../../SubNavbar';
 import IssueFilter from './IssueFilter';
-
-const mockData = {
-  success: 'true',
-  data: {
-    labelCount: 2,
-    milestoneCount: 2,
-    openIssueCount: 2,
-    closedIssueCount: 0,
-    issues: [
-      {
-        id: 1,
-        status: 'open',
-        title: '이슈1',
-        history: {
-          modifier: 'June',
-          dateTime: '2023-07-22 12:01',
-        },
-        labels: [
-          {
-            id: 1,
-            name: 'Backend',
-            description: '백엔드',
-            textColor: '#6E7191',
-            backgroundColor: '#FEFEFE',
-          },
-        ],
-        number: '#1',
-        writer: 'June',
-        assignees: [
-          {
-            id: 2,
-            name: 'Movie',
-          },
-        ],
-        milestone: '프로젝트1',
-      },
-      {
-        id: 2,
-        status: 'open',
-        title: '이슈2',
-        history: {
-          modifier: 'Movie',
-          dateTime: '2023-07-23 12:01',
-        },
-        labels: [
-          {
-            id: 2,
-            name: 'Frontend',
-            description: '프론트엔드',
-            textColor: '#FEFEFE',
-            backgroundColor: '#0025E6',
-          },
-        ],
-        number: '#2',
-        writer: 'Movie',
-        assignees: [
-          {
-            id: 1,
-            name: 'June',
-          },
-          {
-            id: 2,
-            name: 'Movie',
-          },
-        ],
-        milestone: '',
-      },
-    ],
-  },
-};
+import { useNavigate } from 'react-router-dom';
+import { customFetch } from '../../../util/customFetch';
 
 export default function IssueList() {
   const theme = useTheme();
-  const [activeIssue, setActiveIssue] = useState<'open' | 'close'>('open');
-  const [checkedItemIdList, setCheckedItemIdList] = useState<number[]>([]);
+  const navigate = useNavigate();
+  const [activeIssue, setActiveIssue] = useState<'open' | 'closed'>('open');
+  const [checkedItemIdList, setCheckedItemIdList] = useState<number[]>([]); // Question: 빈 배열을 넣어서 타입에러를 해결했는데 괜찮을까요?
+  const [issueList, setIssueList] = useState<IssueData>();
 
-  const allItemIdList = mockData.data.issues.map((item) => item.id);
+  useEffect(() => {
+    (async () => {
+      const subUrl = 'api/';
+
+      try {
+        const issueData = await customFetch<IssueResponse>({ subUrl });
+
+        if (issueData.success && issueData.data) {
+          setIssueList(issueData.data);
+        }
+      } catch (error) {
+        navigate('/sign-in');
+      }
+    })();
+  }, []);
+
+  const allItemIdList = issueList?.issues.map((item: Issue) => item.id) || [];
   const isAllItemChecked = allItemIdList.length === checkedItemIdList.length;
 
-  const onIssueFilterClick = (issueFilter: 'open' | 'close') => {
+  const onIssueFilterClick = (issueFilter: 'open' | 'closed') => {
     setActiveIssue(issueFilter);
   };
 
@@ -104,41 +54,50 @@ export default function IssueList() {
     }
   };
 
+  const onClickToCreate = () => {
+    navigate('/issue-create');
+  };
+
   return (
     <>
-      <SubNavBar
-        isIssue
-        labelCount={mockData.data.labelCount}
-        milestoneCount={mockData.data.milestoneCount}
-        buttonValue="이슈 작성"
-      />
-      <TableContainer>
-        <div css={issueTable(theme)}>
-          <div className="header">
-            <IssueFilter
-              activeIssue={activeIssue}
-              onCheckBoxClick={onAllCheck}
-              isAllItemChecked={isAllItemChecked}
-              onIssueFilterClick={onIssueFilterClick}
-              openIssueCount={mockData.data.openIssueCount}
-              closedIssueCount={mockData.data.closedIssueCount}
-              checkedItemLength={checkedItemIdList.length}
-            />
-          </div>
-          <ul className="item-container">
-            {mockData.data.issues.map((item) => {
-              return (
-                <IssueItem
-                  key={item.id}
-                  issue={item}
-                  onSingleCheck={onSingleCheck}
-                  checkedItemIdList={checkedItemIdList}
+      {!!issueList && (
+        <>
+          <SubNavBar
+            isIssue
+            buttonValue="이슈 작성"
+            labelCount={issueList.labelCount}
+            milestoneCount={issueList.milestoneCount}
+            onClick={onClickToCreate}
+          />
+          <TableContainer>
+            <div css={issueTable(theme)}>
+              <div className="header">
+                <IssueFilter
+                  activeIssue={activeIssue}
+                  onCheckBoxClick={onAllCheck}
+                  isAllItemChecked={isAllItemChecked}
+                  onIssueFilterClick={onIssueFilterClick}
+                  openIssueCount={issueList.openIssueCount}
+                  closedIssueCount={issueList.closedIssueCount}
+                  checkedItemLength={checkedItemIdList.length}
                 />
-              );
-            })}
-          </ul>
-        </div>
-      </TableContainer>
+              </div>
+              <ul className="item-container">
+                {issueList.issues.map((item) => {
+                  return (
+                    <IssueItem
+                      key={item.id}
+                      issue={item}
+                      onSingleCheck={onSingleCheck}
+                      checked={checkedItemIdList.includes(item.id)}
+                    />
+                  );
+                })}
+              </ul>
+            </div>
+          </TableContainer>
+        </>
+      )}
     </>
   );
 }

@@ -1,36 +1,39 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import { border, font, radius } from '../../../styles/styles';
-import { useState } from 'react';
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
+  valid: boolean;
 }
 
-export default function UserInput({ type, value, placeholder, label }: Props) {
+export default function UserInput({
+  type,
+  value,
+  onChange,
+  valid,
+  placeholder,
+  label,
+}: Props) {
   const theme = useTheme();
-  const [inputValue, setInputValue] = useState(value);
-
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
 
   return (
-    <div css={input(theme, inputValue)}>
+    <div css={input(theme, value, valid)}>
       <input
         type={type}
         className="input"
         placeholder={placeholder}
-        value={inputValue}
+        value={value}
         onChange={onChange}
       />
-      {inputValue && <label className="label">{label}</label>}
+      {value && <label className="label">{label}</label>}
     </div>
   );
 }
 
 const input = (
   theme: Theme,
-  inputValue: string | number | readonly string[] | undefined
+  inputValue: string | number | readonly string[] | undefined,
+  valid: boolean
 ) => css`
   position: relative;
 
@@ -38,6 +41,9 @@ const input = (
     width: 320px;
     height: 56px;
     border: none;
+    outline: ${valid
+      ? 'none'
+      : `${border.default} ${theme.danger.borderDefault}`};
     border-radius: ${radius.large};
     font: ${font.displayMedium16};
     background-color: ${theme.neutral.surfaceBold};
@@ -51,7 +57,9 @@ const input = (
 
     :hover,
     :focus {
-      outline: ${border.default} ${theme.neutral.borderDefaultActive};
+      outline: ${valid
+        ? `${border.default} ${theme.neutral.borderDefaultActive}`
+        : `${border.default} ${theme.danger.borderDefault}`};
     }
 
     :focus {

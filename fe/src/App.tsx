@@ -14,7 +14,7 @@ import ThemeToggle from './components/ThemeToggle';
 
 export default function App() {
   const location = useLocation();
-  const hiddenHeaderRoutes = ['/', '/sign-in', '/sign-up'];
+  const hiddenHeaderRoutes = ['/sign-in', '/sign-up'];
   const shouldShowHeader = !hiddenHeaderRoutes.includes(location.pathname);
 
   const [darkMode, setDarkMode] = useState(false);
@@ -29,12 +29,12 @@ export default function App() {
       <div css={body(theme)}>
         {shouldShowHeader && <Header />}
         <Routes>
-          <Route path="/" element={<SignIn />} />
+          <Route path="/" element={<IssueList />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/issue" element={<IssueList />} />
-          <Route path="/issue/create" element={<IssueCreate />} />
-          <Route path="/issue/detail" element={<IssueDetail />} />
+          <Route path="/issue-create" element={<IssueCreate />} />
+          <Route path="/issue-detail" element={<IssueDetail />} />
           <Route path="/label" element={<LabelList />} />
           <Route path="/milestone" element={<MilestoneList />} />
         </Routes>

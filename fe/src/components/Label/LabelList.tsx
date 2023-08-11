@@ -3,51 +3,56 @@ import SubNavBar from '../SubNavbar';
 import TableContainer from '../TableContainer';
 import { border, font, radius } from '../../styles/styles';
 import LabelItem from './LabelItem';
-
-const mockData = {
-  success: 'true',
-  data: {
-    milestoneCount: 2,
-    labels: [
-      {
-        id: 1,
-        name: 'Backend',
-        description: '백엔드',
-        textColor: '#6E7191',
-        backgroundColor: '#FEFEFE',
-      },
-      {
-        id: 2,
-        name: 'Frontend',
-        description: '프론트엔드',
-        textColor: '#FEFEFE',
-        backgroundColor: '#0025E6',
-      },
-    ],
-  },
-};
+import { useEffect, useState } from 'react';
+import { customFetch } from '../../util/customFetch';
+import { useNavigate } from 'react-router-dom';
 
 export default function LabelList() {
   const theme = useTheme();
+  const [labelList, setLabelList] = useState<LabelData>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    (async () => {
+      const subUrl = 'api/labels';
+
+      try {
+        const labelData = await customFetch<LabelResponse>({ subUrl });
+
+        if (labelData.success && labelData.data) {
+          setLabelList(labelData.data);
+        }
+      } catch (error) {
+        navigate('/sign-in');
+      }
+    })();
+  }, []);
+
+  const onClickToCreate = () => {};
 
   return (
     <>
-      <SubNavBar
-        isIssue={false}
-        labelCount={mockData.data.labels.length}
-        milestoneCount={mockData.data.milestoneCount}
-        buttonValue="레이블 추가"
-      />
-      <TableContainer>
-        <div css={labelTable(theme)}>
-          <div className="header">{mockData.data.labels.length}개의 레이블</div>
-          <ul className="item-container">
-            {mockData.data.labels.map((label) => (
-              <LabelItem key={label.id} {...label} />
-            ))}
-          </ul>
-        </div>
-      </TableContainer>
+      {labelList && (
+        <>
+          <SubNavBar
+            isIssue={false}
+            labelCount={labelList.labels.length}
+            milestoneCount={labelList.milestoneCount}
+            buttonValue="레이블 추가"
+            onClick={onClickToCreate}
+          />
+          <TableContainer>
+            <div css={labelTable(theme)}>
+              <div className="header">{labelList.labels.length}개의 레이블</div>
+              <ul className="item-container">
+                {labelList.labels.map((label) => (
+                  <LabelItem key={label.id} {...label} />
+                ))}
+              </ul>
+            </div>
+          </TableContainer>
+        </>
+      )}
     </>
   );
 }

@@ -9,15 +9,31 @@ import { ReactComponent as UserImageSmallIcon } from '/src/assets/icon/userImage
 type Props = {
   issue: Issue;
   onSingleCheck: (checked: boolean, id: number) => void;
-  checkedItemIdList: number[];
+  checked: boolean;
 };
 
-export default function IssueItem({
-  issue,
-  onSingleCheck,
-  checkedItemIdList,
-}: Props) {
+export default function IssueItem({ issue, onSingleCheck, checked }: Props) {
   const theme = useTheme();
+
+  const getTimeLine = (timestamp: string) => {
+    const now = new Date();
+    const pastDate = new Date(timestamp);
+    const timeDifference = now.getTime() - pastDate.getTime();
+
+    const minute = 60 * 1000;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+
+    if (timeDifference < minute) {
+      return `${Math.floor(timeDifference / 1000)}초 전`;
+    } else if (timeDifference < hour) {
+      return `${Math.floor(timeDifference / minute)}분 전`;
+    } else if (timeDifference < day) {
+      return `${Math.floor(timeDifference / hour)}시간 전`;
+    } else {
+      return `${Math.floor(timeDifference / day)}일 전`;
+    }
+  };
 
   return (
     <li css={issueItem(theme)}>
@@ -27,7 +43,7 @@ export default function IssueItem({
             <CheckBoxIcon
               id={issue.id.toString()}
               onChange={(e) => onSingleCheck(e.currentTarget.checked, issue.id)}
-              checked={checkedItemIdList.includes(issue.id)}
+              checked={checked}
             />
             <div className="title">
               <AlertCircleIcon className="open" />
@@ -38,15 +54,16 @@ export default function IssueItem({
             </div>
           </div>
           <div className="info">
-            <div>{issue.number}</div>
+            <div>#{issue.id}</div>
             <div>
-              {`${issue.history.dateTime}, ${issue.history.modifier}에 의해 수정되었습니다`}
+              이 이슈가 {getTimeLine(issue.history.modifiedAt)},{' '}
+              {issue.history.editor}님에 의해 수정되었습니다
             </div>
             <div className="milestone-info">
               {!!issue.milestone && (
                 <>
                   <MilestoneIcon className="milestone-icon" />
-                  {issue.milestone}
+                  {issue.milestone.title}
                 </>
               )}
             </div>
