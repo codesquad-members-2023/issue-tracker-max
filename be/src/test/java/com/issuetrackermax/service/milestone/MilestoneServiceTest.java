@@ -85,7 +85,7 @@ class MilestoneServiceTest extends IntegrationTestSupport {
 
 		// then
 		assertAll(
-			() -> assertThat(openMilestone.get(0).getName()).isEqualTo("milestone_title"),
+			() -> assertThat(openMilestone.get(0).getTitle()).isEqualTo("milestone_title"),
 			() -> assertThat(openMilestone.get(0).getDescription()).isEqualTo("description"),
 			() -> assertThat(openMilestone.get(0).getOpenIssueCount()).isEqualTo(2L),
 			() -> assertThat(openMilestone.get(0).getClosedIssueCount()).isEqualTo(1L)
