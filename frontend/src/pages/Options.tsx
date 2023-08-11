@@ -23,8 +23,8 @@ const TabButton = React.memo(TabButtonComponent);
 export default function Options() {
   const { util } = useContext(AppContext);
   const [activeOption, setActiveOption] = useState<Option>(labels);
-  const [labelData, setLabelDatas] = useState([]);
-  // const [milestones, setMilestones] = useState([]);
+  const [labelData, setLabelData] = useState([]);
+  // const [milestoneData, setMilestoneData] = useState([]);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
@@ -38,9 +38,9 @@ export default function Options() {
         const res = await fetchData();
 
         if (activeOption === labels) {
-          setLabelDatas(res.data.message.labels);
+          setLabelData(res.data.message.labels);
         } else {
-          // setMilestones(res.data);
+          // setMilestoneData(res.data.message.milestones);
         }
       })();
     };
