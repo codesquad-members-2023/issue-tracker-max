@@ -155,7 +155,7 @@ export default function DropdownPanel({
             itemName={assignee.nickname}
             onClick={() => {
               closeDropdown();
-              navigate(`/issues/assigneeId=${assignee.id}`);
+              navigate(`/issues/assigneeIds=${assignee.id}`);
             }}
           />
         ))}
