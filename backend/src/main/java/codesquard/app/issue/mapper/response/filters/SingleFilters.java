@@ -1,68 +1,45 @@
 package codesquard.app.issue.mapper.response.filters;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import codesquard.app.issue.mapper.response.filters.response.SingleFilter;
+import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@RequiredArgsConstructor
 public class SingleFilters {
-	public enum IS {
-		OPENED("is:opened", "열린 이슈"),
-		CLOSED("is:closed", "닫힌 이슈");
 
-		private final String type;
-		private final String name;
+	private final List<SingleFilter> singleFilters = new ArrayList<>();
 
-		IS(String type, String name) {
-			this.type = type;
-			this.name = name;
-		}
+	public static final Long OPENED_ID = 1L;
+	public static final Long AUTHOR_ID = 2L;
+	public static final Long ASSIGNEE_ID = 3L;
+	public static final Long MENTIONS_ID = 4L;
+	public static final Long CLOSED_ID = 5L;
 
-		public String getType() {
-			return type;
-		}
+	public SingleFilters() {
+		// TODO: SingleFilter의 Enum에 RESPONSE라는 필드 추가(총 3개)하여 conditions를 ENUM으로 관리하게끔 하기
 
-		public String getName() {
-			return name;
-		}
+		this.singleFilters.add(new SingleFilter(OPENED_ID, SingleFilter.IS.OPENED.getName(), "is:opened",
+			false));
+		this.singleFilters.add(
+			new SingleFilter(AUTHOR_ID, SingleFilter.ME.AUTHOR.getName(), "author:@me",
+				false));
+		this.singleFilters.add(
+			new SingleFilter(ASSIGNEE_ID, SingleFilter.ME.ASSIGNEE.getName(), "assignee:@me",
+				false));
+		this.singleFilters.add(
+			new SingleFilter(MENTIONS_ID, SingleFilter.ME.MENTIONS.getName(), "mentions:@me",
+				false));
+		this.singleFilters.add(
+			new SingleFilter(CLOSED_ID, SingleFilter.IS.CLOSED.getName(), "is:closed",
+				false));
 	}
 
-	public enum ME {
-		AUTHOR("author:@me", "내가 작성한 이슈"),
-		ASSIGNEE("assignee:@me", "나에게 할당된 이슈"),
-		MENTIONS("mentions:@me", "내가 댓글을 남긴 이슈");
-
-		private final String type;
-		private final String name;
-
-		ME(String type, String name) {
-			this.type = type;
-			this.name = name;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public String getName() {
-			return name;
-		}
+	public void changeBy(boolean selected, Long index) {
+		singleFilters.get(Math.toIntExact(index)).changeSelected(selected);
 	}
 
-	@JsonProperty("id")
-	private Long id;
-	// "내가 댓글을 남긴 이슈"
-	@JsonProperty("name")
-	private String name;
-	// ["is:closed", memtions:@me"]
-	@JsonProperty("conditions")
-	private String conditions;
-	// false
-	// conditions에 지정된 형식이 아니라면 false
-	// 지정된 형식이 하나라도 존재한다면 true
-	@JsonProperty("selected")
-	private boolean selected;
-
+	public List<SingleFilter> getSingleFilters() {
+		return singleFilters;
+	}
 }

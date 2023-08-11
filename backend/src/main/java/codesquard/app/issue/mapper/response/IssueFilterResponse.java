@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquard.app.issue.mapper.response.filters.MultiFilters;
-import codesquard.app.issue.mapper.response.filters.response.SingleFiltersList;
+import codesquard.app.issue.mapper.response.filters.SingleFilters;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +32,7 @@ public class IssueFilterResponse {
 	private List<IssuesResponse> issues;
 
 	@JsonProperty("singleFilters")
-	private SingleFiltersList singleFilters;
+	private SingleFilters singleFilters;
 
 	@JsonProperty("multiFilters")
 	private MultiFilters multiFilters;
