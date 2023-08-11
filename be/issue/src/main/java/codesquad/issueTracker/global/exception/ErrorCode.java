@@ -37,11 +37,21 @@ public enum ErrorCode implements StatusCode {
 	NOT_EXIST_COMMENT(HttpStatus.BAD_REQUEST, "존재하지 않는 댓글입니다."),
 	ALREADY_DELETED_COMMENT(HttpStatus.BAD_REQUEST, "이미 삭제된 댓글입니다."),
 
-	// 마일스톤
+	// -- [Milestone] -- //
 	INVALIDATE_DATE(HttpStatus.BAD_REQUEST, "현재 날짜보다 이전 날짜 입니다."),
 	NOT_FOUND_DATE(HttpStatus.BAD_REQUEST, "유효하지 않은 날짜 입니다."),
 	NOT_FOUND_MILESTONE(HttpStatus.BAD_REQUEST, "마일스톤을 찾을 수 없습니다."),
-	ILLEGAL_STATUS_MILESTONE(HttpStatus.BAD_REQUEST, "올바르지 않은 상태 입력 입니다.");
+	ILLEGAL_STATUS_MILESTONE(HttpStatus.BAD_REQUEST, "올바르지 않은 상태 입력 입니다."),
+
+	// -- [Label] -- //
+
+	LABEL_INSERT_FAILED(HttpStatus.BAD_REQUEST, "DB에서 라벨 생성에 실패했습니다."),
+	LABEL_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "DB에서 라벨 수정에 실패했습니다."),
+	LABEL_DELETE_FAILED(HttpStatus.BAD_REQUEST, "DB에서 라벨 삭제에 실패했습니다"),
+	LABEL_FIND_FAILED(HttpStatus.BAD_REQUEST, "서버 오류로 라벨을 조회할 수 없습니다");
+
+
+
 
 	private HttpStatus status;
 	private String message;

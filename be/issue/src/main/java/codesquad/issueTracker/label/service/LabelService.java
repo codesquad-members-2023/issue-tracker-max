@@ -35,10 +35,10 @@ public class LabelService {
 	public LabelResponseDto findAll() {
 		List<LabelVo> labels = new ArrayList<>();
 		labelRepository.findAll()
-			.orElseThrow(() -> new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION))
+			.orElseThrow(() -> new CustomException(ErrorCode.LABEL_FIND_FAILED))
 			.forEach(label ->
 				labels.add(LabelVo.from(label)));
 		return LabelResponseDto.of(labels,
-			labelRepository.findMilestonesCount().orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER)));
+			labelRepository.findMilestonesCount().orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MILESTONE)));
 	}
 }

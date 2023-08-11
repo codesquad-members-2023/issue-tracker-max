@@ -36,7 +36,7 @@ public class LabelRepository {
 
 		int result = jdbcTemplate.update(sql, params, keyHolder);
 		if (result == 0) {
-			throw new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION);
+			throw new CustomException(ErrorCode.LABEL_INSERT_FAILED);
 		}
 		return keyHolder.getKey().longValue();
 	}
@@ -51,7 +51,7 @@ public class LabelRepository {
 		params.addValue("description", label.getDescription());
 		int result = jdbcTemplate.update(sql, params);
 		if (result == 0) {
-			throw new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION);
+			throw new CustomException(ErrorCode.LABEL_UPDATE_FAILED);
 		}
 		return id;
 	}
@@ -61,7 +61,7 @@ public class LabelRepository {
 		int result = jdbcTemplate.update(sql, new MapSqlParameterSource()
 			.addValue("id", id));
 		if (result == 0) {
-			throw new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION);
+			throw new CustomException(ErrorCode.LABEL_DELETE_FAILED);
 		}
 		return id;
 	}
