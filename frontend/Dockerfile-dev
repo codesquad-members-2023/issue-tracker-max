@@ -8,5 +8,3 @@ COPY . ./
 RUN npm install
 
 CMD ["npm", "run", "build"]
-
-CMD ["npm", "run", "preview", "--", "--port", "5173"]
