@@ -11,7 +11,7 @@ public class IssueSearchParam {
 	private String title; // 검색할 제목
 	private String assigneeName; //assignee:bono
 	private String commentAuthorName; // comment:jian
-	private boolean isFilterRemoved = false; // 필터 적용 후 삭제 시
+	private boolean isFilterRemoved; // 필터 적용 후 삭제 시
 
 	public static IssueSearchParam from(String query) {
 		if (query == null) { // parameter로 받은 filter 값이 없다는 의미
