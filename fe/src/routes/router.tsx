@@ -15,27 +15,14 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <PageNotFound />,
     children: [
+      /* 필터된 결과 api 나오면 <IssuePage/> 관련 수정 */
       {
         path: "",
         element: <IssuesPage />,
-        loader: async () => {
-          const response = await fetch(
-            "http://43.200.169.143:8080/api/issues/open",
-          );
-          const data = await response.json();
-          return data;
-        },
       },
       {
         path: "issues/:status",
         element: <IssuesPage />,
-        loader: async ({ params }) => {
-          const response = await fetch(
-            `http://43.200.169.143:8080/api/issues/${params.status}`,
-          );
-          const data = await response.json();
-          return data;
-        },
       },
       {
         path: "login",

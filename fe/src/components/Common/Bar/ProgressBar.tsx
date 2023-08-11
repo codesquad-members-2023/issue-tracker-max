@@ -17,7 +17,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   return (
     <BarLayout>
       <BarBox>
-        <ProgressBox percentage={closedPercentage} />
+        <ProgressBox $percentage={closedPercentage} />
       </BarBox>
       <BarDetail>
         <p>{closedPercentage}%</p>
@@ -39,9 +39,9 @@ const BarBox = styled.div`
   border-radius: 7px;
 `;
 
-const ProgressBox = styled.div<{ percentage: number }>`
+const ProgressBox = styled.div<{ $percentage: number }>`
   height: 8px;
-  width: ${(props) => `${props.percentage}%`};
+  width: ${(props) => `${props.$percentage}%`};
   border-radius: 10px;
   transition: width 0.3s ease-in-out;
   background-color: ${({ theme: { color } }) => color.paletteBlue};

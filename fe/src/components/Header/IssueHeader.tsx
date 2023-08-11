@@ -40,6 +40,7 @@ export const IssueHeader: React.FC<IssueListHeaderProps> = ({
           $position="left"
           onClose={() => setIsDropdownOpen(false)}
           items={FILTERBAR_DATA}
+          type={"filterBar"}
         />
       )}
 

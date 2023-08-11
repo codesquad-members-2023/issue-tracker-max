@@ -1,6 +1,9 @@
-import { useLoaderData } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
 import { IssueHeader } from "components/Header/IssueHeader";
 import { IssueTable } from "components/Table/IssueTable";
+import { FilterProvider } from "contexts/FilterProvider";
 
 interface IssueItem {
   id: number;
@@ -21,14 +24,44 @@ interface IssuesPageData {
 }
 
 export const IssuesPage = () => {
-  const data: IssuesPageData = useLoaderData() as IssuesPageData;
+  const location = useLocation();
+  const [issuesData, setIssuesData] = useState<IssuesPageData>();
 
-  const { labelCount, milestoneCount, ...issueTableData } = data;
+  useEffect(() => {
+    const fetchData = async () => {
+      const queryParams = new URLSearchParams(location.search);
+      const q = queryParams.get("q") || "is:open";
+
+      const response = await fetch(
+        `http://43.200.169.143:8080/api/issues/filtered?q=${q}`,
+      );
+      const data = await response.json();
+
+      setIssuesData(data);
+    };
+
+    fetchData();
+  }, [location.search]);
+
+  if (!issuesData) {
+    return <p>Loading...</p>;
+  }
+
+  const { labelCount, milestoneCount, ...issueTableData } = issuesData;
 
   return (
-    <>
-      <IssueHeader labelCount={labelCount} milestoneCount={milestoneCount} />
-      <IssueTable tableData={issueTableData} />
-    </>
+    <FilterProvider>
+      {issuesData ? (
+        <>
+          <IssueHeader
+            labelCount={labelCount}
+            milestoneCount={milestoneCount}
+          />
+          <IssueTable tableData={issueTableData} />
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </FilterProvider>
   );
 };

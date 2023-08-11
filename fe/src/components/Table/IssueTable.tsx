@@ -44,33 +44,36 @@ export const IssueTable: React.FC<IssueTableProps> = ({ tableData }) => {
   const location = useLocation();
   const [isChecked, setIsChecked] = useState(false);
   const [subFilterData, setSubFilterData] = useState(INITIAL_SUBFILLTER_DATA);
-  const isFirstClickRef = useRef(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const hasSubFilterFetched = useRef(false);
 
+  /* filtered 결과 완료 되면 수정할 부분 */
   const fetchFilterData = useCallback(async () => {
-    const response = await fetch(`http://43.200.169.143:8080/api/filters`);
-    const data = await response.json();
-    console.log(data, "필터데이터");
+    try {
+      const response = await fetch("http://43.200.169.143:8080/api/filters");
+      const data = await response.json();
+      console.log(data, "필터데이터");
 
-    return subFilterData.map((item) => ({
-      ...item,
-      items: data[item.filter],
-    }));
-  }, [subFilterData]);
+      setSubFilterData((prevData) =>
+        prevData.map((item) => ({
+          ...item,
+          items: data[item.filter],
+        })),
+      );
+    } catch (error) {
+      console.error("Error fetching filter data:", error);
+    }
+  }, []);
 
   useEffect(() => {
-    fetchFilterData();
+    if (!hasSubFilterFetched.current) {
+      fetchFilterData();
+      hasSubFilterFetched.current = true;
+    }
   }, [fetchFilterData]);
 
-  const handleClick = async () => {
-    if (isFirstClickRef.current) {
-      const updatedIndicatorList = await fetchFilterData();
-      setSubFilterData(updatedIndicatorList);
-      isFirstClickRef.current = false;
-    }
-  };
-
   const handleClickCheckBox = () => setIsChecked(!isChecked);
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -107,6 +110,7 @@ export const IssueTable: React.FC<IssueTableProps> = ({ tableData }) => {
               title="상태 변경"
               $position="right"
               onClose={() => setIsDropdownOpen(false)}
+              type="issuesState"
             />
           )}
         </ChangeIssueStateHeader>
@@ -155,7 +159,7 @@ export const IssueTable: React.FC<IssueTableProps> = ({ tableData }) => {
           dropdownData={subFilterData}
           dropdownPosition="right"
           dropdownTitle={(title) => `${title} 필터`}
-          onTabClick={handleClick}
+          // onTabClick={handleClick}
         />
       </DefaultHeader>
       {issueTableList()}

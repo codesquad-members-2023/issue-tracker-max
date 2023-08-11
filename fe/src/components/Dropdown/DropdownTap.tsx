@@ -37,7 +37,10 @@ export const DropdownTap: React.FC<DropdownTapProps> = ({
 
   const handleLabelClick = (filter: string) => {
     setActiveTab(filter);
-    onTabClick && onTabClick(filter);
+
+    if (onTabClick) {
+      onTabClick(filter);
+    }
   };
 
   const handleDropdownClose = () => {
@@ -60,6 +63,7 @@ export const DropdownTap: React.FC<DropdownTapProps> = ({
                 $position={dropdownPosition}
                 filter={item.filter}
                 onClose={handleDropdownClose}
+                type={"dropdownFilter"}
               />
             )}
           </TabItem>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { DropdownOptions } from "./DropdownOptions";
+import { useFilter } from "contexts/FilterProvider";
 
 type PositionType = "center" | "left" | "right";
 
@@ -16,6 +17,7 @@ interface DropdownProps {
   items?: SubFilterItem[];
   title: string;
   filter?: string;
+  type: string;
   $position: PositionType;
   onClose: () => void;
 }
@@ -46,18 +48,32 @@ export const DropdownPanel: React.FC<DropdownProps> = ({
   $position,
   filter,
   onClose,
+  type,
 }) => {
   const [selectedItem, setSelectedItem] = useState<SubFilterItem | null>(null);
   const dropdownRef = useRef(null);
+  const { state, setDropdownFilter, setFilterBar } = useFilter();
 
   useEffect(() => {
     if (selectedItem !== null) {
-      console.log(filter);
-      console.log(items);
-      console.log(selectedItem);
+      if (type === "dropdownFilter" && filter) {
+        setDropdownFilter(filter, [selectedItem.name]);
+      }
+      if (type === "filterBar") {
+        setFilterBar([selectedItem.filter]);
+      }
       onClose();
     }
   }, [selectedItem, onClose, filter, items]);
+
+  const isItemSelected = (item: SubFilterItem) => {
+    if (type === "dropdownFilter" && filter) {
+      return state.dropdownFilter[filter]?.includes(item.name);
+    } else if (type === "filterBar") {
+      return state.filterBar.includes(item.filter);
+    }
+    return false;
+  };
 
   const handleOptionClick = (item: SubFilterItem) => {
     setSelectedItem(item);
@@ -68,7 +84,11 @@ export const DropdownPanel: React.FC<DropdownProps> = ({
   return (
     <Layout {...{ $position }} ref={dropdownRef}>
       <PanelTitle>{title}</PanelTitle>
-      <DropdownOptions items={items} onOptionClick={handleOptionClick} />
+      <DropdownOptions
+        items={items}
+        onOptionClick={handleOptionClick}
+        isSelectedFunc={isItemSelected}
+      />
     </Layout>
   );
 };

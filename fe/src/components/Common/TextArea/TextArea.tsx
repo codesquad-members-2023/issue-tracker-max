@@ -36,10 +36,10 @@ export const TextArea: React.FC<TextAreaProps> = ({ labelText }) => {
   return (
     <Layout $currentState={currentState}>
       <TextAreaBox $currentState={currentState}>
-        <label htmlFor="">{labelText}</label>
+        <label htmlFor="textInput">{labelText}</label>
         <textarea
-          name=""
-          id=""
+          name="textInput"
+          id="textInput"
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleChange}
