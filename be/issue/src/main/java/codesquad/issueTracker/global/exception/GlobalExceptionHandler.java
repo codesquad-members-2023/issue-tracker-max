@@ -40,14 +40,6 @@ public class GlobalExceptionHandler {
 			.body(ApiResponse.fail(statusCode.getStatus(), errorMessage.toString()));
 	}
 
-	@ExceptionHandler(ExpiredJwtException.class)
-	public ResponseEntity<ApiResponse<String>> handleExpiredJwtException(ExpiredJwtException e) {
-		StatusCode statusCode = ErrorCode.from(e);
-
-		return ResponseEntity.status(statusCode.getStatus())
-			.body(ApiResponse.fail(statusCode.getStatus(), statusCode.getMessage()));
-	}
-
 	@ExceptionHandler(DateTimeException.class)
 	public ResponseEntity<ApiResponse<String>> handleDateTimeException(DateTimeException e) {
 		StatusCode statusCode = ErrorCode.from(e);
