@@ -27,7 +27,7 @@ public class LabelRepository {
 	}
 
 	public List<Label> findAll() {
-		String sql = "SELECT id, name, font_color, background_color "
+		String sql = "SELECT id, name, description, font_color, background_color "
 			+ "FROM label "
 			+ "WHERE is_deleted = false "
 			+ "ORDER BY name";
@@ -35,6 +35,7 @@ public class LabelRepository {
 		return jdbcTemplate.query(sql, (rs, rowNum) -> new Label(
 			rs.getInt("id"),
 			rs.getString("name"),
+			rs.getString("description"),
 			rs.getString("font_color"),
 			rs.getString("background_color")
 		));
