@@ -14,4 +14,7 @@ public interface LabelRepository {
 	void updateBy(final Long labelId, final Label label);
 
 	void deleteBy(final Long labelId);
+
+	Long countAll();
+
 }

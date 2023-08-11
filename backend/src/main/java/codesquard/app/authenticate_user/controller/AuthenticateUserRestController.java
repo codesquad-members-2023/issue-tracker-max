@@ -7,17 +7,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.api.errors.errorcode.LoginErrorCode;
 import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.api.response.ApiResponse;
-import codesquard.app.authenticate_user.controller.request.RefreshTokenRequest;
 import codesquard.app.authenticate_user.controller.response.RefreshTokenResponse;
+import codesquard.app.authenticate_user.service.AuthenticateUserService;
+import codesquard.app.authenticate_user.service.request.RefreshTokenServiceRequest;
 import codesquard.app.jwt.Jwt;
-import codesquard.app.user.service.AuthenticateUserService;
 
 @RestController
 public class AuthenticateUserRestController {
@@ -31,10 +31,10 @@ public class AuthenticateUserRestController {
 	}
 
 	@PostMapping("/api/auth/refresh/token")
-	public ApiResponse<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest,
+	public ApiResponse<RefreshTokenResponse> refreshToken(@CookieValue String refreshToken,
 		HttpServletResponse response) {
-		logger.info("refreshTokenRequest : {}", refreshTokenRequest);
-		Jwt jwt = authenticateUserService.refreshToken(refreshTokenRequest.toRefreshTokenServiceRequest());
+		logger.info("refreshToken : {}", refreshToken);
+		Jwt jwt = authenticateUserService.refreshToken(new RefreshTokenServiceRequest(refreshToken));
 		if (jwt == null) {
 			throw new RestApiException(LoginErrorCode.FAIL_REFRESHTOKEN);
 		}

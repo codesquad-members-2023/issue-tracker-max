@@ -56,12 +56,11 @@ public class VerifyUserFilter implements Filter {
 				request.setAttribute(AUTHENTICATE_USER, authenticateUser);
 				chain.doFilter(request, response);
 			} catch (RestApiException e) {
-				LoginErrorCode errorCode = LoginErrorCode.NOT_MATCH_LOGIN;
+				ErrorCode errorCode = LoginErrorCode.NOT_MATCH_LOGIN;
 				httpServletResponse.setStatus(errorCode.getHttpStatus().value());
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
-				ApiResponse<ErrorCode> apiResponse =
-					ApiResponse.of(errorCode.getHttpStatus(), errorCode.getMessage(), null);
+				ApiResponse<ErrorCode> apiResponse = ApiResponse.error(errorCode);
 				String errorJson = objectMapper.writeValueAsString(apiResponse);
 				response.getWriter().write(errorJson);
 			}

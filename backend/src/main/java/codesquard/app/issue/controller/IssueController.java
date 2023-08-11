@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,8 @@ import codesquard.app.issue.dto.response.IssueDeleteResponse;
 import codesquard.app.issue.dto.response.IssueModifyResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueSaveResponse;
+import codesquard.app.issue.mapper.request.IssueFilterRequest;
+import codesquard.app.issue.mapper.response.IssueFilterResponse;
 import codesquard.app.issue.service.IssueQueryService;
 import codesquard.app.issue.service.IssueService;
 import codesquard.app.user.annotation.Login;
@@ -39,6 +42,13 @@ public class IssueController {
 
 	private final IssueService issueService;
 	private final IssueQueryService issueQueryService;
+
+	// TODO: 유효하지 않은 값이 들어왔을 경우 빈 리스트 반환
+	@GetMapping()
+	public ApiResponse<IssueFilterResponse> listIssues(@ModelAttribute IssueFilterRequest request,
+		@Login AuthenticateUser user) {
+		return ApiResponse.ok(issueQueryService.findFilterIssues(user.toEntity().getLoginId(), request));
+	}
 
 	@GetMapping("/{issueId}")
 	public ApiResponse<IssueReadResponse> get(@PathVariable Long issueId, @Login AuthenticateUser user) {
@@ -103,4 +113,5 @@ public class IssueController {
 		issueService.delete(issueId);
 		return ApiResponse.ok(IssueDeleteResponse.success(issueId));
 	}
+
 }

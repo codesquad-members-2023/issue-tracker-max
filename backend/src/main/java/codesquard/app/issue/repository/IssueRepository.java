@@ -7,6 +7,7 @@ import codesquard.app.issue.dto.response.IssueCommentsResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.entity.Issue;
+import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.label.entity.Label;
 import codesquard.app.user.entity.User;
 
@@ -45,6 +46,8 @@ public interface IssueRepository {
 	boolean isExist(Long issueId);
 
 	IssueMilestoneCountResponse countIssueBy(Long id);
+
+	Long countIssueByStatus(IssueStatus status);
 
 	List<IssueCommentsResponse> findCommentsBy(Long issueId, Long userId);
 }
