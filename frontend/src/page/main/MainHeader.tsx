@@ -3,12 +3,20 @@ import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { FilterBar } from "../../components/FilterBar";
 import { TabButton } from "../../components/TabButton";
+import { IconType } from "../../components/icon/Icon";
 import { SingleFilterData } from "./Main";
 
 type MainHeaderProps = {
   singleFilters: SingleFilterData[];
   milestoneCount: number;
   labelCount: number;
+};
+
+type Tab = {
+  name: string;
+  icon: keyof IconType;
+  selected: boolean;
+  onClick: () => void;
 };
 
 export function MainHeader({
@@ -18,16 +26,16 @@ export function MainHeader({
 }: MainHeaderProps) {
   const navigate = useNavigate();
 
-  const tabs = [
+  const tabs: Tab[] = [
     {
       name: `label(${labelCount})`,
-      icon: "label",
+      icon: "Label",
       selected: false,
       onClick: () => navigate("/label"),
     },
     {
       name: `milestone(${milestoneCount})`,
-      icon: "milestone",
+      icon: "Milestone",
       selected: false,
       onClick: () => navigate("/milestone"),
     },
@@ -81,7 +89,7 @@ export function MainHeader({
           ))}
         </TabButton>
         <Button
-          icon="plus"
+          icon="Plus"
           size="S"
           buttonType="Container"
           selected

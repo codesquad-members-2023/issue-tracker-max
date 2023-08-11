@@ -12,14 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.PatternMatchUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquard.app.api.errors.errorcode.ErrorCode;
+import codesquard.app.api.errors.errorcode.JwtTokenErrorCode;
 import codesquard.app.api.errors.exception.RestApiException;
+import codesquard.app.api.response.ApiResponse;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
@@ -56,7 +58,7 @@ public class JwtAuthorizationFilter implements Filter {
 			return;
 		}
 		if (!isContainToken(httpServletRequest)) {
-			httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "인증 오류");
+			setErrorResponse(httpServletResponse, JwtTokenErrorCode.FAIL_AUTHENTICATION);
 			return;
 		}
 		try {
@@ -70,17 +72,25 @@ public class JwtAuthorizationFilter implements Filter {
 			chain.doFilter(request, response);
 		} catch (JsonParseException e) {
 			logger.error("JsonParseException");
-			httpServletResponse.sendError(HttpStatus.BAD_REQUEST.value());
+			setErrorResponse(httpServletResponse, JwtTokenErrorCode.FAIL_PARSE_JSON);
 		} catch (SignatureException | MalformedJwtException | UnsupportedJwtException e) {
 			logger.error("JwtException");
-			httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "인증 오류");
+			setErrorResponse(httpServletResponse, JwtTokenErrorCode.FAIL_AUTHENTICATION);
 		} catch (ExpiredJwtException e) {
 			logger.error("JwtTokenExpired");
-			httpServletResponse.sendError(HttpStatus.FORBIDDEN.value(), "토큰이 만료 되었습니다");
+			setErrorResponse(httpServletResponse, JwtTokenErrorCode.EXPIRE_TOKEN);
 		} catch (RestApiException e) {
 			logger.error("AuthorizationException");
-			httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "권한이 없습니다");
+			setErrorResponse(httpServletResponse, JwtTokenErrorCode.NOT_HAVE_AUTHORIZED);
 		}
+	}
+
+	private void setErrorResponse(HttpServletResponse httpServletResponse, ErrorCode errorCode) throws IOException {
+		httpServletResponse.setStatus(errorCode.getHttpStatus().value());
+		httpServletResponse.setContentType("application/json");
+		httpServletResponse.setCharacterEncoding("UTF-8");
+		ApiResponse<Object> body = ApiResponse.of(errorCode.getHttpStatus(), errorCode.getMessage(), null);
+		httpServletResponse.getWriter().write(objectMapper.writeValueAsString(body));
 	}
 
 	// 요청한 URI가 화이트리스트에 있는지 확인합니다. 화이트 리스트에 있으면 인가처리합니다.

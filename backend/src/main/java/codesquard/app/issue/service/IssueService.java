@@ -1,11 +1,10 @@
 package codesquard.app.issue.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.api.errors.errorcode.IssueErrorCode;
-import codesquard.app.api.errors.exception.IllegalIssueStatusException;
-import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.comment.repository.CommentRepository;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
@@ -37,17 +36,17 @@ public class IssueService {
 	public void modifyStatus(IssueModifyStatusRequest issueModifyStatusRequest, Long issueId) {
 		IssueStatus issueStatus = IssueStatus.validateIssueStatus(issueModifyStatusRequest.getStatus());
 		issueQueryService.validateExistIssue(issueId);
-		issueRepository.modifyStatus(issueStatus.name(), issueId);
+		issueRepository.modifyStatus(issueStatus.name(), issueId, LocalDateTime.now());
 	}
 
 	public void modifyTitle(IssueModifyTitleRequest issueModifyTitleRequest, Long issueId) {
 		issueQueryService.validateExistIssue(issueId);
-		issueRepository.modifyTitle(issueModifyTitleRequest.getTitle(), issueId);
+		issueRepository.modifyTitle(issueModifyTitleRequest.getTitle(), issueId, LocalDateTime.now());
 	}
 
 	public void modifyContent(IssueModifyContentRequest issueModifyTitleRequest, Long issueId) {
 		issueQueryService.validateExistIssue(issueId);
-		issueRepository.modifyContent(issueModifyTitleRequest.getContent(), issueId);
+		issueRepository.modifyContent(issueModifyTitleRequest.getContent(), issueId, LocalDateTime.now());
 	}
 
 	public void modifyAssignees(IssueModifyAssigneesRequest issueModifyAssigneesRequest, Long issueId) {

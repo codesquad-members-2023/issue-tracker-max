@@ -1,5 +1,5 @@
-import { styled, useTheme } from "styled-components";
-import { Icon } from "../Icon";
+import { styled } from "styled-components";
+import { Icon } from "../icon/Icon";
 
 type AssigneeElementProps = {
   name: string;
@@ -7,14 +7,12 @@ type AssigneeElementProps = {
 };
 
 export function AssigneeElement({ name, profile }: AssigneeElementProps) {
-  const theme = useTheme();
-
   return (
     <Div>
       {profile ? (
         <img src={profile} alt="" />
       ) : (
-        <Icon name="userImageSmall" fill={theme.color.neutralSurfaceBold} />
+        <Icon name="UserImageSmall" color="neutralSurfaceBold" />
       )}
       <Text>{name}</Text>
     </Div>

@@ -1,24 +1,16 @@
-import { useEffect, useState } from "react";
-import styled, { useTheme } from "styled-components";
-import { Icon } from "./Icon";
+import { InputHTMLAttributes, useEffect, useState } from "react";
+import styled from "styled-components";
+import { Icon, IconType } from "./icon/Icon";
 
-type TextInputProps = {
-  width?: number;
-  size: "L" | "S";
-  value?: string;
-  placeholder?: string;
+export type TextInputProps = {
+  size?: "L" | "S";
   label?: string;
   caption?: string;
-  icon?: string;
+  icon?: keyof IconType;
   fixLabel?: boolean;
   borderNone?: boolean;
-  disabled?: boolean;
   isError?: boolean;
-  maxLength?: number;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onFocus?: () => void;
-  onBlur?: () => void;
-};
+} & Omit<InputHTMLAttributes<HTMLInputElement>, "size">;
 
 type TextInputState = "Enabled" | "Active" | "Disabled" | "Error";
 
@@ -27,7 +19,7 @@ type InputProps = {
 };
 
 type InputContainerProps = {
-  $width: number;
+  $width: string | number;
   $size: "L" | "S";
   $borderNone?: boolean;
   $state: TextInputState;
@@ -35,7 +27,7 @@ type InputContainerProps = {
 
 export function TextInput({
   width = 254,
-  size,
+  size = "S",
   value: initialValue = "",
   label,
   placeholder,
@@ -49,37 +41,40 @@ export function TextInput({
   onChange,
   onFocus,
   onBlur,
+  ...props
 }: TextInputProps) {
   const [state, setState] = useState<TextInputState>(
     disabled ? "Disabled" : "Enabled",
   );
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
-    setState(isError ? "Error" : "Enabled");
-  }, [isError]);
+    if (state === "Disabled") return;
+
+    setState(isError ? "Error" : isFocused ? "Active" : "Enabled");
+  }, [state, isError, isFocused]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange && onChange(event);
+    onChange?.(event);
   };
 
-  const handleInputFocus = () => {
+  const handleInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     if (state !== "Error") {
       setState("Active");
     }
 
-    onFocus && onFocus();
+    setIsFocused(true);
+    onFocus?.(event);
   };
 
-  const handleInputBlur = () => {
+  const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     if (state !== "Error") {
       setState(disabled ? "Disabled" : "Enabled");
     }
 
-    onBlur && onBlur();
+    setIsFocused(false);
+    onBlur?.(event);
   };
-
-  const theme = useTheme();
-  const iconColor = theme.color.neutralTextDefault;
 
   return (
     <Div $state={state} $width={width}>
@@ -94,7 +89,7 @@ export function TextInput({
         )}
         {icon && (
           <IconWrapper>
-            <Icon name={icon} fill={iconColor} stroke={iconColor} />
+            <Icon name={icon} color="neutralTextDefault" />
           </IconWrapper>
         )}
         <Input
@@ -106,6 +101,7 @@ export function TextInput({
           onBlur={handleInputBlur}
           disabled={state === "Disabled"}
           $state={state}
+          {...props}
         />
       </InputContainer>
       {caption && <Caption $state={state}>{caption}</Caption>}
@@ -113,9 +109,10 @@ export function TextInput({
   );
 }
 
-const Div = styled.div<{ $state: TextInputState; $width: number }>`
+const Div = styled.div<{ $state: TextInputState; $width: string | number }>`
   display: flex;
-  width: ${({ $width }) => $width}px;
+  width: ${({ $width }) =>
+    typeof $width === "number" ? `${$width}px` : $width};
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
@@ -126,7 +123,7 @@ const Div = styled.div<{ $state: TextInputState; $width: number }>`
 
 const InputContainer = styled.div<InputContainerProps>`
   display: flex;
-  width: ${({ $width }) => $width}px;
+  width: 100%;
   height: ${({ $size }) => ($size === "L" ? "56px" : "40px")};
   padding: 5px 16px;
   align-self: stretch;
@@ -162,7 +159,7 @@ const InputContainer = styled.div<InputContainerProps>`
 `;
 
 const StyledSpan = styled.span`
-  width: 64px;
+  min-width: 64px;
   color: ${({ theme }) => theme.color.neutralTextWeak};
   font: ${({ theme }) => theme.font.displayMedium12};
 `;
@@ -175,6 +172,7 @@ const IconWrapper = styled.div`
 `;
 
 const Input = styled.input<InputProps>`
+  width: 100%;
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
