@@ -1,48 +1,161 @@
 import { useTheme } from '@emotion/react';
 import { ReactComponent as Search } from '@assets/icons/search.svg';
-import { InputContainer } from './textInput/InputContainer';
 import { Input } from './textInput/Input';
-import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
-import { DropDownIndicator } from './dropDown/DropDownIndicator';
-import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import { DropDownPanel } from './dropDown/DropDownPanel';
 import { DropDownList } from './dropDown/DropDownList';
-import { generateEncodedQuery } from '@utils/generateEncodedQuery';
+import { DropDownContainer } from './dropDown/DropDownContainer';
+import { getLocalStorageLoginId } from '@utils/localStorage';
 
-const INITIAL_FILTER_VALUE = 'status:open';
+type Props = {
+  filterValue: string;
+  onChangeFilterValue: (value: string) => void;
+  goToFilteredPage: (filterValue: string) => void;
+};
 
-export const FilterBar: React.FC = () => {
+export const FilterBar: React.FC<Props> = ({
+  filterValue,
+  onChangeFilterValue,
+  goToFilteredPage,
+}) => {
   const theme = useTheme() as any;
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [filterValue, setFilterValue] = useState(INITIAL_FILTER_VALUE);
-  const navigate = useNavigate();
-  const { search } = useLocation();
+  const location = useLocation();
 
-  const onChangeFilterValue = (value: string) => {
-    setFilterValue(value);
-  };
+  const loginId = (() => {
+    try {
+      const loginId = getLocalStorageLoginId();
+
+      return loginId;
+    } catch {
+      alert('다시 로그인 해주세요.');
+      goToFilteredPage('/sign');
+    }
+  })() as string;
 
   const closePanel = () => {
     setIsPanelOpen(false);
   };
 
-  const updateFilterValue = () => {
-    const searchValue = decodeURIComponent(location.search).replace(
-      '?query=',
-      '',
-    );
-
-    setFilterValue(searchValue || INITIAL_FILTER_VALUE);
+  const decodedSearch = decodeURIComponent(location.search);
+  const isSelectedMap = {
+    openIssue: location.search === '' || decodedSearch.includes('status:open'),
+    writtenByMe: decodedSearch.includes(`author:${loginId}`),
+    assignToMe: decodedSearch.includes(`assignee:${loginId}`),
+    iCommented: decodedSearch.includes(`commentAuthor:${loginId}`),
+    closedIssue: decodedSearch.includes('status:closed'),
   };
+  const filterOptions = [
+    {
+      id: 1,
+      name: '열린 이슈',
 
-  useEffect(() => {
-    updateFilterValue();
-  }, [search]);
+      onClick: () => {
+        closePanel();
 
-  const filterItems = generateFilterItems(navigate, closePanel);
+        if (isSelectedMap.openIssue) {
+          goToFilteredPage(location.search.replace('status:open', ''));
+
+          return;
+        }
+
+        goToFilteredPage(location.search + ' status:open');
+      },
+
+      isSelected: isSelectedMap.openIssue,
+    },
+    {
+      id: 2,
+      name: '내가 작성한 이슈',
+
+      onClick: () => {
+        closePanel();
+
+        if (isSelectedMap.writtenByMe) {
+          goToFilteredPage(location.search.replace(`author:${loginId}`, ''));
+
+          return;
+        }
+
+        goToFilteredPage(`${location.search} author:${loginId}`);
+      },
+
+      isSelected: isSelectedMap.writtenByMe,
+    },
+    {
+      id: 3,
+      name: '나에게 할당된 이슈',
+
+      onClick: () => {
+        closePanel();
+
+        if (isSelectedMap.assignToMe) {
+          goToFilteredPage(location.search.replace(`assignee:${loginId}`, ''));
+
+          return;
+        }
+
+        goToFilteredPage(`${location.search} assignee:${loginId}`);
+      },
+
+      isSelected: isSelectedMap.assignToMe,
+    },
+    {
+      id: 4,
+      name: '내가 댓글을 남긴 이슈',
+
+      onClick: () => {
+        closePanel();
+
+        if (isSelectedMap.iCommented) {
+          goToFilteredPage(
+            location.search.replace(`commentAuthor:${loginId}`, ''),
+          );
+
+          return;
+        }
+
+        goToFilteredPage(`${location.search} commentAuthor:${loginId}`);
+      },
+
+      isSelected: isSelectedMap.iCommented,
+    },
+    {
+      id: 5,
+      name: '닫힌 이슈',
+
+      onClick: () => {
+        closePanel();
+
+        if (isSelectedMap.closedIssue) {
+          goToFilteredPage(location.search.replace('status:closed', ''));
+
+          return;
+        }
+
+        goToFilteredPage(location.search + ' status:closed');
+      },
+
+      isSelected: isSelectedMap.closedIssue,
+    },
+  ];
 
   return (
-    <InputContainer height={40} radius="m" hasborderColor>
+    <div
+      css={{
+        height: '40px',
+        borderRadius: theme.radius.m,
+        backgroundColor: theme.neutral.surface.bold,
+        gap: '8px',
+        border: `${theme.border.default} ${theme.neutral.border.default}`,
+
+        '&:focus-within': {
+          backgroundColor: theme.neutral.surface.strong,
+          border: `${theme.border.default} ${theme.neutral.border.defaultActive}`,
+        },
+      }}
+    >
       <div
         css={{
           width: '100%',
@@ -51,11 +164,9 @@ export const FilterBar: React.FC = () => {
         }}
       >
         <div
-          onClick={() => setIsPanelOpen(true)}
           css={{
             width: '128px',
             minWidth: '128px',
-            cursor: 'pointer',
 
             display: 'flex',
             alignItems: 'center',
@@ -70,11 +181,14 @@ export const FilterBar: React.FC = () => {
             },
           }}
         >
-          <DropDownIndicator
+          <DropDownContainer
             {...{
               size: 'M',
               indicator: '필터',
               isPanelOpen,
+              onClick: () => {
+                setIsPanelOpen(true);
+              },
             }}
           >
             <DropDownPanel
@@ -84,11 +198,14 @@ export const FilterBar: React.FC = () => {
                 onOutsideClick: closePanel,
               }}
             >
-              {filterItems.map(({ id, name, onClick }) => (
-                <DropDownList key={id} {...{ item: { id, name }, onClick }} />
+              {filterOptions.map(({ id, name, onClick, isSelected }) => (
+                <DropDownList
+                  key={id}
+                  {...{ item: { id, name }, onClick, isSelected }}
+                />
               ))}
             </DropDownPanel>
-          </DropDownIndicator>
+          </DropDownContainer>
         </div>
 
         <form
@@ -102,7 +219,7 @@ export const FilterBar: React.FC = () => {
           onSubmit={(event) => {
             event.preventDefault();
 
-            navigate('?query=' + filterValue);
+            goToFilteredPage(filterValue);
           }}
         >
           <Search stroke={theme.neutral.text.default} />
@@ -113,63 +230,6 @@ export const FilterBar: React.FC = () => {
           />
         </form>
       </div>
-    </InputContainer>
+    </div>
   );
 };
-
-const generateFilterItems = (
-  navigate: NavigateFunction,
-  closePanel: () => void,
-) => [
-  {
-    id: 1,
-    name: '열린 이슈',
-
-    onClick: () => {
-      const query = generateEncodedQuery('status', 'open');
-
-      navigate(query);
-      closePanel();
-    },
-  },
-  {
-    id: 2,
-    name: '내가 작성한 이슈',
-    onClick: () => {
-      const query = generateEncodedQuery('status', 'open');
-
-      navigate(query);
-      closePanel();
-    },
-  },
-  {
-    id: 3,
-    name: '나에게 할당된 이슈',
-    onClick: () => {
-      const query = generateEncodedQuery('status', 'open');
-
-      navigate(query);
-      closePanel();
-    },
-  },
-  {
-    id: 4,
-    name: '내가 댓글을 남긴 이슈',
-    onClick: () => {
-      const query = generateEncodedQuery('status', 'open');
-
-      navigate(query);
-      closePanel();
-    },
-  },
-  {
-    id: 5,
-    name: '닫힌 이슈',
-    onClick: () => {
-      const query = generateEncodedQuery('status', 'open');
-
-      navigate(query);
-      closePanel();
-    },
-  },
-];

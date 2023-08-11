@@ -29,7 +29,6 @@ export const AppRoutes: React.FC<Props> = ({ currentTheme, toggleTheme }) => {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/" element={<Header {...{ currentTheme, toggleTheme }} />}>
         <Route path={ISSUE_LIST_PAGE} element={<IssueListPage />} />
-        <Route path={`${ISSUE_LIST_PAGE}/:query`} element={<IssueListPage />} />
         <Route path={ADD_ISSUE_PAGE} element={<AddIssuePage />} />
         <Route
           path={`${ISSUE_DETAIL_PAGE}/:id`}

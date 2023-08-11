@@ -27,7 +27,6 @@ export const DropDownContainer: React.FC<Props> = ({
         alignItems: 'center',
         justifyContent: 'space-between',
         font: theme.fonts.availableMedium16,
-        width: '100%',
       }}
     >
       <div onClick={onClick}>
