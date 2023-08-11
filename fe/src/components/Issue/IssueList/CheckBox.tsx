@@ -27,7 +27,7 @@ const checkBoxIcon = (id: string) => css`
     width: 16px;
     height: 16px;
     margin: 0;
-    background-image: url('/src/assets/icon/checkBoxInitial.svg');
+    background-image: url('../../../../src/assets/icon/checkBoxInitial.svg');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: 50%;
@@ -35,8 +35,8 @@ const checkBoxIcon = (id: string) => css`
 
     &:checked {
       background-image: ${id === 'selectAll'
-        ? `url('/src/assets/icon/checkBoxDisable.svg')`
-        : `url('/src/assets/icon/checkBoxActive.svg')`};
+        ? `url('../../../../src/assets/icon/checkBoxDisable.svg')`
+        : `url('../../../../src/assets/icon/checkBoxActive.svg')`};
     }
   }
 

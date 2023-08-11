@@ -1,7 +1,7 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as MediumLogo } from '/src/assets/logo/mediumLogo.svg';
-import { ReactComponent as UserImageLargeIcon } from '/src/assets/icon/userImageLarge.svg';
+import { ReactComponent as MediumLogo } from '../../assets/logo/mediumLogo.svg';
+import { ReactComponent as UserImageLargeIcon } from '../../assets/icon/userImageLarge.svg';
 import { font } from '../../styles/styles';
 
 export default function Header() {

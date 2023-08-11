@@ -2,7 +2,7 @@ import { Theme, css, useTheme } from '@emotion/react';
 import Taps from './common/Taps';
 import Button from './common/Button';
 import FilterBar from './FilterBar';
-import { ReactComponent as PlusIcon } from '/src/assets/icon/plus.svg';
+import { ReactComponent as PlusIcon } from '../assets/icon/plus.svg';
 
 type Props = {
   isIssue: boolean;

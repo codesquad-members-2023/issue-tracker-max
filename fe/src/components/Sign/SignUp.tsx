@@ -5,7 +5,7 @@ import { font, radius } from '../../styles/styles';
 import SignButton from './common/SignButton';
 import InputWithValidation from './common/InputWithValidation';
 import { REGEX } from '../../constant/regex';
-import { ReactComponent as LargeLogo } from '/src/assets/logo/largeLogo.svg';
+import { ReactComponent as LargeLogo } from '../../assets/logo/largeLogo.svg';
 import { customFetch } from '../../util/customFetch';
 
 type Response = {
