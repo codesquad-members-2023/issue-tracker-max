@@ -1,14 +1,14 @@
 import { ButtonHTMLAttributes } from "react";
-import { styled, useTheme } from "styled-components";
-import { Icon } from "./Icon";
+import { styled } from "styled-components";
+import { Icon, IconColor, IconType, ThemeColorKeys } from "./icon/Icon";
 
 type ButtonProps = {
   size: "S" | "M" | "L";
   buttonType: "Container" | "Outline" | "Ghost";
   flexible?: "Flexible" | "Fixed";
-  icon?: string;
+  icon?: keyof IconType;
   selected?: boolean;
-  color?: string;
+  color?: IconColor;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
@@ -27,13 +27,12 @@ export function Button({
     Ghost: GhostButton,
   };
 
-  const theme = useTheme();
-  const iconColorMap = {
-    Container: theme.color.brandTextDefault,
-    Outline: theme.color.brandTextWeak,
-    Ghost: selected
-      ? theme.color.neutralTextStrong
-      : theme.color.neutralTextDefault,
+  const iconColorMap: {
+    [K in typeof buttonType]: ThemeColorKeys;
+  } = {
+    Container: "brandTextDefault",
+    Outline: "brandTextWeak",
+    Ghost: selected ? "neutralTextStrong" : "neutralTextDefault",
   };
 
   const ButtonComponent = buttonMap[buttonType];
@@ -49,7 +48,7 @@ export function Button({
       {...props}
     >
       <div>
-        {icon && <Icon name={icon} fill={iconColor} stroke={iconColor} />}
+        {icon && <Icon name={icon} color={iconColor} />}
         <span>{children}</span>
       </div>
     </ButtonComponent>

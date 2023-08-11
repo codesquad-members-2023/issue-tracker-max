@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import codesquard.app.ControllerTestSupport;
 import codesquard.app.api.errors.exception.NoSuchReactionException;
+import codesquard.app.api.errors.exception.NoSuchUserReactionException;
 
 class UserReactionControllerTest extends ControllerTestSupport {
 
@@ -68,6 +69,33 @@ class UserReactionControllerTest extends ControllerTestSupport {
 
 		// when & then
 		mockMvc.perform(post("/api/reactions/" + reactionId + "/comments/" + commentId))
+			.andExpect(status().isNotFound())
+			.andDo(print());
+	}
+
+	@DisplayName("사용자 반응을 삭제한다.")
+	@Test
+	void deleteUserReaction() throws Exception {
+		// given
+		int userReactionId = 1;
+
+		// when & then
+		mockMvc.perform(delete("/api/reactions/" + userReactionId))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.deletedUserReactionId").value(userReactionId))
+			.andDo(print());
+	}
+
+	@DisplayName("사용자 반응이 존재하지 않을 때 사용자 반응 삭제에 실패한다.")
+	@Test
+	void deleteUserReaction_Fail() throws Exception {
+		// given
+		Long userReactionId = 1L;
+		willThrow(new NoSuchUserReactionException())
+			.given(userReactionService).deleteIssueReaction(userReactionId);
+
+		// when & then
+		mockMvc.perform(delete("/api/reactions/" + userReactionId))
 			.andExpect(status().isNotFound())
 			.andDo(print());
 	}

@@ -1,36 +1,35 @@
 import { styled } from "styled-components";
+import { Avatar } from "../../components/Avatar";
 import { TextArea } from "../../components/TextArea";
 import { TextInput } from "../../components/TextInput";
-import { Sidebar, SidebarOptionData } from "../../components/sidebar/Sidebar";
+import { Sidebar, SidebarProps } from "../../components/sidebar/Sidebar";
 
 type NewIssueBodyProps = {
   title: string;
   content: string;
-  assignees: SidebarOptionData[];
-  labels: SidebarOptionData[];
-  milestones: SidebarOptionData[];
+  invalidTitle: boolean;
   onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onTitleFocus: () => void;
   onContentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-};
+} & SidebarProps;
 
 export function NewIssueBody({
   title,
   content,
-  assignees,
-  labels,
-  milestones,
+  invalidTitle,
   onTitleChange,
+  onTitleFocus,
   onContentChange,
+  ...props
 }: NewIssueBodyProps) {
-  const invalidTitle = title.trim().length === 0;
   const titleCaption = invalidTitle
     ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
     : "";
 
   return (
     <Div>
-      <img
-        style={{ width: "32px" }}
+      <Avatar
+        size="L"
         src="https://avatars.githubusercontent.com/u/41321198?v=4"
       />
       <NewIssueContent>
@@ -43,6 +42,7 @@ export function NewIssueBody({
           isError={invalidTitle}
           caption={titleCaption}
           onChange={onTitleChange}
+          onFocus={onTitleFocus}
         />
         <TextArea
           placeholder="코멘트"
@@ -52,11 +52,7 @@ export function NewIssueBody({
           onChange={onContentChange}
         />
       </NewIssueContent>
-      <Sidebar
-        assigneeOptions={assignees}
-        labelOptions={labels}
-        milestoneOptions={milestones}
-      />
+      <Sidebar {...props} />
     </Div>
   );
 }

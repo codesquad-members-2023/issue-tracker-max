@@ -2,14 +2,23 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TabButton } from "../../components/TabButton";
+import { Icon, IconType } from "../../components/icon/Icon";
 import { MilestoneData } from "./Milestone";
 import { MilestoneTableElement } from "./MilestoneTableElement";
 
 type MilestoneTableProps = {
   milestones: MilestoneData[];
-  openCount: Number;
-  closeCount: Number;
+  openCount: number;
+  closeCount: number;
   status: "OPENED" | "CLOSED";
+  fetchData: () => void;
+};
+
+type Tab = {
+  name: string;
+  icon: keyof IconType;
+  selected: boolean;
+  onClick: () => void;
 };
 
 export function MilestoneTable({
@@ -17,13 +26,14 @@ export function MilestoneTable({
   openCount,
   closeCount,
   status,
+  fetchData,
 }: MilestoneTableProps) {
   const navigate = useNavigate();
 
-  const tabs = [
+  const tabs: Tab[] = [
     {
       name: `열린 마일스톤(${openCount})`,
-      icon: "alertCircle",
+      icon: "AlertCircle",
       selected: status === "OPENED",
       onClick: () => {
         navigate("/milestone/opened");
@@ -31,7 +41,7 @@ export function MilestoneTable({
     },
     {
       name: `닫힌 마일스톤(${closeCount})`,
-      icon: "archive",
+      icon: "Archive",
       selected: status === "CLOSED",
       onClick: () => {
         navigate("/milestone/closed");
@@ -64,8 +74,15 @@ export function MilestoneTable({
             key={index}
             milestone={milestone}
             status={status}
+            fetchData={fetchData}
           />
         ))}
+        {!milestones.length && (
+          <NoneElement>
+            <Icon name="AlertCircle" />
+            <span>마일스톤이 비어 있습니다.</span>
+          </NoneElement>
+        )}
       </TableBody>
     </Div>
   );
@@ -77,6 +94,7 @@ const Div = styled.div`
   flex-direction: column;
   border: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
   border-radius: ${({ theme }) => theme.radius.large};
+  background: ${({ theme }) => theme.color.neutralSurfaceStrong};
 `;
 
 const TableHeader = styled.div`
@@ -95,4 +113,16 @@ const TableHeader = styled.div`
 
 const TableBody = styled.div`
   width: 100%;
+`;
+
+const NoneElement = styled.div`
+  width: 100%;
+  height: 96px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  font: ${({ theme }) => theme.font.displayBold16};
+  color: ${({ theme }) => theme.color.neutralTextStrong};
+  border-top: solid 1px ${({ theme }) => theme.color.neutralBorderDefault};
 `;

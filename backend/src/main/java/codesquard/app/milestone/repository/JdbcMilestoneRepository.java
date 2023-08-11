@@ -155,6 +155,12 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		template.update(sql, Map.of("id", milestoneId));
 	}
 
+	@Override
+	public Long countAll() {
+		String sql = "SELECT COUNT(id) FROM milestone";
+		return template.queryForObject(sql, new HashMap<>(), Long.class);
+	}
+
 	private void validateExistMilestone(final Long milestoneId) {
 		String sql = "SELECT COUNT(*) FROM `milestone` WHERE `id` = :id";
 		Integer count = template.queryForObject(sql, Map.of("id", milestoneId), Integer.class);

@@ -1,11 +1,13 @@
 package codesquard.app.issue.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import codesquard.app.issue.dto.response.IssueCommentsResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.entity.Issue;
+import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.label.entity.Label;
 import codesquard.app.user.entity.User;
 
@@ -25,11 +27,11 @@ public interface IssueRepository {
 
 	void saveIssueAssignee(Long issueId, List<Long> assignees);
 
-	void modifyStatus(String status, Long issueId);
+	void modifyStatus(String status, Long issueId, LocalDateTime now);
 
-	void modifyTitle(String toEntity, Long issueId);
+	void modifyTitle(String toEntity, Long issueId, LocalDateTime now);
 
-	void modifyContent(String content, Long issueId);
+	void modifyContent(String content, Long issueId, LocalDateTime now);
 
 	void modifyMilestone(Long milestoneId, Long issueId);
 
@@ -45,5 +47,7 @@ public interface IssueRepository {
 
 	IssueMilestoneCountResponse countIssueBy(Long id);
 
-	List<IssueCommentsResponse> findCommentsBy(Long issueId);
+	Long countIssueByStatus(IssueStatus status);
+
+	List<IssueCommentsResponse> findCommentsBy(Long issueId, Long userId);
 }

@@ -5,8 +5,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { keyframes, styled, useTheme } from "styled-components";
-import { Icon } from "./Icon";
+import { keyframes, styled } from "styled-components";
+import { Button } from "./Button";
+import { Icon } from "./icon/Icon";
 
 type TextAreaProps = {
   value?: string;
@@ -30,6 +31,7 @@ export function TextArea({
   const [countHidden, setCountHidden] = useState(true);
   const [uploadErrorMessage, setUploadErrorMessage] = useState("");
   const textArea = useRef<HTMLTextAreaElement>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -69,6 +71,10 @@ export function TextArea({
     onChange && onChange(e);
   };
 
+  const onFileInputClick = () => {
+    fileInput.current?.click();
+  };
+
   const onFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
@@ -91,6 +97,8 @@ export function TextArea({
     } else {
       setUploadErrorMessage("이미지 파일만 업로드 가능합니다.");
     }
+
+    e.target.value = "";
   };
 
   const isImageTypeFile = (file: File) => {
@@ -131,10 +139,6 @@ export function TextArea({
     }
   };
 
-  const theme = useTheme();
-  const iconColor = theme.color.neutralTextDefault;
-  const gripColor = theme.color.neutralTextWeak;
-
   return (
     <Wrapper>
       <Div $state={state} onFocus={onFocus} onBlur={onBlur}>
@@ -152,20 +156,25 @@ export function TextArea({
             <TextCount $hidden={countHidden}>
               띄어쓰기 포함 {inputValue.length}글자
             </TextCount>
-            <Icon name="grip" fill={gripColor} stroke={gripColor} />
+            <Icon name="Grip" color="neutralTextWeak" />
           </ResizableDiv>
         </InputContainer>
         <Footer>
-          <UploadButton htmlFor="imageUpload">
-            <Icon name="paperclip" fill={iconColor} stroke={iconColor} />
-            <span>파일 첨부하기</span>
-            <input
-              id="imageUpload"
-              type="file"
-              accept="image/*"
-              onChange={onFileInputChange}
-            />
-          </UploadButton>
+          <Button
+            size="S"
+            buttonType="Ghost"
+            icon="PaperClip"
+            onClick={onFileInputClick}
+          >
+            파일 첨부하기
+          </Button>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={onFileInputChange}
+            ref={fileInput}
+            hidden
+          />
         </Footer>
       </Div>
       {uploadErrorMessage && <ErrorMessage>{uploadErrorMessage}</ErrorMessage>}
@@ -260,6 +269,7 @@ const TextCount = styled.span<{ $hidden: boolean }>`
   align-self: flex-end;
   margin-right: 28px;
   font: ${({ theme }) => theme.font.displayMedium12};
+  color: ${({ theme }) => theme.color.neutralTextWeak};
   opacity: ${({ $hidden }) => ($hidden ? 0 : 1)};
   animation: ${({ $hidden }) => ($hidden ? fadeOut : fadeIn)} 0.2s ease-in-out;
 `;
@@ -287,26 +297,9 @@ const Footer = styled.div`
   display: flex;
   height: 52px;
   padding: 0px 16px;
-  align-items: stretch;
+  align-items: center;
   gap: 8px;
   align-self: stretch;
-`;
-
-const UploadButton = styled.label`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  font: ${({ theme }) => theme.font.availableMedium12};
-
-  &:hover {
-    cursor: pointer;
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-
-  & input {
-    display: none;
-  }
 `;
 
 const ErrorMessage = styled.span`

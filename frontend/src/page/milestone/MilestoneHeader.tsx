@@ -2,12 +2,20 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TabButton } from "../../components/TabButton";
+import { IconType } from "../../components/icon/Icon";
 
 type MilestoneHeaderProps = {
   onClick: () => void;
   isAdding: boolean;
-  openedMilestoneCount: Number;
-  labelCount: Number;
+  openedMilestoneCount: number;
+  labelCount: number;
+};
+
+type Tab = {
+  name: string;
+  icon: keyof IconType;
+  selected: boolean;
+  onClick: () => void;
 };
 
 export function MilestoneHeader({
@@ -17,10 +25,10 @@ export function MilestoneHeader({
   labelCount,
 }: MilestoneHeaderProps) {
   const navigate = useNavigate();
-  const tabs = [
+  const tabs: Tab[] = [
     {
       name: `label(${labelCount})`,
-      icon: "label",
+      icon: "Label",
       selected: false,
       onClick: () => {
         navigate("/label");
@@ -28,7 +36,7 @@ export function MilestoneHeader({
     },
     {
       name: `milestone(${openedMilestoneCount})`,
-      icon: "milestone",
+      icon: "Milestone",
       selected: true,
       onClick: () => {
         navigate("/milestone");
@@ -56,7 +64,7 @@ export function MilestoneHeader({
       <Button
         size="S"
         buttonType="Container"
-        icon="plus"
+        icon="Plus"
         onClick={onClick}
         disabled={isAdding}
       >
