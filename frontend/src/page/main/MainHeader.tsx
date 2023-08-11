@@ -10,6 +10,7 @@ type MainHeaderProps = {
   singleFilters: SingleFilterData[];
   milestoneCount: number;
   labelCount: number;
+  input: string;
 };
 
 type Tab = {
@@ -23,6 +24,7 @@ export function MainHeader({
   singleFilters,
   milestoneCount,
   labelCount,
+  input,
 }: MainHeaderProps) {
   const navigate = useNavigate();
 
@@ -69,7 +71,7 @@ export function MainHeader({
           name="필터"
           optionTitle={`이슈 필터`}
           options={setDropdownOptions(singleFilters)}
-          value="is:issue is:open"
+          value={input}
         />
       </div>
       <div style={{ display: "flex", gap: "16px" }}>
