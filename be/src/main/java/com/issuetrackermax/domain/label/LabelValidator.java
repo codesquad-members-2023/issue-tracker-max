@@ -14,6 +14,12 @@ import lombok.RequiredArgsConstructor;
 public class LabelValidator {
 	private final LabelRepository labelRepository;
 
+	public void existByTitle(String title) {
+		if (labelRepository.existByTitle(title)) {
+			throw new ApiException(LabelException.INVALID_LABEL_TITLE);
+		}
+	}
+
 	public void existById(Long id) {
 		if (!labelRepository.existById(id)) {
 			throw new ApiException(LabelException.NOT_FOUND_LABEL);
