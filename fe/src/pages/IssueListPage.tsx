@@ -66,7 +66,7 @@ export const IssueListPage: React.FC = () => {
         <Button
           {...{ typeVariant: 'ghost', size: 'S' }}
           onClick={() => {
-            navigate('/issues');
+            navigate('/');
           }}
           css={{
             display: 'flex',

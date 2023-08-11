@@ -34,7 +34,7 @@ export const Header: React.FC<Props> = ({
         <MediumLogo
           fill={theme.neutral.text.strong}
           onClick={() => {
-            navigate('/issues');
+            navigate('/');
           }}
           css={{ cursor: 'pointer' }}
         />

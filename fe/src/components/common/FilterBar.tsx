@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { ReactComponent as Search } from '@assets/icons/search.svg';
 import { Input } from './textInput/Input';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { DropDownPanel } from './dropDown/DropDownPanel';
 import { DropDownList } from './dropDown/DropDownList';
@@ -23,16 +23,7 @@ export const FilterBar: React.FC<Props> = ({
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const location = useLocation();
 
-  const loginId = (() => {
-    try {
-      const loginId = getLocalStorageLoginId();
-
-      return loginId;
-    } catch {
-      alert('다시 로그인 해주세요.');
-      goToFilteredPage('/sign');
-    }
-  })() as string;
+  const loginId = getLocalStorageLoginId();
 
   const closePanel = () => {
     setIsPanelOpen(false);
