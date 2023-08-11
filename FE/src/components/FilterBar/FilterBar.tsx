@@ -16,7 +16,7 @@ export default function FilterBar({
   return (
     <Wrapper>
       <FilterButtonField>
-        <DropdownIndicator label={"필터"} />
+        <DropdownIndicator label={"필터"} dropdownTop={"48px"} />
       </FilterButtonField>
       <FilterInputField>
         <FilterInputLabel htmlFor="filterInput">

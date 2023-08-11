@@ -26,7 +26,7 @@ export default function MainPage() {
   };
 
   const goMilestonesPage = () => {
-    navigate("/milestones");
+    navigate("/milestones/isOpen=true");
   };
 
   const showOpenIssue = () => {
@@ -139,10 +139,14 @@ export default function MainPage() {
               />
             </IssueTap>
             <FilterTap>
-              <DropdownIndicator label={"담당자"} />
-              <DropdownIndicator label={"레이블"} />
-              <DropdownIndicator label={"마일스톤"} />
-              <DropdownIndicator label={"작성자"} />
+              <DropdownIndicator
+                type={"assignees"}
+                label={"담당자"}
+                dropdownTop={"40px"}
+              />
+              <DropdownIndicator type={"labels"} label={"레이블"} />
+              <DropdownIndicator type={"milestones"} label={"마일스톤"} />
+              <DropdownIndicator type={"authors"} label={"작성자"} />
             </FilterTap>
           </TapWrapper>
         </TableHeader>
@@ -218,7 +222,7 @@ const TapButtonWrapper = styled.div`
 `;
 
 const IssueTable = styled.section`
-  z-index: 10;
+  width: 100%;
   border: ${({ theme }) =>
     `${theme.border.default} ${theme.colorSystem.neutral.border.default}`};
   border-radius: ${({ theme }) => theme.radius.large};
@@ -269,6 +273,7 @@ const IssueTap = styled.form`
 `;
 
 const FilterTap = styled.div`
+  position: relative;
   display: flex;
   gap: 32px;
 `;

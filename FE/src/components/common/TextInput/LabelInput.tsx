@@ -56,6 +56,7 @@ const Label = styled.label`
   width: 64px;
   font: ${({ theme }) => theme.font.displayMedium12};
   color: ${({ theme }) => theme.colorSystem.neutral.text.weak};
+  white-space: nowrap;
 `;
 
 const RandomButton = styled.button`

@@ -28,6 +28,11 @@ export type Milestone = {
   progress: number;
 };
 
+export type DropdownMilestone = {
+  id: number;
+  title: string;
+};
+
 export type IssueListProps = {
   id: number;
   title: string;
@@ -56,7 +61,7 @@ export type AssigneesList = {
 };
 
 export type AssigneesProps = {
-  assignees: AssigneesList[] | [];
+  assignees: AssigneesList[] | null;
 };
 
 export type FetchedLabels = {

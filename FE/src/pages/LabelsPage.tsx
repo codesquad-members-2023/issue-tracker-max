@@ -21,7 +21,7 @@ export default function LabelsPage() {
   };
 
   const goMilestonesPage = () => {
-    navigate("/milestones");
+    navigate("/milestones/isOpen=true");
   };
 
   const openDelete = () => {
@@ -110,7 +110,7 @@ export default function LabelsPage() {
         <TapButtonWrapper>
           <Button
             icon={"label"}
-            label={`레이블`}
+            label={`레이블(${data?.metadata.totalLabelCount})`}
             type={"ghost"}
             size={"medium"}
             width={"50%"}
@@ -118,7 +118,7 @@ export default function LabelsPage() {
           />
           <Button
             icon={"milestone"}
-            label={`마일스톤`}
+            label={`마일스톤(${data?.metadata.totalMilestoneCount})`}
             type={"ghost"}
             size={"medium"}
             width={"50%"}
@@ -161,7 +161,7 @@ export default function LabelsPage() {
             openDelete={openDelete}
           />
         ))}
-        {data?.labels === null && (
+        {data?.labels?.length === 0 && (
           <EmptyList>
             <EmptyContent>생성된 레이블이 없습니다.</EmptyContent>
           </EmptyList>

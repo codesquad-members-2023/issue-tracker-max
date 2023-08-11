@@ -1,5 +1,3 @@
-// type Props = {};
-
 import { styled } from "styled-components";
 import Button from "../common/Button/Button";
 import { Label } from "../../type";
@@ -41,7 +39,7 @@ export default function LabelList({ id, title, color, description }: Props) {
     setLabelDescription(e.target.value);
   };
 
-  const handleCInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleColorInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLabelColor(e.target.value);
   };
 
@@ -76,7 +74,7 @@ export default function LabelList({ id, title, color, description }: Props) {
   };
 
   return (
-    <Container id={id.toString()}>
+    <Container>
       {!isEdit && (
         <Default>
           <LabelWrapper>
@@ -108,7 +106,7 @@ export default function LabelList({ id, title, color, description }: Props) {
           color={labelColor}
           onChangeName={handleNameInputChange}
           onChangeDescrip={handleDescripInputChange}
-          onChangeColor={handleCInputChange}
+          onChangeColor={handleColorInputChange}
           randomColor={randomColor}
           cancelEdit={cancelEdit}
           confirmEdit={confirmEdit}

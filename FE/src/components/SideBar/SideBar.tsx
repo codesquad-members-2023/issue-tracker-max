@@ -6,6 +6,7 @@ export default function SideBar() {
     <Container>
       <ItemList>
         <DropdownIndicator
+          type={"none"}
           icon={"plus"}
           label={"담당자"}
           padding={"0px"}
@@ -15,6 +16,7 @@ export default function SideBar() {
       </ItemList>
       <ItemList>
         <DropdownIndicator
+          type={"none"}
           icon={"plus"}
           label={"레이블"}
           padding={"0px"}
@@ -24,6 +26,7 @@ export default function SideBar() {
       </ItemList>
       <ItemList>
         <DropdownIndicator
+          type={"none"}
           icon={"plus"}
           label={"마일스톤"}
           padding={"0px"}

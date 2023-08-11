@@ -46,7 +46,7 @@ export default function Input({
 }
 
 const TextInput = styled.input`
-  width: 100%;
+  width: calc(100% - 72px);
   height: 24px;
   background-color: transparent;
   font: ${({ theme }) => theme.font.displayMedium16};
