@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { Box } from '@components/common/box/Box';
 import { MilestoneItem } from './MilestoneItem';
@@ -7,7 +7,7 @@ import { MilestoneItem } from './MilestoneItem';
 import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
 import { Button } from '@components/common/Button';
-import { generateEncodedQuery } from '@utils/generateEncodedQuery';
+// import { generateEncodedQuery } from '@utils/generateEncodedQuery';
 
 type Props = {
   isAddTableOpen?: boolean;
@@ -18,20 +18,20 @@ type Props = {
 };
 
 export const Body: React.FC<Props> = ({
-  isAddTableOpen,
+  // isAddTableOpen,
   openMilestonesCount,
   closedMilestoneCount,
   milestoneList,
   // onAddTableClose,
 }) => {
   const theme = useTheme() as any;
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const onMilestoneFilterClick = (queryValue: 'open' | 'closed') => {
-    const query = generateEncodedQuery('status', queryValue);
+  // const onMilestoneFilterClick = (queryValue: 'open' | 'closed') => {
+  //   const query = generateEncodedQuery('status', queryValue);
 
-    navigate(query);
-  };
+  //   navigate(query);
+  // };
 
   return (
     <div
@@ -42,17 +42,14 @@ export const Body: React.FC<Props> = ({
         gap: '24px',
       }}
     >
-      {
-        isAddTableOpen
-        // && (
-        // <TableContainer
-        //   tableVariant="milestone"
-        //   typeVariant="add"
-        //   onAddTableClose={onAddTableClose}
-        //   header={<TableHeader title="새로운 마일스톤 추가" />}
-        // />
-        // )
-      }
+      {/* {isAddTableOpen && (
+        <TableContainer
+          tableVariant="milestone"
+          typeVariant="add"
+          onAddTableClose={onAddTableClose}
+          header={<TableHeader title="새로운 마일스톤 추가" />}
+        />
+      )} */}
 
       <Box
         header={
@@ -65,19 +62,13 @@ export const Body: React.FC<Props> = ({
                 paddingLeft: '32px',
               }}
             >
-              <Button
-                typeVariant="ghost"
-                onClick={() => onMilestoneFilterClick('open')}
-              >
+              <Button typeVariant="ghost" onClick={() => console.log('click')}>
                 <AlertCircle stroke={theme.neutral.text.strong} />
                 <span css={{ font: theme.fonts.availableMedium16 }}>
                   열린 마일스톤({openMilestonesCount})
                 </span>
               </Button>
-              <Button
-                typeVariant="ghost"
-                onClick={() => onMilestoneFilterClick('closed')}
-              >
+              <Button typeVariant="ghost" onClick={() => console.log('click')}>
                 <Archive stroke={theme.neutral.text.strong} />
                 <span css={{ font: theme.fonts.availableMedium16 }}>
                   닫힌 마일스톤({closedMilestoneCount})

@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { ReactComponent as Search } from '@assets/icons/search.svg';
 import { Input } from './textInput/Input';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { DropDownPanel } from './dropDown/DropDownPanel';
 import { DropDownList } from './dropDown/DropDownList';
