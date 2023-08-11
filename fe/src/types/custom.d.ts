@@ -35,6 +35,13 @@ type Issue = {
   isOpen: boolean;
 };
 
+
+type DefaultFileStatusType = {
+  typeError: boolean;
+  sizeError: boolean;
+  isUploading: boolean;
+  uploadFailed: boolean;
+
 type Label = {
   id: number;
   name: string;
@@ -58,4 +65,5 @@ type Milestone = {
   openIssueCount: number;
   closedIssueCount: number;
   deadline: string;
+
 };

@@ -1,13 +1,6 @@
 import { useTheme } from '@emotion/react';
 import { ErrorMessages } from './ErrorMessages';
 
-type DefaultFileStatusType = {
-  typeError: boolean;
-  sizeError: boolean;
-  isUploading: boolean;
-  uploadFailed: boolean;
-};
-
 type Props = {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   fileStatus: DefaultFileStatusType;
