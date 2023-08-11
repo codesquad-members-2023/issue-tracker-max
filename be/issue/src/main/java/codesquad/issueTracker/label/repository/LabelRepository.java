@@ -41,7 +41,7 @@ public class LabelRepository {
 		return keyHolder.getKey().longValue();
 	}
 
-	public int update(Long id, Label label) {
+	public Long update(Long id, Label label) {
 		String sql = "UPDATE labels SET name = :name, text_color = :textColor, background_color = :backgroundColor, description = :description WHERE id = :id";
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("id", id);
@@ -53,17 +53,17 @@ public class LabelRepository {
 		if(result == 0){
 			throw new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION);
 		}
-		return result;
+		return id;
 	}
 
-	public int delete(Long id) {
+	public Long delete(Long id) {
 		String sql = "UPDATE labels SET is_deleted = TRUE where id = :id";
 		int result = jdbcTemplate.update(sql, new MapSqlParameterSource()
 			.addValue("id", id));
 		if(result == 0){
 			throw new CustomException(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION);
 		}
-		return result;
+		return id;
 	}
 
 	public Optional<List<Label>> findAll() {
