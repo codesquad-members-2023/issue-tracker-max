@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommentVo {
+public class CommentWithAuthor {
 	private Long id;
 	private String contents;
 	private LocalDateTime createdAt;

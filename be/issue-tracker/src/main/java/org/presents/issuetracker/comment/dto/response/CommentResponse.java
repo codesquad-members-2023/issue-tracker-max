@@ -2,7 +2,7 @@ package org.presents.issuetracker.comment.dto.response;
 
 import java.time.LocalDateTime;
 
-import org.presents.issuetracker.comment.entity.vo.CommentVo;
+import org.presents.issuetracker.comment.entity.vo.CommentWithAuthor;
 import org.presents.issuetracker.user.dto.response.UserResponse;
 
 import lombok.Builder;
@@ -16,12 +16,12 @@ public class CommentResponse {
 	private LocalDateTime createdAt;
 	private UserResponse author;
 
-	public static CommentResponse fromVo(CommentVo commentVo) {
+	public static CommentResponse from(CommentWithAuthor comment) {
 		return CommentResponse.builder()
-			.id(commentVo.getId())
-			.contents(commentVo.getContents())
-			.createdAt(commentVo.getCreatedAt())
-			.author(UserResponse.fromEntity(commentVo.getAuthor()))
+			.id(comment.getId())
+			.contents(comment.getContents())
+			.createdAt(comment.getCreatedAt())
+			.author(UserResponse.from(comment.getAuthor()))
 			.build();
 	}
 }

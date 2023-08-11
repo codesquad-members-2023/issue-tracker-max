@@ -1,9 +1,9 @@
-INSERT INTO user (login_id, password, image) VALUES ('ayaan', '1234', '???');
-INSERT INTO user (login_id, password, image) VALUES ('jian', '1234', '???');
-INSERT INTO user (login_id, password, image) VALUES ('bono', '1234', '???');
-INSERT INTO user (login_id, password, image) VALUES ('hana', '1234', '???');
-INSERT INTO user (login_id, password, image) VALUES ('khundi', '1234', '???');
-INSERT INTO user (login_id, password, image) VALUES ('puban', '1234', '???');
+INSERT INTO user (login_id, password, image) VALUES ('ayaan', '1234', '이안이미지');
+INSERT INTO user (login_id, password, image) VALUES ('jian', '1234', '지안이미지');
+INSERT INTO user (login_id, password, image) VALUES ('bono', '1234', '보노이미지');
+INSERT INTO user (login_id, password, image) VALUES ('hana', '1234', '하나이미지');
+INSERT INTO user (login_id, password, image) VALUES ('khundi', '1234', '쿤디이미지');
+INSERT INTO user (login_id, password, image) VALUES ('puban', '1234', '푸반이미지');
 
 INSERT INTO milestone (name, deadline, description) VALUES ('be-milestone1', '2023-08-04T00:00:00', '백엔드');
 INSERT INTO milestone (name, deadline, description) VALUES ('be-milestone2', '2023-08-11T00:00:00', '백엔드');
@@ -18,8 +18,8 @@ INSERT INTO label (name, background_color, text_color) VALUES ('docs', '#662208'
 
 INSERT INTO issue (author_id, milestone_id, title, contents) VALUES (1, 1, '기능 구현1', '내용 컨텐츠 내용 컨텐츠 내용 컨텐츠');
 INSERT INTO issue (author_id, milestone_id, title, contents) VALUES (2, 1, '기능 구현2', '내용 컨텐츠 내용 컨텐츠 내용 컨텐츠');
-INSERT INTO issue (author_id, milestone_id, title, contents) VALUES (3, 1, '기능 구현3', '내용 컨텐츠 내용 컨텐츠 내용 컨텐츠');
-INSERT INTO issue (author_id, milestone_id, title, contents) VALUES (4, 1, '기능 구현4', '내용 컨텐츠 내용 컨텐츠 내용 컨텐츠');
+INSERT INTO issue (author_id, milestone_id, title, contents, status) VALUES (3, 1, '기능 구현3', '내용 컨텐츠 내용 컨텐츠 내용 컨텐츠', 'deleted');
+INSERT INTO issue (author_id, milestone_id, title, contents, status) VALUES (4, 1, '기능 구현4', '내용 컨텐츠 내용 컨텐츠 내용 컨텐츠', 'closed');
 INSERT INTO issue (author_id, title, contents) VALUES (5, '기능 구현5', '내용 컨텐츠 내용 컨텐츠 내용 컨텐츠');
 INSERT INTO issue (author_id, title, contents) VALUES (6, '기능 구현6', '내용 컨텐츠 내용 컨텐츠 내용 컨텐츠');
 

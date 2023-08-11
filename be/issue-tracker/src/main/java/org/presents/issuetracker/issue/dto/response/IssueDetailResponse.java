@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.presents.issuetracker.comment.dto.response.CommentResponse;
-import org.presents.issuetracker.issue.entity.vo.IssueDetailVo;
-import org.presents.issuetracker.label.dto.response.LabelResponse;
+import org.presents.issuetracker.issue.entity.vo.IssueDetailInfo;
+import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
 import org.presents.issuetracker.user.dto.response.UserResponse;
 
@@ -21,29 +21,31 @@ public class IssueDetailResponse {
 	private String contents;
 	private LocalDateTime createdAt;
 	private String status;
+	private int commentCount;
 	private UserResponse author;
 	private MilestonePreviewResponse milestone;
 	private List<UserResponse> assignees;
-	private List<LabelResponse> labels;
+	private List<LabelPreviewResponse> labels;
 	private List<CommentResponse> comments;
 
-	public static IssueDetailResponse fromVo(IssueDetailVo issueDetailVo) {
+	public static IssueDetailResponse from(IssueDetailInfo issueDetailInfo) {
 		return IssueDetailResponse.builder()
-			.id(issueDetailVo.getId())
-			.title(issueDetailVo.getTitle())
-			.contents(issueDetailVo.getContents())
-			.createdAt(issueDetailVo.getCreatedAt())
-			.status(issueDetailVo.getStatus())
-			.author(UserResponse.fromEntity(issueDetailVo.getAuthor()))
-			.milestone(MilestonePreviewResponse.fromVo(issueDetailVo.getMilestone()))
-			.assignees(issueDetailVo.getAssignees().stream()
-				.map(UserResponse::fromEntity)
+			.id(issueDetailInfo.getId())
+			.title(issueDetailInfo.getTitle())
+			.contents(issueDetailInfo.getContents())
+			.createdAt(issueDetailInfo.getCreatedAt())
+			.status(issueDetailInfo.getStatus())
+			.commentCount(issueDetailInfo.getComments().size())
+			.author(UserResponse.from(issueDetailInfo.getAuthor()))
+			.milestone(MilestonePreviewResponse.from(issueDetailInfo.getMilestone()))
+			.assignees(issueDetailInfo.getAssignees().stream()
+				.map(UserResponse::from)
 				.collect(Collectors.toList()))
-			.labels(issueDetailVo.getLabels().stream()
-				.map(LabelResponse::fromVo)
+			.labels(issueDetailInfo.getLabels().stream()
+				.map(LabelPreviewResponse::from)
 				.collect(Collectors.toList()))
-			.comments(issueDetailVo.getComments().stream()
-				.map(CommentResponse::fromVo)
+			.comments(issueDetailInfo.getComments().stream()
+				.map(CommentResponse::from)
 				.collect(Collectors.toList()))
 			.build();
 	}

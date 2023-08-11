@@ -99,11 +99,25 @@ public class LabelRepository {
         String sql = "SELECT label_id, name, background_color, text_color " +
             "FROM label " +
             "WHERE is_deleted = :openFlag " +
-            "UNION ALL " +
-            "SELECT 0 AS label_id, 'none' AS name, '' AS background_color, '' AS text_color " +
             "ORDER BY label_id";
 
         MapSqlParameterSource params = new MapSqlParameterSource("openFlag", OPEN_FLAG);
+
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            long id = rs.getLong("label_id");
+            String name = rs.getString("name");
+            String backgroundColor = rs.getString("background_color");
+            String textColor = rs.getString("text_color");
+            return Label.of(id, name, backgroundColor, textColor);
+        });
+    }
+
+    public List<Label> findByIssueId(Long issueId) {
+        String sql = "SELECT l.label_id, l.name, l.background_color, l.text_color "
+            + "FROM label l JOIN issue_label il ON l.label_id = il.label_id "
+            + "WHERE il.issue_id = :issueId";
+
+        MapSqlParameterSource params = new MapSqlParameterSource("issueId", issueId);
 
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
             long id = rs.getLong("label_id");
