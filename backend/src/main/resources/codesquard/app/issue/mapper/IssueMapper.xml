@@ -88,7 +88,7 @@
                     </when>
                     <otherwise>
                         AND issue.`id` IN (
-                        SELECT DISTINCT(issue_label.`issue_id`)
+                        SELECT issue_label.`issue_id`
                         FROM issue_label AS issue_label
                         LEFT OUTER JOIN label AS label
                         ON issue_label.`label_id` = label.`id`
@@ -96,7 +96,8 @@
                         <foreach item="name" index="index" collection="label" open="(" separator="," close=")">
                             #{name}
                         </foreach>
-                        )
+                        GROUP BY issue_label.`issue_id`
+                        HAVING COUNT(issue_label.`issue_id`) >= ${label.size})
                     </otherwise>
                 </choose>
             </if>
