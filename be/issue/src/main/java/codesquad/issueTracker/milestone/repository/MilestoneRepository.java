@@ -85,6 +85,18 @@ public class MilestoneRepository {
 		return jdbcTemplate.query(sql, parameterSource, milestoneRowMapper);
 	}
 
+	public int getAnotherCount(Boolean status) {
+		String sql = "SELECT COUNT(*) FROM milestones WHERE is_closed = :status AND is_deleted = 0";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("status", status);
+		return jdbcTemplate.queryForObject(sql, parameterSource, Integer.class);
+	}
+
+	public int getLabelCount() {
+		String sql = "SELECT COUNT(*) FROM labels WHERE is_deleted = 0";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
+	}
+
 	private final RowMapper<MilestoneVo> milestoneRowMapper = (rs, rowNum) -> MilestoneVo.builder()
 		.id(rs.getLong("id"))
 		.name(rs.getString("name"))
@@ -94,10 +106,4 @@ public class MilestoneRepository {
 		.issueClosedCount(rs.getInt("issueClosedCount"))
 		.build();
 
-	public int countAnother(Boolean status) {
-		String sql = "SELECT COUNT(*) FROM milestones WHERE is_closed = :status AND is_deleted = 0";
-		SqlParameterSource parameterSource = new MapSqlParameterSource()
-			.addValue("status", status);
-		return jdbcTemplate.queryForObject(sql, parameterSource, Integer.class);
-	}
 }
