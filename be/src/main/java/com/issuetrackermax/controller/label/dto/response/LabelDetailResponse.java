@@ -8,15 +8,15 @@ import lombok.Getter;
 @Getter
 public class LabelDetailResponse {
 	private Long id;
-	private String name;
+	private String title;
 	private String description;
 	private String textColor;
 	private String backgroundColor;
 
 	@Builder
-	public LabelDetailResponse(Long id, String name, String description, String textColor, String backgroundColor) {
+	public LabelDetailResponse(Long id, String title, String description, String textColor, String backgroundColor) {
 		this.id = id;
-		this.name = name;
+		this.title = title;
 		this.description = description;
 		this.textColor = textColor;
 		this.backgroundColor = backgroundColor;
@@ -26,7 +26,7 @@ public class LabelDetailResponse {
 		return LabelDetailResponse
 			.builder()
 			.id(label.getId())
-			.name(label.getTitle())
+			.title(label.getTitle())
 			.description(label.getDescription())
 			.textColor(label.getTextColor())
 			.backgroundColor(label.getBackgroundColor())
