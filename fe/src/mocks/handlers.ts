@@ -27,15 +27,6 @@ export const handlers = [
   }),
 
   rest.post('/issues/new', (_, res, ctx) => {
-    // const bodyData = JSON.parse(req.body as string);
-
-    // if (bodyData.content === '') {
-    //   //에러 확인용 조건
-    //   return res(
-    //     ctx.status(400),
-    //     ctx.json({ message: '필요한 필드가 누락되었습니다.' }),
-    //   );
-    // }
     currentId += 1;
     return res(
       ctx.status(200),

@@ -13,7 +13,6 @@ import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/textInput/TextInput';
-// import { Comment } from '@components/common/comment/Commentt';
 
 type SelectionState = {
   assignees: number[];

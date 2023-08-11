@@ -23,20 +23,13 @@ export const DropDownContainer: React.FC<Props> = ({
       className="dropdown-panel"
       css={{
         position: 'relative',
-        boxSizing: 'border-box',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         font: theme.fonts.availableMedium16,
-        ...SIZE[size],
       }}
     >
-      <div
-        css={{
-          width: '100%',
-        }}
-        onClick={onClick}
-      >
+      <div onClick={onClick}>
         <DropDownIndicator indicator={indicator} size={size} />
       </div>
       {isPanelOpen && <>{children}</>}

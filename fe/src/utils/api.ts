@@ -2,8 +2,6 @@ export const fetchData = async (path: string) => {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_APP_BASE_URL}/${path}`,
-      // `${path}`,
-
       {
         method: 'GET',
       },
@@ -35,4 +33,8 @@ export const getMilestones = () => {
 
 export const getIssueListPageData = (query: string) => {
   return fetchData('issues' + query);
+};
+
+export const getLabelListPageData = () => {
+  return fetchData('labels');
 };
