@@ -7,9 +7,9 @@ import Main from '../components/landmark/Main';
 import Toolbar from '../components/landmark/Toolbar';
 import TabButtonComponent from '../components/common/TabButton';
 import Layout from '../components/Layout';
-import axios from '../api/axios';
 import Button from '../components/common/button/BaseButton';
-import Labels from '../components/Labels';
+import Labels from '../components/label/Labels';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 enum Option {
   labels,
@@ -23,30 +23,20 @@ const TabButton = React.memo(TabButtonComponent);
 export default function Options() {
   const { util } = useContext(AppContext);
   const [activeOption, setActiveOption] = useState<Option>(labels);
-  const [labelData, setLabelDatas] = useState([
-    {
-      id: 1,
-      textColor: 'AAA333',
-      backgroundColor: 'FFF3FF',
-      name: 'feat',
-      description: '설명임',
-    },
-  ]);
+  const [labelData, setLabelDatas] = useState([]);
   // const [milestones, setMilestones] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     return () => {
       (async () => {
-        const headers = {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        };
-        const fetch =
+        const fetchData =
           activeOption === labels
-            ? () => axios.get('api/labels', { headers })
-            : () => axios.get('api/milestones', { headers });
+            ? () => axiosPrivate.get('api/labels')
+            : () => axiosPrivate.get('api/milestones');
 
-        const res = await fetch();
-        console.log(res.data);
+        const res = await fetchData();
+
         if (activeOption === labels) {
           setLabelDatas(res.data.message.labels);
         } else {
