@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import InformationTag from './common/InformationTag';
+import InformationTag from '../common/InformationTag';
 
 export default function Label({
   textColor,

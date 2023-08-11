@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { AppContext } from '../main';
 import Header from '../components/landmark/Header';
-import IssueTable from '../components/IssueTable';
+import IssueTable from '../components/issues/IssueTable';
 import Main from '../components/landmark/Main';
 import { Link } from 'react-router-dom';
 import ContextLogo from '../types/ContextLogo';

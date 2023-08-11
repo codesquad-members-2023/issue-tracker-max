@@ -1,9 +1,9 @@
 import { styled } from 'styled-components';
 import { useState } from 'react';
-import Icons from '../design/Icons';
-import CheckBox from '../constant/CheckBox';
-import Button from './common/button/BaseButton';
-import DropdownIndicator from './common/DropdownIndicator';
+import Icons from '../../design/Icons';
+import CheckBox from '../../constant/CheckBox';
+import Button from '../common/button/BaseButton';
+import DropdownIndicator from '../common/DropdownIndicator';
 
 const { initial, active } = CheckBox;
 

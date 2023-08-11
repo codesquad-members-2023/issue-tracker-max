@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import Label from './Label';
-import ButtonSmall from './common/button/ButtonSmall';
+import ButtonSmall from '../common/button/ButtonSmall';
 
 export default function Labels({
   data,
