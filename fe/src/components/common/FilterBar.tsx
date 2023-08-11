@@ -39,62 +39,105 @@ export const FilterBar: React.FC<Props> = ({
   };
 
   const decodedSearch = decodeURIComponent(location.search);
+  const isSelectedMap = {
+    openIssue: location.search === '' || decodedSearch.includes('status:open'),
+    writtenByMe: decodedSearch.includes(`author:${loginId}`),
+    assignToMe: decodedSearch.includes(`assignee:${loginId}`),
+    iCommented: decodedSearch.includes(`commentAuthor:${loginId}`),
+    closedIssue: decodedSearch.includes('status:closed'),
+  };
   const filterOptions = [
     {
       id: 1,
       name: '열린 이슈',
 
       onClick: () => {
-        goToFilteredPage(location.search + ' status:open');
         closePanel();
+
+        if (isSelectedMap.openIssue) {
+          goToFilteredPage(location.search.replace('status:open', ''));
+
+          return;
+        }
+
+        goToFilteredPage(location.search + ' status:open');
       },
 
-      isSelected:
-        location.search === '' || decodedSearch.includes('status:open'),
+      isSelected: isSelectedMap.openIssue,
     },
     {
       id: 2,
       name: '내가 작성한 이슈',
 
       onClick: () => {
-        goToFilteredPage(`${location.search} author:${loginId}`);
         closePanel();
+
+        if (isSelectedMap.writtenByMe) {
+          goToFilteredPage(location.search.replace(`author:${loginId}`, ''));
+
+          return;
+        }
+
+        goToFilteredPage(`${location.search} author:${loginId}`);
       },
 
-      isSelected: decodedSearch.includes(`author:${loginId}`),
+      isSelected: isSelectedMap.writtenByMe,
     },
     {
       id: 3,
       name: '나에게 할당된 이슈',
 
       onClick: () => {
-        goToFilteredPage(`${location.search} assignee:${loginId}`);
         closePanel();
+
+        if (isSelectedMap.assignToMe) {
+          goToFilteredPage(location.search.replace(`assignee:${loginId}`, ''));
+
+          return;
+        }
+
+        goToFilteredPage(`${location.search} assignee:${loginId}`);
       },
 
-      isSelected: decodedSearch.includes(`assignee:${loginId}`),
+      isSelected: isSelectedMap.assignToMe,
     },
     {
       id: 4,
       name: '내가 댓글을 남긴 이슈',
 
       onClick: () => {
-        goToFilteredPage(`${location.search} commentAuthor:${loginId}`);
         closePanel();
+
+        if (isSelectedMap.iCommented) {
+          goToFilteredPage(
+            location.search.replace(`commentAuthor:${loginId}`, ''),
+          );
+
+          return;
+        }
+
+        goToFilteredPage(`${location.search} commentAuthor:${loginId}`);
       },
 
-      isSelected: decodedSearch.includes(`commentAuthor:${loginId}`),
+      isSelected: isSelectedMap.iCommented,
     },
     {
       id: 5,
       name: '닫힌 이슈',
 
       onClick: () => {
-        goToFilteredPage(location.search + ' status:closed');
         closePanel();
+
+        if (isSelectedMap.closedIssue) {
+          goToFilteredPage(location.search.replace('status:closed', ''));
+
+          return;
+        }
+
+        goToFilteredPage(location.search + ' status:closed');
       },
 
-      isSelected: decodedSearch.includes('status:closed'),
+      isSelected: isSelectedMap.closedIssue,
     },
   ];
 
