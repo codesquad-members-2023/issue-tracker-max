@@ -40,12 +40,12 @@ type UserInfo = {
   image: string;
 };
 
-
 type DefaultFileStatusType = {
   typeError: boolean;
   sizeError: boolean;
   isUploading: boolean;
   uploadFailed: boolean;
+};
 
 type Label = {
   id: number;
@@ -70,5 +70,4 @@ type Milestone = {
   openIssueCount: number;
   closedIssueCount: number;
   deadline: string;
-
 };
