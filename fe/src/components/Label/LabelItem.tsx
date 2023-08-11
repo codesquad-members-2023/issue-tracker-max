@@ -1,6 +1,6 @@
 import { Theme, css, useTheme } from '@emotion/react';
-import { ReactComponent as EditIcon } from '/src/assets/icon/edit.svg';
-import { ReactComponent as TrashIcon } from '/src/assets/icon/trash.svg';
+import { ReactComponent as EditIcon } from '../../assets/icon/edit.svg';
+import { ReactComponent as TrashIcon } from '../../assets/icon/trash.svg';
 import { font } from '../../styles/styles';
 import Label from './Label';
 

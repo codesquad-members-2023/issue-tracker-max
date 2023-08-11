@@ -2,9 +2,9 @@ import { Theme, css, useTheme } from '@emotion/react';
 import { font } from '../../../styles/styles';
 import CheckBoxIcon from './CheckBox';
 import Label from '../../Label/Label';
-import { ReactComponent as AlertCircleIcon } from '/src/assets/icon/alertCircle.svg';
-import { ReactComponent as MilestoneIcon } from '/src/assets/icon/milestone.svg';
-import { ReactComponent as UserImageSmallIcon } from '/src/assets/icon/userImageSmall.svg';
+import { ReactComponent as AlertCircleIcon } from '../../../assets/icon/alertCircle.svg';
+import { ReactComponent as MilestoneIcon } from '../../../assets/icon/milestone.svg';
+import { ReactComponent as UserImageSmallIcon } from '../../../assets/icon/userImageSmall.svg';
 
 type Props = {
   issue: Issue;

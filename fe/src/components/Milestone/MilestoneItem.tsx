@@ -1,10 +1,10 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import { font, radius } from '../../styles/styles';
-import { ReactComponent as MilestoneIcon } from '/src/assets/icon/milestone.svg';
-import { ReactComponent as CalendarIcon } from '/src/assets/icon/calendar.svg';
-import { ReactComponent as ArchiveIcon } from '/src/assets/icon/archive.svg';
-import { ReactComponent as EditIcon } from '/src/assets/icon/edit.svg';
-import { ReactComponent as DeleteIcon } from '/src/assets/icon/trash.svg';
+import { ReactComponent as MilestoneIcon } from '../../assets/icon/milestone.svg';
+import { ReactComponent as CalendarIcon } from '../../assets/icon/calendar.svg';
+import { ReactComponent as ArchiveIcon } from '../../assets/icon/archive.svg';
+import { ReactComponent as EditIcon } from '../../assets/icon/edit.svg';
+import { ReactComponent as DeleteIcon } from '../../assets/icon/trash.svg';
 import MilestoneButton from './MilestoneButton';
 
 export default function IssueItem(milestone: Milestone) {

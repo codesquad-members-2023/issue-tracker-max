@@ -1,5 +1,5 @@
 import { Theme, css, useTheme } from '@emotion/react';
-import { ReactComponent as ChevronDownIcon } from '/src/assets/icon/chevronDown.svg';
+import { ReactComponent as ChevronDownIcon } from '../../../assets/icon/chevronDown.svg';
 import { font } from '../../../styles/styles';
 
 type Props = {

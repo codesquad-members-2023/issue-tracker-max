@@ -6,7 +6,7 @@ import { font } from '../../styles/styles';
 import { REGEX } from '../../constant/regex';
 import SignButton from './common/SignButton';
 import InputWithValidation from './common/InputWithValidation';
-import { ReactComponent as LargeLogo } from '/src/assets/logo/largeLogo.svg';
+import { ReactComponent as LargeLogo } from '../../assets/logo/largeLogo.svg';
 
 type Response = {
   success: boolean;
