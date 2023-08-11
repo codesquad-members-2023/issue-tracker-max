@@ -1,6 +1,7 @@
 package codesquard.app.issue.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -21,4 +22,10 @@ public class IssueCommentsResponse {
 	private LocalDateTime createdAt;
 	@JsonProperty("modifiedAt")
 	private LocalDateTime modifiedAt;
+	@JsonProperty("reactions")
+	private final List<userReactionResponse> reactions;
+
+	public Long getId() {
+		return id;
+	}
 }

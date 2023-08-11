@@ -41,8 +41,9 @@ public class IssueController {
 	private final IssueQueryService issueQueryService;
 
 	@GetMapping("/{issueId}")
-	public ApiResponse<IssueReadResponse> get(@PathVariable Long issueId) {
-		return ApiResponse.ok(issueQueryService.get(issueId));
+	public ApiResponse<IssueReadResponse> get(@PathVariable Long issueId, @Login AuthenticateUser user) {
+		Long userId = user.toEntity().getId();
+		return ApiResponse.ok(issueQueryService.get(issueId, userId));
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
