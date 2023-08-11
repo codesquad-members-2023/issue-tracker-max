@@ -2,6 +2,8 @@ package com.issuetrackermax.controller.label;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,18 +33,20 @@ public class LabelController {
 
 	@GetMapping
 	public ApiResponse<LabelsResponse> show() {
-		Long milestonCount = milestoneService.getMilestoneCount();
+		Long milestoneCount = milestoneService.getMilestoneCount();
 		List<LabelDetailResponse> labelList = labelService.getLabelList();
 		LabelsResponse response = LabelsResponse
 			.builder()
-			.milestoneCount(milestonCount)
+			.milestoneCount(milestoneCount)
 			.labels(labelList)
 			.build();
 		return ApiResponse.success(response);
 	}
 
 	@PostMapping
-	public ApiResponse<LabelPostResponse> post(@RequestBody LabelPostRequest labelPostRequest) {
+	public ApiResponse<LabelPostResponse> post(
+		@RequestBody
+		@Valid LabelPostRequest labelPostRequest) {
 		Long id = labelService.save(labelPostRequest);
 		LabelPostResponse response = LabelPostResponse.builder().id(id).build();
 		return ApiResponse.success(response);
@@ -50,7 +54,8 @@ public class LabelController {
 
 	@PutMapping("/{id}")
 	public ApiResponse<Void> modify(@PathVariable Long id,
-		@RequestBody LabelModifyRequest labelModifyRequest) {
+		@RequestBody
+		@Valid LabelModifyRequest labelModifyRequest) {
 		labelService.update(id, labelModifyRequest);
 		return ApiResponse.success();
 	}
