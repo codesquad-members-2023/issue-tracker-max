@@ -39,12 +39,6 @@ public class JdbcUserReactionRepository implements UserReactionRepository {
 	}
 
 	@Override
-	public boolean isExist(Long reactionId) {
-		String sql = "SELECT EXISTS (SELECT 1 FROM reaction WHERE id = :id)";
-		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", reactionId), Boolean.class));
-	}
-
-	@Override
 	public List<userReactionResponse> findIssueReactionBy(Long issueId, Long userId) {
 		String sql = "SELECT r.unicode, IF (EXISTS (SELECT 1 FROM user_reaction as ur WHERE ur.user_id = :userId AND "
 			+ "u.id = ur.user_id AND ur.reaction_id = r.id AND ur.issue_id = :issueId), ur.id, null) as selected FROM reaction as r "
@@ -52,6 +46,24 @@ public class JdbcUserReactionRepository implements UserReactionRepository {
 			+ "LEFT JOIN user as u ON u.id = ur.user_id";
 		return template.query(sql, Map.of("issueId", issueId, "userId", userId),
 			userReactionResponseRowMapper(issueId));
+	}
+
+	@Override
+	public void delete(Long id) {
+		String sql = "DELETE FROM user_reaction WHERE id = :id";
+		template.update(sql, Map.of("id", id));
+	}
+
+	@Override
+	public boolean isExistReaction(Long reactionId) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM reaction WHERE id = :id)";
+		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", reactionId), Boolean.class));
+	}
+
+	@Override
+	public boolean isExistUserReaction(Long id) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM user_reaction WHERE id = :id)";
+		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", id), Boolean.class));
 	}
 
 	private MapSqlParameterSource saveIssueParamSource(Long reactionId, Long userId, Long issueId) {

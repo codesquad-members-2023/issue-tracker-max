@@ -9,7 +9,11 @@ public interface UserReactionRepository {
 
 	Long saveCommentReaction(Long reactionId, Long userId, Long commentId);
 
-	boolean isExist(Long reactionId);
-
 	List<userReactionResponse> findIssueReactionBy(Long issueId, Long userId);
+
+	void delete(Long id);
+
+	boolean isExistReaction(Long reactionId);
+
+	boolean isExistUserReaction(Long id);
 }
