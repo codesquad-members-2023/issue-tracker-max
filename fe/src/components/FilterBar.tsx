@@ -52,7 +52,7 @@ const filterBar = (theme: Theme) => css`
     color: ${theme.neutral.textWeak};
     background-color: ${theme.neutral.surfaceBold};
     font: ${font.displayMedium16};
-    background-image: url('../assets/icon/search.svg');
+    background-image: url('../../src/assets/icon/search.svg');
     background-repeat: no-repeat;
     background-position: 15px center;
   }
