@@ -17,22 +17,26 @@ public class SingleFilters {
 	public static final Long CLOSED_ID = 5L;
 
 	public SingleFilters() {
-		// TODO: SingleFilter의 Enum에 RESPONSE라는 필드 추가(총 3개)하여 conditions를 ENUM으로 관리하게끔 하기
-
-		this.singleFilters.add(new SingleFilter(OPENED_ID, SingleFilter.IS.OPENED.getName(), "is:opened",
-			false));
 		this.singleFilters.add(
-			new SingleFilter(AUTHOR_ID, SingleFilter.ME.AUTHOR.getName(), "author:@me",
-				false));
+			new SingleFilter(OPENED_ID, SingleFilter.IS.OPENED.getName(), SingleFilter.IS.OPENED.getResponse(),
+			false)
+		);
 		this.singleFilters.add(
-			new SingleFilter(ASSIGNEE_ID, SingleFilter.ME.ASSIGNEE.getName(), "assignee:@me",
-				false));
+			new SingleFilter(AUTHOR_ID, SingleFilter.ME.AUTHOR.getName(), SingleFilter.ME.AUTHOR.getResponse(),
+				false)
+		);
 		this.singleFilters.add(
-			new SingleFilter(MENTIONS_ID, SingleFilter.ME.MENTIONS.getName(), "mentions:@me",
-				false));
+			new SingleFilter(ASSIGNEE_ID, SingleFilter.ME.ASSIGNEE.getName(), SingleFilter.ME.ASSIGNEE.getResponse(),
+				false)
+		);
 		this.singleFilters.add(
-			new SingleFilter(CLOSED_ID, SingleFilter.IS.CLOSED.getName(), "is:closed",
-				false));
+			new SingleFilter(MENTIONS_ID, SingleFilter.ME.MENTIONS.getName(), SingleFilter.ME.MENTIONS.getResponse(),
+				false)
+		);
+		this.singleFilters.add(
+			new SingleFilter(CLOSED_ID, SingleFilter.IS.CLOSED.getName(), SingleFilter.IS.CLOSED.getResponse(),
+				false)
+		);
 	}
 
 	public void changeBy(boolean selected, Long index) {

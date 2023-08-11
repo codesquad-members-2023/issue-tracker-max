@@ -9,15 +9,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SingleFilter {
 	public enum IS {
-		OPENED("opened", "열린 이슈"),
-		CLOSED("closed", "닫힌 이슈");
+		OPENED("opened", "열린 이슈", "is:opened"),
+		CLOSED("closed", "닫힌 이슈", "is:closed");
 
 		private final String type;
 		private final String name;
+		private final String response;
 
-		IS(String type, String name) {
+		IS(String type, String name, String response) {
 			this.type = type;
 			this.name = name;
+			this.response = response;
 		}
 
 		public String getType() {
@@ -26,20 +28,26 @@ public class SingleFilter {
 
 		public String getName() {
 			return name;
+		}
+
+		public String getResponse() {
+			return response;
 		}
 	}
 
 	public enum ME {
-		AUTHOR("@me", "내가 작성한 이슈"),
-		ASSIGNEE("@me", "나에게 할당된 이슈"),
-		MENTIONS("@me", "내가 댓글을 남긴 이슈");
+		AUTHOR("@me", "내가 작성한 이슈", "author:@me"),
+		ASSIGNEE("@me", "나에게 할당된 이슈", "assignee:@me"),
+		MENTIONS("@me", "내가 댓글을 남긴 이슈", "mentions:@me");
 
 		private final String type;
 		private final String name;
+		private final String response;
 
-		ME(String type, String name) {
+		ME(String type, String name, String response) {
 			this.type = type;
 			this.name = name;
+			this.response = response;
 		}
 
 		public String getType() {
@@ -48,6 +56,10 @@ public class SingleFilter {
 
 		public String getName() {
 			return name;
+		}
+
+		public String getResponse() {
+			return response;
 		}
 	}
 

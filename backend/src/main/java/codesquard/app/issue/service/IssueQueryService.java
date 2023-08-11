@@ -130,34 +130,34 @@ public class IssueQueryService {
 
 	public SingleFilters checkSingleFilters(IssueFilterRequest request) {
 		// TODO: 지금 여러개가 들어왔을 때 싱글필터로 인식되는 문제가 있음 -> 이거 해결하기
+		String generated = generateInput(request);
+		// "opened:is author:@me"
 
-		if (request.getIs() != null && request.getIs().equalsIgnoreCase(SingleFilter.IS.OPENED.getType())) {
+		if (generated.equals(SingleFilter.IS.OPENED.getResponse())) {
 			SingleFilters singleFilters = new SingleFilters();
 			singleFilters.changeBy(true, SingleFilters.OPENED_ID - 1L);
 			return singleFilters;
 		}
 
-		if (request.getIs() != null && request.getIs().equalsIgnoreCase(SingleFilter.IS.CLOSED.getType())) {
+		if (generated.equals(SingleFilter.IS.CLOSED.getResponse())) {
 			SingleFilters singleFilters = new SingleFilters();
 			singleFilters.changeBy(true, SingleFilters.CLOSED_ID - 1L);
 			return singleFilters;
 		}
 
-		if (request.getAuthor() != null && request.getAuthor().equalsIgnoreCase(SingleFilter.ME.AUTHOR.getType())) {
+		if (!generated.equals(SingleFilter.ME.AUTHOR.getResponse())) {
 			SingleFilters singleFilters = new SingleFilters();
 			singleFilters.changeBy(true, SingleFilters.AUTHOR_ID - 1L);
 			return singleFilters;
 		}
 
-		if (request.getAssignee() != null && request.getAssignee()
-			.equalsIgnoreCase(SingleFilter.ME.ASSIGNEE.getType())) {
+		if (!generated.equals(SingleFilter.ME.ASSIGNEE.getResponse())) {
 			SingleFilters singleFilters = new SingleFilters();
 			singleFilters.changeBy(true, SingleFilters.ASSIGNEE_ID - 1L);
 			return singleFilters;
 		}
 
-		if (request.getMentions() != null && request.getMentions()
-			.equalsIgnoreCase(SingleFilter.ME.MENTIONS.getType())) {
+		if (!generated.equals(SingleFilter.ME.MENTIONS.getResponse())) {
 			SingleFilters singleFilters = new SingleFilters();
 			singleFilters.changeBy(true, SingleFilters.MENTIONS_ID - 1L);
 			return singleFilters;
