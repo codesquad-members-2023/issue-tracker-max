@@ -81,12 +81,12 @@ public class IssueQueryService {
 	// Issue Filtering
 	public IssueFilterResponse findFilterIssues(String loginId, IssueFilterRequest request) {
 		Map<String, Long> counts = countIssuesByStatus();
-		SingleFilters singleFilters = checkSingleFilters(request);
-		boolean multiFiltersCheck = singleFilters == null;
+		SingleFiltersList singleFiltersList = checkSingleFilters(request);
+		boolean multiFiltersCheck = singleFiltersList == null;
 
 		return new IssueFilterResponse(generateInput(request), counts.get(IssueStatus.OPENED.name()),
 			counts.get(IssueStatus.CLOSED.name()), labelRepository.countAll(), milestoneRepository.countAll(),
-			findIssues(loginId, request), singleFilters, checkMultiFilters(multiFiltersCheck, request));
+			findIssues(loginId, request), singleFiltersList, checkMultiFilters(multiFiltersCheck, request));
 	}
 
 	private String generateInput(IssueFilterRequest request) {
@@ -123,63 +123,61 @@ public class IssueQueryService {
 		return issueMapper.getIssues(request.convertMe(loginId));
 	}
 
-	private SingleFiltersList checkSingleFiltersList(IssueFilterRequest request) {
-		SingleFilters singleFilters = checkSingleFilters(request);
-
-		// for문으로 List 만들어줘서 SingleFiltersList에 담기
-
-		return new SingleFiltersList();
-	}
-
-	private SingleFilters checkSingleFilters(IssueFilterRequest request) {
+	private SingleFiltersList checkSingleFilters(IssueFilterRequest request) {
 		boolean selectedIsOpened = request.getIs().equalsIgnoreCase(SingleFilters.IS.OPENED.getType());
 		boolean selectedIsClosed = request.getIs().equalsIgnoreCase(SingleFilters.IS.CLOSED.getType());
-		// TODO: @me 판단 로직 추가
 		boolean selectedAuthorMe = request.getAuthor().equalsIgnoreCase("@me");
 		boolean selectedAssigneeMe = request.getAssignee().equalsIgnoreCase("@me");
 		boolean selectedMentionsMe = request.getMentions().equalsIgnoreCase("@me");
 
-		if (selectedAuthorMe) {
-			if (selectedIsOpened) {
-				return new SingleFilters(id++, NAME_AUTHOR, new ArrayList<>(List.of(IS_OPENED, AUTHOR_ME)), true);
-			}
-
-			if (selectedIsClosed) {
-				return new SingleFilters(id++, NAME_AUTHOR, new ArrayList<>(List.of(IS_CLOSED, AUTHOR_ME)), true);
-			}
-		}
-
-		if (selectedAssigneeMe) {
-			if (selectedIsOpened) {
-				return new SingleFilters(id++, NAME_ASSIGNEE, new ArrayList<>(List.of(IS_OPENED, ASSIGNEE_ME)), true);
-			}
-
-			if (selectedIsClosed) {
-				return new SingleFilters(id++, NAME_ASSIGNEE, new ArrayList<>(List.of(IS_CLOSED, ASSIGNEE_ME)), true);
-			}
-		}
-
-		if (selectedMentionsMe) {
-			if (selectedIsOpened) {
-				return new SingleFilters(id++, NAME_MENTIONS, new ArrayList<>(List.of(IS_OPENED, MENTIONS_ME)), true);
-			}
-
-			if (selectedIsClosed) {
-				return new SingleFilters(id++, NAME_MENTIONS, new ArrayList<>(List.of(IS_CLOSED, MENTIONS_ME)), true);
-			}
-		}
-
-		return null;
-	}
-
-	private SingleFilters checkIS(boolean selectedIsOpened, boolean selectedIsClosed,
-		SingleFilters.IS is) {
 		if (selectedIsOpened) {
-			return new SingleFilters(id++, NAME_OPENED, new ArrayList<>(List.of(IS_OPENED)), true);
+			return new SingleFiltersList(new ArrayList<>(List.of(
+				new SingleFilters(id++, IS.OPENED.getName(), IS.OPENED.getType(), true),
+				new SingleFilters(id++, ME.AUTHOR.getName(), ME.AUTHOR.getType(), false),
+				new SingleFilters(id++, ME.ASSIGNEE.getName(), ME.ASSIGNEE.getType(), false),
+				new SingleFilters(id++, ME.MENTIONS.getName(), ME.MENTIONS.getType(), false),
+				new SingleFilters(id++, IS.CLOSED.getName(), IS.CLOSED.getType(), false)
+			)));
 		}
 
 		if (selectedIsClosed) {
-			return new SingleFilters(id++, NAME_CLOSED, new ArrayList<>(List.of(IS_CLOSED)), true);
+			return new SingleFiltersList(new ArrayList<>(List.of(
+				new SingleFilters(id++, IS.OPENED.getName(), IS.OPENED.getType(), false),
+				new SingleFilters(id++, ME.AUTHOR.getName(), ME.AUTHOR.getType(), false),
+				new SingleFilters(id++, ME.ASSIGNEE.getName(), ME.ASSIGNEE.getType(), false),
+				new SingleFilters(id++, ME.MENTIONS.getName(), ME.MENTIONS.getType(), false),
+				new SingleFilters(id++, IS.CLOSED.getName(), IS.CLOSED.getType(), true)
+			)));
+		}
+
+		if (selectedAuthorMe) {
+			return new SingleFiltersList(new ArrayList<>(List.of(
+				new SingleFilters(id++, IS.OPENED.getName(), IS.OPENED.getType(), false),
+				new SingleFilters(id++, ME.AUTHOR.getName(), ME.AUTHOR.getType(), true),
+				new SingleFilters(id++, ME.ASSIGNEE.getName(), ME.ASSIGNEE.getType(), false),
+				new SingleFilters(id++, ME.MENTIONS.getName(), ME.MENTIONS.getType(), false),
+				new SingleFilters(id++, IS.CLOSED.getName(), IS.CLOSED.getType(), false)
+			)));
+		}
+
+		if (selectedAssigneeMe) {
+			return new SingleFiltersList(new ArrayList<>(List.of(
+				new SingleFilters(id++, IS.OPENED.getName(), IS.OPENED.getType(), false),
+				new SingleFilters(id++, ME.AUTHOR.getName(), ME.AUTHOR.getType(), false),
+				new SingleFilters(id++, ME.ASSIGNEE.getName(), ME.ASSIGNEE.getType(), true),
+				new SingleFilters(id++, ME.MENTIONS.getName(), ME.MENTIONS.getType(), false),
+				new SingleFilters(id++, IS.CLOSED.getName(), IS.CLOSED.getType(), false)
+			)));
+		}
+
+		if (selectedMentionsMe) {
+			return new SingleFiltersList(new ArrayList<>(List.of(
+				new SingleFilters(id++, IS.OPENED.getName(), IS.OPENED.getType(), false),
+				new SingleFilters(id++, ME.AUTHOR.getName(), ME.AUTHOR.getType(), false),
+				new SingleFilters(id++, ME.ASSIGNEE.getName(), ME.ASSIGNEE.getType(), false),
+				new SingleFilters(id++, ME.MENTIONS.getName(), ME.MENTIONS.getType(), true),
+				new SingleFilters(id++, IS.CLOSED.getName(), IS.CLOSED.getType(), false)
+			)));
 		}
 
 		return null;
