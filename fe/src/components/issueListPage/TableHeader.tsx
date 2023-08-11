@@ -269,26 +269,39 @@ export const TableHeader: React.FC<Props> = ({
                 onOutsideClick={onPanelClose}
               >
                 {panelList.users.length > 0 ? (
-                  panelList.users.map(({ userId: id, loginId: name }) => (
-                    <DropDownList
-                      key={id}
-                      {...{
-                        item: {
-                          id,
-                          name: name !== 'none' ? name : '담당자가 없는 이슈',
-                        },
-                        isSelected: location.search.includes(
-                          `assignee:${name}`,
-                        ),
-                        onClick: () => {
-                          goToFilteredPage(
-                            `${location.search} assignee:${name}`,
-                          );
-                          onPanelClose();
-                        },
-                      }}
-                    />
-                  ))
+                  panelList.users.map(({ userId: id, loginId: name }) => {
+                    const isSelected = location.search.includes(
+                      `assignee:${name}`,
+                    );
+
+                    return (
+                      <DropDownList
+                        key={id}
+                        {...{
+                          item: {
+                            id,
+                            name: name !== 'none' ? name : '담당자가 없는 이슈',
+                          },
+                          isSelected,
+                          onClick: () => {
+                            onPanelClose();
+
+                            if (isSelected) {
+                              goToFilteredPage(
+                                location.search.replace(`assignee:${name}`, ''),
+                              );
+
+                              return;
+                            }
+
+                            goToFilteredPage(
+                              `${location.search} assignee:${name}`,
+                            );
+                          },
+                        }}
+                      />
+                    );
+                  })
                 ) : (
                   <DropDownList
                     {...{
@@ -313,7 +326,7 @@ export const TableHeader: React.FC<Props> = ({
               onClick={() => {
                 onPanelOpen('label');
 
-                if (panelList.labels.length === 0) {
+                if (panelList.labels.length !== 0) {
                   return;
                 }
 
@@ -335,23 +348,40 @@ export const TableHeader: React.FC<Props> = ({
                 onOutsideClick={onPanelClose}
               >
                 {panelList.labels.length > 0 ? (
-                  panelList.labels.map(({ id, name, backgroundColor }) => (
-                    <DropDownList
-                      key={id}
-                      {...{
-                        item: {
-                          id,
-                          name: name !== 'none' ? name : '레이블이 없는 이슈',
-                          backgroundColor,
-                        },
-                        isSelected: location.search.includes(`label:${name}`),
-                        onClick: () => {
-                          goToFilteredPage(`${location.search} label:${name}`);
-                          onPanelClose();
-                        },
-                      }}
-                    />
-                  ))
+                  panelList.labels.map(({ id, name, backgroundColor }) => {
+                    const isSelected = location.search.includes(
+                      `label:${name}`,
+                    );
+
+                    return (
+                      <DropDownList
+                        key={id}
+                        {...{
+                          item: {
+                            id,
+                            name: name !== 'none' ? name : '레이블이 없는 이슈',
+                            backgroundColor,
+                          },
+                          isSelected,
+                          onClick: () => {
+                            onPanelClose();
+
+                            if (isSelected) {
+                              goToFilteredPage(
+                                location.search.replace(`label:${name}`, ''),
+                              );
+
+                              return;
+                            }
+
+                            goToFilteredPage(
+                              `${location.search} label:${name}`,
+                            );
+                          },
+                        }}
+                      />
+                    );
+                  })
                 ) : (
                   <DropDownList
                     {...{
@@ -376,7 +406,7 @@ export const TableHeader: React.FC<Props> = ({
               onClick={() => {
                 onPanelOpen('milestone');
 
-                if (panelList.milestones.length === 0) {
+                if (panelList.milestones.length !== 0) {
                   return;
                 }
 
@@ -400,26 +430,43 @@ export const TableHeader: React.FC<Props> = ({
                 }
               >
                 {panelList.milestones.length > 0 ? (
-                  panelList.milestones.map(({ id, name }) => (
-                    <DropDownList
-                      key={id}
-                      {...{
-                        item: {
-                          id,
-                          name: name !== 'none' ? name : '마일스톤이 없는 이슈',
-                        },
-                        isSelected: location.search.includes(
-                          `milestone:${name}`,
-                        ),
-                        onClick: () => {
-                          goToFilteredPage(
-                            `${location.search} milestone:${name}`,
-                          );
-                          onPanelClose();
-                        },
-                      }}
-                    />
-                  ))
+                  panelList.milestones.map(({ id, name }) => {
+                    const isSelected = location.search.includes(
+                      `milestone:${name}`,
+                    );
+
+                    return (
+                      <DropDownList
+                        key={id}
+                        {...{
+                          item: {
+                            id,
+                            name:
+                              name !== 'none' ? name : '마일스톤이 없는 이슈',
+                          },
+                          isSelected,
+                          onClick: () => {
+                            onPanelClose();
+
+                            if (isSelected) {
+                              goToFilteredPage(
+                                location.search.replace(
+                                  `milestone:${name}`,
+                                  '',
+                                ),
+                              );
+
+                              return;
+                            }
+
+                            goToFilteredPage(
+                              `${location.search} milestone:${name}`,
+                            );
+                          },
+                        }}
+                      />
+                    );
+                  })
                 ) : (
                   <DropDownList
                     {...{
@@ -467,6 +514,10 @@ export const TableHeader: React.FC<Props> = ({
               >
                 {panelList.users.length > 0 ? (
                   panelList.users.map(({ userId: id, loginId: name }) => {
+                    const isSelected = location.search.includes(
+                      `author:${name}`,
+                    );
+
                     if (name === 'none') {
                       return <></>;
                     }
@@ -476,14 +527,21 @@ export const TableHeader: React.FC<Props> = ({
                         key={id}
                         {...{
                           item: { id, name },
-                          isSelected: location.search.includes(
-                            `author:${name}`,
-                          ),
+                          isSelected,
                           onClick: () => {
+                            onPanelClose();
+
+                            if (isSelected) {
+                              goToFilteredPage(
+                                location.search.replace(`author:${name}`, ''),
+                              );
+
+                              return;
+                            }
+
                             goToFilteredPage(
                               `${location.search} author:${name}`,
                             );
-                            onPanelClose();
                           },
                         }}
                       />
