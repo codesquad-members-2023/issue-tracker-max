@@ -56,7 +56,7 @@ class MilestoneControllerTest extends ControllerTestSupport {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value("true"))
 			.andExpect(jsonPath("$.data.labelCount").value(2L))
-			.andExpect(jsonPath("$.data.closedMilestoneCount").value(2L))
+			.andExpect(jsonPath("$.data.oppositeCount").value(2L))
 			.andExpect(jsonPath("$.data.milestones[0].name").value("title"))
 			.andExpect(jsonPath("$.data.milestones[0].description").value("description"))
 			.andExpect(jsonPath("$.data.milestones[0].openIssueCount").value(1L))
