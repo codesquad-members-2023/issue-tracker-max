@@ -51,15 +51,16 @@ public class IssueController {
 	}
 
 	@GetMapping("/{issueId}")
-	public ApiResponse<IssueReadResponse> get(@PathVariable Long issueId) {
-		return ApiResponse.ok(issueQueryService.get(issueId));
+	public ApiResponse<IssueReadResponse> get(@PathVariable Long issueId, @Login AuthenticateUser user) {
+		Long userId = user.toEntity().getId();
+		return ApiResponse.ok(issueQueryService.get(issueId, userId));
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public ApiResponse<IssueSaveResponse> save(
-		@Valid @RequestBody IssueSaveRequest issueSaveRequest) {
-		Long userId = 1L;
+		@Valid @RequestBody IssueSaveRequest issueSaveRequest, @Login AuthenticateUser user) {
+		Long userId = user.toEntity().getId();
 		Long issueId = issueService.save(issueSaveRequest, userId);
 		return ApiResponse.of(HttpStatus.CREATED, ResponseMessage.ISSUE_SAVE_SUCCESS,
 			IssueSaveResponse.success(issueId));

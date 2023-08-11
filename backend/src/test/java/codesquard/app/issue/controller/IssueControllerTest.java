@@ -35,7 +35,8 @@ class IssueControllerTest extends ControllerTestSupport {
 	void getIssueDetail() throws Exception {
 		// given
 		int id = 1;
-		given(issueQueryService.get((long)id)).willReturn(FixtureFactory.createIssueReadResponse((long)id));
+		Long userId = 1L;
+		given(issueQueryService.get((long)id, userId)).willReturn(FixtureFactory.createIssueReadResponse((long)id));
 
 		// when & then
 		mockMvc.perform(get("/api/issues/" + id))
@@ -50,8 +51,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	void getIssueDetail_Fail() throws Exception {
 		// given
 		int id = 1;
+		Long userId = 1L;
 		willThrow(new NoSuchIssueException())
-			.given(issueQueryService).get((long)id);
+			.given(issueQueryService).get((long)id, userId);
 
 		// when & then
 		mockMvc.perform(get("/api/issues/" + id))
@@ -63,8 +65,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	@Test
 	void create() throws Exception {
 		// given
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Controller", "내용", 1L,
-			anyLong());
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Controller", "내용", 1L, 1L);
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
@@ -80,7 +81,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void create_InputZeroTitle_Response400() throws Exception {
 		// given
 		String zeroTitle = "";
-		IssueSaveRequest zero = FixtureFactory.createIssueRegisterRequest(zeroTitle, "내용", 1L, anyLong());
+		IssueSaveRequest zero = FixtureFactory.createIssueRegisterRequest(zeroTitle, "내용", 1L, 1L);
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
@@ -96,7 +97,7 @@ class IssueControllerTest extends ControllerTestSupport {
 		// given
 		String title = generateExceedingMaxLengthContent(TITLE_MAX_LENGTH);
 
-		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest(title, "내용", 1L, anyLong());
+		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest(title, "내용", 1L, 1L);
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
@@ -111,7 +112,7 @@ class IssueControllerTest extends ControllerTestSupport {
 	void create_InputBlankTitle_Response400() throws Exception {
 		// given
 		String blankTitle = " ";
-		IssueSaveRequest blank = FixtureFactory.createIssueRegisterRequest(blankTitle, "내용", 1L, anyLong());
+		IssueSaveRequest blank = FixtureFactory.createIssueRegisterRequest(blankTitle, "내용", 1L, 1L);
 
 		// when & then
 		mockMvc.perform(post("/api/issues")
@@ -127,7 +128,7 @@ class IssueControllerTest extends ControllerTestSupport {
 		// given
 		String content = generateExceedingMaxLengthContent(CONTENT_MAX_LENGTH);
 
-		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest("Controller", content, 1L, anyLong());
+		IssueSaveRequest over = FixtureFactory.createIssueRegisterRequest("Controller", content, 1L, 1L);
 
 		// when & then
 		mockMvc.perform(post("/api/issues")

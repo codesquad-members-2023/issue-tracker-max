@@ -1,5 +1,5 @@
-import { DefaultTheme, styled, useTheme } from "styled-components";
-import { Icon } from "./Icon";
+import { DefaultTheme, styled } from "styled-components";
+import { Icon, IconType } from "./icon/Icon";
 
 export function InformationTag({
   value,
@@ -13,16 +13,13 @@ export function InformationTag({
   value: string;
   size: "M" | "S";
   toolTip?: string;
-  icon?: string;
+  icon?: keyof IconType;
   fill?: string;
   stroke?: "Default" | "DefaultActive";
   fontColor?: "LIGHT" | "DARK";
 }) {
-  const theme = useTheme();
   const iconColor =
-    fontColor === "DARK"
-      ? theme.color.neutralTextWeak
-      : theme.color.brandTextDefault;
+    fontColor === "DARK" ? "neutralTextWeak" : "brandTextDefault";
 
   return (
     <StyledInformationTag
@@ -32,13 +29,16 @@ export function InformationTag({
       $stroke={stroke}
       $darkFont={fontColor === "DARK"}
     >
-      {icon && <Icon name={icon} fill={iconColor} stroke={iconColor} />}
+      {icon && <Icon name={icon} color={iconColor} />}
       <span>{value}</span>
     </StyledInformationTag>
   );
 }
 
-const getBorderColor = (hexColor: string | undefined, theme: DefaultTheme): string => {
+const getBorderColor = (
+  hexColor: string | undefined,
+  theme: DefaultTheme,
+): string => {
   if (!hexColor || hexColor.length !== 7 || !hexColor.startsWith("#")) {
     return "transparent";
   }

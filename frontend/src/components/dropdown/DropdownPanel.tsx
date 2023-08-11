@@ -1,4 +1,5 @@
 import { css, styled } from "styled-components";
+import { Icon, IconColor } from "../icon/Icon";
 import { DropdownOption } from "./DropdownOption";
 
 export function DropdownPanel({
@@ -6,6 +7,7 @@ export function DropdownPanel({
   alignment,
   optionTitle,
   options,
+  onOptionClick,
 }: {
   showProfile?: boolean;
   alignment: "Left" | "Right" | "Center";
@@ -13,32 +15,44 @@ export function DropdownPanel({
   options: {
     name: string;
     profile?: string;
-    background?: string;
-    color?: "LIGHT" | "DARK";
+    background?: IconColor;
     selected: boolean;
     onClick: () => void;
   }[];
+  onOptionClick?: () => void;
 }) {
+  const renderOptions = () => {
+    if (options.length === 0) {
+      return (
+        <EmptyOption>
+          <Icon name="AlertCircle" color="neutralTextDefault" />
+          No Options
+        </EmptyOption>
+      );
+    }
+    return options.map(
+      ({ name, profile, background, selected, onClick }, index) => (
+        <DropdownOption
+          key={`dropdown-option-${index}`}
+          showProfile={showProfile}
+          profile={profile}
+          background={background}
+          selected={selected}
+          onClick={() => {
+            onClick();
+            onOptionClick?.();
+          }}
+        >
+          {name}
+        </DropdownOption>
+      ),
+    );
+  };
+
   return (
     <StyledPanel $alignment={alignment}>
       <div className="dropdown__header">{optionTitle}</div>
-      <ul>
-        {options.map(
-          ({ name, profile, background, color, selected, onClick }, index) => (
-            <DropdownOption
-              key={`dropdown-option-${index}`}
-              showProfile={showProfile}
-              profile={profile}
-              background={background}
-              color={color}
-              selected={selected}
-              onClick={onClick}
-            >
-              {name}
-            </DropdownOption>
-          ),
-        )}
-      </ul>
+      <ul>{renderOptions()}</ul>
     </StyledPanel>
   );
 }
@@ -92,4 +106,18 @@ const StyledPanel = styled.div<{ $alignment: "Left" | "Right" | "Center" }>`
       ${({ theme }) => `${theme.radius.large} ${theme.radius.large}`};
     background-color: ${({ theme }) => theme.color.neutralBorderDefault};
   }
+`;
+
+const EmptyOption = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: ${({ theme }) =>
+    `0px 0px ${theme.radius.large} ${theme.radius.large}`};
+  font: ${({ theme }) => theme.font.availableMedium16};
+  font-style: italic;
+  background-color:  ${({ theme }) => theme.color.neutralSurfaceStrong};
+  color: ${({ theme }) => theme.color.neutralTextDefault};
 `;

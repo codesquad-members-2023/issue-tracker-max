@@ -28,6 +28,8 @@ public class IssueReadResponse {
 	private final LocalDateTime modifiedAt;
 	@JsonProperty("content")
 	private final String content;
+	@JsonProperty("reactions")
+	private List<userReactionResponse> reactions;
 	@JsonProperty("assignees")
 	private List<IssueUserResponse> assignees;
 	@JsonProperty("labels")
@@ -43,10 +45,11 @@ public class IssueReadResponse {
 		return milestone;
 	}
 
-	public IssueReadResponse from(List<IssueUserResponse> assignees, List<IssueLabelResponse> labels,
+	public IssueReadResponse from(List<userReactionResponse> users, List<IssueUserResponse> assignees,
+		List<IssueLabelResponse> labels,
 		IssueMilestoneCountResponse issueMilestoneCountResponse, List<IssueCommentsResponse> issueCommentsResponse) {
 		return new IssueReadResponse(this.id, this.title, this.status, this.statusModifiedAt, this.createdAt,
-			this.modifiedAt, this.content, assignees, labels,
+			this.modifiedAt, this.content, users, assignees, labels,
 			milestone == null ? null : new IssueMilestoneResponse(this.milestone.getId(), this.milestone.getName(),
 				issueMilestoneCountResponse),
 			this.writer, issueCommentsResponse);
@@ -58,6 +61,14 @@ public class IssueReadResponse {
 
 	public IssueStatus getStatus() {
 		return status;
+	}
+
+	public LocalDateTime getStatusModifiedAt() {
+		return statusModifiedAt;
+	}
+
+	public LocalDateTime getModifiedAt() {
+		return modifiedAt;
 	}
 
 	public String getContent() {
