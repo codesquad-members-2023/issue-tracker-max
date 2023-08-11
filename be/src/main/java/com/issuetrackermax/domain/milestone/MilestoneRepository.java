@@ -80,6 +80,12 @@ public class MilestoneRepository {
 			.addValue("id", id), Boolean.class);
 	}
 
+	public Boolean existByTitle(String title) {
+		String sql = "SELECT EXISTS(SELECT 1 FROM milestone WHERE title =:title)";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("title", title), Boolean.class);
+	}
+
 	public int deleteById(Long id) {
 		String sql = "DELETE FROM milestone WHERE id = :id";
 		return jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
