@@ -241,4 +241,11 @@ public class JdbcIssueRepository implements IssueRepository {
 	private RowMapper<String> usersRowMapper() {
 		return ((rs, rowNum) -> rs.getString("login_id"));
 	}
+
+	@Override
+	public Long countIssueByStatus(IssueStatus status) {
+		String sql = "SELECT COUNT(id) AS count FROM issue WHERE status = :status";
+		return template.queryForObject(sql, Map.of("status", status.name()), Long.class);
+	}
+
 }
