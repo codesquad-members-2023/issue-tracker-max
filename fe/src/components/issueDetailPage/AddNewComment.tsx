@@ -20,11 +20,14 @@ export const AddNewComment: React.FC<Props> = ({ disabled = true }) => {
     >
       <Comment
         typeVariant="add"
-
         // letterCount={textAreaValue.length}
         // textAreaValue={contents}
         // onAddFileUrl={onAddFileUrl}
         // onChangeTextArea={onChangeTextArea}
+        letterCount={1}
+        // textAreaValue="1"
+        onAddFileUrl={() => console.log('1')}
+        onChangeTextArea={() => console.log('1')}
       />
       <Button typeVariant="contained" size="S" disabled={disabled}>
         <Plus stroke={theme.brand.text.default} />

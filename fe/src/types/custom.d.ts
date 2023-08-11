@@ -1,4 +1,5 @@
 type ThemeType = 'light' | 'dark';
+type StatusType = 'open' | 'closed';
 
 type IssuePageData = {
   labelCount: number;
@@ -66,8 +67,48 @@ type Milestone = {
   name: string;
   description: string;
   progress: number;
-  status: 'open' | 'closed';
+  status: StatusType;
   openIssueCount: number;
   closedIssueCount: number;
   deadline: string;
+};
+
+//ISSUE_DETAIL_PAGE
+type User = {
+  userId: number;
+  loginId: string;
+  image: string;
+};
+
+type IssueDetailLabel = {
+  id: number;
+  name: string;
+  textColor: ThemeType;
+  backgroundColor: string;
+};
+
+type IssueDetailMilestone = {
+  id: number;
+  name: string;
+  progress: number;
+};
+
+type Comment = {
+  id: number;
+  author: User;
+  contents: string;
+  createdAt: string;
+};
+
+type IssueDetailPageData = {
+  id: number;
+  title: string;
+  contents: string;
+  status: StatusType;
+  createdAt: string;
+  author: User;
+  assignees: User[];
+  labels: IssueDetailLabel[];
+  milestone: IssueDetailMilestone;
+  comments: Comment[];
 };

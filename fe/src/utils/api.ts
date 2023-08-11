@@ -38,3 +38,7 @@ export const getIssueListPageData = (query: string) => {
 export const getLabelListPageData = () => {
   return fetchData('labels');
 };
+
+export const getIssueDetailPageData = (id: string) => {
+  return fetchData(`issues/${id}`);
+};

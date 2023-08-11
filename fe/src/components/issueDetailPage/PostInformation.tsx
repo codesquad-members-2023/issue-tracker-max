@@ -1,9 +1,13 @@
 import { PostInformationHeader } from './PostInformationHeader';
 import { PostInformationHeaderMeta } from './PostInformationHeaderMeta';
 
-type Props = { title: string; id: number };
+type Props = {
+  issueDetailPageData: IssueDetailPageData;
+};
 
-export const PostInformation: React.FC<Props> = ({ title, id }: Props) => {
+export const PostInformation: React.FC<Props> = ({
+  issueDetailPageData,
+}: Props) => {
   return (
     <>
       <div
@@ -14,8 +18,16 @@ export const PostInformation: React.FC<Props> = ({ title, id }: Props) => {
           gap: '16px',
         }}
       >
-        <PostInformationHeader title={title} id={id} />
-        <PostInformationHeaderMeta />
+        <PostInformationHeader
+          title={issueDetailPageData.title}
+          id={issueDetailPageData.id}
+        />
+        <PostInformationHeaderMeta
+          status={issueDetailPageData.status}
+          createdAt={issueDetailPageData.createdAt}
+          author={issueDetailPageData.author}
+          comments={issueDetailPageData.comments}
+        />
       </div>
     </>
   );

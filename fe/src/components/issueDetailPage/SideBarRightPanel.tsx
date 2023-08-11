@@ -23,10 +23,14 @@ export const SideBarRightPanel: React.FC<Props> = ({}: Props) => {
     >
       <SideBar>
         <ListSideBar
-        // onSingleSelectedMilestone={onSingleSelectedMilestone}
-        // onMultipleSelectedAssignee={onMultipleSelectedAssignee}
-        // onMultipleSelectedLabel={onMultipleSelectedLabel}
-        // selections={selections}
+          onSingleSelectedMilestone={() => console.log('1')}
+          onMultipleSelectedAssignee={() => console.log('2')}
+          onMultipleSelectedLabel={() => console.log('3')}
+          selections={{
+            assignees: [],
+            labels: [],
+            milestones: [],
+          }}
         />
       </SideBar>
       <Button typeVariant="ghost" size="S">

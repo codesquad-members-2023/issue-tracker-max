@@ -84,7 +84,6 @@ export const ListSideBar: React.FC<Props> = ({
   const assigneeOptions = modifiedUserData.slice(1);
   const labelOptions = listData.labels.slice(1);
   const milestoneOptions = listData.milestones.slice(1);
-
   const selectedAssigneesData = modifiedUserData.filter((users) =>
     selections.assignees.includes(users.id),
   );

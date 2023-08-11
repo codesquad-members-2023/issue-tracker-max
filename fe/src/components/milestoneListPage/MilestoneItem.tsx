@@ -7,8 +7,8 @@ import { ReactComponent as Trash } from '@assets/icons/trash.svg';
 import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { ReactComponent as Calendar } from '@assets/icons/calendar.svg';
 import { ReactComponent as Milestone } from '@assets/icons/milestone.svg';
-import { TableContainer } from '@components/common/Table/TableContainer';
-import { TableHeader } from '@components/common/Table/TableHeader';
+// import { TableContainer } from '@components/common/Table/TableContainer';
+// import { TableHeader } from '@components/common/Table/TableHeader';
 import { ProgressBar } from '@components/common/ProgressBar';
 import { ProgressLabel } from '@components/common/ProgressLabel';
 
@@ -36,9 +36,9 @@ export const MilestoneItem: React.FC<Props> = ({
     setIsEditing(true);
   };
 
-  const onEditMilestoneClose = () => {
-    setIsEditing(false);
-  };
+  // const onEditMilestoneClose = () => {
+  //   setIsEditing(false);
+  // };
 
   return (
     <li
@@ -53,13 +53,14 @@ export const MilestoneItem: React.FC<Props> = ({
       }}
     >
       {isEditing ? (
-        <TableContainer
-          header={<TableHeader title="마일스톤 편집" />}
-          tableVariant="milestone"
-          typeVariant="edit"
-          onAddTableClose={onEditMilestoneClose}
-        ></TableContainer>
+        <></>
       ) : (
+        // <TableContainer
+        //   header={<TableHeader title="마일스톤 편집" />}
+        //   tableVariant="milestone"
+        //   typeVariant="edit"
+        //   onAddTableClose={onEditMilestoneClose}
+        // ></TableContainer>
         <>
           <div
             css={{
