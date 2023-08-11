@@ -7,9 +7,11 @@ export default function MilestonesTableBody({
 }: {
   milestoneList: Milestone[] | null;
 }) {
+  const hasMilestone = milestoneList && milestoneList.length !== 0;
+
   return (
     <TableBody>
-      {milestoneList ? (
+      {hasMilestone ? (
         <ul>
           {milestoneList.map((milestone) => (
             <MilestonesTableItem
@@ -19,7 +21,7 @@ export default function MilestonesTableBody({
           ))}
         </ul>
       ) : (
-        <EmptyTableBodyItem>등록된 마일스톤이 없습니다.</EmptyTableBodyItem>
+        <EmptyTableBodyItem>마일스톤이 없습니다.</EmptyTableBodyItem>
       )}
     </TableBody>
   );

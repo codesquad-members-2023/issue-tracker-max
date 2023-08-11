@@ -69,6 +69,8 @@ const TextArea = styled.textarea`
   color: ${({ theme: { neutral } }) => neutral.text.default};
   font: ${({ theme: { font } }) => font.displayMD16};
   caret-color: ${({ theme: { palette } }) => palette.blue};
+  word-break: "break-word";
+  white-space: "pre-wrap";
 
   &::placeholder {
     color: ${({ theme: { neutral } }) => neutral.text.weak};

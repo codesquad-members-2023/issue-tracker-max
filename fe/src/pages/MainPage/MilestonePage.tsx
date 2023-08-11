@@ -1,6 +1,7 @@
 import labelIcon from "@assets/icon/label.svg";
 import milestoneIcon from "@assets/icon/milestone.svg";
 import plusIcon from "@assets/icon/plus.svg";
+import MilestoneEditor from "@components/Milestone/MilestoneEditor";
 import MilestonesTable from "@components/Table/MilestonesTable";
 import Button from "@components/common/Button";
 import TabBar from "@components/common/TabBar";
@@ -60,11 +61,26 @@ export default function MilestonePage() {
         </Button>
       </LabelNav>
 
-      {isAddNewMilestone && <div>add new milestone component</div>}
+      {isAddNewMilestone && (
+        <MilestoneEditorContainer>
+          <MilestoneEditor
+            variant="add"
+            closeEditor={() => setIsAddNewMilestone(false)}
+          />
+        </MilestoneEditorContainer>
+      )}
       <MilestonesTable {...{ openMilestone, closedMilestone }} />
     </StyledLabelPage>
   );
 }
+
+const MilestoneEditorContainer = styled.div`
+  padding: 32px;
+  background-color: ${({ theme: { neutral } }) => neutral.surface.strong};
+  border: ${({ theme: { border, neutral } }) =>
+    `${border.default} ${neutral.border.default}`};
+  border-radius: ${({ theme: { radius } }) => radius.m};
+`;
 
 const StyledLabelPage = styled.div`
   display: flex;

@@ -14,15 +14,15 @@ import {
 } from "./data";
 
 type AuthRequestBody = {
-  username: string;
+  loginId: string;
   password: string;
 };
 
 export const handlers = [
   rest.post("/api/auth/signup", async (req, res, ctx) => {
-    const { username, password } = await req.json<AuthRequestBody>();
-    const isExist = loginInfo[username];
-    loginInfo[username] = password;
+    const { loginId, password } = await req.json<AuthRequestBody>();
+    const isExist = loginInfo[loginId];
+    loginInfo[loginId] = password;
 
     if (isExist) {
       return res(
@@ -38,9 +38,9 @@ export const handlers = [
   }),
 
   rest.post("/api/auth/login", async (req, res, ctx) => {
-    const { username, password } = await req.json<AuthRequestBody>();
-    const isExist = loginInfo[username];
-    const isCorrectPassword = loginInfo[username] === password;
+    const { loginId, password } = await req.json<AuthRequestBody>();
+    const isExist = loginInfo[loginId];
+    const isCorrectPassword = loginInfo[loginId] === password;
 
     if (!isExist) {
       return res(
@@ -68,10 +68,10 @@ export const handlers = [
         token: {
           tokenType: "bearer",
           accessToken: "q13t302hv2ht0",
-          expirationTime: 1691531693098,
+          expirationTime: 1791720452298,
         },
         user: {
-          username: username,
+          loginId: loginId,
           profileUrl: "https://avatars.githubusercontent.com/u/48426991?v=4",
         },
       })
@@ -187,6 +187,30 @@ export const handlers = [
   }),
 
   rest.delete("/api/labels/:labelId", async (_, res, ctx) => {
+    return res(ctx.status(204));
+  }),
+
+  rest.post("/api/milestones", async (_, res, ctx) => {
+    return res(ctx.status(201));
+  }),
+
+  rest.put("/api/milestones/:milestoneId", async (_, res, ctx) => {
+    return res(ctx.status(200));
+  }),
+
+  rest.put("/api/milestones/:milestoneId", async (_, res, ctx) => {
+    // CONTENT
+    return res(ctx.status(200));
+  }),
+
+  rest.put("/api/milestones/:milestoneId", async (req, res, ctx) => {
+    const state = req.url.searchParams.get("state");
+    if (state === "open" || state === "closed") {
+      return res(ctx.status(200));
+    }
+  }),
+
+  rest.delete("/api/milestones/:milestoneId", async (_, res, ctx) => {
     return res(ctx.status(204));
   }),
 ];
