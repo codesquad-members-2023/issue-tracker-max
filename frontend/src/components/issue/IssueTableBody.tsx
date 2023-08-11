@@ -1,18 +1,18 @@
-import {styled} from "styled-components";
-import {IssueData} from "../../page/main/Main";
-import {Issue} from "./Issue";
+import { styled } from "styled-components";
+import { IssueData } from "../../page/main/Main";
+import { Issue } from "./Issue";
 
 type TableBodyProps = {
   issues: IssueData[];
 };
 
-export function IssueTableBody({issues}: TableBodyProps) {
+export function IssueTableBody({ issues }: TableBodyProps) {
   return (
-      <Div>
-        {issues.map((issue, index) => (
-            <Issue key={index} issue={issue}/>
-        ))}
-      </Div>
+    <Div>
+      {issues.map((issue, index) => (
+        <Issue key={index} issue={issue} />
+      ))}
+    </Div>
   );
 }
 
