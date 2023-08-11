@@ -1,7 +1,5 @@
 package codesquard.app.issue.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.api.response.ApiResponse;
 import codesquard.app.api.response.ResponseMessage;
-import codesquard.app.issue.mapper.request.IssueFilterRequest;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -30,10 +28,11 @@ import codesquard.app.issue.dto.response.IssueDeleteResponse;
 import codesquard.app.issue.dto.response.IssueModifyResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueSaveResponse;
+import codesquard.app.issue.mapper.request.IssueFilterRequest;
 import codesquard.app.issue.mapper.response.IssueFilterResponse;
-import codesquard.app.issue.mapper.response.IssuesResponse;
 import codesquard.app.issue.service.IssueQueryService;
 import codesquard.app.issue.service.IssueService;
+import codesquard.app.user.annotation.Login;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -44,9 +43,11 @@ public class IssueController {
 	private final IssueService issueService;
 	private final IssueQueryService issueQueryService;
 
+	// TODO: 유효하지 않은 값이 들어왔을 경우 빈 리스트 반환
 	@GetMapping()
-	public ApiResponse<IssueFilterResponse> listIssues(@ModelAttribute IssueFilterRequest request) {
-		return ApiResponse.ok(issueQueryService.findFilterIssues(request));
+	public ApiResponse<IssueFilterResponse> listIssues(@ModelAttribute IssueFilterRequest request,
+		@Login AuthenticateUser user) {
+		return ApiResponse.ok(issueQueryService.findFilterIssues(user.toEntity().getLoginId(), request));
 	}
 
 	@GetMapping("/{issueId}")
@@ -111,4 +112,5 @@ public class IssueController {
 		issueService.delete(issueId);
 		return ApiResponse.ok(IssueDeleteResponse.success(issueId));
 	}
+
 }

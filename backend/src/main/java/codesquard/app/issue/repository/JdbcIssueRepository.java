@@ -213,4 +213,10 @@ public class JdbcIssueRepository implements IssueRepository {
 		return template.query(sql, Map.of("issueId", issueId), issueCommentsResponseRowMapper);
 	}
 
+	@Override
+	public Long countIssueByStatus(IssueStatus status) {
+		String sql = "SELECT COUNT(id) AS count FROM issue WHERE status = :status";
+		return template.queryForObject(sql, Map.of("status", status.name()), Long.class);
+	}
+
 }

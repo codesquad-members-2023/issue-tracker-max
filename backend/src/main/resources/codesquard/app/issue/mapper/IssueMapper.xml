@@ -107,8 +107,8 @@
 
     <select id="getMultiFiltersAssignees" parameterType="java.util.Map"
             resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersAssignees">
-        SELECT id, login_id, password, avatar_url
-        <if test="check = true">
+        SELECT id, login_id AS name, avatar_url AS avatarUrl
+        <if test="check = true and request.assignee != null">
             , (SELECT IF(login_id = #{request.assignee}, true, false)) AS `selected`
         </if>
         <if test="check = false">
@@ -119,8 +119,8 @@
 
     <select id="getMultiFiltersAuthors" parameterType="java.util.Map"
             resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersAuthors">
-        SELECT id, login_id, password, avatar_url
-        <if test="check = true">
+        SELECT id, login_id AS name, avatar_url AS avatarUrl
+        <if test="check = true and request.author != null">
             , (SELECT IF(login_id = #{request.author}, true, false)) AS `selected`
         </if>
         <if test="check = false">
@@ -128,11 +128,11 @@
         </if>
         FROM `user`
     </select>
-    
+
     <select id="getMultiFiltersLabels" parameterType="java.util.Map"
             resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersLabels">
         SELECT id, name, color, background
-        <if test="check = true">
+        <if test="check = true and request.label != null">
             , (SELECT IF(name IN
             <foreach item="name" index="index" collection="request.label" open="(" separator="," close=")">
                 #{name}
@@ -148,7 +148,7 @@
     <select id="getMultiFiltersMilestones" parameterType="java.util.Map"
             resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersMilestones">
         SELECT id, name
-        <if test="check = true">
+        <if test="check = true and request.milestone != null">
             , (SELECT IF(name = #{request.milestone}, true, false)) AS `selected`
         </if>
         <if test="check = false">

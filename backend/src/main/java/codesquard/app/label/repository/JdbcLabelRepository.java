@@ -1,6 +1,7 @@
 package codesquard.app.label.repository;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -85,8 +86,13 @@ public class JdbcLabelRepository implements LabelRepository {
 		String sql = "DELETE FROM `label` " +
 			"WHERE `id` = :id";
 
-
 		template.update(sql, Map.of("id", labelId));
+	}
+
+	@Override
+	public Long countAll() {
+		String sql = "SELECT COUNT(id) FROM label";
+		return template.queryForObject(sql, new HashMap<>(), Long.class);
 	}
 
 	private void validateExistLabel(final Long labelId) {

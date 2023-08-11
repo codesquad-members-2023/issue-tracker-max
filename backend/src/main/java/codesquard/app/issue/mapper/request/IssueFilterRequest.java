@@ -9,17 +9,32 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class IssueFilterRequest {
 
-	private String is; // opened, closed
+	private static final String ME = "@me";
+
+	private String is;
 
 	private String milestone;
 
 	private List<String> label;
 
-	private String author; // 작성자 // 왼쪽에 있는 필터 리스트에서 선택하면 @me
+	private String author;
 
-	private String assignee; // 왼쪽에 있는 필터 리스트에서 선택하면 @me
+	private String assignee;
 
-	private String mentions; // 왼쪽에 있는 필터 리스트에서 선택하면 @me
+	private String mentions;
+
+	public IssueFilterRequest convertMe(String loginId) {
+		if (author != null && author.equals(ME)) {
+			setAuthor(loginId);
+		}
+		if (assignee != null && assignee.equals(ME)) {
+			setAssignee(loginId);
+		}
+		if (mentions != null && mentions.equals(ME)) {
+			setMentions(loginId);
+		}
+		return this;
+	}
 
 	public String getIs() {
 		return is;
@@ -68,5 +83,5 @@ public class IssueFilterRequest {
 	public void setMentions(String mentions) {
 		this.mentions = mentions;
 	}
-	
+
 }

@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IssueFilterResponse {
 
-	// Input String
 	@JsonProperty("input")
 	private String input;
 
@@ -23,16 +22,18 @@ public class IssueFilterResponse {
 	@JsonProperty("closedIssueCount")
 	private Long closedIssueCount;
 
-	// Filtered Issues
+	@JsonProperty("labelCount")
+	private Long labelCount;
+
+	@JsonProperty("milestoneCount")
+	private Long milestoneCount;
+
 	@JsonProperty("issues")
 	private List<IssuesResponse> issues;
 
-	// Single Filters
-	// 열린 이슈, 내가 작성한 이슈, 나에게 할당된 이슈, 내가 댓글을 남긴 이슈, 닫힌 이슈
 	@JsonProperty("singleFilters")
 	private SingleFilters singleFilters;
 
-	// Multi Filters
 	@JsonProperty("multiFilters")
 	private MultiFilters multiFilters;
 

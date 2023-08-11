@@ -22,4 +22,7 @@ public interface MilestoneRepository {
 	void updateBy(final Long milestoneId, final MilestoneStatus status);
 
 	void deleteBy(final Long milestoneId);
+
+	Long countAll();
+
 }

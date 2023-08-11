@@ -3,8 +3,8 @@ package codesquard.app.issue.service;
 import static codesquard.app.issue.mapper.response.filters.SingleFilters.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +25,8 @@ import codesquard.app.issue.mapper.response.filters.MultiFilters;
 import codesquard.app.issue.mapper.response.filters.SingleFilters;
 import codesquard.app.issue.mapper.response.filters.response.SingleFiltersList;
 import codesquard.app.issue.repository.IssueRepository;
+import codesquard.app.label.repository.LabelRepository;
+import codesquard.app.milestone.repository.MilestoneRepository;
 import lombok.RequiredArgsConstructor;
 
 @Transactional(readOnly = true)
@@ -33,8 +35,12 @@ import lombok.RequiredArgsConstructor;
 public class IssueQueryService {
 
 	private final IssueRepository issueRepository;
+	private final LabelRepository labelRepository;
+	private final MilestoneRepository milestoneRepository;
 	private final IssueMapper issueMapper;
+
 	private static Long id = 0L;
+	private static final String SPACE = " ";
 
 	public IssueReadResponse get(Long issueId) {
 		validateExistIssue(issueId);
@@ -72,30 +78,49 @@ public class IssueQueryService {
 		return IssueLabelResponse.from(issueRepository.findLabelsBy(issueId));
 	}
 
-	public IssueFilterResponse findFilterIssues(IssueFilterRequest request) {
-		HashMap<String, Long> counts = countIssuesByStatus(request);
+	// Issue Filtering
+	public IssueFilterResponse findFilterIssues(String loginId, IssueFilterRequest request) {
+		Map<String, Long> counts = countIssuesByStatus();
 		SingleFilters singleFilters = checkSingleFilters(request);
 		boolean multiFiltersCheck = singleFilters == null;
-		return new IssueFilterResponse(
-			generateInput(request),
-			counts.get(IssueStatus.OPENED.name()),
-			counts.get(IssueStatus.CLOSED.name()),
-			findIssues(request),
-			singleFilters,
-			checkMultiFilters(multiFiltersCheck, request)
-		);
-	}
 
-	private HashMap<String, Long> countIssuesByStatus(IssueFilterRequest request) {
-		return null;
+		return new IssueFilterResponse(generateInput(request), counts.get(IssueStatus.OPENED.name()),
+			counts.get(IssueStatus.CLOSED.name()), labelRepository.countAll(), milestoneRepository.countAll(),
+			findIssues(loginId, request), singleFilters, checkMultiFilters(multiFiltersCheck, request));
 	}
 
 	private String generateInput(IssueFilterRequest request) {
-		return null;
+		StringBuilder builder = new StringBuilder();
+		if (request.getIs() != null) {
+			builder.append("is:").append(request.getIs()).append(SPACE);
+		}
+		if (request.getAuthor() != null) {
+			builder.append("author:").append(request.getAuthor()).append(SPACE);
+		}
+		if (request.getAssignee() != null) {
+			builder.append("assignee:").append(request.getAssignee()).append(SPACE);
+		}
+		if (request.getMentions() != null) {
+			builder.append("mentions:").append(request.getMentions()).append(SPACE);
+		}
+		if (request.getMilestone() != null) {
+			builder.append("milestone:").append(request.getMentions()).append(SPACE);
+		}
+		if (request.getLabel().size() > 0) {
+			for (String label : request.getLabel()) {
+				builder.append("label:").append(label).append(SPACE);
+			}
+		}
+		return builder.toString();
 	}
 
-	private List<IssuesResponse> findIssues(IssueFilterRequest request) {
-		return issueMapper.getIssues(request);
+	private Map<String, Long> countIssuesByStatus() {
+		return Map.of(IssueStatus.OPENED.name(), issueRepository.countIssueByStatus(IssueStatus.OPENED),
+			IssueStatus.CLOSED.name(), issueRepository.countIssueByStatus(IssueStatus.CLOSED));
+	}
+
+	private List<IssuesResponse> findIssues(String loginId, IssueFilterRequest request) {
+		return issueMapper.getIssues(request.convertMe(loginId));
 	}
 
 	private SingleFiltersList checkSingleFiltersList(IssueFilterRequest request) {
@@ -163,9 +188,9 @@ public class IssueQueryService {
 	private MultiFilters checkMultiFilters(boolean check, IssueFilterRequest request) {
 		return new MultiFilters(
 			issueMapper.getMultiFiltersAssignees(check, request),
-			issueMapper.getMultiFiltersAuthors(check, request),
 			issueMapper.getMultiFiltersLabels(check, request),
-			issueMapper.getMultiFiltersMilestones(check, request)
+			issueMapper.getMultiFiltersMilestones(check, request),
+			issueMapper.getMultiFiltersAuthors(check, request)
 		);
 	}
 
