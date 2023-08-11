@@ -34,6 +34,9 @@ export const handlers = [
       })
     );
   }),
+  rest.get('/api/labels', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(labelData));
+  }),
 ];
 
 const successLogin = {
@@ -67,5 +70,35 @@ const successGitHubLogin = {
     userId: 1,
     userName: 'silvertae',
     userProfileImg: 'https://f1.kina.or.kr/2020/11/jtqgmmu4i3.jpg',
+  },
+};
+
+const labelData = {
+  statusCode: 200,
+  message: {
+    milestoneCount: 2,
+    labels: [
+      {
+        id: 1,
+        textColor: 'AAA333',
+        backgroundColor: 'FFF3FF',
+        name: 'feat',
+        description: '기능 추가',
+      },
+      {
+        id: 2,
+        textColor: 'FEFEFE',
+        backgroundColor: '333333',
+        name: 'fix',
+        description: '버그 수정',
+      },
+      {
+        id: 3,
+        textColor: 'AAA333',
+        backgroundColor: 'FFF3FF',
+        name: 'refactor',
+        description: '리팩터링',
+      },
+    ],
   },
 };

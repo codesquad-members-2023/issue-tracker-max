@@ -35,23 +35,25 @@ export default function Options() {
   // const [milestones, setMilestones] = useState([]);
 
   useEffect(() => {
-    (async () => {
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-      };
-      const fetch =
-        activeOption === labels
-          ? () => axios.get('api/labels', { headers })
-          : () => axios.get('api/milestones', { headers });
+    return () => {
+      (async () => {
+        const headers = {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        };
+        const fetch =
+          activeOption === labels
+            ? () => axios.get('api/labels', { headers })
+            : () => axios.get('api/milestones', { headers });
 
-      const res = await fetch();
-      console.log(res.data);
-      // if (activeOption === label) {
-      //   setLabels(res.data);
-      // } else {
-      //   setMilestones(res.data);
-      // }
-    })();
+        const res = await fetch();
+        console.log(res.data);
+        if (activeOption === labels) {
+          setLabelDatas(res.data.message.labels);
+        } else {
+          // setMilestones(res.data);
+        }
+      })();
+    };
   }, [activeOption]);
 
   return (
