@@ -29,20 +29,24 @@ public class MilestoneRepository {
 			.usingGeneratedKeyColumns("id");
 	}
 
-	public List<MilestoneResponse> findAll() {
-		String sql = "SELECT milestone.id, milestone.name, milestone.description, milestone.due_date, "
-			+ "IFNULL(SUM(issue.is_open = TRUE), 0) as open_count, "
-			+ "IFNULL(SUM(issue.is_open = FALSE), 0) as closed_count "
-			+ "FROM milestone "
-			+ "LEFT JOIN issue ON milestone.id = issue.milestone_id AND issue.is_deleted = FALSE "
-			+ "WHERE milestone.is_deleted = FALSE "
-			+ "GROUP BY milestone.id";
+	public List<MilestoneResponse> findAll(boolean isOpen) {
+		String sql =
+			"SELECT milestone.id, milestone.name, milestone.description, milestone.due_date, milestone.is_open, "
+				+ "IFNULL(SUM(issue.is_open = TRUE), 0) as open_count, "
+				+ "IFNULL(SUM(issue.is_open = FALSE), 0) as closed_count "
+				+ "FROM milestone "
+				+ "LEFT JOIN issue ON milestone.id = issue.milestone_id AND issue.is_deleted = FALSE "
+				+ "WHERE milestone.is_open = :isOpen AND milestone.is_deleted = FALSE "
+				+ "GROUP BY milestone.id";
+		MapSqlParameterSource params = new MapSqlParameterSource()
+			.addValue("isOpen", isOpen);
 
-		return jdbcTemplate.query(sql, (rs, rowNum) -> new MilestoneResponse(
+		return jdbcTemplate.query(sql, params, (rs, rowNum) -> new MilestoneResponse(
 			rs.getInt("id"),
 			rs.getString("name"),
 			rs.getString("description"),
 			rs.getTimestamp("due_date"),
+			rs.getBoolean("is_open"),
 			rs.getInt("open_count"),
 			rs.getInt("closed_count")
 		));
@@ -85,6 +89,17 @@ public class MilestoneRepository {
 			+ "WHERE id = :milestoneId";
 
 		MapSqlParameterSource params = new MapSqlParameterSource()
+			.addValue("milestoneId", milestoneId);
+		jdbcTemplate.update(sql, params);
+	}
+
+	public void updateOpenState(Integer milestoneId, boolean isOpen) {
+		String sql = "UPDATE milestone "
+			+ "SET milestone.is_open = :openState "
+			+ "WHERE id = :milestoneId";
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+			.addValue("openState", isOpen)
 			.addValue("milestoneId", milestoneId);
 		jdbcTemplate.update(sql, params);
 	}

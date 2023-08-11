@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.codesquad.issuetracker.application.MilestoneService;
+import kr.codesquad.issuetracker.presentation.converter.OpenState;
 import kr.codesquad.issuetracker.presentation.request.MilestoneCommonRequest;
 import kr.codesquad.issuetracker.presentation.response.MilestoneResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +30,9 @@ public class MilestoneController {
 	private final MilestoneService milestoneService;
 
 	@GetMapping
-	public ResponseEntity<List<MilestoneResponse>> findAll() {
-		return ResponseEntity.ok(milestoneService.findAll());
+	public ResponseEntity<List<MilestoneResponse>> findAll(
+		@RequestParam(value = "state", required = false, defaultValue = "open") OpenState state) {
+		return ResponseEntity.ok(milestoneService.findAll(state.isOpen()));
 	}
 
 	@PostMapping
@@ -50,5 +53,12 @@ public class MilestoneController {
 	public ResponseEntity<Void> remove(@PathVariable Integer milestoneId) {
 		milestoneService.remove(milestoneId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@PutMapping(path = "/{milestoneId}", params = "state")
+	public ResponseEntity<Void> changeOpenState(@PathVariable Integer milestoneId,
+		@RequestParam("state") OpenState state) {
+		milestoneService.changeOpenState(milestoneId, state.isOpen());
+		return ResponseEntity.ok().build();
 	}
 }

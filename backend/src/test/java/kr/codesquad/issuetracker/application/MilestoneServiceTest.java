@@ -3,7 +3,7 @@ package kr.codesquad.issuetracker.application;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -30,13 +30,13 @@ class MilestoneServiceTest {
 	@Test
 	void register() {
 		// given
-		LocalDateTime dueDate = LocalDateTime.of(2023, 9, 1, 0, 0, 0);
+		LocalDate dueDate = LocalDate.of(2023, 9, 1);
 
 		// when
 		milestoneService.register("BE 1주차 스프린트", "열심히 하자", dueDate);
 
 		// then
-		List<MilestoneResponse> milestones = milestoneService.findAll();
+		List<MilestoneResponse> milestones = milestoneService.findAll(true);
 		assertAll(
 			() -> assertThat(milestones).hasSize(1),
 			() -> assertThat(milestones.get(0).getMilestoneId()).isEqualTo(1),
@@ -54,14 +54,14 @@ class MilestoneServiceTest {
 		@Test
 		void modify() {
 			// given
-			LocalDateTime dueDate = LocalDateTime.parse("2023-09-01T00:00:00");
+			LocalDate dueDate = LocalDate.of(2023, 9, 1);
 			milestoneService.register("BE 1주차 스프린트", null, null);
 
 			// when
 			milestoneService.modify(1, "BE 2주차 스프린트", "2주차", dueDate);
 
 			// then
-			List<MilestoneResponse> result = milestoneService.findAll();
+			List<MilestoneResponse> result = milestoneService.findAll(true);
 
 			assertAll(
 				() -> assertThat(result.get(0).getMilestoneName()).isEqualTo("BE 2주차 스프린트"),
@@ -92,6 +92,6 @@ class MilestoneServiceTest {
 		milestoneService.remove(1);
 
 		// then
-		assertThat(milestoneService.findAll()).hasSize(0);
+		assertThat(milestoneService.findAll(true)).hasSize(0);
 	}
 }

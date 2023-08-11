@@ -1,6 +1,7 @@
 package kr.codesquad.issuetracker.application;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class CommentService {
 	public CommentRegisterResponse register(Integer userId, String content, Integer issueId) {
 		Comment comment = new Comment(content, userId, issueId);
 		int commentId = commentRepository.save(comment);
-		return new CommentRegisterResponse(commentId, content, LocalDateTime.now());
+		return new CommentRegisterResponse(commentId, content, LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 	}
 
 	@Transactional
@@ -45,7 +46,7 @@ public class CommentService {
 		if (comments.isEmpty()) {
 			return new Slice<>(List.of(), false, 0);
 		}
-		cursor = comments.get(comments.size() - 1).getId();
+		cursor = comments.get(comments.size() - 1).getCommentId();
 
 		return new Slice<>(comments, cursor);
 	}

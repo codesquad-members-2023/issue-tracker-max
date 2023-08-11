@@ -1,7 +1,7 @@
 package kr.codesquad.issuetracker.presentation.response;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -17,24 +17,26 @@ public class MilestoneResponse {
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private String description;
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	private LocalDateTime dueDate;
+	private LocalDate dueDate;
+	private Boolean isOpen;
 	private Integer openIssueCount;
 	private Integer closedIssueCount;
 
-	public MilestoneResponse(Integer milestoneId, String milestoneName, String description, Timestamp dueDate,
-		Integer openIssueCount, Integer closedIssueCount) {
+	public MilestoneResponse(Integer milestoneId,
+		String milestoneName,
+		String description,
+		Timestamp dueDate,
+		Boolean isOpen,
+		Integer openIssueCount,
+		Integer closedIssueCount) {
 		this.milestoneId = milestoneId;
 		this.milestoneName = milestoneName;
 		this.description = description;
 		if (dueDate != null) {
-			this.dueDate = dueDate.toLocalDateTime();
+			this.dueDate = dueDate.toLocalDateTime().toLocalDate();
 		}
+		this.isOpen = isOpen;
 		this.openIssueCount = openIssueCount;
 		this.closedIssueCount = closedIssueCount;
-	}
-
-	public MilestoneResponse(Integer milestoneId, String milestoneName, Integer openIssueCount,
-		Integer closedIssueCount) {
-		this(milestoneId, milestoneName, null, null, openIssueCount, closedIssueCount);
 	}
 }
