@@ -1,7 +1,7 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import CheckBoxIcon from './CheckBox';
 import { ReactComponent as AlertCircleIcon } from '/src/assets/icon/alertCircle.svg';
-import { ReactComponent as ArchiveIcon } from '/src/assets/icon/Archive.svg';
+import { ReactComponent as ArchiveIcon } from '/src/assets/icon/archive.svg';
 import { border, font, radius } from '../../../styles/styles';
 import DropdownIndicator from './DropdownIndicator';
 import { filterType } from '../../../constant/constant';
