@@ -14,6 +14,7 @@ import codesquard.app.IntegrationTestSupport;
 import codesquard.app.api.errors.exception.NoSuchCommentException;
 import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.api.errors.exception.NoSuchReactionException;
+import codesquard.app.api.errors.exception.NoSuchUserReactionException;
 import codesquard.app.comment.service.CommentService;
 import codesquard.app.comment.service.request.CommentSaveServiceRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
@@ -25,6 +26,8 @@ class UserReactionServiceTest extends IntegrationTestSupport {
 
 	@Autowired
 	private UserReactionService userReactionService;
+	@Autowired
+	private UserReactionQueryService userReactionQueryService;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -42,6 +45,7 @@ class UserReactionServiceTest extends IntegrationTestSupport {
 		jdbcTemplate.update("TRUNCATE TABLE issue");
 		jdbcTemplate.update("TRUNCATE TABLE milestone");
 		jdbcTemplate.update("TRUNCATE TABLE user");
+		jdbcTemplate.update("TRUNCATE TABLE comment");
 		jdbcTemplate.update("TRUNCATE TABLE label");
 		jdbcTemplate.update("TRUNCATE TABLE user_reaction");
 		jdbcTemplate.update("TRUNCATE TABLE reaction");
@@ -138,5 +142,34 @@ class UserReactionServiceTest extends IntegrationTestSupport {
 		// when & then
 		assertThatThrownBy(() -> userReactionService.saveCommentReaction(reactionId, loginId, commentId)).isInstanceOf(
 			NoSuchCommentException.class);
+	}
+
+	@DisplayName("사용자 반응을 삭제한다.")
+	@Test
+	void delete() {
+		// given
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", null, loginId);
+		Long issueId = issueService.save(issueSaveRequest, loginId);
+		Long reactionId = 1L;
+		Long id = userReactionService.saveIssueReaction(reactionId, loginId, issueId);
+
+		// when
+		userReactionService.deleteIssueReaction(id);
+
+		// then
+		assertThatThrownBy(() -> userReactionQueryService.validateExistUserReactionId(id)).isInstanceOf(
+			NoSuchUserReactionException.class);
+	}
+
+	@DisplayName("사용자 반응 삭제에 실패한다.")
+	@Test
+	void delete_Fail() {
+		// given
+		Long id = 10000L;
+		
+		// when & then
+		assertThatThrownBy(() -> userReactionService.deleteIssueReaction(id)).isInstanceOf(
+			NoSuchUserReactionException.class);
 	}
 }

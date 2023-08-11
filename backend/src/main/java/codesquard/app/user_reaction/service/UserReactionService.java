@@ -29,4 +29,9 @@ public class UserReactionService {
 		commentService.validateCommentId(commentId);
 		return userReactionRepository.saveCommentReaction(reactionId, userId, commentId);
 	}
+
+	public void deleteIssueReaction(Long id) {
+		userReactionQueryService.validateExistUserReactionId(id);
+		userReactionRepository.delete(id);
+	}
 }
