@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.api.response.ApiResponse;
 import codesquard.app.api.response.ResponseMessage;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -28,6 +29,7 @@ import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueSaveResponse;
 import codesquard.app.issue.service.IssueQueryService;
 import codesquard.app.issue.service.IssueService;
+import codesquard.app.user.annotation.Login;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -46,8 +48,8 @@ public class IssueController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public ApiResponse<IssueSaveResponse> save(
-		@Valid @RequestBody IssueSaveRequest issueSaveRequest) {
-		Long userId = 1L;
+		@Valid @RequestBody IssueSaveRequest issueSaveRequest, @Login AuthenticateUser user) {
+		Long userId = user.toEntity().getId();
 		Long issueId = issueService.save(issueSaveRequest, userId);
 		return ApiResponse.of(HttpStatus.CREATED, ResponseMessage.ISSUE_SAVE_SUCCESS,
 			IssueSaveResponse.success(issueId));
