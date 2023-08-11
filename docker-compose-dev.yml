@@ -11,7 +11,7 @@ services:
     container_name: issue_tracker_web_dev
     image: issuetracker/issue_tracker_web_dev:latest
     ports:
-      - 3000:3000
+      - 5173:5173
   nginx:
     image: nginx:latest
     container_name: nginx_server
