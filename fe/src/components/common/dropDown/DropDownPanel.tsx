@@ -19,7 +19,7 @@ export const DropDownPanel: React.FC<Props> = ({
 
   useEffect(() => {
     const onClick = ({ target }: MouseEvent) => {
-      if (target instanceof HTMLElement && target?.closest('.dropdown-panel')) {
+      if (target instanceof Element && target?.closest('.dropdown-panel')) {
         return;
       }
 
