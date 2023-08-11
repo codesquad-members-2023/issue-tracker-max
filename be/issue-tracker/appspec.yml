@@ -1,0 +1,22 @@
+version: 0.0
+os: linux
+
+# 복사할 파일에 대한 설정
+files:
+  - source: / # S3 복사할 파일 경로
+    destination: /home/ubuntu/app # EC2 저장 경로
+    overwrite: yes
+
+# files에서 복사한 파일에 대한 권한 설정
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+
+# 배포 이후에 수행할 스크립트 지정
+hooks:
+  ApplicationStart:
+    - location: scripts/deploy.sh
+      timeout: 60
+      runas: ubuntu

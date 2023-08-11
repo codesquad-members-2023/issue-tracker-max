@@ -8,8 +8,8 @@ on:
       - dev-fe
 
 env:
-    AWS_REGION: ap-northeast-2
-    PROFILE_RESOURCE_PATH: ./.env
+  AWS_REGION: ap-northeast-2
+  PROFILE_RESOURCE_PATH: ./.env
 
 jobs:
   build:
@@ -52,18 +52,18 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-            aws-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       # S3에 배포
       - name: S3 Deploy
         uses: jakejarvis/s3-sync-action@master
         with:
-            args: --acl public-read --follow-symlinks --delete
+          args: --acl public-read --follow-symlinks --delete
         env:
-            AWS_S3_BUCKET: room-number7-presents-react-server
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
-            AWS_REGION: ${{ env.AWS_REGION }}
-            SOURCE_DIR: './fe/dist'
+          AWS_S3_BUCKET: room-number7-presents-react-server
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_REGION: ${{ env.AWS_REGION }}
+          SOURCE_DIR: './fe/dist'

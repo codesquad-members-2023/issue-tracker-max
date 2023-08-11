@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.presents.issuetracker.issue.mapper.IssueMapper">
+
+    <resultMap id="issueResultMap" type="IssueSearchInfo">
+        <id property="id" column="issue_id"/>
+        <result property="title" column="issue_title"/>
+        <result property="status" column="issue_status"/>
+        <result property="createdAt" column="issue_created_at"/>
+        <result property="authorLoginId" column="author_login_id"/>
+
+        <association property="milestone" javaType="Milestone">
+            <id property="id" column="milestone_id"/>
+            <result property="name" column="milestone_name"/>
+        </association>
+
+        <collection property="assignees" ofType="User">
+            <result property="userId" column="assignee_user_id"/>
+            <result property="image" column="assignee_image"/>
+        </collection>
+
+        <collection property="labels" ofType="Label">
+            <id property="id" column="label_id"/>
+            <result property="name" column="label_name"/>
+            <result property="textColor" column="label_text_color"/>
+            <result property="backgroundColor" column="label_background_color"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="getIssues" resultMap="issueResultMap"
+            parameterType="org.presents.issuetracker.issue.dto.request.IssueSearchParam">
+        SELECT DISTINCT i.issue_id AS issue_id,
+        i.title AS issue_title,
+        i.status AS issue_status,
+        i.created_at AS issue_created_at,
+        author.login_id AS author_login_id,
+        assignee_user.user_id AS assignee_user_id,
+        assignee_user.image AS assignee_image,
+        l.label_id AS label_id,
+        l.name AS label_name,
+        l.text_color AS label_text_color,
+        l.background_color AS label_background_color,
+        mis.milestone_id AS milestone_id,
+        mis.name AS milestone_name
+        FROM issue i
+        INNER JOIN user AS author ON author.user_id = i.author_id
+        LEFT OUTER JOIN milestone AS mis ON i.milestone_id = mis.milestone_id AND mis.status != 'deleted'
+        LEFT OUTER JOIN issue_label il ON i.issue_id = il.issue_id
+        LEFT OUTER JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
+        LEFT OUTER JOIN assignee a ON i.issue_id = a.issue_id
+        LEFT OUTER JOIN user assignee_user ON a.user_id = assignee_user.user_id
+        LEFT OUTER JOIN comment c ON i.issue_id = c.issue_id AND c.is_deleted = false
+        LEFT OUTER JOIN user comment_user ON c.author_id = comment_user.user_id
+        <where>
+            i.status != 'deleted'
+            <if test="status == null and !isFilterRemoved">
+                <trim prefix="AND">
+                    i.status = 'open'
+                </trim>
+            </if>
+            <if test="status != null">
+                <trim prefix="AND">
+                    i.status = #{status}
+                </trim>
+            </if>
+            <if test="authorName != null">
+                <trim prefix="AND">
+                    author.login_id = #{authorName}
+                </trim>
+            </if>
+            <if test="labelName != null">
+                <trim prefix="AND">
+                    i.issue_id IN (
+                    SELECT issue_id
+                    FROM issue_label
+                    JOIN label ON issue_label.label_id = label.label_id
+                    WHERE label.name = #{labelName}
+                    )
+                </trim>
+            </if>
+            <if test="milestoneName != null">
+                <trim prefix="AND">
+                    mis.name = #{milestoneName}
+                </trim>
+            </if>
+            <if test="assigneeName != null">
+                <trim prefix="AND">
+                    i.issue_id IN (
+                    SELECT issue_id
+                    FROM assignee
+                    JOIN user ON assignee.user_id = user.user_id
+                    WHERE user.login_id = #{assigneeName}
+                    )
+                </trim>
+            </if>
+            <if test="commentAuthorName != null">
+                <trim prefix="AND">
+                    comment_user.login_id = #{commentAuthorName}
+                </trim>
+            </if>
+            <if test="title != null and title.trim() != ''">
+                <trim prefix="AND">
+                    i.title LIKE CONCAT('%', #{title}, '%')
+                </trim>
+            </if>
+        </where>
+    </select>
+
+    <select id="getIssueSearchCounts" resultType="IssueSearchCountInfo"
+            parameterType="org.presents.issuetracker.issue.dto.request.IssueSearchParam">
+        SELECT
+        (SELECT COUNT(*)
+        FROM label
+        WHERE is_deleted = false) AS label_count,
+        (SELECT COUNT(*)
+        FROM milestone
+        WHERE status != 'deleted') AS milestone_count,
+        COUNT(DISTINCT CASE WHEN i.status = 'open' THEN i.issue_id END) AS open_issue_count,
+        COUNT(DISTINCT CASE WHEN i.status = 'closed' THEN i.issue_id END) AS closed_issue_count
+        FROM issue i
+        INNER JOIN user AS author ON author.user_id = i.author_id
+        LEFT OUTER JOIN milestone AS mis ON i.milestone_id = mis.milestone_id AND mis.status != 'deleted'
+        LEFT OUTER JOIN issue_label il ON i.issue_id = il.issue_id
+        LEFT OUTER JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
+        LEFT OUTER JOIN assignee a ON i.issue_id = a.issue_id
+        LEFT OUTER JOIN user assignee_user ON a.user_id = assignee_user.user_id
+        LEFT OUTER JOIN comment c ON i.issue_id = c.issue_id AND c.is_deleted = false
+        LEFT OUTER JOIN user comment_user ON c.author_id = comment_user.user_id
+        <where>
+            i.status != 'deleted'
+            <if test="authorName != null">
+                <trim prefix="AND">
+                    author.login_id = #{authorName}
+                </trim>
+            </if>
+            <if test="labelName != null">
+                <trim prefix="AND">
+                    l.name = #{labelName}
+                </trim>
+            </if>
+            <if test="milestoneName != null">
+                <trim prefix="AND">
+                    mis.name = #{milestoneName}
+                </trim>
+            </if>
+            <if test="assigneeName != null">
+                <trim prefix="AND">
+                    assignee_user.login_id = #{assigneeName}
+                </trim>
+            </if>
+            <if test="commentAuthorName != null">
+                <trim prefix="AND">
+                    comment_user.login_id = #{commentAuthorName}
+                </trim>
+            </if>
+            <if test="title != null and title.trim() != ''">
+                <trim prefix="AND">
+                    i.title LIKE CONCAT('%', #{title}, '%')
+                </trim>
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="issueDetailResultMap" type="IssueDetailInfo">
+        <id property="id" column="issue_id"/>
+        <result property="title" column="title"/>
+        <result property="contents" column="contents"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="status" column="status"/>
+
+        <association property="author" javaType="User">
+            <id property="userId" column="author_id"/>
+            <result property="loginId" column="login_id"/>
+            <result property="image" column="author_image"/>
+        </association>
+
+        <association property="milestone" javaType="MilestonePreview">
+            <id property="id" column="milestone_id"/>
+            <result property="name" column="milestone_name"/>
+            <result property="progress" column="progress"/>
+        </association>
+
+        <collection property="assignees" ofType="User">
+            <id property="userId" column="assignee_id"/>
+            <result property="loginId" column="assignee_login_id"/>
+            <result property="image" column="assignee_image"/>
+        </collection>
+
+        <collection property="labels" ofType="Label">
+            <id property="id" column="label_id"/>
+            <result property="name" column="label_name"/>
+            <result property="textColor" column="text_color"/>
+            <result property="backgroundColor" column="background_color"/>
+        </collection>
+
+        <collection property="comments" ofType="CommentWithAuthor">
+            <id property="id" column="comment_id"/>
+            <result property="contents" column="comment_contents"/>
+            <result property="createdAt" column="comment_created_at"/>
+            <association property="author" javaType="User">
+                <id property="userId" column="comment_author_id"/>
+                <result property="loginId" column="comment_login_id"/>
+                <result property="image" column="comment_author_image"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="getIssueDetail" parameterType="Long" resultMap="issueDetailResultMap">
+        SELECT i.issue_id,
+               i.title,
+               i.contents,
+               i.created_at,
+               i.status,
+               i.author_id,
+               author.login_id,
+               author.image           AS           author_image,
+               m.milestone_id,
+               m.name                 AS           milestone_name,
+               (SELECT FLOOR(COUNT(CASE WHEN status = 'close' THEN 1 END) / COUNT(*) * 100)
+                FROM issue
+                WHERE milestone_id = i.milestone_id
+                  AND status IN ('open', 'close')) progress,
+               assignee_user.user_id  AS           assignee_id,
+               assignee_user.login_id AS           assignee_login_id,
+               assignee_user.image    AS           assignee_image,
+               l.label_id,
+               l.name                 AS           label_name,
+               l.text_color,
+               l.background_color,
+               c.comment_id,
+               c.contents             AS           comment_contents,
+               c.created_at           AS           comment_created_at,
+               c.author_id            AS           comment_author_id,
+               comment_user.login_id  AS           comment_login_id,
+               comment_user.image     AS           comment_author_image
+        FROM issue i
+                 JOIN user AS author ON i.author_id = author.user_id
+                 LEFT JOIN milestone m ON i.milestone_id = m.milestone_id
+                 LEFT JOIN assignee a ON i.issue_id = a.issue_id
+                 LEFT JOIN user AS assignee_user ON a.user_id = assignee_user.user_id
+                 LEFT JOIN issue_label il ON i.issue_id = il.issue_id
+                 LEFT JOIN label l ON il.label_id = l.label_id AND l.is_deleted = false
+                 LEFT JOIN comment c ON i.issue_id = c.issue_id AND c.is_deleted = false
+                 LEFT JOIN user comment_user ON c.author_id = comment_user.user_id
+        WHERE i.issue_id = #{issueId}
+    </select>
+</mapper>
