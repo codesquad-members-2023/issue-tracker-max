@@ -99,7 +99,7 @@ public class UserService {
 	public void logout(HttpServletRequest request) {
 		Long userId = Long.parseLong(String.valueOf(request.getAttribute("userId")));
 		userRepository.deleteTokenByUserId(userId)
-			.orElseThrow(() -> new CustomException(ErrorCode.DELETE_FAIL));
+			.orElseThrow(() -> new CustomException(ErrorCode.DB_EXCEPTION));
 	}
 
 }
