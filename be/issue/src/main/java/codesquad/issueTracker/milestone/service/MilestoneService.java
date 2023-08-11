@@ -51,8 +51,9 @@ public class MilestoneService {
 	public MilestoneResponseDto findAll(MileStoneStatusDto request) {
 		Boolean status = Status.from(request.getStatus()).getStatus();
 		List<MilestoneVo> milestones = milestoneRepository.findAll(status);
-		int anotherCount = milestoneRepository.countAnother(!status);
-		MilestoneResponseDto milestoneResponseDto = new MilestoneResponseDto(anotherCount, milestones);
+		int labelCount = milestoneRepository.getLabelCount();
+		int anotherCount = milestoneRepository.getAnotherCount(!status);
+		MilestoneResponseDto milestoneResponseDto = new MilestoneResponseDto(labelCount, anotherCount, milestones);
 		return milestoneResponseDto;
 	}
 
