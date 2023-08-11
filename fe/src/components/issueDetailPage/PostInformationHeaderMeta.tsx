@@ -4,13 +4,15 @@ import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
 type Props = {
   status?: string;
   createdAt?: string;
-  author?: string;
+  author: User;
+  comments?: Comment[];
 };
 
 export const PostInformationHeaderMeta: React.FC<Props> = ({
-  status = 'open',
-  createdAt = '1시간',
-  author = 'blue',
+  status,
+  createdAt,
+  author,
+  comments,
 }: Props) => {
   const theme = useTheme() as any;
   const statusText = status === 'open' ? '열린' : '닫힌';
@@ -40,12 +42,13 @@ export const PostInformationHeaderMeta: React.FC<Props> = ({
           {statusText}이슈
         </InformationTag>
         <span>
-          이 이슈가 {createdAt}전에 {author}님에 의해 {statusResultText}습니다
+          이 이슈가 {createdAt}전에 {author.loginId}님에 의해 {statusResultText}
+          습니다
         </span>
         <span>∙</span>
         <span>
           코멘트
-          {'2'}개
+          {comments?.length}개
         </span>
       </div>
     </>

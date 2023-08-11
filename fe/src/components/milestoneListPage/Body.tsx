@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { Box } from '@components/common/box/Box';
 import { MilestoneItem } from './MilestoneItem';
-import { TableContainer } from '@components/common/Table/TableContainer';
-import { TableHeader } from '@components/common/Table/TableHeader';
+// import { TableContainer } from '@components/common/Table/TableContainer';
+// import { TableHeader } from '@components/common/Table/TableHeader';
 import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
 import { Button } from '@components/common/Button';
@@ -22,7 +22,7 @@ export const Body: React.FC<Props> = ({
   openMilestonesCount,
   closedMilestoneCount,
   milestoneList,
-  onAddTableClose,
+  // onAddTableClose,
 }) => {
   const theme = useTheme() as any;
   const navigate = useNavigate();
@@ -42,14 +42,17 @@ export const Body: React.FC<Props> = ({
         gap: '24px',
       }}
     >
-      {isAddTableOpen && (
-        <TableContainer
-          tableVariant="milestone"
-          typeVariant="add"
-          onAddTableClose={onAddTableClose}
-          header={<TableHeader title="새로운 마일스톤 추가" />}
-        />
-      )}
+      {
+        isAddTableOpen
+        // && (
+        // <TableContainer
+        //   tableVariant="milestone"
+        //   typeVariant="add"
+        //   onAddTableClose={onAddTableClose}
+        //   header={<TableHeader title="새로운 마일스톤 추가" />}
+        // />
+        // )
+      }
 
       <Box
         header={

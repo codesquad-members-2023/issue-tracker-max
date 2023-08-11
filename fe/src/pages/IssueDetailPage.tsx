@@ -3,7 +3,6 @@ import { Body } from '@components/issueDetailPage/Body';
 import { PostInformation } from '@components/issueDetailPage/PostInformation';
 import { getIssueDetailPageData } from '@utils/api';
 import { useParams } from 'react-router-dom';
-import { SubNav } from '@components/milestoneListPage/SubNav';
 
 type Props = {};
 

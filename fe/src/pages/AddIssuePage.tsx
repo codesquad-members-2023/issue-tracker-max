@@ -13,7 +13,7 @@ import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/textInput/TextInput';
-import { ISSUE_DETAIL_PAGE } from 'constants/PATH';
+// import { ISSUE_DETAIL_PAGE } from 'constants/PATH';
 
 type SelectionState = {
   assignees: number[];
@@ -35,7 +35,7 @@ export const AddIssuePage: React.FC = ({}) => {
   const [selections, setSelections] = useState<SelectionState>({
     assignees: [],
     labels: [],
-    milestones: [],
+    milestones: [], //todo 배열말고 단일 선택으로 변경
   });
   const [titleInput, setTitleInput] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
@@ -43,50 +43,49 @@ export const AddIssuePage: React.FC = ({}) => {
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
   const onSubmit = async () => {
-    const bodyData = {
-      // title: titleInput,
-      // contents: textAreaValue,
-      // // authorId: authorId,
-      // authorId: 1,
-      // assigneeIds: selections.assignees,
-      // labelIds: selections.labels,
-      // milestoneId: selections.milestones,
+    // const bodyData = {
+    //   title: '타이틀',
+    //   contents: '콘텐츠',
+    //   authorId: 1,
+    //   assigneeIds: selections.assignees,
+    //   labelIds: selections.labels,
+    //   milestoneId: selections.milestones,
+    // };
 
+    const bodyData = {
       title: '타이틀',
       contents: '콘텐츠',
       authorId: 1,
-      assigneeIds: [1, 3],
-      labelIds: [5, 7],
+      assigneeIds: selections.assignees,
+      labelIds: selections.labels,
       milestoneId: 1,
     };
 
     try {
       setIsSubmiting(true);
       setIsSubmitError(false);
-      // const response = await fetch(
-      //   `${import.meta.env.VITE_APP_BASE_URL}/issues/new`,
-      //   // `/issues/new`,
-      //   {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify(bodyData),
-      //   },
-      // );
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_BASE_URL}/issues/new`,
+        // `/issues/new`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(bodyData),
+        },
+      );
 
-      // if (!response.ok) {
-      //   const errorData = await response.json();
-      //   console.error('API Response Error:', errorData);
-      //   setIsSubmitError(true);
-      //   return;
-      // }
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('API Response Error:', errorData);
+        setIsSubmitError(true);
+        return;
+      }
 
-      // const data = await response.json();
-      const data = { id: 1 };
+      const data = await response.json();
 
       navigate(`/issue/${data.id}`);
-      // navigate(`${import.meta.env.VITE_APP_BASE_URL}/issue/${data.id}`);
 
       return data;
     } catch (error) {

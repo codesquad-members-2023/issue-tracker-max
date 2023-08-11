@@ -22,7 +22,12 @@ export const PostInformation: React.FC<Props> = ({
           title={issueDetailPageData.title}
           id={issueDetailPageData.id}
         />
-        <PostInformationHeaderMeta />
+        <PostInformationHeaderMeta
+          status={issueDetailPageData.status}
+          createdAt={issueDetailPageData.createdAt}
+          author={issueDetailPageData.author}
+          comments={issueDetailPageData.comments}
+        />
       </div>
     </>
   );

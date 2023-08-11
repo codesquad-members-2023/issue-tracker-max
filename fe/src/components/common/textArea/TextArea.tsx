@@ -51,10 +51,13 @@ export const TextArea: React.FC<Props> = ({
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch(`/file-upload`, {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_BASE_URL}/file-upload`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
 
       if (!response.ok) {
         throw new Error('File upload failed');

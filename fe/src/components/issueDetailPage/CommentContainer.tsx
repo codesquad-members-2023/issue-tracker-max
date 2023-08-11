@@ -1,4 +1,4 @@
-import { Comment } from '@components/common/comment/Commentt';
+// import { Comment } from '@components/common/comment/Commentt';
 import { AddNewComment } from './AddNewComment';
 
 type AuthorType = {
@@ -16,13 +16,13 @@ type Props = {
 
 export const CommentContainer: React.FC<Props> = ({
   contents,
-  createdAt,
-  author,
-  comments,
-}: Props) => {
+} // createdAt,
+// author,
+// comments,
+: Props) => {
   console.log('contents', contents);
 
-  const isCommentsExist = comments.length > 0;
+  // const isCommentsExist = comments.length > 0;
 
   return (
     <div
@@ -33,7 +33,7 @@ export const CommentContainer: React.FC<Props> = ({
         width: '960px',
       }}
     >
-      <Comment
+      {/* <Comment
         typeVariant="default"
         // letterCount={textAreaValue.length}
         placeholder={contents}
@@ -47,7 +47,7 @@ export const CommentContainer: React.FC<Props> = ({
             typeVariant="default"
             placeholder={contents}
           />
-        ))}
+        ))} */}
 
       <AddNewComment />
     </div>
