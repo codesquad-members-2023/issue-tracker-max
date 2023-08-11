@@ -19,6 +19,8 @@ import codesquard.app.api.errors.errorcode.UserErrorCode;
 import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
+import codesquard.app.authenticate_user.service.response.AuthenticateUserLoginServiceResponse;
+import codesquard.app.jwt.Jwt;
 import codesquard.app.jwt.filter.VerifyUserFilter;
 import codesquard.app.user.controller.request.UserLoginRequest;
 import codesquard.app.user.service.request.UserLoginServiceRequest;
@@ -29,8 +31,7 @@ class UserLoginRestControllerTest extends ControllerTestSupport {
 
 	@BeforeEach
 	void beforeEach() {
-		mockMvc = MockMvcBuilders.standaloneSetup(
-				new UserLoginRestController(jwtProvider, objectMapper, authenticateUserService))
+		mockMvc = MockMvcBuilders.standaloneSetup()
 			.setControllerAdvice(new GlobalExceptionHandler())
 			.addFilter(new VerifyUserFilter(objectMapper, userQueryService))
 			.build();
@@ -42,8 +43,13 @@ class UserLoginRestControllerTest extends ControllerTestSupport {
 		// given
 		UserLoginRequest userLoginRequest = new UserLoginRequest("hong1234", "hong1234");
 		AuthenticateUser mockAuthenticateUser = new AuthenticateUser(1L, "hong1234", "hong1234@gmail.com", null);
+		Jwt jwt = new Jwt("accessToken", "refreshToken");
+		AuthenticateUserLoginServiceResponse mockAuthenticateUserLoginServiceResponse = new AuthenticateUserLoginServiceResponse(
+			mockAuthenticateUser, jwt);
 		// mocking
 		when(userQueryService.verifyUser(Mockito.any(UserLoginServiceRequest.class))).thenReturn(mockAuthenticateUser);
+		when(authenticateUserService.login(Mockito.any(AuthenticateUser.class))).thenReturn(
+			mockAuthenticateUserLoginServiceResponse);
 		// when & then
 		mockMvc.perform(post("/api/login")
 				.content(objectMapper.writeValueAsString(userLoginRequest))

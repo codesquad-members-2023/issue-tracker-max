@@ -1,4 +1,6 @@
-package codesquard.app.user.resolver;
+package codesquard.app.authenticate_user.resolver;
+
+import static codesquard.app.jwt.filter.VerifyUserFilter.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,7 +31,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 		HttpServletRequest request = (HttpServletRequest)webRequest.getNativeRequest();
-		AuthenticateUser authenticateUser = (AuthenticateUser)request.getAttribute("user");
+		AuthenticateUser authenticateUser = (AuthenticateUser)request.getAttribute(AUTHENTICATE_USER);
 		logger.info("resolveArgument, authenticateUser : {}", authenticateUser);
 		return authenticateUser;
 	}

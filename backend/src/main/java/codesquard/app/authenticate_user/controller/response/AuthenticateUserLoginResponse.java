@@ -1,20 +1,20 @@
-package codesquard.app.user.controller.response;
+package codesquard.app.authenticate_user.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.jwt.Jwt;
 
-public class UserLoginResponse {
+public class AuthenticateUserLoginResponse {
 	@JsonProperty("user")
 	private AuthenticateUser authenticateUser;
 	@JsonProperty("jwt")
 	private Jwt jwt;
 
-	public UserLoginResponse() {
+	public AuthenticateUserLoginResponse() {
 	}
 
-	public UserLoginResponse(AuthenticateUser authenticateUser, Jwt jwt) {
+	public AuthenticateUserLoginResponse(AuthenticateUser authenticateUser, Jwt jwt) {
 		this.authenticateUser = authenticateUser;
 		this.jwt = jwt;
 	}

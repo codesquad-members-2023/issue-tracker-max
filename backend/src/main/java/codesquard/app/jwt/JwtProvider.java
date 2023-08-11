@@ -67,7 +67,7 @@ public class JwtProvider {
 	}
 
 	public Date getExpireDateRefreshToken() {
-		final long DEFAULT_REFRESHTOKEN_EXPIRE_MILLISECOND = 1000L * 60 * 60 * 24 * 30; // 1달
+		final long DEFAULT_REFRESHTOKEN_EXPIRE_MILLISECOND = 1000L * 60 * 60 * 24 * 14; // 14일
 		return new Date(System.currentTimeMillis() + DEFAULT_REFRESHTOKEN_EXPIRE_MILLISECOND);
 	}
 }

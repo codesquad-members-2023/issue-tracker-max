@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import codesquard.app.api.errors.exception.RestApiException;
-import codesquard.app.api.errors.exception.jwt.JwtRestApiException;
-import codesquard.app.api.errors.exception.user.LoginRestApiException;
-import codesquard.app.api.errors.exception.user.UserRestApiException;
 import codesquard.app.api.response.ApiResponse;
 
 @RestControllerAdvice
@@ -40,7 +37,7 @@ public class GlobalExceptionHandler {
 		);
 	}
 
-	@ExceptionHandler({UserRestApiException.class, LoginRestApiException.class, JwtRestApiException.class})
+	@ExceptionHandler(RestApiException.class)
 	public ResponseEntity<ApiResponse<Object>> handleUserRestApiException(RestApiException e) {
 		ApiResponse<Object> body = ApiResponse.of(
 			e.getErrorCode().getHttpStatus(),

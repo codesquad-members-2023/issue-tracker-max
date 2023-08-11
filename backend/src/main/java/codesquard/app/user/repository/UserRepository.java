@@ -20,9 +20,9 @@ public interface UserRepository {
 
 	boolean isExistEmail(User user);
 
-	User findByLoginId(User user);
-
 	User findByLoginIdAndPassword(User user);
 
 	User findByRefreshToken(String refreshToken);
+
+	User findByEmail(User user);
 }
