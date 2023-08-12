@@ -1,91 +1,78 @@
 import { Theme, css } from '@emotion/react';
 import { Button } from '@components/common/Button';
 import { TextInput } from '@components/common/textInput/TextInput';
+import { useState } from 'react';
 
 export const RegisterForm: React.FC = () => {
-  // const [id, setId] = useState('');
-  // const [password, setPassword] = useState('');
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  // textArea와 중복되는 코드 줄이기
-  // const [uploadedProfile, setUploadedProfile] = useState<string | null>(null);
+  const onIdChange = (id: string) => {
+    setId(id);
+  };
 
-  // const [fileStatus, setFileStatus] = useState<DefaultFileStatusType>({
-  //   typeError: false,
-  //   sizeError: false,
-  //   isUploading: false,
-  //   uploadFailed: false,
-  // });
+  const onPasswordChange = (password: string) => {
+    setPassword(password);
+  };
 
-  // const profile = uploadedProfile
-  //   ? uploadedProfile
-  //   : 'https://avatars.githubusercontent.com/u/180050?v=4';
+  const onConfirmPasswordChange = (password: string) => {
+    setConfirmPassword(password);
+  };
 
-  // const uploadImage = async (file: File) => {
-  //   try {
-  //     setFileStatus((prev) => ({ ...prev, isUploading: true }));
-
-  //     const formData = new FormData();
-  //     formData.append('file', file);
-
-  //     const response = await fetch(`/{경로}`, {
-  //       method: 'POST',
-  //       body: formData,
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('File upload failed');
-  //     }
-
-  //     const data = await response.json();
-  //     setUploadedProfile(data.url);
-  //     return data;
-  //   } catch (error) {
-  //     setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
-  //   } finally {
-  //     setFileStatus((prev) => ({ ...prev, isUploading: false }));
-  //   }
-  // };
+  const isIdError = (id.length > 0 && id.length < 6) || id.length > 17;
+  const isPasswordError =
+    (password.length > 0 && password.length < 6) || password.length > 12;
+  const isPasswordMatchingError =
+    confirmPassword.length > 0 && password !== confirmPassword;
+  const submitButtonEnabled =
+    id.length > 0 &&
+    password.length > 0 &&
+    confirmPassword.length > 0 &&
+    !isIdError &&
+    !isPasswordError &&
+    !isPasswordMatchingError;
 
   return (
     <form css={formStyle}>
       <TextInput
-        value=""
+        value={id}
         label="아이디"
         height={56}
         inputType="text"
         placeholder="아이디"
-        isError={false}
+        isError={isIdError}
         captionString="아이디는 6자 이상 16자 이하로 입력해주세요."
-        onChange={() => console.log('id입력')}
+        onChange={onIdChange}
       />
 
       <TextInput
-        value=""
+        value={password}
         label="비밀번호"
         height={56}
         inputType="password"
         placeholder="비밀번호"
-        isError={false}
+        isError={isPasswordError}
         captionString="비밀번호는 6자 이상 12자 이하로 입력해주세요."
-        onChange={() => console.log('pw입력')}
+        onChange={onPasswordChange}
       />
 
       <TextInput
-        value=""
+        value={confirmPassword}
         label="비밀번호 확인"
         height={56}
         inputType="password"
         placeholder="비밀번호 확인"
-        isError={false}
+        isError={isPasswordMatchingError}
         captionString="비밀번호가 일치하지 않습니다."
-        onChange={() => console.log('pw확인 입력')}
+        onChange={onConfirmPasswordChange}
       />
 
       <Button
         className="submit-button"
         typeVariant="contained"
         size="L"
-        disabled={true}
+        disabled={!submitButtonEnabled}
       >
         가입하기
       </Button>
