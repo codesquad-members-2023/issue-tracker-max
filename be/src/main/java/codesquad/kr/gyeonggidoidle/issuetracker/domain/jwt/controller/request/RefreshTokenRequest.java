@@ -1,8 +1,10 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller.request;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Setter
 @Getter
 public class RefreshTokenRequest {
@@ -13,5 +15,4 @@ public class RefreshTokenRequest {
         this.refreshToken = refreshToken;
     }
 
-    public RefreshTokenRequest(){}
 }

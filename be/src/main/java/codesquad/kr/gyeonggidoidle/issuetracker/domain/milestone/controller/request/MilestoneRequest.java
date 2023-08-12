@@ -5,13 +5,15 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.service.conditi
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class MilestoneRequest {
 
-    private final String name;
-    private final String description;
-    private final LocalDate dueDate;
+    private String name;
+    private String description;
+    private LocalDate dueDate;
 
     @Builder
     public MilestoneRequest(String name, String description, LocalDate dueDate) {

@@ -5,17 +5,19 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class IssueCreateRequest {
 
-    private final Long authorId;
-    private final String title;
-    private final String comment;
-    private final List<Long> assignees;
-    private final List<Long> labels;
-    private final Long milestone;
-    private final String file;
+    private Long authorId;
+    private String title;
+    private String comment;
+    private List<Long> assignees;
+    private List<Long> labels;
+    private Long milestone;
+    private String file;
 
     @Builder
     private IssueCreateRequest(Long authorId, String title, String comment, List<Long> assignees, List<Long> labels,

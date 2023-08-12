@@ -23,7 +23,7 @@ CREATE TABLE milestone
     id          bigint AUTO_INCREMENT,
     name        varchar(50) NOT NULL,
     due_date    date        NOT NULL,
-    description varchar(255),
+    description varchar(2000),
     is_open     boolean     NOT NULL default TRUE,
     is_deleted  boolean     NOT NULL default FALSE,
     PRIMARY KEY (id)

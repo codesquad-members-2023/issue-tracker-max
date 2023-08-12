@@ -14,6 +14,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.PatternMatchUtils;
@@ -34,7 +36,7 @@ public class JwtAuthorizationFilter implements Filter {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-        if (httpServletRequest.getMethod().equals("OPTIONS")) {
+        if (httpServletRequest.getMethod().equals(HttpMethod.OPTIONS)) {
             return;
         }
         if (whiteListCheck(httpServletRequest.getRequestURI())) {
@@ -57,7 +59,7 @@ public class JwtAuthorizationFilter implements Filter {
     }
 
     private String getToken(HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         return authorization.substring(7).replace("\"","");
     }
 
@@ -66,7 +68,7 @@ public class JwtAuthorizationFilter implements Filter {
     }
 
     private boolean isContainToken(HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         return authorization != null && authorization.startsWith("Bearer ");
     }
 
@@ -83,7 +85,7 @@ public class JwtAuthorizationFilter implements Filter {
 
     private ApiResponse generateErrorApiResponse(RuntimeException e) {
         JwtExceptionType jwtExceptionType = JwtExceptionType.from(e);
-        return ApiResponse.exception(jwtExceptionType.getHttpstatus(), jwtExceptionType.getMessage());
+        return ApiResponse.fail(jwtExceptionType.getHttpstatus(), jwtExceptionType.getMessage());
     }
 
 }

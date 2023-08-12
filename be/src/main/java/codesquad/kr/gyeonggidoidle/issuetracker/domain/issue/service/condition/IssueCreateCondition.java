@@ -12,11 +12,11 @@ public class IssueCreateCondition {
 
     private final Long authorId;
     private final String title;
-    private final String comment;
-    private final List<Long> assignees;
-    private final List<Long> labels;
-    private final Long milestone;
-    private final String file;
+    private String comment;
+    private List<Long> assignees;
+    private List<Long> labels;
+    private Long milestone;
+    private String file;
 
     @Builder
     public IssueCreateCondition(Long authorId, String title, String comment, List<Long> assignees, List<Long> labels,

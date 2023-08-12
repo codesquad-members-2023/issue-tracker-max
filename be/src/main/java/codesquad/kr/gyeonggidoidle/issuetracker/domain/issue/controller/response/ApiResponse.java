@@ -18,7 +18,7 @@ public class ApiResponse<T> {
         return new ApiResponse(status.value(), null);
     }
 
-    public static ApiResponse exception(HttpStatus status, String data) {
+    public static ApiResponse fail(HttpStatus status, String data) {
         return new ApiResponse<>(status.value(), data);
 
     }

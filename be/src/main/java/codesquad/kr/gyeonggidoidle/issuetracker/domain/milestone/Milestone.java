@@ -11,7 +11,7 @@ public class Milestone {
     private final Long id;
     private final String name;
     private final LocalDate dueDate;
-    private final String description;
+    private String description;
     private final String status;
 
     @Builder

@@ -11,9 +11,9 @@ public class IssueUpdateCondition {
 
     private final Long issueId;
     private final String title;
-    private final List<Long> assignees;
-    private final List<Long> labels;
-    private final Long milestone;
+    private List<Long> assignees;
+    private List<Long> labels;
+    private Long milestone;
 
     @Builder
     public IssueUpdateCondition(Long issueId, String title, List<Long> assignees, List<Long> labels, Long milestone) {

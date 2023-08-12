@@ -8,8 +8,8 @@ public class Comment {
 
     private final Long authorId;
     private final Long issueId;
-    private final String contents;
-    private final String file;
+    private String contents;
+    private String file;
 
     @Builder
     public Comment(Long authorId, Long issueId, String contents, String file) {

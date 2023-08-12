@@ -10,7 +10,7 @@ public class MilestoneDetailsVO {
 
     private final Long id;
     private final String name;
-    private final String description;
+    private String description;
     private final LocalDate dueDate;
     private final Integer openIssueCount;
     private final Integer closedIssuesCount;

@@ -5,14 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class IssueUpdateRequest {
 
-    private final String title;
-    private final List<Long> assignees;
-    private final List<Long> labels;
-    private final Long milestone;
+    private String title;
+    private List<Long> assignees;
+    private List<Long> labels;
+    private Long milestone;
 
     @Builder
     private IssueUpdateRequest(String title, List<Long> assignees, List<Long> labels, Long milestone) {

@@ -69,7 +69,7 @@ class MilestoneRepositoryTest {
         assertThat(actual).isTrue();
     }
 
-    @DisplayName("라벨 내용을 수정하고 성공하면 true를 반환한다.")
+    @DisplayName("라벨 내용 수정을 성공한다.")
     @Test
     void update() {
         // given
@@ -85,7 +85,7 @@ class MilestoneRepositoryTest {
         assertThat(actual).isTrue();
     }
 
-    @DisplayName("마일스톤 아이디를 받아 is_deleted를 true로 바꾸고 성공하면 true를 반환한다")
+    @DisplayName("마일스톤 삭제에 성공한다.")
     @Test
     void delete() {
         // when
@@ -94,7 +94,7 @@ class MilestoneRepositoryTest {
         assertThat(actual).isTrue();
     }
 
-    @DisplayName("마일스톤 아이디를 받아 is_open을 바꾸고 성공하면 true를 반환한다")
+    @DisplayName("마일스톤 상태변경을 성공한다.")
     @Test
     void updateStatus() {
         // when

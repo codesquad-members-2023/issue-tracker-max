@@ -4,14 +4,16 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.condition.L
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.condition.LabelUpdateCondition;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class LabelRequest {
 
-    private final String name;
-    private final String description;
-    private final String backgroundColor;
-    private final String textColor;
+    private String name;
+    private String description;
+    private String backgroundColor;
+    private String textColor;
 
     @Builder
     public LabelRequest(String name, String description, String backgroundColor, String textColor) {

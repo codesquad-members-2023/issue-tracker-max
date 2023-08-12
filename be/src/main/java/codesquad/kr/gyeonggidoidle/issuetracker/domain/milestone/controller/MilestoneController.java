@@ -2,6 +2,7 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.ApiResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller.request.MilestoneRequest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller.request.MilestoneStatusRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller.response.MilestonePageResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.service.MilestoneService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -50,8 +50,8 @@ public class MilestoneController {
     }
 
     @PatchMapping("/api/milestones/{milestoneId}")
-    public ApiResponse updateStatus(@PathVariable Long milestoneId, @RequestParam("isOpen") boolean isOpen) {
-        milestoneService.updateStatus(milestoneId, isOpen);
+    public ApiResponse updateStatus(@PathVariable Long milestoneId, @RequestBody MilestoneStatusRequest request) {
+        milestoneService.updateStatus(milestoneId, request.isOpen());
         return ApiResponse.success(HttpStatus.OK);
     }
 }

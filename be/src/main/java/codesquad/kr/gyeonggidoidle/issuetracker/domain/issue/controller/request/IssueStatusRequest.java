@@ -6,13 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class IssueStatusRequest {
 
     @JsonProperty("isOpen")
-    private final boolean open;
-    private final List<Long> issues;
+    private boolean open;
+    private List<Long> issues;
 
     @Builder
     private IssueStatusRequest(boolean open, List<Long> issues) {

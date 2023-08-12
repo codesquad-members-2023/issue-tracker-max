@@ -53,7 +53,7 @@ class LabelRepositoryTest {
         });
     }
 
-    @DisplayName("Label을 받아서 db에 저장하고 성공하면 true를 반환한다.")
+    @DisplayName("라벨 저장에 성공한다.")
     @Test
     void save() {
         // given
@@ -84,7 +84,7 @@ class LabelRepositoryTest {
         });
     }
 
-    @DisplayName("라벨 내용을 수정하고 성공하면 true를 반환한다.")
+    @DisplayName("라벨 내용 수정을 성공한다.")
     @Test
     void update() {
         // given
@@ -101,7 +101,7 @@ class LabelRepositoryTest {
         assertThat(actual).isTrue();
     }
 
-    @DisplayName("라벨 아이디를 받아 is_deleted를 true로 바꾸고 성공하면 true를 반환한다")
+    @DisplayName("라벨 삭제에 성공한다.")
     @Test
     void delete() {
         // when

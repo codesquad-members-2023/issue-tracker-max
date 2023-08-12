@@ -1,5 +1,14 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.integration;
 
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.IntegrationTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.IssueCreateRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.IssueStatusRequest;
@@ -8,20 +17,14 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.Jwt;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.JwtProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.List;
-import java.util.Map;
-
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
 class IssueIntegrationTest {
@@ -38,8 +41,10 @@ class IssueIntegrationTest {
     @DisplayName("열린 이슈의 모든 정보를 다 가지고 온다.")
     @Test
     void getOpenIssues() throws Exception {
-        //when
+        // given
         Jwt jwt = makeToken();
+
+        //when
         ResultActions resultActions = mockMvc.perform(get("/api/issues/open")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 
@@ -59,8 +64,10 @@ class IssueIntegrationTest {
     @DisplayName("닫힌 이슈의 모든 정보를 다 가지고 온다.")
     @Test
     void getClosedIssues() throws Exception {
-        //when
+        // given
         Jwt jwt = makeToken();
+
+        //when
         ResultActions resultActions = mockMvc.perform(get("/api/issues/closed")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 
@@ -80,8 +87,10 @@ class IssueIntegrationTest {
     @DisplayName("메인 화면의 필터 목록을 가지고 온다.")
     @Test
     void getFilters() throws Exception {
-        //when
+        // given
         Jwt jwt = makeToken();
+
+        //when
         ResultActions resultActions = mockMvc.perform(get("/api/filters")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 
@@ -100,8 +109,10 @@ class IssueIntegrationTest {
     @DisplayName("이슈 화면의 필터 목록을 가지고 온다.")
     @Test
     void getFiltersByIssue() throws Exception {
-        //when
+        // given
         Jwt jwt = makeToken();
+
+        //when
         ResultActions resultActions = mockMvc.perform(get("/api/issues")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 
@@ -123,18 +134,20 @@ class IssueIntegrationTest {
     @DisplayName("선택한 여러 개의 이슈 상태를 변경한다.")
     @Test
     void testUpdateIssuesStatusIntegrationTest() throws Exception {
-
+        // given
         IssueStatusRequest request = IssueStatusRequest.builder()
                 .open(false)
                 .issues(List.of(4L, 5L))
                 .build();
-
         Jwt jwt = makeToken();
+
+        // when
         ResultActions resultActions = mockMvc.perform(patch("/api/issues")
                 .header("Authorization", "Bearer " + jwt.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)));
 
+        // then
         resultActions.andExpect(status().isOk())
                 .andDo(print());
     }
@@ -142,10 +155,14 @@ class IssueIntegrationTest {
     @DisplayName("선택한 이슈를 삭제한다.")
     @Test
     void testDeleteIssue() throws Exception {
+        // given
         Jwt jwt = makeToken();
+
+        // when
         ResultActions resultActions = mockMvc.perform(delete("/api/issues/1")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 
+        // then
         resultActions.andExpect(status().isOk())
                 .andDo(print());
     }
@@ -153,16 +170,18 @@ class IssueIntegrationTest {
     @DisplayName("선택한 하나의 이슈 상태를 변경한다.")
     @Test
     void testUpdateIssueStatus() throws Exception {
+        // given
         IssueStatusRequest request = IssueStatusRequest.builder()
                 .open(false)
                 .build();
-
         Jwt jwt = makeToken();
+
+        // when
         ResultActions resultActions = mockMvc.perform(patch("/api/issues/2")
                 .header("Authorization", "Bearer " + jwt.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)));
-
+        // then
         resultActions.andExpect(status().isOk())
                 .andDo(print());
     }
@@ -170,6 +189,7 @@ class IssueIntegrationTest {
     @DisplayName("이슈를 생성한다.")
     @Test
     void testCreate() throws Exception {
+        // given
         IssueCreateRequest request = IssueCreateRequest.builder()
                 .title("제목")
                 .authorId(1L)
@@ -177,13 +197,15 @@ class IssueIntegrationTest {
                 .labels(List.of(2L))
                 .milestone(1L)
                 .build();
-
         Jwt jwt = makeToken();
+
+        // when
         ResultActions resultActions = mockMvc.perform(post("/api/issues")
                 .header("Authorization", "Bearer " + jwt.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)));
 
+        // then
         resultActions.andExpect(status().isOk())
                 .andDo(print());
     }
@@ -198,9 +220,9 @@ class IssueIntegrationTest {
                 .labels(List.of(2L))
                 .milestone(1L)
                 .build();
+        Jwt jwt = makeToken();
 
         // when
-        Jwt jwt = makeToken();
         ResultActions resultActions = mockMvc.perform(put("/api/issues/1")
                 .header("Authorization", "Bearer " + jwt.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)

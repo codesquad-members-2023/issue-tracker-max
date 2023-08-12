@@ -37,8 +37,10 @@ class LabelIntegrationTest {
     @DisplayName("라벨의 모드 정보를 가지고 온다.")
     @Test
     void getLabels() throws Exception {
-        //when
+        // given
         Jwt jwt = makeToken();
+
+        //when
         ResultActions resultActions = mockMvc.perform(get("/api/labels")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 
@@ -63,9 +65,9 @@ class LabelIntegrationTest {
                 .backgroundColor("##")
                 .textColor("#")
                 .build();
+        Jwt jwt = makeToken();
 
         // when
-        Jwt jwt = makeToken();
         ResultActions resultActions = mockMvc.perform(post("/api/labels")
                 .header("Authorization", "Bearer " + jwt.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -80,8 +82,10 @@ class LabelIntegrationTest {
     @DisplayName("하나의 라벨 정보를 가져온다.")
     @Test
     void read() throws Exception {
-        // when
+        // given
         Jwt jwt = makeToken();
+
+        // when
         ResultActions resultActions = mockMvc.perform(get("/api/labels/1")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 
@@ -105,9 +109,9 @@ class LabelIntegrationTest {
                 .backgroundColor("##")
                 .textColor("#")
                 .build();
+        Jwt jwt = makeToken();
 
         // when
-        Jwt jwt = makeToken();
         ResultActions resultActions = mockMvc.perform(patch("/api/labels/1")
                 .header("Authorization", "Bearer " + jwt.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -122,8 +126,10 @@ class LabelIntegrationTest {
     @DisplayName("라벨 아이디를 받아 라벨을 삭제한다.")
     @Test
     void delete() throws Exception {
-        // when
+        // given
         Jwt jwt = makeToken();
+
+        // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/api/labels/3")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 

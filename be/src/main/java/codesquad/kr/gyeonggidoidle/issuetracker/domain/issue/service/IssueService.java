@@ -87,8 +87,12 @@ public class IssueService {
         if (comment.isContentsExist()) {
             commentRepository.createComment(fileId, comment);
         }
-        memberRepository.addIssueAssignees(createdId, condition.getAssignees());
-        labelRepository.addIssueLabels(createdId, condition.getLabels());
+        if (condition.getAssignees() != null) {
+            memberRepository.addIssueAssignees(createdId, condition.getAssignees());
+        }
+        if (condition.getLabels() != null) {
+            labelRepository.addIssueLabels(createdId, condition.getLabels());
+        }
     }
 
     public void deleteIssue(Long issueId) {

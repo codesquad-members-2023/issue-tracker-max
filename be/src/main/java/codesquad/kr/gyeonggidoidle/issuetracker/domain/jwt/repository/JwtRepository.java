@@ -2,6 +2,7 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.repository;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.Member;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,16 +15,18 @@ public class JwtRepository {
 
     private final NamedParameterJdbcTemplate template;
 
-    public Member findByRefreshToken(String refreshToken) {
+    public Optional<Member> findByRefreshToken(String refreshToken) {
         String sql = "SELECT member.id, member.email, member.name, member.password, member.profile "
                 + "FROM member "
                 + "JOIN refresh_token "
                 + "ON member.id = refresh_token.member_id "
                 + "WHERE refresh_token.refresh_token = :refreshToken";
         try {
-            return template.queryForObject(sql, Map.of("refreshToken", refreshToken), memberRowMapper());
+            Member member = template.queryForObject(sql, Map.of("refreshToken", refreshToken),
+                    memberRowMapper());
+            return Optional.ofNullable(member);
         } catch (DataAccessException e) {
-            return null;
+            return Optional.empty();
         }
     }
 

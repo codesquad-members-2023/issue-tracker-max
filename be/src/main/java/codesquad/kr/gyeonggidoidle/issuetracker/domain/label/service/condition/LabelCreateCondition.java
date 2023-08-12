@@ -8,7 +8,7 @@ import lombok.Getter;
 public class LabelCreateCondition {
 
     private final String name;
-    private final String description;
+    private String description;
     private final String backgroundColor;
     private final String textColor;
 
