@@ -38,7 +38,7 @@ export function Issue({ issue }: { issue: IssueData }) {
           <span>#{issue.id}</span>
           <span>
             {`이 이슈가 ${getElapsedSince(issue.createdAt)} 전 ${
-              issue.writer.name
+              issue.author.name
             }님에 의해 작성되었습니다.`}
           </span>
           {issue.milestone && (
