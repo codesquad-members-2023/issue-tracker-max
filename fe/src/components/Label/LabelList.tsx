@@ -61,7 +61,6 @@ const labelTable = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   border-radius: ${radius.medium};
-  border: ${border.default} ${theme.neutral.borderDefault};
   color: ${theme.neutral.textDefault};
 
   .header {
@@ -71,7 +70,7 @@ const labelTable = (theme: Theme) => css`
     height: 64px;
     padding: 0 32px;
     border-radius: ${radius.medium} ${radius.medium} 0 0;
-    border-bottom: ${border.default} ${theme.neutral.borderDefault};
+    border: ${border.default} ${theme.neutral.borderDefault};
     background-color: ${theme.neutral.surfaceDefault};
     font: ${font.displayBold16};
     color: ${theme.neutral.textDefault};
@@ -80,6 +79,8 @@ const labelTable = (theme: Theme) => css`
   .item-container {
     display: flex;
     flex-direction: column;
+    border: ${border.default} ${theme.neutral.borderDefault};
+    border-top: none;
     border-radius: 0 0 ${radius.medium} ${radius.medium};
     background-color: ${theme.neutral.surfaceStrong};
 

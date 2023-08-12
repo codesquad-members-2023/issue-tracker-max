@@ -34,7 +34,7 @@ export default function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/issue" element={<IssueList />} />
           <Route path="/issue-create" element={<IssueCreate />} />
-          <Route path="/issue-detail/:id" element={<IssueDetail />} />
+          <Route path="/issue/:id" element={<IssueDetail />} />
           <Route path="/label" element={<LabelList />} />
           <Route path="/milestone" element={<MilestoneList />} />
         </Routes>

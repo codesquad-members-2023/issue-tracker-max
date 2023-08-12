@@ -33,7 +33,7 @@ export default function SignUp() {
 
     const subUrl = 'api/signup';
     const method = 'POST';
-    const body = signUpData;
+    const body = JSON.stringify(signUpData);
 
     const response = await customFetch<Response>({
       subUrl,
@@ -48,11 +48,11 @@ export default function SignUp() {
 
   const onCheckEmail = async () => {
     const subUrl = 'api/signup/check-member-email';
-    const body = { loginId: email };
+    const header = { email: email };
 
     const response = await customFetch<Response>({
       subUrl,
-      body,
+      header,
     });
 
     if (response && response.success) {
@@ -110,7 +110,7 @@ export default function SignUp() {
             placeholder="example@gmail.com"
             label="이메일"
             valid={isValidEmail}
-            text="올바른 이메일을 입력해주세요"
+            text="올바른 이메일을 입력 후 중복 체크 해주세요"
           />
           <button type="button" className="check-email" onClick={onCheckEmail}>
             중복 체크

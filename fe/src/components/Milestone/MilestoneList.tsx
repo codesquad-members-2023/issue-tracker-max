@@ -95,13 +95,14 @@ const milestoneTable = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   border-radius: ${radius.medium};
-  border: ${border.default} ${theme.neutral.borderDefault};
   color: ${theme.neutral.textDefault};
 
   .item-container {
     display: flex;
     flex-direction: column;
     border-radius: 0 0 ${radius.medium} ${radius.medium};
+    border: ${border.default} ${theme.neutral.borderDefault};
+    border-top: none;
     background-color: ${theme.neutral.surfaceStrong};
 
     li {

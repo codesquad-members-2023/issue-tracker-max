@@ -13,6 +13,9 @@ type Response = {
   data: {
     accessToken: string;
     refreshToken: string;
+    // userId: number;
+    // userName: string;
+    // userImg: string;
   };
 };
 
@@ -33,7 +36,7 @@ export default function SignIn() {
 
     const subUrl = 'api/signin';
     const method = 'POST';
-    const body = signInData;
+    const body = JSON.stringify(signInData);
 
     const response = await customFetch<Response>({
       subUrl,
@@ -44,6 +47,9 @@ export default function SignIn() {
     if (response && response.success && response.data) {
       localStorage.setItem('accessToken', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
+      // localStorage.setItem('userId', response.data.userId.toString());
+      // localStorage.setItem('userName', response.data.userName);
+      // localStorage.setItem('userImg', response.data.userImg);
 
       navigate('/');
     }

@@ -37,3 +37,18 @@ type Assignee = {
   id: number;
   name: string;
 };
+
+type IssueDetail = {
+  issue: Issue;
+  comments: CommentType[];
+};
+
+type CommentType = {
+  id: number;
+  writer: {
+    id: number;
+    name: string;
+  };
+  content: string;
+  dateTime: string;
+};

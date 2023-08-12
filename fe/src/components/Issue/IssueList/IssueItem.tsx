@@ -5,6 +5,7 @@ import Label from '../../Label/Label';
 import { ReactComponent as AlertCircleIcon } from '../../../assets/icon/alertCircle.svg';
 import { ReactComponent as MilestoneIcon } from '../../../assets/icon/milestone.svg';
 import { ReactComponent as UserImageSmallIcon } from '../../../assets/icon/userImageSmall.svg';
+import { getTimeLine } from '../../../util/getTimeLine';
 
 type Props = {
   issue: Issue;
@@ -15,33 +16,13 @@ type Props = {
 export default function IssueItem({ issue, onSingleCheck, checked }: Props) {
   const theme = useTheme();
 
-  const getTimeLine = (timestamp: string) => {
-    const now = new Date();
-    const pastDate = new Date(timestamp);
-    const timeDifference = now.getTime() - pastDate.getTime();
-
-    const minute = 60 * 1000;
-    const hour = 60 * minute;
-    const day = 24 * hour;
-
-    if (timeDifference < minute) {
-      return `${Math.floor(timeDifference / 1000)}초 전`;
-    } else if (timeDifference < hour) {
-      return `${Math.floor(timeDifference / minute)}분 전`;
-    } else if (timeDifference < day) {
-      return `${Math.floor(timeDifference / hour)}시간 전`;
-    } else {
-      return `${Math.floor(timeDifference / day)}일 전`;
-    }
-  };
-
   return (
     <li css={issueItem(theme)}>
       <div className="detail-wrapper">
         <div className="detail">
           <div className="title-wrapper">
             <CheckBoxIcon
-              id={issue.id.toString()}
+              id="selectOne"
               onChange={(e) => onSingleCheck(e.currentTarget.checked, issue.id)}
               checked={checked}
             />

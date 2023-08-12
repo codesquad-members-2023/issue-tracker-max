@@ -2,6 +2,7 @@ type Props = {
   subUrl: string;
   method?: string;
   header?: any;
+  contentType?: string;
   body?: any;
 };
 
@@ -9,6 +10,7 @@ export async function customFetch<T>({
   subUrl,
   method,
   header,
+  contentType = 'application/json',
   body,
 }: Props): Promise<T> {
   const baseUrl = import.meta.env.VITE_APP_BASE_URL;
@@ -19,10 +21,10 @@ export async function customFetch<T>({
     method: method,
     headers: {
       authorization: authorization,
-      'Content-Type': 'application/json',
+      'Content-Type': contentType,
       ...header,
     },
-    body: JSON.stringify(body),
+    body: body,
   };
 
   try {

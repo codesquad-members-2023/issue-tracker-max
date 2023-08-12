@@ -26,7 +26,12 @@ export default function SubNavBar({
       {isIssue && <FilterBar />}
       <div className="nav-container">
         <Taps labelCount={labelCount} milestoneCount={milestoneCount} />
-        <Button type="button" value={buttonValue} onClick={onClick}>
+        <Button
+          value={buttonValue}
+          onClick={onClick}
+          color={theme.brand.textDefault}
+          backgroundColor={theme.brand.surfaceDefault}
+        >
           <PlusIcon className="plus" />
         </Button>
       </div>

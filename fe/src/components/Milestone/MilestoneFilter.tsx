@@ -46,7 +46,7 @@ const milestone = (theme: Theme) => css`
   display: flex;
   gap: 24px;
   border-radius: ${radius.medium} ${radius.medium} 0 0;
-  border-bottom: ${border.default} ${theme.neutral.borderDefault};
+  border: ${border.default} ${theme.neutral.borderDefault};
   background-color: ${theme.neutral.surfaceDefault};
 
   .open-milestone,

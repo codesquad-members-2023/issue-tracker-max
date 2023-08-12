@@ -6,20 +6,10 @@ import { ReactComponent as ArchiveIcon } from '../../assets/icon/archive.svg';
 import { ReactComponent as EditIcon } from '../../assets/icon/edit.svg';
 import { ReactComponent as DeleteIcon } from '../../assets/icon/trash.svg';
 import MilestoneButton from './MilestoneButton';
+import { getFormatDate } from '../../util/getFormatDate';
 
 export default function IssueItem(milestone: Milestone) {
   const theme = useTheme();
-
-  const getFormatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const formattedDate = `
-    ${date.getFullYear()}. 
-    ${String(date.getMonth() + 1).padStart(2, '0')}. 
-    ${String(date.getDate()).padStart(2, '0')}
-    `;
-
-    return formattedDate;
-  };
 
   const completionChart = Math.floor(
     (milestone.openIssueCount /

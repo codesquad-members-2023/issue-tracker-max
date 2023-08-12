@@ -92,7 +92,7 @@ const issueFilter = (theme: Theme) => css`
   height: 64px;
   padding: 0 32px;
   border-radius: ${radius.medium} ${radius.medium} 0 0;
-  border-bottom: ${border.default} ${theme.neutral.borderDefault};
+  border: ${border.default} ${theme.neutral.borderDefault};
   background-color: ${theme.neutral.surfaceDefault};
 
   .issue-filter {

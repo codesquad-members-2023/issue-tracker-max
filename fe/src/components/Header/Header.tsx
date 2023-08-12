@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ReactComponent as MediumLogo } from '../../assets/logo/mediumLogo.svg';
 import { ReactComponent as UserImageLargeIcon } from '../../assets/icon/userImageLarge.svg';
 import { font } from '../../styles/styles';
+import Button from '../common/Button';
 
 export default function Header() {
   const theme = useTheme();
@@ -23,9 +24,14 @@ export default function Header() {
       <MediumLogo className="logo" onClick={onLogoClick} />
 
       <div className="nav">
-        <button className="sign-out" onClick={onSignOutClick}>
-          로그아웃
-        </button>
+        <Button
+          color={theme.neutral.textStrong}
+          backgroundColor="inherit"
+          value="로그아웃"
+          size="S"
+          fontSize="S"
+          onClick={onSignOutClick}
+        />
         <UserImageLargeIcon />
       </div>
     </header>
@@ -52,7 +58,8 @@ const header = (theme: Theme) => css`
 
   .nav {
     display: flex;
-    gap: 48px;
+    align-items: center;
+    gap: 32px;
 
     .sign-out {
       display: flex;

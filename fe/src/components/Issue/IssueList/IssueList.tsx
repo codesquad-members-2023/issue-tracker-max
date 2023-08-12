@@ -31,9 +31,6 @@ export default function IssueList() {
     })();
   }, []);
 
-  const allItemIdList = issueList?.issues.map((item: Issue) => item.id) || [];
-  const isAllItemChecked = allItemIdList.length === checkedItemIdList.length;
-
   const onIssueFilterClick = (issueFilter: 'open' | 'closed') => {
     setActiveIssue(issueFilter);
   };
@@ -57,6 +54,11 @@ export default function IssueList() {
   const onClickToCreate = () => {
     navigate('/issue-create');
   };
+
+  const allItemIdList = issueList?.issues.map((item: Issue) => item.id) || [];
+  const isAllItemChecked =
+    allItemIdList.length !== 0 &&
+    allItemIdList.length === checkedItemIdList.length;
 
   return (
     <>
@@ -106,12 +108,13 @@ const issueTable = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   border-radius: ${radius.medium};
-  border: ${border.default} ${theme.neutral.borderDefault};
   color: ${theme.neutral.textDefault};
 
   .item-container {
     display: flex;
     flex-direction: column;
+    border: ${border.default} ${theme.neutral.borderDefault};
+    border-top: none;
     border-radius: 0 0 ${radius.medium} ${radius.medium};
     background-color: ${theme.neutral.surfaceStrong};
 
