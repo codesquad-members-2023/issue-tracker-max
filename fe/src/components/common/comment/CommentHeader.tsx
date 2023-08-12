@@ -1,4 +1,4 @@
-import { useTheme } from '@emotion/react';
+import { Theme, css } from '@emotion/react';
 import { InformationTag } from '../InformationTag';
 import { Button } from '../Button';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
@@ -19,95 +19,85 @@ export const CommentHeader: React.FC<Props> = ({
   isAuthor,
   onClickEdit,
 }) => {
-  const theme = useTheme() as any;
   return (
-    <div
-      css={{
-        height: '64px',
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 24px',
-        background: theme.neutral.surface.default,
-      }}
-    >
-      <div
-        css={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-        }}
-      >
-        <img
-          src={image}
-          alt="작성자이미지"
-          css={{
-            width: '32px',
-            height: '32px',
-            borderRadius: theme.radius.half,
-          }}
-        />
-        <span
-          css={{
-            font: theme.fonts.displayMedium16,
-            color: theme.neutral.text.default,
-          }}
-        >
-          {loginId}
-        </span>
-        <span
-          css={{
-            font: theme.fonts.displayMedium16,
-            color: theme.neutral.text.weak,
-          }}
-        >
-          {createdAt}
-        </span>
+    <div css={commentHeaderStyle}>
+      <div className="header-left">
+        <img className="user-image" src={image} alt="작성자이미지" />
+        <span className="user-name">{loginId}</span>
+        <span className="created-at">{createdAt}</span>
       </div>
 
-      <div
-        css={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '16px',
-        }}
-      >
+      <div className="header-right">
         {isAuthor && (
           <InformationTag size="S" typeVariant="default">
-            <span
-              css={{
-                color: theme.neutral.text.weak,
-              }}
-            >
-              작성자
-            </span>
+            <span className="author-label">작성자</span>
           </InformationTag>
         )}
         <Button
+          className="header-right__button"
           onClick={onClickEdit}
           typeVariant="ghost"
           size="S"
-          css={{
-            width: 'fit-content',
-            padding: '0',
-          }}
         >
-          <Edit stroke={theme.neutral.text.default} />
+          <Edit className="button-icon" />
           편집
         </Button>
-        <Button
-          typeVariant="ghost"
-          size="S"
-          css={{
-            width: 'fit-content',
-            padding: '0',
-          }}
-        >
-          <Smile stroke={theme.neutral.text.default} />
+        <Button className="header-right__button" typeVariant="ghost" size="S">
+          <Smile className="button-icon" />
           반응
         </Button>
       </div>
     </div>
   );
 };
+
+const commentHeaderStyle = (theme: Theme) => css`
+  height: 64px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: ${theme.neutral.surface.default};
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .user-image {
+      width: 32px;
+      height: 32px;
+      border-radius: ${theme.radius.half};
+    }
+
+    .user-name {
+      font: ${theme.fonts.displayMedium16};
+      color: ${theme.neutral.text.default};
+    }
+
+    .created-at {
+      font: ${theme.fonts.displayMedium16};
+      color: ${theme.neutral.text.weak};
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .author-label {
+      color: ${theme.neutral.text.weak};
+    }
+
+    &__button {
+      width: fit-content;
+      padding: 0;
+
+      .button-icon {
+        stroke: ${theme.neutral.text.default};
+      }
+    }
+  }
+`;
