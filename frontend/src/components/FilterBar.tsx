@@ -1,14 +1,9 @@
 import { useState } from "react";
 import { styled } from "styled-components";
-import { TextInput } from "./TextInput";
+import { TextInput, TextInputProps } from "./TextInput";
 import { DropdownContainer } from "./dropdown/DropdownContainer";
 
-export function FilterBar({
-  name,
-  optionTitle,
-  options,
-  value,
-}: {
+type FilterBarProps = {
   name: string;
   optionTitle: string;
   options: {
@@ -17,8 +12,14 @@ export function FilterBar({
     selected: boolean;
     onClick: () => void;
   }[];
-  value: string;
-}) {
+} & TextInputProps;
+
+export function FilterBar({
+  name,
+  optionTitle,
+  options,
+  ...props
+}: FilterBarProps) {
   const [state, setState] = useState<"Enabled" | "Active">("Enabled");
 
   const handleFilterBarFocus = () => {
@@ -40,8 +41,9 @@ export function FilterBar({
         optionTitle={optionTitle}
         options={options}
         alignment="Left"
+        autoClose
       />
-      <TextInput size="S" icon="search" value={value} />
+      <TextInput icon="Search" {...props} />
     </Div>
   );
 }

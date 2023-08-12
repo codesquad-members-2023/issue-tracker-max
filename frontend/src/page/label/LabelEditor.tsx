@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
-import { Icon } from "../../components/Icon";
 import { InformationTag } from "../../components/InformationTag";
 import { TextInput } from "../../components/TextInput";
 import { DropdownContainer } from "../../components/dropdown/DropdownContainer";
+import { Icon } from "../../components/icon/Icon";
 import { LabelData } from "./Label";
 
 const colorDictionary = {
@@ -16,9 +16,15 @@ const colorDictionary = {
 
 type LabelEditorProps = {
   onClickClose: () => void;
+  fetchData: () => void;
 } & ({ type: "add"; label?: never } | { type: "edit"; label: LabelData });
 
-export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
+export function LabelEditor({
+  onClickClose,
+  fetchData,
+  type,
+  label,
+}: LabelEditorProps) {
   const isEditMode = type === "edit" && label;
 
   const [selectedFontColor, setSelectedFontColor] = useState<string>(
@@ -34,6 +40,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
   const [labelDescription, setLabelDescription] = useState(
     isEditMode && label.description ? label.description : "",
   );
+
   const [isColorValid, setIsColorValid] = useState(true);
   const [isFocus, setIsFocus] = useState(false);
   const [fontColorOptions, setFontColorOptions] = useState([
@@ -57,12 +64,14 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
     },
   ]);
 
+  const isSameLabelData =
+    labelName === label?.name &&
+    background === label?.background &&
+    color === label?.color &&
+    labelDescription === label?.description;
+
   const isButtonDisabled = isEditMode
-    ? !isColorValid ||
-      (labelName === label.name &&
-        background === label.background &&
-        color === label.color) ||
-      labelName === ""
+    ? !isColorValid || isSameLabelData || labelName === ""
     : !isColorValid || labelName === "";
 
   const updateOptions = (selectedName: string) => {
@@ -113,15 +122,26 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
     setLabelDescription(description);
   };
 
-  const submit = () => {
+  const submit = async () => {
+    const method = type === "add" ? "POST" : "PUT";
+    const path = type === "add" ? "" : `/${label.id}`;
     const obj = {
       name: labelName,
       description: labelDescription,
       background: background,
-      fontColor: color,
+      color: color,
     };
 
-    console.log(obj);
+    await fetch(`/api/labels${path}`, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    });
+
+    onClickClose();
+    fetchData();
   };
 
   return (
@@ -138,7 +158,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
         </Preview>
         <InputWrapper>
           <TextInput
-            width={904}
+            width={"100%"}
             size="S"
             label="이름"
             placeholder="레이블의 이름을 입력하세요"
@@ -147,7 +167,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
             onChange={onChangeName}
           />
           <TextInput
-            width={904}
+            width={"100%"}
             size="S"
             label="설명(선택)"
             placeholder="레이블에 대한 설명을 입력하세요"
@@ -167,7 +187,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
                 onChange={onChangeBackground}
               />
               <button onClick={setRandomBackground}>
-                <Icon name="refreshCcw" fill="#4E4B66" stroke="#4E4B66" />
+                <Icon name="RefreshCcw" color="#4E4B66" />
               </button>
             </BackgroundSelector>
             <DropdownContainer
@@ -175,6 +195,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
               optionTitle={"텍스트 색상"}
               options={fontColorOptions}
               alignment="Left"
+              autoClose
             />
           </ColorSelector>
         </InputWrapper>
@@ -182,7 +203,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
       <Buttons>
         <Button
           size="S"
-          icon="xSquare"
+          icon="XSquare"
           buttonType="Outline"
           onClick={onClickClose}
         >
@@ -190,7 +211,7 @@ export function LabelEditor({ onClickClose, type, label }: LabelEditorProps) {
         </Button>
         <Button
           size="S"
-          icon="plus"
+          icon="Plus"
           buttonType="Container"
           onClick={submit}
           disabled={isButtonDisabled}
@@ -206,10 +227,8 @@ const Div = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 337px;
   align-self: stretch;
   box-sizing: border-box;
-  padding: 32px;
   gap: 24px;
 `;
 

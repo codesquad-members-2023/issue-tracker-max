@@ -3,27 +3,33 @@ package codesquard.app.user.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquard.app.errors.errorcode.UserErrorCode;
-import codesquard.app.errors.exception.RestApiException;
+import codesquard.app.api.errors.errorcode.UserErrorCode;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.user.repository.UserRepository;
 import codesquard.app.user.service.request.UserSaveServiceRequest;
-import codesquard.app.user.service.response.UserSaveResponse;
-import lombok.RequiredArgsConstructor;
+import codesquard.app.user.service.response.UserSaveServiceResponse;
 
-@RequiredArgsConstructor
+@Transactional
 @Service
 public class UserService {
 
+	private final UserQueryService userQueryService;
 	private final UserRepository userRepository;
 
-	@Transactional
-	public UserSaveResponse signUp(UserSaveServiceRequest userSaveServiceRequest) {
+	public UserService(UserQueryService userQueryService, UserRepository userRepository) {
+		this.userQueryService = userQueryService;
+		this.userRepository = userRepository;
+	}
+
+	public UserSaveServiceResponse signUp(UserSaveServiceRequest userSaveServiceRequest) {
 		// 비밀번호와 비밀번호 확인이 서로 일치하는지 검증
 		validatePasswordMatching(userSaveServiceRequest);
+		// 로그인아이디가 이미 존재하는지 검증
 		validateDuplicatedLoginId(userSaveServiceRequest);
+		// 이메일이 이미 존재하는지 검증
 		validateDuplicatedEmail(userSaveServiceRequest);
-		userRepository.save(userSaveServiceRequest.toEntity());
-		return UserSaveResponse.success();
+		Long saveId = userRepository.save(userSaveServiceRequest.toEntity());
+		return userQueryService.findUserById(saveId);
 	}
 
 	private void validatePasswordMatching(UserSaveServiceRequest userSaveServiceRequest) {
@@ -33,13 +39,13 @@ public class UserService {
 	}
 
 	private void validateDuplicatedLoginId(UserSaveServiceRequest userSaveServiceRequest) {
-		if (userRepository.existLoginId(userSaveServiceRequest.toEntity())) {
+		if (userQueryService.verifyDuplicatedLoginId(userSaveServiceRequest)) {
 			throw new RestApiException(UserErrorCode.ALREADY_EXIST_LOGINID);
 		}
 	}
 
 	private void validateDuplicatedEmail(UserSaveServiceRequest userSaveServiceRequest) {
-		if (userRepository.existEmail(userSaveServiceRequest.toEntity())) {
+		if (userQueryService.verifyDuplicatedEmail(userSaveServiceRequest)) {
 			throw new RestApiException(UserErrorCode.ALREADY_EXIST_EMAIL);
 		}
 	}

@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IssueModifyResponse {
 
-	@JsonProperty("success")
-	private final boolean success;
+	@JsonProperty("modifiedIssueId")
+	private final Long id;
 
-	public static IssueModifyResponse success() {
-		return new IssueModifyResponse(true);
+	public static IssueModifyResponse success(Long issueId) {
+		return new IssueModifyResponse(issueId);
 	}
 }

@@ -1,5 +1,6 @@
 package codesquard.app.issue.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueUserResponse;
+import codesquard.app.issue.dto.response.userReactionResponse;
 import codesquard.app.issue.entity.Issue;
 import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.label.entity.Label;
@@ -37,7 +39,9 @@ public class JdbcIssueRepository implements IssueRepository {
 		rs.getTimestamp("created_at").toLocalDateTime(),
 		rs.getTimestamp("modified_at") != null ? rs.getTimestamp("modified_at").toLocalDateTime() : null,
 		rs.getString("content"),
-		new IssueMilestoneResponse(rs.getLong("milestone_id"), rs.getString("name"), new IssueMilestoneCountResponse()),
+		rs.getLong("milestone_id") == 0 ? null :
+			new IssueMilestoneResponse(rs.getLong("milestone_id"), rs.getString("name"),
+				new IssueMilestoneCountResponse()),
 		new IssueUserResponse(rs.getLong("writer_id"), rs.getString("login_id"), rs.getString("avatar_url"))));
 	private static final RowMapper<User> userRowMapper = ((rs, rowNum) -> new User(
 		rs.getLong("id"),
@@ -51,13 +55,6 @@ public class JdbcIssueRepository implements IssueRepository {
 	private static final RowMapper<IssueMilestoneCountResponse> issueMilestoneCountResponseRowMapper = ((rs, rowNum) -> new IssueMilestoneCountResponse(
 		rs.getInt("openedIssueCount"),
 		rs.getInt("closedIssueCount")));
-	private static final RowMapper<IssueCommentsResponse> issueCommentsResponseRowMapper = ((rs, rowNum) -> new IssueCommentsResponse(
-		rs.getLong("id"),
-		rs.getString("login_id"),
-		rs.getString("avatar_url"),
-		rs.getString("content"),
-		rs.getTimestamp("created_at").toLocalDateTime(),
-		rs.getTimestamp("modified_at").toLocalDateTime()));
 
 	public JdbcIssueRepository(NamedParameterJdbcTemplate template, DataSource dataSource) {
 		this.template = template;
@@ -99,33 +96,57 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public void saveIssueLabel(Long issueId, Long labelId) {
+	public void saveIssueLabel(Long issueId, List<Long> labels) {
 		String sql = "INSERT INTO issue_label(issue_id, label_id) VALUES(:issueId, :labelId)";
-		template.update(sql, Map.of("issueId", issueId, "labelId", labelId));
+		template.batchUpdate(sql, generateIssueLabelParameters(issueId, labels));
+	}
+
+	private SqlParameterSource[] generateIssueLabelParameters(Long issueId, List<Long> labels) {
+		return labels.stream()
+			.map(labelId -> generateIssueLabelParameter(issueId, labelId))
+			.toArray(SqlParameterSource[]::new);
+	}
+
+	private SqlParameterSource generateIssueLabelParameter(Long issueId, Long labelId) {
+		return new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("labelId", labelId);
 	}
 
 	@Override
-	public void saveIssueAssignee(Long issueId, Long userId) {
-		String sql = "INSERT INTO issue_assignee(issue_id, user_id) VALUES(:issueId, :userId)";
-		template.update(sql, Map.of("issueId", issueId, "userId", userId));
+	public void saveIssueAssignee(Long issueId, List<Long> assignees) {
+		String sql = "INSERT INTO issue_assignee(issue_id, user_id) VALUES(:issueId, :assigneeId)";
+		template.batchUpdate(sql, generateIssueAssigneeParameters(issueId, assignees));
+	}
+
+	private SqlParameterSource[] generateIssueAssigneeParameters(Long issueId, List<Long> assignees) {
+		return assignees.stream()
+			.map(assigneeId -> generateIssueAssigneeParameter(issueId, assigneeId))
+			.toArray(SqlParameterSource[]::new);
+	}
+
+	private SqlParameterSource generateIssueAssigneeParameter(Long issueId, Long assigneeId) {
+		return new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("assigneeId", assigneeId);
 	}
 
 	@Override
-	public void modifyStatus(String status, Long issueId) {
-		String sql = "UPDATE issue SET status = :status WHERE id = :id";
-		template.update(sql, Map.of("status", status, "id", issueId));
+	public void modifyStatus(String status, Long issueId, LocalDateTime now) {
+		String sql = "UPDATE issue SET status = :status, status_modified_at = :now WHERE id = :id";
+		template.update(sql, Map.of("status", status, "id", issueId, "now", now));
 	}
 
 	@Override
-	public void modifyTitle(String title, Long issueId) {
-		String sql = "UPDATE issue SET title = :title WHERE id = :id";
-		template.update(sql, Map.of("title", title, "id", issueId));
+	public void modifyTitle(String title, Long issueId, LocalDateTime now) {
+		String sql = "UPDATE issue SET title = :title, modified_at = :now WHERE id = :id";
+		template.update(sql, Map.of("title", title, "id", issueId, "now", now));
 	}
 
 	@Override
-	public void modifyContent(String content, Long issueId) {
-		String sql = "UPDATE issue SET content = :content WHERE id = :id";
-		template.update(sql, Map.of("content", content, "id", issueId));
+	public void modifyContent(String content, Long issueId, LocalDateTime now) {
+		String sql = "UPDATE issue SET content = :content, modified_at = :now WHERE id = :id";
+		template.update(sql, Map.of("content", content, "id", issueId, "now", now));
 	}
 
 	@Override
@@ -166,7 +187,7 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public boolean exist(Long issueId) {
+	public boolean isExist(Long issueId) {
 		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id AND is_deleted = false)";
 		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", issueId), Boolean.class));
 	}
@@ -180,10 +201,51 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public List<IssueCommentsResponse> findCommentsBy(Long issueId) {
+	public List<IssueCommentsResponse> findCommentsBy(Long issueId, Long userId) {
 		String sql = "SELECT c.id, c.content, c.created_at, c.modified_at, u.login_id, u.avatar_url FROM comment as c "
 			+ "JOIN user as u ON u.id = c.user_id "
 			+ "WHERE c.issue_id = :issueId";
-		return template.query(sql, Map.of("issueId", issueId), issueCommentsResponseRowMapper);
+		return template.query(sql, Map.of("issueId", issueId), issueCommentsResponseRowMapper(userId));
 	}
+
+	private RowMapper<IssueCommentsResponse> issueCommentsResponseRowMapper(Long userId) {
+		return ((rs, rowNum) -> new IssueCommentsResponse(
+			rs.getLong("id"),
+			rs.getString("login_id"),
+			rs.getString("avatar_url"),
+			rs.getString("content"),
+			rs.getTimestamp("created_at").toLocalDateTime(),
+			rs.getTimestamp("modified_at") != null ? rs.getTimestamp("modified_at").toLocalDateTime() : null,
+			findCommentReactionBy(rs.getLong("id"), userId)));
+	}
+
+	private List<userReactionResponse> findCommentReactionBy(Long commentId, Long userId) {
+		String sql = "SELECT r.unicode, IF (EXISTS (SELECT 1 FROM user_reaction as ur WHERE ur.user_id = :userId AND "
+			+ "u.id = ur.user_id AND ur.reaction_id = r.id AND ur.comment_id = :commentId), ur.id, null) as selected FROM reaction as r "
+			+ "LEFT JOIN user_reaction as ur ON ur.reaction_id = r.id AND ur.comment_id = :commentId "
+			+ "LEFT JOIN user as u ON u.id = ur.user_id";
+		return template.query(sql, Map.of("commentId", commentId, "userId", userId),
+			userReactionResponseRowMapper(commentId));
+	}
+
+	private RowMapper<userReactionResponse> userReactionResponseRowMapper(Long commentId) {
+		String sql = "SELECT u.login_id FROM user as u "
+			+ "JOIN user_reaction as ur ON ur.comment_id = :commentId AND ur.user_id = u.id "
+			+ "JOIN reaction as r ON r.unicode = :unicode AND r.id = ur.reaction_id";
+		return ((rs, rowNum) -> new userReactionResponse(
+			rs.getString("unicode"),
+			template.query(sql, Map.of("commentId", commentId, "unicode", rs.getString("unicode")), usersRowMapper()),
+			rs.getLong("selected")));
+	}
+
+	private RowMapper<String> usersRowMapper() {
+		return ((rs, rowNum) -> rs.getString("login_id"));
+	}
+
+	@Override
+	public Long countIssueByStatus(IssueStatus status) {
+		String sql = "SELECT COUNT(id) AS count FROM issue WHERE status = :status";
+		return template.queryForObject(sql, Map.of("status", status.name()), Long.class);
+	}
+
 }

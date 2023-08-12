@@ -3,6 +3,8 @@ package codesquard.app.user.repository;
 import java.util.List;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -10,12 +12,14 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import codesquard.app.errors.errorcode.UserErrorCode;
-import codesquard.app.errors.exception.RestApiException;
+import codesquard.app.api.errors.errorcode.UserErrorCode;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.user.entity.User;
 
 @Repository
 public class JdbcUserRepository implements UserRepository {
+
+	private static final Logger logger = LoggerFactory.getLogger(JdbcUserRepository.class);
 
 	private final NamedParameterJdbcTemplate template;
 
@@ -33,7 +37,8 @@ public class JdbcUserRepository implements UserRepository {
 
 	@Override
 	public List<User> findAll() {
-		return null;
+		String sql = "SELECT id, login_id, email, avatar_url FROM user";
+		return template.query(sql, createUserRowMapper());
 	}
 
 	@Override
@@ -55,7 +60,9 @@ public class JdbcUserRepository implements UserRepository {
 
 	@Override
 	public Long modify(User user) {
-		return null;
+		String sql = "UPDATE user SET email = :email, avatar_url = :avatarUrl WHERE id = :id";
+		template.update(sql, user.createSaveParamSource());
+		return user.getId();
 	}
 
 	@Override
@@ -64,18 +71,45 @@ public class JdbcUserRepository implements UserRepository {
 	}
 
 	@Override
-	public boolean existLoginId(User user) {
-		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE login_id = :loginId";
-		return template.query(sql, user.createSaveParamSource(), createUserRowMapper()).stream()
-			.findAny()
-			.isPresent();
+	public boolean isExistLoginId(User user) {
+		String sql = "SELECT EXISTS(SELECT 1 FROM user WHERE login_id = :loginId) AS count";
+		return template.query(sql, user.createSaveParamSource(), (rs, rowNum) -> rs.getBoolean("count"))
+			.stream()
+			.anyMatch(aBoolean -> aBoolean);
 	}
 
 	@Override
-	public boolean existEmail(User user) {
-		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE email = :email";
+	public boolean isExistEmail(User user) {
+		String sql = "SELECT EXISTS(SELECT 1 FROM user WHERE email = :email) AS count";
+		return template.query(sql, user.createSaveParamSource(), (rs, rowNum) -> rs.getBoolean("count"))
+			.stream()
+			.anyMatch(aBoolean -> aBoolean);
+	}
+
+	@Override
+	public User findByLoginIdAndPassword(User user) {
+		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE login_id = :loginId AND password = :password";
 		return template.query(sql, user.createSaveParamSource(), createUserRowMapper()).stream()
 			.findAny()
-			.isPresent();
+			.orElseThrow(() -> new RestApiException(UserErrorCode.NOT_FOUND_USER));
+	}
+
+	@Override
+	public User findByRefreshToken(String refreshToken) {
+		String sql = "SELECT u.id, u.login_id, u.email, u.avatar_url FROM user u INNER JOIN authenticate_user au ON u.id = au.id WHERE au.refreshToken = :refreshToken";
+		MapSqlParameterSource paramSource = new MapSqlParameterSource("refreshToken", refreshToken);
+		return template.query(sql, paramSource, createUserRowMapper())
+			.stream()
+			.findAny()
+			.orElseThrow(() -> new RestApiException(UserErrorCode.NOT_FOUND_USER));
+	}
+
+	@Override
+	public User findByEmail(User user) {
+		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE email = :email";
+		return template.query(sql, user.createSaveParamSource(), createUserRowMapper())
+			.stream()
+			.findAny()
+			.orElse(null);
 	}
 }

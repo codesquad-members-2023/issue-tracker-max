@@ -1,5 +1,8 @@
 package codesquard.app.label.dto.response;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquard.app.label.entity.Label;
@@ -26,7 +29,14 @@ public class LabelsResponse {
 		this.description = description;
 	}
 
-	public static LabelsResponse fromEntity(final Label label) {
+	public static List<LabelsResponse> toDtoList(final List<Label> labels) {
+		return labels
+			.stream()
+			.map(LabelsResponse::fromEntity)
+			.collect(Collectors.toUnmodifiableList());
+	}
+
+	private static LabelsResponse fromEntity(final Label label) {
 		return new LabelsResponse(label.getId(), label.getName(), label.getColor(), label.getBackground(),
 			label.getDescription());
 	}

@@ -3,6 +3,7 @@ package codesquard.app.issue.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquard.app.issue.entity.IssueStatus;
@@ -25,10 +26,10 @@ public class IssueReadResponse {
 	private final LocalDateTime createdAt;
 	@JsonProperty("modifiedAt")
 	private final LocalDateTime modifiedAt;
-	@JsonProperty("commentCount")
-	private int commentCount;
 	@JsonProperty("content")
 	private final String content;
+	@JsonProperty("reactions")
+	private List<userReactionResponse> reactions;
 	@JsonProperty("assignees")
 	private List<IssueUserResponse> assignees;
 	@JsonProperty("labels")
@@ -44,11 +45,13 @@ public class IssueReadResponse {
 		return milestone;
 	}
 
-	public IssueReadResponse from(List<IssueUserResponse> assignees, List<IssueLabelResponse> labels,
+	public IssueReadResponse from(List<userReactionResponse> users, List<IssueUserResponse> assignees,
+		List<IssueLabelResponse> labels,
 		IssueMilestoneCountResponse issueMilestoneCountResponse, List<IssueCommentsResponse> issueCommentsResponse) {
 		return new IssueReadResponse(this.id, this.title, this.status, this.statusModifiedAt, this.createdAt,
-			this.modifiedAt, commentCount, this.content, assignees, labels,
-			new IssueMilestoneResponse(this.milestone.getId(), this.milestone.getName(), issueMilestoneCountResponse),
+			this.modifiedAt, this.content, users, assignees, labels,
+			milestone == null ? null : new IssueMilestoneResponse(this.milestone.getId(), this.milestone.getName(),
+				issueMilestoneCountResponse),
 			this.writer, issueCommentsResponse);
 	}
 
@@ -60,10 +63,19 @@ public class IssueReadResponse {
 		return status;
 	}
 
+	public LocalDateTime getStatusModifiedAt() {
+		return statusModifiedAt;
+	}
+
+	public LocalDateTime getModifiedAt() {
+		return modifiedAt;
+	}
+
 	public String getContent() {
 		return content;
 	}
 
+	@JsonIgnore
 	public Long getMilestoneId() {
 		return milestone.getId();
 	}

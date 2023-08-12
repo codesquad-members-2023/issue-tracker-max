@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import codesquard.app.IntegrationTestSupport;
-import codesquard.app.errors.exception.IllegalIssueStatusException;
-import codesquard.app.errors.exception.NoSuchIssueException;
+import codesquard.app.api.errors.exception.IllegalIssueStatusException;
+import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -29,7 +29,6 @@ import codesquard.app.label.service.LabelService;
 import codesquard.app.milestone.service.MilestoneService;
 import codesquard.app.user.repository.UserRepository;
 import codesquard.app.user.service.UserService;
-import codesquard.app.user.service.request.UserSaveServiceRequest;
 
 class IssueServiceTest extends IntegrationTestSupport {
 
@@ -37,6 +36,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 	private IssueRepository issueRepository;
 	@Autowired
 	private IssueService issueService;
+	@Autowired
+	private IssueQueryService issueQueryService;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -64,10 +65,11 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void getDetail() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		// when
-		IssueReadResponse issueReadResponse = issueService.get(id);
+		IssueReadResponse issueReadResponse = issueQueryService.get(id, userId);
 
 		// then
 		assertThat(issueReadResponse.getTitle()).isEqualTo("Service");
@@ -78,10 +80,10 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void create() {
 		// given
-		UserSaveServiceRequest userSaveServiceRequest = FixtureFactory.createUserSaveServiceRequest();
-		Long loginId = userRepository.save(userSaveServiceRequest.toEntity());
+		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId,
+			loginId);
 
 		// when
 		Long id = issueService.save(issueSaveRequest, loginId);
@@ -94,7 +96,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyStatus() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		String issueStatus = "CLOSED";
 		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(issueStatus);
@@ -103,7 +106,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 		issueService.modifyStatus(issueModifyStatusRequest, id);
 
 		// then
-		assertThat(issueService.findById(id).getStatus().name()).isEqualTo(issueStatus);
+		assertThat(issueQueryService.findById(id).getStatus().name()).isEqualTo(issueStatus);
 	}
 
 	@DisplayName("이슈 상태를 수정시 이슈가 없다면 400 에러를 반환한다.")
@@ -124,10 +127,11 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyInvalidStatus_Response400() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
-		String issueStatus = "OPEN";
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(issueStatus);
+		String invalidIssueStatus = "OPEN";
+		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(invalidIssueStatus);
 
 		// when & then
 		assertThatThrownBy(() -> issueService.modifyStatus(issueModifyStatusRequest, id)).isInstanceOf(
@@ -138,7 +142,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyTitle() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		String title = "modified Service title";
 		IssueModifyTitleRequest issueModifyTitleRequest = new IssueModifyTitleRequest(title);
@@ -147,14 +152,15 @@ class IssueServiceTest extends IntegrationTestSupport {
 		issueService.modifyTitle(issueModifyTitleRequest, id);
 
 		// then
-		assertThat(issueService.findById(id).getTitle()).isEqualTo(title);
+		assertThat(issueQueryService.findById(id).getTitle()).isEqualTo(title);
 	}
 
 	@DisplayName("이슈 내용을 수정한다.")
 	@Test
 	void modifyContent() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		String content = "modified Service content";
 		IssueModifyContentRequest issueModifyContentRequest = new IssueModifyContentRequest(content);
@@ -163,7 +169,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 		issueService.modifyContent(issueModifyContentRequest, id);
 
 		// then
-		assertThat(issueService.findById(id).getContent()).isEqualTo(content);
+		assertThat(issueQueryService.findById(id).getContent()).isEqualTo(content);
 	}
 
 	@DisplayName("이슈 마일스톤을 수정한다.")
@@ -173,7 +179,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId1 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
 		Long milestoneId2 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("수정된 마일스톤"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId1);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId1,
+			loginId);
 		Long id = issueService.save(issueSaveRequest, loginId);
 
 		IssueModifyMilestoneRequest issueModifyMilestoneRequest = new IssueModifyMilestoneRequest(milestoneId2);
@@ -182,14 +189,15 @@ class IssueServiceTest extends IntegrationTestSupport {
 		issueService.modifyMilestone(issueModifyMilestoneRequest, id);
 
 		// then
-		assertThat(issueService.findById(id).getMilestoneId()).isEqualTo(milestoneId2);
+		assertThat(issueQueryService.findById(id).getMilestoneId()).isEqualTo(milestoneId2);
 	}
 
 	@DisplayName("이슈 책임자를 수정한다.")
 	@Test
 	void modifyAssignees() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		IssueModifyAssigneesRequest issueModifyAssigneesRequest = new IssueModifyAssigneesRequest(List.of());
 
@@ -197,7 +205,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 		issueService.modifyAssignees(issueModifyAssigneesRequest, id);
 
 		// then
-		assertThat(issueService.findAssigneesById(id)).isEmpty();
+		assertThat(issueQueryService.findAssigneesById(id)).isEmpty();
 	}
 
 	@DisplayName("이슈 라벨을 수정한다.")
@@ -210,7 +218,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 		String color = "light";
 		String background = "#111111";
 		Long labelId = labelService.saveLabel(new LabelSaveRequest(name, color, background, "기능 구현"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId,
+			loginId);
 		Long id = issueService.save(issueSaveRequest, loginId);
 
 		IssueModifyLabelsRequest issueModifyLabelsRequest = new IssueModifyLabelsRequest(List.of(labelId));
@@ -219,7 +228,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 		issueService.modifyLabels(issueModifyLabelsRequest, id);
 
 		// then
-		List<IssueLabelResponse> label = issueService.findLabelsById(id);
+		List<IssueLabelResponse> label = issueQueryService.findLabelsById(id);
 		assertThat(label.get(0).getName()).isEqualTo(name);
 		assertThat(label.get(0).getBackground()).isEqualTo(background);
 		assertThat(label.get(0).getColor().getNameToLowerCase()).isEqualTo(color);
@@ -229,7 +238,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyLabels_Null() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		IssueModifyLabelsRequest issueModifyLabelsRequest = new IssueModifyLabelsRequest(List.of());
 
@@ -237,7 +247,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 		issueService.modifyLabels(issueModifyLabelsRequest, id);
 
 		// then
-		List<IssueLabelResponse> label = issueService.findLabelsById(id);
+		List<IssueLabelResponse> label = issueQueryService.findLabelsById(id);
 		assertThat(label).isEmpty();
 	}
 
@@ -245,7 +255,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void delete() {
 		// given
-		Long id = createIssue();
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id = createIssue(userId);
 
 		// when
 		issueService.delete(id);
@@ -254,10 +265,10 @@ class IssueServiceTest extends IntegrationTestSupport {
 		assertThatThrownBy(() -> issueService.delete(id)).isInstanceOf(NoSuchIssueException.class);
 	}
 
-	private Long createIssue() {
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+	private Long createIssue(Long userId) {
 		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId);
-		return issueService.save(issueSaveRequest, loginId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId,
+			userId);
+		return issueService.save(issueSaveRequest, userId);
 	}
 }
