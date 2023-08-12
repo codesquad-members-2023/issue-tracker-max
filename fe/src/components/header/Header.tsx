@@ -1,6 +1,5 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { ReactComponent as MediumLogo } from '@assets/logos/mediumLogo.svg';
-import { ReactComponent as UserImageLarge } from '@assets/icons/userImageLarge.svg';
 import { useTheme } from '@emotion/react';
 import { Button } from '@components/common/Button';
 import { ThemeToggle } from './ThemeToggle';
@@ -34,7 +33,9 @@ export const Header: React.FC<Props> = ({
       >
         <MediumLogo
           fill={theme.neutral.text.strong}
-          onClick={() => navigate('/')}
+          onClick={() => {
+            navigate('/');
+          }}
           css={{ cursor: 'pointer' }}
         />
 
@@ -44,7 +45,12 @@ export const Header: React.FC<Props> = ({
           <Button typeVariant="ghost" size="S">
             로그아웃
           </Button>
-          {image ? <img src={image} alt="프로필 사진" /> : <UserImageLarge />}
+
+          <img
+            src={image || 'basic-profile.jpeg'}
+            alt="프로필 사진"
+            css={{ width: '32px', borderRadius: theme.radius.half }}
+          />
         </div>
       </header>
 

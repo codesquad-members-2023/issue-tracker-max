@@ -3,21 +3,25 @@ import { Button } from '@components/common/Button';
 import { TabButton } from '@components/common/tabButton/TabButton';
 import { ReactComponent as PlusIcon } from '@assets/icons/plus.svg';
 import { useTheme } from '@emotion/react';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
-  labelCount: IssuePageData['labelCount'];
-  milestoneCount: IssuePageData['milestoneCount'];
   filterValue: string;
   onChangeFilterValue: (value: string) => void;
+  labelCount: IssuePageData['labelCount'];
+  milestoneCount: IssuePageData['milestoneCount'];
+  goToFilteredPage: (filterValue: string) => void;
 };
 
 export const SubNav: React.FC<Props> = ({
-  labelCount,
-  milestoneCount,
   filterValue,
   onChangeFilterValue,
+  labelCount,
+  milestoneCount,
+  goToFilteredPage,
 }) => {
   const theme = useTheme() as any;
+  const navigate = useNavigate();
 
   return (
     <div
@@ -28,7 +32,13 @@ export const SubNav: React.FC<Props> = ({
       }}
     >
       <div css={{ width: '560px' }}>
-        <FilterBar {...{ filterValue, onChangeFilterValue }} />
+        <FilterBar
+          {...{
+            filterValue,
+            onChangeFilterValue,
+            goToFilteredPage,
+          }}
+        />
       </div>
 
       <div
@@ -37,7 +47,11 @@ export const SubNav: React.FC<Props> = ({
       >
         <TabButton {...{ labelCount, milestoneCount }} />
 
-        <Button className="add-issue-button" size="S">
+        <Button
+          className="add-issue-button"
+          size="S"
+          onClick={() => navigate('/add')}
+        >
           <PlusIcon stroke={theme.brand.text.default} />
           <span>이슈 작성</span>
         </Button>

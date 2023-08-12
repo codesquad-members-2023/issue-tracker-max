@@ -1,27 +1,24 @@
 import { useTheme } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Title } from '@components/addIssuePage/Title';
 import { Body } from '@components/addIssuePage/Body';
 import { UserImage } from '@components/addIssuePage/UserImage';
 import { UserImageContainer } from '@components/addIssuePage/UserImageContainer';
 import { InputContainer } from '@components/addIssuePage/InputContainer';
-import { TextInput } from '@components/common/textInput/TextInput';
-import { TextArea } from '@components/common/TextArea';
+import { TextArea } from '@components/common/textArea/TextArea';
 import { SideBar } from '@components/common/sideBar/SideBar';
 import { ListSideBar } from '@components/common/sideBar/ListSideBar';
 import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
-
-type SelectedItems = {
-  [key: number]: boolean;
-};
+import { TextInput } from '@components/common/textInput/TextInput';
+// import { ISSUE_DETAIL_PAGE } from 'constants/PATH';
 
 type SelectionState = {
-  assignees: SelectedItems;
-  labels: SelectedItems;
-  milestones: SelectedItems;
+  assignees: number[];
+  labels: number[];
+  milestones: number[];
 };
 
 // 추후 구현 보완시 추가
@@ -34,110 +31,42 @@ export const AddIssuePage: React.FC = ({}) => {
   const theme = useTheme() as any;
   const navigate = useNavigate();
   const userImage = 'https://avatars.githubusercontent.com/u/57523197?v=4'; //임시 이미지
-  const availableFileSize = 1048576; //1MB
-
-  const defaultFileStatus = {
-    typeError: false,
-    sizeError: false,
-    isUploading: false,
-    uploadFailed: false,
-  };
 
   const [selections, setSelections] = useState<SelectionState>({
-    assignees: {},
-    labels: {},
-    milestones: {},
+    assignees: [],
+    labels: [],
+    milestones: [], //todo 배열말고 단일 선택으로 변경
   });
-
   const [titleInput, setTitleInput] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
-  const [isDisplayingCount, setIsDisplayingCount] = useState(false);
-
-  const [fileStatus, setFileStatus] = useState(defaultFileStatus);
-
-  const uploadImage = async (file: File) => {
-    try {
-      setFileStatus((prev) => ({ ...prev, isUploading: true }));
-
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const response = await fetch(
-        'https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/file-upload',
-        {
-          method: 'POST',
-          body: formData,
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('File upload failed');
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
-    } finally {
-      setFileStatus((prev) => ({ ...prev, isUploading: false }));
-    }
-  };
-
-  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileStatus((prev) => ({ ...prev, sizeError: false }));
-    setFileStatus((prev) => ({ ...prev, typeError: false }));
-    setFileStatus((prev) => ({ ...prev, uploadFailed: false }));
-
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-
-      if (!file) {
-        setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
-        return;
-      }
-
-      const fileName = file.name;
-
-      if (file.size > availableFileSize) {
-        setFileStatus((prev) => ({ ...prev, sizeError: true }));
-        return;
-      }
-
-      if (!file.type.startsWith('image/')) {
-        setFileStatus((prev) => ({ ...prev, typeError: true }));
-        return;
-      }
-
-      const fileUrl = await uploadImage(file);
-      setTextAreaValue(
-        (prevValue) => `${prevValue}![${fileName}](${fileUrl.fileUrl})`,
-      );
-    }
-  };
+  const [isSubmitError, setIsSubmitError] = useState<boolean>(false);
+  const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
   const onSubmit = async () => {
+    // const bodyData = {
+    //   title: '타이틀',
+    //   contents: '콘텐츠',
+    //   authorId: 1,
+    //   assigneeIds: selections.assignees,
+    //   labelIds: selections.labels,
+    //   milestoneId: selections.milestones,
+    // };
+
     const bodyData = {
-      title: titleInput,
-      contents: textAreaValue,
-      // authorId: authorId,
+      title: '타이틀',
+      contents: '콘텐츠',
       authorId: 1,
-      assigneeIds: Object.keys(selections.assignees)
-        .filter((key) => selections.assignees[parseInt(key)])
-        .map((key) => Number(key) + 1),
-      labelIds: Object.keys(selections.labels)
-        .filter((key) => selections.labels[parseInt(key)])
-        .map((key) => Number(key) + 1),
-      milestoneId:
-        Number(
-          Object.keys(selections.milestones).find(
-            (key) => selections.milestones[parseInt(key)],
-          ),
-        ) + 1,
+      assigneeIds: selections.assignees,
+      labelIds: selections.labels,
+      milestoneId: 1,
     };
 
     try {
+      setIsSubmiting(true);
+      setIsSubmitError(false);
       const response = await fetch(
-        'https://cb8d8d5e-a994-4e94-b386-9971124d22e2.mock.pstmn.io/issues/new',
+        `${import.meta.env.VITE_APP_BASE_URL}/issues/new`,
+        // `/issues/new`,
         {
           method: 'POST',
           headers: {
@@ -148,44 +77,47 @@ export const AddIssuePage: React.FC = ({}) => {
       );
 
       if (!response.ok) {
-        throw new Error('HTTP error ' + response.status);
+        const errorData = await response.json();
+        console.error('API Response Error:', errorData);
+        setIsSubmitError(true);
+        return;
       }
 
       const data = await response.json();
+
+      navigate(`/issue/${data.id}`);
+
       return data;
     } catch (error) {
-      console.error('이슈가 정상적으로 등록되지 않았습니다.');
+      console.error('API Call Error:', error);
+      setIsSubmitError(true);
     } finally {
-      navigate('/');
+      setIsSubmiting(false);
     }
   };
 
-  useEffect(() => {
-    if (textAreaValue) {
-      setIsDisplayingCount(true);
-      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [textAreaValue]);
-
-  const onMultipleSelectedAssignee = (index: number) => {
+  const onMultipleSelectedAssignee = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      assignees: { ...prev.assignees, [index]: !prev.assignees[index] },
+      assignees: prev.assignees.includes(id)
+        ? prev.assignees.filter((itemId) => itemId !== id)
+        : [...prev.assignees, id],
     }));
   };
 
-  const onMultipleSelectedLabel = (index: number) => {
+  const onMultipleSelectedLabel = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      labels: { ...prev.labels, [index]: !prev.labels[index] },
+      labels: prev.labels.includes(id)
+        ? prev.labels.filter((itemId) => itemId !== id)
+        : [...prev.labels, id],
     }));
   };
 
-  const onSingleSelectedMilestone = (index: number) => {
+  const onSingleSelectedMilestone = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      milestones: { [index]: true },
+      milestones: prev.milestones.includes(id) ? [] : [id],
     }));
   };
 
@@ -195,6 +127,10 @@ export const AddIssuePage: React.FC = ({}) => {
 
   const onChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextAreaValue(e.target.value);
+  };
+
+  const onAddFileUrl = (fileName: string, fileUrl: string) => {
+    setTextAreaValue((prevValue) => `${prevValue}![${fileName}](${fileUrl})`);
   };
 
   return (
@@ -222,12 +158,7 @@ export const AddIssuePage: React.FC = ({}) => {
           <TextArea
             letterCount={textAreaValue.length}
             textAreaValue={textAreaValue}
-            isDisplayingCount={isDisplayingCount}
-            isFileUploading={fileStatus.isUploading}
-            isFileTypeError={fileStatus.typeError}
-            isFileSizeError={fileStatus.sizeError}
-            isFileUploadFailed={fileStatus.uploadFailed}
-            onFileChange={onFileChange}
+            onAddFileUrl={onAddFileUrl}
             onChangeTextArea={onChangeTextArea}
           />
         </InputContainer>
@@ -236,13 +167,21 @@ export const AddIssuePage: React.FC = ({}) => {
             onSingleSelectedMilestone={onSingleSelectedMilestone}
             onMultipleSelectedAssignee={onMultipleSelectedAssignee}
             onMultipleSelectedLabel={onMultipleSelectedLabel}
-            selectedAssignees={selections.assignees}
-            selectedLabels={selections.labels}
-            selectedMilestones={selections.milestones}
+            selections={selections}
           />
         </SideBar>
       </Body>
       <ButtonContainer>
+        {isSubmitError && (
+          <span
+            css={{
+              color: theme.danger.text.default,
+              font: theme.fonts.displayMedium16,
+            }}
+          >
+            이슈가 정상적으로 등록되지 않았습니다.
+          </span>
+        )}
         <Button
           typeVariant="ghost"
           size="M"
@@ -256,7 +195,7 @@ export const AddIssuePage: React.FC = ({}) => {
         <Button
           typeVariant="contained"
           size="L"
-          disabled={titleInput.length === 0}
+          disabled={titleInput === '' || isSubmiting}
           onClick={onSubmit}
         >
           완료

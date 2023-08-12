@@ -1,5 +1,4 @@
 import { useTheme } from '@emotion/react';
-import React, { useState } from 'react';
 
 type Props = {
   children?: React.ReactNode;

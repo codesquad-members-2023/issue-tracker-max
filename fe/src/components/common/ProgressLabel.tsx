@@ -29,7 +29,7 @@ export const ProgressLabel: React.FC<Props> = ({
         </p>
       )}
 
-      {progress && openIssueCount && closeIssueCount && (
+      {progress && (
         <div
           css={{
             marginTop: '8px',

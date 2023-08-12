@@ -84,6 +84,7 @@ export const TextInput: React.FC<Props> = ({
           </div>
         </>
       </InputContainer>
+      {/* 외부로 옮기기 */}
       <div
         css={{
           font: theme.fonts.displayMedium12,
