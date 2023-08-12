@@ -2,6 +2,7 @@ import { Theme, css } from '@emotion/react';
 import { Button } from '@components/common/Button';
 import { TextInput } from '@components/common/textInput/TextInput';
 import { useState } from 'react';
+import { registerUser } from '@utils/apis/auth';
 
 export const RegisterForm: React.FC = () => {
   const [id, setId] = useState('');
@@ -20,6 +21,10 @@ export const RegisterForm: React.FC = () => {
     setConfirmPassword(password);
   };
 
+  const onSubmit = () => {
+    registerUser(id, password);
+  };
+
   const isIdError = (id.length > 0 && id.length < 6) || id.length > 17;
   const isPasswordError =
     (password.length > 0 && password.length < 6) || password.length > 12;
@@ -34,7 +39,7 @@ export const RegisterForm: React.FC = () => {
     !isPasswordMatchingError;
 
   return (
-    <form css={formStyle}>
+    <form css={formStyle} onSubmit={onSubmit}>
       <TextInput
         value={id}
         label="아이디"

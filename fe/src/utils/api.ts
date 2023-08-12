@@ -1,22 +1,15 @@
-export const fetchData = async (path: string) => {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_APP_BASE_URL}/${path}`,
-      {
-        method: 'GET',
-      },
-    );
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
-    const data = await response.json();
+export const fetchData = async (path: string, options = {}) => {
+  const response = await fetch(BASE_URL + path, options);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return data;
-  } catch (error) {
-    console.error(`There was a problem with the fetch operation: ${error}`);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
+
+  const data = await response.json();
+
+  return data;
 };
 
 export const getUsers = () => {
