@@ -1,15 +1,13 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Filter;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.junit.jupiter.api.BeforeEach;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueVO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
@@ -18,20 +16,11 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(scripts = {"classpath:schema/schema.sql", "classpath:schema/data.sql"})
 class FilteredIssueRepositoryTest {
 
     @Autowired
     private FilteredIssueRepository repository;
-    @Autowired
-    private SqlSessionFactory sqlSessionFactory;
-
-    @BeforeEach
-    void setUp() {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            session.insert("testSchema.createTables");
-            session.insert("testSchema.insertData");
-        }
-    }
 
     @DisplayName("필터된 이슈들을 가지고 온다.")
     @Test
@@ -48,9 +37,9 @@ class FilteredIssueRepositoryTest {
 
         //then
         assertSoftly(assertions -> {
-           assertions.assertThat(actual).hasSize(2);
-           assertions.assertThat(actual.get(0).getId()).isEqualTo(3L);
-           assertions.assertThat(actual.get(1).getAuthor()).isEqualTo("nag");
+            assertions.assertThat(actual).hasSize(2);
+            assertions.assertThat(actual.get(0).getId()).isEqualTo(3L);
+            assertions.assertThat(actual.get(1).getAuthor()).isEqualTo("nag");
         });
     }
 
