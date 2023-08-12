@@ -6,6 +6,13 @@ import svgr from "vite-plugin-svgr";
 export default defineConfig({
     plugins: [react(), svgr()],
     server: {
+        proxy: {
+            "/api": {
+                target: "http://3.36.120.124:8080",
+                changeOrigin: true,
+                secure: false,
+            }
+        },
         host: true, // needed for the Docker Container port mapping to work
         port: 5173, // you can replace this port with any port
     },
