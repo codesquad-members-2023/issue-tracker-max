@@ -98,7 +98,7 @@ public class UserValidatorTest {
 		given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(existUser));
 		LoginType existUserLoginType = userRepository.findByEmail(existUser.getEmail()).get().getLoginType();
 		assertThrows(CustomException.class, () -> {
-				userValidator.validateLoginType(input, existUserLoginType);
+			userValidator.validateLoginType(input, existUserLoginType);
 		});
 
 	}
