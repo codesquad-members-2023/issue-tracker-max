@@ -12,30 +12,34 @@
         FROM issue
             LEFT JOIN member AS author
                 ON issue.author_id = author.id
-            LEFT JOIN issue_assignee
+            <if test="assignee != null">
+                LEFT JOIN issue_assignee
                 ON issue.id = issue_assignee.issue_id
-            LEFT JOIN member AS assignee
+                LEFT JOIN member AS assignee
                 ON issue_assignee.assignee_id = assignee.id
-            LEFT JOIN issue_label
+            </if>
+            <if test="label != null">
+                LEFT JOIN issue_label
                 ON issue.id = issue_label.issue_id
-            LEFT JOIN label
+                LEFT JOIN label
                 ON issue_label.label_id = label.id
+            </if>
             LEFT JOIN milestone
                 ON issue.milestone_id = milestone.id
         WHERE issue.is_deleted = false
           AND issue.is_open = #{isOpen}
-        <if test="assignee != null">
+          <if test="assignee != null">
             AND assignee.name = #{assignee}
-        </if>
-        <if test="label != null">
+          </if>
+          <if test="label != null">
             AND label.name = #{label}
-        </if>
-        <if test="milestone != null">
+          </if>
+          <if test="milestone != null">
             AND milestone.name = #{milestone}
-        </if>
-        <if test="author != null">
+          </if>
+          <if test="author != null">
             AND author.name = #{author}
-        </if>
+          </if>
         ORDER BY issue.id DESC
     </select>
 </mapper>

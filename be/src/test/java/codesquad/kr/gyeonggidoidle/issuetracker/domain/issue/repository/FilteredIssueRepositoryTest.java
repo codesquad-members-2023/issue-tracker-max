@@ -59,4 +59,21 @@ class FilteredIssueRepositoryTest {
         //then
         assertThat(actual).isEmpty();
     }
+
+    @DisplayName("Filter의 isOpen가 null이면 필터로 검색했을 때 아무것도 나오지 않는다")
+    @Test
+    void findWithNullIsOpenFilter() {
+        Filter filter = Filter.builder()
+                .isOpen(null)
+                .assignee("nag")
+                .label("라벨 2")
+                .author("nag")
+                .build();
+
+        //when
+        List<IssueVO> actual = repository.findByFilter(filter);
+
+        //then
+        assertThat(actual).isEmpty();
+    }
 }
