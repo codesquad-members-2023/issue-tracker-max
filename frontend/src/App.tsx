@@ -19,13 +19,20 @@ import { getAccessToken } from "./utils/localStorage";
 export default function App() {
   const [themeMode, setThemeMode] = useState<"LIGHT" | "DARK">("LIGHT");
 
+  const changeThemeMode = () => {
+    setThemeMode((prev) => (prev === "LIGHT" ? "DARK" : "LIGHT"));
+  };
+
   return (
     <ThemeProvider theme={designSystem[themeMode]}>
       <Div>
         <Router>
           <Routes>
             <Route path="/auth" element={<AuthRoute />} />
-            <Route path="*" element={<MainRoutes />} />
+            <Route
+              path="*"
+              element={<MainRoutes changeThemeMode={changeThemeMode} />}
+            />
           </Routes>
         </Router>
       </Div>
@@ -33,10 +40,10 @@ export default function App() {
   );
 }
 
-function MainRoutes() {
+function MainRoutes({ changeThemeMode }: { changeThemeMode: () => void }) {
   return (
     <PrivateRoute>
-      <Header />
+      <Header changeThemeMode={changeThemeMode} />
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/issues/new" element={<NewIssue />} />
