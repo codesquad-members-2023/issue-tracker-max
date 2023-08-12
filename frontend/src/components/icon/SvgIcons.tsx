@@ -14,12 +14,14 @@ import { ReactComponent as Label } from "../../assets/label.svg";
 import { ReactComponent as LogoLarge } from "../../assets/logoLarge.svg";
 import { ReactComponent as LogoMedium } from "../../assets/logoMedium.svg";
 import { ReactComponent as Milestone } from "../../assets/milestone.svg";
+import { ReactComponent as moon } from "../../assets/moon.svg";
 import { ReactComponent as PaperClip } from "../../assets/paperclip.svg";
 import { ReactComponent as Plus } from "../../assets/plus.svg";
 import { ReactComponent as RefreshCcw } from "../../assets/refreshCcw.svg";
 import { ReactComponent as Search } from "../../assets/search.svg";
 import { ReactComponent as Smile } from "../../assets/smile.svg";
 import { ReactComponent as success } from "../../assets/success.svg";
+import { ReactComponent as sun } from "../../assets/sun.svg";
 import { ReactComponent as Trash } from "../../assets/trash.svg";
 import { ReactComponent as UserImageLarge } from "../../assets/userImageLarge.svg";
 import { ReactComponent as UserImageSmall } from "../../assets/userImageSmall.svg";
@@ -52,6 +54,8 @@ export const iconComponents = {
   UserImageSmall,
   XSquare,
   success,
+  sun,
+  moon,
 };
 
 export const fillTypeComponents = [
@@ -61,4 +65,6 @@ export const fillTypeComponents = [
   Comment,
   LogoMedium,
   LogoLarge,
+  moon,
+  sun,
 ];

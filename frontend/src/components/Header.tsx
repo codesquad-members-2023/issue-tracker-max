@@ -3,9 +3,10 @@ import { styled } from "styled-components";
 import { clearAuthInfo } from "../utils/localStorage";
 import { Avatar } from "./Avatar";
 import { Button } from "./Button";
+import { Toggle } from "./ToggleButton";
 import { Icon } from "./icon/Icon";
 
-export function Header() {
+export function Header({ changeThemeMode }: { changeThemeMode: () => void }) {
   const navigate = useNavigate();
 
   const logOut = () => {
@@ -19,6 +20,7 @@ export function Header() {
         <Icon name="LogoMedium" color="neutralTextStrong" />
       </Anchor>
       <HeaderRight>
+        <Toggle onClick={changeThemeMode} />
         <Avatar
           size="L"
           src="https://avatars.githubusercontent.com/u/41321198?v=4"
