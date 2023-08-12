@@ -9,4 +9,4 @@ RUN npm install
 
 COPY . ./
 
-CMD ["npm", "run", "dev", "--", "--port", "5174"]
+CMD ["npm", "run", "dev-deploy", "--", "--port", "5174"]
