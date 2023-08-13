@@ -53,7 +53,6 @@ public class MilestoneIntegrationTest {
 			.content(request));
 		// then
 		resultActions.andExpect(status().isOk())
-			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message", containsString("요청이 성공적으로 처리되었습니다.")));
 
 	}
