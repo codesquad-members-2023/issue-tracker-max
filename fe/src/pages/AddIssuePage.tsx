@@ -36,7 +36,7 @@ export const AddIssuePage: React.FC = ({}) => {
   const [selections, setSelections] = useState<SelectionState>({
     assignees: [],
     labels: [],
-    milestones: null, //todo 배열말고 단일 선택으로 변경
+    milestones: null, //todo 이름 단수형으로 변경
   });
   const [titleInput, setTitleInput] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
