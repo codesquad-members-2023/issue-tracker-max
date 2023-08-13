@@ -1,4 +1,6 @@
 import { useTheme } from '@emotion/react';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { Button } from '@components/common/Button';
 import { ListSideBar } from '@components/common/sideBar/ListSideBar';
 import { SideBar } from '@components/common/sideBar/SideBar';
@@ -10,12 +12,18 @@ type Props = {
 
 export const SideBarRightPanel: React.FC<Props> = ({ issueId }: Props) => {
   const theme = useTheme() as any;
+  const navigate = useNavigate();
+
+  const [isDeleteError, setIsDeleteError] = useState<boolean>(false);
 
   const onDeleteIssue = async () => {
     try {
+      setIsDeleteError(false);
       await deleteIssue(issueId);
+      navigate('/');
     } catch (error) {
       console.error(error);
+      setIsDeleteError(true);
     }
   };
 
@@ -49,6 +57,11 @@ export const SideBarRightPanel: React.FC<Props> = ({ issueId }: Props) => {
 
         <span>이슈 삭제</span>
       </Button>
+      {isDeleteError && (
+        <span css={{ color: theme.danger.text.default }}>
+          이슈 삭제에 실패했습니다.
+        </span>
+      )}
     </div>
   );
 };
