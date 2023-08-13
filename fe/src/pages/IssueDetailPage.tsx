@@ -32,7 +32,7 @@ export const IssueDetailPage: React.FC = ({}: Props) => {
       }}
     >
       <PostInformation issueDetailPageData={issueDetailPageData} />
-      <Body />
+      <Body issueDetailPageData={issueDetailPageData} />
     </div>
   );
 };

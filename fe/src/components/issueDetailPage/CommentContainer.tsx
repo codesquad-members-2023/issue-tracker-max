@@ -1,28 +1,35 @@
-// import { Comment } from '@components/common/comment/Comment';
+import { Comment } from '@components/common/comment/Comment';
+import { useState } from 'react';
 import { AddNewComment } from './AddNewComment';
 
-type AuthorType = {
-  userId: number;
-  loginId: string;
-  image: string;
-};
+// type AuthorType = {
+//   userId: number;
+//   loginId: string;
+//   image: string;
+// };
 
 type Props = {
+  issueId: number;
   contents: string;
   createdAt: string;
-  author: AuthorType;
+  author: User;
   comments: any[]; // todo 타입
 };
 
 export const CommentContainer: React.FC<Props> = ({
-  contents,
-} // createdAt,
-// author,
-// comments,
-: Props) => {
-  console.log('contents', contents);
+  author,
+  issueId,
+  comments,
+}: Props) => {
+  const isCommentsExist = comments.length > 0;
 
-  // const isCommentsExist = comments.length > 0;
+  const [commentList, setCommentList] = useState<any[]>(comments);
+
+  const onAddComment = (comment: any) => {
+    console.log('작동오케이?');
+
+    setCommentList([...commentList, comment]);
+  };
 
   return (
     <div
@@ -33,23 +40,25 @@ export const CommentContainer: React.FC<Props> = ({
         width: '960px',
       }}
     >
-      {/* <Comment
-        typeVariant="default"
-        // letterCount={textAreaValue.length}
-        placeholder={contents}
-        // onAddFileUrl={onAddFileUrl}
-        // onChangeTextArea={onChangeTextArea}
-      />
       {isCommentsExist &&
-        comments.map((comment) => (
+        commentList.map((comment) => (
           <Comment
             key={comment.id}
+            issueId={issueId}
+            issueAuthor={author} //이슈 작성자 정보
+            userId={comment.author.userId} //코멘트 작성자 id
+            loginId={comment.author.loginId}
             typeVariant="default"
-            placeholder={contents}
+            defaultValue={comment.contents}
           />
-        ))} */}
+        ))}
 
-      <AddNewComment />
+      <AddNewComment
+        issueId={issueId}
+        issueAuthor={author}
+        userId={author.userId}
+        onAddComment={onAddComment}
+      />
     </div>
   );
 };

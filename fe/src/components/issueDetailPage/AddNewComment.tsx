@@ -1,14 +1,22 @@
-import { useTheme } from '@emotion/react';
-import { Button } from '@components/common/Button';
 import { Comment } from '@components/common/comment/Comment';
-import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 
 type Props = {
-  disabled?: boolean;
+  issueId: number;
+  issueAuthor: User;
+  userId: number;
+  onAddComment: (comment: any) => void;
 };
 
-export const AddNewComment: React.FC<Props> = ({ disabled = true }) => {
-  const theme = useTheme() as any;
+export const AddNewComment: React.FC<Props> = ({
+  issueId,
+  issueAuthor,
+  userId,
+  onAddComment,
+}) => {
+  console.log('issueId', issueId);
+  console.log('issueAuthor', issueAuthor);
+  console.log('userId', userId);
+
   return (
     <div
       css={{
@@ -19,20 +27,12 @@ export const AddNewComment: React.FC<Props> = ({ disabled = true }) => {
       }}
     >
       <Comment
+        issueId={issueId}
+        issueAuthor={issueAuthor}
+        defaultValue=""
         typeVariant="add"
-        // letterCount={textAreaValue.length}
-        // textAreaValue={contents}
-        // onAddFileUrl={onAddFileUrl}
-        // onChangeTextArea={onChangeTextArea}
-        letterCount={1}
-        // textAreaValue="1"
-        onAddFileUrl={() => console.log('1')}
-        onChangeTextArea={() => console.log('1')}
+        onAddComment={onAddComment}
       />
-      <Button typeVariant="contained" size="S" disabled={disabled}>
-        <Plus stroke={theme.brand.text.default} />
-        코멘트 작성
-      </Button>
     </div>
   );
 };
