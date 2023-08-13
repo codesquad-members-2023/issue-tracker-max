@@ -1,20 +1,12 @@
 package com.codesquad.issuetracker.api.filter.dto;
 
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
 public class MilestoneFilter {
 
-    private long id;
+    private Long id;
     private String name;
-
-    public MilestoneFilter(long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
 }

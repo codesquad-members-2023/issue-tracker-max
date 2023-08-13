@@ -1,11 +1,13 @@
 package com.codesquad.issuetracker.api.comment.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 
+@Builder
 @Getter
 public class Emoticon {
 
-    private Long id;
-    private String unicode;
+    private final Long id;
+    private final String unicode;
 
 }

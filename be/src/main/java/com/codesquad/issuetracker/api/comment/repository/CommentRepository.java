@@ -1,16 +1,17 @@
 package com.codesquad.issuetracker.api.comment.repository;
 
 import com.codesquad.issuetracker.api.comment.domain.Comment;
+import com.codesquad.issuetracker.api.comment.domain.IssueCommentVo;
 import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository {
 
-    Optional<Long> create(Comment comment);
+    Optional<Long> save(Comment comment);
 
     Long update(Comment comment);
 
-    void delete(Long commentId);
+    void deleteBy(Long issueId); // 이거 이슈 아이디로 수정??
 
-    List<Comment> findAllByIssueId(Long issueId);
+    List<IssueCommentVo> findAllBy(Long issueId, String issueAuthor);
 }

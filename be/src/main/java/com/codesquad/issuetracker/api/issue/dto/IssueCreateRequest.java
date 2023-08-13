@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -15,34 +16,35 @@ public class IssueCreateRequest {
 
     private Long organizationId;
     private Long milestonesId;
-    private Long memberId = 1L; // TODO: 임의로 1을 넣어놓은 상황
+    @Setter
+    private Long memberId;
 
     private String title;
     private CommentRequest comment;
-    private List<Long> assignees;
-    private List<Long> labels;
+    private List<Long> assigneesId;
+    private List<Long> labelsId;
     private final Boolean isClosed = false;
 
-    public static Issue toEntity(Long organizationId, Long issuesCount, IssueCreateRequest issueCreateRequest) {
+    public Issue toEntity(Long organizationId, Long issuesCount) {
         return Issue.builder()
                 .organizationId(organizationId)
                 .number(issuesCount)
-                .milestoneId(issueCreateRequest.milestonesId)
-                .memberId(issueCreateRequest.memberId)
-                .title(issueCreateRequest.title)
-                .isClosed(issueCreateRequest.isClosed)
+                .milestoneId(milestonesId)
+                .memberId(memberId)
+                .title(title)
+                .isClosed(isClosed)
                 .build();
     }
 
-    public static List<IssueAssignee> extractAssignees(Long issueId, IssueCreateRequest issueCreateRequest) {
-        return issueCreateRequest.assignees.stream()
-                .map(assignee -> new IssueAssignee(issueId, assignee))
+    public List<IssueAssignee> extractAssignees(Long issueId) {
+        return assigneesId.stream()
+                .map(assigneeId -> new IssueAssignee(issueId, assigneeId))
                 .collect(Collectors.toList());
     }
 
-    public static List<IssueLabel> extractLabels(Long issueId, IssueCreateRequest issueCreateRequest) {
-        return issueCreateRequest.labels.stream()
-                .map(label -> new IssueLabel(issueId, label))
+    public List<IssueLabel> extractLabels(Long issueId) {
+        return labelsId.stream()
+                .map(labelId -> new IssueLabel(issueId, labelId))
                 .collect(Collectors.toList());
     }
 }

@@ -1,8 +1,11 @@
 package com.codesquad.issuetracker.api.comment.controller;
 
+import com.codesquad.issuetracker.api.comment.dto.request.CommentEmoticonAddRequest;
 import com.codesquad.issuetracker.api.comment.dto.request.CommentRequest;
 import com.codesquad.issuetracker.api.comment.service.CommentService;
+import java.util.Collections;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,21 +19,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CommentController {
 
+    public static final String MEMBER_ID = "memberId";
     private final CommentService commentService;
 
     @PostMapping("/api/{organizationTitle}/issues/{issueId}/comments")
-    public ResponseEntity<Map<String, Long>> create(@PathVariable Long issueId,
-        @RequestBody CommentRequest commentRequest) {
-        Long commentId = commentService.create(issueId, commentRequest);
+    public ResponseEntity<Map<String, Long>> createComment(HttpServletRequest request,
+                                                           @PathVariable Long issueId,
+                                                           @RequestBody CommentRequest commentRequest) {
+        Long memberId = (Long) request.getAttribute(MEMBER_ID);
+        Long commentId = commentService.createComment(issueId, commentRequest, memberId);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(Map.of("id", commentId));
+                .body(Collections.singletonMap("id", commentId));
     }
 
     @PatchMapping("/api/{organizationTitle}/issues/{issueId}/comments/{commentId}")
-    public ResponseEntity<Map<String, Long>> update(@PathVariable Long commentId,
-        @RequestBody CommentRequest commentRequest) {
-        Long updatedCommentId = commentService.update(commentId, commentRequest);
+    public ResponseEntity<Map<String, Long>> updateComment(@PathVariable Long commentId,
+                                                           @RequestBody CommentRequest commentRequest) {
+        Long updatedCommentId = commentService.updateComment(commentId, commentRequest);
         return ResponseEntity.ok()
-            .body(Map.of("id", updatedCommentId));
+                .body(Collections.singletonMap("id", updatedCommentId));
+    }
+
+    @PostMapping("/api/{organizationTitle}/issues/{issueId}/comments/{commentId}/emoticons")
+    public ResponseEntity<Void> createCommentEmoticon(HttpServletRequest request,
+                                                      @PathVariable Long commentId,
+                                                      @RequestBody CommentEmoticonAddRequest commentEmoticonAddRequest) {
+        Long memberId = (Long) request.getAttribute(MEMBER_ID);
+        commentService.createCommentEmoticon(commentId, memberId, commentEmoticonAddRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
     }
 }

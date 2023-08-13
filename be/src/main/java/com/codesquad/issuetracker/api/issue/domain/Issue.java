@@ -1,10 +1,12 @@
 package com.codesquad.issuetracker.api.issue.domain;
 
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 @Builder
 public class Issue {
 
@@ -18,4 +20,13 @@ public class Issue {
     private Boolean isClosed;
     private LocalDate createdTime;
 
+    public Issue(Long id, Long milestoneId) {
+        this.id = id;
+        this.milestoneId = milestoneId;
+    }
+
+    public Issue(Long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 }
