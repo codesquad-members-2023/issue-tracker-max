@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Body } from '@components/issueDetailPage/Body';
 import { PostInformation } from '@components/issueDetailPage/PostInformation';
-import { getIssueDetailPageData } from 'apis/api';
+import { getIssueDetail } from 'apis/api';
 import { useParams } from 'react-router-dom';
 
 type Props = {};
@@ -13,7 +13,7 @@ export const IssueDetailPage: React.FC = ({}: Props) => {
 
   const fetchLabelList = async () => {
     if (id) {
-      const pageData = await getIssueDetailPageData(id);
+      const pageData = await getIssueDetail(id);
       setIssueDetailPageData(pageData);
     }
   };

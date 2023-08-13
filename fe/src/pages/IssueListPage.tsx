@@ -1,7 +1,7 @@
 import { Button } from '@components/common/Button';
 import { IssueTable } from '@components/issueListPage/IssueTable';
 import { SubNav } from '@components/issueListPage/SubNav';
-import { getIssueListPageData } from 'apis/api';
+import { getIssuesWithQuery } from 'apis/api';
 import { processFilterString } from '@utils/processFilterString';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -30,7 +30,7 @@ export const IssueListPage: React.FC = () => {
   };
 
   const fetchPageData = async () => {
-    const pageData = await getIssueListPageData(location.search);
+    const pageData = await getIssuesWithQuery(location.search);
 
     setPageData(pageData);
   };

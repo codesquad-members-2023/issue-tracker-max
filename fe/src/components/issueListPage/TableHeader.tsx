@@ -7,7 +7,11 @@ import { useTheme } from '@emotion/react';
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 import React, { useState } from 'react';
 import { DropDownContainer } from '@components/common/dropDown/DropDownContainer';
-import { getLabels, getMilestones, getUsers } from 'apis/api';
+import {
+  getLabelPreviews,
+  getMilestonePreviews,
+  getUserPreviews,
+} from 'apis/api';
 import { DropDownList } from '@components/common/dropDown/DropDownList';
 
 type Props = {
@@ -252,7 +256,7 @@ export const TableHeader: React.FC<Props> = ({
                 }
 
                 (async () => {
-                  const users = await getUsers();
+                  const users = await getUserPreviews();
 
                   setPanelList((prev) => {
                     return {
@@ -331,7 +335,7 @@ export const TableHeader: React.FC<Props> = ({
                 }
 
                 (async () => {
-                  const labels = await getLabels();
+                  const labels = await getLabelPreviews();
 
                   setPanelList((prev) => {
                     return {
@@ -411,7 +415,7 @@ export const TableHeader: React.FC<Props> = ({
                 }
 
                 (async () => {
-                  const milestones = await getMilestones();
+                  const milestones = await getMilestonePreviews();
 
                   setPanelList((prev) => {
                     return {
@@ -496,7 +500,7 @@ export const TableHeader: React.FC<Props> = ({
                 }
 
                 (async () => {
-                  const users = await getUsers();
+                  const users = await getUserPreviews();
 
                   setPanelList((prev) => {
                     return {
