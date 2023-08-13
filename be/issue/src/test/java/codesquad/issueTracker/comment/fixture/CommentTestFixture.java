@@ -51,5 +51,10 @@ public abstract class CommentTestFixture {
     public CommentRequestDto dummyCommentRequestDto(int num) {
         return new CommentRequestDto("comment test" + num);
     }
-    
+
+    public List<CommentRequestDto> dummyCommentRequestDtos() {
+        return IntStream.range(1, 4)
+                .mapToObj(this::dummyCommentRequestDto)
+                .collect(Collectors.toList());
+    }
 }
