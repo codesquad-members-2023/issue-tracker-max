@@ -61,12 +61,18 @@ export function TextInput({
   height,
   placeholder,
   onChange,
+  isFormValid,
+  inputValue,
+  caption,
 }: {
   isPassword?: boolean;
   width: string;
   height: number;
   placeholder: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isFormValid?: boolean;
+  inputValue?: string;
+  caption?: string;
 }) {
   const [inputState, setInputState] = useState<InputState>("enabled");
 
@@ -81,24 +87,39 @@ export function TextInput({
   };
 
   return (
-    <div css={textInputContainer(color, inputState, width, height)}>
-      {inputState === "active" && (
-        <div
-          css={{
-            ...fonts.medium12,
-            color: color.neutral.text.weak,
-          }}>
-          {placeholder}
-        </div>
-      )}
-      <input
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onChange={onChange}
-        placeholder={placeholder}
-        css={input(color, inputState)}
-        type={isPassword ? "password" : "text"}
-      />
-    </div>
+    <>
+      <div css={textInputContainer(color, inputState, width, height)}>
+        {inputState === "active" && (
+          <div
+            css={{
+              ...fonts.medium12,
+              color: color.neutral.text.weak,
+            }}>
+            {placeholder}
+          </div>
+        )}
+        <input
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onChange={onChange}
+          placeholder={placeholder}
+          css={input(color, inputState)}
+          type={isPassword ? "password" : "text"}
+        />
+        {isFormValid ? null : inputValue ? (
+          <div
+            css={{
+              display: "flex",
+
+              position: "absolute",
+              ...fonts.medium12,
+              color: color.danger.text.default,
+              marginTop: "70px",
+            }}>
+            {caption}
+          </div>
+        ) : null}
+      </div>
+    </>
   );
 }

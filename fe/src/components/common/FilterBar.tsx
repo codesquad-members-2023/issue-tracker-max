@@ -8,7 +8,7 @@ import { Dropdown } from "./Dropdown";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 
 type Props = {
-  filterSelected: string;
+  selectedOptions: string[];
   isFilterOpen: boolean;
   filterItems: { title: string; icon: string | null; color: string | null }[];
   onClickFilterOpenButton: () => void;
@@ -17,6 +17,7 @@ type Props = {
     icon: string | null;
     color: string | null;
   }) => void;
+
 };
 
 const filterBarContainer = (color: ColorScheme, isActive: boolean) => css`
@@ -79,7 +80,7 @@ const input = (color: ColorScheme) => css`
 `;
 
 export function FilterBar({
-  filterSelected,
+  selectedOptions,
   isFilterOpen,
   filterItems,
   onClickFilterOpenButton,
@@ -126,11 +127,11 @@ export function FilterBar({
           <Dropdown
             ref={dropdownRef}
             onClick={onClickFilterOption}
-            filterSelected={filterSelected}
+            selectedOptions={selectedOptions}
             isDropdownOpen={isFilterOpen}
             title="이슈 필터"
             items={filterItems}
-            multiSelect={false}
+            
           />
         </div>
       </div>

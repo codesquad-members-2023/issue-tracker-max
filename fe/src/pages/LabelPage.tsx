@@ -27,7 +27,7 @@ const tableContainer = css`
 
 export type LabelType = {
   id?: number;
-  title: string;
+  title?: string;
   name?: string;
   description?: string;
   backgroundColor: string;

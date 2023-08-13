@@ -26,7 +26,7 @@ export const contentContainer = css`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 80px; /* 예시로 height를 추가하였습니다. */
+  height: 64px;
 `;
 
 const userImageStyle = css`

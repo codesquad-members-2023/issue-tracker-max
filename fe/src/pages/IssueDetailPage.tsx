@@ -13,6 +13,7 @@ import { Icon } from "../components/common/Icon";
 import { Comment } from "../components/Issue/Comment";
 import { TextArea } from "../components/common/TextArea";
 import { AddBox } from "../components/Issue/AddBox";
+// import { ISSUE_URL, SERVER } from "../constants/url";
 
 export type CommentType = IssueDetail["comments"][0];
 
@@ -82,8 +83,8 @@ const infoTag = (color: ColorScheme) => css`
   background-color: ${color.palette.blue};
 `;
 
-const ISSUE_DETAIL_URL =
-  "http://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/issues/:issueId";
+const mockURL =
+  "https://aed497a9-4c3a-45bf-91b8-433463633b2e.mock.pstmn.io/api/eojjeogojeojjeogo/issues";
 
 export function IssueDetailPage() {
   const [issueDetail, setIssueDetail] = useState<IssueDetail>();
@@ -96,7 +97,8 @@ export function IssueDetailPage() {
       try {
         setLoading(true);
 
-        const issueDetailResponse = await fetch(ISSUE_DETAIL_URL);
+        const issueDetailResponse = await fetch(`${mockURL}/${id}`);
+        // const issueDetailResponse = await fetch(`${SERVER}${ISSUE_URL}/${id}`);
         const issueDetailData = await issueDetailResponse.json();
 
         setIssueDetail(issueDetailData);
@@ -213,7 +215,7 @@ export function IssueDetailPage() {
                 />
               </div>
             </div>
-            <AddBox mode="edit" issueDetail={issueDetail} />
+            <AddBox mode="edit" />
           </div>
         </div>
       </MainArea>

@@ -16,7 +16,13 @@ import { MilestoneElement } from "../components/Milestone/MilestoneElement";
 import { LoadingBar } from "../components/common/LoadingBar";
 import { MilestoneDetail } from "../components/Milestone/MilestoneDetail";
 import { MainArea } from "../components/common/MainArea";
-import { COMMON_URL, MILESTONE_URL, SERVER } from "../constants/url";
+import {
+  COMMON_URL,
+  FILTER_CLOSED_URL,
+  FILTER_OPEN_URL,
+  MILESTONE_URL,
+  SERVER,
+} from "../constants/url";
 import { AlertContext } from "../contexts/AlertContext";
 
 type MilestonesData = {
@@ -26,7 +32,7 @@ type MilestonesData = {
     id: number;
     title: string;
     description: string;
-    dueDay: string;
+    dueDate: string;
     issueClosedCount: number;
     issueOpenedCount: number;
   }[];
@@ -46,6 +52,7 @@ export function MilestonePage() {
   const [isLeftSelected, setIsLeftSelected] = useState(false);
   const [isOpenSelected, setIsOpenSelected] = useState(true);
   const [isAddMilestoneOpen, setIsAddMilestoneOpen] = useState(false);
+  const [milestoneStatusChange, setMilestoneStatusChange] = useState(false);
 
   const alertContextValue = useContext(AlertContext)!;
   const { shouldFetchAgain, setShouldFetchAgain } = alertContextValue;
@@ -59,7 +66,11 @@ export function MilestonePage() {
         setLoading(true);
         const totalCountResponse = await fetch(`${SERVER}${COMMON_URL}`);
 
-        const milestoneResponse = await fetch(`${SERVER}${MILESTONE_URL}`);
+        const milestoneResponse = await fetch(
+          `${SERVER}${MILESTONE_URL}${
+            isOpenSelected ? FILTER_OPEN_URL : FILTER_CLOSED_URL
+          }`
+        );
         const totalCountData = await totalCountResponse.json();
         const milestoneData = await milestoneResponse.json();
 
@@ -74,7 +85,8 @@ export function MilestonePage() {
 
     fetchData();
     setShouldFetchAgain(false);
-  }, [shouldFetchAgain]);
+    setMilestoneStatusChange(false);
+  }, [shouldFetchAgain, isOpenSelected, milestoneStatusChange]);
 
   const AddMilestoneButtonStatus = isAddMilestoneOpen ? "disabled" : "enabled";
 
@@ -106,6 +118,10 @@ export function MilestonePage() {
   };
   const onClickClosedTab = () => {
     setIsOpenSelected(false);
+  };
+
+  const onStatusChange = () => {
+    setMilestoneStatusChange(true);
   };
 
   const leftTabProps = {
@@ -185,7 +201,12 @@ export function MilestonePage() {
               </div>
             </div>
             {milestones?.milestones.map((milestone) => (
-              <MilestoneElement key={milestone.id} milestones={milestone} />
+              <MilestoneElement
+                key={milestone.id}
+                onStatusChange={onStatusChange}
+                isOpenSelected={isOpenSelected}
+                milestones={milestone}
+              />
             ))}
           </div>
         </div>

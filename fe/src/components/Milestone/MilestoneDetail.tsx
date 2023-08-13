@@ -5,7 +5,7 @@ import { Milestone } from "../../pages/MilestonePage";
 import { DetailTextInput } from "../common/DetailTextInput";
 import { Txt } from "../util/Txt";
 import { Button } from "../common/Button";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MILESTONE_URL, SERVER } from "../../constants/url";
 import { AlertContext } from "../../contexts/AlertContext";
 
@@ -41,6 +41,44 @@ const buttonContainer = css`
   background-color: transparent;
 `;
 
+const isValidDate = (dateStr: string) => {
+  const parts = dateStr.split("-");
+
+  if (parts.length < 3) {
+    return false;
+  }
+
+  const year = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10);
+  const day = parseInt(parts[2], 10);
+
+  if (month < 1 || month > 12) {
+    return false;
+  }
+
+  if (day < 1 || day > 31) {
+    return false;
+  }
+
+  if (month === 2) {
+    if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
+      if (day > 29) {
+        return false;
+      }
+    } else {
+      if (day > 28) {
+        return false;
+      }
+    }
+  }
+
+  if ((month === 4 || month === 6 || month === 9 || month === 11) && day > 30) {
+    return false;
+  }
+
+  return true;
+};
+
 export function MilestoneDetail({
   mode,
   milestone,
@@ -60,44 +98,74 @@ export function MilestoneDetail({
     milestone ? milestone.description : ""
   );
   const [inputDueDay, setInputDueDay] = useState(
-    milestone ? milestone.dueDay : ""
+    milestone ? milestone.dueDate : ""
   );
+  const [isDateValid, setIsDateValid] = useState(false);
 
   const AlertContextValue = useContext(AlertContext)!;
   const { editElementId, setShouldFetchAgain } = AlertContextValue;
 
   const color = useTheme() as ColorScheme;
 
-  const onChangeTitleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputTitle(e.target.value);
-    if (e.target.value.length > 0 && inputDesc.length > 0) {
+  useEffect(() => {
+    if ((isAddMode && inputTitle && isDateValid) || inputDesc) {
       setIsEditCompleted(true);
     } else {
       setIsEditCompleted(false);
     }
+  }, [inputTitle, inputDesc, isDateValid]);
+
+  const onChangeTitleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputTitle(e.target.value);
   };
 
   const onChangeDescInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputDesc(e.target.value);
-    if (e.target.value.length > 0 && inputTitle.length > 0) {
-      setIsEditCompleted(true);
-    } else {
-      setIsEditCompleted(false);
-    }
   };
 
   const onChangeDueDayInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputDueDay(e.target.value);
+    const value = e.target.value;
+
+    let onlyDigits = value.replace(/[^0-9]/g, "");
+
+    if (onlyDigits.length > 8) {
+      onlyDigits = onlyDigits.substring(0, 8);
+    }
+
+    let formattedValue = onlyDigits;
+
+    if (onlyDigits.length > 4) {
+      formattedValue =
+        onlyDigits.substring(0, 4) + "-" + onlyDigits.substring(4);
+    }
+
+    if (onlyDigits.length > 6) {
+      formattedValue =
+        formattedValue.substring(0, 7) + "-" + formattedValue.substring(7);
+    }
+
+    setInputDueDay(formattedValue);
+    if (isValidDate(formattedValue)) {
+      setIsDateValid(true);
+    } else {
+      setIsDateValid(false);
+    }
   };
 
   const isAddMode = mode === "add";
 
+  const formatToDotSeparatedDate = (dueDate: string) => {
+    return dueDate.replace(/-/g, ".");
+  };
+
   const handleClickCompleteButton = async () => {
     if (isEditCompleted) {
+      const checkedInputDueDate = formatToDotSeparatedDate(inputDueDay);
+
       const milestoneToSend = {
         title: inputTitle,
         description: inputDesc,
-        dueDate: inputDueDay,
+        dueDate: checkedInputDueDate,
       };
 
       try {
@@ -120,9 +188,9 @@ export function MilestoneDetail({
       } catch (error) {
         console.error("API 요청 중 에러 발생:", error);
       }
+      setShouldFetchAgain(true);
+      onClickCompleteButton && onClickCompleteButton();
     }
-    setShouldFetchAgain(true);
-    onClickCompleteButton && onClickCompleteButton();
   };
 
   return (
@@ -141,11 +209,12 @@ export function MilestoneDetail({
               placeholder="마일스톤의 이름을 입력하세요"
             />
             <DetailTextInput
+              isDate={true}
               onChange={onChangeDueDayInput}
               mode={mode}
               title="완료일(선택)"
               inputText={inputDueDay}
-              placeholder="YYYY. MM. DD"
+              placeholder="YYYY.MM.DD"
             />
           </div>
           <DetailTextInput

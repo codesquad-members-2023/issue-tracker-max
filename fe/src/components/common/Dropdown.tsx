@@ -8,13 +8,13 @@ type Props = {
   isDropdownOpen: boolean;
   title: string;
   items: { title: string; icon: string | null; color: string | null }[];
-  multiSelect: boolean;
+
   onClick?: (item: {
     title: string;
     icon: string | null;
     color: string | null;
   }) => void;
-  filterSelected: string;
+  selectedOptions: string[];
 };
 const dropdownStyle = (color: ColorScheme) => css`
   position: absolute;
@@ -61,9 +61,9 @@ export const Dropdown = React.forwardRef<HTMLDivElement, Props>(
       isDropdownOpen,
       title,
       items = [],
-      multiSelect = false,
+
       onClick,
-      filterSelected,
+      selectedOptions,
     },
     ref
   ) => {
@@ -77,10 +77,9 @@ export const Dropdown = React.forwardRef<HTMLDivElement, Props>(
         </div>
         <ul>
           {items.map((item, idx) => {
-            const isSelected = item.title === filterSelected;
+            const isSelected = selectedOptions.includes(item.title);
             return (
               <DropdownItems
-                multiSelect={multiSelect}
                 key={idx}
                 onClick={onClick}
                 isSelected={isSelected}

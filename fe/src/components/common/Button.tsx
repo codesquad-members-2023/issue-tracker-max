@@ -94,7 +94,7 @@ export function Button({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        cursor: "pointer",
+        cursor: status === "enabled" ? "pointer" : "default",
         gap: "4px",
         ...TYPE_VARIANT[type!],
         ...SIZE_VARIANT[size!],

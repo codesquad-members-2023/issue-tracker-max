@@ -95,11 +95,13 @@ export function LabelDetail({
   onClickCompleteButton?: () => void;
 }) {
   const [isEditCompleted, setIsEditCompleted] = useState(false);
-  const [inputTitle, setInputTitle] = useState(label ? label.title : "");
+  const [inputTitle, setInputTitle] = useState(
+    label ? (label.title ? label.title : "") : ""
+  );
   const [inputDesc, setInputDesc] = useState(label ? label.description! : "");
   const [isDark, setIsDark] = useState(label ? label.isDark : true);
-  const [filterSelected, setFilterSelected] = useState<string>(
-    label ? (label.isDark ? TEXT_DARK : TEXT_LIGHT) : TEXT_DARK
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(
+    label ? (label.isDark ? [TEXT_DARK] : [TEXT_LIGHT]) : [TEXT_DARK]
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -118,12 +120,12 @@ export function LabelDetail({
   );
 
   useEffect(() => {
-    if (filterSelected === TEXT_LIGHT) {
+    if (selectedOptions.includes(TEXT_LIGHT)) {
       setIsDark(false);
     } else {
       setIsDark(true);
     }
-  }, [filterSelected]);
+  }, [selectedOptions]);
 
   useOutsideClick(dropdownRef, [dropdownOpenRef], () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -137,7 +139,10 @@ export function LabelDetail({
     icon: string | null;
     color: string | null;
   }) => {
-    setFilterSelected(item.title);
+    setSelectedOptions([item.title]);
+    if (inputTitle.length > 0 && inputDesc.length > 0) {
+      setIsEditCompleted(true);
+    }
   };
 
   const onClickDropdownButton = () => {
@@ -173,7 +178,7 @@ export function LabelDetail({
         title: inputTitle,
         description: inputDesc,
         backgroundColor: selectedColor,
-        isDark: filterSelected === "어두운색" ? true : false,
+        isDark: selectedOptions.includes("어두운색") ? true : false,
       };
 
       const url = isAddMode
@@ -257,8 +262,7 @@ export function LabelDetail({
                   isDropdownOpen={isDropdownOpen}
                   title="텍스트 색상"
                   items={textColorFilterItems}
-                  multiSelect={false}
-                  filterSelected={filterSelected}
+                  selectedOptions={selectedOptions}
                 />
               </div>
             </div>

@@ -12,8 +12,10 @@ import { TextArea } from "../components/common/TextArea";
 import { Button } from "../components/common/Button";
 import { Icon } from "../components/common/Icon";
 import { Txt } from "../components/util/Txt";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { IssueContext } from "../contexts/IssueContext";
+import { ISSUE_URL, SERVER } from "../constants/url";
 
 const newIssueContentContainer = (color: ColorScheme) => css`
   display: flex;
@@ -55,16 +57,13 @@ export function NewIssuePage() {
   const [inputTitle, setInputTitle] = useState<string>("");
   const [inputContent, setInputContent] = useState<string>("");
   const [isValidate, setIsValidate] = useState<boolean>(false);
-
+  // const [file, setFile] = useState<File | null>(null);
   // const [assigneesList, setAssigneesList] = useState<string[]>([]);
   // const [labelsList, setLabelsList] = useState<string[]>([]);
   // const [milestoneList, setMilestoneList] = useState<string[]>([]);
 
-  // const addBoxValue = {
-  //   assigneesList,
-  //   setAssigneesList,
-  //   labelsList,
-  // };
+  const issueContextValue = useContext(IssueContext)!;
+  const { assigneeList, labelList, milestoneList } = issueContextValue;
 
   const navigate = useNavigate();
 
@@ -72,8 +71,39 @@ export function NewIssuePage() {
     navigate("/issues");
   };
 
-  const onClickCompleteButton = () => {
-    console.log(inputTitle, inputContent); //API 연결 전 임시사용
+  const onClickCompleteButton = async () => {
+    const newIssueData = {
+      title: inputTitle,
+      assignees: assigneeList,
+      labels: labelList,
+      milestoneId: milestoneList[0],
+      comment: {
+        content: inputContent,
+        fileUrl: "fileUrl",
+      },
+    };
+
+    try {
+      const response = await fetch(`${SERVER}${ISSUE_URL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newIssueData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        console.log(data);
+
+        navigate(`/issues/${data.id}`);
+      } else {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const onChangeInputTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,6 +123,7 @@ export function NewIssuePage() {
   };
 
   const color = useTheme() as ColorScheme;
+
   return (
     <Background>
       <Header />
