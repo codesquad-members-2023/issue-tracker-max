@@ -44,18 +44,9 @@ export const AddIssuePage: React.FC = ({}) => {
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
   const onSubmit = async () => {
-    // const bodyData = {
-    //   title: '타이틀',
-    //   contents: '콘텐츠',
-    //   authorId: 1,
-    //   assigneeIds: selections.assignees,
-    //   labelIds: selections.labels,
-    //   milestoneId: selections.milestones,
-    // };
-
     const bodyData = {
-      title: '타이틀',
-      contents: '콘텐츠',
+      title: titleInput,
+      contents: textAreaValue,
       authorId: 1,
       assigneeIds: selections.assignees,
       labelIds: selections.labels,
@@ -67,7 +58,6 @@ export const AddIssuePage: React.FC = ({}) => {
       setIsSubmitError(false);
       const response = await fetch(
         `${import.meta.env.VITE_APP_BASE_URL}/issues/new`,
-        // `/issues/new`,
         {
           method: 'POST',
           headers: {
@@ -159,6 +149,7 @@ export const AddIssuePage: React.FC = ({}) => {
           <TextArea
             letterCount={textAreaValue.length}
             textAreaValue={textAreaValue}
+            typeVariant="add"
             onAddFileUrl={onAddFileUrl}
             onChangeTextArea={onChangeTextArea}
           />

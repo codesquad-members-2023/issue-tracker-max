@@ -6,8 +6,8 @@ import { ReactComponent as Smile } from '@assets/icons/smile.svg';
 
 type Props = {
   image: string;
-  loginId: string;
-  createdAt: string;
+  loginId?: string;
+  createdAt?: string;
   isAuthor?: boolean;
   onClickEdit?: () => void;
 };

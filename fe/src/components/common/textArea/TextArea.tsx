@@ -6,19 +6,14 @@ import { TextAreaContainer } from './TextAreaContainer';
 import { Caption } from './Caption';
 import { AddButtons } from './AddButtons';
 import { TextAreaInput } from './TextAreaInput';
-
-type DefaultFileStatusType = {
-  typeError: boolean;
-  sizeError: boolean;
-  isUploading: boolean;
-  uploadFailed: boolean;
-};
+import { uploadFile } from 'apis/fileUpload';
 
 type Props = {
   size?: 'defaultSize' | 'S';
   isDisabled?: boolean;
   letterCount?: number;
   textAreaValue: string;
+  typeVariant: 'default' | 'add';
   onChangeTextArea: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onAddFileUrl: (fileName: string, fileUrl: string) => void;
 };
@@ -28,57 +23,23 @@ export const TextArea: React.FC<Props> = ({
   isDisabled = false,
   letterCount,
   textAreaValue,
+  typeVariant,
   onChangeTextArea,
   onAddFileUrl,
 }) => {
   const theme = useTheme() as any;
-  const AVAILABLE_FILE_SIZE = 1048576; //1MB
 
   const [isDisplayingCount, setIsDisplayingCount] = useState(false);
-  const [fileStatus, setFileStatus] = useState<DefaultFileStatusType>({
-    typeError: false,
-    sizeError: false,
-    isUploading: false,
-    uploadFailed: false,
-  });
+  const [fileUrl, setFileUrl] = useState<string>(''); /* 여러개 넣을때는...?? */
+  const [fileStatus, setFileStatus] =
+    useState<DefaultFileStatusType>(initialStatus);
 
-  const isTyping = textAreaValue.length > 0;
-
-  const uploadImage = async (file: File) => {
-    try {
-      setFileStatus((prev) => ({ ...prev, isUploading: true }));
-
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const response = await fetch(
-        `${import.meta.env.VITE_APP_BASE_URL}/file-upload`,
-        {
-          method: 'POST',
-          body: formData,
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('File upload failed');
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
-    } finally {
-      setFileStatus((prev) => ({ ...prev, isUploading: false }));
-    }
+  const initFileStatus = () => {
+    setFileStatus(initialStatus);
   };
 
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileStatus((prev) => ({
-      ...prev,
-      sizeError: false,
-      typeError: false,
-      uploadFailed: false,
-    }));
+    initFileStatus();
 
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -100,9 +61,18 @@ export const TextArea: React.FC<Props> = ({
         return;
       }
 
-      const fileUrl = await uploadImage(file);
+      try {
+        setFileStatus((prev) => ({ ...prev, isUploading: true }));
 
-      onAddFileUrl(fileName, fileUrl.fileUrl);
+        const fileUrl = await uploadFile(file);
+
+        setFileUrl(fileUrl.fileUrl);
+        onAddFileUrl(fileName, fileUrl.fileUrl);
+      } catch {
+        setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
+      } finally {
+        setFileStatus((prev) => ({ ...prev, isUploading: false }));
+      }
     }
   };
 
@@ -113,6 +83,8 @@ export const TextArea: React.FC<Props> = ({
       return () => clearTimeout(timer);
     }
   }, [textAreaValue]);
+
+  const isTyping = textAreaValue.length > 0;
 
   return (
     <>
@@ -132,6 +104,8 @@ export const TextArea: React.FC<Props> = ({
           textAreaValue={textAreaValue}
           onChangeTextArea={onChangeTextArea}
           isDisabled={isDisabled}
+          typeVariant={typeVariant}
+          fileUrl={fileUrl} /* 여러개 넣을때는...?? */
         />
 
         <Caption
@@ -155,3 +129,12 @@ export const TextArea: React.FC<Props> = ({
     </>
   );
 };
+
+const initialStatus = {
+  typeError: false,
+  sizeError: false,
+  isUploading: false,
+  uploadFailed: false,
+};
+
+const AVAILABLE_FILE_SIZE = 1048576; //1MB
