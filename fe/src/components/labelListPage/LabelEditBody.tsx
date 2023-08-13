@@ -92,7 +92,7 @@ export const LabelEditBody: React.FC<Props> = ({
           onChange={onNameChange}
           height={40}
           isError={isNameLengthError}
-          captionString="20자 이하로 입력해주세요"
+          caption="20자 이하로 입력해주세요"
         />
         <TextInput
           value={descriptionInput}
@@ -112,7 +112,7 @@ export const LabelEditBody: React.FC<Props> = ({
         >
           <ColorCodeInput
             isError={isColorCodeError}
-            captionString="올바른 색상 코드를 입력해주세요"
+            caption="올바른 색상 코드를 입력해주세요"
             value={colorCodeInput}
             onChange={onColorCodeChange}
             onRandomButtonClick={onColorCodeRandom}
