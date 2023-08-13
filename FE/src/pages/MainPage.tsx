@@ -12,7 +12,7 @@ import parseParam from "../utils/parseParam";
 export default function MainPage() {
   const navigate = useNavigate();
   const { filter } = useParams();
-  const [data, setData] = useState<ListDataProps | null>(null);
+  const [data, setData] = useState<ListDataProps>();
   const [filterValue, setFilterValue] = useState<string>(
     filter ? filter : "isOpen=true",
   );

@@ -2,22 +2,35 @@ import { styled } from "styled-components";
 import Button from "../common/Button/Button";
 
 type Props = {
-  onClickCancel(): void;
-  onClickActive(): void;
+  content: string;
+  leftButtonLabel: string;
+  rightButtonLabel: string;
+  onClickLeftButton(): void;
+  onClickRightButton(): void;
 };
 
-export default function Alert({ onClickCancel, onClickActive }: Props) {
+export default function Alert({
+  content,
+  leftButtonLabel,
+  rightButtonLabel,
+  onClickLeftButton,
+  onClickRightButton,
+}: Props) {
   return (
     <Container>
-      <AlertContent>정말 삭제하시겠습니까?</AlertContent>
+      <AlertContent>{content}</AlertContent>
       <ButtonTap>
         <Button
           type={"outline"}
-          label={"취소"}
+          label={leftButtonLabel}
           width={"176px"}
-          onClick={onClickCancel}
+          onClick={onClickLeftButton}
         />
-        <Button label={"삭제"} width={"176px"} onClick={onClickActive} />
+        <Button
+          label={rightButtonLabel}
+          width={"176px"}
+          onClick={onClickRightButton}
+        />
       </ButtonTap>
     </Container>
   );

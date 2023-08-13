@@ -12,19 +12,19 @@ type Props = {
 };
 
 type AssigneesData = {
-  assignees: AssigneesList[] | null;
+  assignees: AssigneesList[];
 };
 
 type LabelsData = {
-  labels: Label[] | null;
+  labels: Label[];
 };
 
 type MilestonesData = {
-  milestones: DropdownMilestone[] | null;
+  milestones: DropdownMilestone[];
 };
 
 type AuthorsData = {
-  authors: AssigneesList[] | null;
+  authors: AssigneesList[];
 };
 
 export default function DropdownPanel({
@@ -35,14 +35,10 @@ export default function DropdownPanel({
 }: Props) {
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [assigneesData, setAssigneesData] = useState<AssigneesData | null>(
-    null,
-  );
-  const [labelsData, setLabelsData] = useState<LabelsData | null>(null);
-  const [milestonesData, setMilestonesData] = useState<MilestonesData | null>(
-    null,
-  );
-  const [authorsData, setAuthorsData] = useState<AuthorsData | null>(null);
+  const [assigneesData, setAssigneesData] = useState<AssigneesData>();
+  const [labelsData, setLabelsData] = useState<LabelsData>();
+  const [milestonesData, setMilestonesData] = useState<MilestonesData>();
+  const [authorsData, setAuthorsData] = useState<AuthorsData>();
 
   const showOpenIssue = () => {
     closeDropdown();

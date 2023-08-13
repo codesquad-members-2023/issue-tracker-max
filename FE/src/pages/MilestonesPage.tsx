@@ -10,7 +10,7 @@ import parseFilter from "../utils/parseFilter";
 export default function MilestonesPage() {
   const navigate = useNavigate();
   const { state } = useParams();
-  const [data, setData] = useState<FetchedMilestone | null>(null);
+  const [data, setData] = useState<FetchedMilestone>();
   const [isAdd, setIsAdd] = useState<boolean>(false);
   const [addTitle, setAddTitle] = useState<string>("");
   const [addDescription, setAddDescription] = useState<string>("");

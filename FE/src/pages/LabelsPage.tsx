@@ -10,7 +10,7 @@ import { generateRandomHex } from "../utils/generateRandomHex";
 
 export default function LabelsPage() {
   const navigate = useNavigate();
-  const [data, setData] = useState<FetchedLabels | null>(null);
+  const [data, setData] = useState<FetchedLabels>();
   const [openDeleteAlert, setOpenDeleteAlert] = useState<boolean>(false);
   const [openAdd, setOpenAdd] = useState<boolean>(false);
   const [addLabelName, setAddLabelName] = useState<string>("");
@@ -106,82 +106,97 @@ export default function LabelsPage() {
 
   return (
     <Main>
-      <Tap>
-        <TapButtonWrapper>
-          <Button
-            icon={"label"}
-            label={`레이블(${data?.metadata.totalLabelCount})`}
-            type={"ghost"}
-            size={"medium"}
-            width={"50%"}
-            onClick={goLabelsPage}
-          />
-          <Button
-            icon={"milestone"}
-            label={`마일스톤(${data?.metadata.totalMilestoneCount})`}
-            type={"ghost"}
-            size={"medium"}
-            width={"50%"}
-            onClick={goMilestonesPage}
-          />
-        </TapButtonWrapper>
-        <Button
-          icon={"plus"}
-          label={"레이블 추가"}
-          onClick={openAddLabel}
-          disabled={openAdd}
-        />
-      </Tap>
-      {openAdd && (
-        <EditLabel
-          type={"add"}
-          title={"새로운 레이블 추가"}
-          name={addLabelName}
-          description={addLabelDescription}
-          color={addLabelColor}
-          onChangeName={handleNameInputChange}
-          onChangeDescrip={handleDescripInputChange}
-          onChangeColor={handleColorInputChange}
-          randomColor={randomColor}
-          cancelEdit={closeAddLabel}
-          confirmEdit={createLabel}
-        />
-      )}
-      <LabelsTable>
-        <TableHeader>
-          <LabelCounter>{data?.labels?.length}개의 레이블</LabelCounter>
-        </TableHeader>
-        {data?.labels?.map((label) => (
-          <LabelList
-            key={label.id}
-            id={label.id}
-            title={label.title}
-            color={label.color}
-            description={label.description}
-            openDelete={openDelete}
-          />
-        ))}
-        {data?.labels?.length === 0 && (
-          <EmptyList>
-            <EmptyContent>생성된 레이블이 없습니다.</EmptyContent>
-          </EmptyList>
-        )}
-      </LabelsTable>
-      {openDeleteAlert && (
-        <Dim>
-          <Alert onClickCancel={closeDelete} onClickActive={() => {}} />
-        </Dim>
+      {!data && <div></div>}
+      {data && (
+        <Wrapper>
+          <Tap>
+            <TapButtonWrapper>
+              <Button
+                icon={"label"}
+                label={`레이블(${data?.metadata.totalLabelCount})`}
+                type={"ghost"}
+                size={"medium"}
+                width={"50%"}
+                onClick={goLabelsPage}
+              />
+              <Button
+                icon={"milestone"}
+                label={`마일스톤(${data?.metadata.totalMilestoneCount})`}
+                type={"ghost"}
+                size={"medium"}
+                width={"50%"}
+                onClick={goMilestonesPage}
+              />
+            </TapButtonWrapper>
+            <Button
+              icon={"plus"}
+              label={"레이블 추가"}
+              onClick={openAddLabel}
+              disabled={openAdd}
+            />
+          </Tap>
+          {openAdd && (
+            <EditLabel
+              type={"add"}
+              title={"새로운 레이블 추가"}
+              name={addLabelName}
+              description={addLabelDescription}
+              color={addLabelColor}
+              onChangeName={handleNameInputChange}
+              onChangeDescrip={handleDescripInputChange}
+              onChangeColor={handleColorInputChange}
+              randomColor={randomColor}
+              cancelEdit={closeAddLabel}
+              confirmEdit={createLabel}
+            />
+          )}
+          <LabelsTable>
+            <TableHeader>
+              <LabelCounter>{data?.labels?.length}개의 레이블</LabelCounter>
+            </TableHeader>
+            {data?.labels?.map((label) => (
+              <LabelList
+                key={label.id}
+                id={label.id}
+                title={label.title}
+                color={label.color}
+                description={label.description}
+                openDelete={openDelete}
+              />
+            ))}
+            {data?.labels?.length === 0 && (
+              <EmptyList>
+                <EmptyContent>생성된 레이블이 없습니다.</EmptyContent>
+              </EmptyList>
+            )}
+          </LabelsTable>
+          {openDeleteAlert && (
+            <Dim>
+              <Alert
+                content={"정말 삭제하시겠습니까?"}
+                leftButtonLabel={"취소"}
+                rightButtonLabel={"삭제"}
+                onClickLeftButton={closeDelete}
+                onClickRightButton={() => {}}
+              />
+            </Dim>
+          )}
+        </Wrapper>
       )}
     </Main>
   );
 }
 
 const Main = styled.div`
+  width: 1280px;
+`;
+
+const Wrapper = styled.div`
+  width: 100%;
   padding: 32px 0px;
   display: flex;
   gap: 24px;
   flex-direction: column;
-  width: 1280px;
 `;
 
 const Tap = styled.div`

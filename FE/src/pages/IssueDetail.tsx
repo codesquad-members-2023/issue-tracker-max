@@ -12,7 +12,7 @@ import InformationTag from "../components/InformationTag/InformationTag";
 
 export default function IssueDetail() {
   // const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [data, setData] = useState<FetchedDetail | null>(null);
+  const [data, setData] = useState<FetchedDetail>();
   const [isEditTitle, setIsEditTitle] = useState<boolean>(false);
   const [issueTitle, setIssueTitle] = useState<string | undefined>(data?.title);
   const [addComment, setAddComment] = useState<string>("");
