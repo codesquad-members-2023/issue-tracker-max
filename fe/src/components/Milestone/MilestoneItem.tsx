@@ -1,10 +1,12 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import { font, radius } from '../../styles/styles';
-import { ReactComponent as MilestoneIcon } from '/src/assets/icon/milestone.svg';
-import { ReactComponent as CalendarIcon } from '/src/assets/icon/calendar.svg';
-import { ReactComponent as ArchiveIcon } from '/src/assets/icon/archive.svg';
-import { ReactComponent as EditIcon } from '/src/assets/icon/edit.svg';
-import { ReactComponent as DeleteIcon } from '/src/assets/icon/trash.svg';
+import { ReactComponent as MilestoneIcon } from '../../assets/icon/milestone.svg';
+import { ReactComponent as CalendarIcon } from '../../assets/icon/calendar.svg';
+import { ReactComponent as ArchiveIcon } from '../../assets/icon/archive.svg';
+import { ReactComponent as EditIcon } from '../../assets/icon/edit.svg';
+import { ReactComponent as DeleteIcon } from '../../assets/icon/trash.svg';
+import MilestoneButton from './MilestoneButton';
+import { getFormatDate } from '../../util/getFormatDate';
 
 export default function IssueItem(milestone: Milestone) {
   const theme = useTheme();
@@ -21,13 +23,13 @@ export default function IssueItem(milestone: Milestone) {
         <div className="title">
           <div className="milestone-name">
             <MilestoneIcon className="open" />
-            {milestone.name}
+            {milestone.title}
           </div>
           <div className="due-date">
             {!!milestone.dueDate && (
               <>
                 <CalendarIcon />
-                {milestone.dueDate}
+                {getFormatDate(milestone.dueDate)}
               </>
             )}
           </div>
@@ -36,18 +38,24 @@ export default function IssueItem(milestone: Milestone) {
       </div>
       <div className="sub">
         <div className="buttons">
-          <button type="button" className="close">
-            <ArchiveIcon />
+          <MilestoneButton
+            color={theme.neutral.textDefault}
+            icon={<ArchiveIcon />}
+          >
             닫기
-          </button>
-          <button type="button" className="edit">
-            <EditIcon />
+          </MilestoneButton>
+          <MilestoneButton
+            color={theme.neutral.textDefault}
+            icon={<EditIcon />}
+          >
             편집
-          </button>
-          <button type="button" className="delete">
-            <DeleteIcon />
+          </MilestoneButton>
+          <MilestoneButton
+            color={theme.danger.textDefault}
+            icon={<DeleteIcon />}
+          >
             삭제
-          </button>
+          </MilestoneButton>
         </div>
         <div className="progress-indicator">
           <progress
@@ -132,28 +140,6 @@ const issueItem = (theme: Theme, completionChart: number) => css`
         align-items: center;
         gap: 4px;
         background-color: inherit;
-      }
-
-      .close {
-        color: ${theme.neutral.textDefault};
-
-        & svg path {
-          stroke: ${theme.neutral.textDefault};
-        }
-      }
-      .edit {
-        color: ${theme.neutral.textDefault};
-
-        & svg path {
-          stroke: ${theme.neutral.textDefault};
-        }
-      }
-      .delete {
-        color: ${theme.danger.textDefault};
-
-        & svg path {
-          stroke: ${theme.danger.textDefault};
-        }
       }
     }
 

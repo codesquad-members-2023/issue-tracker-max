@@ -1,5 +1,5 @@
 import { Theme, css, useTheme } from '@emotion/react';
-import { ReactComponent as ChevronDownIcon } from '/src/assets/icon/chevronDown.svg';
+import { ReactComponent as ChevronDownIcon } from '../assets/icon/chevronDown.svg';
 import { border, font, radius } from '../styles/styles';
 
 export default function FilterBar() {
@@ -52,7 +52,7 @@ const filterBar = (theme: Theme) => css`
     color: ${theme.neutral.textWeak};
     background-color: ${theme.neutral.surfaceBold};
     font: ${font.displayMedium16};
-    background-image: url('/src/assets/icon/search.svg');
+    background-image: url('../../src/assets/icon/search.svg');
     background-repeat: no-repeat;
     background-position: 15px center;
   }

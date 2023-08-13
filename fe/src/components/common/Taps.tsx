@@ -1,8 +1,8 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import { border, font, radius } from '../../styles/styles';
 import { NavLink } from 'react-router-dom';
-import { ReactComponent as LabelIcon } from '/src/assets/icon/label.svg';
-import { ReactComponent as MilestoneIcon } from '/src/assets/icon/milestone.svg';
+import { ReactComponent as LabelIcon } from '../../assets/icon/label.svg';
+import { ReactComponent as MilestoneIcon } from '../../assets/icon/milestone.svg';
 
 type Props = {
   labelCount: number;

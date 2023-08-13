@@ -1,6 +1,6 @@
 import { Theme, css, useTheme } from '@emotion/react';
-import { ReactComponent as DarkModeIcon } from '/src/assets/icon/darkMode.svg';
-import { ReactComponent as LightModeIcon } from '/src/assets/icon/lightMode.svg';
+import { ReactComponent as DarkModeIcon } from '../assets/icon/darkMode.svg';
+import { ReactComponent as LightModeIcon } from '../assets/icon/lightMode.svg';
 
 type Props = {
   onClick: () => void;

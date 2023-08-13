@@ -2,21 +2,18 @@ import { Theme, css, useTheme } from '@emotion/react';
 import { font } from '../../../styles/styles';
 import CheckBoxIcon from './CheckBox';
 import Label from '../../Label/Label';
-import { ReactComponent as AlertCircleIcon } from '/src/assets/icon/alertCircle.svg';
-import { ReactComponent as MilestoneIcon } from '/src/assets/icon/milestone.svg';
-import { ReactComponent as UserImageSmallIcon } from '/src/assets/icon/userImageSmall.svg';
+import { ReactComponent as AlertCircleIcon } from '../../../assets/icon/alertCircle.svg';
+import { ReactComponent as MilestoneIcon } from '../../../assets/icon/milestone.svg';
+import { ReactComponent as UserImageSmallIcon } from '../../../assets/icon/userImageSmall.svg';
+import { getTimeLine } from '../../../util/getTimeLine';
 
 type Props = {
   issue: Issue;
   onSingleCheck: (checked: boolean, id: number) => void;
-  checkedItemIdList: number[];
+  checked: boolean;
 };
 
-export default function IssueItem({
-  issue,
-  onSingleCheck,
-  checkedItemIdList,
-}: Props) {
+export default function IssueItem({ issue, onSingleCheck, checked }: Props) {
   const theme = useTheme();
 
   return (
@@ -25,9 +22,9 @@ export default function IssueItem({
         <div className="detail">
           <div className="title-wrapper">
             <CheckBoxIcon
-              id={issue.id.toString()}
+              id="selectOne"
               onChange={(e) => onSingleCheck(e.currentTarget.checked, issue.id)}
-              checked={checkedItemIdList.includes(issue.id)}
+              checked={checked}
             />
             <div className="title">
               <AlertCircleIcon className="open" />
@@ -38,15 +35,16 @@ export default function IssueItem({
             </div>
           </div>
           <div className="info">
-            <div>{issue.number}</div>
+            <div>#{issue.id}</div>
             <div>
-              {`${issue.history.dateTime}, ${issue.history.modifier}에 의해 수정되었습니다`}
+              이 이슈가 {getTimeLine(issue.history.modifiedAt)},{' '}
+              {issue.history.editor}님에 의해 수정되었습니다
             </div>
             <div className="milestone-info">
               {!!issue.milestone && (
                 <>
                   <MilestoneIcon className="milestone-icon" />
-                  {issue.milestone}
+                  {issue.milestone.title}
                 </>
               )}
             </div>
