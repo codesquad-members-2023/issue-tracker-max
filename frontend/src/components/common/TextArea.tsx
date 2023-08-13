@@ -4,7 +4,7 @@ import ButtonSmall from './button/ButtonSmall';
 import React from 'react';
 
 type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-  labelName: string;
+  labelName?: string;
   placeholder?: string;
   disabled?: boolean;
 };
@@ -61,7 +61,6 @@ export default function TextArea(props: TextAreaProps) {
 }
 
 const Wrapper = styled.div<{ $isFocused: boolean }>`
-  width: 340px;
   min-height: 184px;
   display: flex;
   flex-direction: column;
