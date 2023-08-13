@@ -5,9 +5,13 @@ import { IssueContainer } from './IssueContainer';
 
 type Props = {
   issueDetailPageData: IssueDetailPageData;
+  onAddComment: (comment: Comment) => void;
 };
 
-export const Body: React.FC<Props> = ({ issueDetailPageData }: Props) => {
+export const Body: React.FC<Props> = ({
+  issueDetailPageData,
+  onAddComment,
+}: Props) => {
   const theme = useTheme() as any;
 
   return (
@@ -40,6 +44,7 @@ export const Body: React.FC<Props> = ({ issueDetailPageData }: Props) => {
           createdAt={issueDetailPageData.createdAt}
           author={issueDetailPageData.author}
           comments={issueDetailPageData.comments}
+          onAddComment={onAddComment}
         />
       </div>
 

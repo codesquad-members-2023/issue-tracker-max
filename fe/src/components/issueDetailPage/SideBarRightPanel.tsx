@@ -6,6 +6,7 @@ import { ListSideBar } from '@components/common/sideBar/ListSideBar';
 import { SideBar } from '@components/common/sideBar/SideBar';
 import { ReactComponent as Trash } from '@assets/icons/trash.svg';
 import { deleteIssue } from 'apis/api';
+
 type Props = {
   issueId: number;
 };

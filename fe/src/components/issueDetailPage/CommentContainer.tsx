@@ -1,5 +1,4 @@
 import { Comment } from '@components/common/comment/Comment';
-import { useState } from 'react';
 import { AddNewComment } from './AddNewComment';
 
 // type AuthorType = {
@@ -13,23 +12,17 @@ type Props = {
   contents: string;
   createdAt: string;
   author: User;
-  comments: any[]; // todo 타입
+  comments: Comment[]; // todo 타입
+  onAddComment: (comment: Comment) => void;
 };
 
 export const CommentContainer: React.FC<Props> = ({
   author,
   issueId,
   comments,
+  onAddComment,
 }: Props) => {
   const isCommentsExist = comments.length > 0;
-
-  const [commentList, setCommentList] = useState<any[]>(comments);
-
-  const onAddComment = (comment: any) => {
-    console.log('작동오케이?');
-
-    setCommentList([...commentList, comment]);
-  };
 
   return (
     <div
@@ -41,7 +34,7 @@ export const CommentContainer: React.FC<Props> = ({
       }}
     >
       {isCommentsExist &&
-        commentList.map((comment) => (
+        comments.map((comment) => (
           <Comment
             key={comment.id}
             issueId={issueId}
