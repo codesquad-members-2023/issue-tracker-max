@@ -9,6 +9,7 @@ import { deleteIssue } from 'apis/api';
 
 type Props = {
   issueId: number;
+  //이슈 데이터 받아와서 선택된 라벨, 마일스톤, 담당자 받아와야함
 };
 
 export const SideBarRightPanel: React.FC<Props> = ({ issueId }: Props) => {
@@ -49,7 +50,7 @@ export const SideBarRightPanel: React.FC<Props> = ({ issueId }: Props) => {
           selections={{
             assignees: [],
             labels: [],
-            milestones: [],
+            milestones: null,
           }}
         />
       </SideBar>
