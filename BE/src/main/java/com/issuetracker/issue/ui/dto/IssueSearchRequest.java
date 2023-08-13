@@ -30,7 +30,7 @@ public class IssueSearchRequest {
 	}
 
 	private Long getCommentAuthorId(Long loginMemberId) {
-		if(isCommentedByMe == null || isCommentedByMe == Boolean.FALSE) {
+		if (isCommentedByMe == null || isCommentedByMe == Boolean.FALSE) {
 			return null;
 		}
 

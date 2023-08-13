@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.issuetracker.util.fixture.AssigneeFixture;
 import com.issuetracker.util.fixture.IssueCommentFixture;
 import com.issuetracker.util.fixture.IssueFixture;
-import com.issuetracker.util.fixture.IssueLabelMappingFixture;
+import com.issuetracker.util.fixture.AssignedLabelFixture;
 import com.issuetracker.util.fixture.LabelFixture;
 import com.issuetracker.util.fixture.MemberFixture;
 import com.issuetracker.util.fixture.MilestoneFixture;
@@ -42,6 +42,6 @@ public class DatabaseInitialization {
 		jdbcTemplate.update(IssueFixture.createInsertSQL());
 		jdbcTemplate.update(IssueCommentFixture.createInsertSQL());
 		jdbcTemplate.update(AssigneeFixture.createInsertSQL());
-		jdbcTemplate.update(IssueLabelMappingFixture.createInsertSQL());
+		jdbcTemplate.update(AssignedLabelFixture.createInsertSQL());
 	}
 }

@@ -18,10 +18,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.issuetracker.config.exception.MemberNotFoundException;
+import com.issuetracker.config.exception.CustomHttpException;
 import com.issuetracker.member.application.MemberValidator;
 import com.issuetracker.member.domain.MemberRepository;
-import com.issuetracker.member.infrastructure.JdbcMemberRepository;
 import com.issuetracker.util.MockTest;
 
 @MockTest
@@ -74,7 +73,7 @@ public class MemberValidatorTest {
 		given(memberRepository.existById(any())).willReturn(false);
 
 		// then
-		Assertions.assertThrows(MemberNotFoundException.class,
+		Assertions.assertThrows(CustomHttpException.class,
 			() -> memberValidator.verifyMember(1L));
 	}
 
@@ -84,7 +83,7 @@ public class MemberValidatorTest {
 		given(memberRepository.existByIds(any())).willReturn(false);
 
 		// then
-		Assertions.assertThrows(MemberNotFoundException.class,
+		Assertions.assertThrows(CustomHttpException.class,
 			() -> memberValidator.verifyMembers(Arrays.asList(1L, null)));
 	}
 

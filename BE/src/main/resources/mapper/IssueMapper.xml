@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.issuetracker.issue.domain.IssueMapper">
-    <resultMap id="issueResultMap" type="Issue">
+    <resultMap id="issueResultMap" type="IssueRead">
         <id property="id" column="issue_id" />
         <result property="title" column="issue_title" />
         <result property="content" column="issue_content" />
@@ -14,7 +14,7 @@
         <association property="author" javaType="Member">
             <id property="id" column="author_id" />
             <result property="nickname" column="author_nickname" />
-            <result property="proFileImageUrl" column="author_profile_image_url" />
+            <result property="profileImageUrl" column="author_profile_image_url" />
         </association>
 
         <association property="milestone" javaType="Milestone">
@@ -26,6 +26,55 @@
             <id property="id" column="label_id" />
             <result property="title" column="label_title" />
             <result property="color" column="label_color" />
+            <result property="description" column="label_description" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="IssueCommentReadResultMap" type="IssueCommentRead">
+        <id property="id" column="issue_comment_id" />
+        <result property="content" column="issue_comment_content" />
+        <result property="description" column="issue_comment_description" />
+        <result property="createAt" column="issue_comment_create_at"/>
+        <association property="author" column="issue_comment_author" javaType="Member">
+            <id property="id" column="issue_comment_author_id" />
+            <result property="nickname" column="issue_comment_author_nickname" />
+            <result property="profileImageUrl" column="issue_comment_author_profile_image_url" />
+        </association>
+    </resultMap>
+
+    <resultMap id="issueDetailResultMap" type="IssueDetailRead">
+        <id property="id" column="issue_id" />
+        <result property="title" column="issue_title" />
+        <result property="content" column="issue_content" />
+        <result property="isOpen" column="issue_is_open" />
+        <result property="createAt" column="issue_create_at" />
+
+        <association property="author" javaType="Member">
+            <id property="id" column="author_id" />
+            <result property="nickname" column="author_nickname" />
+            <result property="profileImageUrl" column="author_profile_image_url" />
+        </association>
+
+        <association property="milestone" javaType="Milestone">
+            <id property="id" column="milestone_id" />
+            <result property="title" column="milestone_title" />
+            <result property="progress" column="milestone_progress" />
+        </association>
+
+        <collection property="assignees" ofType="Member">
+            <id property="id" column="assignees_id" />
+            <result property="nickname" column="assignees_nickname" />
+            <result property="profileImageUrl" column="assignees_profile_image_url" />
+        </collection>
+
+        <collection property="comments" ofType="IssueCommentRead" resultMap="IssueCommentReadResultMap">
+        </collection>
+
+        <collection property="labels" ofType="Label">
+            <id property="id" column="label_id" />
+            <result property="title" column="label_title" />
+            <result property="color" column="label_color" />
+            <result property="description" column="label_description" />
         </collection>
     </resultMap>
 
@@ -42,16 +91,17 @@
                 milestone.title as milestone_title,
                 label.id as label_id,
                 label.title as label_title,
-                label.color as label_color
-        FROM issue issue
+                label.color as label_color,
+                label.description as label_description
+        FROM issue
         INNER JOIN member author ON author.id = issue.author_id
-        LEFT OUTER JOIN milestone milestone ON issue.milestone_id = milestone.id
-        LEFT OUTER JOIN issue_label_mapping issue_label_mapping ON issue.id = issue_label_mapping.issue_id
-        LEFT OUTER JOIN label label ON issue_label_mapping.label_id = label.id
-        LEFT OUTER JOIN assignee assignee ON issue.id = assignee.issue_id
-        LEFT OUTER JOIN member assignee_member ON assignee.member_id = assignee_member.id
-        LEFT OUTER JOIN issue_comment issue_comment ON issue.id = issue_comment.issue_id
-        <where>
+        LEFT OUTER JOIN milestone ON issue.milestone_id = milestone.id AND milestone.is_deleted = 0
+        LEFT OUTER JOIN assigned_label ON issue.id = assigned_label.issue_id
+        LEFT OUTER JOIN label ON assigned_label.label_id = label.id AND label.is_deleted = 0
+        LEFT OUTER JOIN assignee ON issue.id = assignee.issue_id
+        LEFT OUTER JOIN member ON assignee.member_id = member.id
+        LEFT OUTER JOIN issue_comment ON issue.id = issue_comment.issue_id AND issue_comment.is_deleted = 0
+        WHERE issue.is_deleted = 0
             <if test="isOpen != null">
                 <trim prefix="AND">
                     issue.is_open = #{isOpen}
@@ -59,20 +109,34 @@
             </if>
             <if test="assigneeIds != null and assigneeIds.size() > 0">
                 <trim prefix="AND">
-                    assignee.member_id IN
+                    issue.id IN (
+                        SELECT issue_id
+                        FROM assignee
+                        WHERE member_id IN
+                        <foreach collection="assigneeIds" item="assigneeId" separator="," open="(" close=")">
+                            #{assigneeId}
+                        </foreach>
+                        GROUP BY issue_id
+                        HAVING COUNT(DISTINCT member_id) = ${assigneeIds.size}
+                    )
                 </trim>
-                <foreach collection="assigneeIds" item="assigneeId" separator="," open="(" close=")">
-                    #{assigneeId}
-                </foreach>
             </if>
             <if test="labelIds != null and labelIds.size() > 0">
                 <trim prefix="AND">
-                    issue_label_mapping.label_id IN
+                    issue.id IN (
+                        SELECT issue_id
+                        FROM assigned_label
+                        WHERE label_id IN
+                        <foreach collection="labelIds" item="labelId" separator="," open="(" close=")">
+                            #{labelId}
+                        </foreach>
+                        GROUP BY issue_id
+                        HAVING COUNT(DISTINCT label_id) = ${labelIds.size}
+                    )
                 </trim>
-                <foreach collection="labelIds" item="labelId" separator="," open="(" close=")">
-                    #{labelId}
-                </foreach>
+
             </if>
+
             <if test="milestoneId != null">
                 <trim prefix="AND">
                     issue.milestone_id = #{milestoneId}
@@ -88,7 +152,48 @@
                     issue_comment.author_id = #{commentAuthorId}
                 </trim>
             </if>
-        </where>
-        ORDER BY issue.id, label.id
+        ORDER BY issue.id desc, label.id
+    </select>
+
+    <select id="findById" resultMap="issueDetailResultMap" parameterType="Long">
+        SELECT DISTINCT issue.id as issue_id,
+                        issue.title as issue_title,
+                        issue.content as issue_content,
+                        issue.is_open as issue_is_open,
+                        issue.create_at as issue_create_at,
+                        author.id as author_id,
+                        author.nickname as author_nickname,
+                        author.profile_image_url as author_profile_image_url,
+                        milestone.id as milestone_id,
+                        milestone.title as milestone_title,
+                        milestone.progress as milestone_progress,
+                        label.id as label_id,
+                        label.title as label_title,
+                        label.color as label_color,
+                        label.description as label_description,
+                        member.id as assignees_id,
+                        member.nickname as assignees_nickname,
+                        member.profile_image_url as assignees_profile_image_url,
+                        issue_comment.id as issue_comment_id,
+                        issue_comment.content as issue_comment_content,
+                        issue_comment.create_at as issue_comment_create_at,
+                        issue_comment_author.id as issue_comment_author_id,
+                        issue_comment_author.nickname as issue_comment_author_nickname,
+                        issue_comment_author.profile_image_url as issue_comment_author_profile_image_url
+            FROM issue
+           INNER JOIN member author ON author.id = issue.author_id
+            LEFT OUTER JOIN ( SELECT milestone.id, milestone.title, milestone.is_deleted, (SUM(issue.is_open = 0) / COUNT(issue.id) * 100) AS progress
+                                FROM milestone
+                               INNER JOIN issue ON issue.milestone_id = milestone.id
+                               GROUP BY milestone.id, milestone.title) as milestone ON issue.milestone_id = milestone.id AND milestone.is_deleted = 0
+            LEFT OUTER JOIN assigned_label ON issue.id = assigned_label.issue_id
+            LEFT OUTER JOIN label ON assigned_label.label_id = label.id AND label.is_deleted = 0
+            LEFT OUTER JOIN assignee ON issue.id = assignee.issue_id
+            LEFT OUTER JOIN member ON assignee.member_id = member.id
+            LEFT OUTER JOIN issue_comment ON issue.id = issue_comment.issue_id
+            LEFT OUTER JOIN member issue_comment_author ON issue_comment.author_id = issue_comment_author.id AND issue_comment.is_deleted = 0
+           WHERE issue.is_deleted = 0
+             AND issue.id = #{id}
+           ORDER BY issue.id desc, label.id, issue_comment.id, member.id
     </select>
 </mapper>

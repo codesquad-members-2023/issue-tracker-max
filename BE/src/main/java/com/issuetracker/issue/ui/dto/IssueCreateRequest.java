@@ -1,6 +1,9 @@
 package com.issuetracker.issue.ui.dto;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 
@@ -14,7 +17,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 public class IssueCreateRequest {
 
@@ -31,6 +33,15 @@ public class IssueCreateRequest {
 
 	private Long milestoneId;
 
+	public IssueCreateRequest(String title, String content, List<Long> assigneeIds, List<Long> labelIds,
+		Long milestoneId) {
+		this.title = title;
+		this.content = content;
+		this.assigneeIds = converterNonNullList(assigneeIds);
+		this.labelIds = converterNonNullList(labelIds);
+		this.milestoneId = milestoneId;
+	}
+
 	public IssueCreateInputData toIssueCreateData(Long authorId) {
 		return new IssueCreateInputData(
 			title,
@@ -40,5 +51,15 @@ public class IssueCreateRequest {
 			milestoneId,
 			authorId
 		);
+	}
+
+	private List<Long> converterNonNullList(List<Long> ids) {
+		if (Objects.isNull(ids)) {
+			ids = Collections.emptyList();
+		}
+
+		return ids.stream()
+			.filter(Objects::nonNull)
+			.collect(Collectors.toUnmodifiableList());
 	}
 }

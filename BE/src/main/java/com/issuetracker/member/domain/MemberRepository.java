@@ -7,4 +7,6 @@ public interface MemberRepository {
 	boolean existById(Long id);
 
 	boolean existByIds(List<Long> Ids);
+
+	List<Member> search();
 }

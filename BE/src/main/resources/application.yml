@@ -1,14 +1,23 @@
 spring:
   profiles:
     group:
-      prod: prodDB, common
-      test: testDB, common
+      prod: prodDB, awsConfig, common
+      test: testDB, awsConfig, common
     active: prod
 ---
 spring:
   config:
     activate:
       on-profile: common
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 mybatis:
   type-aliases-package: com.issuetracker.issue.domain, com.issuetracker.label.domain, com.issuetracker.milestone.domain, com.issuetracker.member.domain

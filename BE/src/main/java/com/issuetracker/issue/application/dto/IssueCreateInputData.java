@@ -2,16 +2,16 @@ package com.issuetracker.issue.application.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.issuetracker.issue.domain.assignedlabel.AssignedLabel;
+import com.issuetracker.issue.domain.assignee.Assignee;
 import com.issuetracker.issue.domain.Issue;
-import com.issuetracker.label.domain.Label;
-import com.issuetracker.member.domain.Member;
-import com.issuetracker.milestone.domain.Milestone;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public class IssueCreateInputData {
 
@@ -20,33 +20,34 @@ public class IssueCreateInputData {
 	private List<Long> assigneeIds;
 	private List<Long> labelIds;
 	private Long milestoneId;
-	private Long author;
+	private Long authorId;
 
-	public IssueCreateInputData(String title, String content, List<Long> assigneeIds, List<Long> labelIds,
-		Long milestoneId, Long author) {
-		this.title = title;
-		this.content = content;
-		this.assigneeIds = getNonNullLabels(assigneeIds);
-		this.labelIds = getNonNullLabels(labelIds);
-		this.milestoneId = milestoneId;
-		this.author = author;
-	}
-
-	public Issue toIssue(Member author, List<Label> labels, Milestone milestone, LocalDateTime now) {
+	public Issue toIssue(LocalDateTime now) {
 		return Issue.builder()
 			.title(title)
 			.content(content)
 			.isOpen(true)
 			.createAt(now)
-			.author(author)
-			.labels(labels)
-			.milestone(milestone)
+			.authorId(authorId)
+			.milestoneId(milestoneId)
 			.build();
 	}
 
-	private List<Long> getNonNullLabels(List<Long> ids) {
-		return ids.stream()
-			.filter(Objects::nonNull)
+	public List<Assignee> toAssignees(Long issueId) {
+		return assigneeIds.stream()
+			.map(memberId -> Assignee.builder()
+				.issueId(issueId)
+				.memberId(memberId)
+				.build())
+			.collect(Collectors.toUnmodifiableList());
+	}
+
+	public List<AssignedLabel> toAssignedLabel(Long issueId) {
+		return labelIds.stream()
+			.map(labelId -> AssignedLabel.builder()
+				.issueId(issueId)
+				.labelId(labelId)
+				.build())
 			.collect(Collectors.toUnmodifiableList());
 	}
 }

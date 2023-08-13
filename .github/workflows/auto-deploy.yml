@@ -11,9 +11,9 @@ permissions:
 env:
   APPLICATION_PROD_DB_FILE_PATH: ./BE/src/main/resources/application-prodDB.yml
   APPLICATION_TEST_DB_FILE_PATH: ./BE/src/main/resources/application-testDB.yml
+  APPLICATION_AWS_CONFIG_PATH: ./BE/src/main/resources/application-awsConfig.yml
   DEPLOYMENT_APPLICATION_NAME: issue
   DEPLOYMENT_GROUP_NAME: issue-group
-  S3_BUCKET_NAME: issue-mandu
   AWS_REGION: ap-northeast-2
 
 jobs:
@@ -44,6 +44,12 @@ jobs:
         run: touch ${{ env.APPLICATION_TEST_DB_FILE_PATH }}
         shell: bash
       - run: echo "${{ secrets.APPLICATION_TEST_DB }}" > ${{ env.APPLICATION_TEST_DB_FILE_PATH }}
+        shell: bash
+
+      - name: Create application-awsConfig.yml
+        run: touch ${{ env.APPLICATION_AWS_CONFIG_PATH }}
+        shell: bash
+      - run: echo "${{ secrets.APPLICATION_AWS_CONFIG }}" > ${{ env.APPLICATION_AWS_CONFIG_PATH }}
         shell: bash
 
       - name: Grant execute gradlew
@@ -78,7 +84,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Send zip file s3
-        run: aws s3 cp --region ${{ env.AWS_REGION }} ./$GITHUB_SHA.zip s3://${{ env.S3_BUCKET_NAME }}/$GITHUB_SHA.zip
+        run: aws s3 cp --region ${{ env.AWS_REGION }} ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/$GITHUB_SHA.zip
         shell: bash
 
       - name: Deploy CodeDeploy
@@ -86,5 +92,5 @@ jobs:
           --application-name ${{ env.DEPLOYMENT_APPLICATION_NAME }}
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name ${{ env.DEPLOYMENT_GROUP_NAME }}
-          --s3-location bucket=${{ env.S3_BUCKET_NAME }},bundleType=zip,key=$GITHUB_SHA.zip
+          --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=$GITHUB_SHA.zip
         shell: bash

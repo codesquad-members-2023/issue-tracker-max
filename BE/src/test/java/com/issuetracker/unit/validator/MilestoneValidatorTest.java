@@ -10,10 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.issuetracker.config.exception.MilestoneNotFoundException;
+import com.issuetracker.config.exception.CustomHttpException;
 import com.issuetracker.milestone.application.MilestoneValidator;
 import com.issuetracker.milestone.domain.MilestoneRepository;
-import com.issuetracker.milestone.infrastructure.JdbcMilestoneRepository;
 import com.issuetracker.util.MockTest;
 
 @MockTest
@@ -47,7 +46,7 @@ public class MilestoneValidatorTest {
 		given(milestoneRepository.existById(any())).willReturn(false);
 
 		// then
-		Assertions.assertThrows(MilestoneNotFoundException.class,
+		Assertions.assertThrows(CustomHttpException.class,
 			() -> milestoneValidator.verifyMilestone(1L));
 	}
 }

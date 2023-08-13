@@ -15,20 +15,26 @@ public class Milestone {
 	private String title;
 	private String description;
 	private LocalDate deadline;
-	private Boolean isOpen;
+	private boolean isOpen;
+	private Integer progress;
+	private Integer openIssueCount;
+	private Integer closeIssueCount;
 
 	@Builder
-	private Milestone(Long id, String title, String description, LocalDate deadline, Boolean isOpen) {
+	public Milestone(Long id, String title, String description, LocalDate deadline, boolean isOpen, Integer progress,
+		Integer openIssueCount, Integer closeIssueCount) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.deadline = deadline;
 		this.isOpen = isOpen;
+		this.progress = progress;
+		this.openIssueCount = openIssueCount;
+		this.closeIssueCount = closeIssueCount;
 	}
 
-	public static Milestone createInstanceById(Long id) {
-		return Milestone.builder()
-			.id(id)
-			.build();
+	public boolean getIsOpen() {
+		return isOpen;
 	}
+
 }

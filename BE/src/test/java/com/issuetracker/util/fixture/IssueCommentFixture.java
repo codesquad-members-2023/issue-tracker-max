@@ -2,6 +2,7 @@ package com.issuetracker.util.fixture;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public enum IssueCommentFixture {
@@ -58,6 +59,12 @@ public enum IssueCommentFixture {
 			.filter(ic -> ic.id == id)
 			.findAny()
 			.orElseThrow();
+	}
+
+	public static List<IssueCommentFixture> findByIssueId(Long issueId) {
+		return Arrays.stream(values())
+			.filter(i -> i.issueId == issueId)
+			.collect(Collectors.toUnmodifiableList());
 	}
 
 	public static String createInsertSQL() {
