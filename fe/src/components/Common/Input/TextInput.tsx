@@ -52,9 +52,10 @@ export const TextInput: React.FC<InputProps> = ({
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-    if (inputValue) {
-      onValueChange?.(event.target.value);
+    const newValue = event.target.value;
+    setInputValue(newValue);
+    if (newValue) {
+      onValueChange?.(newValue);
       setCurrentState("active");
       setTypingState("onTyping");
     } else {

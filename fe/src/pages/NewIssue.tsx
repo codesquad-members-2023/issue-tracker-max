@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextInput } from "components/Common/Input/TextInput";
 import { TextArea } from "components/Common/TextArea/TextArea";
@@ -10,6 +11,8 @@ import UserTestProfile from "assets/img/profile_test.svg";
 
 export const NewIssuePage = () => {
   const navigate = useNavigate();
+  const [issueTitleInput, setIssueTitleInput] = useState("");
+  console.log(issueTitleInput);
 
   return (
     <Layout>
@@ -18,7 +21,11 @@ export const NewIssuePage = () => {
       <ContentBox>
         <img src={UserTestProfile} width={32} />
         <FormBox>
-          <TextInput $labelText="제목" />
+          <TextInput
+            $labelText="제목"
+            value={issueTitleInput}
+            onValueChange={setIssueTitleInput}
+          />
           <div style={{ height: "448px" }}>
             <NewIssueTextArea labelText="코멘트를 입력하세요" />
           </div>
@@ -34,7 +41,7 @@ export const NewIssuePage = () => {
         <Button
           size="L"
           variant="contained"
-          disabled
+          disabled={!issueTitleInput}
           onClick={() => navigate("/")}
         >
           완료
