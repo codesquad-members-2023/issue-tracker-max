@@ -3,18 +3,19 @@ import { ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
 import { darkTheme } from './theme';
 import GlobalStyle from './style/Global';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Components from './pages/Components';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Main from './pages/Main';
+import AddIssue from './pages/AddIssue';
 
 import LogoDarkLarge from './asset/logo/logo_dark_large.svg';
 import LogoDarkMedium from './asset/logo/logo_dark_medium.svg';
 import LogoLightLarge from './asset/logo/logo_light_large.svg';
 import LogoLightMedium from './asset/logo/logo_light_medium.svg';
 import { AppContext } from './main';
-import AuthenticatedRoute from './routes/AuthenticatedRoute';
+import RequireAuth from './routes/RequireAuth';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -36,26 +37,18 @@ function App() {
   return (
     <ThemeProvider theme={isLight ? lightTheme : darkTheme}>
       <GlobalStyle />
-      {/* <ButtonSmall type="button" ghost flexible onClick={changeTheme}>
-        Change Theme
-      </ButtonSmall> */}
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <AuthenticatedRoute>
-                <Routes>
-                  <Route path='/' element={<Main />} />
-                </Routes>
-              </AuthenticatedRoute>
-            }
-          />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/component" element={<Components />} />
-        </Routes>
-      </Router>
+      <Routes>
+        {/* public routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/component" element={<Components />} />
+
+        {/* protected routes */}
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<Main />} />
+          <Route path="/addIssue" element={<AddIssue />} />
+        </Route>
+      </Routes>
     </ThemeProvider>
   );
 }

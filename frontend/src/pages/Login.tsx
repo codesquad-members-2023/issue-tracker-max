@@ -1,45 +1,63 @@
 import { useContext } from 'react';
 import { styled } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import axios from '../api/axios';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AppContext } from '../main';
+import useAuth from '../hooks/useAuth';
 import ContextLogo from '../types/ContextLogo';
 import TextInput from '../components/common/TextInput';
 import ButtonLarge from '../components/common/button/ButtonLarge';
 import Button from '../components/common/button/BaseButton';
 
 export default function Login() {
-  const { util, control } = useContext(AppContext);
+  const { login } = useAuth();
+  const { util } = useContext(AppContext);
   const logo = (util.getLogoByTheme() as ContextLogo).large;
   const navigate = useNavigate();
-  const login = (id: string, password: string) => {
-    (async function () {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id, password }),
-      });
-      const data = await res.json();
+  const location = useLocation();
+  // 로그인 화면 넘어오기 전 페이지를 기억해서 로그인 성공 시 그 페이지로 이동
+  const from = location.state?.from?.pathname || '/';
+  const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${
+    import.meta.env.VITE_CLIENT_ID
+  }`;
+
+  const handleLogin = async (userId: string, password: string) => {
+    try {
+      const res = await axios.post(
+        '/api/login',
+        JSON.stringify({ email: userId, password }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
 
       if (res.status === 200) {
-        localStorage.setItem('accessToken', data.messages.accessToken);
-        localStorage.setItem('refreshToken', data.messages.refreshToken);
-        control.loginCheck();
+        localStorage.setItem('accessToken', res.data.messages.accessToken);
+        localStorage.setItem('refreshToken', res.data.messages.refreshToken);
+        login({
+          userId: userId,
+          pwd: password,
+          userName: res.data.messages.userName,
+          accessToken: res.data.messages.accessToken,
+        });
       }
-      navigate('/');
-    })();
+
+      navigate(from, { replace: true });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const { id, password } = Object.fromEntries(formData) as {
-      id: string;
+    const { userId, password } = Object.fromEntries(formData) as {
+      userId: string;
       password: string;
     };
-    login(id, password);
+    handleLogin(userId, password);
   };
 
   return (
@@ -49,14 +67,21 @@ export default function Login() {
         <img src={logo} alt="" />
         <figcaption className="blind">이슈트래커</figcaption>
       </Logo>
-      <GitHubOAuthButton type="button" outline>
+      <GitHubOAuthButton
+        type="button"
+        outline
+        onClick={() => {
+          window.location.assign(
+            GITHUB_LOGIN_URL + `&redirect_uri=localhost:5173`
+          );
+        }}>
         GitHub 계정으로 로그인
       </GitHubOAuthButton>
       <span>or</span>
       <LoginForm onSubmit={handleSubmit}>
         <TextInput
           id="id"
-          name="id"
+          name="userId"
           size="tall"
           labelName="아이디"
           placeholder="아이디"
@@ -65,6 +90,7 @@ export default function Login() {
           id="password"
           name="password"
           size="tall"
+          type="password"
           labelName="비밀번호"
           placeholder="비밀번호"
         />

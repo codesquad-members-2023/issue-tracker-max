@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import { worker } from './mocks/browser';
-
-export const API_URL = import.meta.env.DEV ? '' : import.meta.env.VITE_API_URL;
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/AuthProvider.tsx';
 
 if (import.meta.env.DEV) {
   worker.start({
@@ -20,8 +20,12 @@ export const AppContext = React.createContext(appContext);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AppContext.Provider value={appContext}>
-      <App />
-    </AppContext.Provider>
+    <BrowserRouter>
+      <AppContext.Provider value={appContext}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </AppContext.Provider>
+    </BrowserRouter>
   </React.StrictMode>
 );

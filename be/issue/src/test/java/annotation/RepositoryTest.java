@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 @JdbcTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Sql(scripts = {"classpath:schema/schema.sql"})
+@Sql(scripts = {"classpath:schema.sql"})
 public @interface RepositoryTest {
 
 }

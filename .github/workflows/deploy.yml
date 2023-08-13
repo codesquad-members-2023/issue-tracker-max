@@ -1,0 +1,111 @@
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: release
+
+env:
+  APPLICATION_YML_FILE_PATH: ./src/main/resources/application.yml
+  AWS_REGION: ap-northeast-2
+  S3_BUCKET_NAME: issue-tracker-s3-bucket
+  CODE_DEPLOY_APPLICATION_NAME: issue-tracker-codedeploy-app
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: issuetracker-codedeploy-deployment-group
+
+permissions:
+  contents: read
+
+jobs:
+  app-build-and-deploy:
+    name: BE Deploy
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./be/issue
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Output application information
+        run: echo '${{ secrets.APPLICATION }}' > '${{ env.APPLICATION_YML_FILE_PATH }}'
+
+      - name: Build with Gradle
+        run: |
+          chmod +x gradlew
+          ./gradlew clean build -x test
+
+      - name: Make zip file
+        run: zip -r ./$GITHUB_SHA.zip .
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ${{env.AWS_REGION}}
+
+      - name: Upload to S3
+        run: aws s3 cp
+          --region '${{ env.AWS_REGION }}' ./$GITHUB_SHA.zip
+          s3://$S3_BUCKET_NAME/Build/$GITHUB_SHA.zip
+
+      - name: Code Deploy
+        run: aws deploy create-deployment
+          --application-name $CODE_DEPLOY_APPLICATION_NAME
+          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --deployment-group-name $CODE_DEPLOY_DEPLOYMENT_GROUP_NAME
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=Build/$GITHUB_SHA.zip
+
+  web-build-and-deploy:
+    name: FE Deploy
+    needs: app-build-and-deploy
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Build with npm
+        run: |
+          npm install
+          npm run build
+
+      - name: Make zip file
+        run: zip -r ./react-build.zip .
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ${{env.AWS_REGION}}
+
+      - name: Upload to S3
+        run: aws s3 cp
+          --region ${{ env.AWS_REGION }} ./react-build.zip
+          s3://$S3_BUCKET_NAME/Build/react-build.zip
+
+      - name: Code Deploy
+        run: aws deploy create-deployment
+          --application-name $CODE_DEPLOY_APPLICATION_NAME
+          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --deployment-group-name $CODE_DEPLOY_DEPLOYMENT_GROUP_NAME
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=Build/react-build.zip
