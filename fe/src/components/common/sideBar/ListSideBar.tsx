@@ -70,7 +70,9 @@ export const ListSideBar: React.FC<Props> = ({
     null | 'users' | 'labels' | 'milestones'
   >(null);
 
+  // todo
   const [isFetched, setIsFetched] = useState({
+    //ref 리렌더가 필요x
     users: false,
     labels: false,
     milestones: false,
