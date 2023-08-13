@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/issues")
+@RequestMapping("/api/issues")
 public class IssueController {
 	private static final String MEMBER_ID = "memberId";
 	private final IssueService issueService;
@@ -37,12 +37,13 @@ public class IssueController {
 		@RequestBody
 		@Valid IssuePostRequest request, HttpServletRequest servletRequest) {
 		Integer memberId = (Integer)servletRequest.getAttribute(MEMBER_ID);
-		return ApiResponse.success(IssuePostResponse.from(issueService.post(request, memberId.longValue())));
+		return ApiResponse.success(issueService.post(request, memberId.longValue()));
 	}
 
 	@PatchMapping("/status")
-	public ApiResponse<Void> updateStatus(@RequestBody IssuesStatusRequest request) {
-		issueService.updateStatus(request);
+	public ApiResponse<Void> updateStatus(@RequestBody IssuesStatusRequest request, HttpServletRequest servletRequest) {
+		Integer memberId = (Integer)servletRequest.getAttribute(MEMBER_ID);
+		issueService.updateStatus(request, memberId.longValue());
 		return ApiResponse.success();
 	}
 

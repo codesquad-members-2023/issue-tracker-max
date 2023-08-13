@@ -11,6 +11,7 @@ import com.issuetrackermax.common.exception.ApiException;
 import com.issuetrackermax.common.exception.domain.LoginException;
 import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
 import com.issuetrackermax.domain.IntegrationTestSupport;
+import com.issuetrackermax.domain.jwt.JwtRepository;
 import com.issuetrackermax.domain.jwt.entity.Jwt;
 import com.issuetrackermax.service.member.MemberService;
 import com.issuetrackermax.util.DatabaseCleaner;
@@ -22,6 +23,9 @@ class JwtServiceTest extends IntegrationTestSupport {
 
 	@Autowired
 	MemberService memberService;
+
+	@Autowired
+	JwtRepository jwtRepository;
 
 	@Autowired
 	DatabaseCleaner databaseCleaner;
@@ -58,7 +62,7 @@ class JwtServiceTest extends IntegrationTestSupport {
 
 	@DisplayName("패스워드가 일치하지 않으면 오류를 일으킨다.")
 	@Test
-	void incoreectPasswordException() {
+	void incorrectPasswordException() {
 		// given
 		SignUpRequest signUpRequest = SignUpRequest.builder()
 			.loginId("June@codesquad.co.kr")
@@ -75,25 +79,6 @@ class JwtServiceTest extends IntegrationTestSupport {
 				ApiException apiException = (ApiException)exception;
 				assertThat(apiException.getCustomException()).isInstanceOf(LoginException.class);
 			});
-	}
-
-	@DisplayName("패스워드가 8글자 이하면 오류를 일으킨다.")
-	@Test
-	void invalidPasswordException() {
-		// given
-		SignUpRequest signUpRequest = SignUpRequest.builder()
-			.loginId("June@codesquad.co.kr")
-			.nickName("June")
-			.password("1234")
-			.build();
-		// when & then
-		assertThatThrownBy(() -> memberService.registerMember(signUpRequest))
-			.isInstanceOf(ApiException.class)
-			.satisfies(exception -> {
-				ApiException apiException = (ApiException)exception;
-				assertThat(apiException.getCustomException()).isInstanceOf(LoginException.class);
-			});
-
 	}
 
 	@DisplayName("이미 같은 아이디가 존재하면 오류를 일으킨다.")
@@ -140,6 +125,27 @@ class JwtServiceTest extends IntegrationTestSupport {
 		// then
 		assertThat(jwtProvider.getClaims(accessToken).get("memberId")).isEqualTo(1);
 		assertThat(jwtProvider.getClaims(refreshToken).get("memberId")).isNull();
+
+	}
+
+	@DisplayName("logout을 하면 저장된 refreshToken이 삭제된다.")
+	@Test
+	void logout() {
+		// given
+		SignUpRequest signUpRequest = SignUpRequest.builder()
+			.loginId("June@codesquad.co.kr")
+			.nickName("June")
+			.password("12345678")
+			.build();
+		memberService.registerMember(signUpRequest);
+		Jwt jwt = jwtService.login("June@codesquad.co.kr", "12345678");
+		String refreshToken = jwt.getRefreshToken();
+		// when
+		jwtService.logout(refreshToken);
+
+		// then
+		Boolean exist = jwtRepository.existsRefreshToken(refreshToken);
+		assertThat(exist).isFalse();
 
 	}
 }

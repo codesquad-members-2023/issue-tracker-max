@@ -29,11 +29,12 @@ public class IssueDetailsResponse {
 	private List<Comment> comments;
 
 	@Builder
-	public IssueDetailsResponse(IssueResultVO resultVO, History history, List<Comment> comments) {
+	public IssueDetailsResponse(IssueResultVO resultVO, History history, List<Comment> comments,
+		List<LabelResponse> labels) {
 		this.id = resultVO.getId();
 		this.isOpen = resultVO.getIsOpen();
 		this.title = resultVO.getTitle();
-		this.labels = LabelResponse.convertToLabelResponseList(resultVO.getLabelIds(), resultVO.getLabelTitles());
+		this.labels = labels;
 		this.assignees = AssigneeResponse.convertToAssigneeResponseList(resultVO.getAssigneeIds(),
 			resultVO.getAssigneeNames());
 		this.writer = WriterResponse.builder()

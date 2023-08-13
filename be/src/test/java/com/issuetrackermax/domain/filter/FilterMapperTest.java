@@ -147,15 +147,8 @@ class FilterMapperTest extends IntegrationTestSupport {
 		Issue issue = makeIssue(issueIsOpen, issueTitle, 1L, 1L);
 		Long issueId = issueRepository.save(issue);
 
-		IssueWithLabel issueWithLabel1 = IssueWithLabel.builder()
-			.issueId(issueId)
-			.labelId(labelId1)
-			.build();
-
-		IssueWithLabel issueWithLabel2 = IssueWithLabel.builder()
-			.issueId(issueId)
-			.labelId(labelId2)
-			.build();
+		IssueWithLabel issueWithLabel1 = makeIssueWithLabel(labelId1, issueId);
+		IssueWithLabel issueWithLabel2 = makeIssueWithLabel(labelId2, issueId);
 
 		Long issueLabelId1 = issueLabelRepository.save(issueWithLabel1);
 		Long issueLabelId2 = issueLabelRepository.save(issueWithLabel2);
@@ -166,9 +159,9 @@ class FilterMapperTest extends IntegrationTestSupport {
 		List<FilterResultVO> filteredList = filterMapper.getFilteredList(information);
 		// then
 		assertThat(filteredList).hasSize(1)
-			.extracting("title", "isOpen", "labelIds", "labelTitles")
+			.extracting("title", "isOpen", "labelIds")
 			.containsExactlyInAnyOrder(
-				tuple(issueTitle, issueIsOpen, "1,2", "label_title1,label_title2")
+				tuple(issueTitle, issueIsOpen, "1,2")
 			);
 
 	}

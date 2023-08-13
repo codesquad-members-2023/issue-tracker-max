@@ -13,10 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.PatternMatchUtils;
+import org.springframework.web.cors.CorsUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.issuetrackermax.common.exception.response.ErrorResponse;
 import com.issuetrackermax.common.exception.domain.JwtException;
+import com.issuetrackermax.common.exception.response.ErrorResponse;
 import com.issuetrackermax.service.jwt.JwtProvider;
 
 import io.jsonwebtoken.Claims;
@@ -26,8 +27,8 @@ public class JwtAuthorizationFilter implements Filter {
 	private static final String TOKEN_PREFIX = "Bearer ";
 	private static final String HEADER_AUTHORIZATION = "Authorization";
 	private static final String MEMBER_ID = "memberId";
-	private static final String[] whiteListUris = new String[] {"/h2-console/**", "/signin", "/signup",
-		"/reissue-access-token", "/oauth/**", "/redirect/**"};
+	private static final String[] whiteListUris = {"/h2-console/**", "/api/signin", "/api/signup",
+		"/api/reissue-access-token", "/api/oauth/**", "/api/redirect/**"};
 
 	private final JwtProvider jwtProvider;
 	private final ObjectMapper objectMapper;
@@ -42,7 +43,10 @@ public class JwtAuthorizationFilter implements Filter {
 		throws ServletException, IOException {
 
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-
+		if (CorsUtils.isPreFlightRequest(httpServletRequest)) {
+			chain.doFilter(request, response);
+			return;
+		}
 		if (whiteListCheck(httpServletRequest.getRequestURI())) {
 			chain.doFilter(request, response);
 			return;

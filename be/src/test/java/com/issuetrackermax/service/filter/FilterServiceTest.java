@@ -19,7 +19,6 @@ import com.issuetrackermax.domain.assignee.entity.Assignee;
 import com.issuetrackermax.domain.issue.IssueLabelRepository;
 import com.issuetrackermax.domain.issue.IssueRepository;
 import com.issuetrackermax.domain.issue.entity.Issue;
-import com.issuetrackermax.domain.issue.entity.IssueWithLabel;
 import com.issuetrackermax.domain.label.LabelRepository;
 import com.issuetrackermax.domain.label.entity.Label;
 import com.issuetrackermax.domain.member.MemberRepository;
@@ -69,18 +68,12 @@ class FilterServiceTest extends IntegrationTestSupport {
 		Issue issue = makeIssue(true, "issue_title", milestoneId, juneId);
 		Long issueId = issueRepository.save(issue);
 
-		Label label = makeLabel("label1", "label_description", "0#9999", "0#9999");
+		Label label = makeLabel("label1", "label_description", "0#1111", "0#3333");
 		Long labelId = labelRepository.save(label);
-		Label label2 = makeLabel("label2", "label_description", "0#9999", "0#9999");
+		Label label2 = makeLabel("label2", "label_description", "0#1111", "0#3332");
 		Long labelId2 = labelRepository.save(label2);
-		Long issueLabelId = issueLabelRepository.save(IssueWithLabel.builder()
-			.labelId(labelId)
-			.issueId(issueId)
-			.build());
-		Long issueLabelId2 = issueLabelRepository.save(IssueWithLabel.builder()
-			.labelId(labelId2)
-			.issueId(issueId)
-			.build());
+		Long issueLabelId = issueLabelRepository.save(makeIssueWithLabel(labelId, issueId));
+		Long issueLabelId2 = issueLabelRepository.save(makeIssueWithLabel(labelId2, issueId));
 
 		Assignee assignee = makeAssignee(issueId, juneId);
 		Long assigneeId = assigneeRepository.save(assignee);
@@ -98,7 +91,7 @@ class FilterServiceTest extends IntegrationTestSupport {
 		// then
 		assertAll(
 			() -> assertThat(mainPageIssue.getLabelCount()).isEqualTo(2L),
-			() -> assertThat(mainPageIssue.getMileStoneCount()).isEqualTo(1L),
+			() -> assertThat(mainPageIssue.getMilestoneCount()).isEqualTo(1L),
 			() -> assertThat(mainPageIssue.getOpenIssueCount()).isEqualTo(1L),
 			() -> assertThat(mainPageIssue.getClosedIssueCount()).isEqualTo(0L),
 			() -> assertThat(issues.get(0).getId()).isEqualTo(issueId),
@@ -106,8 +99,12 @@ class FilterServiceTest extends IntegrationTestSupport {
 			() -> assertThat(issues.get(0).getTitle()).isEqualTo("issue_title"),
 			() -> assertThat(issues.get(0).getLabels().get(0).getId()).isEqualTo(labelId),
 			() -> assertThat(issues.get(0).getLabels().get(0).getTitle()).isEqualTo("label1"),
+			() -> assertThat(issues.get(0).getLabels().get(0).getTextColor()).isEqualTo("0#1111"),
+			() -> assertThat(issues.get(0).getLabels().get(0).getBackgroundColor()).isEqualTo("0#3333"),
 			() -> assertThat(issues.get(0).getLabels().get(1).getId()).isEqualTo(labelId2),
 			() -> assertThat(issues.get(0).getLabels().get(1).getTitle()).isEqualTo("label2"),
+			() -> assertThat(issues.get(0).getLabels().get(1).getTextColor()).isEqualTo("0#1111"),
+			() -> assertThat(issues.get(0).getLabels().get(1).getBackgroundColor()).isEqualTo("0#3332"),
 			() -> assertThat(issues.get(0).getAssignees().get(0).getId()).isEqualTo(juneId),
 			() -> assertThat(issues.get(0).getAssignees().get(0).getName()).isEqualTo("June"),
 			() -> assertThat(issues.get(0).getAssignees().get(1).getId()).isEqualTo(movieId),

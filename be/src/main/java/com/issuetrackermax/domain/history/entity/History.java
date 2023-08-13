@@ -2,6 +2,8 @@ package com.issuetrackermax.domain.history.entity;
 
 import java.time.LocalDateTime;
 
+import com.issuetrackermax.controller.history.dto.HistoryRequest;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,5 +22,13 @@ public class History {
 		this.issueId = issueId;
 		this.issueIsOpen = issueIsOpen;
 		this.modifiedAt = modifiedAt;
+	}
+
+	public static History from(HistoryRequest historyRequest) {
+		return History.builder()
+			.issueId(historyRequest.getIssueId())
+			.issueIsOpen(historyRequest.getIssueIsOpen())
+			.editor(historyRequest.getEditor())
+			.build();
 	}
 }
