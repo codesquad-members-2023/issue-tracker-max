@@ -23,8 +23,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Long save(HttpServletRequest request, Long issueId, CommentRequestDto commentRequestDto) {
-        Long userId = Long.parseLong(String.valueOf(request.getAttribute("userId")));
+    public Long save(Long userId, Long issueId, CommentRequestDto commentRequestDto) {
         return commentRepository.create(userId, issueId, commentRequestDto)
                 .orElseThrow(() -> new CustomException(ErrorCode.DB_EXCEPTION));
     }
