@@ -24,7 +24,7 @@ VALUES (1, 2, '2번이슈', '내용2');
 INSERT INTO issues (milestone_id, user_id, title, content)
 VALUES (2, 3, '3번이슈', '내용3');
 INSERT INTO issues (milestone_id, user_id, title, content, is_closed)
-VALUES (1, 1, '1번이슈', '닫힌이슈', false);
+VALUES (1, 1, '1번이슈', '닫힌이슈', true);
 
 -- milestone
 INSERT INTO milestones (name, description, done_date)
