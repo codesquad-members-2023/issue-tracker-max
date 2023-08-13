@@ -38,7 +38,7 @@ export default function Components() {
           BUTTON
         </ButtonSmall>
         <ColorCodeInput label="배경색" />
-        <TabButton />
+        {/* <TabButton />
         <InformationTag size="medium" iconName="alertCircle">
           Label
         </InformationTag>
@@ -74,7 +74,7 @@ export default function Components() {
           comment="오늘 점심 뭐 먹죠?"
         />
         <SideBar />
-        <FilterBar />
+        <FilterBar /> */}
       </Wrapper>
     </StyledComponents>
   );
