@@ -38,7 +38,11 @@ export default function TextInput({
   return (
     <Container>
       <InputWrapper isFocus={isFocus} $size={size} $direction={direction}>
-        {isFocus && <Label htmlFor={id}>{label}</Label>}
+        {isFocus && (
+          <Label htmlFor={id} $direction={direction}>
+            {label}
+          </Label>
+        )}
         <Input
           id={id}
           inputType={inputType}
@@ -68,6 +72,7 @@ const InputWrapper = styled.div<{
   padding: 8px 16px;
   display: flex;
   justify-content: center;
+  align-items: ${({ $direction }) => ($direction === "row" ? "center" : "")};
   flex-direction: ${({ $direction }) =>
     $direction === "column" ? "column" : "row"};
   width: 100%;
@@ -79,7 +84,8 @@ const InputWrapper = styled.div<{
   border-radius: ${({ theme }) => theme.radius.large};
 `;
 
-const Label = styled.label`
+const Label = styled.label<{ $direction: "row" | "column" }>`
+  width: ${({ $direction }) => ($direction === "row" ? "64px" : "")};
   font: ${({ theme }) => theme.font.displayMedium12};
   color: ${({ theme }) => theme.colorSystem.neutral.text.weak};
 `;

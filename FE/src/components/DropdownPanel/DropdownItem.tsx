@@ -1,37 +1,21 @@
 import { styled } from "styled-components";
 import UserProfileButton from "../UserProfileButton/UserProfileButton";
-import { useNavigate, useParams } from "react-router-dom";
 
 type Props = {
-  id: number;
   userImg?: string;
   itemName: string;
-  closeDropdown(): void;
+  onClick(): void;
 };
 
 export default function DropdownItem({
-  id,
-  userImg = "/logo/profile.jpg",
+  userImg = "",
   itemName,
-  closeDropdown,
+  onClick,
 }: Props) {
-  const navigate = useNavigate();
-  const { filter } = useParams();
-  const checkAssignee = () => {
-    navigate(`/issues/${filter}&assigneeIds=${id}`);
-    closeDropdown();
-  };
-
   return (
-    <Container>
+    <Container onClick={onClick}>
       <Info>
-        {userImg && (
-          <UserProfileButton
-            src={userImg}
-            size={"small"}
-            onClick={checkAssignee}
-          />
-        )}
+        {userImg && <UserProfileButton src={userImg} size={"small"} />}
         <Label>{itemName}</Label>
       </Info>
       <Checkbox type={"checkbox"}></Checkbox>
@@ -39,12 +23,13 @@ export default function DropdownItem({
   );
 }
 
-const Container = styled.div`
+const Container = styled.button`
   padding: 10px 16px;
+  width: 100%;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${({ theme }) => theme.colorSystem.neutral.surface.strong};
   border-top: ${({ theme }) =>
     `${theme.border.default} ${theme.colorSystem.neutral.border.default}`};
 `;

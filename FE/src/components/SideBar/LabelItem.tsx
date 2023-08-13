@@ -8,17 +8,17 @@ type Props = {
 export default function LabelItem({ label, color }: Props) {
   return (
     <Wrapper $color={color}>
-      <LabelTitle>{label}</LabelTitle>
+      <LabelTitle>{label === "" ? "Label" : label}</LabelTitle>
     </Wrapper>
   );
 }
 
-// const Container = styled.div`
-//   display: inline-flex;
-// `;
-
 const Wrapper = styled.div<{ $color: string }>`
-  display: inline-flex;
+  display: flex;
+  justify-content: center;
+  align-items: centers;
+  height: 24px;
+  min-width: 40px;
   background-color: ${({ $color }) => $color};
   border: ${({ theme }) =>
     `${theme.border.default} ${theme.colorSystem.neutral.text.strong}`};

@@ -1,69 +1,89 @@
+import { useState } from "react";
 import { styled } from "styled-components";
 import DropdownPanel from "../DropdownPanel/DropdownPanel";
-import { useEffect, useState } from "react";
-import { AssigneesProps } from "../../type";
 
 type Props = {
+  type?: "filter" | "assignees" | "labels" | "milestones" | "authors" | "none";
   icon?: string;
   label: string;
   padding?: string;
   width?: string;
   height?: string;
-  hasDropdown?: boolean;
+  dropdownTop?: string;
+  dropdownLeft?: string;
 };
 
 export default function DropdownIndicator({
+  type = "filter",
   icon = "chevronDown",
   label,
   padding = "4px 0px",
   width = "80px",
   height = "32px",
-  hasDropdown = false,
+  dropdownTop = "0px",
+  dropdownLeft = "0px",
 }: Props) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [assigneesData, setAssigneesData] = useState<AssigneesProps>();
+  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
 
-  const openDropdown = () => {
-    setIsOpen(true);
+  const openDropdownPanel = () => {
+    setOpenDropdown(true);
   };
 
-  const closeDropdown = () => {
-    setIsOpen(false);
+  const closeDropdownPanel = () => {
+    setOpenDropdown(false);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "http://3.34.141.196/api/issues/assignees",
-        );
-        const data = await response.json();
-        setAssigneesData(data);
-      } catch (error) {
-        console.log("error");
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
-    <IndicatorButton
-      $padding={padding}
-      $width={width}
-      $height={height}
-      onClick={openDropdown}
-    >
-      <IndicatorLabel>{label}</IndicatorLabel>
-      <IndicatorIcon src={`/icons/${icon}.svg`} />
-      {hasDropdown && isOpen && (
+    <Container>
+      <IndicatorButton
+        $padding={padding}
+        $width={width}
+        $height={height}
+        onClick={openDropdownPanel}
+      >
+        <IndicatorLabel>{label}</IndicatorLabel>
+        <IndicatorIcon src={`/icons/${icon}.svg`} />
+      </IndicatorButton>
+      {openDropdown && type === "filter" && (
         <DropdownPanel
-          title={label}
-          assigneesList={assigneesData!}
-          closeDropdown={closeDropdown}
+          top={dropdownTop}
+          left={dropdownLeft}
+          closeDropdown={closeDropdownPanel}
         />
       )}
-    </IndicatorButton>
+      {openDropdown && type === "assignees" && (
+        <DropdownPanel
+          type={"assignees"}
+          top={"40px"}
+          left={"0px"}
+          closeDropdown={closeDropdownPanel}
+        />
+      )}
+      {openDropdown && type === "labels" && (
+        <DropdownPanel
+          type={"labels"}
+          top={"40px"}
+          left={"112px"}
+          closeDropdown={closeDropdownPanel}
+        />
+      )}
+      {openDropdown && type === "milestones" && (
+        <DropdownPanel
+          type={"milestones"}
+          top={"40px"}
+          left={"180px"}
+          closeDropdown={closeDropdownPanel}
+        />
+      )}
+      {openDropdown && type === "authors" && (
+        <DropdownPanel
+          type={"authors"}
+          top={"40px"}
+          left={"200px"}
+          closeDropdown={closeDropdownPanel}
+        />
+      )}
+    </Container>
   );
 }
 
@@ -72,7 +92,6 @@ const IndicatorButton = styled.button<{
   $width: string;
   $height: string;
 }>`
-  position: relative;
   width: ${({ $width }) => $width};
   height: ${({ $height }) => $height};
   display: flex;
@@ -89,6 +108,8 @@ const IndicatorButton = styled.button<{
     opacity: ${({ theme }) => theme.opacity.disabled};
   }
 `;
+
+const Container = styled.div``;
 
 const IndicatorLabel = styled.span`
   font: ${({ theme }) => theme.font.availableMedium16};

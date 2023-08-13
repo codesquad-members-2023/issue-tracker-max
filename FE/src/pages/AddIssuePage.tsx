@@ -1,14 +1,66 @@
 import { styled } from "styled-components";
 import UserProfileButton from "../components/UserProfileButton/UserProfileButton";
+import { useNavigate } from "react-router-dom";
+import TextArea from "../components/common/TextArea/TextArea";
+import { useState } from "react";
+import LabelInput from "../components/common/TextInput/LabelInput";
 import SideBar from "../components/SideBar/SideBar";
 import Button from "../components/common/Button/Button";
-import TextInput from "../components/common/TextInput/TextInput";
-import { useNavigate } from "react-router-dom";
 
 export default function AddIssuePage() {
+  const [issueTitle, setIssueTitle] = useState<string>("");
+  const [issueContent, setIssueContent] = useState<string>("");
+  const [assignees, setAssignees] = useState([1]);
+  const [labels, setLabels] = useState([4]);
+  const [milestone, setMilestone] = useState(null);
   const navigate = useNavigate();
   const goMainPage = () => {
     navigate("/issues/isOpen=true");
+  };
+  setAssignees;
+  setLabels;
+  setMilestone;
+  const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIssueTitle(e.target.value);
+  };
+
+  const handleContentInputChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setIssueContent(e.target.value);
+  };
+
+  const createIssue = async () => {
+    const url = "http://3.34.141.196/api/issues";
+
+    const data = {
+      title: issueTitle,
+      content: issueContent,
+      assigneeIds: assignees,
+      labelIds: labels,
+      milestoneId: milestone,
+    };
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(data),
+      });
+
+      if (response.status === 201) {
+        const responseData = await response.json();
+        navigate(`/detail/${responseData.id}`);
+      } else {
+        console.log("이슈 생성에 실패하였습니다. 상태 코드:", response.status);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
   };
 
   return (
@@ -18,7 +70,17 @@ export default function AddIssuePage() {
         <ContentsContainer>
           <UserProfileButton src={"/logo/profile.jpg"} onClick={() => {}} />
           <AddIssueForm>
-            <TextInput id={"newIssueTitle"} label={"제목"} />
+            <LabelInput
+              id={"newTitle"}
+              label={"제목"}
+              placeholder={"제목을 입력해주세요"}
+              value={issueTitle}
+              onChange={handleTitleInputChange}
+            />
+            <TextArea
+              inputValue={issueContent}
+              onChange={handleContentInputChange}
+            />
           </AddIssueForm>
           <SideBar></SideBar>
         </ContentsContainer>
@@ -34,7 +96,8 @@ export default function AddIssuePage() {
             label={"완료"}
             type={"container"}
             size={"large"}
-            onClick={() => {}}
+            onClick={createIssue}
+            disabled={!issueTitle}
           />
         </ButtonTap>
       </Main>
@@ -43,6 +106,7 @@ export default function AddIssuePage() {
 }
 
 const Page = styled.div`
+  margin-bottom: 50px;
   display: flex;
   gap: 32px;
   flex-direction: column;
@@ -93,6 +157,9 @@ const ContentsContainer = styled.div`
 `;
 
 const AddIssueForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   width: 912px;
 `;
 
