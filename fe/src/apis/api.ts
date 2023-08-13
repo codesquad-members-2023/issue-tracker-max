@@ -7,9 +7,13 @@ export const fetchData = async (path: string, options?: RequestInit) => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  const data = await response.json();
+  // JSON 형식의 본문이 함께 오는 경우에만 해당 본문을 파싱하여 반환
+  if (response.headers.get('content-type')?.includes('application/json')) {
+    const data = await response.json();
+    return data;
+  }
 
-  return data;
+  return null;
 };
 
 export const getIssuesWithQuery = (query: string) => {
@@ -123,7 +127,7 @@ export const getIssueDetail = (id: string | number) => {
 };
 
 export const deleteIssue = (id: number) => {
-  return fetchData(`issues/delete/${id}`, {
+  return fetchData(`/issues/${id}`, {
     method: 'DELETE',
   });
 };
@@ -209,9 +213,6 @@ export const editLabel = (
 export const deleteLabel = (id: string | number) => {
   return fetchData(`/labels/${id}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
   });
 };
 
@@ -260,9 +261,6 @@ export const editMilestone = (
 export const deleteMilestone = (id: string | number) => {
   return fetchData(`/milestones/${id}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
   });
 };
 
@@ -313,8 +311,5 @@ export const editComment = (id: number, contents: string) => {
 export const deleteComment = (id: string | number) => {
   return fetchData(`/comments/${id}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
   });
 };

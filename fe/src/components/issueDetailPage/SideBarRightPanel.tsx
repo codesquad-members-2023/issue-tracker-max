@@ -3,10 +3,21 @@ import { Button } from '@components/common/Button';
 import { ListSideBar } from '@components/common/sideBar/ListSideBar';
 import { SideBar } from '@components/common/sideBar/SideBar';
 import { ReactComponent as Trash } from '@assets/icons/trash.svg';
-type Props = {};
+import { deleteIssue } from 'apis/api';
+type Props = {
+  issueId: number;
+};
 
-export const SideBarRightPanel: React.FC<Props> = ({}: Props) => {
+export const SideBarRightPanel: React.FC<Props> = ({ issueId }: Props) => {
   const theme = useTheme() as any;
+
+  const onDeleteIssue = async () => {
+    try {
+      await deleteIssue(issueId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div
@@ -33,7 +44,7 @@ export const SideBarRightPanel: React.FC<Props> = ({}: Props) => {
           }}
         />
       </SideBar>
-      <Button typeVariant="ghost" size="S">
+      <Button typeVariant="ghost" size="S" onClick={onDeleteIssue}>
         <Trash stroke={theme.danger.text.default} />
 
         <span>이슈 삭제</span>

@@ -2,18 +2,13 @@ import { useTheme } from '@emotion/react';
 import { SideBarRightPanel } from './SideBarRightPanel';
 import { CommentContainer } from './CommentContainer';
 import { IssueContainer } from './IssueContainer';
+
 type Props = {
   issueDetailPageData: IssueDetailPageData;
 };
 
 export const Body: React.FC<Props> = ({ issueDetailPageData }: Props) => {
   const theme = useTheme() as any;
-
-  const author = {
-    userId: 1,
-    loginId: '작성자입니다',
-    image: '이미지url',
-  };
 
   return (
     <div
@@ -48,7 +43,7 @@ export const Body: React.FC<Props> = ({ issueDetailPageData }: Props) => {
         />
       </div>
 
-      <SideBarRightPanel />
+      <SideBarRightPanel issueId={issueDetailPageData.id} />
     </div>
   );
 };
