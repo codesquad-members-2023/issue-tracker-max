@@ -12,8 +12,8 @@ import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { uploadFile } from 'apis/fileUpload';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
-import { postNewComment } from 'apis/api';
-
+// todo issueDetailPage에 들어가면 줄바꿈해서 작성한게 그대로 보여야하는데
+// 한줄로 보이는중
 type DefaultFileStatusType = {
   typeError: boolean;
   sizeError: boolean;
@@ -45,7 +45,6 @@ export const Comment: React.FC<Props> = ({
   onAddComment,
 }) => {
   const theme = useTheme() as any;
-  const availableFileSize = 1048576; //1MB
 
   const [textAreaValue, setTextAreaValue] = useState<string>(defaultValue);
   const [placeholderValue, setPlaceholderValue] =
@@ -158,6 +157,7 @@ export const Comment: React.FC<Props> = ({
     }
   };
 
+  // todo api에서 가져와서 바꾸기
   const onEditSubmit = async () => {
     const path = typeVariant === 'issue' ? `issues/contents` : `comments`;
     const method = typeVariant === 'issue' ? 'PATCH' : 'PUT';
