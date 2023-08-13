@@ -15,7 +15,7 @@ import { DropDownList } from '../dropDown/DropDownList';
 type SelectionState = {
   assignees: number[];
   labels: number[];
-  milestones: number[];
+  milestones: number | null;
 };
 
 type FetchPath = 'users' | 'labels' | 'milestones';
@@ -74,7 +74,9 @@ export const ListSideBar: React.FC<Props> = ({
     null | 'users' | 'labels' | 'milestones'
   >(null);
 
+  // todo
   const [isFetched, setIsFetched] = useState({
+    //ref 리렌더가 필요x
     users: false,
     labels: false,
     milestones: false,
@@ -96,8 +98,8 @@ export const ListSideBar: React.FC<Props> = ({
     selections.labels.includes(label.id),
   );
 
-  const selectedMilestonesData = milestoneOptions.filter((milestone) =>
-    selections.milestones.includes(milestone.id),
+  const selectedMilestonesData = milestoneOptions.filter(
+    (milestone) => selections.milestones === milestone.id,
   );
 
   const openPanel = async (
@@ -205,7 +207,7 @@ export const ListSideBar: React.FC<Props> = ({
                 key={item.id}
                 item={item}
                 onClick={() => onSingleSelectedMilestone(item.id)}
-                isSelected={selections.milestones.includes(item.id)}
+                isSelected={selections.milestones === item.id}
               />
             ))}
           </DropDownPanel>

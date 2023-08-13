@@ -18,7 +18,7 @@ import { TextInput } from '@components/common/textInput/TextInput';
 type SelectionState = {
   assignees: number[];
   labels: number[];
-  milestones: number[];
+  milestones: number | null;
 };
 
 // 추후 구현 보완시 추가
@@ -35,7 +35,7 @@ export const AddIssuePage: React.FC = ({}) => {
   const [selections, setSelections] = useState<SelectionState>({
     assignees: [],
     labels: [],
-    milestones: [], //todo 배열말고 단일 선택으로 변경
+    milestones: null, //todo 배열말고 단일 선택으로 변경
   });
   const [titleInput, setTitleInput] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
@@ -49,7 +49,7 @@ export const AddIssuePage: React.FC = ({}) => {
       authorId: 1,
       assigneeIds: selections.assignees,
       labelIds: selections.labels,
-      milestoneId: 1,
+      milestoneId: selections.milestones,
     };
 
     try {
@@ -107,7 +107,7 @@ export const AddIssuePage: React.FC = ({}) => {
   const onSingleSelectedMilestone = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      milestones: prev.milestones.includes(id) ? [] : [id],
+      milestones: prev.milestones === id ? null : id,
     }));
   };
 
