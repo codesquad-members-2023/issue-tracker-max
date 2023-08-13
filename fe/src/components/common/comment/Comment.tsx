@@ -10,6 +10,7 @@ import { Button } from '../Button';
 import { ReactComponent as PaperClip } from '@assets/icons/paperclip.svg';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
+import { uploadFile } from 'apis/fileUpload';
 
 type DefaultFileStatusType = {
   typeError: boolean;
@@ -17,6 +18,7 @@ type DefaultFileStatusType = {
   isUploading: boolean;
   uploadFailed: boolean;
 };
+
 type Props = {
   typeVariant: 'default' | 'edit' | 'add';
   isDisabled?: boolean;
@@ -35,51 +37,19 @@ export const Comment: React.FC<Props> = ({
   onAddFileUrl,
 }) => {
   const theme = useTheme() as any;
-  const AVAILABLE_FILE_SIZE = 1048576; //1MB
 
   const [textAreaValue, setTextAreaValue] = useState<string>('');
-  setTextAreaValue;
   const [isDisplayingCount, setIsDisplayingCount] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [fileStatus, setFileStatus] = useState<DefaultFileStatusType>({
-    typeError: false,
-    sizeError: false,
-    isUploading: false,
-    uploadFailed: false,
-  });
+  const [fileStatus, setFileStatus] =
+    useState<DefaultFileStatusType>(initialStatus);
 
-  const uploadImage = async (file: File) => {
-    try {
-      setFileStatus((prev) => ({ ...prev, isUploading: true }));
-
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const response = await fetch(`/file-upload`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('File upload failed');
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
-    } finally {
-      setFileStatus((prev) => ({ ...prev, isUploading: false }));
-    }
+  const initFileStatus = () => {
+    setFileStatus(initialStatus);
   };
 
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileStatus((prev) => ({
-      ...prev,
-      sizeError: false,
-      typeError: false,
-      uploadFailed: false,
-    }));
+    initFileStatus();
 
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -101,9 +71,17 @@ export const Comment: React.FC<Props> = ({
         return;
       }
 
-      const fileUrl = await uploadImage(file);
+      try {
+        setFileStatus((prev) => ({ ...prev, isUploading: true }));
 
-      onAddFileUrl(fileName, fileUrl.fileUrl);
+        const fileUrl = await uploadFile(file);
+
+        onAddFileUrl(fileName, fileUrl.fileUrl);
+      } catch {
+        setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
+      } finally {
+        setFileStatus((prev) => ({ ...prev, isUploading: false }));
+      }
     }
   };
 
@@ -111,6 +89,7 @@ export const Comment: React.FC<Props> = ({
     if (textAreaValue) {
       setIsDisplayingCount(true);
       const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
+
       return () => clearTimeout(timer);
     }
   }, [textAreaValue]);
@@ -255,3 +234,12 @@ export const Comment: React.FC<Props> = ({
     </>
   );
 };
+
+const initialStatus = {
+  typeError: false,
+  sizeError: false,
+  isUploading: false,
+  uploadFailed: false,
+};
+
+const AVAILABLE_FILE_SIZE = 1048576; //1MB
