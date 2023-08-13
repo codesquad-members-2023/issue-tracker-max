@@ -34,6 +34,7 @@ public class UserValidatorTest {
 			.id(1L)
 			.email("asd123@ddd.com")
 			.password(BCrypt.hashpw("12345678", BCrypt.gensalt()))
+			.loginType(LoginType.LOCAL)
 			.build();
 
 		given(userRepository.findByEmail("asd123@ddd.com")).willReturn(Optional.of(user));
@@ -78,7 +79,7 @@ public class UserValidatorTest {
 		given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(existUser));
 		LoginType existUserLoginType = userRepository.findByEmail(existUser.getEmail()).get().getLoginType();
 		assertDoesNotThrow(() -> {
-				userValidator.validateLoginType(input, existUserLoginType);
+			userValidator.validateLoginType(input, existUserLoginType);
 		});
 
 	}
@@ -97,7 +98,7 @@ public class UserValidatorTest {
 		given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(existUser));
 		LoginType existUserLoginType = userRepository.findByEmail(existUser.getEmail()).get().getLoginType();
 		assertThrows(CustomException.class, () -> {
-				userValidator.validateLoginType(input, existUserLoginType);
+			userValidator.validateLoginType(input, existUserLoginType);
 		});
 
 	}
@@ -114,7 +115,7 @@ public class UserValidatorTest {
 		given(userRepository.findByEmail(any())).willReturn(Optional.empty());
 
 		assertDoesNotThrow(() -> {
-				userValidator.validateDuplicatedEmail(signUpRequestDto);
+			userValidator.validateDuplicatedEmail(signUpRequestDto);
 		});
 	}
 
@@ -130,7 +131,7 @@ public class UserValidatorTest {
 		given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(existUser));
 
 		assertThrows(CustomException.class, () -> {
-				userValidator.validateDuplicatedEmail(signUpRequestDto);
+			userValidator.validateDuplicatedEmail(signUpRequestDto);
 		});
 	}
 
