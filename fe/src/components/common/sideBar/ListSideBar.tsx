@@ -5,7 +5,11 @@ import { DropDownPanel } from '../dropDown/DropDownPanel';
 import { ListAssignee } from './ListAssignee';
 import { ListLabel } from './ListLabel';
 import { ListMilestone } from './ListMilestone';
-import { getLabels, getMilestones, getUsers } from '@utils/api';
+import {
+  getLabelPreviews,
+  getMilestonePreviews,
+  getUserPreviews,
+} from 'apis/api';
 import { DropDownList } from '../dropDown/DropDownList';
 
 type SelectionState = {
@@ -143,7 +147,7 @@ export const ListSideBar: React.FC<Props> = ({
           indicator="담당자"
           size="L"
           isPanelOpen={isPanelOpen === 'users'}
-          onClick={() => openPanel(getUsers, 'users')}
+          onClick={() => openPanel(getUserPreviews, 'users')}
         >
           <DropDownPanel
             panelHeader="담당자 설정"
@@ -167,7 +171,7 @@ export const ListSideBar: React.FC<Props> = ({
           indicator="레이블"
           size="L"
           isPanelOpen={isPanelOpen === 'labels'}
-          onClick={() => openPanel(getLabels, 'labels')}
+          onClick={() => openPanel(getLabelPreviews, 'labels')}
         >
           <DropDownPanel
             panelHeader="레이블 설정"
@@ -191,7 +195,7 @@ export const ListSideBar: React.FC<Props> = ({
           indicator="마일스톤"
           size="L"
           isPanelOpen={isPanelOpen === 'milestones'}
-          onClick={() => openPanel(getMilestones, 'milestones')}
+          onClick={() => openPanel(getMilestonePreviews, 'milestones')}
         >
           <DropDownPanel
             panelHeader="마일스톤 설정"

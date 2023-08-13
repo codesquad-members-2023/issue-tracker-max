@@ -1,4 +1,4 @@
-import { fetchData } from '@utils/api';
+import { fetchData } from 'apis/api';
 
 export const uploadFile = async (file: File) => {
   const formData = new FormData();
