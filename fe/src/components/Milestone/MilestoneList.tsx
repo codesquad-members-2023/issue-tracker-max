@@ -1,74 +1,92 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Theme, css, useTheme } from '@emotion/react';
 import { border, radius } from '../../styles/styles';
 import SubNavBar from '../SubNavbar';
 import TableContainer from '../TableContainer';
 import MilestoneFilter from './MilestoneFilter';
 import MilestoneItem from './MilestoneItem';
-
-const mockData = {
-  success: 'true',
-  data: {
-    labelCount: 2,
-    closedMilestoneCount: 0,
-    milestones: [
-      {
-        id: 1,
-        name: '프로젝트1',
-        description: '4주 프로젝트 입니다',
-        dueDate: '2023.08.07',
-        openIssueCount: 2,
-        closedIssueCount: 1,
-      },
-      {
-        id: 2,
-        name: '프로젝트2',
-        description: '',
-        dueDate: '',
-        openIssueCount: 1,
-        closedIssueCount: 0,
-      },
-    ],
-  },
-};
+import { customFetch } from '../../util/customFetch';
+import { useNavigate } from 'react-router-dom';
 
 export default function MilestoneList() {
   const theme = useTheme();
-  const [activeMilestone, setActiveMilestone] = useState<'open' | 'close'>(
+  const [milestoneFilter, setMilestoneFilter] = useState<'open' | 'closed'>(
     'open'
   );
+  const [milestoneList, setMilestoneList] = useState<MilestoneData>();
+  const navigate = useNavigate();
 
-  const onMilestoneFilterClick = (milestoneFilter: 'open' | 'close') => {
-    setActiveMilestone(milestoneFilter);
+  useEffect(() => {
+    (async () => {
+      const subUrl = 'api/milestones/' + milestoneFilter;
+
+      try {
+        const milestoneData = await customFetch<MilestoneResponse>({ subUrl });
+
+        if (milestoneData.success && milestoneData.data) {
+          setMilestoneList(milestoneData.data);
+        }
+      } catch (error) {
+        navigate('/sign-in');
+      }
+    })();
+  }, [milestoneFilter]);
+
+  const onMilestoneFilterClick = () => {
+    switch (milestoneFilter) {
+      case 'open':
+        setMilestoneFilter('closed');
+        break;
+      case 'closed':
+        setMilestoneFilter('open');
+        break;
+    }
   };
+
+  const onClickToCreate = () => {};
+
+  const isOpen = milestoneFilter === 'open';
 
   return (
     <>
-      <SubNavBar
-        isIssue={false}
-        labelCount={mockData.data.labelCount}
-        milestoneCount={
-          mockData.data.milestones.length + mockData.data.closedMilestoneCount
-        }
-        buttonValue="마일스톤 추가"
-      />
-      <TableContainer>
-        <div css={milestoneTable(theme)}>
-          <div className="header">
-            <MilestoneFilter
-              openMilestoneCount={mockData.data.milestones.length}
-              closedMilestoneCount={mockData.data.closedMilestoneCount}
-              filterState={activeMilestone}
-              onClick={onMilestoneFilterClick}
-            />
-          </div>
-          <ul className="item-container">
-            {mockData.data.milestones.map((milestone) => (
-              <MilestoneItem key={milestone.id} {...milestone} />
-            ))}
-          </ul>
-        </div>
-      </TableContainer>
+      {milestoneList && (
+        <>
+          <SubNavBar
+            isIssue={false}
+            labelCount={milestoneList.labelCount}
+            milestoneCount={
+              milestoneList.milestones.length + milestoneList.oppositeCount
+            }
+            buttonValue="마일스톤 추가"
+            onClick={onClickToCreate}
+          />
+          <TableContainer>
+            <div css={milestoneTable(theme)}>
+              <div className="header">
+                <MilestoneFilter
+                  openMilestoneCount={
+                    isOpen
+                      ? milestoneList.milestones.length
+                      : milestoneList.oppositeCount
+                  }
+                  closedMilestoneCount={
+                    !isOpen
+                      ? milestoneList.milestones.length
+                      : milestoneList.oppositeCount
+                  }
+                  filterState={milestoneFilter}
+                  onMilestoneFilterClick={onMilestoneFilterClick}
+                />
+              </div>
+              <ul className="item-container">
+                {milestoneList.milestones.map((milestone) => (
+                  <MilestoneItem key={milestone.id} {...milestone} />
+                ))}
+              </ul>
+            </div>
+          </TableContainer>
+        </>
+      )}
     </>
   );
 }
@@ -77,13 +95,14 @@ const milestoneTable = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   border-radius: ${radius.medium};
-  border: ${border.default} ${theme.neutral.borderDefault};
   color: ${theme.neutral.textDefault};
 
   .item-container {
     display: flex;
     flex-direction: column;
     border-radius: 0 0 ${radius.medium} ${radius.medium};
+    border: ${border.default} ${theme.neutral.borderDefault};
+    border-top: none;
     background-color: ${theme.neutral.surfaceStrong};
 
     li {

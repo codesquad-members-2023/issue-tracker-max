@@ -1,26 +1,36 @@
+type IssueResponse = {
+  success: boolean;
+  data: IssueData;
+};
+
+type IssueData = {
+  labelCount: number;
+  milestoneCount: number;
+  openIssueCount: number;
+  closedIssueCount: number;
+  issues: Issue[];
+};
+
 type Issue = {
   id: number;
-  number: string;
+  isOpen: boolean;
   title: string;
-  status: string;
-  writer: string;
   history: IssueHistory;
-  labels: LabelType[] | [];
+  labels: Label[] | [];
   assignees: Assignee[] | [];
-  milestone: string;
+  writer: {
+    id: number;
+    name: string;
+  };
+  milestone: {
+    id: number;
+    title: string;
+  };
 };
 
 type IssueHistory = {
-  modifier: string;
-  dateTime: string;
-};
-
-type LabelType = {
-  id: number;
-  name: string;
-  description: string;
-  textColor: string;
-  backgroundColor: string;
+  editor: string;
+  modifiedAt: string;
 };
 
 type Assignee = {
@@ -28,11 +38,17 @@ type Assignee = {
   name: string;
 };
 
-type Milestone = {
+type IssueDetail = {
+  issue: Issue;
+  comments: CommentType[];
+};
+
+type CommentType = {
   id: number;
-  name: string;
-  description: string;
-  dueDate: string;
-  openIssueCount: number;
-  closedIssueCount: number;
+  writer: {
+    id: number;
+    name: string;
+  };
+  content: string;
+  dateTime: string;
 };

@@ -1,15 +1,16 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import CheckBoxIcon from './CheckBox';
-import { ReactComponent as AlertCircleIcon } from '/src/assets/icon/alertCircle.svg';
-import { ReactComponent as ArchiveIcon } from '/src/assets/icon/Archive.svg';
+import { ReactComponent as AlertCircleIcon } from '../../../assets/icon/alertCircle.svg';
+import { ReactComponent as ArchiveIcon } from '../../../assets/icon/archive.svg';
 import { border, font, radius } from '../../../styles/styles';
 import DropdownIndicator from './DropdownIndicator';
+import { filterType } from '../../../constant/constant';
 
 type Props = {
-  activeIssue: 'open' | 'close';
+  activeIssue: 'open' | 'closed';
   onCheckBoxClick: (checked: boolean) => void;
   isAllItemChecked: boolean;
-  onIssueFilterClick: (filter: 'open' | 'close') => void;
+  onIssueFilterClick: (filter: 'open' | 'closed') => void;
   openIssueCount: number;
   closedIssueCount: number;
   checkedItemLength: number;
@@ -27,12 +28,6 @@ export default function IssueFilter({
   const theme = useTheme();
 
   const isCheckedListEmpty = checkedItemLength === 0;
-  const filterType = [
-    { id: 1, name: '담당자' },
-    { id: 2, name: '레이블' },
-    { id: 3, name: '마일스톤' },
-    { id: 4, name: '작성자' },
-  ];
 
   return (
     <div css={issueFilter(theme)}>
@@ -57,9 +52,9 @@ export default function IssueFilter({
               </div>
               <div
                 className={`close-issue ${
-                  activeIssue === 'close' ? 'active' : ''
+                  activeIssue === 'closed' ? 'active' : ''
                 }`}
-                onClick={() => onIssueFilterClick('close')}
+                onClick={() => onIssueFilterClick('closed')}
               >
                 <ArchiveIcon />
                 {`닫힌 이슈(${closedIssueCount})`}
@@ -97,7 +92,7 @@ const issueFilter = (theme: Theme) => css`
   height: 64px;
   padding: 0 32px;
   border-radius: ${radius.medium} ${radius.medium} 0 0;
-  border-bottom: ${border.default} ${theme.neutral.borderDefault};
+  border: ${border.default} ${theme.neutral.borderDefault};
   background-color: ${theme.neutral.surfaceDefault};
 
   .issue-filter {

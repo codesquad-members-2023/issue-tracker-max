@@ -1,20 +1,20 @@
 import { Theme, css, useTheme } from '@emotion/react';
-import { ReactComponent as AlertCircleIcon } from '/src/assets/icon/alertCircle.svg';
-import { ReactComponent as ArchiveIcon } from '/src/assets/icon/Archive.svg';
+import { ReactComponent as AlertCircleIcon } from '../../assets/icon/alertCircle.svg';
+import { ReactComponent as ArchiveIcon } from '../../assets/icon/archive.svg';
 import { border, font, radius } from '../../styles/styles';
 
 type Props = {
   openMilestoneCount: number;
   closedMilestoneCount: number;
-  filterState: 'open' | 'close';
-  onClick: (filter: 'open' | 'close') => void;
+  filterState: 'open' | 'closed';
+  onMilestoneFilterClick: (filter: 'open' | 'closed') => void;
 };
 
 export default function MilestoneFilter({
   openMilestoneCount,
   closedMilestoneCount,
   filterState,
-  onClick,
+  onMilestoneFilterClick: onClick,
 }: Props) {
   const theme = useTheme();
 
@@ -28,8 +28,10 @@ export default function MilestoneFilter({
         열린 마일스톤({openMilestoneCount})
       </div>
       <div
-        className={`close-milestone ${filterState === 'close' ? 'active' : ''}`}
-        onClick={() => onClick('close')}
+        className={`close-milestone ${
+          filterState === 'closed' ? 'active' : ''
+        }`}
+        onClick={() => onClick('closed')}
       >
         <ArchiveIcon />
         닫힌 마일스톤({closedMilestoneCount})
@@ -44,7 +46,7 @@ const milestone = (theme: Theme) => css`
   display: flex;
   gap: 24px;
   border-radius: ${radius.medium} ${radius.medium} 0 0;
-  border-bottom: ${border.default} ${theme.neutral.borderDefault};
+  border: ${border.default} ${theme.neutral.borderDefault};
   background-color: ${theme.neutral.surfaceDefault};
 
   .open-milestone,

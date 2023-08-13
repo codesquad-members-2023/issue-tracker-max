@@ -3,51 +3,56 @@ import SubNavBar from '../SubNavbar';
 import TableContainer from '../TableContainer';
 import { border, font, radius } from '../../styles/styles';
 import LabelItem from './LabelItem';
-
-const mockData = {
-  success: 'true',
-  data: {
-    milestoneCount: 2,
-    labels: [
-      {
-        id: 1,
-        name: 'Backend',
-        description: '백엔드',
-        textColor: '#6E7191',
-        backgroundColor: '#FEFEFE',
-      },
-      {
-        id: 2,
-        name: 'Frontend',
-        description: '프론트엔드',
-        textColor: '#FEFEFE',
-        backgroundColor: '#0025E6',
-      },
-    ],
-  },
-};
+import { useEffect, useState } from 'react';
+import { customFetch } from '../../util/customFetch';
+import { useNavigate } from 'react-router-dom';
 
 export default function LabelList() {
   const theme = useTheme();
+  const [labelList, setLabelList] = useState<LabelData>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    (async () => {
+      const subUrl = 'api/labels';
+
+      try {
+        const labelData = await customFetch<LabelResponse>({ subUrl });
+
+        if (labelData.success && labelData.data) {
+          setLabelList(labelData.data);
+        }
+      } catch (error) {
+        navigate('/sign-in');
+      }
+    })();
+  }, []);
+
+  const onClickToCreate = () => {};
 
   return (
     <>
-      <SubNavBar
-        isIssue={false}
-        labelCount={mockData.data.labels.length}
-        milestoneCount={mockData.data.milestoneCount}
-        buttonValue="레이블 추가"
-      />
-      <TableContainer>
-        <div css={labelTable(theme)}>
-          <div className="header">{mockData.data.labels.length}개의 레이블</div>
-          <ul className="item-container">
-            {mockData.data.labels.map((label) => (
-              <LabelItem key={label.id} {...label} />
-            ))}
-          </ul>
-        </div>
-      </TableContainer>
+      {labelList && (
+        <>
+          <SubNavBar
+            isIssue={false}
+            labelCount={labelList.labels.length}
+            milestoneCount={labelList.milestoneCount}
+            buttonValue="레이블 추가"
+            onClick={onClickToCreate}
+          />
+          <TableContainer>
+            <div css={labelTable(theme)}>
+              <div className="header">{labelList.labels.length}개의 레이블</div>
+              <ul className="item-container">
+                {labelList.labels.map((label) => (
+                  <LabelItem key={label.id} {...label} />
+                ))}
+              </ul>
+            </div>
+          </TableContainer>
+        </>
+      )}
     </>
   );
 }
@@ -56,7 +61,6 @@ const labelTable = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   border-radius: ${radius.medium};
-  border: ${border.default} ${theme.neutral.borderDefault};
   color: ${theme.neutral.textDefault};
 
   .header {
@@ -66,7 +70,7 @@ const labelTable = (theme: Theme) => css`
     height: 64px;
     padding: 0 32px;
     border-radius: ${radius.medium} ${radius.medium} 0 0;
-    border-bottom: ${border.default} ${theme.neutral.borderDefault};
+    border: ${border.default} ${theme.neutral.borderDefault};
     background-color: ${theme.neutral.surfaceDefault};
     font: ${font.displayBold16};
     color: ${theme.neutral.textDefault};
@@ -75,6 +79,8 @@ const labelTable = (theme: Theme) => css`
   .item-container {
     display: flex;
     flex-direction: column;
+    border: ${border.default} ${theme.neutral.borderDefault};
+    border-top: none;
     border-radius: 0 0 ${radius.medium} ${radius.medium};
     background-color: ${theme.neutral.surfaceStrong};
 

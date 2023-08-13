@@ -1,10 +1,11 @@
 import { css } from '@emotion/react';
 
 interface Props extends React.HTMLAttributes<HTMLInputElement> {
-  checked?: boolean;
+  id: 'selectAll' | 'selectOne';
+  checked: boolean;
 }
 
-export default function CheckBoxIcon({ id = '', checked, onChange }: Props) {
+export default function CheckBoxIcon({ id, checked, onChange }: Props) {
   return (
     <div css={checkBoxIcon(id)}>
       <input
@@ -13,13 +14,13 @@ export default function CheckBoxIcon({ id = '', checked, onChange }: Props) {
         type="checkbox"
         onChange={onChange}
         checked={checked}
-      ></input>
+      />
       <label htmlFor={id} className="label" />
     </div>
   );
 }
 
-const checkBoxIcon = (id: string) => css`
+const checkBoxIcon = (id: 'selectAll' | 'selectOne') => css`
   position: relative;
 
   .check-box {
@@ -27,16 +28,14 @@ const checkBoxIcon = (id: string) => css`
     width: 16px;
     height: 16px;
     margin: 0;
-    background-image: url('/src/assets/icon/checkBoxInitial.svg');
+    background-image: url('../../../../src/assets/icon/checkBoxInitial.svg');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: 50%;
     cursor: pointer;
 
     &:checked {
-      background-image: ${id === 'selectAll'
-        ? `url('/src/assets/icon/checkBoxDisable.svg')`
-        : `url('/src/assets/icon/checkBoxActive.svg')`};
+      background-image: ${CHECK_BOX_STYLE[id].backgroundImage};
     }
   }
 
@@ -45,7 +44,23 @@ const checkBoxIcon = (id: string) => css`
     top: -30%;
     left: -30%;
     width: 40px;
-    height: ${id === 'selectAll' ? '40px' : '70px'};
+    height: ${CHECK_BOX_STYLE[id].height};
     cursor: pointer;
   }
 `;
+
+const SELECT_ALL_SVG = `url('../../../../src/assets/icon/checkBoxDisable.svg')`;
+const SELECT_ONE_SVG = `url('../../../../src/assets/icon/checkBoxActive.svg')`;
+const ALL_LABEL_HEIGHT = '40px';
+const ONE_LABEL_HEIGHT = '70px';
+
+const CHECK_BOX_STYLE = {
+  selectAll: {
+    backgroundImage: SELECT_ALL_SVG,
+    height: ALL_LABEL_HEIGHT,
+  },
+  selectOne: {
+    backgroundImage: SELECT_ONE_SVG,
+    height: ONE_LABEL_HEIGHT,
+  },
+};
