@@ -7,7 +7,7 @@ import { useTheme } from '@emotion/react';
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 import React, { useState } from 'react';
 import { DropDownContainer } from '@components/common/dropDown/DropDownContainer';
-import { getLabels, getMilestones, getUsers } from '@utils/api';
+import { getLabels, getMilestones, getUsers } from 'apis/api';
 import { DropDownList } from '@components/common/dropDown/DropDownList';
 
 type Props = {

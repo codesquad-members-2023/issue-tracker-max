@@ -5,7 +5,7 @@ import { DropDownPanel } from '../dropDown/DropDownPanel';
 import { ListAssignee } from './ListAssignee';
 import { ListLabel } from './ListLabel';
 import { ListMilestone } from './ListMilestone';
-import { getLabels, getMilestones, getUsers } from '@utils/api';
+import { getLabels, getMilestones, getUsers } from 'apis/api';
 import { DropDownList } from '../dropDown/DropDownList';
 
 type SelectionState = {

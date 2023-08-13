@@ -1,7 +1,7 @@
 import { Button } from '@components/common/Button';
 import { IssueTable } from '@components/issueListPage/IssueTable';
 import { SubNav } from '@components/issueListPage/SubNav';
-import { getIssueListPageData } from '@utils/api';
+import { getIssueListPageData } from 'apis/api';
 import { processFilterString } from '@utils/processFilterString';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';

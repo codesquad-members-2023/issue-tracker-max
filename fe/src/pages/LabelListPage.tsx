@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { SubNav } from '@components/labelListPage/SubNav';
 import { Body } from '@components/labelListPage/Body';
-import { getLabelListPageData } from '@utils/api';
+import { getLabelListPageData } from 'apis/api';
 type Props = {};
 
 export const LabelListPage: React.FC<Props> = ({}) => {

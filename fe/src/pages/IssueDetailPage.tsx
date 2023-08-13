@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Body } from '@components/issueDetailPage/Body';
 import { PostInformation } from '@components/issueDetailPage/PostInformation';
-import { getIssueDetailPageData } from '@utils/api';
+import { getIssueDetailPageData } from 'apis/api';
 import { useParams } from 'react-router-dom';
 
 type Props = {};
