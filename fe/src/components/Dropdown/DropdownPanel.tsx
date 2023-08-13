@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { DropdownTitle } from "./DropdownTitle";
 import { DropdownOptions } from "./DropdownOptions";
+import { useFilter } from "contexts/FilterProvider";
 
 type PositionType = "center" | "left" | "right";
 
@@ -16,8 +16,9 @@ interface SubFilterItem {
 interface DropdownProps {
   items?: SubFilterItem[];
   title: string;
-  filter: string;
-  position: PositionType;
+  filter?: string;
+  type: string;
+  $position: PositionType;
   onClose: () => void;
 }
 
@@ -41,24 +42,38 @@ function useOutsideClick(
   });
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({
+export const DropdownPanel: React.FC<DropdownProps> = ({
   items = [],
   title,
-  position,
+  $position,
   filter,
   onClose,
+  type,
 }) => {
   const [selectedItem, setSelectedItem] = useState<SubFilterItem | null>(null);
   const dropdownRef = useRef(null);
+  const { state, setDropdownFilter, setFilterBar } = useFilter();
 
   useEffect(() => {
     if (selectedItem !== null) {
-      console.log(filter);
-      console.log(items);
-      console.log(selectedItem);
+      if (type === "dropdownFilter" && filter) {
+        setDropdownFilter(filter, [selectedItem.name]);
+      }
+      if (type === "filterBar") {
+        setFilterBar([selectedItem.filter]);
+      }
       onClose();
     }
   }, [selectedItem, onClose, filter, items]);
+
+  const isItemSelected = (item: SubFilterItem) => {
+    if (type === "dropdownFilter" && filter) {
+      return state.dropdownFilter[filter]?.includes(item.name);
+    } else if (type === "filterBar") {
+      return state.filterBar.includes(item.filter);
+    }
+    return false;
+  };
 
   const handleOptionClick = (item: SubFilterItem) => {
     setSelectedItem(item);
@@ -67,28 +82,41 @@ export const Dropdown: React.FC<DropdownProps> = ({
   useOutsideClick(dropdownRef, onClose);
 
   return (
-    <DropdownPanel {...{ position }} ref={dropdownRef}>
-      <DropdownTitle title={title} />
-      <DropdownOptions items={items} onOptionClick={handleOptionClick} />
-    </DropdownPanel>
+    <Layout {...{ $position }} ref={dropdownRef}>
+      <PanelTitle>{title}</PanelTitle>
+      <DropdownOptions
+        items={items}
+        onOptionClick={handleOptionClick}
+        isSelectedFunc={isItemSelected}
+      />
+    </Layout>
   );
 };
 
-const DropdownPanel = styled.div<Pick<DropdownProps, "position">>`
+const Layout = styled.div<Pick<DropdownProps, "$position">>`
   position: absolute;
   z-index: 10;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  ${(props) => DropdownPosition[props.position]}
+  ${(props) => DropdownPosition[props.$position]}
   width: 240px;
   border: ${({ theme: { border } }) => border.default};
   border-color: ${({ theme: { color } }) => color.nuetralBorderDefault};
+  overflow: hidden;
   border-radius: ${({ theme: { radius } }) => radius.large};
 `;
 
 const DropdownPosition: Record<PositionType, string> = {
-  left: `left: 0;`,
-  right: `right: 0;`,
+  left: `left: 0; top: 90%;`,
+  right: `right: 0; top: 90%;`,
   center: `left: 50%; transform: translateX(-50%);`,
 };
+
+const PanelTitle = styled.p`
+  width: 100%;
+  padding: 8px 16px;
+  background-color: ${({ theme: { color } }) => color.nuetralSurfaceDefault};
+  color: ${({ theme: { color } }) => color.nuetralTextWeak};
+  font: ${({ theme: { font } }) => font.displayM12};
+`;

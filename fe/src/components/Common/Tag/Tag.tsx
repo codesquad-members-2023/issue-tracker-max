@@ -7,7 +7,7 @@ type IconName = keyof IconType;
 interface StyledTagProps {
   $backgroundColor: string;
   $border?: boolean;
-  color: ThemeColorKeys;
+  color: ThemeColorKeys | string;
   size?: "S" | "M";
 }
 

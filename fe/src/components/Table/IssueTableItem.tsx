@@ -1,9 +1,48 @@
 import styled from "styled-components";
 import { Icon } from "components/Common/Icon/Icon";
 import { Tag } from "components/Common/Tag/Tag";
-import UserTestProfile from "assets/img/profile_test.svg";
 
-export const IssueTableItem = () => {
+interface IssueItem {
+  id: number;
+  title: string;
+  author: string;
+  assigneeProfiles?: string[];
+  milestone?: string;
+  createdAt: string;
+  labels?: { name: string; backgroundColor: string; textColor: string }[];
+}
+
+interface IssueTableItemProps {
+  issueItem: IssueItem;
+}
+
+export const IssueTableItem: React.FC<IssueTableItemProps> = ({
+  issueItem,
+}) => {
+  const getRelativeTime = (timestamp: string) => {
+    const now = new Date();
+    const time = new Date(timestamp);
+
+    const diffInSeconds = Math.floor((now.getTime() - time.getTime()) / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    const rtf = new Intl.RelativeTimeFormat("ko", { numeric: "auto" });
+
+    if (diffInDays > 0) {
+      return rtf.format(-diffInDays, "day");
+    } else if (diffInHours > 0) {
+      return rtf.format(-diffInHours, "hour");
+    } else if (diffInMinutes > 0) {
+      return rtf.format(-diffInMinutes, "minute");
+    } else {
+      return "just now";
+    }
+  };
+
+  const relativeTime = getRelativeTime(issueItem.createdAt);
+
   return (
     <TableItem>
       <div>
@@ -13,35 +52,41 @@ export const IssueTableItem = () => {
         <InfoBox>
           <TitleBox>
             <Icon icon="AlertCircle" stroke="paletteBlue" />
-            <p>이슈 제목</p>
-            <Tag
-              text="document"
-              color="nuetralBorderDefault"
-              $backgroundColor="#FEFEFE"
-              $border
-              size="S"
-            />
+            <p>{issueItem.title}</p>
+            {issueItem.labels &&
+              issueItem.labels.map((label) => (
+                <Tag
+                  key={label.name}
+                  text={label.name}
+                  color={label.textColor}
+                  $backgroundColor={label.backgroundColor}
+                  $border
+                  size="S"
+                />
+              ))}
           </TitleBox>
           <SummaryBox>
-            <span>#이슈번호</span>
-            <span>#이슈번호</span>
-            <span>작성자 및 타임스탬프 정보</span>
+            <span>#{issueItem.id}</span>
             <span>
-              <Icon icon="Milestone" fill="nuetralTextDefault" />
-              <p>마일스톤</p>
+              이 이슈가 {relativeTime}, {issueItem.author}님에 의해
+              작성되었습니다.
             </span>
+            {issueItem.milestone && (
+              <span>
+                <Icon icon="Milestone" fill="nuetralTextDefault" />
+                <p>{issueItem.milestone}</p>
+              </span>
+            )}
           </SummaryBox>
         </InfoBox>
       </div>
       <AssigneesProfileBox>
-        <ul>
-          <li>
-            <img src={UserTestProfile} alt="내 프로필 이미지" width={20} />
-          </li>
-          <li>
-            <img src={UserTestProfile} alt="내 프로필 이미지" width={20} />
-          </li>
-        </ul>
+        {issueItem.assigneeProfiles &&
+          issueItem.assigneeProfiles.map((url) => (
+            <li key={url}>
+              <img src={url} width={20} />
+            </li>
+          ))}
       </AssigneesProfileBox>
     </TableItem>
   );
@@ -98,16 +143,14 @@ const SummaryBox = styled.div`
   gap: 16px;
 `;
 
-const AssigneesProfileBox = styled.div`
-  ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    li {
-      margin-right: -6px;
-    }
-    &:last-child {
-      margin-right: 0;
-    }
+const AssigneesProfileBox = styled.ul`
+  list-style: none;
+  display: flex;
+  align-items: center;
+  li {
+    margin-right: -6px;
+  }
+  &:last-child {
+    margin-right: 0;
   }
 `;

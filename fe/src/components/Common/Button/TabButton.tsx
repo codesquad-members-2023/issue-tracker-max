@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import styled from "styled-components";
 import { Button } from "components/Common/Button/Button";
 import { Icon, IconType } from "components/Common/Icon/Icon";
@@ -7,6 +7,7 @@ type IconName = keyof IconType;
 
 interface TabProps {
   children: ReactNode[];
+  activeTab?: string | null;
 }
 
 interface TabButtonProps {
@@ -17,17 +18,17 @@ interface TabButtonProps {
   onClick?: () => void;
 }
 
-export const Tab: React.FC<TabProps> = ({ children }) => {
-  const [activeTab, setActiveTab] = useState(0);
-
+export const Tab: React.FC<TabProps> = ({ children, activeTab = null }) => {
   return (
     <StyledTabLayout>
-      {React.Children.map(children, (child, index) =>
-        React.cloneElement(child as React.ReactElement<TabButtonProps>, {
-          onClick: () => setActiveTab(index),
-          $isActive: activeTab === index,
-        }),
-      )}
+      {React.Children.map(children, (child) => {
+        if (React.isValidElement<TabButtonProps>(child)) {
+          return React.cloneElement(child, {
+            $isActive: activeTab ? activeTab === child.props.text : false,
+          });
+        }
+        return child;
+      })}
     </StyledTabLayout>
   );
 };
@@ -49,7 +50,6 @@ export const TabButton: React.FC<TabButtonProps> = ({
     <StyledTitle $isActive={$isActive}>{`${text} (${count})`}</StyledTitle>
   </Button>
 );
-
 const StyledTabLayout = styled.div`
   display: flex;
   align-items: center;

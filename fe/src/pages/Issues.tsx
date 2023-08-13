@@ -1,31 +1,67 @@
 import { useState, useEffect } from "react";
-import { IssueTableHeader } from "components/Table/IssueTableHeader";
-import { IssueListHeader } from "components/Header/IssueListHeader";
-import { IssueTableList } from "components/Table/IssueTableList";
+import { useLocation } from "react-router-dom";
+
+import { IssueHeader } from "components/Header/IssueHeader";
+import { IssueTable } from "components/Table/IssueTable";
+import { FilterProvider } from "contexts/FilterProvider";
+
+interface IssueItem {
+  id: number;
+  title: string;
+  author: string;
+  assigneeProfiles?: string[];
+  milestone?: string;
+  createdAt: string;
+  labels?: { name: string; backgroundColor: string; textColor: string }[];
+}
+
+interface IssuesPageData {
+  labelCount: number;
+  milestoneCount: number;
+  openIssueCount: number;
+  closedIssueCount: number;
+  issues: IssueItem[] | null;
+}
 
 export const IssuesPage = () => {
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleClickCheckBox = () => {
-    setIsChecked(!isChecked);
-  };
+  const location = useLocation();
+  const [issuesData, setIssuesData] = useState<IssuesPageData>();
 
   useEffect(() => {
-    fetch("http://3.39.194.109:8080/api/issues/open")
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, []);
+    const fetchData = async () => {
+      const queryParams = new URLSearchParams(location.search);
+      const q = queryParams.get("q") || "is:open";
+
+      const response = await fetch(
+        `http://43.200.169.143:8080/api/issues/filtered?q=${q}`,
+      );
+      const data = await response.json();
+
+      setIssuesData(data);
+    };
+
+    fetchData();
+  }, [location.search]);
+
+  if (!issuesData) {
+    return <p>Loading...</p>;
+  }
+
+  const { labelCount, milestoneCount, ...issueTableData } = issuesData;
+
   return (
-    <>
-      <IssueListHeader />
-      <IssueTableHeader
-        isChecked={isChecked}
-        onClickCheckBox={handleClickCheckBox}
-      />
-      <IssueTableList />
-    </>
+    <FilterProvider>
+      {issuesData ? (
+        <>
+          <IssueHeader
+            labelCount={labelCount}
+            milestoneCount={milestoneCount}
+          />
+          <IssueTable tableData={issueTableData} />
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </FilterProvider>
   );
 };

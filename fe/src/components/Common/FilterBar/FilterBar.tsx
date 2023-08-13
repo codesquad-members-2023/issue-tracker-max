@@ -1,15 +1,18 @@
 import styled from "styled-components";
 import React, { useState } from "react";
-import { DropdownIndicator } from "components/Dropdown/DropdownIndicator";
 import { Icon } from "components/Common/Icon/Icon";
-
+import { Button } from "components/Common/Button/Button";
 
 /* Indicator 수정해야함~~ */
 interface FilterBarProps {
-  onIndicatorClick: (id: string) => void;
+  filterTitle: string;
+  onFilterClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-export const FilterBar: React.FC<FilterBarProps> = ({ onIndicatorClick }) => {
+export const FilterBar: React.FC<FilterBarProps> = ({
+  filterTitle,
+  onFilterClick,
+}) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => {
@@ -21,20 +24,21 @@ export const FilterBar: React.FC<FilterBarProps> = ({ onIndicatorClick }) => {
   };
 
   return (
-    <FilterBarLayout $isFocused={isFocused}>
-      <IndicatorBox $isFocused={isFocused}>
-        <DropdownIndicator
-          title="필터"
-          onLabelClick={onIndicatorClick}
-          id="1"
-        />
-      </IndicatorBox>
-      <InputArea $isFocused={isFocused}>
-        <Icon icon="Search" stroke="nuetralTextDefault"></Icon>
-        <InputBox onFocus={handleFocus} onBlur={handleBlur} />
-      </InputArea>
+    <>
+      <FilterBarLayout $isFocused={isFocused}>
+        <IndicatorBox $isFocused={isFocused} onClick={onFilterClick}>
+          <Button variant="ghost" size="M">
+            <p>{filterTitle}</p>
+            <Icon icon="ChevronDown" />
+          </Button>
+        </IndicatorBox>
 
-    </FilterBarLayout>
+        <InputArea $isFocused={isFocused}>
+          <Icon icon="Search" stroke="nuetralTextDefault"></Icon>
+          <InputBox onFocus={handleFocus} onBlur={handleBlur} />
+        </InputArea>
+      </FilterBarLayout>
+    </>
   );
 };
 
@@ -49,22 +53,35 @@ const FilterBarLayout = styled.div<{ $isFocused: boolean }>`
         ? color.nuetralBorderDefaultActive
         : color.nuetralBorderDefault};
   border-radius: ${({ theme: { radius } }) => radius.medium};
-  overflow: hidden;
   transition: all 0.3s;
+  > div {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 const IndicatorBox = styled.div<{ $isFocused: boolean }>`
   font: ${({ theme: { font } }) => font.availableM16};
-  padding: 0px 24px;
   cursor: pointer;
+  position: relative;
   height: 100%;
+  width: 128px;
   border-right: ${({ theme: { color } }) => color.nuetralBorderDefault};
   display: flex;
   align-items: center;
+  justify-content: center;
   background-color: ${({ theme: { color }, $isFocused }) =>
     $isFocused ? color.nuetralSurfaceStrong : color.nuetralSurfaceDefault};
   border-right: 1px solid
     ${({ theme: { color } }) => color.nuetralBorderDefault};
+  border-top-left-radius: ${({ theme: { radius } }) => radius.medium};
+  border-bottom-left-radius: ${({ theme: { radius } }) => radius.medium};
+  padding: 0 24px;
+  button {
+    justify-content: space-between;
+    width: 80px;
+    height: 38px;
+  }
 `;
 
 const InputArea = styled.div<{ $isFocused: boolean }>`
@@ -74,6 +91,8 @@ const InputArea = styled.div<{ $isFocused: boolean }>`
   background-color: ${({ theme: { color }, $isFocused }) =>
     $isFocused ? color.nuetralSurfaceStrong : color.nuetralSurfaceBold};
   height: 100%;
+  border-top-right-radius: ${({ theme: { radius } }) => radius.medium};
+  border-bottom-right-radius: ${({ theme: { radius } }) => radius.medium};
   svg {
     margin: 0 8px 0 24px;
   }

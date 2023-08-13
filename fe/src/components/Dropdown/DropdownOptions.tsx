@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import { useState } from "react";
 import { Icon } from "components/Common/Icon/Icon";
-
+import { ProfileImg } from "components/Common/Profile/Profile";
 interface SubFilterItem {
   id: number;
   name: string;
@@ -13,17 +12,18 @@ interface SubFilterItem {
 interface DropdownOptionsProps {
   items: SubFilterItem[] | null;
   onOptionClick?: (item: SubFilterItem) => void;
+  isSelectedFunc: (item: SubFilterItem) => boolean;
 }
 
 export const DropdownOptions: React.FC<DropdownOptionsProps> = ({
   items,
   onOptionClick,
+  isSelectedFunc,
 }) => {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-
   const handleOptionClick = (item: SubFilterItem) => {
-    setSelectedId(item.id);
-    onOptionClick && onOptionClick(item);
+    if (onOptionClick) {
+      onOptionClick(item);
+    }
   };
 
   return (
@@ -32,12 +32,10 @@ export const DropdownOptions: React.FC<DropdownOptionsProps> = ({
         <OptionItem
           key={item.id}
           onClick={() => handleOptionClick(item)}
-          $isSelected={selectedId === item.id}
+          $isSelected={isSelectedFunc(item)}
         >
           <div>
-            {item.profile && (
-              <Circle style={{ backgroundImage: `url(${item.profile})` }} />
-            )}
+            {item.profile && <ProfileImg size={20} $url={item.profile} />}
             {item.backgroundColor && (
               <Circle style={{ backgroundColor: item.backgroundColor }} />
             )}
@@ -45,7 +43,7 @@ export const DropdownOptions: React.FC<DropdownOptionsProps> = ({
           </div>
 
           <Icon
-            icon={selectedId === item.id ? "CheckOnCircle" : "CheckOffCircle"}
+            icon={isSelectedFunc(item) ? "CheckOnCircle" : "CheckOffCircle"}
           />
         </OptionItem>
       ))}
@@ -59,7 +57,6 @@ const OptionLists = styled.ul`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme: { color } }) => color.nuetralSurfaceStrong};
-  border-radius: ${({ theme: { radius } }) => radius.large};
 `;
 
 const OptionItem = styled.li<{ $isSelected: boolean }>`
