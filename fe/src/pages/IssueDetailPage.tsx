@@ -11,15 +11,22 @@ export const IssueDetailPage: React.FC = ({}: Props) => {
     useState<IssueDetailPageData>(initialPageData);
   const { id } = useParams<{ id?: string }>();
 
-  const fetchLabelList = async () => {
+  const fetchIssueDetailPageData = async () => {
     if (id) {
       const pageData = await getIssueDetail(id);
       setIssueDetailPageData(pageData);
     }
   };
 
+  const onAddComment = (comment: any) => {
+    setIssueDetailPageData({
+      ...issueDetailPageData,
+      comments: [...issueDetailPageData.comments, comment],
+    });
+  };
+
   useEffect(() => {
-    fetchLabelList();
+    fetchIssueDetailPageData();
   }, []);
 
   return (
@@ -32,7 +39,10 @@ export const IssueDetailPage: React.FC = ({}: Props) => {
       }}
     >
       <PostInformation issueDetailPageData={issueDetailPageData} />
-      <Body issueDetailPageData={issueDetailPageData} />
+      <Body
+        issueDetailPageData={issueDetailPageData}
+        onAddComment={onAddComment}
+      />
     </div>
   );
 };

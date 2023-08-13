@@ -12,6 +12,7 @@ import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { uploadFile } from 'apis/fileUpload';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
+import { postNewComment } from 'apis/api';
 
 type DefaultFileStatusType = {
   typeError: boolean;
@@ -124,33 +125,29 @@ export const Comment: React.FC<Props> = ({
   const onClickEdit = () => {
     setIsEditing(true);
   };
+
   const onAddSubmit = async () => {
-    const body = {
-      issueId: issueId,
-      authorId: issueAuthor.userId,
-      contents: textAreaValue,
-    };
+    // postNewComment(issueId, issueAuthor.userId, textAreaValue);
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_APP_BASE_URL}/comments`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body),
+      // const responseData = await postNewComment(
+      //   issueId,
+      //   issueAuthor.userId,
+      //   textAreaValue,
+      // );
+      // const newComment = responseData.data;
+      // console.log(newComment);
+
+      const newComment = {
+        id: issueId,
+        author: {
+          userId: issueAuthor.userId,
+          loginId: 'bono1234',
+          image: '이미지 url',
         },
-      );
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const responseData = await response.json();
-      const newComment = responseData.data;
-      console.log(newComment);
-
+        contents: textAreaValue,
+        createdAt: '2023-07-27T00:00:00',
+      };
       if (onAddComment) {
         onAddComment(newComment);
         setTextAreaValue('');
