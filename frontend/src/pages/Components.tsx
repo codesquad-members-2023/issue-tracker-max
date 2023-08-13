@@ -3,16 +3,16 @@ import Button from '../components/common/button/BaseButton';
 import ButtonLarge from '../components/common/button/ButtonLarge';
 import ButtonSmall from '../components/common/button/ButtonSmall';
 import ColorCodeInput from '../components/common/ColorCodeInput';
-import TabButton from '../components/common/TabButton';
-import InformationTag from '../components/common/InformationTag';
-import TextInput from '../components/common/TextInput';
-import ProgressIndicator from '../components/common/ProgressIndicator';
-import DropdownIndicator from '../components/common/DropdownIndicator';
-import DropdownPanel from '../components/common/DropdownPanel';
-import TextArea from '../components/common/TextArea';
-import SideBar from '../components/common/SideBar';
-import FilterBar from '../components/common/FilterBar';
-import Comment from '../components/common/CommentElements';
+// import TabButton from '../components/common/TabButton';
+// import InformationTag from '../components/common/InformationTag';
+// import TextInput from '../components/common/TextInput';
+// import ProgressIndicator from '../components/common/ProgressIndicator';
+// import DropdownIndicator from '../components/common/DropdownIndicator';
+// import DropdownPanel from '../components/common/DropdownPanel';
+// import TextArea from '../components/common/TextArea';
+// import SideBar from '../components/common/SideBar';
+// import FilterBar from '../components/common/FilterBar';
+// import Comment from '../components/common/CommentElements';
 import { AppContext } from '../main';
 import { useContext } from 'react';
 
@@ -29,16 +29,19 @@ export default function Components() {
           BUTTON
         </Button>
         <Button type="submit" ghost flexible iconName="plus">
-          This is Flexible BUTTON
+          Flexible BUTTON
         </Button>
-        <ButtonSmall type="submit" ghost iconName="plus">
-          BUTTON
-        </ButtonSmall>
+        <Button type="submit" ghost flexible selected iconName="plus">
+          Selected BUTTON
+        </Button>
+        <Button type="submit" ghost iconName="plus">
+          Normal BUTTON
+        </Button>
         <ButtonSmall type="submit" ghost iconName="plus" onClick={changeTheme}>
-          BUTTON
+          S BUTTON
         </ButtonSmall>
         <ColorCodeInput label="배경색" />
-        <TabButton />
+        {/* <TabButton />
         <InformationTag size="medium" iconName="alertCircle">
           Label
         </InformationTag>
@@ -74,7 +77,7 @@ export default function Components() {
           comment="오늘 점심 뭐 먹죠?"
         />
         <SideBar />
-        <FilterBar />
+        <FilterBar /> */}
       </Wrapper>
     </StyledComponents>
   );

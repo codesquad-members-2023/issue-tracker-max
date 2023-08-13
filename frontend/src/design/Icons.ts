@@ -10,6 +10,16 @@ import { ReactComponent as PaperClip } from '../asset/icons/paperclip.svg';
 import { ReactComponent as Edit } from '../asset/icons/edit.svg';
 import { ReactComponent as Smile } from '../asset/icons/smile.svg';
 import { ReactComponent as Search } from '../asset/icons/search.svg';
+import { ReactComponent as Label } from '../asset/icons/label.svg';
+import { ReactComponent as MileStone } from '../asset/icons/milestone.svg';
+import { ReactComponent as CheckBoxInitial } from '../asset/icons/check_box/initial.svg';
+import { ReactComponent as CheckBoxDisable } from '../asset/icons/check_box/disable.svg';
+import { ReactComponent as CheckBoxActive } from '../asset/icons/check_box/active.svg';
+import { ReactComponent as Archive } from '../asset/icons/archive.svg';
+import { ReactComponent as Trash } from '../asset/icons/trash.svg';
+import CheckBox from '../constant/CheckBox';
+
+const { initial, disable, active } = CheckBox;
 
 const Icons = {
   plus: Plus,
@@ -21,10 +31,19 @@ const Icons = {
   checkOnCircle: CheckOnCircle,
   checkOffCircle: CheckOffCircle,
   paperClip: PaperClip,
+  label: Label,
+  milestone: MileStone,
   edit: Edit,
   smile: Smile,
   search: Search,
   default: Plus,
+  archive: Archive,
+  trash: Trash,
+  checkBox: {
+    [initial]: CheckBoxInitial,
+    [disable]: CheckBoxDisable,
+    [active]: CheckBoxActive,
+  },
 } as const;
 
 export default Icons;

@@ -15,7 +15,7 @@ export default function InformationTag({
   iconName?: keyof typeof Icons;
   children?: React.ReactNode;
 }) {
-  const Icon = iconName && Icons[iconName];
+  const Icon = iconName && Icons[iconName] as React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 
   return (
     <Container $size={size}>

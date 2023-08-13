@@ -4,26 +4,29 @@ import { useState } from 'react';
 
 export default function ColorCodeInput({ label }: { label: string }) {
   const [colorCode, setColorCode] = useState<string>(getRandomColor());
-  const [key, setKey] = useState<number>(Date.now());
+  const [inputValue, setInputValue] = useState<string>(colorCode);
+  const [isInvalid, setIsInvalid] = useState<boolean>(false);
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.target as typeof e.target & {
-      'color-code': { value: string };
-    };
-    const colorCode = form['color-code'].value;
-    if (isValidColorCode(colorCode)) {
-      setColorCode(colorCode);
+    if (isValidColorCode(inputValue)) {
+      setColorCode(inputValue);
+    } else {
+      setIsInvalid(true);
     }
-  }
+  };
 
-  const refresh = () => {
-    setKey(Date.now());
-  }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    if (isInvalid && isValidColorCode(e.target.value)) {
+      setIsInvalid(false);
+    }
+  };
 
   const refreshBtnHandler = () => {
-    setColorCode(getRandomColor());
-    refresh();
+    const newRandomColor = getRandomColor();
+    setColorCode(newRandomColor);
+    setInputValue(newRandomColor);
   };
 
   return (
@@ -31,14 +34,12 @@ export default function ColorCodeInput({ label }: { label: string }) {
       <Label htmlFor="color-code">{label}</Label>
       <TypingStates>
         <input
-          key={key}
           type="text"
           id="color-code"
           name="color-code"
-          defaultValue={colorCode}
+          value={inputValue}
+          onChange={handleInputChange}
           pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$"
-          onInvalid={refresh}
-          onBlur={refresh}
           required
         />
       </TypingStates>

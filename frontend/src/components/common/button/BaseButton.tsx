@@ -9,6 +9,7 @@ type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
   flexible?: boolean;
   outline?: boolean;
   ghost?: boolean;
+  selected?: boolean;
   onClick?: () => void;
 };
 
@@ -21,10 +22,13 @@ export default function Button(props: ButtonProps) {
     flexible,
     outline,
     ghost,
+    selected,
     ...rest
   } = props;
   const hasIcon = iconName !== undefined;
-  const Icon = Icons[iconName ?? 'default'];
+  const Icon = Icons[iconName ?? 'default'] as React.FunctionComponent<
+    React.SVGProps<SVGSVGElement>
+  >;
 
   return (
     <RealButton
@@ -33,9 +37,10 @@ export default function Button(props: ButtonProps) {
       $flexible={flexible}
       $outline={outline}
       $ghost={ghost}
+      $selected={selected}
       {...rest}>
       {hasIcon && <Icon />}
-      <TextLabel>{children}</TextLabel>
+      <TextLabel $ghost={ghost}>{children}</TextLabel>
     </RealButton>
   );
 }
@@ -44,11 +49,12 @@ type StyledButtonProps = {
   $flexible?: boolean;
   $outline?: boolean;
   $ghost?: boolean;
+  $selected?: boolean;
 };
 
 const RealButton = styled.button<StyledButtonProps>`
   width: ${({ $flexible }) => ($flexible ? 'auto' : '184px')};
-  height: 48px;
+  min-height: 48px;
   padding: 0 16px;
   display: inline-flex;
   justify-content: center;
@@ -102,28 +108,48 @@ const RealButton = styled.button<StyledButtonProps>`
     }
     `}
 
-  ${({ theme, $ghost, $flexible }) =>
+  ${({ theme, $ghost, $flexible, $selected }) =>
     $ghost &&
     `
+    min-height: 32px;
     padding: ${$flexible ? '0' : '0 16px'};
+    gap: 4px;
     background-color: transparent;
     border: none;
     border-radius: 0;
-    color: ${theme.color.neutral.text.default};
+    color: ${
+      $selected
+        ? theme.color.neutral.text.strong
+        : theme.color.neutral.text.default
+    };
+    ${$selected && theme.font.selected.bold[16]};
 
     svg {
       path {
-        stroke: ${theme.color.neutral.text.default};
+        stroke: ${
+          $selected
+            ? theme.color.neutral.text.strong
+            : theme.color.neutral.text.default
+        };
       }
 
       rect {
-        fill: ${theme.color.neutral.text.default};
+        fill: ${
+          $selected
+            ? theme.color.neutral.text.strong
+            : theme.color.neutral.text.default
+        };
       }
     }
     `}
 `;
 
-const TextLabel = styled.span`
-  padding: 0 8px;
+const TextLabel = styled.span<{ $ghost?: boolean }>`
   text-align: center;
+  ${({ $ghost }) => {
+    if (!$ghost) {
+      return 'padding: 0 8px;';
+    }
+    return 'padding: 0;';
+  }}
 `;
