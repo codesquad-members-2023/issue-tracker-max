@@ -5,7 +5,7 @@ import { TextInput } from '@components/common/textInput/TextInput';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 
 export const RegisterForm: React.FC = () => {
-  // const availableFileSize = 1048576; //1MB
+  // const  AVAILABLE_FILE_SIZE = 1048576; //1MB
   const theme = useTheme() as any;
   // const [id, setId] = useState('');
   // const [password, setPassword] = useState('');

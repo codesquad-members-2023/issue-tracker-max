@@ -32,7 +32,7 @@ export const TextArea: React.FC<Props> = ({
   onAddFileUrl,
 }) => {
   const theme = useTheme() as any;
-  const availableFileSize = 1048576; //1MB
+  const AVAILABLE_FILE_SIZE = 1048576; //1MB
 
   const [isDisplayingCount, setIsDisplayingCount] = useState(false);
   const [fileStatus, setFileStatus] = useState<DefaultFileStatusType>({
@@ -90,7 +90,7 @@ export const TextArea: React.FC<Props> = ({
 
       const fileName = file.name;
 
-      if (file.size > availableFileSize) {
+      if (file.size > AVAILABLE_FILE_SIZE) {
         setFileStatus((prev) => ({ ...prev, sizeError: true }));
         return;
       }
