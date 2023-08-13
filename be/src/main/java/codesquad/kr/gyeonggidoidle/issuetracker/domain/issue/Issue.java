@@ -10,7 +10,7 @@ public class Issue {
 
     private final Long id;
     private final Long authorId;
-    private final Long milestoneId;
+    private Long milestoneId;
     private final String title;
     private final String status;
     private final LocalDateTime createdAt;

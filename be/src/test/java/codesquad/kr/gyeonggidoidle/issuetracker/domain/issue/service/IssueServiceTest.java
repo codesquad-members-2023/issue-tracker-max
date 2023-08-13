@@ -21,101 +21,134 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ServiceTest
-public class IssueServiceTest {
+class IssueServiceTest {
 
     @InjectMocks
-    IssueService issueService;
+    private IssueService issueService;
+
     @Mock
-    StatRepository statRepository;
+    private StatRepository statRepository;
     @Mock
-    IssueRepository issueRepository;
+    private IssueRepository issueRepository;
     @Mock
-    LabelRepository labelRepository;
+    private LabelRepository labelRepository;
     @Mock
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
     @Mock
-    MilestoneRepository milestoneRepository;
+    private MilestoneRepository milestoneRepository;
 
     @DisplayName("레포지토리에서 열린 이슈 관련 정보들을 받고 FilterInformation으로 변환할 수 있다.")
     @Test
-    void readOpenIssuesTest() {
+    void transformOpenIssuesVO() {
+        //given
         given(statRepository.countOverallStats()).willReturn(createDummyStatVO());
         given(issueRepository.findOpenIssues()).willReturn((createDummyOpenIssueVOs()));
         given(labelRepository.findAllByIssueIds(any())).willReturn(createDummyLabelVOs());
         given(memberRepository.findAllProfilesByIssueIds(any())).willReturn(createDummyAssigneeProfiles());
 
+        //when
         FilterInformation actual = issueService.readOpenIssues();
 
-        assertThat(actual.getOpenIssueCount()).isEqualTo(3);
-        assertThat(actual.getLabelCount()).isEqualTo(4);
-        assertThat(actual.getIssueInformations()).hasSize(5);
-        assertThat(actual.getIssueInformations().get(3).getAuthor()).isEqualTo("작성자 1");
-        assertThat(actual.getIssueInformations().get(2).getLabelInformations()).hasSize(4);
-        assertThat(actual.getIssueInformations().get(2).getLabelInformations().get(2).getBackgroundColor())
-                .isEqualTo("배경색 3");
-        assertThat(actual.getIssueInformations().get(4).getAssigneeProfiles().get(3)).isEqualTo("담당자 4");
+        //then
+        assertSoftly(assertions -> {
+            assertions.assertThat(actual.getOpenIssueCount()).isEqualTo(3);
+            assertions.assertThat(actual.getLabelCount()).isEqualTo(4);
+            assertions.assertThat(actual.getIssueInformations()).hasSize(5);
+            assertions.assertThat(actual.getIssueInformations().get(3).getAuthor())
+                    .isEqualTo("작성자 1");
+            assertions.assertThat(actual.getIssueInformations().get(2).getLabelInformations())
+                    .hasSize(4);
+            assertions.assertThat(actual.getIssueInformations().get(2).getLabelInformations().get(2).getBackgroundColor())
+                    .isEqualTo("배경색 3");
+            assertions.assertThat(actual.getIssueInformations().get(4).getAssigneeProfiles().get(3))
+                    .isEqualTo("담당자 4");
+        });
     }
 
     @DisplayName("레포지토리에서 닫힌 이슈 관련 정보들을 받고 FilterInformation으로 변환할 수 있다.")
     @Test
-    void readClosedIssuesTest() {
+    void transformClosedIssuesVO() {
+        //given
         given(statRepository.countOverallStats()).willReturn(createDummyStatVO());
         given(issueRepository.findClosedIssues()).willReturn((createDummyClosedIssueVOs()));
         given(labelRepository.findAllByIssueIds(any())).willReturn(createDummyLabelVOs());
         given(memberRepository.findAllProfilesByIssueIds(any())).willReturn(createDummyAssigneeProfiles());
 
+        //when
         FilterInformation actual = issueService.readClosedIssues();
 
-        assertThat(actual.getClosedIssueCount()).isEqualTo(3);
-        assertThat(actual.getMilestoneCount()).isEqualTo(2);
-        assertThat(actual.getIssueInformations()).hasSize(5);
-        assertThat(actual.getIssueInformations().get(0).getMilestone()).isEqualTo("마일스톤 1");
-        assertThat(actual.getIssueInformations().get(4).getLabelInformations()).isEqualTo(List.of());
-        assertThat(actual.getIssueInformations().get(1).getAssigneeProfiles().get(0)).isEqualTo("담당자 4");
+        //then
+        assertSoftly(assertions -> {
+            assertions.assertThat(actual.getClosedIssueCount()).isEqualTo(3);
+            assertions.assertThat(actual.getMilestoneCount()).isEqualTo(2);
+            assertions.assertThat(actual.getIssueInformations()).hasSize(5);
+            assertions.assertThat(actual.getIssueInformations().get(0).getMilestone())
+                    .isEqualTo("마일스톤 1");
+            assertions.assertThat(actual.getIssueInformations().get(4).getLabelInformations())
+                    .isEqualTo(Collections.emptyList());
+            assertions.assertThat(actual.getIssueInformations().get(1).getAssigneeProfiles().get(0))
+                    .isEqualTo("담당자 4");
+        });
     }
 
     @DisplayName("레포지토리에서 메인 페이지의 필터 정보를 받아 FilterListInformation으로 변환할 수 있다.")
     @Test
-    void testReadFilters() {
+    void transformFilterVO() {
+        //given
         given(memberRepository.findAllFilters()).willReturn(createDummyMemberDetailsVOs());
         given(labelRepository.findAllFilters()).willReturn(createDummyLabelDetailsVOs());
         given(milestoneRepository.findAllFilters()).willReturn(createDummyMilestoneDetailVOs());
 
+        //when
         FilterListInformation actual = issueService.readFilters();
 
-        assertThat(actual.getAssigneeFilterInformations().size()).isEqualTo(4);
-        assertThat(actual.getAuthorFilterInformations().size()).isEqualTo(3);
-        assertThat(actual.getAuthorFilterInformations().get(0).getName()).isEqualTo("ati");
-        assertThat(actual.getLabelFilterInformations().size()).isEqualTo(3);
-        assertThat(actual.getLabelFilterInformations().get(0).getId()).isEqualTo(3L);
-        assertThat(actual.getMilestoneFilterInformations().size()).isEqualTo(2);
+        //then
+        assertSoftly(assertions -> {
+            assertions.assertThat(actual.getAssigneeFilterInformations()).hasSize(4);
+            assertions.assertThat(actual.getAuthorFilterInformations()).hasSize(3);
+            assertions.assertThat(actual.getAuthorFilterInformations().get(0).getName())
+                    .isEqualTo("ati");
+            assertions.assertThat(actual.getLabelFilterInformations()).hasSize(3);
+            assertions.assertThat(actual.getLabelFilterInformations().get(0).getId())
+                    .isEqualTo(3L);
+            assertions.assertThat(actual.getMilestoneFilterInformations()).hasSize(2);
+        });
     }
 
     @DisplayName("레포지토리에서 이슈 페이지의 필터 정보를 받아 FilterListInformation으로 변환할 수 있다.")
     @Test
-    void testReadFiltersFromIssue() {
+    void transformFiltersFromIssue() {
+        //given
         given(memberRepository.findAllFilters()).willReturn(createDummyMemberDetailsVOs());
         given(labelRepository.findAllFilters()).willReturn(createDummyLabelDetailsVOs());
         given(milestoneRepository.findAllFilters()).willReturn(createDummyMilestoneDetailVOs());
         given(statRepository.findIssuesCountByMilestoneIds(any())).willReturn(createDummyIssueByMilestoneVOs());
 
+        //when
         FilterListInformation actual = issueService.readFiltersFromIssue();
 
-        assertThat(actual.getAssigneeFilterInformations().size()).isEqualTo(3);
-        assertThat(actual.getAuthorFilterInformations()).isEmpty();
-        assertThat(actual.getLabelFilterInformations().size()).isEqualTo(3);
-        assertThat(actual.getMilestoneFilterInformations().size()).isEqualTo(2);
-        assertThat(actual.getMilestoneFilterInformations().get(0).getId()).isEqualTo(0L);
-        assertThat(actual.getMilestoneFilterInformations().get(0).getOpenIssueCount()).isEqualTo(1);
-        assertThat(actual.getMilestoneFilterInformations().get(1).getId()).isEqualTo(1L);
+        //then
+        assertSoftly(assertions -> {
+            assertions.assertThat(actual.getAssigneeFilterInformations()).hasSize(3);
+            assertions.assertThat(actual.getAuthorFilterInformations()).isEmpty();
+            assertions.assertThat(actual.getLabelFilterInformations()).hasSize(3);
+            assertions.assertThat(actual.getMilestoneFilterInformations()).hasSize(2);
+            assertions.assertThat(actual.getMilestoneFilterInformations().get(0).getId())
+                    .isEqualTo(0L);
+            assertions.assertThat(actual.getMilestoneFilterInformations().get(0).getOpenIssueCount())
+                    .isEqualTo(1);
+            assertions.assertThat(actual.getMilestoneFilterInformations().get(1).getId())
+                    .isEqualTo(1L);
+        });
     }
 
     private Map<Long, IssueByMilestoneVO> createDummyIssueByMilestoneVOs() {

@@ -4,11 +4,12 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.Label
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import lombok.Builder;
-import lombok.Getter;
 
 @Getter
 public class FilterListInformation {
@@ -20,9 +21,9 @@ public class FilterListInformation {
 
     @Builder
     private FilterListInformation(List<AssigneeFilterInformation> assigneeFilterInformations,
-                                 List<AuthorFilterInformation> authorFilterInformations,
-                                 List<LabelFilterInformation> labelFilterInformations,
-                                 List<MilestoneFilterInformation> milestoneFilterInformations) {
+                                  List<AuthorFilterInformation> authorFilterInformations,
+                                  List<LabelFilterInformation> labelFilterInformations,
+                                  List<MilestoneFilterInformation> milestoneFilterInformations) {
         this.assigneeFilterInformations = assigneeFilterInformations;
         this.authorFilterInformations = authorFilterInformations;
         this.labelFilterInformations = labelFilterInformations;
@@ -37,7 +38,6 @@ public class FilterListInformation {
                 .labelFilterInformations(LabelFilterInformation.from(labels))
                 .milestoneFilterInformations(MilestoneFilterInformation.from(milestones))
                 .build();
-
     }
 
     public static FilterListInformation from(List<MemberDetailsVO> assignees, List<LabelDetailsVO> labels,

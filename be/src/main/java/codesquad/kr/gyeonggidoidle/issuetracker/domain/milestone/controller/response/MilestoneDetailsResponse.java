@@ -1,11 +1,12 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller.response;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.service.information.MilestoneDetailsInformation;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.Builder;
-import lombok.Getter;
 
 @Getter
 public class MilestoneDetailsResponse {
@@ -19,7 +20,7 @@ public class MilestoneDetailsResponse {
 
     @Builder
     private MilestoneDetailsResponse(Long id, String name, String description, LocalDate dueDate, Integer openIssueCount,
-                                    Integer closedIssuesCount) {
+                                     Integer closedIssuesCount) {
         this.id = id;
         this.name = name;
         this.description = description;

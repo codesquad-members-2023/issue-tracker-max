@@ -1,12 +1,13 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.contoller.response;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.MilestoneFilterInformation;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class MilestoneFilterResponse {
