@@ -48,10 +48,10 @@ public enum ErrorCode implements StatusCode {
 	LABEL_INSERT_FAILED(HttpStatus.BAD_REQUEST, "DB에서 라벨 생성에 실패했습니다."),
 	LABEL_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "DB에서 라벨 수정에 실패했습니다."),
 	LABEL_DELETE_FAILED(HttpStatus.BAD_REQUEST, "DB에서 라벨 삭제에 실패했습니다"),
-	LABEL_FIND_FAILED(HttpStatus.BAD_REQUEST, "서버 오류로 라벨을 조회할 수 없습니다");
+	LABEL_FIND_FAILED(HttpStatus.BAD_REQUEST, "서버 오류로 라벨을 조회할 수 없습니다"),
 
-
-
+	// -- [Issue] -- //
+	DUPLICATE_OBJECT_FOUND(HttpStatus.BAD_REQUEST, "중복된 항목 선택입니다.");
 
 	private HttpStatus status;
 	private String message;

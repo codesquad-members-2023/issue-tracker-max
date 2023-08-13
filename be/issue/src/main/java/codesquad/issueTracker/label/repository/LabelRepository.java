@@ -1,8 +1,10 @@
 package codesquad.issueTracker.label.repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -78,6 +80,13 @@ public class LabelRepository {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 
 		return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, Integer.class));
+	}
+
+	public Optional<Label> findById(Long id) {
+		String sql = "SELECT id, name, description, background_color, text_color, is_deleted FROM labels WHERE id = :id";
+		return Optional.ofNullable(
+			DataAccessUtils.singleResult(
+				jdbcTemplate.query(sql, Map.of("id", id), labelRowMapper)));
 	}
 
 	private final RowMapper<Label> labelRowMapper = (rs, rowNum) -> Label.builder()
