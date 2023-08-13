@@ -5,6 +5,7 @@ import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/textInput/TextInput';
+import { patchIssueTitle } from 'apis/api';
 
 type Props = {
   title: string;
@@ -18,28 +19,46 @@ export const PostInformationHeader: React.FC<Props> = ({
   const theme = useTheme() as any;
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [titleInput, setTitleInput] = useState<string>('');
+  const [titleInput, setTitleInput] = useState<string>(title);
+  const [placeholderValue, setPlaceholderValue] = useState<string>(title); //편집 취소시 돌아갈 값
+  //todo 길이제한 0이나 n0자 이상일때 버튼 비활성화
+  console.log(title);
+  console.log(titleInput);
 
   const isDisabled = title.length === 0;
 
   const onEditTitleOpen = () => {
     setIsEditing(true);
+    setTitleInput(titleInput);
   };
 
-  const onEditTitleClose = () => {
+  const onEditTitleCancel = () => {
     setIsEditing(false);
+    setTitleInput(placeholderValue);
   };
 
   const onChangeTitle = (value: string) => {
     setTitleInput(value);
+    //x버튼 호환 생각하기
   };
 
   const onClearInput = () => {
     setTitleInput('');
+    setPlaceholderValue('');
   };
 
-  const onSubmitTitle = () => {
+  const onSubmitTitle = async () => {
     console.log('제목 변경');
+
+    try {
+      const data = await patchIssueTitle(id, titleInput);
+      console.log(data);
+      setTitleInput(titleInput);
+      setPlaceholderValue(titleInput);
+      setIsEditing(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onCloseIssue = () => {
@@ -81,7 +100,7 @@ export const PostInformationHeader: React.FC<Props> = ({
               font: theme.fonts.displayBold32,
             }}
           >
-            {title}
+            {titleInput}
           </h2>
 
           <span
@@ -104,12 +123,17 @@ export const PostInformationHeader: React.FC<Props> = ({
       >
         {isEditing ? (
           <>
-            <Button typeVariant="outline" size="S" onClick={onEditTitleClose}>
+            <Button typeVariant="outline" size="S" onClick={onEditTitleCancel}>
               <XSquare stroke={theme.brand.text.weak} />
               편집 취소
             </Button>
-            <Button typeVariant="contained" size="S" disabled={isDisabled}>
-              <Edit stroke={theme.brand.text.default} onClick={onSubmitTitle} />
+            <Button
+              typeVariant="contained"
+              size="S"
+              disabled={isDisabled}
+              onClick={onSubmitTitle}
+            >
+              <Edit stroke={theme.brand.text.default} />
               편집 완료
             </Button>
           </>

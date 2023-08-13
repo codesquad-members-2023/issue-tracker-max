@@ -28,7 +28,7 @@ export const postNewIssue = (
   labelIds: number[],
   milestoneId: number,
 ) => {
-  return fetchData('issues/new', {
+  return fetchData('/issues/new', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ export const postNewIssue = (
 };
 
 export const patchIssueTitle = (id: number, title: string) => {
-  return fetchData('issues/title', {
+  return fetchData('/issues/title', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export const patchIssueTitle = (id: number, title: string) => {
 };
 
 export const patchIssueContents = (id: number, contents: string) => {
-  return fetchData('issues/contents', {
+  return fetchData('/issues/contents', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

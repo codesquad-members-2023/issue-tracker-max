@@ -21,8 +21,6 @@ export const TextAreaInput: React.FC<Props> = ({
 
   const placeholderText = placeholder ? placeholder : '코멘트를 입력하세요';
 
-  // console.log('텍스트에어리어 placeholder', placeholder);
-
   return (
     <>
       {typeVariant === 'add' ? (
