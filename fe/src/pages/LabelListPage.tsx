@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import { SubNav } from '@components/labelListPage/SubNav';
 import { Body } from '@components/labelListPage/Body';
 import { getLabelList } from 'apis/api';
-type Props = {};
 
-export const LabelListPage: React.FC<Props> = ({}) => {
+export const LabelListPage: React.FC = () => {
   const [isAddTableOpen, setIsAddTableOpen] = useState(false);
   const [labelListData, setLabelListData] = useState<Label[]>([]);
 
