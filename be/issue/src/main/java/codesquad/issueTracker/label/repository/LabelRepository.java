@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -96,4 +97,23 @@ public class LabelRepository {
 		.backgroundColor(rs.getString("background_color"))
 		.description(rs.getString("description"))
 		.build();
+
+	public Long resetIssuesLabels(Long issueId) {
+		String sql = "DELETE FROM issues_labels WHERE issue_id = :issueId";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("issueId", issueId);
+		jdbcTemplate.update(sql, parameterSource);
+		return issueId;
+	}
+
+	public Long insertIssuesLabels(Long issueId, Long labelId) {
+		String sql = "INSERT INTO issues_labels(issue_id, label_id) VALUES(:issueId, :labelId)";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		SqlParameterSource parameters = new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("labelId", labelId);
+		jdbcTemplate.update(sql, parameters, keyHolder);
+		return keyHolder.getKey().longValue();
+	}
+
 }
