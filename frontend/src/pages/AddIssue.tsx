@@ -34,13 +34,11 @@ export default function AddIssue() {
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setIssueInfo((prev) => ({ ...prev, title: value }));
-    console.log(issueInfo);
   };
 
   const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setIssueInfo((prev) => ({ ...prev, content: value }));
-    console.log(issueInfo);
   };
 
   return (

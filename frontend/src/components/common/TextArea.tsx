@@ -9,17 +9,17 @@ type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 
 export default function TextArea(props: TextAreaProps) {
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  // const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const { value, labelName, placeholder, disabled, ...rest } = props;
 
-  // useEffect(() => {
-  //   if (isFocused && !isTyping) {
-  //     setIsTyping(true);
-  //     setTimeout(() => {
-  //       setIsTyping(false);
-  //     }, 2000);
-  //   }
-  // }, [value]);
+  useEffect(() => {
+    if (isFocused && !isTyping) {
+      setIsTyping(true);
+      setTimeout(() => {
+        setIsTyping(false);
+      }, 2000);
+    }
+  }, [value]);
 
   const handleBlur = () => {
     setIsFocused(false);
@@ -42,7 +42,9 @@ export default function TextArea(props: TextAreaProps) {
           {...rest}></StyledTextArea>
       </Section>
       <Bottom>
-        {/* {isTyping && <TextCounter>띄어쓰기 포함 {value.length}자</TextCounter>} */}
+        {isTyping && typeof value === 'string' && (
+          <TextCounter>띄어쓰기 포함 {value.length}자</TextCounter>
+        )}
         <ButtonSmall type="button" ghost flexible iconName="paperClip">
           파일 첨부하기
         </ButtonSmall>
@@ -106,9 +108,9 @@ const Bottom = styled.div`
   ${({ theme }) => theme.color.neutral.border.default};
 `;
 
-// const TextCounter = styled.span`
-//   ${({ theme }) => theme.font.display.medium[12]};
-//   position: absolute;
-//   top: -32px;
-//   right: 30px;
-// `;
+const TextCounter = styled.span`
+  ${({ theme }) => theme.font.display.medium[12]};
+  position: absolute;
+  top: -32px;
+  right: 30px;
+`;
