@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.issuetrackermax.controller.ApiResponse;
 import com.issuetrackermax.controller.ApiResponse;
 import com.issuetrackermax.controller.comment.dto.request.CommentCreateRequest;
 import com.issuetrackermax.controller.comment.dto.request.CommentModifyRequest;
@@ -48,4 +52,11 @@ public class CommentController {
 		commentService.delete(id, memberId.longValue());
 		return ApiResponse.success();
 	}
+
+	@PostMapping("/upload")
+	public ApiResponse<String> uploadImage(
+		@RequestPart MultipartFile multipartFile) {
+		return ApiResponse.success(commentService.uploadFile(multipartFile));
+	}
+
 }
