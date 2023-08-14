@@ -45,7 +45,7 @@ public class CommentService {
 
 	public CommentDeleteResponse delete(Long userId, Long commentId) {
 		validateCommentId(commentId);
-		validateAuthor(userId, commentId);
+		validateAuthor(commentId, userId);
 		Long deletedCommentId = commentRepository.deleteById(commentId);
 
 		return new CommentDeleteResponse(deletedCommentId);
