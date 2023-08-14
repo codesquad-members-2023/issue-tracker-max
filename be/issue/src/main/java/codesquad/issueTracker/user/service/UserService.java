@@ -106,4 +106,8 @@ public class UserService {
 		return userRepository.findById(assigneeId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
 	}
 
+	@Transactional(readOnly = true)
+	public List<User> getUsers() {
+		return userRepository.findAll();
+	}
 }

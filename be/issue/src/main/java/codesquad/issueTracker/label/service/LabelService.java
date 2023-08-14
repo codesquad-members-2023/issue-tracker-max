@@ -1,8 +1,10 @@
 package codesquad.issueTracker.label.service;
 
+import codesquad.issueTracker.issue.vo.IssueLabelVo;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import codesquad.issueTracker.global.exception.CustomException;
@@ -53,5 +55,11 @@ public class LabelService {
 
 	public Long insertIssuesLabels(Long id, Long labelId) {
 		return labelRepository.insertIssuesLabels(id, labelId);
+	}
+
+	public List<IssueLabelVo> findByIssueId(Long issueId) {
+		return labelRepository.findLabelsById(issueId).stream()
+				.map(IssueLabelVo::from)
+				.collect(Collectors.toList());
 	}
 }

@@ -98,6 +98,18 @@ public class LabelRepository {
 		.description(rs.getString("description"))
 		.build();
 
+
+	public List<Label> findLabelsById(Long issueId) {
+		String sql = "select l.id, l.name, l.background_color, l.text_color, l.description "
+				+ "from issues_labels il "
+				+ "    join issues i on i.id = il.issue_id "
+				+ "    join labels l on il.label_id = l.id "
+				+ "where i.id = :issueId "
+				+ "AND l.is_deleted = false "
+				+ "AND i.is_deleted = false ";
+		return jdbcTemplate.query(sql, Map.of("issueId", issueId), labelRowMapper);
+  }
+  
 	public Long resetIssuesLabels(Long issueId) {
 		String sql = "DELETE FROM issues_labels WHERE issue_id = :issueId";
 		SqlParameterSource parameterSource = new MapSqlParameterSource()

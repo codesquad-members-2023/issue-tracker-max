@@ -1,5 +1,18 @@
 package codesquad.issueTracker.issue.service;
 
+import codesquad.issueTracker.global.common.Status;
+import codesquad.issueTracker.issue.dto.IssueOptionResponseDto;
+import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
+import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
+import codesquad.issueTracker.issue.vo.IssueLabelVo;
+import codesquad.issueTracker.issue.vo.IssueMilestoneVo;
+import codesquad.issueTracker.issue.dto.IssueResponseDto;
+import codesquad.issueTracker.issue.dto.IssueUserResponseDto;
+import codesquad.issueTracker.issue.vo.AssigneeVo;
+import codesquad.issueTracker.label.dto.LabelResponseDto;
+
+import codesquad.issueTracker.milestone.vo.MilestoneVo;
+import codesquad.issueTracker.user.domain.User;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -7,6 +20,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import codesquad.issueTracker.comment.service.CommentService;
 import codesquad.issueTracker.global.common.Status;
@@ -37,7 +51,6 @@ public class IssueService {
 	private final LabelService labelService;
 	private final UserService userService;
 	private final MilestoneService milestoneService;
-	private final CommentService commentService;
 
 	@Transactional
 	public Long save(IssueWriteRequestDto request, Long id) {
@@ -76,6 +89,62 @@ public class IssueService {
 		}
 	}
 
+
+	public List<IssueLabelResponseDto> getIssueLabels() {
+		LabelResponseDto allLabels = labelService.findAll();
+		return allLabels.getLabels().stream()
+				.map(IssueLabelResponseDto::from)
+				.collect(Collectors.toList());
+	}
+
+	public List<IssueMilestoneResponseDto> getIssueMilestones() {
+		List<MilestoneVo> milestones = milestoneService.findMilestonesByStatus(Status.OPEN.getStatus());
+		return milestones.stream()
+				.map(IssueMilestoneResponseDto::from)
+				.collect(Collectors.toList());
+	}
+
+	public List<IssueUserResponseDto> getIssueUsers() {
+		List<User> users = userService.getUsers();
+		return users.stream()
+				.map(IssueUserResponseDto::from)
+				.collect(Collectors.toList());
+	}
+
+	public IssueResponseDto getIssueById(Long issueId) {
+		validateExistIssue(issueId);
+		Issue issue = validateActiveIssueById(issueId);
+
+		return IssueResponseDto.from(issue);
+	}
+
+	private void validateExistIssue(Long issueId) {
+		issueRepository.findById(issueId)
+				.orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ISSUE));
+	}
+
+	private Issue validateActiveIssueById(Long issueId) {
+		return issueRepository.findActiveIssueById(issueId)
+				.orElseThrow(() -> new CustomException(ErrorCode.ALREADY_DELETED_ISSUE));
+	}
+
+	public IssueOptionResponseDto getIssueOptions(Long issueId) {
+		validateExistIssue(issueId);
+		validateActiveIssueById(issueId);
+
+		List<AssigneeVo> assignees = issueRepository.findAssigneesById(issueId);
+		List<IssueLabelVo> labels = labelService.findByIssueId(issueId);
+		IssueMilestoneVo milestone = milestoneService.findByIssueId(issueId);
+
+		if (milestone.getId() != null) {
+			int closeCount = issueRepository.findCountByStatusAndMilestone(Status.CLOSED.getStatus(), milestone);
+			int openCount = issueRepository.findCountByStatusAndMilestone(Status.OPEN.getStatus(), milestone);
+			return IssueOptionResponseDto.of(assignees, labels, milestone.getMilestoneWithRatio(openCount, closeCount));
+		}
+
+		return IssueOptionResponseDto.of(assignees, labels, milestone);
+ }
+
 	@Transactional
 	public List<Long> modifyIssueStatus(ModifyIssueStatusRequestDto request) {
 		List<Long> issueIds = request.getIssueIds();
@@ -86,10 +155,8 @@ public class IssueService {
 				.map(issueId -> validateExistIssue(issueId))
 				.map(existIssue -> issueRepository.modifyStatus(existIssue.getId(), status))
 				.collect(Collectors.toList());
-			;
 		}
 		return issueIds;
-
 	}
 
 	@Transactional
@@ -97,7 +164,6 @@ public class IssueService {
 		Boolean status = Status.from(request.getStatus()).getStatus();
 		validateExistIssue(id);
 		return issueRepository.modifyStatus(id, status);
-
 	}
 
 	private Issue validateExistIssue(Long issuesIds) {

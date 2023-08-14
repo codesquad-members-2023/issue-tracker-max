@@ -1,8 +1,14 @@
 package codesquad.issueTracker.issue.repository;
 
-import java.time.LocalDateTime;
+
+import codesquad.issueTracker.issue.vo.AssigneeVo;
+import codesquad.issueTracker.issue.vo.IssueMilestoneVo;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.time.LocalDateTime;
+
+
 
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -56,6 +62,59 @@ public class IssueRepository {
 		return keyHolder.getKey().longValue();
 	}
 
+
+	public Optional<Issue> findActiveIssueById(Long issueId) {
+		String sql = "SELECT * FROM issues WHERE id = :issueId AND is_deleted = false";
+		return Optional.ofNullable(
+				DataAccessUtils.singleResult(
+						jdbcTemplate.query(sql, Map.of("issueId", issueId), issueRowMapper)));
+	}
+
+	private final RowMapper<Issue> issueRowMapper = ((rs, rowNum) -> Issue.builder()
+			.id(rs.getLong("id"))
+			.title(rs.getString("title"))
+			.content(rs.getString("content"))
+			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+			.isClosed(rs.isClosed())
+			.build());
+
+	public Optional<Issue> findById(Long issueId) {
+		String sql = "SELECT * FROM issues WHERE id = :issueId";
+		return Optional.ofNullable(
+				DataAccessUtils.singleResult(
+						jdbcTemplate.query(sql, Map.of("issueId", issueId), issueRowMapper)));
+	}
+
+	public List<AssigneeVo> findAssigneesById(Long issueId) {
+		String sql = "select u.id, u.name, u.profile_img "
+				+ "from assignees a "
+				+ "    join users u on a.user_id = u.id "
+				+ "    join issues i on a.issue_id = i.user_id "
+				+ "where i.id = :issueId "
+				+ "AND i.is_deleted = false";
+		return jdbcTemplate.query(sql, Map.of("issueId",issueId), assigneeVoRowMapper);
+	}
+
+	private final RowMapper<AssigneeVo> assigneeVoRowMapper = ((rs, rowNum) -> AssigneeVo.builder()
+			.id(rs.getLong("id"))
+			.name(rs.getString("name"))
+			.imgUrl(rs.getString("profile_img"))
+			.build());
+
+
+	public int findCountByStatusAndMilestone(boolean status, IssueMilestoneVo milestone) {
+		String sql = "select COUNT(i.id) as count "
+				+ "from issues i "
+				+ "    join milestones m on m.id = i.milestone_id "
+				+ "where m.id = :milestoneId "
+				+ "and i.is_deleted = false "
+				+ "and i.is_closed = :status";
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("milestoneId", milestone.getId());
+		params.addValue("status", status);
+		return jdbcTemplate.queryForObject(sql, params, Integer.class);
+  }
+  
 	public Optional<Issue> findById(Long id) {
 		String sql = "SELECT id, milestone_id, user_id, title, content, created_at, is_closed FROM issues WHERE id = :id AND is_deleted = 0";
 		return Optional.ofNullable(
@@ -89,7 +148,6 @@ public class IssueRepository {
 			.addValue("modifiedContent", modifiedContent);
 		jdbcTemplate.update(sql, parameterSource);
 		return id;
-
 	}
 
 	public Long updateTitle(Long id, String modifiedTitle) {
@@ -125,4 +183,5 @@ public class IssueRepository {
 		jdbcTemplate.update(sql, parameterSource);
 		return issueId;
 	}
+  
 }

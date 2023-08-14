@@ -1,5 +1,6 @@
 package codesquad.issueTracker.user.repository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -115,5 +116,9 @@ public class UserRepository {
 				jdbcTemplate.query(sql, Map.of("id", id), userRowMapper)));
 	}
 
+	public List<User> findAll() {
+		String sql = "SELECT * FROM users";
+		return jdbcTemplate.query(sql, userRowMapper);
+	}
 }
 
