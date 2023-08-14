@@ -8,18 +8,16 @@ type selectedMilestonesData = {
 };
 
 type Props = {
-  selectedMilestonesData: selectedMilestonesData[];
+  selectedMilestonesData: selectedMilestonesData;
 };
 
 export const ListMilestone: React.FC<Props> = ({ selectedMilestonesData }) => {
+  console.log(selectedMilestonesData);
+
   return (
-    <>
-      {selectedMilestonesData.map((milestone) => (
-        <div key={milestone.id}>
-          <ProgressBar progress={milestone.progress} />
-          <ProgressLabel name={milestone.name} />
-        </div>
-      ))}
-    </>
+    <div>
+      <ProgressBar progress={selectedMilestonesData.progress} />
+      <ProgressLabel name={selectedMilestonesData.name} />
+    </div>
   );
 };

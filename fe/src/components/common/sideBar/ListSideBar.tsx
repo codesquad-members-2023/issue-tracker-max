@@ -12,11 +12,11 @@ import {
 } from 'apis/api';
 import { DropDownList } from '../dropDown/DropDownList';
 
-type SelectionState = {
-  assignees: number[];
-  labels: number[];
-  milestones: number | null;
-};
+// type SelectionState = {
+//   assignees: number[];
+//   labels: number[];
+//   milestones: number | null;
+// };
 
 type FetchPath = 'users' | 'labels' | 'milestones';
 
@@ -26,11 +26,11 @@ type UserData = {
   image: string;
 };
 
-// type ModifiedUserData = {
-//   id: number;
-//   loginId: string;
-//   image: string;
-// };
+type ModifiedUserData = {
+  id: number;
+  loginId: string;
+  image: string;
+};
 
 type LabelData = {
   id: number;
@@ -46,10 +46,13 @@ type MilestoneData = {
 };
 
 type Props = {
-  selections: SelectionState;
+  selections: SelectionState['newIssuePage'];
   onSingleSelectedMilestone: (id: number) => void;
   onMultipleSelectedAssignee: (id: number) => void;
   onMultipleSelectedLabel: (id: number) => void;
+  //
+  onChangeSelect?: (key: string) => void;
+  selectionsOptions?: SelectionState['detailPage'];
 };
 
 export const ListSideBar: React.FC<Props> = ({
@@ -57,6 +60,9 @@ export const ListSideBar: React.FC<Props> = ({
   onSingleSelectedMilestone,
   onMultipleSelectedAssignee,
   onMultipleSelectedLabel,
+  //
+  onChangeSelect,
+  selectionsOptions,
 }) => {
   const theme = useTheme() as any;
 
@@ -69,6 +75,8 @@ export const ListSideBar: React.FC<Props> = ({
     labels: [],
     milestones: [],
   });
+
+  console.log(selections.milestones);
 
   const [isPanelOpen, setIsPanelOpen] = useState<
     null | 'users' | 'labels' | 'milestones'
@@ -87,20 +95,36 @@ export const ListSideBar: React.FC<Props> = ({
     return { id: userId, ...rest };
   });
 
+  const modifiedUserDataaa = selectionsOptions?.assignees.map((item) => {
+    const { userId, ...rest } = item;
+    return { id: userId, ...rest };
+  });
+
   const assigneeOptions = modifiedUserData.slice(1);
   const labelOptions = listData.labels.slice(1);
   const milestoneOptions = listData.milestones.slice(1);
-  const selectedAssigneesData = modifiedUserData.filter((users) =>
-    selections.assignees.includes(users.id),
-  );
 
-  const selectedLabelsData = labelOptions.filter((label) =>
-    selections.labels.includes(label.id),
-  );
+  const selectedAssigneesData =
+    listData.users.length !== 0
+      ? modifiedUserData.filter((users) =>
+          selections.assignees.includes(users.id),
+        )
+      : modifiedUserDataaa;
 
-  const selectedMilestonesData = milestoneOptions.filter(
-    (milestone) => selections.milestones === milestone.id,
-  );
+  const selectedLabelsData =
+    listData.labels.length !== 0
+      ? labelOptions.filter((label) => selections.labels.includes(label.id))
+      : selectionsOptions?.labels;
+
+  const selectedMilestonesData =
+    listData.milestones.length !== 0
+      ? milestoneOptions.find(
+          (milestone) => selections.milestones === milestone.id,
+        )
+      : selectionsOptions?.milestones;
+
+  console.log(milestoneOptions);
+  console.log(selectedMilestonesData);
 
   const openPanel = async (
     fetchDataFunction: () => Promise<
@@ -125,8 +149,12 @@ export const ListSideBar: React.FC<Props> = ({
     setIsPanelOpen(panelName);
   };
 
-  const closePanel = () => {
+  const closePanel = (key: string) => {
     setIsPanelOpen(null);
+
+    if (onChangeSelect) {
+      onChangeSelect(key);
+    }
   };
 
   const commonStyles = css`
@@ -152,7 +180,7 @@ export const ListSideBar: React.FC<Props> = ({
           <DropDownPanel
             panelHeader="담당자 설정"
             position="center"
-            onOutsideClick={closePanel}
+            onOutsideClick={() => closePanel('assignees')}
           >
             {assigneeOptions?.map((item) => (
               <DropDownList
@@ -164,7 +192,9 @@ export const ListSideBar: React.FC<Props> = ({
             ))}
           </DropDownPanel>
         </DropDownContainer>
-        <ListAssignee selectedAssigneesData={selectedAssigneesData} />
+        {selectedAssigneesData && (
+          <ListAssignee selectedAssigneesData={selectedAssigneesData} />
+        )}
       </div>
       <div css={commonStyles}>
         <DropDownContainer
@@ -176,7 +206,7 @@ export const ListSideBar: React.FC<Props> = ({
           <DropDownPanel
             panelHeader="레이블 설정"
             position="center"
-            onOutsideClick={closePanel}
+            onOutsideClick={() => closePanel('labels')}
           >
             {labelOptions?.map((item) => (
               <DropDownList
@@ -188,7 +218,9 @@ export const ListSideBar: React.FC<Props> = ({
             ))}
           </DropDownPanel>
         </DropDownContainer>
-        <ListLabel selectedLabelsData={selectedLabelsData} />
+        {selectedLabelsData && (
+          <ListLabel selectedLabelsData={selectedLabelsData} />
+        )}
       </div>
       <div css={commonStyles}>
         <DropDownContainer
@@ -200,7 +232,7 @@ export const ListSideBar: React.FC<Props> = ({
           <DropDownPanel
             panelHeader="마일스톤 설정"
             position="center"
-            onOutsideClick={closePanel}
+            onOutsideClick={() => closePanel('milestones')}
           >
             {milestoneOptions?.map((item) => (
               <DropDownList
@@ -212,7 +244,9 @@ export const ListSideBar: React.FC<Props> = ({
             ))}
           </DropDownPanel>
         </DropDownContainer>
-        <ListMilestone selectedMilestonesData={selectedMilestonesData} />
+        {selectedMilestonesData && (
+          <ListMilestone selectedMilestonesData={selectedMilestonesData} />
+        )}
       </div>
     </>
   );
