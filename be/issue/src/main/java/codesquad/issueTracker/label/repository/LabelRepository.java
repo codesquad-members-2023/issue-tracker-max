@@ -115,4 +115,5 @@ public class LabelRepository {
 		jdbcTemplate.update(sql, parameters, keyHolder);
 		return keyHolder.getKey().longValue();
 	}
+
 }

@@ -116,4 +116,13 @@ public class IssueRepository {
 		jdbcTemplate.update(sql, parameterSource);
 		return issueId;
 	}
+
+	public Long updateMilestone(Long issueId, Long milestoneId) {
+		String sql = "UPDATE issues SET milestone_id = :milestoneId WHERE id = :issueId ";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("milestoneId", milestoneId);
+		jdbcTemplate.update(sql, parameterSource);
+		return issueId;
+	}
 }

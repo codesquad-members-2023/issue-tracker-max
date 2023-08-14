@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ModifyIssueContentResponseDto {
-	String modifiedContent;
+	private String modifiedContent;
 }

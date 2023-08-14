@@ -17,6 +17,7 @@ import codesquad.issueTracker.issue.dto.IssueWriteRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyAssigneeRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueContentRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueContentResponseDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueMilestoneDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueTitleRequest;
 import codesquad.issueTracker.issue.dto.ModifyIssueTitleResponse;
@@ -165,5 +166,15 @@ public class IssueService {
 		}
 		labelService.resetLabels(id);
 		return id;
+	}
+
+	@Transactional
+	public Long modifyMilestone(Long id, ModifyIssueMilestoneDto request) {
+		validateExistIssue(id);
+		Long milestoneId = request.getMilestone();
+		if (milestoneId != null) {
+			milestoneService.isExistMilestone(milestoneId);
+		}
+		return issueRepository.updateMilestone(id, milestoneId);
 	}
 }

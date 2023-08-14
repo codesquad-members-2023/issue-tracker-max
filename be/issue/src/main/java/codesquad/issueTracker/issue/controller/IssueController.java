@@ -18,6 +18,7 @@ import codesquad.issueTracker.issue.dto.IssueWriteRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyAssigneeRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueContentRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueContentResponseDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueMilestoneDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueTitleRequest;
 import codesquad.issueTracker.issue.dto.ModifyIssueTitleResponse;
@@ -80,8 +81,14 @@ public class IssueController {
 	}
 
 	@PatchMapping("/issues/{id}/labels")
-	public ApiResponse<String> patchLabel(@PathVariable Long id, @RequestBody ModifyLabelRequestDto request) {
+	public ApiResponse<String> patchLabels(@PathVariable Long id, @RequestBody ModifyLabelRequestDto request) {
 		issueService.modifyLabels(id, request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+	}
+
+	@PatchMapping("/issues/{id}/milestones")
+	public ApiResponse<String> patchMilestone(@PathVariable Long id, @RequestBody ModifyIssueMilestoneDto request) {
+		issueService.modifyMilestone(id, request);
 		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 }
