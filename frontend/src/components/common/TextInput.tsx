@@ -42,7 +42,7 @@ export default function TextInput(props: TextInputProps) {
 
   return (
     <InputContainer $size={size} $disabled={disabled} $hasError={hasError}>
-      {(isFocused || value) && <Label $size={size}>{labelName}</Label>}
+      {labelName && isFocused && <Label $size={size}>{labelName}</Label>}
       <StyledTextInput
         type={type ? type : 'text'}
         id={id}
@@ -111,6 +111,7 @@ const Label = styled.label<{ $size: 'tall' | 'short' }>`
 `;
 
 const StyledTextInput = styled.input`
+  height: inherit;
   padding: 0;
   border: none;
   outline: none;

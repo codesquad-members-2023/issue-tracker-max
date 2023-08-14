@@ -29,7 +29,7 @@ export default function AddIssue() {
           <img src={defaultUserImg} alt="" />
         </Profile>
       </Header>
-      <Main>
+      <Body>
         <Title>새로운 이슈 작성</Title>
         <Container>
           <UserImg src={defaultUserImg} alt="" />
@@ -52,14 +52,21 @@ export default function AddIssue() {
           </Button>
           <ButtonLarge type="submit">완료</ButtonLarge>
         </ButtonArea>
-      </Main>
+      </Body>
     </Layout>
   );
 }
 
 const Profile = styled.div``;
 
-const Title = styled.h2`
+const Body = styled(Main)`
+  min-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+const Title = styled.p`
   padding-bottom: 24px;
   border-bottom: ${({ theme }) => theme.objectStyles.border.default};
   border-bottom-color: ${({ theme }) => theme.color.neutral.border.default};
@@ -69,9 +76,9 @@ const Title = styled.h2`
 
 const Container = styled.div`
   padding-bottom: 24px;
-  margin-top: 24px;
   display: flex;
   align-items: flex-start;
+  flex: 1 0 0;
   gap: 24px;
   border-bottom: ${({ theme }) => theme.objectStyles.border.default};
   border-bottom-color: ${({ theme }) => theme.color.neutral.border.default};
@@ -83,7 +90,7 @@ const InputArea = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex: 1;
+  flex: 1 0 0;
 
   & > div {
     height: 552px;
@@ -91,7 +98,6 @@ const InputArea = styled.div`
 `;
 
 const ButtonArea = styled.div`
-  margin-top: 24px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
