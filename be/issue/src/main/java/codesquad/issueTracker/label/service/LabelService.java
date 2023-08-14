@@ -46,4 +46,12 @@ public class LabelService {
 	public Label validateLabelsId(Long label) {
 		return labelRepository.findById(label).orElseThrow(() -> new CustomException(ErrorCode.LABEL_FIND_FAILED));
 	}
+
+	public Long resetLabels(Long id) {
+		return labelRepository.resetIssuesLabels(id);
+	}
+
+	public Long insertIssuesLabels(Long id, Long labelId) {
+		return labelRepository.insertIssuesLabels(id, labelId);
+	}
 }

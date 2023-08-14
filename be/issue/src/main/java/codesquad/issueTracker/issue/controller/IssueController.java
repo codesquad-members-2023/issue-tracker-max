@@ -21,6 +21,7 @@ import codesquad.issueTracker.issue.dto.ModifyIssueContentResponseDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueTitleRequest;
 import codesquad.issueTracker.issue.dto.ModifyIssueTitleResponse;
+import codesquad.issueTracker.issue.dto.ModifyLabelRequestDto;
 import codesquad.issueTracker.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
 
@@ -75,6 +76,12 @@ public class IssueController {
 	@PatchMapping("/issues/{id}/assignees")
 	public ApiResponse<String> patchAssignees(@PathVariable Long id, @RequestBody ModifyAssigneeRequestDto request) {
 		issueService.modifyAssignees(id, request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+	}
+
+	@PatchMapping("/issues/{id}/labels")
+	public ApiResponse<String> patchLabel(@PathVariable Long id, @RequestBody ModifyLabelRequestDto request) {
+		issueService.modifyLabels(id, request);
 		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 }

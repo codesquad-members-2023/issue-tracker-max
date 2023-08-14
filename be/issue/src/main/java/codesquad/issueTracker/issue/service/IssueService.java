@@ -20,6 +20,7 @@ import codesquad.issueTracker.issue.dto.ModifyIssueContentResponseDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueTitleRequest;
 import codesquad.issueTracker.issue.dto.ModifyIssueTitleResponse;
+import codesquad.issueTracker.issue.dto.ModifyLabelRequestDto;
 import codesquad.issueTracker.issue.repository.IssueRepository;
 import codesquad.issueTracker.label.service.LabelService;
 import codesquad.issueTracker.milestone.service.MilestoneService;
@@ -130,8 +131,9 @@ public class IssueService {
 	public Long modifyAssignees(Long id, ModifyAssigneeRequestDto request) {
 		validateExistIssue(id);
 		List<Long> assignees = request.getAssignees();
-		duplicatedId(assignees);
+
 		if (assignees != null) {
+			duplicatedId(assignees);
 			for (Long assigneeId : assignees) {
 				userService.validateUserId(assigneeId);
 			}
@@ -145,4 +147,23 @@ public class IssueService {
 		return id;
 	}
 
+	@Transactional
+	public Long modifyLabels(Long id, ModifyLabelRequestDto request) {
+		validateExistIssue(id);
+		List<Long> labels = request.getLabels();
+
+		if (labels != null) {
+			duplicatedId(labels);
+			for (Long labelId : labels) {
+				labelService.validateLabelsId(labelId);
+			}
+			labelService.resetLabels(id);
+			for (Long labelId : labels) {
+				labelService.insertIssuesLabels(id, labelId);
+			}
+			return id;
+		}
+		labelService.resetLabels(id);
+		return id;
+	}
 }
