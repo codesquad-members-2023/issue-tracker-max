@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.issueTracker.comment.service.CommentService;
+import codesquad.issueTracker.global.common.Status;
 import codesquad.issueTracker.global.exception.CustomException;
 import codesquad.issueTracker.global.exception.ErrorCode;
 import codesquad.issueTracker.issue.domain.Issue;
 import codesquad.issueTracker.issue.dto.IssueWriteRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
 import codesquad.issueTracker.issue.repository.IssueRepository;
 import codesquad.issueTracker.label.service.LabelService;
 import codesquad.issueTracker.milestone.service.MilestoneService;
@@ -64,6 +66,22 @@ public class IssueService {
 			if (!set.add(temp)) {
 				throw new CustomException(ErrorCode.DUPLICATE_OBJECT_FOUND);
 			}
+		}
+	}
+
+	@Transactional
+	public List<Long> modifyIssueStatus(ModifyIssueStatusRequestDto request) {
+		List<Long> issueIds = request.getIssueIds();
+		Boolean status = Status.from(request.getStatus()).getStatus();
+		duplicatedId(issueIds);
+		validateExistIssue(issueIds);
+		return issueIds.stream()
+			.map(issueId -> issueRepository.modifyStatus(issueId, status)).collect(Collectors.toList());
+	}
+
+	private void validateExistIssue(List<Long> issuesIds) {
+		for (Long issueId : issuesIds) {
+			issueRepository.findById(issueId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ISSUES));
 		}
 	}
 }

@@ -1,6 +1,12 @@
 package codesquad.issueTracker.issue.repository;
 
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -49,4 +55,31 @@ public class IssueRepository {
 		jdbcTemplate.update(sql, parameters, keyHolder);
 		return keyHolder.getKey().longValue();
 	}
+
+	public Optional<Issue> findById(Long id) {
+		String sql = "SELECT id, milestone_id, user_id, title, content, created_at, is_closed FROM issues WHERE id = :id AND is_deleted = 0";
+		return Optional.ofNullable(
+			DataAccessUtils.singleResult(
+				jdbcTemplate.query(sql, Map.of("id", id), issueRowMapper)));
+	}
+
+	public Long modifyStatus(Long issueId, Boolean status) {
+		String sql = "UPDATE issues SET is_closed = :status  where id = :id AND is_deleted = 0";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("id", issueId)
+			.addValue("status", status);
+		jdbcTemplate.update(sql, parameterSource);
+		return issueId;
+	}
+
+	private final RowMapper<Issue> issueRowMapper = (rs, rowNum) -> Issue.builder()
+		.id(rs.getLong("id"))
+		.milestoneId(rs.getLong("milestone_id"))
+		.userId(rs.getLong("user_id"))
+		.title(rs.getString("title"))
+		.content(rs.getString("content"))
+		.createdAt(rs.getObject("created_at", LocalDateTime.class))
+		.isClosed(rs.getBoolean("is_closed"))
+		.build();
+
 }
