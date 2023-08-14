@@ -6,11 +6,9 @@ import java.util.Map;
 
 import javax.crypto.SecretKey;
 
+import org.presents.issuetracker.global.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -40,14 +38,33 @@ public class JwtProvider {
 		long now = new Date().getTime();
 		Date expiration = new Date(now + 1000L * seconds);
 
+		return Jwts.builder()
+			.claim("body", JsonUtil.toStr(claims))
+			.setExpiration(expiration)
+			.signWith(getSecretKey(), SignatureAlgorithm.HS512)
+			.compact();
+	}
+
+	public boolean verify(String token) {
 		try {
-			return Jwts.builder()
-				.claim("body", new ObjectMapper().writeValueAsString(claims))
-				.setExpiration(expiration)
-				.signWith(getSecretKey(), SignatureAlgorithm.HS512)
-				.compact();
-		} catch (JsonProcessingException e) {
-			return null;
+			Jwts.parserBuilder()
+				.setSigningKey(getSecretKey())
+				.build()
+				.parseClaimsJws(token);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
+		return true;
+	}
+
+	public Map<String, Object> getClaims(String token) {
+		String claims = Jwts.parserBuilder()
+			.setSigningKey(getSecretKey())
+			.build()
+			.parseClaimsJws(token)
+			.getBody()
+			.get("body", String.class);
+		return JsonUtil.toMap(claims);
 	}
 }
