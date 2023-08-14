@@ -28,7 +28,7 @@ public class Milestone {
 	public static Milestone from(MilestonePostRequest milestonePostRequest) {
 		return Milestone
 			.builder()
-			.title(milestonePostRequest.getName())
+			.title(milestonePostRequest.getTitle())
 			.description(milestonePostRequest.getDescription())
 			.duedate(milestonePostRequest.getDueDate())
 			.isOpen(true)

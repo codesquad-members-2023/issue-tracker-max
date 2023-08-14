@@ -34,7 +34,6 @@ public class IssueControllerTest extends ControllerTestSupport {
 		IssuePostRequest request = IssuePostRequest.builder()
 			.title("title")
 			.content("content")
-			.imageUrl("imageUrl")
 			.build();
 
 		IssuePostResponse issuePostResponse = new IssuePostResponse(1L);
@@ -60,7 +59,6 @@ public class IssueControllerTest extends ControllerTestSupport {
 		IssuePostRequest request = IssuePostRequest.builder()
 			.title("")
 			.content("content")
-			.imageUrl("imageUrl")
 			.build();
 
 		//when & then

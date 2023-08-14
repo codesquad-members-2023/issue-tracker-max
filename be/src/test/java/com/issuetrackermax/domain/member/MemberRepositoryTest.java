@@ -2,8 +2,6 @@ package com.issuetrackermax.domain.member;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +34,9 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 			.build();
 		memberRepository.save(member);
 		// when
-		Optional<Member> june = memberRepository.findByMemberLoginId("June");
+		Member june = memberRepository.findByMemberLoginId("June");
 		// then
-		assertThat(june.get().getLoginId()).isEqualTo("June");
+		assertThat(june.getLoginId()).isEqualTo("June");
 	}
 
 	@Test

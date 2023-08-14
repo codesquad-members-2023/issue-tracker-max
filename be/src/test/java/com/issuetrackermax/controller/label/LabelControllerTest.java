@@ -66,7 +66,7 @@ class LabelControllerTest extends ControllerTestSupport {
 
 		// given
 		LabelPostRequest labelPostRequest = LabelPostRequest.builder()
-			.name("title1")
+			.title("title1")
 			.description("description")
 			.textColor("0#1111")
 			.backgroundColor("0#2222")

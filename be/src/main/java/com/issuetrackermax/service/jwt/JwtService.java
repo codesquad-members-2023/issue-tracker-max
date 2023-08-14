@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetrackermax.controller.auth.dto.response.LoginResponse;
 import com.issuetrackermax.domain.jwt.JwtRepository;
 import com.issuetrackermax.domain.jwt.JwtValidator;
 import com.issuetrackermax.domain.jwt.entity.Jwt;
@@ -22,12 +23,17 @@ public class JwtService {
 	private final JwtProvider jwtProvider;
 
 	@Transactional
-	public Jwt login(String email, String password) {
-		Member member = memberRepository.findByMemberLoginId(email).get();
+	public LoginResponse login(String email, String password) {
+		Member member = memberRepository.findByMemberLoginId(email);
 		jwtValidator.verifyPassword(member, password);
 		Jwt jwt = jwtProvider.createJwt(generateMemberClaims(member.getId()));
 		jwtRepository.saveRefreshToken(jwt.getRefreshToken(), member.getId());
-		return jwt;
+
+		return LoginResponse.builder()
+			.accessToken(jwt.getAccessToken())
+			.refreshToken(jwt.getRefreshToken())
+			.member(member)
+			.build();
 	}
 
 	@Transactional

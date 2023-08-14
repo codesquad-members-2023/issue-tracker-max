@@ -12,6 +12,12 @@ import lombok.RequiredArgsConstructor;
 public class MilestoneValidator {
 	private final MilestoneRepository milestoneRepository;
 
+	public void existByTitle(String title) {
+		if (milestoneRepository.existByTitle(title)) {
+			throw new ApiException(MilestoneException.INVALID_MILESTONE_TITLE);
+		}
+	}
+
 	public void existById(Long id) {
 		if (!milestoneRepository.existById(id)) {
 			throw new ApiException(MilestoneException.NOT_FOUND_MILESTONE);

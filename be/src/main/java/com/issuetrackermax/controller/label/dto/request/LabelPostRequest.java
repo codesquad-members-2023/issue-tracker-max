@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LabelPostRequest {
 	@NotBlank(message = "이름을 입력해주세요.")
-	private String name;
+	private String title;
 	private String description;
 	@NotBlank(message = "텍스트 색상을 선택해주세요.")
 	private String textColor;
@@ -18,8 +18,8 @@ public class LabelPostRequest {
 	private String backgroundColor;
 
 	@Builder
-	public LabelPostRequest(String name, String description, String textColor, String backgroundColor) {
-		this.name = name;
+	public LabelPostRequest(String title, String description, String textColor, String backgroundColor) {
+		this.title = title;
 		this.description = description;
 		this.textColor = textColor;
 		this.backgroundColor = backgroundColor;

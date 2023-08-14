@@ -73,7 +73,7 @@ class MilestoneControllerTest extends ControllerTestSupport {
 
 		// given
 		MilestonePostRequest request = MilestonePostRequest.builder()
-			.name("title")
+			.title("title")
 			.description("description")
 			.dueDate(LocalDateTime.now())
 			.build();

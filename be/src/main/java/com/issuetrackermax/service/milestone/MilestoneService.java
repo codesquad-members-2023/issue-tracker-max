@@ -44,6 +44,7 @@ public class MilestoneService {
 
 	@Transactional
 	public Long save(MilestonePostRequest milestonePostRequest) {
+		milestoneValidator.existByTitle(milestonePostRequest.getTitle());
 		Milestone milestone = Milestone.from(milestonePostRequest);
 		return milestoneRepository.save(milestone);
 	}

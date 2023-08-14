@@ -12,6 +12,7 @@ import com.issuetrackermax.controller.auth.dto.request.JwtRefreshTokenRequest;
 import com.issuetrackermax.controller.auth.dto.request.LoginRequest;
 import com.issuetrackermax.controller.auth.dto.request.LogoutRequest;
 import com.issuetrackermax.controller.auth.dto.response.JwtResponse;
+import com.issuetrackermax.controller.auth.dto.response.LoginResponse;
 import com.issuetrackermax.service.jwt.JwtService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,11 +24,11 @@ public class AuthController {
 	private final JwtService jwtService;
 
 	@PostMapping("/signin")
-	public ApiResponse<JwtResponse> login(
+	public ApiResponse<LoginResponse> login(
 		@RequestBody
 		@Valid LoginRequest request) {
 		return ApiResponse.success(
-			JwtResponse.from(jwtService.login(request.getLoginId(), request.getPassword()))
+			jwtService.login(request.getLoginId(), request.getPassword())
 		);
 	}
 

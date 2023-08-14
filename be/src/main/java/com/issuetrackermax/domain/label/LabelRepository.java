@@ -4,7 +4,6 @@ import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -68,6 +67,12 @@ public class LabelRepository {
 		return count != null && count.equals(ids.size());
 	}
 
+	public Boolean existByTitle(String title) {
+		String sql = "SELECT EXISTS(SELECT 1 FROM label WHERE title =:title)";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("title", title), Boolean.class);
+	}
+
 	public Boolean existById(Long id) {
 		String sql = "SELECT EXISTS(SELECT 1 FROM label WHERE id =:id)";
 		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
@@ -76,8 +81,8 @@ public class LabelRepository {
 
 	public Label findById(Long id) {
 		String sql = "SELECT id, title, description, text_color, background_color FROM label WHERE id = :id ";
-		return Optional.ofNullable(
-			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), LABEL_ROW_MAPPER))).get();
+		return DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), LABEL_ROW_MAPPER));
+
 	}
 
 	public int deleteById(Long id) {
