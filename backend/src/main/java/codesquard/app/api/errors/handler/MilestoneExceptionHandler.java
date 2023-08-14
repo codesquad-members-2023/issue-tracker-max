@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import codesquard.app.api.errors.exception.CommentMaxLengthExceededException;
 import codesquard.app.api.errors.exception.DuplicateMilestoneException;
-import codesquard.app.api.errors.exception.NoSuchCommentException;
 import codesquard.app.api.errors.exception.NoSuchMilestoneException;
 import codesquard.app.api.response.ApiResponse;
 

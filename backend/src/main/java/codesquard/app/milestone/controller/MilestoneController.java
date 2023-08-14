@@ -3,7 +3,6 @@ package codesquard.app.milestone.controller;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.api.response.ApiResponse;
-import codesquard.app.api.response.LabelResponseMessage;
 import codesquard.app.api.response.MilestoneResponseMessage;
-import codesquard.app.api.response.ResponseMessage;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
 import codesquard.app.milestone.dto.request.MilestoneStatusRequest;
 import codesquard.app.milestone.dto.request.MilestoneUpdateRequest;
@@ -53,7 +50,8 @@ public class MilestoneController {
 		@Valid @RequestBody final MilestoneSaveRequest milestoneSaveRequest) {
 		Long milestoneId = milestoneService.saveMilestone(milestoneSaveRequest);
 		MilestoneSaveResponse milestoneSaveResponse = MilestoneSaveResponse.success(milestoneId);
-		return ApiResponse.of(HttpStatus.CREATED, MilestoneResponseMessage.MILESTONE_SAVE_SUCCESS, milestoneSaveResponse);
+		return ApiResponse.of(HttpStatus.CREATED, MilestoneResponseMessage.MILESTONE_SAVE_SUCCESS,
+			milestoneSaveResponse);
 	}
 
 	@PutMapping("/{milestoneId}")
