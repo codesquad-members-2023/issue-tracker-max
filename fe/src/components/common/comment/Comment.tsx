@@ -160,14 +160,13 @@ export const Comment: React.FC<Props> = ({
   const onEditSubmit = async () => {
     try {
       typeVariant === 'issue'
-        ? patchIssueContents(issueId, textAreaValue)
-        : editComment(issueId, textAreaValue);
+        ? await patchIssueContents(issueId, textAreaValue)
+        : await editComment(issueId, textAreaValue);
 
       // 받아오는 응답: id만
       setTextAreaValue(textAreaValue);
       setPlaceholderValue(textAreaValue);
       setIsEditing(false);
-      console.log('에러를');
     } catch (error) {
       console.error('이슈 편집 에러:', error);
       // 에러처리
@@ -272,7 +271,14 @@ export const Comment: React.FC<Props> = ({
             )}
           </Box>
           {isEditing && (
-            <ButtonContainer>
+            <div
+              css={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: '16px',
+              }}
+            >
               <Button typeVariant="outline" size="S" onClick={onEditCancel}>
                 <XSquare stroke={theme.brand.border.default} />
                 편집 취소
@@ -285,7 +291,7 @@ export const Comment: React.FC<Props> = ({
               >
                 편집 완료
               </Button>
-            </ButtonContainer>
+            </div>
           )}
         </>
       )}
