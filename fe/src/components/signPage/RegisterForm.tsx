@@ -4,13 +4,16 @@ import { TextInput } from '@components/common/textInput/TextInput';
 import { useState } from 'react';
 import { signUpUser } from 'apis/api';
 import { validateId, validatePassword } from './validateInput';
+import { useNavigate } from 'react-router-dom';
+import { SIGN_PAGE } from 'constants/PATH';
 
 export const RegisterForm: React.FC = () => {
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
-  const onIdChange = (id: string) => {
+  const onLoginIdChange = (id: string) => {
     setLoginId(id);
   };
 
@@ -22,8 +25,14 @@ export const RegisterForm: React.FC = () => {
     setConfirmPassword(password);
   };
 
-  const onSubmit = () => {
-    signUpUser(loginId, password);
+  const onSubmit = async () => {
+    try {
+      await signUpUser(loginId, password);
+
+      navigate(`/${SIGN_PAGE}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const isIdError = validateId(loginId);
@@ -48,7 +57,7 @@ export const RegisterForm: React.FC = () => {
         placeholder="아이디"
         isError={isIdError}
         caption="아이디는 6자 이상 16자 이하로 입력해주세요."
-        onChange={onIdChange}
+        onChange={onLoginIdChange}
       />
 
       <TextInput
