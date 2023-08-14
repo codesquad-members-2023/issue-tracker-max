@@ -1,6 +1,10 @@
 package codesquad.issueTracker.issue.repository;
 
+import java.util.Map;
+import java.util.Optional;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -48,5 +52,27 @@ public class IssueRepository {
 			.addValue("userId", userId);
 		jdbcTemplate.update(sql, parameters, keyHolder);
 		return keyHolder.getKey().longValue();
+	}
+
+	public Optional<Issue> findActiveIssueById(Long issueId) {
+		String sql = "SELECT * FROM issues WHERE id = :issueId AND is_deleted = false";
+		return Optional.ofNullable(
+				DataAccessUtils.singleResult(
+						jdbcTemplate.query(sql, Map.of("issueId", issueId), issueRowMapper)));
+	}
+
+	private final RowMapper<Issue> issueRowMapper = ((rs, rowNum) -> Issue.builder()
+			.id(rs.getLong("id"))
+			.title(rs.getString("title"))
+			.content(rs.getString("content"))
+			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+			.isClosed(rs.isClosed())
+			.build());
+
+	public Optional<Issue> findById(Long issueId) {
+		String sql = "SELECT * FROM issues WHERE id = :issueId";
+		return Optional.ofNullable(
+				DataAccessUtils.singleResult(
+						jdbcTemplate.query(sql, Map.of("issueId", issueId), issueRowMapper)));
 	}
 }

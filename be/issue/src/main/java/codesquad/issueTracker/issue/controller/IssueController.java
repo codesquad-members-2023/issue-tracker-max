@@ -4,12 +4,14 @@ import static codesquad.issueTracker.global.exception.SuccessCode.*;
 
 import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
 import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
+import codesquad.issueTracker.issue.dto.IssueResponseDto;
 import codesquad.issueTracker.issue.dto.IssueUserResponseDto;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +53,12 @@ public class IssueController {
 	public ApiResponse<List<IssueUserResponseDto>> getIssueUsers() {
 		List<IssueUserResponseDto> participants = issueService.getIssueUsers();
 		return ApiResponse.success(SUCCESS.getStatus(), participants);
+	}
+
+	@GetMapping("/issues/{issueId}")
+	public ApiResponse<IssueResponseDto> getIssue(@PathVariable Long issueId) {
+		IssueResponseDto issueResponseDto = issueService.getIssueById(issueId);
+		return ApiResponse.success(SUCCESS.getStatus(), issueResponseDto);
 	}
 
 }

@@ -3,6 +3,7 @@ package codesquad.issueTracker.issue.service;
 import codesquad.issueTracker.global.common.Status;
 import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
 import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
+import codesquad.issueTracker.issue.dto.IssueResponseDto;
 import codesquad.issueTracker.issue.dto.IssueUserResponseDto;
 import codesquad.issueTracker.label.dto.LabelResponseDto;
 import codesquad.issueTracker.milestone.vo.MilestoneVo;
@@ -93,5 +94,17 @@ public class IssueService {
 		return users.stream()
 				.map(IssueUserResponseDto::from)
 				.collect(Collectors.toList());
+	}
+
+	public IssueResponseDto getIssueById(Long issueId) {
+		validateExistIssue(issueId);
+		Issue issue = issueRepository.findActiveIssueById(issueId)
+				.orElseThrow(() -> new CustomException(ErrorCode.ALREADY_DELETED_ISSUE));
+		return IssueResponseDto.from(issue);
+	}
+
+	private void validateExistIssue(Long issueId) {
+		issueRepository.findById(issueId)
+				.orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ISSUE));
 	}
 }

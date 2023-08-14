@@ -53,7 +53,9 @@ public enum ErrorCode implements StatusCode {
 
 
 	// -- [Issue] -- //
-	DUPLICATE_OBJECT_FOUND(HttpStatus.BAD_REQUEST, "중복된 항목 선택입니다.");
+	DUPLICATE_OBJECT_FOUND(HttpStatus.BAD_REQUEST, "중복된 항목 선택입니다."),
+	NOT_EXIST_ISSUE(HttpStatus.BAD_REQUEST, "존재하지 않는 이슈입니다."),
+	ALREADY_DELETED_ISSUE(HttpStatus.BAD_REQUEST, "이미 삭제된 이슈입니다.");
 
 
 	private HttpStatus status;
