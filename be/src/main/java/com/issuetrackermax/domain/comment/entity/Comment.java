@@ -9,15 +9,13 @@ import lombok.Getter;
 public class Comment {
 	private Long id;
 	private String content;
-	private String imageUrl;
 	private Long writerId;
 	private LocalDateTime createdAt;
 
 	@Builder
-	public Comment(Long id, String content, String imageUrl, Long writerId, LocalDateTime createdAt) {
+	public Comment(Long id, String content, Long writerId, LocalDateTime createdAt) {
 		this.id = id;
 		this.content = content;
-		this.imageUrl = imageUrl;
 		this.writerId = writerId;
 		this.createdAt = createdAt;
 	}

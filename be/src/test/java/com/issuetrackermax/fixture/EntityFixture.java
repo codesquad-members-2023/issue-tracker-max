@@ -60,10 +60,9 @@ public class EntityFixture {
 			.build();
 	}
 
-	public static Comment makeComment(String content, String imageUrl, Long writerId) {
+	public static Comment makeComment(String content, Long writerId) {
 		return Comment.builder()
 			.content(content)
-			.imageUrl(imageUrl)
 			.writerId(writerId)
 			.build();
 	}

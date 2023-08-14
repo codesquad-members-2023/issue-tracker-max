@@ -50,6 +50,12 @@ public class FilterService {
 	}
 
 	private IssueResponse getIssueResponseWithLabelIds(FilterResultVO filterResultVO) {
+		if (filterResultVO.getLabelIds() == null) {
+			return IssueResponse.builder()
+				.resultVO(filterResultVO)
+				.labels(new ArrayList<>())
+				.build();
+		}
 		String[] labelIds = filterResultVO.getLabelIds().split(",");
 		List<LabelResponse> labels = getLabelResponse(labelIds);
 		return IssueResponse.builder()
