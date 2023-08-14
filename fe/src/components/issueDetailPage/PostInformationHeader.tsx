@@ -49,22 +49,16 @@ export const PostInformationHeader: React.FC<Props> = ({
   };
 
   const onSubmitTitle = async () => {
-    console.log('제목 변경');
-
     try {
-      const data = await patchIssueTitle(id, titleInput);
-      console.log(data);
-      // setTitleInput(titleInput);
-      // setPlaceholderValue(titleInput);
+      await patchIssueTitle(id, titleInput);
+      setPlaceholderValue(titleInput);
       setIsEditing(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const onCloseIssue = () => {
-    console.log('이슈 닫기');
-  };
+  const onCloseIssue = () => {};
 
   return (
     <div
@@ -80,9 +74,8 @@ export const PostInformationHeader: React.FC<Props> = ({
       {isEditing ? (
         <TextInput
           height={40}
-          value={titleInput}
+          value={titleInput ? titleInput : title}
           label="제목"
-          placeholder={title}
           inputType="text"
           disabled={false}
           onChange={onChangeTitle}
@@ -101,7 +94,7 @@ export const PostInformationHeader: React.FC<Props> = ({
               font: theme.fonts.displayBold32,
             }}
           >
-            {titleInput}
+            {titleInput ? titleInput : title}
           </h2>
 
           <span
