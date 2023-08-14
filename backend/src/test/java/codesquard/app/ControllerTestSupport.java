@@ -1,13 +1,21 @@
 package codesquard.app;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquard.app.api.errors.handler.GlobalExceptionHandler;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
+import codesquard.app.authenticate_user.resolver.LoginUserArgumentResolver;
 import codesquard.app.authenticate_user.service.AuthenticateUserService;
 import codesquard.app.comment.controller.CommentController;
 import codesquard.app.comment.service.CommentService;
@@ -69,4 +77,20 @@ public abstract class ControllerTestSupport {
 
 	@MockBean
 	protected OauthService oauthService;
+
+	@Mock
+	protected LoginUserArgumentResolver loginUserArgumentResolver;
+
+	protected void mockingAuthenticateUser() {
+		mockMvc = MockMvcBuilders.standaloneSetup(new IssueController(issueService, issueQueryService))
+			.setControllerAdvice(new GlobalExceptionHandler())
+			.setCustomArgumentResolvers(loginUserArgumentResolver)
+			.build();
+
+		AuthenticateUser authenticateUser = new AuthenticateUser(1L, "wis123", "wis123@naver.com", null);
+		when(loginUserArgumentResolver.supportsParameter(any()))
+			.thenReturn(true);
+		when(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+			.thenReturn(authenticateUser);
+	}
 }

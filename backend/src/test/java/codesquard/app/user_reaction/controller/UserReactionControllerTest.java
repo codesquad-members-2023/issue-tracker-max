@@ -18,6 +18,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 사용자 반응을 등록한다.")
 	@Test
 	void createIssue() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int issueId = 1;
@@ -32,6 +35,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 사용자 반응 등록에 실패한다.")
 	@Test
 	void createIssue_Fail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int issueId = 1;
@@ -47,6 +53,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("댓글 사용자 반응을 등록한다.")
 	@Test
 	void createComment() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int commentId = 1;
@@ -61,6 +70,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("댓글 사용자 반응 등록에 실패한다.")
 	@Test
 	void createComment_Fail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int commentId = 1;
