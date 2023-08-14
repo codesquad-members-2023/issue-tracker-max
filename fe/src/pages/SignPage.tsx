@@ -41,8 +41,6 @@ export const SignPage: React.FC = () => {
 };
 
 const signPageStyle = (theme: Theme) => css`
-  border: 1px solid black;
-  width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
