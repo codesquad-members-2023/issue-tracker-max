@@ -11,12 +11,14 @@ import lombok.Getter;
 public class CommentResponse {
 	private final Long id;
 	private final String content;
+	private final Long writerId;
 	private final LocalDateTime createdAt;
 
 	@Builder
-	public CommentResponse(Long id, String content, LocalDateTime createdAt) {
+	public CommentResponse(Long id, String content, Long writerId, LocalDateTime createdAt) {
 		this.id = id;
 		this.content = content;
+		this.writerId = writerId;
 		this.createdAt = createdAt;
 	}
 
@@ -24,6 +26,7 @@ public class CommentResponse {
 		return CommentResponse.builder()
 			.id(comment.getId())
 			.content(comment.getContent())
+			.writerId(comment.getWriterId())
 			.createdAt(comment.getCreatedAt())
 			.build();
 	}

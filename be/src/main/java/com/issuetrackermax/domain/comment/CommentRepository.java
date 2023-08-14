@@ -43,7 +43,6 @@ public class CommentRepository {
 			.addValue("issueId", comment.getIssueId(), Types.BIGINT);
 		jdbcTemplate.update(sql, parameters, keyHolder, new String[] {"id"});
 		return keyHolder.getKey().longValue();
-
 	}
 
 	public List<Comment> findByIssueId(Long id) {

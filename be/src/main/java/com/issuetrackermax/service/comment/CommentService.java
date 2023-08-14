@@ -22,24 +22,20 @@ public class CommentService {
 	private final CommentValidator commentValidator;
 	private final CommentRepository commentRepository;
 
-	//todo : 수정 필요
-	@Transactional
-	public Long save(Comment comment) {
-		memberValidator.existById(comment.getWriterId());
-		return commentRepository.save(comment);
-	}
-
+	@Transactional(readOnly = true)
 	public List<Comment> findByIssueId(Long id) {
 		return commentRepository.findByIssueId(id);
 	}
 
+	@Transactional
 	public void modifyComment(CommentModifyRequest commentModifyRequest, Long commentId, Long memberId) {
 		memberValidator.existById(memberId);
 		commentValidator.checkWriter(commentId, memberId);
 		commentRepository.updateComment(Comment.from(commentModifyRequest), commentId);
 	}
 
-	public CommentResponse postComment(CommentCreateRequest commentCreateRequest, Long memberId) {
+	@Transactional
+	public CommentResponse save(CommentCreateRequest commentCreateRequest, Long memberId) {
 		memberValidator.existById(memberId);
 		Long commentId = commentRepository.save(Comment.from(commentCreateRequest, memberId));
 		return CommentResponse.from(commentRepository.findById(commentId).get());

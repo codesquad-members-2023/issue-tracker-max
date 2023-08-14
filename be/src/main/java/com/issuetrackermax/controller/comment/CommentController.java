@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/issues/{id}/comments")
+@RequestMapping("/api/issues/{issueId}/comments")
 public class CommentController {
 	private static final String MEMBER_ID = "memberId";
 	private final CommentService commentService;
@@ -37,7 +37,7 @@ public class CommentController {
 	public ApiResponse<CommentResponse> post(@RequestBody CommentCreateRequest commentCreateRequest,
 		HttpServletRequest request) {
 		Integer memberId = (Integer)request.getAttribute(MEMBER_ID);
-		CommentResponse commentResponse = commentService.postComment(commentCreateRequest, memberId.longValue());
+		CommentResponse commentResponse = commentService.save(commentCreateRequest, memberId.longValue());
 		return ApiResponse.success(commentResponse);
 	}
 }
