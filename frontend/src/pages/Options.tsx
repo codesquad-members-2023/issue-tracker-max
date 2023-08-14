@@ -10,6 +10,7 @@ import Layout from '../components/Layout';
 import Button from '../components/common/button/BaseButton';
 import Labels from '../components/label/Labels';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import Milestones from '../components/milestone/Milestones';
 
 enum Option {
   labels,
@@ -24,27 +25,28 @@ export default function Options() {
   const { util } = useContext(AppContext);
   const [activeOption, setActiveOption] = useState<Option>(labels);
   const [labelData, setLabelData] = useState([]);
-  // const [milestoneData, setMilestoneData] = useState([]);
+  const [milestoneData, setMilestoneData] = useState([]);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    return () => {
-      (async () => {
-        const fetchData =
-          activeOption === labels
-            ? () => axiosPrivate.get('api/labels')
-            : () => axiosPrivate.get('api/milestones');
+    const fetchData = async () => {
+      const requestPath =
+        activeOption === labels ? 'api/labels' : 'api/milestones';
 
-        const res = await fetchData();
-
+      try {
+        const res = await axiosPrivate.get(requestPath);
         if (activeOption === labels) {
           setLabelData(res.data.message.labels);
         } else {
-          // setMilestoneData(res.data.message.milestones);
+          setMilestoneData(res.data.message.milestones);
         }
-      })();
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
-  }, [activeOption]);
+
+    fetchData();
+  }, [activeOption, axiosPrivate]);
 
   return (
     <Layout>
@@ -77,10 +79,14 @@ export default function Options() {
             ]}
           />
           <Button type="button" flexible iconName="plus">
-            레이블 추가
+            {activeOption === labels ? '레이블' : '마일스톤'} 추가
           </Button>
         </Toolbar>
-        {activeOption === labels ? <Labels data={labelData} /> : <>마일스톤</>}
+        {activeOption === labels ? (
+          <Milestones data={milestoneData} />
+        ) : (
+          <Labels data={labelData} />
+        )}
       </Main>
     </Layout>
   );
