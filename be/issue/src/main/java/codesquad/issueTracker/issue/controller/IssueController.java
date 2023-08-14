@@ -4,6 +4,7 @@ import static codesquad.issueTracker.global.exception.SuccessCode.*;
 
 import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
 import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
+import codesquad.issueTracker.issue.dto.IssueOptionResponseDto;
 import codesquad.issueTracker.issue.dto.IssueResponseDto;
 import codesquad.issueTracker.issue.dto.IssueUserResponseDto;
 import java.util.List;

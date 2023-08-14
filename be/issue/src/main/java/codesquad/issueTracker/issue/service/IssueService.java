@@ -1,7 +1,7 @@
 package codesquad.issueTracker.issue.service;
 
 import codesquad.issueTracker.global.common.Status;
-import codesquad.issueTracker.issue.controller.IssueOptionResponseDto;
+import codesquad.issueTracker.issue.dto.IssueOptionResponseDto;
 import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
 import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
 import codesquad.issueTracker.issue.vo.IssueLabelVo;

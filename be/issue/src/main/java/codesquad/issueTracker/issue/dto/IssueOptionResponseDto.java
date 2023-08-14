@@ -1,4 +1,4 @@
-package codesquad.issueTracker.issue.controller;
+package codesquad.issueTracker.issue.dto;
 
 import codesquad.issueTracker.issue.vo.IssueLabelVo;
 import codesquad.issueTracker.issue.vo.IssueMilestoneVo;
