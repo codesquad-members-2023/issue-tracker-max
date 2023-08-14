@@ -3,6 +3,7 @@ import { Button } from '@components/common/Button';
 import { TextInput } from '@components/common/textInput/TextInput';
 import { useState } from 'react';
 import { signUpUser } from 'apis/api';
+import { validateId, validatePassword } from './validateInput';
 
 export const RegisterForm: React.FC = () => {
   const [loginId, setLoginId] = useState('');
@@ -25,10 +26,8 @@ export const RegisterForm: React.FC = () => {
     signUpUser(loginId, password);
   };
 
-  const isIdError =
-    (loginId.length > 0 && loginId.length < 6) || loginId.length > 17;
-  const isPasswordError =
-    (password.length > 0 && password.length < 6) || password.length > 12;
+  const isIdError = validateId(loginId);
+  const isPasswordError = validatePassword(password);
   const isPasswordMatchingError =
     confirmPassword.length > 0 && password !== confirmPassword;
   const submitButtonEnabled =
