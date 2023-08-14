@@ -43,7 +43,7 @@
         <where>
             issue.`is_deleted` = 0
             <choose>
-                <when test="is == null and milestone == null and author == null and assignee == null label == null">
+                <when test="is == null and milestone == null and author == null and assignee == null and label == null and mentions == null">
                     AND issue.`status` = "OPENED"
                 </when>
                 <otherwise>
@@ -105,6 +105,14 @@
                                 HAVING COUNT(issue_label.`issue_id`) >= ${label.size})
                             </otherwise>
                         </choose>
+                    </if>
+                    <if test="mentions != null">
+                        AND issue.`id` IN (
+                        SELECT DISTINCT(comment.`issue_id`)
+                        FROM comment AS comment
+                        LEFT OUTER JOIN user AS u
+                        ON u.`id` = comment.`user_id`
+                        WHERE u.`login_id` = #{mentions})
                     </if>
                 </otherwise>
             </choose>
