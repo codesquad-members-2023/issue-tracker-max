@@ -1,6 +1,7 @@
 package org.presents.issuetracker.issue.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.presents.issuetracker.comment.repository.CommentRepository;
@@ -33,6 +34,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class IssueService {
+	private static final Long NOT_ASSIGNED_MILESTONE_ID = 0L;
+
 	private final IssueRepository issueRepository;
 	private final LabelRepository labelRepository;
 	private final MilestoneRepository milestoneRepository;
@@ -104,7 +107,7 @@ public class IssueService {
 	@Transactional
 	public MilestonePreviewResponse updateMilestone(Long milestoneId, Long issueId) {
 		validateId(issueId);
-		if (milestoneId == 0) {
+		if (Objects.equals(milestoneId, NOT_ASSIGNED_MILESTONE_ID)) {
 			issueRepository.deleteMilestone(issueId);
 		} else {
 			setMilestone(milestoneId, issueId);
