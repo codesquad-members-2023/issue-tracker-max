@@ -40,6 +40,7 @@ const Container = styled.aside`
   border-radius: ${({ theme }) => theme.objectStyles.radius.large};
   & > ul {
     & > li {
+      background-color: ${({ theme }) => theme.color.neutral.surface.strong};
       padding: 32px;
       border-bottom: 1px solid
         ${({ theme }) => theme.color.neutral.border.default};
