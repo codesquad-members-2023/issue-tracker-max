@@ -2,6 +2,7 @@ package codesquad.issueTracker.issue.controller;
 
 import static codesquad.issueTracker.global.exception.SuccessCode.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +23,10 @@ public class IssueController {
 	private final IssueService issueService;
 
 	@PostMapping("/issues")
-	public ApiResponse<String> postIssues(@Valid @RequestBody IssueWriteRequestDto request) {
-		issueService.save(request);
+	public ApiResponse<String> postIssues(@Valid @RequestBody IssueWriteRequestDto request,
+		HttpServletRequest httpServletRequest) {
+		Long id = Long.parseLong(String.valueOf(httpServletRequest.getAttribute("userId")));
+		issueService.save(request, id);
 		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 }

@@ -36,7 +36,7 @@ public class IssueIntegrationTest {
 
 	@BeforeEach
 	void setUp() {
-		Jwt jwt = jwtProvider.createJwt(Map.of("memberId", 1L));
+		Jwt jwt = jwtProvider.createJwt(Map.of("userId", 1L));
 		jwtToken = jwt.getAccessToken();
 	}
 
@@ -45,7 +45,7 @@ public class IssueIntegrationTest {
 	void postIssues() throws Exception {
 		// given
 		List<Long> ids = List.of(1L, 2L);
-		IssueWriteRequestDto requestDto = new IssueWriteRequestDto("제목", "내용", ids, ids, 1L, 1L);
+		IssueWriteRequestDto requestDto = new IssueWriteRequestDto("제목", "내용", ids, ids, 1L);
 		String request = objectMapper.writeValueAsString(requestDto);
 		// when
 		ResultActions resultActions =

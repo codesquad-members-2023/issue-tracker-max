@@ -65,4 +65,10 @@ public class MilestoneService {
 		return milestoneResponseDto;
 	}
 
+	public void isExistMilestone(Long id) {
+		if (!milestoneRepository.isExist(id)) {
+			throw new CustomException(ErrorCode.NOT_FOUND_MILESTONE);
+		}
+	}
+
 }

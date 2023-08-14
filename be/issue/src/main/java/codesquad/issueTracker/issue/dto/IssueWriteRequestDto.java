@@ -14,17 +14,16 @@ public class IssueWriteRequestDto {
 	@NotNull(message = "제목을 입력해주세요")
 	private String title;
 	private String content;
-	private List<Long> assignees;
-	private List<Long> labels;
+	private List<Long> assignees; // 1,2
+	private List<Long> labels; // 1,2
 	private Long milestoneId;
-	private Long userId;
 
-	public static Issue toEntity(IssueWriteRequestDto request) {
+	public static Issue toEntity(IssueWriteRequestDto request, Long userId) {
 		return Issue.builder()
 			.title(request.title)
 			.content(request.getContent())
 			.milestoneId(request.getMilestoneId())
-			.userId(request.getUserId())
+			.userId(userId)
 			.build();
 	}
 
