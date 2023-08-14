@@ -47,7 +47,7 @@ public class CommentController {
 		@Login AuthenticateUser user,
 		@PathVariable Long id) {
 		LocalDateTime modifiedAt = LocalDateTime.now();
-		return ApiResponse.ok(commentService.modify(request.toServiceRequest(user.toEntity().getId(), id), modifiedAt));
+		return ApiResponse.ok(commentService.modify(request.toServiceRequest(id, user.toEntity().getId()), modifiedAt));
 	}
 
 	@DeleteMapping("/{id}")
