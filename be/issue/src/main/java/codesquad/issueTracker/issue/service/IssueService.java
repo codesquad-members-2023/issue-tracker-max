@@ -1,11 +1,16 @@
 package codesquad.issueTracker.issue.service;
 
 import codesquad.issueTracker.global.common.Status;
+import codesquad.issueTracker.issue.controller.IssueOptionResponseDto;
 import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
 import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
+import codesquad.issueTracker.issue.vo.IssueLabelVo;
+import codesquad.issueTracker.issue.vo.IssueMilestoneVo;
 import codesquad.issueTracker.issue.dto.IssueResponseDto;
 import codesquad.issueTracker.issue.dto.IssueUserResponseDto;
+import codesquad.issueTracker.issue.vo.AssigneeVo;
 import codesquad.issueTracker.label.dto.LabelResponseDto;
+
 import codesquad.issueTracker.milestone.vo.MilestoneVo;
 import codesquad.issueTracker.user.domain.User;
 import java.util.HashSet;
@@ -16,7 +21,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codesquad.issueTracker.comment.service.CommentService;
 import codesquad.issueTracker.global.exception.CustomException;
 import codesquad.issueTracker.global.exception.ErrorCode;
 import codesquad.issueTracker.issue.domain.Issue;
@@ -36,7 +40,6 @@ public class IssueService {
 	private final LabelService labelService;
 	private final UserService userService;
 	private final MilestoneService milestoneService;
-	private final CommentService commentService;
 
 	@Transactional
 	public Long save(IssueWriteRequestDto request, Long id) {
@@ -98,13 +101,35 @@ public class IssueService {
 
 	public IssueResponseDto getIssueById(Long issueId) {
 		validateExistIssue(issueId);
-		Issue issue = issueRepository.findActiveIssueById(issueId)
-				.orElseThrow(() -> new CustomException(ErrorCode.ALREADY_DELETED_ISSUE));
+		Issue issue = validateActiveIssueById(issueId);
+
 		return IssueResponseDto.from(issue);
 	}
 
 	private void validateExistIssue(Long issueId) {
 		issueRepository.findById(issueId)
 				.orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ISSUE));
+	}
+
+	private Issue validateActiveIssueById(Long issueId) {
+		return issueRepository.findActiveIssueById(issueId)
+				.orElseThrow(() -> new CustomException(ErrorCode.ALREADY_DELETED_ISSUE));
+	}
+
+	public IssueOptionResponseDto getIssueOptions(Long issueId) {
+		validateExistIssue(issueId);
+		validateActiveIssueById(issueId);
+
+		List<AssigneeVo> assignees = issueRepository.findAssigneesById(issueId);
+		List<IssueLabelVo> labels = labelService.findByIssueId(issueId);
+		IssueMilestoneVo milestone = milestoneService.findByIssueId(issueId);
+
+		if (milestone.getId() != null) {
+			int closeCount = issueRepository.findCountByStatusAndMilestone(Status.CLOSED.getStatus(), milestone);
+			int openCount = issueRepository.findCountByStatusAndMilestone(Status.OPEN.getStatus(), milestone);
+			return IssueOptionResponseDto.of(assignees, labels, milestone.getMilestoneWithRatio(openCount, closeCount));
+		}
+
+		return IssueOptionResponseDto.of(assignees, labels, milestone);
 	}
 }

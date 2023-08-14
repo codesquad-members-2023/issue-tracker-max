@@ -1,7 +1,10 @@
 package codesquad.issueTracker.milestone.service;
 
+import codesquad.issueTracker.issue.vo.IssueMilestoneVo;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +23,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional(readOnly = true)
 public class MilestoneService {
+
+	private final Log log = LogFactory.getLog(MilestoneService.class);
+
 	private final MilestoneRepository milestoneRepository;
 
 	@Transactional
@@ -73,5 +79,10 @@ public class MilestoneService {
 
 	public List<MilestoneVo> findMilestonesByStatus(Boolean status) {
 		return milestoneRepository.findAll(status);
+	}
+
+	public IssueMilestoneVo findByIssueId(Long issueId) {
+		return milestoneRepository.findByIssueId(issueId)
+				.orElseGet(() -> IssueMilestoneVo.builder().build());
 	}
 }

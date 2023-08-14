@@ -61,4 +61,9 @@ public class IssueController {
 		return ApiResponse.success(SUCCESS.getStatus(), issueResponseDto);
 	}
 
+	@GetMapping("/issues/{issueId}/options")
+	public ApiResponse<IssueOptionResponseDto> getIssueOptions(@PathVariable Long issueId) {
+		IssueOptionResponseDto issueOptionResponseDto = issueService.getIssueOptions(issueId);
+		return ApiResponse.success(SUCCESS.getStatus(), issueOptionResponseDto);
+	}
 }

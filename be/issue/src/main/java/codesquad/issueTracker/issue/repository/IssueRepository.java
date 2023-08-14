@@ -1,5 +1,8 @@
 package codesquad.issueTracker.issue.repository;
 
+import codesquad.issueTracker.issue.vo.AssigneeVo;
+import codesquad.issueTracker.issue.vo.IssueMilestoneVo;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.dao.support.DataAccessUtils;
@@ -74,5 +77,35 @@ public class IssueRepository {
 		return Optional.ofNullable(
 				DataAccessUtils.singleResult(
 						jdbcTemplate.query(sql, Map.of("issueId", issueId), issueRowMapper)));
+	}
+
+	public List<AssigneeVo> findAssigneesById(Long issueId) {
+		String sql = "select u.id, u.name, u.profile_img "
+				+ "from assignees a "
+				+ "    join users u on a.user_id = u.id "
+				+ "    join issues i on a.issue_id = i.user_id "
+				+ "where i.id = :issueId "
+				+ "AND i.is_deleted = false";
+		return jdbcTemplate.query(sql, Map.of("issueId",issueId), assigneeVoRowMapper);
+	}
+
+	private final RowMapper<AssigneeVo> assigneeVoRowMapper = ((rs, rowNum) -> AssigneeVo.builder()
+			.id(rs.getLong("id"))
+			.name(rs.getString("name"))
+			.imgUrl(rs.getString("profile_img"))
+			.build());
+
+
+	public int findCountByStatusAndMilestone(boolean status, IssueMilestoneVo milestone) {
+		String sql = "select COUNT(i.id) as count "
+				+ "from issues i "
+				+ "    join milestones m on m.id = i.milestone_id "
+				+ "where m.id = :milestoneId "
+				+ "and i.is_deleted = false "
+				+ "and i.is_closed = :status";
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("milestoneId", milestone.getId());
+		params.addValue("status", status);
+		return jdbcTemplate.queryForObject(sql, params, Integer.class);
 	}
 }
