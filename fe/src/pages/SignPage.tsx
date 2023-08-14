@@ -1,49 +1,67 @@
-import { useTheme } from '@emotion/react';
-// import { useState } from 'react';
-
+import { Theme, css, useTheme } from '@emotion/react';
 import { OAuthButton } from '@components/signPage/OAuthButton';
 import { LoginForm } from '@components/signPage/LoginForm';
 import { ReactComponent as LargeLogo } from '@assets/logos/largeLogo.svg';
+import { Button } from '@components/common/Button';
+import { useNavigate } from 'react-router-dom';
+import { REGISTER_PAGE } from 'constants/PATH';
 
-type Props = {};
-
-export const SignPage: React.FC<Props> = () => {
-  const theme = useTheme() as any;
+export const SignPage: React.FC = () => {
+  const navigate = useNavigate();
   // const [isSignError, setIsSignError] = useState(false);
 
   return (
-    <>
-      <div
-        css={{
-          border: '1px solid black',
-          width: '100%',
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '16px',
-        }}
-      >
-        <div css={{ height: 'fit-content', marginBottom: '48px' }}>
-          <LargeLogo fill={theme.neutral.text.strong} />
-        </div>
-        <OAuthButton />
-        <span
-          css={{
-            font: theme.fonts.displayMedium16,
-            color: theme.neutral.text.weak,
-          }}
-        >
-          or
-        </span>
-        <LoginForm />
-        {/* {isSignError && (
+    <div css={signPageStyle}>
+      <LargeLogo className="logo" />
+
+      <OAuthButton />
+
+      <span className="form-text">or</span>
+
+      <LoginForm />
+
+      {/* {isSignError && (
           <span css={{ color: theme.danger.text.default }}>
             실패사유 다시 시도해 주세요
           </span>
         )} */}
-      </div>
-    </>
+
+      <Button
+        className="sign-up-button"
+        typeVariant="ghost"
+        size="L"
+        onClick={() => {
+          navigate(`/${REGISTER_PAGE}`);
+        }}
+      >
+        회원가입
+      </Button>
+    </div>
   );
 };
+
+const signPageStyle = (theme: Theme) => css`
+  border: 1px solid black;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  .logo {
+    margin-bottom: 48px;
+    fill: ${theme.neutral.text.strong};
+  }
+
+  .form-text {
+    font: ${theme.fonts.displayMedium16};
+    color: ${theme.neutral.text.weak};
+  }
+
+  .sign-up-button {
+    width: 100%;
+    border-radius: ${theme.radius.l};
+  }
+`;
