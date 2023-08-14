@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.issuetracker.config.exception.CustomHttpException;
-import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.common.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.ErrorType;
 import com.issuetracker.milestone.application.dto.MilestoneCandidatesInformation;
 import com.issuetracker.milestone.application.dto.MilestoneCountMetadataInformation;
 import com.issuetracker.milestone.application.dto.MilestoneCreateInformation;

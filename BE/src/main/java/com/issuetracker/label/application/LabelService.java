@@ -3,8 +3,8 @@ package com.issuetracker.label.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.issuetracker.config.exception.CustomHttpException;
-import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.common.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.ErrorType;
 import com.issuetracker.label.application.dto.LabelCountMetadataInformation;
 import com.issuetracker.label.application.dto.LabelCreateInformation;
 import com.issuetracker.label.application.dto.LabelCreateInputData;

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetracker.issue.application.dto.IssueUpdateAllOpenData;
 import com.issuetracker.issue.application.dto.assignedlabel.AssignedLabelCreateData;
 import com.issuetracker.issue.application.dto.assignee.AssigneeCandidatesInformation;
 import com.issuetracker.issue.application.dto.assignee.AssigneeCreateData;
@@ -80,7 +81,7 @@ public class IssueService {
 
 	@Transactional
 	public void updateIssueOpen(IssueUpdateData issueUpdateData) {
-		int updatedCount = issueRepository.updateOpen(issueUpdateData.getId(), issueUpdateData.getIsOpen());
+		int updatedCount = issueRepository.updateOpen(issueUpdateData.getIsOpen(), issueUpdateData.getId());
 		issueValidator.verifyUpdatedOrDeletedCount(updatedCount);
 	}
 
@@ -165,5 +166,12 @@ public class IssueService {
 	@Transactional
 	public int deleteAssignedLabel(Long assignedLabelId) {
 		return assignedLabelRepository.delete(assignedLabelId);
+	}
+
+	@Transactional
+	public void updateAllIssueOpen(IssueUpdateAllOpenData issueUpdateAllOpenData) {
+		List<Long> ids = issueUpdateAllOpenData.getIds();
+		int updatedCount = issueRepository.updateAllOpen(issueUpdateAllOpenData.getIsOpen(), ids);
+		issueValidator.verifyUpdatedOrDeletedCount(updatedCount, ids.size());
 	}
 }

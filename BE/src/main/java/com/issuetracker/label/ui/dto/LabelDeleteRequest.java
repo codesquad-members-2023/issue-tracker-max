@@ -1,7 +1,7 @@
 package com.issuetracker.label.ui.dto;
 
-import com.issuetracker.config.exception.CustomHttpException;
-import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.common.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.ErrorType;
 import com.issuetracker.label.application.dto.LabelDeleteInputData;
 
 import lombok.AccessLevel;

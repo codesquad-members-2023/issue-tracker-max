@@ -1,7 +1,7 @@
 package com.issuetracker.milestone.ui.dto;
 
-import com.issuetracker.config.exception.CustomHttpException;
-import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.common.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.ErrorType;
 import com.issuetracker.milestone.application.dto.MilestoneDeleteInputData;
 
 import lombok.AccessLevel;

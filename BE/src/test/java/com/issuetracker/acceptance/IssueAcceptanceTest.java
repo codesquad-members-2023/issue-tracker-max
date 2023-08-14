@@ -1,6 +1,7 @@
 package com.issuetracker.acceptance;
 
 import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
+import static com.issuetracker.util.fixture.IssueFixture.ISSUE2;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL2;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL4;
@@ -18,8 +19,10 @@ import static com.issuetracker.util.steps.IssueSteps.이슈_목록_조회_요청
 import static com.issuetracker.util.steps.IssueSteps.이슈_삭제_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_상세_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_열림_닫힘_수정_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈_열림_닫힘_일괄_수정_요쳥;
 import static com.issuetracker.util.steps.IssueSteps.이슈_작성_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_제목_수정_요청;
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
@@ -246,11 +249,11 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 이슈_열림_닫힘_수정한다() {
 		// when
-		var response = 이슈_열림_닫힘_수정_요청(ISSUE1.getId(), false);
+		var response = 이슈_열림_닫힘_수정_요청(true, ISSUE1.getId());
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
-		이슈_상세_조회에서_수정한_값_검증(ISSUE1.getId(), "isOpen", false);
+		이슈_상세_조회에서_수정한_값_검증(ISSUE1.getId(), "isOpen", true);
 	}
 
 	/**
@@ -263,7 +266,39 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		Long 존재하지_않는_이슈_아이디 = 20L;
 
 		// when
-		var response = 이슈_열림_닫힘_수정_요청(존재하지_않는_이슈_아이디, false);
+		var response = 이슈_열림_닫힘_수정_요청(false, 존재하지_않는_이슈_아이디);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Given 라벨, 마일스톤, 회원, 이슈를 생성하고
+	 * When 이슈 열림/닫힘을 일괄 수정하면
+	 * Then 이슈 목록에서 변경된 열림/닫힘을 확인 할 수 있다.
+	 */
+	@ParameterizedTest
+	@MethodSource("providerUpdateOpenAll")
+	void 이슈_열림_닫힘을_일괄_수정한다(boolean isOpen, List<Long> ids) {
+		// when
+		var response = 이슈_열림_닫힘_일괄_수정_요쳥(isOpen, ids);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		이슈_목록에서_수정된_열림_닫힘_검증(isOpen, ids);
+	}
+
+	/**
+	 * When 존재하지 않는 이슈로 열림/닫힘을 일괄 수정하면
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 존재하지_않는_이슈로_열림_닫힘을_일괄_수정_시_요청이_실패된다() {
+		// given
+		Long 존재하지_않는_이슈_아이디 = 20L;
+
+		// when
+		var response = 이슈_열림_닫힘_일괄_수정_요쳥( false, List.of(존재하지_않는_이슈_아이디));
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
@@ -475,6 +510,17 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		);
 	}
 
+	private static Stream<Arguments> providerUpdateOpenAll() {
+		return Stream.of(
+			Arguments.of(
+				true, Arrays.asList(ISSUE1.getId(), ISSUE2.getId())
+			),
+			Arguments.of(
+				false, Arrays.asList(ISSUE1.getId(), ISSUE2.getId())
+			)
+		);
+	}
+
 	private void 검색_조건에_맞는_이슈_목록_검증(ExtractableResponse<Response> response, IssueSearchRequest issueSearchRequest) {
 		int issueOpenCount = response.jsonPath().getInt("metadata.issueOpenCount");
 		int issueCloseCount = response.jsonPath().getInt("metadata.issueCloseCount");
@@ -579,5 +625,17 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		var response = 이슈_상세_조회_요청(id);
 
 		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	private void 이슈_목록에서_수정된_열림_닫힘_검증(boolean isOpen, List<Long> ids) {
+		List<IssueSearchResponse> issues = 이슈_목록_조회_요청(Map.of("isOpen", isOpen)).as(IssuesSearchResponse.class)
+			.getIssues();
+		boolean result = issues.stream()
+			.map(IssueSearchResponse::getId)
+			.collect(Collectors.toUnmodifiableList())
+			.containsAll(ids);
+
+		assertThat(result).isTrue();
+		assertThat(issues.get(0).getIsOpen()).isEqualTo(isOpen);
 	}
 }

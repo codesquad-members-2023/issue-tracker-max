@@ -1,4 +1,4 @@
-package com.issuetracker.config;
+package com.issuetracker.common.config;
 
 import org.springframework.http.HttpStatus;
 

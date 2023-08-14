@@ -1,10 +1,12 @@
 package com.issuetracker.unit.infrastrucure;
 
 import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
+import static com.issuetracker.util.fixture.IssueFixture.ISSUE2;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON3;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,10 +72,19 @@ class IssueRepositoryTest {
 	@Test
 	void 이슈_열림_닫힘을_수정한다() {
 		// when
-		int actual = issueRepository.updateOpen(ISSUE1.getId(), false);
+		int actual = issueRepository.updateOpen(false, ISSUE1.getId());
 
 		// then
 		assertThat(actual).isEqualTo(1);
+	}
+
+	@Test
+	void 이슈_열림_닫힘을_일괄_수정한다() {
+		// when
+		int actual = issueRepository.updateAllOpen(false, List.of(ISSUE1.getId(), ISSUE2.getId()));
+
+		// then
+		assertThat(actual).isEqualTo(2);
 	}
 
 	@Test

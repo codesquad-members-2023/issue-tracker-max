@@ -1,18 +1,15 @@
 package com.issuetracker.issue.ui.dto;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
 
 import com.issuetracker.issue.application.dto.IssueCreateInputData;
+import com.issuetracker.common.util.ConvertorUtil;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,8 +34,8 @@ public class IssueCreateRequest {
 		Long milestoneId) {
 		this.title = title;
 		this.content = content;
-		this.assigneeIds = converterNonNullList(assigneeIds);
-		this.labelIds = converterNonNullList(labelIds);
+		this.assigneeIds = ConvertorUtil.converterToNonNullList(assigneeIds);
+		this.labelIds = ConvertorUtil.converterToNonNullList(labelIds);
 		this.milestoneId = milestoneId;
 	}
 
@@ -51,15 +48,5 @@ public class IssueCreateRequest {
 			milestoneId,
 			authorId
 		);
-	}
-
-	private List<Long> converterNonNullList(List<Long> ids) {
-		if (Objects.isNull(ids)) {
-			ids = Collections.emptyList();
-		}
-
-		return ids.stream()
-			.filter(Objects::nonNull)
-			.collect(Collectors.toUnmodifiableList());
 	}
 }

@@ -2,8 +2,8 @@ package com.issuetracker.milestone.ui.dto;
 
 import javax.validation.constraints.Pattern;
 
-import com.issuetracker.config.exception.CustomHttpException;
-import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.common.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.ErrorType;
 import com.issuetracker.milestone.application.dto.MilestoneUpdateOpenStatusInputData;
 
 import lombok.AccessLevel;

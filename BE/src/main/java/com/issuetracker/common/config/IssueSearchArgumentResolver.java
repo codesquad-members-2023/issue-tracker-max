@@ -1,4 +1,4 @@
-package com.issuetracker.config;
+package com.issuetracker.common.config;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -14,8 +14,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.issuetracker.config.exception.CustomHttpException;
-import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.common.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.ErrorType;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 
 @Component

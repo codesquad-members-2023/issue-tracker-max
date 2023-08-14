@@ -23,6 +23,7 @@ import com.issuetracker.issue.ui.dto.IssueCreateRequest;
 import com.issuetracker.issue.ui.dto.IssueCreateResponse;
 import com.issuetracker.issue.ui.dto.IssueDetailResponse;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
+import com.issuetracker.issue.ui.dto.IssueUpdateAllOpenRequest;
 import com.issuetracker.issue.ui.dto.IssueUpdateRequest;
 import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
 import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelCandidatesResponse;
@@ -90,6 +91,12 @@ public class IssueController {
 	public ResponseEntity<AssignedLabelResponses> showLabels() {
 		AssignedLabelResponses assignedLabelResponses = AssignedLabelResponses.from(issueService.searchAssignedLabel());
 		return ResponseEntity.ok().body(assignedLabelResponses);
+	}
+
+	@PatchMapping("/open-all")
+	public ResponseEntity<Void> updateAllOpen(@RequestBody IssueUpdateAllOpenRequest issueUpdateAllOpenRequest) {
+		issueService.updateAllIssueOpen(issueUpdateAllOpenRequest.toIssueUpdateAllOpenData());
+		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping("/{id}")

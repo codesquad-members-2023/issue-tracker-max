@@ -5,8 +5,8 @@ import java.util.Objects;
 
 import org.springframework.stereotype.Component;
 
-import com.issuetracker.config.exception.CustomHttpException;
-import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.common.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.ErrorType;
 import com.issuetracker.issue.application.dto.IssueCreateInputData;
 import com.issuetracker.issue.application.dto.assignedlabel.AssignedLabelCreateData;
 import com.issuetracker.issue.application.dto.assignee.AssigneeCreateData;
@@ -48,6 +48,12 @@ public class IssueValidator {
 
 	public void verifyUpdatedOrDeletedCount(int count) {
 		if (count != 1) {
+			throw new CustomHttpException(ErrorType.ISSUE_NOT_FOUND);
+		}
+	}
+
+	public void verifyUpdatedOrDeletedCount(int updatedCount, int count) {
+		if (updatedCount != count) {
 			throw new CustomHttpException(ErrorType.ISSUE_NOT_FOUND);
 		}
 	}

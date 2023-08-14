@@ -1,16 +1,18 @@
 package com.issuetracker.util.steps;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.MediaType;
 
+import com.issuetracker.issue.ui.dto.IssueCreateRequest;
+import com.issuetracker.issue.ui.dto.IssueSearchRequest;
+import com.issuetracker.issue.ui.dto.IssueUpdateAllOpenRequest;
+import com.issuetracker.issue.ui.dto.IssueUpdateRequest;
 import com.issuetracker.issue.ui.dto.assignedlabel.AssignedLabelCreateRequest;
 import com.issuetracker.issue.ui.dto.assignee.AssigneeCreateRequest;
 import com.issuetracker.issue.ui.dto.comment.IssueCommentCreateRequest;
-import com.issuetracker.issue.ui.dto.IssueCreateRequest;
-import com.issuetracker.issue.ui.dto.IssueSearchRequest;
-import com.issuetracker.issue.ui.dto.IssueUpdateRequest;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -85,12 +87,21 @@ public class IssueSteps {
 			.then().log().all().extract();
 	}
 
-	public static ExtractableResponse<Response> 이슈_열림_닫힘_수정_요청(Long id, boolean isOpen) {
+	public static ExtractableResponse<Response> 이슈_열림_닫힘_수정_요청(boolean isOpen, Long id) {
 		return RestAssured.given().log().all()
 			.body(new IssueUpdateRequest(isOpen, null, null, null))
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().patch("/api/issues/{id}/open", id)
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 이슈_열림_닫힘_일괄_수정_요쳥(boolean isOpen, List<Long> ids) {
+		return RestAssured.given().log().all()
+			.body(new IssueUpdateAllOpenRequest(ids, isOpen))
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when().patch("/api/issues/open-all")
 			.then().log().all().extract();
 	}
 
