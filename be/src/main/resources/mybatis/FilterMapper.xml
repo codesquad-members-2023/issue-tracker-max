@@ -40,9 +40,7 @@
         <choose>
             <when test="commentWriter != null">
                 LEFT JOIN
-                issue_comment icmts ON icmts.issue_id = i.id
-                LEFT JOIN
-                comments cmts ON icmts.comment_id = cmts.id
+                comments cmts ON i.id = cmts.issue_id
             </when>
         </choose>
         WHERE

@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
-import com.issuetrackermax.domain.comment.entity.Comment;
+import com.issuetrackermax.controller.comment.dto.request.CommentCreateRequest;
 import com.issuetrackermax.domain.issue.entity.Issue;
 
 import lombok.Builder;
@@ -52,10 +52,10 @@ public class IssuePostRequest {
 			.build();
 	}
 
-	public Comment toComment(Long writerId) {
-		return Comment.builder()
+	public CommentCreateRequest toCommentCreateRequest(Long issueId) {
+		return CommentCreateRequest.builder()
 			.content(content)
-			.writerId(writerId)
+			.issueId(issueId)
 			.build();
 	}
 }

@@ -3,7 +3,6 @@ package com.issuetrackermax.fixture;
 import com.issuetrackermax.domain.assignee.entity.Assignee;
 import com.issuetrackermax.domain.comment.entity.Comment;
 import com.issuetrackermax.domain.issue.entity.Issue;
-import com.issuetrackermax.domain.issue.entity.IssueWithComment;
 import com.issuetrackermax.domain.issue.entity.IssueWithLabel;
 import com.issuetrackermax.domain.label.entity.Label;
 import com.issuetrackermax.domain.member.entity.LoginType;
@@ -60,17 +59,11 @@ public class EntityFixture {
 			.build();
 	}
 
-	public static Comment makeComment(String content, Long writerId) {
+	public static Comment makeComment(String content, Long issueId, Long writerId) {
 		return Comment.builder()
 			.content(content)
-			.writerId(writerId)
-			.build();
-	}
-
-	public static IssueWithComment makeIssueWithComment(Long issueId, Long commentId) {
-		return IssueWithComment.builder()
 			.issueId(issueId)
-			.commentId(commentId)
+			.writerId(writerId)
 			.build();
 	}
 }

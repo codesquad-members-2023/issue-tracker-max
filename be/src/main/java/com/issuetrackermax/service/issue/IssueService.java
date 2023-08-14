@@ -18,12 +18,10 @@ import com.issuetrackermax.controller.issue.dto.response.IssueDetailsResponse;
 import com.issuetrackermax.controller.issue.dto.response.IssuePostResponse;
 import com.issuetrackermax.domain.comment.entity.Comment;
 import com.issuetrackermax.domain.history.entity.History;
-import com.issuetrackermax.domain.issue.IssueCommentRepository;
 import com.issuetrackermax.domain.issue.IssueLabelRepository;
 import com.issuetrackermax.domain.issue.IssueRepository;
 import com.issuetrackermax.domain.issue.IssueValidator;
 import com.issuetrackermax.domain.issue.entity.IssueResultVO;
-import com.issuetrackermax.domain.issue.entity.IssueWithComment;
 import com.issuetrackermax.domain.label.LabelValidator;
 import com.issuetrackermax.domain.member.MemberValidator;
 import com.issuetrackermax.domain.milestone.MilestoneValidator;
@@ -31,7 +29,6 @@ import com.issuetrackermax.service.assignee.AssigneeService;
 import com.issuetrackermax.service.comment.CommentService;
 import com.issuetrackermax.service.history.HistoryService;
 import com.issuetrackermax.service.label.LabelService;
-import com.issuetrackermax.service.milestone.MilestoneService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,14 +40,12 @@ public class IssueService {
 	private final HistoryService historyService;
 	private final LabelService labelService;
 	private final AssigneeService assigneeService;
-	private final MilestoneService milestoneService;
 	private final MemberValidator memberValidator;
 	private final IssueValidator issueValidator;
 	private final LabelValidator labelValidator;
 	private final MilestoneValidator milestoneValidator;
 	private final IssueRepository issueRepository;
 	private final IssueLabelRepository issueLabelRepository;
-	private final IssueCommentRepository issueCommentRepository;
 
 	@Transactional
 	public IssuePostResponse post(IssuePostRequest request, Long writerId) {
@@ -60,7 +55,7 @@ public class IssueService {
 		applyLabels(issueId, request.toLabel());
 
 		if (request.getContent() != null) {
-			saveComment(request, writerId, issueId);
+			commentService.save(request.toCommentCreateRequest(issueId), writerId);
 		}
 		return IssuePostResponse.from(issueId);
 	}
@@ -137,11 +132,6 @@ public class IssueService {
 	public void modifyTitle(Long issueId, IssueTitleRequest request) {
 		issueValidator.existById(issueId);
 		issueRepository.modifyTitle(issueId, request.getTitle());
-	}
-
-	private void saveComment(IssuePostRequest request, Long writerId, Long issueId) {
-		Long commentId = commentService.save(request.toComment(writerId));
-		issueCommentRepository.save(IssueWithComment.builder().issueId(issueId).commentId(commentId).build());
 	}
 
 	private List<LabelResponse> getLabelResponse(String[] labelIds) {
