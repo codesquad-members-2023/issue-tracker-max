@@ -12,7 +12,7 @@ type Props = {
   contents: string;
   createdAt: string;
   author: User;
-  comments: Comment[]; // todo 타입
+  comments: any[]; // todo 타입
   onAddComment: (comment: Comment) => void;
 };
 
@@ -23,6 +23,8 @@ export const CommentContainer: React.FC<Props> = ({
   onAddComment,
 }: Props) => {
   const isCommentsExist = comments.length > 0;
+
+  console.log(comments);
 
   return (
     <div
@@ -37,6 +39,7 @@ export const CommentContainer: React.FC<Props> = ({
         comments.map((comment) => (
           <Comment
             key={comment.id}
+            commentId={comment.id}
             issueId={issueId}
             issueAuthor={author} //이슈 작성자 정보
             userId={comment.author.userId} //코멘트 작성자 id

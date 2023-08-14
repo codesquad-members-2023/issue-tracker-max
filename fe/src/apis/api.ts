@@ -3,6 +3,8 @@ import { getAccessToken } from './localStorage';
 const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
 export const fetchData = async (path: string, options?: RequestInit) => {
+  console.log(path, options);
+
   const response = await fetch(BASE_URL + path, options);
 
   if (!response.ok) {
