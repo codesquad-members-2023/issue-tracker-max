@@ -1,5 +1,6 @@
 package codesquard.app.issue.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,19 +14,17 @@ import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueUserResponse;
+import codesquard.app.issue.dto.response.userReactionResponse;
 import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.issue.mapper.IssueMapper;
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
 import codesquard.app.issue.mapper.response.IssueFilterResponse;
 import codesquard.app.issue.mapper.response.IssuesResponse;
 import codesquard.app.issue.mapper.response.filters.MultiFilters;
-import codesquard.app.issue.mapper.response.filters.SingleFilters;
 import codesquard.app.issue.mapper.response.filters.response.SingleFilter;
 import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.label.repository.LabelRepository;
 import codesquard.app.milestone.repository.MilestoneRepository;
-import codesquard.app.issue.dto.response.userReactionResponse;
-import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.user_reaction.repository.UserReactionRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -37,10 +36,17 @@ public class IssueQueryService {
 	private final IssueRepository issueRepository;
 	private final LabelRepository labelRepository;
 	private final MilestoneRepository milestoneRepository;
+	private final UserReactionRepository userReactionRepository;
 	private final IssueMapper issueMapper;
-  private final UserReactionRepository userReactionRepository;
-  
+
 	private static final String SPACE = " ";
+	private static final Long OPENED_ID = 1L;
+	private static final Long AUTHOR_ID = 2L;
+	private static final Long ASSIGNEE_ID = 3L;
+	private static final Long MENTIONS_ID = 4L;
+	private static final Long CLOSED_ID = 5L;
+
+	private boolean multiFiltersCheck = false;
 
 	public IssueReadResponse get(Long issueId, Long userId) {
 		validateExistIssue(issueId);
@@ -82,12 +88,11 @@ public class IssueQueryService {
 	// Issue Filtering
 	public IssueFilterResponse findFilterIssues(String loginId, IssueFilterRequest request) {
 		Map<String, Long> counts = countIssuesByStatus();
-		SingleFilters singleFilters = checkSingleFilters(request);
-		boolean multiFiltersCheck = singleFilters == null;
 
 		return new IssueFilterResponse(generateInput(request), counts.get(IssueStatus.OPENED.name()),
 			counts.get(IssueStatus.CLOSED.name()), labelRepository.countAll(), milestoneRepository.countAll(),
-			findIssues(loginId, request), singleFilters, checkMultiFilters(multiFiltersCheck, request));
+			findIssues(loginId, request), generateSingleFilters(request),
+			checkMultiFilters(multiFiltersCheck, request));
 	}
 
 	private String generateInput(IssueFilterRequest request) {
@@ -105,13 +110,18 @@ public class IssueQueryService {
 			builder.append("mentions:").append(request.getMentions()).append(SPACE);
 		}
 		if (request.getMilestone() != null) {
-			builder.append("milestone:").append(request.getMentions()).append(SPACE);
+			builder.append("milestone:").append(request.getMilestone()).append(SPACE);
 		}
-		if (request.getLabel().size() > 0) {
+		if (request.getLabel() != null && !request.getLabel().isEmpty()) {
 			for (String label : request.getLabel()) {
 				builder.append("label:").append(label).append(SPACE);
 			}
 		}
+
+		if (builder.length() == 0) {
+			return "";
+		}
+
 		return builder.toString();
 	}
 
@@ -124,49 +134,51 @@ public class IssueQueryService {
 		return issueMapper.getIssues(request.convertMe(loginId));
 	}
 
-	public SingleFilters checkSingleFilters(IssueFilterRequest request) {
-		// TODO: 지금 여러개가 들어왔을 때 싱글필터로 인식되는 문제가 있음 -> 이거 해결하기
+	public List<SingleFilter> generateSingleFilters(IssueFilterRequest request) {
+		List<SingleFilter> singleFilters = new ArrayList<>();
+		String generated = generateInput(request);
 
-		if (request.getIs() != null && request.getIs().equalsIgnoreCase(SingleFilter.IS.OPENED.getType())) {
-			SingleFilters singleFilters = new SingleFilters();
-			singleFilters.changeBy(true, SingleFilters.OPENED_ID - 1L);
-			return singleFilters;
-		}
+		boolean selectedOpened = generated.strip().equals(SingleFilter.IS.OPENED.getResponse());
+		singleFilters.add(
+			new SingleFilter(OPENED_ID, SingleFilter.IS.OPENED.getName(), SingleFilter.IS.OPENED.getResponse(),
+				selectedOpened));
 
-		if (request.getIs() != null && request.getIs().equalsIgnoreCase(SingleFilter.IS.CLOSED.getType())) {
-			SingleFilters singleFilters = new SingleFilters();
-			singleFilters.changeBy(true, SingleFilters.CLOSED_ID - 1L);
-			return singleFilters;
-		}
+		boolean selectedAuthor = generated.strip().equals(SingleFilter.ME.AUTHOR.getResponse());
+		singleFilters.add(
+			new SingleFilter(AUTHOR_ID, SingleFilter.ME.AUTHOR.getName(), SingleFilter.ME.AUTHOR.getResponse(),
+				selectedAuthor));
 
-		if (request.getAuthor() != null && request.getAuthor().equalsIgnoreCase(SingleFilter.ME.AUTHOR.getType())) {
-			SingleFilters singleFilters = new SingleFilters();
-			singleFilters.changeBy(true, SingleFilters.AUTHOR_ID - 1L);
-			return singleFilters;
-		}
+		boolean selectedAssignee = generated.strip().equals(SingleFilter.ME.ASSIGNEE.getResponse());
+		singleFilters.add(
+			new SingleFilter(ASSIGNEE_ID, SingleFilter.ME.ASSIGNEE.getName(), SingleFilter.ME.ASSIGNEE.getResponse(),
+				selectedAssignee));
 
-		if (request.getAssignee() != null && request.getAssignee().equalsIgnoreCase(SingleFilter.ME.ASSIGNEE.getType())) {
-			SingleFilters singleFilters = new SingleFilters();
-			singleFilters.changeBy(true, SingleFilters.ASSIGNEE_ID - 1L);
-			return singleFilters;
-		}
+		boolean selectedMentions = generated.strip().equals(SingleFilter.ME.MENTIONS.getResponse());
+		singleFilters.add(
+			new SingleFilter(MENTIONS_ID, SingleFilter.ME.MENTIONS.getName(), SingleFilter.ME.MENTIONS.getResponse(),
+				selectedMentions));
 
-		if (request.getMentions() != null && request.getMentions().equalsIgnoreCase(SingleFilter.ME.MENTIONS.getType())) {
-			SingleFilters singleFilters = new SingleFilters();
-			singleFilters.changeBy(true, SingleFilters.MENTIONS_ID - 1L);
-			return singleFilters;
-		}
+		boolean selectedClosed = generated.strip().equals(SingleFilter.IS.CLOSED.getResponse());
+		singleFilters.add(
+			new SingleFilter(CLOSED_ID, SingleFilter.IS.CLOSED.getName(), SingleFilter.IS.CLOSED.getResponse(),
+				selectedClosed));
 
-		return null;
+		multiFiltersCheck =
+			!selectedOpened && !selectedClosed && !selectedAuthor && !selectedAssignee && !selectedMentions;
+
+		return singleFilters;
 	}
 
 	private MultiFilters checkMultiFilters(boolean check, IssueFilterRequest request) {
-		return new MultiFilters(
+		MultiFilters multiFilters = new MultiFilters(
 			issueMapper.getMultiFiltersAssignees(check, request),
 			issueMapper.getMultiFiltersLabels(check, request),
 			issueMapper.getMultiFiltersMilestones(check, request),
-			issueMapper.getMultiFiltersAuthors(check, request)
-		);
+			issueMapper.getMultiFiltersAuthors(check, request));
+		multiFilters.addNoneOptionToAssignee(request.getAssignee() != null && request.getAssignee().equals("none"));
+		multiFilters.addNoneOptionToLabels(request.getLabel() != null && request.getLabel().get(0).equals("none"));
+		multiFilters.addNoneOptionToMilestones(request.getMilestone() != null && request.getMilestone().equals("none"));
+		return multiFilters;
 	}
 
 }
