@@ -17,6 +17,8 @@ import codesquad.issueTracker.issue.dto.IssueWriteRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueContentRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueContentResponseDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueTitleRequest;
+import codesquad.issueTracker.issue.dto.ModifyIssueTitleResponse;
 import codesquad.issueTracker.issue.repository.IssueRepository;
 import codesquad.issueTracker.label.service.LabelService;
 import codesquad.issueTracker.milestone.service.MilestoneService;
@@ -101,8 +103,17 @@ public class IssueService {
 
 	@Transactional
 	public ModifyIssueContentResponseDto modifyIssueContent(Long id, ModifyIssueContentRequestDto request) {
+		validateExistIssue(id);
 		String modifiedContent = request.getContent();
 		issueRepository.updateContent(id, modifiedContent);
 		return new ModifyIssueContentResponseDto(modifiedContent);
+	}
+
+	@Transactional
+	public ModifyIssueTitleResponse modifyIssueTitle(Long id, ModifyIssueTitleRequest request) {
+		validateExistIssue(id);
+		String modifiedTitle = request.getTitle();
+		issueRepository.updateTitle(id, modifiedTitle);
+		return new ModifyIssueTitleResponse(modifiedTitle);
 	}
 }

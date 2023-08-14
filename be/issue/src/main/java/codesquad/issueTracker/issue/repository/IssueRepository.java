@@ -91,4 +91,13 @@ public class IssueRepository {
 		return id;
 
 	}
+
+	public Long updateTitle(Long id, String modifiedTitle) {
+		String sql = "UPDATE issues SET title = :modifiedTitle WHERE Id = :id";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("id", id)
+			.addValue("modifiedTitle", modifiedTitle);
+		jdbcTemplate.update(sql, parameterSource);
+		return id;
+	}
 }
