@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.issuetrackermax.common.exception.ApiException;
 import com.issuetrackermax.common.exception.domain.CommentException;
 import com.issuetrackermax.controller.comment.dto.request.CommentCreateRequest;
-import com.issuetrackermax.controller.comment.dto.request.CommentModifyRequest;
+import com.issuetrackermax.controller.comment.dto.request.CommentRequest;
 import com.issuetrackermax.controller.comment.dto.response.CommentResponse;
 import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.comment.CommentRepository;
@@ -106,7 +106,7 @@ public class CommentServiceTest extends IntegrationTestSupport {
 			.build();
 		CommentResponse commentResponse = commentService.save(commentCreateRequest, writerId);
 
-		CommentModifyRequest request = CommentModifyRequest.builder()
+		CommentRequest request = CommentRequest.builder()
 			.content("Modified content")
 			.build();
 
@@ -133,7 +133,7 @@ public class CommentServiceTest extends IntegrationTestSupport {
 			.build();
 		CommentResponse commentResponse = commentService.save(commentCreateRequest, writerId1);
 
-		CommentModifyRequest request = CommentModifyRequest.builder()
+		CommentRequest request = CommentRequest.builder()
 			.content("Modified content")
 			.build();
 
