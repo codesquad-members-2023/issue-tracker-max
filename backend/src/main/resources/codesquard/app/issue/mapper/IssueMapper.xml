@@ -117,6 +117,7 @@
                 </otherwise>
             </choose>
         </where>
+        ORDER BY issue.`created_at` DESC
     </select>
 
     <resultMap id="issueAssigneeResponse" type="codesquard.app.issue.mapper.response.IssueAssigneeResponse">
