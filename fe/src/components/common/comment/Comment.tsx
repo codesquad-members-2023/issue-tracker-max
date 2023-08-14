@@ -28,6 +28,7 @@ type Props = {
   createdAt?: string;
   userId?: number;
   loginId?: string;
+  commentAuthor?: User;
   isDisabled?: boolean;
   defaultValue: string;
   onAddComment?: (comment: any) => void;
@@ -41,6 +42,7 @@ export const Comment: React.FC<Props> = ({
   createdAt,
   userId,
   loginId,
+  commentAuthor,
   typeVariant = 'default',
   isDisabled = false,
   defaultValue,
@@ -215,7 +217,11 @@ export const Comment: React.FC<Props> = ({
             header={
               <CommentHeader
                 onClickEdit={onClickEdit}
-                image="D"
+                image={
+                  typeVariant === 'issue'
+                    ? issueAuthor.image
+                    : commentAuthor?.image
+                }
                 loginId={loginId}
                 createdAt={createdAt}
                 isAuthor={isAuthor}
