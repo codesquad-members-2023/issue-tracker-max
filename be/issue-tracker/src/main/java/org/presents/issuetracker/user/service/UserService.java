@@ -1,12 +1,14 @@
 package org.presents.issuetracker.user.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.presents.issuetracker.auth.dto.TokenResponse;
-import org.presents.issuetracker.auth.jwt.JwtProvider;
 import org.presents.issuetracker.global.error.exception.CustomException;
 import org.presents.issuetracker.global.error.statuscode.UserErrorCode;
+import org.presents.issuetracker.jwt.JwtProvider;
+import org.presents.issuetracker.jwt.dto.TokenResponse;
+import org.presents.issuetracker.jwt.service.JwtService;
 import org.presents.issuetracker.user.dto.request.UserRequest;
 import org.presents.issuetracker.user.dto.response.UserResponse;
 import org.presents.issuetracker.user.entity.User;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 	private final UserRepository userRepository;
 	private final JwtProvider jwtProvider;
+	private final JwtService jwtService;
 
 	public List<UserResponse> getUserPreviews() {
 		return userRepository.findAll().stream()
@@ -40,13 +43,17 @@ public class UserService {
 	}
 
 	public TokenResponse login(UserRequest userRequest) {
-		User user = userRepository.findByLoginId(userRequest.getLoginId())
+		String loginId = userRequest.getLoginId();
+		User user = userRepository.findByLoginId(loginId)
 			.orElseThrow(() -> {
 				throw new CustomException(UserErrorCode.NOT_FOUND_LOGIN_ID);
 			});
-		if (!userRequest.getPassword().equals(user.getPassword())) {
+		if (!user.matchesPassword(userRequest.getPassword())) {
 			throw new CustomException(UserErrorCode.WRONG_PASSWORD);
 		}
-		return null;
+
+		TokenResponse tokenResponse = jwtProvider.generateToken(Map.of("loginId", loginId));
+		jwtService.saveRefreshToken(tokenResponse.getRefreshToken(), loginId);
+		return tokenResponse;
 	}
 }

@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS issue;
 DROP TABLE IF EXISTS label;
 DROP TABLE IF EXISTS milestone;
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS token;
 SET foreign_key_checks = 1;
 
 CREATE TABLE `user` (
@@ -90,4 +91,12 @@ CREATE TABLE `issue_label` (
        ) ,
     FOREIGN KEY (`issue_id`) REFERENCES `issue` (`issue_id`) ,
     FOREIGN KEY (`label_id`) REFERENCES `label` (`label_id`)
+);
+
+CREATE TABLE `token` (
+    `refresh_token` varchar(200) NOT NULL,
+    `login_id` varchar(10) NOT NULL,
+    PRIMARY KEY (
+            `refresh_token`
+    )
 );

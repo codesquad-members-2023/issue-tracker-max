@@ -20,5 +20,9 @@ public class User {
 		this.password = password;
 		this.image = image;
 	}
+
+	public boolean matchesPassword(String password) {
+		return this.password.equals(password);
+	}
 }
 
