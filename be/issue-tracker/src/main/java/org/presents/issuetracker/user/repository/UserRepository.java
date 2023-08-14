@@ -1,6 +1,7 @@
 package org.presents.issuetracker.user.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.presents.issuetracker.user.entity.User;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,6 +20,14 @@ public class UserRepository {
 		(rs, rowNum) -> User.builder()
 			.userId(rs.getLong("user_id"))
 			.loginId(rs.getString("login_id"))
+			.image(rs.getString("image"))
+			.build();
+
+	private final RowMapper<User> userRowMapper =
+		(rs, rowNum) -> User.builder()
+			.userId(rs.getLong("user_id"))
+			.loginId(rs.getString("login_id"))
+			.password(rs.getString("password"))
 			.image(rs.getString("image"))
 			.build();
 
@@ -46,5 +55,25 @@ public class UserRepository {
 		MapSqlParameterSource params = new MapSqlParameterSource("user_id", id);
 
 		return jdbcTemplate.queryForObject(sql, params, userPreviewRowMapper);
+  }
+  
+	public Optional<User> findByLoginId(String loginId) {
+		final String sql = "SELECT user_id, login_id, password, image "
+			+ "FROM user WHERE login_id = :loginId";
+
+		MapSqlParameterSource params = new MapSqlParameterSource("loginId", loginId);
+
+		return jdbcTemplate.query(sql, params, userRowMapper)
+			.stream()
+			.findFirst();
+	}
+
+	public void save(User user) {
+		final String sql = "INSERT INTO user(login_id, password) VALUES(:loginId, :password)";
+
+		MapSqlParameterSource params = new MapSqlParameterSource("loginId", user.getLoginId())
+			.addValue("password", user.getPassword());
+
+		jdbcTemplate.update(sql, params);
 	}
 }

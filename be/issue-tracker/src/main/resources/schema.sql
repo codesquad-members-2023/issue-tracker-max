@@ -12,7 +12,7 @@ CREATE TABLE `user` (
     `user_id` bigint  NOT NULL AUTO_INCREMENT ,
     `login_id` varchar(10) NOT NULL UNIQUE ,
     `password` varchar(50)  NOT NULL ,
-    `image` varchar(200)  NOT NULL ,
+    `image` varchar(200)  NOT NULL DEFAULT '' ,
     PRIMARY KEY (
                  `user_id`
         )
