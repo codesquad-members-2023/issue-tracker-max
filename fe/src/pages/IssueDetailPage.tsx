@@ -8,6 +8,7 @@ import {
   getIssueDetail,
 } from 'apis/api';
 import { useParams } from 'react-router-dom';
+import { DetailPageDataProvider } from 'context/DetailContext';
 
 type Props = {};
 
@@ -133,27 +134,29 @@ export const IssueDetailPage: React.FC = ({}) => {
   };
 
   return (
-    <div
-      css={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '24px',
-      }}
-    >
-      <PostInformation issueDetailPageData={issueDetailPageData} />
-      <Body
-        issueDetailPageData={issueDetailPageData}
-        onAddComment={onAddComment}
-        //
-        selectionsOptions={selectionsOptions}
-        selections={selectionsIds}
-        onChangeSelect={onChangeSelect}
-        onSingleSelectedMilestone={onSingleSelectedMilestone}
-        onMultipleSelectedAssignee={onMultipleSelectedAssignee}
-        onMultipleSelectedLabel={onMultipleSelectedLabel}
-      />
-    </div>
+    <DetailPageDataProvider>
+      <div
+        css={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '24px',
+        }}
+      >
+        <PostInformation issueDetailPageData={issueDetailPageData} />
+        <Body
+          issueDetailPageData={issueDetailPageData}
+          onAddComment={onAddComment}
+          //
+          selectionsOptions={selectionsOptions}
+          selections={selectionsIds}
+          onChangeSelect={onChangeSelect}
+          onSingleSelectedMilestone={onSingleSelectedMilestone}
+          onMultipleSelectedAssignee={onMultipleSelectedAssignee}
+          onMultipleSelectedLabel={onMultipleSelectedLabel}
+        />
+      </div>
+    </DetailPageDataProvider>
   );
 };
 
