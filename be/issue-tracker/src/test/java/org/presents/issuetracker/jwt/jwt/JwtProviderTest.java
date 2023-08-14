@@ -1,4 +1,4 @@
-package org.presents.issuetracker.auth.jwt;
+package org.presents.issuetracker.jwt.jwt;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -8,6 +8,7 @@ import java.util.Map;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.presents.issuetracker.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 

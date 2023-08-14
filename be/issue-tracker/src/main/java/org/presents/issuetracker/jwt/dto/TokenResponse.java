@@ -1,4 +1,4 @@
-package org.presents.issuetracker.auth.dto;
+package org.presents.issuetracker.jwt.dto;
 
 import lombok.Builder;
 

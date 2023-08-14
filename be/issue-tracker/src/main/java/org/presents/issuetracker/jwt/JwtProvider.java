@@ -1,4 +1,4 @@
-package org.presents.issuetracker.auth.jwt;
+package org.presents.issuetracker.jwt;
 
 import java.security.Key;
 import java.util.Base64;
@@ -8,8 +8,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.presents.issuetracker.auth.dto.TokenResponse;
 import org.presents.issuetracker.global.util.JsonUtil;
+import org.presents.issuetracker.jwt.dto.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
