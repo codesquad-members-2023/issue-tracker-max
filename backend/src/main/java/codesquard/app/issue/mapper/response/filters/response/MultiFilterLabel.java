@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class MultiFiltersLabels {
+public class MultiFilterLabel {
 
 	private Long id;
 	private String name;

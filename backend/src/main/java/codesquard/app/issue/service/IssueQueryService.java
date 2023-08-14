@@ -21,6 +21,10 @@ import codesquard.app.issue.mapper.request.IssueFilterRequest;
 import codesquard.app.issue.mapper.response.IssueFilterResponse;
 import codesquard.app.issue.mapper.response.IssuesResponse;
 import codesquard.app.issue.mapper.response.filters.MultiFilters;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterAssignees;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterAuthors;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterLabels;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterMilestones;
 import codesquard.app.issue.mapper.response.filters.response.SingleFilter;
 import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.label.repository.LabelRepository;
@@ -171,13 +175,16 @@ public class IssueQueryService {
 
 	private MultiFilters checkMultiFilters(boolean check, IssueFilterRequest request) {
 		MultiFilters multiFilters = new MultiFilters(
-			issueMapper.getMultiFiltersAssignees(check, request),
-			issueMapper.getMultiFiltersLabels(check, request),
-			issueMapper.getMultiFiltersMilestones(check, request),
-			issueMapper.getMultiFiltersAuthors(check, request));
-		multiFilters.addNoneOptionToAssignee(request.getAssignee() != null && request.getAssignee().equals("none"));
-		multiFilters.addNoneOptionToLabels(request.getLabel() != null && request.getLabel().get(0).equals("none"));
-		multiFilters.addNoneOptionToMilestones(request.getMilestone() != null && request.getMilestone().equals("none"));
+			new MultiFilterAssignees(issueMapper.getMultiFiltersAssignees(check, request)),
+			new MultiFilterLabels(issueMapper.getMultiFiltersLabels(check, request)),
+			new MultiFilterMilestones(issueMapper.getMultiFiltersMilestones(check, request)),
+			new MultiFilterAuthors(issueMapper.getMultiFiltersAuthors(check, request)));
+		multiFilters.getAssignees()
+			.addNoneOptionToAssignee(request.getAssignee() != null && request.getAssignee().equals("none"));
+		multiFilters.getLabels()
+			.addNoneOptionToLabels(request.getLabel() != null && request.getLabel().get(0).equals("none"));
+		multiFilters.getMilestones()
+			.addNoneOptionToMilestones(request.getMilestone() != null && request.getMilestone().equals("none"));
 		return multiFilters;
 	}
 
