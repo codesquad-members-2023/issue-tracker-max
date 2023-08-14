@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.presents.issuetracker.jwt.dto.TokenResponse;
 import org.presents.issuetracker.user.dto.request.UserRequest;
+import org.presents.issuetracker.user.dto.response.LoginResponse;
 import org.presents.issuetracker.user.dto.response.UserResponse;
 import org.presents.issuetracker.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +38,7 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<TokenResponse> login(@Valid @RequestBody UserRequest userRequest) {
+	public ResponseEntity<LoginResponse> login(@Valid @RequestBody UserRequest userRequest) {
 		return ResponseEntity.ok().body(userService.login(userRequest));
 	}
 }

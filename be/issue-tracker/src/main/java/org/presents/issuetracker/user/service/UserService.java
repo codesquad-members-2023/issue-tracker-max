@@ -7,9 +7,10 @@ import java.util.stream.Collectors;
 import org.presents.issuetracker.global.error.exception.CustomException;
 import org.presents.issuetracker.global.error.statuscode.UserErrorCode;
 import org.presents.issuetracker.jwt.JwtProvider;
-import org.presents.issuetracker.jwt.dto.TokenResponse;
+import org.presents.issuetracker.jwt.dto.TokenInfo;
 import org.presents.issuetracker.jwt.service.JwtService;
 import org.presents.issuetracker.user.dto.request.UserRequest;
+import org.presents.issuetracker.user.dto.response.LoginResponse;
 import org.presents.issuetracker.user.dto.response.UserResponse;
 import org.presents.issuetracker.user.entity.User;
 import org.presents.issuetracker.user.repository.UserRepository;
@@ -42,7 +43,7 @@ public class UserService {
 			.build());
 	}
 
-	public TokenResponse login(UserRequest userRequest) {
+	public LoginResponse login(UserRequest userRequest) {
 		String loginId = userRequest.getLoginId();
 		User user = userRepository.findByLoginId(loginId)
 			.orElseThrow(() -> {
@@ -52,8 +53,13 @@ public class UserService {
 			throw new CustomException(UserErrorCode.WRONG_PASSWORD);
 		}
 
-		TokenResponse tokenResponse = jwtProvider.generateToken(Map.of("userId", user.getUserId()));
-		jwtService.saveRefreshToken(tokenResponse.getRefreshToken(), loginId);
-		return tokenResponse;
+		TokenInfo tokenInfo = jwtProvider.generateToken(Map.of("userId", user.getUserId()));
+		jwtService.saveRefreshToken(tokenInfo.getRefreshToken(), loginId);
+		return LoginResponse.builder()
+			.loginId(user.getLoginId())
+			.image(user.getImage())
+			.accessToken(tokenInfo.getAccessToken())
+			.refreshToken(tokenInfo.getRefreshToken())
+			.build();
 	}
 }
