@@ -22,13 +22,13 @@ type IssueDetailBodyProps = {
   }[];
   assignees: {
     id: number;
-    loginId: string;
+    name: string;
     avatarUrl: string;
   }[];
   labels: {
     id: number;
     name: string;
-    color: string;
+    color: "LIGHT" | "DARK";
     background: string;
   }[];
   milestone: {

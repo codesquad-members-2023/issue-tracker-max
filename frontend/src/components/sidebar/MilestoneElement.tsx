@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export function MilestoneElmeent({
+export function MilestoneElement({
   progress,
   children,
 }: {

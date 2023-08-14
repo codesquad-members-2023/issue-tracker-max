@@ -4,16 +4,7 @@ import { IconColor } from "../icon/Icon";
 import { DropdownIndicator } from "./DropdownIndicator";
 import { DropdownPanel } from "./DropdownPanel";
 
-export function DropdownContainer({
-  name,
-  optionTitle,
-  options,
-  showProfile = true,
-  type = "Default",
-  alignment,
-  disabled = false,
-  autoClose = false
-}: {
+type DropdownContainerProps = {
   name: string;
   optionTitle: string;
   options: {
@@ -28,7 +19,20 @@ export function DropdownContainer({
   alignment: "Left" | "Right" | "Center";
   disabled?: boolean;
   autoClose?: boolean;
-}) {
+  onDimClick?: () => void;
+}
+
+export function DropdownContainer({
+  name,
+  optionTitle,
+  options,
+  showProfile = true,
+  type = "Default",
+  alignment,
+  disabled = false,
+  autoClose = false,
+  onDimClick
+}: DropdownContainerProps) {
   const [isPanelOpened, setIsPanelOpened] = useState(false);
 
   const openPanel = () => {
@@ -36,6 +40,7 @@ export function DropdownContainer({
   };
 
   const closePanel = () => {
+    onDimClick?.();
     setIsPanelOpened(false);
   };
 
