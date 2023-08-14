@@ -13,9 +13,9 @@ export const AddNewComment: React.FC<Props> = ({
   userId,
   onAddComment,
 }) => {
-  console.log('issueId', issueId);
-  console.log('issueAuthor', issueAuthor);
-  console.log('userId', userId);
+  // console.log('issueId', issueId);
+  // console.log('issueAuthor', issueAuthor);
+  // console.log('userId', userId);
 
   return (
     <div

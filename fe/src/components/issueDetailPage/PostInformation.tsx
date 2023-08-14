@@ -8,6 +8,8 @@ type Props = {
 export const PostInformation: React.FC<Props> = ({
   issueDetailPageData,
 }: Props) => {
+  console.log('타이틀 확인', issueDetailPageData.title);
+
   return (
     <>
       <div
