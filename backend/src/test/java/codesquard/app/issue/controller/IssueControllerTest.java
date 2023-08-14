@@ -10,11 +10,14 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
 import codesquard.app.api.errors.errorcode.IssueErrorCode;
 import codesquard.app.api.errors.exception.IllegalIssueStatusException;
 import codesquard.app.api.errors.exception.NoSuchIssueException;
+import codesquard.app.api.errors.handler.IssueExceptionHandler;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -54,15 +57,14 @@ class IssueControllerTest extends ControllerTestSupport {
 	void getIssueDetail_Fail() throws Exception {
 		// mocking
 		mockingAuthenticateUser();
-		
+
 		// given
-		int id = 1;
-		Long userId = 1L;
 		willThrow(new NoSuchIssueException())
-			.given(issueQueryService).get((long)id, userId);
+			.given(issueQueryService).get(anyLong(), anyLong());
 
 		// when & then
-		mockMvc.perform(get("/api/issues/" + id))
+		mockMvc.
+			perform(get("/api/issues/" + anyLong()))
 			.andExpect(status().isNotFound())
 			.andDo(print());
 	}
@@ -346,5 +348,18 @@ class IssueControllerTest extends ControllerTestSupport {
 			builder.append("Talk is cheap. Show me the code. ");
 		}
 		return builder.toString();
+	}
+
+	private void mockingAuthenticateUser() {
+		mockMvc = MockMvcBuilders.standaloneSetup(new IssueController(issueService, issueQueryService))
+			.setControllerAdvice(new IssueExceptionHandler())
+			.setCustomArgumentResolvers(loginUserArgumentResolver)
+			.build();
+
+		AuthenticateUser authenticateUser = new AuthenticateUser(1L, "wis123", "wis123@naver.com", null);
+		when(loginUserArgumentResolver.supportsParameter(any()))
+			.thenReturn(true);
+		when(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+			.thenReturn(authenticateUser);
 	}
 }

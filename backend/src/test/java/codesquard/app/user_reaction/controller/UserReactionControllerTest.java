@@ -8,10 +8,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
 import codesquard.app.api.errors.exception.NoSuchReactionException;
 import codesquard.app.api.errors.exception.NoSuchUserReactionException;
+import codesquard.app.api.errors.handler.UserReactionExceptionHandler;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 
 class UserReactionControllerTest extends ControllerTestSupport {
 
@@ -110,5 +113,18 @@ class UserReactionControllerTest extends ControllerTestSupport {
 		mockMvc.perform(delete("/api/reactions/" + userReactionId))
 			.andExpect(status().isNotFound())
 			.andDo(print());
+	}
+
+	private void mockingAuthenticateUser() {
+		mockMvc = MockMvcBuilders.standaloneSetup(new UserReactionController(userReactionService))
+			.setControllerAdvice(new UserReactionExceptionHandler())
+			.setCustomArgumentResolvers(loginUserArgumentResolver)
+			.build();
+
+		AuthenticateUser authenticateUser = new AuthenticateUser(1L, "wis123", "wis123@naver.com", null);
+		when(loginUserArgumentResolver.supportsParameter(any()))
+			.thenReturn(true);
+		when(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+			.thenReturn(authenticateUser);
 	}
 }

@@ -31,7 +31,7 @@ public class UserReactionController {
 		Long userId = user.toEntity().getId();
 		Long userReactionId = userReactionService.saveIssueReaction(reactionId, userId, issueId);
 		return ApiResponse.of(HttpStatus.CREATED, ResponseMessage.USER_REACTION_ISSUE_SAVE_SUCCESS,
-			UserReactionSaveResponse.success(userId));
+			UserReactionSaveResponse.success(userReactionId));
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
@@ -41,7 +41,7 @@ public class UserReactionController {
 		Long userId = user.toEntity().getId();
 		Long userReactionId = userReactionService.saveCommentReaction(reactionId, userId, commentId);
 		return ApiResponse.of(HttpStatus.CREATED, ResponseMessage.USER_REACTION_COMMENT_SAVE_SUCCESS,
-			UserReactionSaveResponse.success(userId));
+			UserReactionSaveResponse.success(userReactionId));
 	}
 
 	@DeleteMapping("/{userReactionId}")
