@@ -1,15 +1,12 @@
 import { styled } from 'styled-components';
 import InformationTag from '../common/InformationTag';
+import LabelProps from '../../types/LabelProps';
 
 export default function Label({
   textColor,
   backgroundColor,
   name,
-}: {
-  textColor: string;
-  backgroundColor: string;
-  name: string;
-}) {
+}: LabelProps) {
   return (
     <Container $textColor={textColor} $backgroundColor={backgroundColor}>
       <InformationTag size="small">{name}</InformationTag>
