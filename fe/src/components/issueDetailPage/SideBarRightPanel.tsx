@@ -56,8 +56,8 @@ export const SideBarRightPanel: React.FC<Props> = ({
         gap: '16px',
         alignItems: 'flex-end',
         '& span': {
-          color: theme.danger.text.default,
-          font: theme.fonts.availableMedium12,
+          color: theme.neutral.text.default,
+          font: theme.fonts.availableMedium16,
         },
       }}
     >

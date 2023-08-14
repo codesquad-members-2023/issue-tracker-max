@@ -30,7 +30,7 @@ export const PostInformationHeader: React.FC<Props> = ({
 
   const onEditTitleOpen = () => {
     setIsEditing(true);
-    setTitleInput(titleInput);
+    // setTitleInput(titleInput);
   };
 
   const onEditTitleCancel = () => {
@@ -54,8 +54,8 @@ export const PostInformationHeader: React.FC<Props> = ({
     try {
       const data = await patchIssueTitle(id, titleInput);
       console.log(data);
-      setTitleInput(titleInput);
-      setPlaceholderValue(titleInput);
+      // setTitleInput(titleInput);
+      // setPlaceholderValue(titleInput);
       setIsEditing(false);
     } catch (error) {
       console.log(error);
