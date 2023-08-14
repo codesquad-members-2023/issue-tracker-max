@@ -25,9 +25,9 @@ public class MemberService {
 
 	@Transactional
 	public Member registerOauthMember(MemberProfileResponse memberProfileResponse) {
-		if (memberRepository.findByMemberLoginId(memberProfileResponse.getLoginId()).isEmpty()) {
+		if (!memberRepository.existsLoginId(memberProfileResponse.getLoginId())) {
 			memberRepository.save(memberProfileResponse.toMember());
 		}
-		return memberRepository.findByMemberLoginId(memberProfileResponse.getLoginId()).get();
+		return memberRepository.findByMemberLoginId(memberProfileResponse.getLoginId());
 	}
 }

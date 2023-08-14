@@ -2,8 +2,6 @@ package com.issuetrackermax.service.member;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +40,7 @@ class MemberServiceTest extends IntegrationTestSupport {
 		// when
 		memberService.registerMember(signUpRequest);
 		// then
-		Optional<Member> member = memberRepository.findByMemberLoginId("June@codesquad.co.kr");
-		assertThat(member.get().getLoginId()).isEqualTo("June@codesquad.co.kr");
+		Member member = memberRepository.findByMemberLoginId("June@codesquad.co.kr");
+		assertThat(member.getLoginId()).isEqualTo("June@codesquad.co.kr");
 	}
 }
