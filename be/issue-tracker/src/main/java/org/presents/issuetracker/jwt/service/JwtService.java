@@ -1,7 +1,15 @@
 package org.presents.issuetracker.jwt.service;
 
+import java.util.Map;
+
+import org.presents.issuetracker.global.error.exception.CustomException;
+import org.presents.issuetracker.global.error.statuscode.UserErrorCode;
+import org.presents.issuetracker.jwt.JwtProvider;
+import org.presents.issuetracker.jwt.dto.TokenResponse;
 import org.presents.issuetracker.jwt.entity.Jwt;
 import org.presents.issuetracker.jwt.repository.JwtRepository;
+import org.presents.issuetracker.user.entity.User;
+import org.presents.issuetracker.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -9,12 +17,24 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
+	private final UserRepository userRepository;
 	private final JwtRepository jwtRepository;
+	private final JwtProvider jwtProvider;
 
 	public void saveRefreshToken(String refreshToken, String loginId) {
 		jwtRepository.save(Jwt.builder()
 			.refreshToken(refreshToken)
 			.loginId(loginId)
 			.build());
+	}
+
+	public TokenResponse reissueAccessToken(String refreshToken) {
+		String loginId = jwtRepository.findByRefreshToken(refreshToken);
+		User user = userRepository.findByLoginId(loginId)
+			.orElseThrow(() -> {
+				throw new CustomException(UserErrorCode.NOT_FOUND_LOGIN_ID);
+			});
+
+		return jwtProvider.reissueToken(Map.of("userId", user.getUserId()), refreshToken);
 	}
 }

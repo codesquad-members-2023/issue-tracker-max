@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.presents.issuetracker.global.error.exception.CustomException;
+import org.presents.issuetracker.global.error.statuscode.JwtErrorCode;
 import org.presents.issuetracker.global.util.JsonUtil;
 import org.presents.issuetracker.jwt.dto.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,6 +53,18 @@ public class JwtProvider {
 			.compact();
 	}
 
+	public TokenResponse reissueToken(Map<String, Object> claims, String refreshToken) {
+		if (verify(refreshToken)) {
+			return TokenResponse.builder()
+				.accessToken(createToken(claims, ACCESS_TOKEN_EXPIRATION_TIME))
+				.refreshToken(refreshToken)
+				.build();
+		} else {
+			// refresh token 만료 시 다시 로그인 요청을 위한 예외 발생
+			throw new CustomException(JwtErrorCode.NOT_VALID_LOGIN_INFO);
+		}
+	}
+
 	public boolean verify(String token) {
 		try {
 			Jwts.parserBuilder()
@@ -59,7 +73,6 @@ public class JwtProvider {
 				.parseClaimsJws(token);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}

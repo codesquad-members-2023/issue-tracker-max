@@ -52,7 +52,7 @@ public class UserService {
 			throw new CustomException(UserErrorCode.WRONG_PASSWORD);
 		}
 
-		TokenResponse tokenResponse = jwtProvider.generateToken(Map.of("loginId", loginId));
+		TokenResponse tokenResponse = jwtProvider.generateToken(Map.of("userId", user.getUserId()));
 		jwtService.saveRefreshToken(tokenResponse.getRefreshToken(), loginId);
 		return tokenResponse;
 	}
