@@ -82,7 +82,8 @@ public class MilestoneService {
 	}
 
 	public IssueMilestoneVo findByIssueId(Long issueId) {
-		return milestoneRepository.findByIssueId(issueId)
-				.orElseGet(() -> IssueMilestoneVo.builder().build());
+		MilestoneVo milestoneVo = milestoneRepository.findByIssueId(issueId)
+				.orElseGet(() -> MilestoneVo.builder().build());
+		return IssueMilestoneVo.from(milestoneVo);
 	}
 }

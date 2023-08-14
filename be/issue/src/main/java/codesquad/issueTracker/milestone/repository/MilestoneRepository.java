@@ -1,6 +1,5 @@
 package codesquad.issueTracker.milestone.repository;
 
-import codesquad.issueTracker.issue.vo.IssueMilestoneVo;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -110,8 +109,8 @@ public class MilestoneRepository {
 		.issueClosedCount(rs.getInt("issueClosedCount"))
 		.build();
 
-	public Optional<IssueMilestoneVo> findByIssueId(Long issueId) {
-		String sql = "select m.id, m.name "
+	public Optional<MilestoneVo> findByIssueId(Long issueId) {
+		String sql = "select m.id, m.name, m.description, m.don_date "
 				+ "from milestones m "
 				+ "    join issues i on m.id = i.milestone_id "
 				+ "where i.id = :issueId "
@@ -120,10 +119,10 @@ public class MilestoneRepository {
 
 		return Optional.ofNullable(
 				DataAccessUtils.singleResult(
-						jdbcTemplate.query(sql, Map.of("issueId", issueId), issueMilestoneVoRowMapper)));
+						jdbcTemplate.query(sql, Map.of("issueId", issueId), milestoneVoRowMapper)));
 	}
 
-	private final RowMapper<IssueMilestoneVo> issueMilestoneVoRowMapper = ((rs, rowNum) -> IssueMilestoneVo.builder()
+	private final RowMapper<MilestoneVo> milestoneVoRowMapper = ((rs, rowNum) -> MilestoneVo.builder()
 			.id(rs.getLong("id"))
 			.name(rs.getString("name"))
 			.build());

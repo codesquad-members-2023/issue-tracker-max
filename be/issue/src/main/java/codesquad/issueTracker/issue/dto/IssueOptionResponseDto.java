@@ -22,7 +22,7 @@ public class IssueOptionResponseDto {
     }
 
     public static IssueOptionResponseDto of(List<AssigneeVo> assignees, List<IssueLabelVo> labels, IssueMilestoneVo milestone) {
-        if (milestone.getId() == null) {
+        if (milestone.getIssueMileStoneDetailVo() == null) {
             return IssueOptionResponseDto.builder()
                     .assignees(assignees)
                     .labels(labels)

@@ -84,7 +84,7 @@ public class IssueRepository {
 			+ "and i.is_deleted = false "
 			+ "and i.is_closed = :status";
 		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("milestoneId", milestone.getId());
+		params.addValue("milestoneId", milestone.getIssueMileStoneDetailVo().getId());
 		params.addValue("status", status);
 		return jdbcTemplate.queryForObject(sql, params, Integer.class);
 	}

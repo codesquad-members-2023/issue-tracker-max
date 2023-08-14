@@ -1,32 +1,29 @@
 package codesquad.issueTracker.issue.vo;
 
+import codesquad.issueTracker.milestone.vo.MilestoneVo;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class IssueMilestoneVo {
-    private Long id;
-    private String name;
+    private IssueMileStoneDetailVo issueMileStoneDetailVo;
     private int completedRatio;
 
     @Builder
-    public IssueMilestoneVo(Long id, String name, int completedRatio) {
-        this.id = id;
-        this.name = name;
+    public IssueMilestoneVo(IssueMileStoneDetailVo issueMileStoneDetailVo, int completedRatio) {
+        this.issueMileStoneDetailVo = issueMileStoneDetailVo;
         this.completedRatio = completedRatio;
     }
 
-    public static IssueMilestoneVo from(IssueMilestoneVo issueMilestone) {
+    public static IssueMilestoneVo from(MilestoneVo milestoneVo) {
         return IssueMilestoneVo.builder()
-                .id(issueMilestone.getId())
-                .name(issueMilestone.getName())
+                .issueMileStoneDetailVo(IssueMileStoneDetailVo.from(milestoneVo))
                 .build();
     }
 
     public IssueMilestoneVo getMilestoneWithRatio(int openCount, int closeCount) {
         return IssueMilestoneVo.builder()
-                .id(this.id)
-                .name(this.name)
+                .issueMileStoneDetailVo(this.issueMileStoneDetailVo)
                 .completedRatio(calculateRatio(openCount, closeCount))
                 .build();
     }

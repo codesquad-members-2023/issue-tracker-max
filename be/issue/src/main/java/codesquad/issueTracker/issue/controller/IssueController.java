@@ -59,8 +59,8 @@ public class IssueController {
 	}
 
 	@GetMapping("/issues/milestones")
-	public ApiResponse<List<IssueMilestoneResponseDto>> getIssueMilestones() {
-		List<IssueMilestoneResponseDto> milestones = issueService.getIssueMilestones();
+	public ApiResponse<IssueMilestoneResponseDto> getIssueMilestones() {
+		IssueMilestoneResponseDto milestones = issueService.getIssueMilestones();
 		return ApiResponse.success(SUCCESS.getStatus(), milestones);
 	}
 

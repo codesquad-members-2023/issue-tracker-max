@@ -1,24 +1,22 @@
 package codesquad.issueTracker.issue.dto;
 
-import codesquad.issueTracker.milestone.vo.MilestoneVo;
+import codesquad.issueTracker.issue.vo.IssueMileStoneDetailVo;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class IssueMilestoneResponseDto {
-    private Long id;
-    private String name;
+    private List<IssueMileStoneDetailVo> milestones;
 
     @Builder
-    public IssueMilestoneResponseDto(Long id, String name) {
-        this.id = id;
-        this.name = name;
+    public IssueMilestoneResponseDto(List<IssueMileStoneDetailVo> milestones) {
+        this.milestones = milestones;
     }
 
-    public static IssueMilestoneResponseDto from(MilestoneVo milestoneVo) {
+    public static IssueMilestoneResponseDto from(List<IssueMileStoneDetailVo> milestones) {
         return builder()
-                .id(milestoneVo.getId())
-                .name(milestoneVo.getName())
+                .milestones(milestones)
                 .build();
     }
 }
