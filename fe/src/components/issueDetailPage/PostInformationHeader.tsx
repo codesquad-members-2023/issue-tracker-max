@@ -5,16 +5,18 @@ import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/textInput/TextInput';
-import { patchIssueTitle } from 'apis/api';
+import { editIssueStatus, patchIssueTitle } from 'apis/api';
 
 type Props = {
   title: string;
   id: number;
+  status: string;
 };
 
 export const PostInformationHeader: React.FC<Props> = ({
   title,
   id,
+  status,
 }: Props) => {
   const theme = useTheme() as any;
 
@@ -23,14 +25,11 @@ export const PostInformationHeader: React.FC<Props> = ({
   const [placeholderValue, setPlaceholderValue] = useState<string>(title); //편집 취소시 돌아갈 값
   // 이렇게 말고 이전 값을 알고있을 방법 찾기
   //todo 길이제한 0이나 n0자 이상일때 버튼 비활성화
-  console.log(title);
-  console.log(titleInput);
 
   const isDisabled = title.length === 0;
 
   const onEditTitleOpen = () => {
     setIsEditing(true);
-    // setTitleInput(titleInput);
   };
 
   const onEditTitleCancel = () => {
@@ -58,7 +57,10 @@ export const PostInformationHeader: React.FC<Props> = ({
     }
   };
 
-  const onCloseIssue = () => {};
+  const onToggleIssueStatus = () => {
+    const newStatus = status === 'open' ? 'closed' : 'open';
+    editIssueStatus([id], newStatus);
+  };
 
   return (
     <div
@@ -137,9 +139,13 @@ export const PostInformationHeader: React.FC<Props> = ({
               <Edit stroke={theme.brand.text.weak} />
               제목 편집
             </Button>
-            <Button typeVariant="outline" size="S" onClick={onCloseIssue}>
+            <Button
+              typeVariant="outline"
+              size="S"
+              onClick={onToggleIssueStatus}
+            >
               <Archive stroke={theme.brand.text.weak} />
-              이슈 닫기
+              {status === 'open' ? '이슈 닫기' : '이슈 열기'}
             </Button>
           </>
         )}
