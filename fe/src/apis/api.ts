@@ -110,7 +110,7 @@ export const editIssueStatus = (
   issueIds: number[],
   status: 'open' | 'closed',
 ) => {
-  return fetchData('issues/status', {
+  return fetchData('/issues/status', {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

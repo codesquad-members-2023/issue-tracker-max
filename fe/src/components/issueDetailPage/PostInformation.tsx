@@ -21,6 +21,7 @@ export const PostInformation: React.FC<Props> = ({
         <PostInformationHeader
           title={issueDetailPageData.title}
           id={issueDetailPageData.id}
+          status={issueDetailPageData.status}
         />
         <PostInformationHeaderMeta
           status={issueDetailPageData.status}
