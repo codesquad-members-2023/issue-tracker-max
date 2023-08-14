@@ -15,6 +15,7 @@ import ColorCodeInput from '../components/common/ColorCodeInput';
 // import Comment from '../components/common/CommentElements';
 import { AppContext } from '../main';
 import { useContext } from 'react';
+import SideBar from '../components/common/SideBar';
 
 export default function Components() {
   const appContext = useContext(AppContext);
@@ -22,7 +23,7 @@ export default function Components() {
   return (
     <StyledComponents>
       <Wrapper>
-        <ButtonLarge type="submit" iconName="plus">
+        {/* <ButtonLarge type="submit" iconName="plus">
           BUTTON
         </ButtonLarge>
         <Button type="submit" outline iconName="plus">
@@ -41,7 +42,7 @@ export default function Components() {
           S BUTTON
         </ButtonSmall>
         <ColorCodeInput label="배경색" />
-        {/* <TabButton />
+        <TabButton />
         <InformationTag size="medium" iconName="alertCircle">
           Label
         </InformationTag>
@@ -75,9 +76,9 @@ export default function Components() {
           userInfo={{ userName: '@fuse' }}
           timeStamp="5분 전"
           comment="오늘 점심 뭐 먹죠?"
-        />
+        /> */}
         <SideBar />
-        <FilterBar /> */}
+        {/* <FilterBar /> */}
       </Wrapper>
     </StyledComponents>
   );

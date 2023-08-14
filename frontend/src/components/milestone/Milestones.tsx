@@ -22,6 +22,8 @@ type Milestone = {
 export default function Milestones({ data }: { data: Milestone[] }) {
   const [milestoneType, setMilestoneType] = useState<MilestoneType>(open);
 
+  const openMilestoneCount = getOpenMilestoneCount(data);
+  const closedMilestoneCount = getClosedMilestoneCount(data);
   return (
     <Container>
       <Header>
@@ -34,9 +36,7 @@ export default function Milestones({ data }: { data: Milestone[] }) {
               ghost
               flexible>
               열린 마일스톤
-              {getOpenMilestoneCount(data)
-                ? ` (${getOpenMilestoneCount(data)})`
-                : ''}
+              {openMilestoneCount ? ` (${openMilestoneCount})` : ''}
             </Button>
           </li>
           <li>
@@ -47,9 +47,7 @@ export default function Milestones({ data }: { data: Milestone[] }) {
               ghost
               flexible>
               닫힌 마일스톤
-              {getClosedMilestoneCount(data)
-                ? ` (${getClosedMilestoneCount(data)})`
-                : ''}
+              {closedMilestoneCount ? ` (${closedMilestoneCount})` : ''}
             </Button>
           </li>
         </Buttons>
@@ -57,7 +55,7 @@ export default function Milestones({ data }: { data: Milestone[] }) {
       <Body>
         {data.map((milestone) => (
           <TableElement key={milestone.name + milestone.id}>
-            <Milestone {...{ ...milestone }} />
+            <Milestone {...milestone} />
           </TableElement>
         ))}
       </Body>
