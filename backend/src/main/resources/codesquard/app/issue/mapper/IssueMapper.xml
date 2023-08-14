@@ -43,7 +43,7 @@
         <where>
             issue.`is_deleted` = 0
             <choose>
-                <when test="is == null and milestone == null and author == null and assignee == null label == null">
+                <when test="is == null and milestone == null and author == null and assignee == null and label == null">
                     AND issue.`status` = "OPENED"
                 </when>
                 <otherwise>
