@@ -43,18 +43,18 @@ public class IssueService {
 		// 라벨 리스트가 null 이 아니면 해당 라벨이 존재하는지 검증 후  라벨과 이슈 연결 테이블에 insert
 		if (labels != null) {
 			duplicatedId(labels);
-			labelService.validateLabelsId(labels);
 			labels.stream()
-				.map(findLabel -> issueRepository.insertLabels(savedIssueId, findLabel))
+				.map(labelId -> labelService.validateLabelsId(labelId))
+				.map(existLabel -> issueRepository.insertLabels(savedIssueId, existLabel.getId()))
 				.collect(Collectors.toList());
 		}
 
 		// assignee 리스트가 null 이 아니면 assignees( 유저 id )가  존재하는지 검증 후  assignees 테이블에 insert
 		if (assignees != null) {
 			duplicatedId(assignees);
-			userService.validateUserIds(assignees);
 			assignees.stream()
-				.map(findUser -> issueRepository.insertAssignees(savedIssueId, findUser))
+				.map(assigneesId -> userService.validateUserId(assigneesId))
+				.map(existUser -> issueRepository.insertAssignees(savedIssueId, existUser.getId()))
 				.collect(Collectors.toList());
 		}
 		return savedIssueId;

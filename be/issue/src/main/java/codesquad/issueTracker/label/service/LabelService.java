@@ -43,9 +43,7 @@ public class LabelService {
 				.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MILESTONE)));
 	}
 
-	public void validateLabelsId(List<Long> labels) {
-		for (Long label : labels) {
-			labelRepository.findById(label).orElseThrow(() -> new CustomException(ErrorCode.LABEL_FIND_FAILED));
-		}
+	public Label validateLabelsId(Long label) {
+		return labelRepository.findById(label).orElseThrow(() -> new CustomException(ErrorCode.LABEL_FIND_FAILED));
 	}
 }

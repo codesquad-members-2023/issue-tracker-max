@@ -103,11 +103,8 @@ public class UserService {
 				.orElseThrow(() -> new CustomException(ErrorCode.FAILED_LOGOUT_USER));
 	}
 
-	public void validateUserIds(List<Long> assignees) {
-		for (Long assignee : assignees) {
-			userRepository.findById(assignee).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
-		}
-
+	public User validateUserId(Long assigneeId) {
+		return userRepository.findById(assigneeId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
 	}
 
 }
