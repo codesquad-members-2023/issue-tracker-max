@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -97,6 +98,7 @@ public class LabelRepository {
 		.description(rs.getString("description"))
 		.build();
 
+
 	public List<Label> findLabelsById(Long issueId) {
 		String sql = "select l.id, l.name, l.background_color, l.text_color, l.description "
 				+ "from issues_labels il "
@@ -106,6 +108,24 @@ public class LabelRepository {
 				+ "AND l.is_deleted = false "
 				+ "AND i.is_deleted = false ";
 		return jdbcTemplate.query(sql, Map.of("issueId", issueId), labelRowMapper);
+  }
+  
+	public Long resetIssuesLabels(Long issueId) {
+		String sql = "DELETE FROM issues_labels WHERE issue_id = :issueId";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("issueId", issueId);
+		jdbcTemplate.update(sql, parameterSource);
+		return issueId;
+	}
+
+	public Long insertIssuesLabels(Long issueId, Long labelId) {
+		String sql = "INSERT INTO issues_labels(issue_id, label_id) VALUES(:issueId, :labelId)";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		SqlParameterSource parameters = new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("labelId", labelId);
+		jdbcTemplate.update(sql, parameters, keyHolder);
+		return keyHolder.getKey().longValue();
 	}
 
 }

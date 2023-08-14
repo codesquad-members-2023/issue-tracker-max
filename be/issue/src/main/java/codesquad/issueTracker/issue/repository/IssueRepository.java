@@ -1,10 +1,15 @@
 package codesquad.issueTracker.issue.repository;
 
+
 import codesquad.issueTracker.issue.vo.AssigneeVo;
 import codesquad.issueTracker.issue.vo.IssueMilestoneVo;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.time.LocalDateTime;
+
+
+
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -57,6 +62,7 @@ public class IssueRepository {
 		return keyHolder.getKey().longValue();
 	}
 
+
 	public Optional<Issue> findActiveIssueById(Long issueId) {
 		String sql = "SELECT * FROM issues WHERE id = :issueId AND is_deleted = false";
 		return Optional.ofNullable(
@@ -107,5 +113,75 @@ public class IssueRepository {
 		params.addValue("milestoneId", milestone.getId());
 		params.addValue("status", status);
 		return jdbcTemplate.queryForObject(sql, params, Integer.class);
+  }
+  
+	public Optional<Issue> findById(Long id) {
+		String sql = "SELECT id, milestone_id, user_id, title, content, created_at, is_closed FROM issues WHERE id = :id AND is_deleted = 0";
+		return Optional.ofNullable(
+			DataAccessUtils.singleResult(
+				jdbcTemplate.query(sql, Map.of("id", id), issueRowMapper)));
 	}
+
+	public Long modifyStatus(Long issueId, Boolean status) {
+		String sql = "UPDATE issues SET is_closed = :status  where id = :id AND is_deleted = 0";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("id", issueId)
+			.addValue("status", status);
+		jdbcTemplate.update(sql, parameterSource);
+		return issueId;
+	}
+
+	private final RowMapper<Issue> issueRowMapper = (rs, rowNum) -> Issue.builder()
+		.id(rs.getLong("id"))
+		.milestoneId(rs.getLong("milestone_id"))
+		.userId(rs.getLong("user_id"))
+		.title(rs.getString("title"))
+		.content(rs.getString("content"))
+		.createdAt(rs.getObject("created_at", LocalDateTime.class))
+		.isClosed(rs.getBoolean("is_closed"))
+		.build();
+
+	public Long updateContent(Long id, String modifiedContent) {
+		String sql = "UPDATE issues SET content = :modifiedContent WHERE Id = :id";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("id", id)
+			.addValue("modifiedContent", modifiedContent);
+		jdbcTemplate.update(sql, parameterSource);
+		return id;
+	}
+
+	public Long updateTitle(Long id, String modifiedTitle) {
+		String sql = "UPDATE issues SET title = :modifiedTitle WHERE Id = :id";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("id", id)
+			.addValue("modifiedTitle", modifiedTitle);
+		jdbcTemplate.update(sql, parameterSource);
+		return id;
+	}
+
+	public Long delete(Long id) {
+		String sql = "UPDATE issues SET is_deleted = 1 where id = :id";
+		SqlParameterSource parameters = new MapSqlParameterSource()
+			.addValue("id", id);
+		jdbcTemplate.update(sql, parameters);
+		return id;
+	}
+
+	public Long resetAssignees(Long issueId) {
+		String sql = "DELETE FROM assignees WHERE issue_id = :issueId";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("issueId", issueId);
+		jdbcTemplate.update(sql, parameterSource);
+		return issueId;
+	}
+
+	public Long updateMilestone(Long issueId, Long milestoneId) {
+		String sql = "UPDATE issues SET milestone_id = :milestoneId WHERE id = :issueId ";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("milestoneId", milestoneId);
+		jdbcTemplate.update(sql, parameterSource);
+		return issueId;
+	}
+  
 }

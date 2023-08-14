@@ -1,6 +1,5 @@
 package codesquad.issueTracker.user.service;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -100,14 +99,11 @@ public class UserService {
 	public void logout(HttpServletRequest request) {
 		Long userId = Long.parseLong(String.valueOf(request.getAttribute("userId")));
 		userRepository.deleteTokenByUserId(userId)
-				.orElseThrow(() -> new CustomException(ErrorCode.FAILED_LOGOUT_USER));
+			.orElseThrow(() -> new CustomException(ErrorCode.FAILED_LOGOUT_USER));
 	}
 
-	public void validateUserIds(List<Long> assignees) {
-		for (Long assignee : assignees) {
-			userRepository.findById(assignee).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
-		}
-
+	public User validateUserId(Long assigneeId) {
+		return userRepository.findById(assigneeId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
 	}
 
 	@Transactional(readOnly = true)

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.issueTracker.global.common.ApiResponse;
 import codesquad.issueTracker.issue.dto.IssueWriteRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyAssigneeRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueContentRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueContentResponseDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueMilestoneDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueTitleRequest;
+import codesquad.issueTracker.issue.dto.ModifyIssueTitleResponse;
+import codesquad.issueTracker.issue.dto.ModifyLabelRequestDto;
 import codesquad.issueTracker.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
 
@@ -37,6 +47,7 @@ public class IssueController {
 		issueService.save(request, id);
 		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
+
 
 	@GetMapping("/issues/labels")
 	public ApiResponse<List<IssueLabelResponseDto>> getIssueLabels() {
@@ -66,5 +77,55 @@ public class IssueController {
 	public ApiResponse<IssueOptionResponseDto> getIssueOptions(@PathVariable Long issueId) {
 		IssueOptionResponseDto issueOptionResponseDto = issueService.getIssueOptions(issueId);
 		return ApiResponse.success(SUCCESS.getStatus(), issueOptionResponseDto);
+
+	@PatchMapping("/issues/status")
+	public ApiResponse<String> patchStatus(@RequestBody ModifyIssueStatusRequestDto request) {
+		issueService.modifyIssueStatus(request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+	}
+
+	@PatchMapping("/issues/{id}/status")
+	public ApiResponse<String> patchInDetailStatus(@PathVariable Long id,
+		@RequestBody ModifyIssueStatusRequestDto request) {
+		issueService.modifyIssueStatusInDetail(id, request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+	}
+
+	@PatchMapping("/issues/{id}/content")
+	public ApiResponse<ModifyIssueContentResponseDto> patchContent(@PathVariable Long id,
+		@RequestBody ModifyIssueContentRequestDto request) {
+		ModifyIssueContentResponseDto response = issueService.modifyIssueContent(id, request);
+		return ApiResponse.success(SUCCESS.getStatus(), response);
+	}
+
+	@PatchMapping("/issues/{id}/title")
+	public ApiResponse<ModifyIssueTitleResponse> patchTitle(@PathVariable Long id,
+		@Valid @RequestBody ModifyIssueTitleRequest request) {
+		ModifyIssueTitleResponse response = issueService.modifyIssueTitle(id, request);
+		return ApiResponse.success(SUCCESS.getStatus(), response);
+	}
+
+	@DeleteMapping("/issues/{id}")
+	public ApiResponse<String> deleteIssues(@PathVariable Long id) {
+		issueService.delete(id);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+	}
+
+	@PatchMapping("/issues/{id}/assignees")
+	public ApiResponse<String> patchAssignees(@PathVariable Long id, @RequestBody ModifyAssigneeRequestDto request) {
+		issueService.modifyAssignees(id, request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+	}
+
+	@PatchMapping("/issues/{id}/labels")
+	public ApiResponse<String> patchLabels(@PathVariable Long id, @RequestBody ModifyLabelRequestDto request) {
+		issueService.modifyLabels(id, request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+	}
+
+	@PatchMapping("/issues/{id}/milestones")
+	public ApiResponse<String> patchMilestone(@PathVariable Long id, @RequestBody ModifyIssueMilestoneDto request) {
+		issueService.modifyMilestone(id, request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 }

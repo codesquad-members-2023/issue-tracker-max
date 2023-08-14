@@ -37,7 +37,7 @@ public enum ErrorCode implements StatusCode {
 	ALREADY_DELETED_COMMENT(HttpStatus.BAD_REQUEST, "이미 삭제된 댓글입니다."),
 	FAILED_CREATE_COMMENT(HttpStatus.SERVICE_UNAVAILABLE, "DB 서버 오류로 인해 댓글 생성에 실패했습니다."),
 	FAILED_UPDATE_COMMENT(HttpStatus.SERVICE_UNAVAILABLE, "DB 서버 오류로 인해 댓글 수정에 실패했습니다."),
-	FAILED_DELETE_COMMENT(HttpStatus.SERVICE_UNAVAILABLE,"DB 서버 오류로 인해 댓글 삭제에 실패했습니다."),
+	FAILED_DELETE_COMMENT(HttpStatus.SERVICE_UNAVAILABLE, "DB 서버 오류로 인해 댓글 삭제에 실패했습니다."),
 
 	// -- [Milestone] -- //
 	INVALIDATE_DATE(HttpStatus.BAD_REQUEST, "현재 날짜보다 이전 날짜 입니다."),
@@ -51,11 +51,11 @@ public enum ErrorCode implements StatusCode {
 	LABEL_DELETE_FAILED(HttpStatus.BAD_REQUEST, "DB에서 라벨 삭제에 실패했습니다"),
 	LABEL_FIND_FAILED(HttpStatus.BAD_REQUEST, "서버 오류로 라벨을 조회할 수 없습니다"),
 
-
 	// -- [Issue] -- //
 	DUPLICATE_OBJECT_FOUND(HttpStatus.BAD_REQUEST, "중복된 항목 선택입니다."),
 	NOT_EXIST_ISSUE(HttpStatus.BAD_REQUEST, "존재하지 않는 이슈입니다."),
-	ALREADY_DELETED_ISSUE(HttpStatus.BAD_REQUEST, "이미 삭제된 이슈입니다.");
+	ALREADY_DELETED_ISSUE(HttpStatus.BAD_REQUEST, "이미 삭제된 이슈입니다."),
+	NOT_FOUND_ISSUES(HttpStatus.BAD_REQUEST, "이슈를 찾을 수 없습니다.");
 
 
 	private HttpStatus status;
