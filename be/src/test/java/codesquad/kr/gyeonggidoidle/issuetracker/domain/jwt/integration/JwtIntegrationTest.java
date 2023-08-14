@@ -7,10 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.IntegrationTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller.request.LoginRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller.request.RefreshTokenRequest;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.JwtProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,6 @@ public class JwtIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private JwtProvider jwtProvider;
     @Autowired
     ObjectMapper objectMapper;
 
@@ -46,11 +45,14 @@ public class JwtIntegrationTest {
         // then
         resultActions
                 .andExpect(status().isOk())
+                .andExpect(result -> {
+                    Cookie[] cookies = result.getResponse().getCookies();
+                    Arrays.stream(cookies).anyMatch(cookie -> cookie.getName().equals("refreshToken"));
+                })
                 .andExpectAll(
                         jsonPath("$.length()").value(2),
                         jsonPath("$.profile").isNotEmpty(),
-                        jsonPath("$.jwtResponse.accessToken").isNotEmpty(),
-                        jsonPath("$.jwtResponse.refreshToken").isNotEmpty()
+                        jsonPath("$.jwtResponse.accessToken").isNotEmpty()
                 );
     }
 
@@ -67,12 +69,14 @@ public class JwtIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(loginRequest)));
 
-        String jsonResponse = loginResult.andReturn().getResponse().getContentAsString();
-        JsonNode jsonNode = new ObjectMapper().readTree(jsonResponse);
-        JsonNode jwtResponseNode = jsonNode.get("jwtResponse");
-        String refreshToken = jwtResponseNode.get("refreshToken").asText();
+        final String[] refreshToken = new String[1];
 
-        RefreshTokenRequest request = new RefreshTokenRequest(refreshToken);
+        loginResult.andExpect(result -> {
+            Cookie cookie = result.getResponse().getCookie("refreshToken");
+            refreshToken[0] = cookie.getValue();
+        });
+
+        RefreshTokenRequest request = new RefreshTokenRequest(refreshToken[0]);
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/auth/reissue")
@@ -83,9 +87,8 @@ public class JwtIntegrationTest {
         resultActions
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.length()").value(2),
-                        jsonPath("$.accessToken").isNotEmpty(),
-                        jsonPath("$.refreshToken").isNotEmpty()
+                        jsonPath("$.length()").value(1),
+                        jsonPath("$.accessToken").isNotEmpty()
                 );
     }
 
