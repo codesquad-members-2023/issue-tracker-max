@@ -82,4 +82,13 @@ public class IssueRepository {
 		.isClosed(rs.getBoolean("is_closed"))
 		.build();
 
+	public Long updateContent(Long id, String modifiedContent) {
+		String sql = "UPDATE issues SET content = :modifiedContent WHERE Id = :id";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("id", id)
+			.addValue("modifiedContent", modifiedContent);
+		jdbcTemplate.update(sql, parameterSource);
+		return id;
+
+	}
 }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.issueTracker.global.common.ApiResponse;
 import codesquad.issueTracker.issue.dto.IssueWriteRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueContentRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueContentResponseDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
 import codesquad.issueTracker.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
@@ -46,4 +48,10 @@ public class IssueController {
 		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 
+	@PatchMapping("/issues/{id}/content")
+	public ApiResponse<ModifyIssueContentResponseDto> patchContent(@PathVariable Long id,
+		@RequestBody ModifyIssueContentRequestDto request) {
+		ModifyIssueContentResponseDto response = issueService.modifyIssueContent(id, request);
+		return ApiResponse.success(SUCCESS.getStatus(), response);
+	}
 }

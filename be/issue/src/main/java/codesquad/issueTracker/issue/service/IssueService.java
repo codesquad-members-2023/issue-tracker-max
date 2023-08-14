@@ -14,6 +14,8 @@ import codesquad.issueTracker.global.exception.CustomException;
 import codesquad.issueTracker.global.exception.ErrorCode;
 import codesquad.issueTracker.issue.domain.Issue;
 import codesquad.issueTracker.issue.dto.IssueWriteRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueContentRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyIssueContentResponseDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
 import codesquad.issueTracker.issue.repository.IssueRepository;
 import codesquad.issueTracker.label.service.LabelService;
@@ -95,5 +97,12 @@ public class IssueService {
 
 	private Issue validateExistIssue(Long issuesIds) {
 		return issueRepository.findById(issuesIds).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ISSUES));
+	}
+
+	@Transactional
+	public ModifyIssueContentResponseDto modifyIssueContent(Long id, ModifyIssueContentRequestDto request) {
+		String modifiedContent = request.getContent();
+		issueRepository.updateContent(id, modifiedContent);
+		return new ModifyIssueContentResponseDto(modifiedContent);
 	}
 }
