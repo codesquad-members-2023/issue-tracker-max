@@ -1,15 +1,10 @@
 import { useState } from 'react';
 import { styled } from 'styled-components';
 
-type TextInputProps = React.HTMLAttributes<HTMLInputElement> & {
-  size: 'tall' | 'short';
-  id: string;
-  name: string;
-  value: string;
-  labelName: string;
-  type?: string;
-  disabled?: boolean;
-  placeholder?: string;
+type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  id?: string;
+  sizeType: 'tall' | 'short';
+  labelName?: string;
   helpText?: string;
   hasError?: boolean;
 };
@@ -20,9 +15,8 @@ export default function TextInput(props: TextInputProps) {
   const {
     id,
     name,
-    size,
+    sizeType,
     type,
-    value,
     labelName,
     disabled,
     placeholder,
@@ -41,8 +35,8 @@ export default function TextInput(props: TextInputProps) {
   };
 
   return (
-    <InputContainer $size={size} $disabled={disabled} $hasError={hasError}>
-      {(isFocused || value) && <Label $size={size}>{labelName}</Label>}
+    <InputContainer $size={sizeType} $disabled={disabled} $hasError={hasError}>
+      {labelName && isFocused && <Label $size={sizeType}>{labelName}</Label>}
       <StyledTextInput
         type={type ? type : 'text'}
         id={id}
@@ -79,9 +73,7 @@ const InputContainer = styled.fieldset<InputContainerProps>`
   position: relative;
   border: 1px solid
     ${({ theme, $hasError }) =>
-      $hasError
-        ? theme.color.danger.text.default
-        : theme.color.neutral.border.default};
+      $hasError ? theme.color.danger.text.default : 'transparent'};
   border-radius: ${({ theme, $size }) =>
     $size === 'short'
       ? theme.objectStyles.radius.medium
@@ -113,6 +105,7 @@ const Label = styled.label<{ $size: 'tall' | 'short' }>`
 `;
 
 const StyledTextInput = styled.input`
+  height: inherit;
   padding: 0;
   border: none;
   outline: none;
