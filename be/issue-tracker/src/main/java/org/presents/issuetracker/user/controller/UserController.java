@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.presents.issuetracker.auth.dto.TokenResponse;
 import org.presents.issuetracker.user.dto.request.UserRequest;
 import org.presents.issuetracker.user.dto.response.UserResponse;
 import org.presents.issuetracker.user.service.UserService;
@@ -34,5 +35,10 @@ public class UserController {
 	public ResponseEntity<Void> createUser(@Valid @RequestBody UserRequest userRequest) {
 		userService.createUser(userRequest);
 		return ResponseEntity.noContent().build();
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<TokenResponse> login(@Valid @RequestBody UserRequest userRequest) {
+		return null;
 	}
 }

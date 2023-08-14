@@ -3,10 +3,12 @@ package org.presents.issuetracker.auth.jwt;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.presents.issuetracker.auth.dto.TokenResponse;
 import org.presents.issuetracker.global.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,15 +20,24 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtProvider {
 
+	private static final int ACCESS_TOKEN_EXPIRATION_TIME = 60 * 60;    // 1시간
+	private static final int REFRESH_TOKEN_EXPIRATION_TIME = 60 * 60 * 24;    // 24시간
+
 	@Value("${jwt.secret}")
 	private String secretKeyPlain;
-
 	private Key key;
 
 	@PostConstruct
 	protected void init() {
 		String keyBased64Encoded = Base64.getEncoder().encodeToString(secretKeyPlain.getBytes());
 		key = Keys.hmacShaKeyFor(keyBased64Encoded.getBytes());
+	}
+
+	public TokenResponse generateToken(Map<String, Object> claims) {
+		return TokenResponse.builder()
+			.accessToken(createToken(claims, ACCESS_TOKEN_EXPIRATION_TIME))
+			.refreshToken(createToken(new HashMap<>(), REFRESH_TOKEN_EXPIRATION_TIME))
+			.build();
 	}
 
 	public String createToken(Map<String, Object> claims, int seconds) {
