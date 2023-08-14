@@ -40,4 +40,11 @@ public class CommentService {
 		Long commentId = commentRepository.save(Comment.from(commentCreateRequest, memberId));
 		return CommentResponse.from(commentRepository.findById(commentId).get());
 	}
+
+	@Transactional
+	public void delete(Long commentId, Long memeberId) {
+		memberValidator.existById(memeberId);
+		commentValidator.checkWriter(commentId, memeberId);
+		commentRepository.deleteById(commentId);
+	}
 }

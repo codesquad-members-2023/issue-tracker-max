@@ -63,4 +63,9 @@ public class CommentRepository {
 			.addValue("id", id, Types.BIGINT);
 		jdbcTemplate.update(sql, parameters);
 	}
+
+	public int deleteById(Long id) {
+		String sql = "DELETE FROM comments WHERE id = :id";
+		return jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
+	}
 }

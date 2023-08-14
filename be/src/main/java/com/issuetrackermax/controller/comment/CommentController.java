@@ -2,6 +2,7 @@ package com.issuetrackermax.controller.comment;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,5 +40,12 @@ public class CommentController {
 		Integer memberId = (Integer)request.getAttribute(MEMBER_ID);
 		CommentResponse commentResponse = commentService.save(commentCreateRequest, memberId.longValue());
 		return ApiResponse.success(commentResponse);
+	}
+
+	@DeleteMapping("/{id}")
+	public ApiResponse<Void> deleteComment(@PathVariable Long id, HttpServletRequest request) {
+		Integer memberId = (Integer)request.getAttribute(MEMBER_ID);
+		commentService.delete(id, memberId.longValue());
+		return ApiResponse.success();
 	}
 }
