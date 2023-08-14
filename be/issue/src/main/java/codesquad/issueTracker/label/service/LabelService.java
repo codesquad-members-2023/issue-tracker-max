@@ -39,6 +39,13 @@ public class LabelService {
 			.forEach(label ->
 				labels.add(LabelVo.from(label)));
 		return LabelResponseDto.of(labels,
-			labelRepository.findMilestonesCount().orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MILESTONE)));
+			labelRepository.findMilestonesCount()
+				.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MILESTONE)));
+	}
+
+	public void validateLabelsId(List<Long> labels) {
+		for (Long label : labels) {
+			labelRepository.findById(label).orElseThrow(() -> new CustomException(ErrorCode.LABEL_FIND_FAILED));
+		}
 	}
 }
