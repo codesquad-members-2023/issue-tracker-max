@@ -46,12 +46,12 @@ public class VerifyUserFilter implements Filter {
 		if ((httpServletRequest.getMethod().equals("POST"))) {
 			// 입력받은 json을 UserLoginRequest으로 변환
 			UserLoginRequest userLoginRequest = objectMapper.readValue(request.getReader(), UserLoginRequest.class);
-			logger.info("userLoginRequest : {}", userLoginRequest);
+			logger.debug("userLoginRequest : {}", userLoginRequest);
 			try {
 				// 로그인 아이디에 따른 회원이 있는지 확인
 				AuthenticateUser authenticateUser =
 					userQueryService.verifyUser(userLoginRequest.toUserLoginServiceRequest());
-				logger.info("authenticateUser : {}", authenticateUser);
+				logger.debug("authenticateUser : {}", authenticateUser);
 				// request 객체에 인증 유저 설정
 				request.setAttribute(AUTHENTICATE_USER, authenticateUser);
 				chain.doFilter(request, response);
