@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.issueTracker.global.common.ApiResponse;
 import codesquad.issueTracker.issue.dto.IssueWriteRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyAssigneeRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueContentRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueContentResponseDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
@@ -68,6 +69,12 @@ public class IssueController {
 	@DeleteMapping("/issues/{id}")
 	public ApiResponse<String> deleteIssues(@PathVariable Long id) {
 		issueService.delete(id);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+	}
+
+	@PatchMapping("/issues/{id}/assignees")
+	public ApiResponse<String> patchAssignees(@PathVariable Long id, @RequestBody ModifyAssigneeRequestDto request) {
+		issueService.modifyAssignees(id, request);
 		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 }

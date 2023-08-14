@@ -108,4 +108,12 @@ public class IssueRepository {
 		jdbcTemplate.update(sql, parameters);
 		return id;
 	}
+
+	public Long resetAssignees(Long issueId) {
+		String sql = "DELETE FROM assignees WHERE issue_id = :issueId";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("issueId", issueId);
+		jdbcTemplate.update(sql, parameterSource);
+		return issueId;
+	}
 }

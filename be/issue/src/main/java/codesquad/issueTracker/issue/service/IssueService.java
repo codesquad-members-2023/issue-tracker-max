@@ -14,6 +14,7 @@ import codesquad.issueTracker.global.exception.CustomException;
 import codesquad.issueTracker.global.exception.ErrorCode;
 import codesquad.issueTracker.issue.domain.Issue;
 import codesquad.issueTracker.issue.dto.IssueWriteRequestDto;
+import codesquad.issueTracker.issue.dto.ModifyAssigneeRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueContentRequestDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueContentResponseDto;
 import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
@@ -124,4 +125,24 @@ public class IssueService {
 		return deletedId;
 
 	}
+
+	@Transactional
+	public Long modifyAssignees(Long id, ModifyAssigneeRequestDto request) {
+		validateExistIssue(id);
+		List<Long> assignees = request.getAssignees();
+		duplicatedId(assignees);
+		if (assignees != null) {
+			for (Long assigneeId : assignees) {
+				userService.validateUserId(assigneeId);
+			}
+			issueRepository.resetAssignees(id);
+			for (Long assigneeId : assignees) {
+				issueRepository.insertAssignees(id, assigneeId);
+			}
+			return id;
+		}
+		issueRepository.resetAssignees(id);
+		return id;
+	}
+
 }
