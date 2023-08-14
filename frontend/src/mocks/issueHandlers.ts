@@ -7,9 +7,9 @@ type Issue = {
   title: string;
   content: string;
   status: "OPENED" | "CLOSED";
-  statusModifiedAt: string,
+  statusModifiedAt: string;
   createdAt: string;
-  modifiedAt: string | null,
+  modifiedAt: string | null;
   assignees: {
     id: number;
     name: string;
@@ -47,10 +47,10 @@ type Issue = {
       selected: number | null;
     }[];
   }[];
-}
+};
 
 export const issueHandlers = [
-  rest.get("/api/issues/:issueId", (req, res, ctx) => {
+  rest.get("/api/issues/:issueId", (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(issue));
   }),
   rest.patch("/api/issues/:issueId/title", async (req, res, ctx) => {
@@ -116,116 +116,18 @@ export const issueHandlers = [
     );
   }),
   rest.patch("/api/issues/:issueId/assignees", async (req, res, ctx) => {
-    const { issueId, assignees: assigneeIds} = await req.json();
+    const { issueId, assignees: assigneeIds } = await req.json();
 
     issue.data = {
       ...issue.data,
       assignees: assigneeIds.map((id: number) => {
         const assigneeData = assignees.data.assignees.find((a) => a.id === id)!;
-        
+
         return {
           id: assigneeData.id,
           name: assigneeData.loginId,
           avatarUrl: assigneeData.avatarUrl,
-        }
-      }),
-    };
-
-    return res(ctx.status(200), ctx.json({
-      code: 200,
-      status: "OK",
-      messages: "OK",
-      data: {
-        modifiedIssueId: issueId,
-      }
-    }));
-  }),
-  rest.patch("/api/issues/:issueId/labels", async (req, res, ctx) => {
-    const { issueId, labels: labelIds} = await req.json();
-
-    issue.data = {
-      ...issue.data,
-      labels: labelIds.map((id: number) => {
-        const labelData = labels.data.labels.find((l) => l.id === id)!;
-        
-        return {
-          id: labelData.id,
-          name: labelData.name,
-          color: labelData.color,
-          background: labelData.background,
-        }
-      }),
-    };
-
-    return res(ctx.status(200), ctx.json({
-      code: 200,
-      status: "OK",
-      messages: "OK",
-      data: {
-        modifiedIssueId: issueId,
-      }
-    }));
-  }),
-  rest.patch("/api/issues/:issueId/milestones", async (req, res, ctx) => {
-    const { issueId, milestone: milestoneId } = await req.json();
-
-    issue.data = {
-      ...issue.data,
-      milestone: milestones.data.milestones.find(m => m.id === milestoneId) ?? null
-    };
-
-    return res(ctx.status(200), ctx.json({
-      code: 200,
-      status: "OK",
-      messages: "OK",
-      data: {
-        modifiedIssueId: issueId,
-      }
-    }));
-  })
-]
-
-export const commentHandlers = [
-  rest.post("/api/comments", async (req, res, ctx) => {
-    const { content, userId } = await req.json();
-
-    const comment = {
-      id: issue.data.comments.length + 1,
-      userId,
-      avatarUrl: "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
-      content,
-      createdAt: new Date().toISOString(),
-      modifiedAt: new Date().toISOString(),
-      reactions: [],
-    };
-
-    issue.data = {
-      ...issue.data,
-      comments: [...issue.data.comments, comment],
-    };
-
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 201,
-        status: "CREATED",
-        message: "댓글 등록에 성공했습니다.",
-        data: {
-          savedCommentId: comment.id,
-        },
-      }),
-    );
-  }),
-  rest.patch("/api/comments/:commentId", async (req, res, ctx) => {
-    const { commentId } = req.params;
-    const { content } = await req.json();
-
-    issue.data = {
-      ...issue.data,
-      comments: issue.data.comments.map((comment) => {
-        return comment.id === Number(commentId)
-          ? { ...comment, content, modifiedAt: new Date().toISOString() }
-          : comment;
+        };
       }),
     };
 
@@ -234,16 +136,81 @@ export const commentHandlers = [
       ctx.json({
         code: 200,
         status: "OK",
-        message: "OK",
+        messages: "OK",
         data: {
-          modifiedCommentId: Number(commentId),
+          modifiedIssueId: issueId,
         },
       }),
     );
   }),
-]
+  rest.patch("/api/issues/:issueId/labels", async (req, res, ctx) => {
+    const { issueId, labels: labelIds } = await req.json();
 
-const issue: {
+    issue.data = {
+      ...issue.data,
+      labels: labelIds.map((id: number) => {
+        const labelData = labels.data.labels.find((l) => l.id === id)!;
+
+        return {
+          id: labelData.id,
+          name: labelData.name,
+          color: labelData.color,
+          background: labelData.background,
+        };
+      }),
+    };
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        code: 200,
+        status: "OK",
+        messages: "OK",
+        data: {
+          modifiedIssueId: issueId,
+        },
+      }),
+    );
+  }),
+  rest.patch("/api/issues/:issueId/milestones", async (req, res, ctx) => {
+    const { issueId, milestone: milestoneId } = await req.json();
+
+    issue.data = {
+      ...issue.data,
+      milestone:
+        milestones.data.milestones.find((m) => m.id === milestoneId) ?? null,
+    };
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        code: 200,
+        status: "OK",
+        messages: "OK",
+        data: {
+          modifiedIssueId: issueId,
+        },
+      }),
+    );
+  }),
+  rest.delete("/api/issues/:issueId", async (req, res, ctx) => {
+    const { issueId } = req.params;
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        code: 200,
+        status: "OK",
+        messages: "OK",
+        data: {
+          deletedIssueId: issueId,
+        },
+      }),
+    );
+  }),
+];
+
+export const issue: {
   code: number;
   status: string;
   message: string;

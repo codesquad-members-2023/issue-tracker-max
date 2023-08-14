@@ -1,6 +1,7 @@
 import { rest } from "msw";
-import { commentHandlers, issueHandlers } from "./issueHandlers";
+import { issueHandlers } from "./issueHandlers";
 import { assigneeHandlers } from "./assigneeHandlers";
+import { commentHandlers } from "./commentHandlers";
 
 type LabelRequestBody = {
   name: string;
