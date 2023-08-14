@@ -15,6 +15,7 @@ import java.util.Optional;
 @Repository
 public class CommentRepository {
     private static final int NOT_DELETED_FLAG = 0;
+    private static final int DELETED_FLAG = 1;
     private static final int NO_RECORD = 0;
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -38,6 +39,16 @@ public class CommentRepository {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("contents", comment.getContents())
                 .addValue("id", comment.getId());
+
+        jdbcTemplate.update(sql, params);
+    }
+
+    public void deleteById(Long id) {
+        final String sql = "UPDATE comment SET is_deleted = :deleted_flag WHERE comment_id = :id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id)
+                .addValue("deleted_flag", DELETED_FLAG);
 
         jdbcTemplate.update(sql, params);
     }

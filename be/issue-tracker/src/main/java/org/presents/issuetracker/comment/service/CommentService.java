@@ -45,6 +45,12 @@ public class CommentService {
         return IdResponse.from(commentUpdateRequest.getId());
     }
 
+    @Transactional
+    public void delete(Long id) {
+        validateId(id);
+        commentRepository.deleteById(id);
+    }
+
     private void validateId(Long id) {
         if (!commentRepository.existsById(id)) {
             throw new CustomException(CommentErrorCode.NOT_FOUND);
