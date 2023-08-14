@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import codesquard.app.api.errors.exception.EmptyFileException;
+import codesquard.app.api.errors.exception.FailedUploadException;
 import codesquard.app.api.response.ApiResponse;
 import codesquard.app.api.response.ResponseMessage;
 
@@ -20,6 +21,7 @@ public class ImageExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public ApiResponse<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+		logger.debug("MaxUploadSizeExceededException handling : {}", e.getMessage());
 		return ApiResponse.of(
 			HttpStatus.BAD_REQUEST,
 			ResponseMessage.MAXIMUM_UPLOAD_SIZE_EXCEEDED,
@@ -30,8 +32,20 @@ public class ImageExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(EmptyFileException.class)
 	public ApiResponse<Object> handleEmptyFileException(EmptyFileException e) {
+		logger.debug("EmptyFileException handling : {}", e.getMessage());
 		return ApiResponse.of(
 			HttpStatus.BAD_REQUEST,
+			e.getMessage(),
+			null
+		);
+	}
+
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(FailedUploadException.class)
+	public ApiResponse<Object> handleFailedUploadException(FailedUploadException e) {
+		logger.debug("FailedUploadException handling : {}", e.getMessage());
+		return ApiResponse.of(
+			HttpStatus.INTERNAL_SERVER_ERROR,
 			e.getMessage(),
 			null
 		);

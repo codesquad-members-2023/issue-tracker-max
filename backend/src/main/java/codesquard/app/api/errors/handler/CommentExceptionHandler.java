@@ -19,14 +19,14 @@ public class CommentExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(CommentMaxLengthExceededException.class)
 	public ApiResponse<Object> handleCommentMaxLengthExceededException(CommentMaxLengthExceededException e) {
-		logger.info("CommentMaxLengthExceededException handling : {}", e.toString());
+		logger.debug("CommentMaxLengthExceededException handling : {}", e.getMessage());
 		return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage(), null);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(NoSuchCommentException.class)
 	public ApiResponse<Object> handleNoSuchCommentException(NoSuchCommentException e) {
-		logger.info("NoSuchCommentException handling : {}", e.toString());
+		logger.debug("NoSuchCommentException handling : {}", e.getMessage());
 		return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage(), null);
 	}
 
