@@ -37,4 +37,14 @@ public class UserRepository {
 
 		return jdbcTemplate.query(sql, userPreviewRowMapper);
 	}
+
+	public User findById(Long id) {
+		final String sql = "SELECT user_id, login_id, image " +
+                "FROM user " +
+                "WHERE user_id = :user_id";
+
+		MapSqlParameterSource params = new MapSqlParameterSource("user_id", id);
+
+		return jdbcTemplate.queryForObject(sql, params, userPreviewRowMapper);
+	}
 }
