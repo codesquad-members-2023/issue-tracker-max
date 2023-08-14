@@ -65,8 +65,8 @@ public class IssueController {
 	}
 
 	@GetMapping("/issues/participants")
-	public ApiResponse<List<IssueUserResponseDto>> getIssueUsers() {
-		List<IssueUserResponseDto> participants = issueService.getIssueUsers();
+	public ApiResponse<IssueUserResponseDto> getIssueUsers() {
+		IssueUserResponseDto participants = issueService.getIssueUsers();
 		return ApiResponse.success(SUCCESS.getStatus(), participants);
 	}
 

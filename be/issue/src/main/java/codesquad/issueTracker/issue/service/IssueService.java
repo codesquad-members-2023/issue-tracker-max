@@ -1,6 +1,7 @@
 package codesquad.issueTracker.issue.service;
 
 import codesquad.issueTracker.issue.vo.IssueMileStoneDetailVo;
+import codesquad.issueTracker.issue.vo.IssueUserVo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -115,11 +116,12 @@ public class IssueService {
         return IssueMilestoneResponseDto.from(milestoneVos);
     }
 
-    public List<IssueUserResponseDto> getIssueUsers() {
+    public IssueUserResponseDto getIssueUsers() {
         List<User> users = userService.getUsers();
-        return users.stream()
-                .map(IssueUserResponseDto::from)
+        List<IssueUserVo> participants = users.stream()
+                .map(IssueUserVo::from)
                 .collect(Collectors.toList());
+        return IssueUserResponseDto.from(participants);
     }
 
     public IssueResponseDto getIssueById(Long issueId) {
@@ -142,7 +144,7 @@ public class IssueService {
         List<IssueLabelVo> labels = labelService.findByIssueId(issueId);
         IssueMilestoneVo milestone = milestoneService.findByIssueId(issueId);
 
-        if (milestone.getIssueMileStoneDetailVo() != null) {
+        if (milestone.getIssueMileStoneDetailVo().getId() != null) {
             int closeCount = issueRepository.findCountByStatusAndMilestone(Status.CLOSED.getStatus(), milestone);
             int openCount = issueRepository.findCountByStatusAndMilestone(Status.OPEN.getStatus(), milestone);
             return IssueOptionResponseDto.of(assignees, labels, milestone.getMilestoneWithRatio(openCount, closeCount));

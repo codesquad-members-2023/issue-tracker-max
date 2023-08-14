@@ -110,7 +110,7 @@ public class MilestoneRepository {
 		.build();
 
 	public Optional<MilestoneVo> findByIssueId(Long issueId) {
-		String sql = "select m.id, m.name, m.description, m.don_date "
+		String sql = "select m.id, m.name "
 				+ "from milestones m "
 				+ "    join issues i on m.id = i.milestone_id "
 				+ "where i.id = :issueId "

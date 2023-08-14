@@ -1,27 +1,23 @@
 package codesquad.issueTracker.issue.dto;
 
-import codesquad.issueTracker.user.domain.User;
+import codesquad.issueTracker.issue.vo.IssueUserVo;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class IssueUserResponseDto {
-    private Long id;
-    private String name;
-    private String imageUrl;
+    private List<IssueUserVo> participants;
+
 
     @Builder
-    public IssueUserResponseDto(Long id, String name, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.imageUrl = imageUrl;
+    public IssueUserResponseDto(List<IssueUserVo> participants) {
+        this.participants = participants;
     }
 
-    public static IssueUserResponseDto from(User user) {
+    public static IssueUserResponseDto from(List<IssueUserVo> participants) {
         return IssueUserResponseDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .imageUrl(user.getProfileImg())
+                .participants(participants)
                 .build();
     }
 }
