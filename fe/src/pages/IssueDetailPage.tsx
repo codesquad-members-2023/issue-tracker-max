@@ -25,7 +25,6 @@ export const IssueDetailPage: React.FC = ({}) => {
     milestones: null,
   });
 
-  //
   const [selectionsOptions, setSelectionsOptions] = useState<
     SelectionState['detailPage']
   >({
@@ -33,6 +32,63 @@ export const IssueDetailPage: React.FC = ({}) => {
     labels: [],
     milestones: null,
   });
+
+  useEffect(() => {
+    fetchIssueDetailPageData();
+  }, []);
+
+  const fetchIssueDetailPageData = async () => {
+    if (id) {
+      const pageData: IssueDetailPageData = await getIssueDetail(id);
+
+      setIssueDetailPageData(pageData);
+
+      const initialAssignees = pageData.assignees.map(
+        (assignee) => assignee.userId,
+      );
+      const initialLabels = pageData.labels.map((label) => label.id);
+      const initialMilestone = pageData.milestone
+        ? pageData.milestone.id
+        : null;
+
+      setSelectionsOptions({
+        assignees: pageData.assignees,
+        labels: pageData.labels,
+        milestones: pageData.milestone,
+      });
+
+      setSelectionsIds({
+        assignees: initialAssignees,
+        labels: initialLabels,
+        milestones: initialMilestone,
+      });
+    }
+  };
+
+  const onChangeSelect = async (key: string) => {
+    if (!id) {
+      return;
+    }
+    try {
+      switch (key) {
+        case 'assignees':
+          await editIssueAssignees(id, selectionsIds.assignees);
+          break;
+        case 'labels':
+          await editIssueLabel(id, selectionsIds.labels);
+          break;
+        case 'milestones':
+          await editIssueMilestone(id, selectionsIds.milestones);
+          break;
+        default:
+          break;
+      }
+
+      // await fetchIssueDetailPageData();
+    } catch (err) {
+      console.error('에러인뎁쇼', err);
+    }
+  };
 
   const onMultipleSelectedAssignee = (id: number) => {
     setSelectionsIds((prev) => ({
@@ -59,70 +115,12 @@ export const IssueDetailPage: React.FC = ({}) => {
     }));
   };
 
-  useEffect(() => {
-    console.log('useEffect', issueDetailPageData);
-
-    const initialAssignees = issueDetailPageData.assignees.map(
-      (assignee) => assignee.userId,
-    );
-    const initialLabels = issueDetailPageData.labels.map((label) => label.id);
-    const initialMilestone = issueDetailPageData.milestone
-      ? issueDetailPageData.milestone.id
-      : null;
-
-    setSelectionsOptions({
-      assignees: issueDetailPageData.assignees,
-      labels: issueDetailPageData.labels,
-      milestones: issueDetailPageData.milestone,
-    });
-
-    setSelectionsIds({
-      assignees: initialAssignees,
-      labels: initialLabels,
-      milestones: initialMilestone,
-    });
-  }, []);
-
-  const fetchIssueDetailPageData = async () => {
-    if (id) {
-      const pageData = await getIssueDetail(id);
-      setIssueDetailPageData(pageData);
-    }
-  };
-
   const onAddComment = (comment: any) => {
     setIssueDetailPageData({
       ...issueDetailPageData,
       comments: [...issueDetailPageData.comments, comment],
     });
   };
-
-  const onChangeSelect = async (key: string) => {
-    if (!id) {
-      return;
-    }
-    try {
-      switch (key) {
-        case 'assignees':
-          await editIssueAssignees(id, selectionsIds.assignees);
-          break;
-        case 'labels':
-          await editIssueLabel(id, selectionsIds.labels);
-          break;
-        case 'milestones':
-          await editIssueMilestone(id, selectionsIds.milestones);
-          break;
-        default:
-          break;
-      }
-    } catch (err) {
-      console.error('에러인뎁쇼', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchIssueDetailPageData();
-  }, []);
 
   return (
     <div
