@@ -5,7 +5,16 @@ import { ElementContainer } from "./ElementContainer";
 import { MilestoneElement } from "./MilestoneElement";
 import { OptionDiv } from "./Sidebar";
 
-type MilestoneData = {
+export type IssueMilestone = {
+  id: number;
+  name: string;
+  issues: {
+    openedIssueCount: number;
+    closedIssueCount: number;
+  };
+};
+
+export type MilestoneData = {
   id: number;
   name: string;
   issues: {
@@ -16,16 +25,17 @@ type MilestoneData = {
   onClick: () => void;
 };
 
-type AddMilestoneProps = {
-  issueMilestone: {
-    id: number;
-    name: string;
-    issues: {
-      openedIssueCount: number;
-      closedIssueCount: number;
-    };
-  } | null;
-  onMilestoneClick: (id: number | null) => void;
+export type AddMilestoneProps = {
+  issueMilestone: IssueMilestone | null;
+  onMilestoneClick:
+    | {
+        args: "Number";
+        handler: (id: number | null) => void;
+      }
+    | {
+        args: "Data";
+        handler: (milestone: IssueMilestone | null) => void;
+      };
 };
 
 export function AddMilestone({
@@ -33,6 +43,25 @@ export function AddMilestone({
   onMilestoneClick,
 }: AddMilestoneProps) {
   const [milestones, setMilestones] = useState<MilestoneData[]>([]);
+
+  const handleMilestoneClick = useCallback((clickedMilestone: {
+    id: number;
+    name: string;
+    issues: {
+      openedIssueCount: number;
+      closedIssueCount: number;
+    };
+  }) => {
+    if (onMilestoneClick.args === "Number") {
+      onMilestoneClick.handler(
+        clickedMilestone.id === issueMilestone?.id ? null : clickedMilestone.id,
+      );
+    } else {
+      onMilestoneClick.handler(
+        clickedMilestone.id === issueMilestone?.id ? null : clickedMilestone,
+      );
+    }
+  }, [issueMilestone, onMilestoneClick]);
 
   const fetchMilestones = useCallback(async () => {
     const response = await fetch("/api/milestones");
@@ -45,36 +74,34 @@ export function AddMilestone({
         issues: {
           openedIssueCount: number;
           closedIssueCount: number;
-        } | null;
+        };
       }) => {
         return {
           id: milestone.id,
           name: milestone.name,
           issues: milestone.issues,
           selected: false,
-          onClick: () => {},
+          onClick: () => handleMilestoneClick(milestone),
         };
       },
     );
 
     setMilestones(milestonesData);
-  }, []);
+  }, [handleMilestoneClick]);
 
   useEffect(() => {
     fetchMilestones();
   }, [fetchMilestones]);
 
   useEffect(() => {
-    setMilestones((m) =>
-      m.map((item) => ({
-        ...item,
-        selected: issueMilestone?.id === item.id,
-        onClick: () => {
-          onMilestoneClick(item.id === issueMilestone?.id ? null : item.id);
-        },
+    setMilestones((milestones) =>
+      milestones.map((milestone) => ({
+        ...milestone,
+        selected: milestone.id === issueMilestone?.id,
+        onClick: () => handleMilestoneClick(milestone),
       })),
     );
-  }, [issueMilestone, onMilestoneClick]);
+  }, [issueMilestone, handleMilestoneClick]);
 
   const getMilestoneProgress = (issues?: {
     openedIssueCount: number;

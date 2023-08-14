@@ -1,11 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
+import { sameNumbers } from "../../utils/sameNumbers";
 import { DropdownContainer } from "../dropdown/DropdownContainer";
 import { AssigneeElement } from "./AssigneeElement";
 import { ElementContainer } from "./ElementContainer";
 import { OptionDiv } from "./Sidebar";
-import { sameNumbers } from "../../utils/sameNumbers";
 
-type AssigneeData = {
+export type IssueAssignee = {
+  id: number;
+  name: string;
+  avatarUrl: string;
+};
+
+export type AssigneeData = {
   id: number;
   name: string;
   profile: string;
@@ -13,13 +19,11 @@ type AssigneeData = {
   onClick: () => void;
 };
 
-type AddAssigneeProps = {
-  issueAssignees: {
-    id: number;
-    name: string;
-    avatarUrl: string;
-  }[];
-  onAssigneeClick: (ids: number[]) => void;
+export type AddAssigneeProps = {
+  issueAssignees: IssueAssignee[];
+  onAssigneeClick:
+    | { args: "NumberArray"; handler: (ids: number[]) => void }
+    | { args: "DataArray"; handler: (assignees: IssueAssignee[]) => void };
 };
 
 export function AddAssignee({
@@ -69,9 +73,8 @@ export function AddAssignee({
   }, [issueAssignees]);
 
   const patchIssueAssignees = () => {
-    const selectedIds = assignees
-      .filter(({ selected }) => selected)
-      .map(({ id }) => id);
+    const selectedAssignees = assignees.filter(({ selected }) => selected);
+    const selectedIds = selectedAssignees.map(({ id }) => id);
     if (
       sameNumbers(
         selectedIds,
@@ -80,7 +83,18 @@ export function AddAssignee({
     ) {
       return;
     }
-    onAssigneeClick(selectedIds);
+
+    if (onAssigneeClick.args === "NumberArray") {
+      onAssigneeClick.handler(selectedIds);
+    } else {
+      onAssigneeClick.handler(
+        selectedAssignees.map(({ id, name, profile }) => ({
+          id,
+          name,
+          avatarUrl: profile,
+        })),
+      );
+    }
   };
 
   return (

@@ -1,32 +1,9 @@
 import { styled } from "styled-components";
-import { AddAssignee } from "./AddAssignee";
-import { AddLabel } from "./AddLabel";
-import { AddMilestone } from "./AddMilestone";
+import { AddAssignee, AddAssigneeProps } from "./AddAssignee";
+import { AddLabel, AddLabelProps } from "./AddLabel";
+import { AddMilestone, AddMilestoneProps } from "./AddMilestone";
 
-export type SidebarProps = {
-  issueAssignees: {
-    id: number;
-    name: string;
-    avatarUrl: string;
-  }[];
-  issueLabels: {
-    id: number;
-    name: string;
-    color: "LIGHT" | "DARK";
-    background: string;
-  }[];
-  issueMilestone: {
-    id: number;
-    name: string;
-    issues: {
-      openedIssueCount: number;
-      closedIssueCount: number;
-    };
-  } | null;
-  onAssigneeClick: (ids: number[]) => void;
-  onLabelClick: (ids: number[]) => void;
-  onMilestoneClick: (id: number | null) => void;
-};
+export type SidebarProps = AddAssigneeProps & AddLabelProps & AddMilestoneProps;
 
 export function Sidebar({
   issueAssignees,

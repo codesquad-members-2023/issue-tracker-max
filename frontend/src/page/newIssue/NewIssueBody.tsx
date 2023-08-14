@@ -20,7 +20,7 @@ export function NewIssueBody({
   onTitleChange,
   onTitleFocus,
   onContentChange,
-  ...props
+  ...rest
 }: NewIssueBodyProps) {
   const titleCaption = invalidTitle
     ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
@@ -52,7 +52,7 @@ export function NewIssueBody({
           onChange={onContentChange}
         />
       </NewIssueContent>
-      <Sidebar {...props} />
+      <Sidebar {...rest} />
     </Div>
   );
 }

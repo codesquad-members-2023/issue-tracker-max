@@ -23,67 +23,57 @@ type IssueDetailSidePanelProps = {
     };
   } | null;
   fetchIssue: () => void;
-}
+};
 
 export function IssueDetailSidePanel({
   id: issueId,
   assignees,
   labels,
   milestone,
-  fetchIssue
+  fetchIssue,
 }: IssueDetailSidePanelProps) {
-
   const patchIssueAssignees = async (ids: number[]) => {
-    await fetch(
-      `/api/issues/${issueId}/assignees`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          assignees: ids,
-        }),
-      },
-    );
+    await fetch(`/api/issues/${issueId}/assignees`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        assignees: ids,
+      }),
+    });
 
     fetchIssue();
-  }
+  };
 
   const patchIssueLabels = async (ids: number[]) => {
-    await fetch(
-      `/api/issues/${issueId}/labels`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          labels: ids,
-        }),
-      },
-    );
+    await fetch(`/api/issues/${issueId}/labels`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        labels: ids,
+      }),
+    });
 
     fetchIssue();
-  }
+  };
 
   const patchIssueMilestone = async (id: number | null) => {
-    await fetch(
-      `/api/issues/${issueId}/milestones`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          milestone: id,
-        }),
-      },
-    );
+    await fetch(`/api/issues/${issueId}/milestones`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        milestone: id,
+      }),
+    });
 
     fetchIssue();
-  }
+  };
 
-  return (    
+  return (
     <Div>
       <Sidebar
         issueAssignees={assignees}
         issueLabels={labels}
         issueMilestone={milestone}
-        onAssigneeClick={patchIssueAssignees}
-        onLabelClick={patchIssueLabels}
-        onMilestoneClick={patchIssueMilestone}
+        onAssigneeClick={{ args: "NumberArray", handler: patchIssueAssignees }}
+        onLabelClick={{ args: "NumberArray", handler: patchIssueLabels }}
+        onMilestoneClick={{ args: "Number", handler: patchIssueMilestone }}
       />
       {/* <DeleteButton /> */}
     </Div>

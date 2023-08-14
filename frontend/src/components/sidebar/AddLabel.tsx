@@ -1,12 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
+import { sameNumbers } from "../../utils/sameNumbers";
 import { InformationTag } from "../InformationTag";
 import { DropdownContainer } from "../dropdown/DropdownContainer";
 import { IconColor } from "../icon/Icon";
 import { ElementContainer } from "./ElementContainer";
 import { OptionDiv } from "./Sidebar";
-import { sameNumbers } from "../../utils/sameNumbers";
 
-type LabelData = {
+export type IssueLabel = {
+  id: number;
+  name: string;
+  color: "LIGHT" | "DARK";
+  background: string;
+};
+
+export type LabelData = {
   id: number;
   name: string;
   color: "LIGHT" | "DARK";
@@ -15,14 +22,11 @@ type LabelData = {
   onClick: () => void;
 };
 
-type AddLabelProps = {
-  issueLabels: {
-    id: number;
-    name: string;
-    color: "LIGHT" | "DARK";
-    background: string;
-  }[];
-  onLabelClick: (ids: number[]) => void;
+export type AddLabelProps = {
+  issueLabels: IssueLabel[];
+  onLabelClick:
+    | { args: "NumberArray"; handler: (ids: number[]) => void }
+    | { args: "DataArray"; handler: (labels: IssueLabel[]) => void };
 };
 
 export function AddLabel({ issueLabels, onLabelClick }: AddLabelProps) {
@@ -74,9 +78,8 @@ export function AddLabel({ issueLabels, onLabelClick }: AddLabelProps) {
   }, [issueLabels]);
 
   const patchIssueLabels = () => {
-    const selectedIds = labels
-      .filter(({ selected }) => selected)
-      .map(({ id }) => id);
+    const selectedLabels = labels.filter(({ selected }) => selected);
+    const selectedIds = selectedLabels.map(({ id }) => id);
     if (
       sameNumbers(
         selectedIds,
@@ -85,7 +88,19 @@ export function AddLabel({ issueLabels, onLabelClick }: AddLabelProps) {
     ) {
       return;
     }
-    onLabelClick(selectedIds);
+
+    if (onLabelClick.args === "NumberArray") {
+      onLabelClick.handler(selectedIds);
+    } else {
+      onLabelClick.handler(
+        selectedLabels.map(({ id, name, color, background }) => ({
+          id,
+          name,
+          color,
+          background,
+        })),
+      );
+    }
   };
 
   return (
