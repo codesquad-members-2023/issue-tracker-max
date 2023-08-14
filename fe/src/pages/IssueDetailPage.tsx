@@ -65,6 +65,7 @@ export const IssueDetailPage: React.FC = ({}) => {
     }
   };
 
+  // 패널을 두번 닫아줘야 변경이 됨
   const onChangeSelect = async (key: string) => {
     if (!id) {
       return;
@@ -72,21 +73,30 @@ export const IssueDetailPage: React.FC = ({}) => {
     try {
       switch (key) {
         case 'assignees':
+          console.log('어사이니 변경', selectionsIds.assignees);
+
           await editIssueAssignees(id, selectionsIds.assignees);
+
           break;
         case 'labels':
+          console.log('라벨 변경', selectionsIds.labels);
+
           await editIssueLabel(id, selectionsIds.labels);
+
           break;
         case 'milestones':
+          console.log('마일스톤 변경', selectionsIds.milestones);
+
           await editIssueMilestone(id, selectionsIds.milestones);
+
           break;
         default:
           break;
       }
-
-      // await fetchIssueDetailPageData();
     } catch (err) {
       console.error('에러인뎁쇼', err);
+    } finally {
+      console.log('음');
     }
   };
 

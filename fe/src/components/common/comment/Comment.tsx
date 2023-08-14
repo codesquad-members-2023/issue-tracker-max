@@ -9,7 +9,6 @@ import { AddButtons } from '../textArea/AddButtons';
 import { Button } from '../Button';
 import { ReactComponent as PaperClip } from '@assets/icons/paperclip.svg';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
-import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { uploadFile } from 'apis/fileUpload';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 import { editComment, patchIssueContents, postNewComment } from 'apis/api';
@@ -22,6 +21,7 @@ type DefaultFileStatusType = {
   uploadFailed: boolean;
 };
 type Props = {
+  commentId?: number;
   issueId: number;
   issueAuthor: User;
   typeVariant: 'issue' | 'default' | 'edit' | 'add';
@@ -35,6 +35,7 @@ type Props = {
 };
 
 export const Comment: React.FC<Props> = ({
+  commentId,
   issueId,
   issueAuthor,
   createdAt,
@@ -135,7 +136,6 @@ export const Comment: React.FC<Props> = ({
         textAreaValue,
       );
       const newComment = responseData.data;
-      console.log(newComment);
 
       // const newComment = {
       //   id: issueId,
@@ -161,11 +161,9 @@ export const Comment: React.FC<Props> = ({
     try {
       typeVariant === 'issue'
         ? await patchIssueContents(issueId, textAreaValue)
-        : await editComment(issueId, textAreaValue);
+        : await editComment(commentId, textAreaValue);
 
       // 받아오는 응답: id만
-      setTextAreaValue(textAreaValue);
-      setPlaceholderValue(textAreaValue);
       setIsEditing(false);
     } catch (error) {
       console.error('이슈 편집 에러:', error);

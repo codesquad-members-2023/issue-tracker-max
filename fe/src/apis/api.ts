@@ -1,6 +1,8 @@
 const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
 export const fetchData = async (path: string, options?: RequestInit) => {
+  console.log(path, options);
+
   const response = await fetch(BASE_URL + path, options);
 
   if (!response.ok) {
@@ -293,7 +295,7 @@ export const postNewComment = (
   });
 };
 
-export const editComment = (id: number, contents: string) => {
+export const editComment = (id: number | undefined, contents: string) => {
   return fetchData(`/comments`, {
     method: 'PUT',
     headers: {
