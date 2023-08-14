@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.api.response.ApiResponse;
 import codesquard.app.api.response.ResponseMessage;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.comment.controller.request.CommentModifyRequest;
 import codesquard.app.comment.controller.request.CommentSaveRequest;
 import codesquard.app.comment.service.CommentService;
 import codesquard.app.comment.service.response.CommentDeleteResponse;
 import codesquard.app.comment.service.response.CommentModifyResponse;
 import codesquard.app.comment.service.response.CommentSaveResponse;
+import codesquard.app.user.annotation.Login;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -33,22 +35,25 @@ public class CommentController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public ApiResponse<CommentSaveResponse> saveComment(@Valid @RequestBody CommentSaveRequest request) {
+	public ApiResponse<CommentSaveResponse> saveComment(@Valid @RequestBody CommentSaveRequest request,
+		@Login AuthenticateUser user) {
 		LocalDateTime createdAt = LocalDateTime.now();
 		return ApiResponse.of(HttpStatus.CREATED, ResponseMessage.COMMENT_SAVE_SUCCESS,
-			commentService.save(request.toServiceRequest(), createdAt));
+			commentService.save(request.toServiceRequest(user.toEntity().getId()), createdAt));
 	}
 
 	@PatchMapping("/{id}")
 	public ApiResponse<CommentModifyResponse> modifyComment(@Valid @RequestBody CommentModifyRequest request,
+		@Login AuthenticateUser user,
 		@PathVariable Long id) {
 		LocalDateTime modifiedAt = LocalDateTime.now();
-		return ApiResponse.ok(commentService.modify(request.toServiceRequest(id), modifiedAt));
+		return ApiResponse.ok(commentService.modify(request.toServiceRequest(user.toEntity().getId(), id), modifiedAt));
 	}
 
 	@DeleteMapping("/{id}")
-	public ApiResponse<CommentDeleteResponse> deleteComment(@PathVariable Long id) {
-		return ApiResponse.ok(commentService.delete(id));
+	public ApiResponse<CommentDeleteResponse> deleteComment(@PathVariable Long id,
+		@Login AuthenticateUser user) {
+		return ApiResponse.ok(commentService.delete(user.toEntity().getId(), id));
 	}
 
 }

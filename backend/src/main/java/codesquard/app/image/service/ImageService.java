@@ -13,6 +13,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import codesquard.app.api.errors.exception.EmptyFileException;
+import codesquard.app.api.errors.exception.FailedUploadException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -24,13 +25,18 @@ public class ImageService {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
-	public String upload(MultipartFile multipartFile) throws IOException {
+	public String upload(MultipartFile multipartFile) {
 		validateFileExists(multipartFile);
 
 		String fileName = multipartFile.getOriginalFilename() + "-" + UUID.randomUUID();
-		ObjectMetadata objectMetadata = generateObjectMetadata(multipartFile);
-		amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, multipartFile.getInputStream(), objectMetadata)
-			.withCannedAcl(CannedAccessControlList.PublicRead));
+		try {
+			ObjectMetadata objectMetadata = generateObjectMetadata(multipartFile);
+			amazonS3Client.putObject(
+				new PutObjectRequest(bucket, fileName, multipartFile.getInputStream(), objectMetadata)
+					.withCannedAcl(CannedAccessControlList.PublicRead));
+		} catch (IOException e) {
+			throw new FailedUploadException();
+		}
 
 		return amazonS3Client.getUrl(bucket, fileName).toString();
 	}

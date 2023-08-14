@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BindException.class)
 	public ApiResponse<Object> handleBindException(BindException e) {
-		logger.info("BindException handling : {}", e.toString());
+		logger.debug("BindException handling : {}", e.toString());
 		return ApiResponse.of(
 			HttpStatus.BAD_REQUEST,
 			HttpStatus.BAD_REQUEST.getReasonPhrase(),
