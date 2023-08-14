@@ -32,7 +32,7 @@ public class HistoryAspect {
 
 		historyService.save(HistoryRequest.builder()
 			.issueId(issueId)
-			.editor(memberRepository.findById(writerId).get().getNickName())
+			.editor(memberRepository.findById(writerId).getNickName())
 			.issueIsOpen(true)
 			.build());
 		return issuePostResponse;
@@ -44,7 +44,7 @@ public class HistoryAspect {
 		joinPoint.proceed();
 		List<Long> ids = request.getIssueIds();
 		String status = request.getIssueStatus();
-		String editor = memberRepository.findById(memberId).get().getNickName();
+		String editor = memberRepository.findById(memberId).getNickName();
 		ids.forEach(id -> historyService.save(
 			HistoryRequest.builder()
 				.issueId(id)
