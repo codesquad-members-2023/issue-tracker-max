@@ -19,6 +19,11 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
 
+cloud:
+  aws:
+    stack:
+      auto: false
+
 mybatis:
   type-aliases-package: com.issuetracker.issue.domain, com.issuetracker.label.domain, com.issuetracker.milestone.domain, com.issuetracker.member.domain
   mapper-locations: classpath:mapper/*.xml
