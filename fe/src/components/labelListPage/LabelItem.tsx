@@ -6,6 +6,8 @@ import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { ReactComponent as Trash } from '@assets/icons/trash.svg';
 import { TableHeader } from '@components/common/Table/TableHeader';
 import { LabelEditTable } from './LabelEditTable';
+import { deleteLabel } from 'apis/api';
+import { Alert } from '@components/common/Alert';
 
 type Props = {
   label: Label;
@@ -15,6 +17,7 @@ type Props = {
 export const LabelItem: React.FC<Props> = ({ label, fetchLabelList }) => {
   const theme = useTheme() as any;
   const [isEditing, setIsEditing] = useState(false);
+  const [isOpenAlert, setIsOpenAlert] = useState(false);
 
   const onEditLabelOpen = () => {
     setIsEditing(true);
@@ -24,11 +27,22 @@ export const LabelItem: React.FC<Props> = ({ label, fetchLabelList }) => {
     setIsEditing(false);
   };
 
+  const onAlertOpen = () => {
+    setIsOpenAlert(true);
+  };
+
+  const onAlertClose = () => {
+    setIsOpenAlert(false);
+  };
+
   const onDeleteLabel = async () => {
-    await fetch(`${import.meta.env.VITE_APP_BASE_URL}/labels/${label.id}`, {
-      method: 'DELETE',
-    });
-    fetchLabelList();
+    try {
+      await deleteLabel(label.id);
+      fetchLabelList();
+      onAlertClose();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -105,13 +119,26 @@ export const LabelItem: React.FC<Props> = ({ label, fetchLabelList }) => {
                 padding: '0',
                 color: theme.danger.text.default,
               }}
-              onClick={onDeleteLabel}
+              onClick={onAlertOpen}
             >
               <Trash stroke={theme.danger.text.default} />
               삭제
             </Button>
           </div>
         </>
+      )}
+      {isOpenAlert && (
+        <Alert
+          {...{
+            action: 'danger',
+            leftButtonText: '취소',
+            rightButtonText: '삭제',
+            onClose: onAlertClose,
+            onConfirm: onDeleteLabel,
+          }}
+        >
+          <span>해당 레이블을 삭제하시겠습니까?</span>
+        </Alert>
       )}
     </li>
   );
