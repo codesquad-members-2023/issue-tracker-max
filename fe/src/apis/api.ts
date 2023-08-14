@@ -212,9 +212,6 @@ export const editLabel = (
 export const deleteLabel = (id: string | number) => {
   return fetchData(`/labels/${id}`, {
     method: 'DELETE',
-    // headers: {
-    //   'Content-Type': 'application/json',
-    // },
   });
 };
 
