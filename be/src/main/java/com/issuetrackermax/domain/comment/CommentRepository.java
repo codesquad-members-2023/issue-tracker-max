@@ -1,10 +1,13 @@
 package com.issuetrackermax.domain.comment;
 
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -21,6 +24,7 @@ public class CommentRepository {
 			.id(rs.getLong("id"))
 			.content(rs.getString("content"))
 			.writerId(rs.getLong("writer_id"))
+			.issueId(rs.getLong("issue_id"))
 			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
 			.build();
 	private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -31,22 +35,24 @@ public class CommentRepository {
 	}
 
 	public Long save(Comment comment) {
-		String sql = "INSERT INTO comments(content ,writer_id) VALUES (:content, :writerId)";
+		String sql = "INSERT INTO comments(content, issue_id, writer_id) VALUES (:content, :issueId, :writerId)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		SqlParameterSource parameters = new MapSqlParameterSource()
 			.addValue("content", comment.getContent(), Types.VARCHAR)
-			.addValue("writerId", comment.getWriterId(), Types.BIGINT);
+			.addValue("writerId", comment.getWriterId(), Types.BIGINT)
+			.addValue("issueId", comment.getIssueId(), Types.BIGINT);
 		jdbcTemplate.update(sql, parameters, keyHolder, new String[] {"id"});
 		return keyHolder.getKey().longValue();
 
 	}
 
 	public List<Comment> findByIssueId(Long id) {
-		return new ArrayList<>();
+		String sql = "SELECT id, content, issue_id, writer_id, created_at FROM comments WHERE issue_id= :id";
+		return jdbcTemplate.query(sql, Map.of("id", id), COMMENT_ROW_MAPPER);
 	}
 
 	public Optional<Comment> findById(Long id) {
-		String sql = "SELECT id, content, writer_id, created_at FROM comments WHERE id = :id ";
+		String sql = "SELECT id, content, issue_id, writer_id, created_at FROM comments WHERE id = :id ";
 		return Optional.ofNullable(
 			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), COMMENT_ROW_MAPPER)));
 	}

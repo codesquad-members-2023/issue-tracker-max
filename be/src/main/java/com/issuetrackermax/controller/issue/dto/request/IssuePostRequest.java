@@ -52,9 +52,10 @@ public class IssuePostRequest {
 			.build();
 	}
 
-	public Comment toComment(Long writerId) {
+	public Comment toComment(Long issueId, Long writerId) {
 		return Comment.builder()
 			.content(content)
+			.issueId(issueId)
 			.writerId(writerId)
 			.build();
 	}
