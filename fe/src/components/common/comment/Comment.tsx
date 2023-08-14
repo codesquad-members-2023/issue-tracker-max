@@ -225,11 +225,7 @@ export const Comment: React.FC<Props> = ({
             }
             customStyle={wrapperStyle}
           >
-            <div
-              css={{
-                paddingTop: '16px',
-              }}
-            >
+            <div css={{ paddingTop: '16px' }}>
               <TextAreaInput
                 typeVariant={isEditing ? 'add' : 'default'}
                 textAreaValue={textAreaValue}

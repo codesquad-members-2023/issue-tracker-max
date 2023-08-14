@@ -6,11 +6,25 @@ import { IssueContainer } from './IssueContainer';
 type Props = {
   issueDetailPageData: IssueDetailPageData;
   onAddComment: (comment: Comment) => void;
+  //
+  selectionsOptions: SelectionState['detailPage'];
+  selections: SelectionState['newIssuePage'];
+  onChangeSelect?: (key: string) => void;
+  onSingleSelectedMilestone: (id: number) => void;
+  onMultipleSelectedAssignee: (id: number) => void;
+  onMultipleSelectedLabel: (id: number) => void;
 };
 
 export const Body: React.FC<Props> = ({
   issueDetailPageData,
   onAddComment,
+  //
+  selectionsOptions,
+  selections,
+  onChangeSelect,
+  onSingleSelectedMilestone,
+  onMultipleSelectedAssignee,
+  onMultipleSelectedLabel,
 }: Props) => {
   const theme = useTheme() as any;
 
@@ -33,7 +47,7 @@ export const Body: React.FC<Props> = ({
         }}
       >
         <IssueContainer
-          issueId={issueDetailPageData.id}
+          issueId={issueDetailPageData.id} // 페이지 데이터만 내리기?
           author={issueDetailPageData.author}
           contents={issueDetailPageData.contents}
           createdAt={issueDetailPageData.createdAt}
@@ -48,7 +62,17 @@ export const Body: React.FC<Props> = ({
         />
       </div>
 
-      <SideBarRightPanel issueId={issueDetailPageData.id} />
+      <SideBarRightPanel
+        issueId={issueDetailPageData.id}
+        issueDetailPageData={issueDetailPageData}
+        selectionsOptions={selectionsOptions}
+        //
+        selections={selections}
+        onChangeSelect={onChangeSelect}
+        onSingleSelectedMilestone={onSingleSelectedMilestone}
+        onMultipleSelectedAssignee={onMultipleSelectedAssignee}
+        onMultipleSelectedLabel={onMultipleSelectedLabel}
+      />
     </div>
   );
 };

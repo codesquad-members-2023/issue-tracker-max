@@ -7,13 +7,11 @@ export const fetchData = async (path: string, options?: RequestInit) => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  // JSON 형식의 본문이 함께 오는 경우에만 해당 본문을 파싱하여 반환
-  if (response.headers.get('content-type')?.includes('application/json')) {
+  if (response.headers.get('content-type') === 'application/json') {
     const data = await response.json();
+
     return data;
   }
-
-  return null;
 };
 
 export const getIssuesWithQuery = (query: string) => {
@@ -70,8 +68,8 @@ export const patchIssueContents = (id: number, contents: string) => {
   });
 };
 
-export const editIssueLabel = (id: number, labelIds: number[]) => {
-  return fetchData(`issues/${id}/labels`, {
+export const editIssueLabel = (id: string, labelIds: number[]) => {
+  return fetchData(`/issues/${id}/labels`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -82,8 +80,8 @@ export const editIssueLabel = (id: number, labelIds: number[]) => {
   });
 };
 
-export const editIssueMilestone = (id: number, milestoneId: number) => {
-  return fetchData(`milestones/${id}/milestone`, {
+export const editIssueMilestone = (id: string, milestoneId: number | null) => {
+  return fetchData(`/issues/${id}/milestone`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -94,8 +92,8 @@ export const editIssueMilestone = (id: number, milestoneId: number) => {
   });
 };
 
-export const editIssueAssignees = (id: number, assigneeIds: number[]) => {
-  return fetchData(`issues/${id}/assignees`, {
+export const editIssueAssignees = (id: string, assigneeIds: number[]) => {
+  return fetchData(`/issues/${id}/assignees`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
