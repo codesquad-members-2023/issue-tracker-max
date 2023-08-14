@@ -48,8 +48,9 @@ public class JwtIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpectAll(
                         jsonPath("$.length()").value(2),
-                        jsonPath("$.accessToken").isNotEmpty(),
-                        jsonPath("$.refreshToken").isNotEmpty()
+                        jsonPath("$.profile").isNotEmpty(),
+                        jsonPath("$.jwtResponse.accessToken").isNotEmpty(),
+                        jsonPath("$.jwtResponse.refreshToken").isNotEmpty()
                 );
     }
 
@@ -68,7 +69,8 @@ public class JwtIntegrationTest {
 
         String jsonResponse = loginResult.andReturn().getResponse().getContentAsString();
         JsonNode jsonNode = new ObjectMapper().readTree(jsonResponse);
-        String refreshToken = jsonNode.get("refreshToken").asText();
+        JsonNode jwtResponseNode = jsonNode.get("jwtResponse");
+        String refreshToken = jwtResponseNode.get("refreshToken").asText();
 
         RefreshTokenRequest request = new RefreshTokenRequest(refreshToken);
 
@@ -102,7 +104,8 @@ public class JwtIntegrationTest {
 
         String jsonResponse = loginResult.andReturn().getResponse().getContentAsString();
         JsonNode jsonNode = new ObjectMapper().readTree(jsonResponse);
-        String accessToken = jsonNode.get("accessToken").asText();
+        JsonNode jwtResponseNode = jsonNode.get("jwtResponse");
+        String accessToken = jwtResponseNode.get("accessToken").asText();
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/logout")

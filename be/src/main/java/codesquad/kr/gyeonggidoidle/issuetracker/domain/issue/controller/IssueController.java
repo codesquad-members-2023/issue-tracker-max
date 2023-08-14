@@ -7,6 +7,7 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.FilterListResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.FilterResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -43,8 +44,11 @@ public class IssueController {
     }
 
     @PostMapping("/api/issues")
-    public ApiResponse create(@RequestBody IssueCreateRequest request) {
-        issueService.createIssue(IssueCreateRequest.to(request));
+    public ApiResponse create(@RequestBody IssueCreateRequest request, HttpServletRequest httpServletRequest) {
+        issueService.createIssue(IssueCreateRequest.to(request,
+                Long.valueOf(String.valueOf(httpServletRequest.getAttribute("memberId")))
+                )
+        );
         return ApiResponse.success(HttpStatus.OK);
     }
 

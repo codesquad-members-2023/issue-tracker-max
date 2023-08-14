@@ -31,9 +31,9 @@ public class IssueCreateRequest {
         this.file = file;
     }
 
-    public static IssueCreateCondition to(IssueCreateRequest request) {
+    public static IssueCreateCondition to(IssueCreateRequest request, Long memberId) {
         return IssueCreateCondition.builder()
-                .authorId(request.getAuthorId())
+                .authorId(memberId)
                 .title(request.getTitle())
                 .comment(request.getComment())
                 .assignees(request.getAssignees())

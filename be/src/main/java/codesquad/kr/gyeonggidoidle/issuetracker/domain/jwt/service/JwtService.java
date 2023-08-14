@@ -5,6 +5,7 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.Jwt;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.JwtProvider;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.repository.JwtRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.service.condition.LoginCondition;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.service.information.JwtLoginInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.Member;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.MemberRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.exception.IllegalJwtTokenException;
@@ -25,14 +26,15 @@ public class JwtService {
     private final JwtProvider jwtProvider;
 
     @Transactional
-    public Jwt login(LoginCondition condition) {
+    public JwtLoginInformation login(LoginCondition condition) {
         Member member = memberRepository.findByEmail(condition.getEmail());
         if (!verifyPassword(member, condition.getPassword())) {
             throw new IllegalPasswordException();
         }
         Jwt jwt = jwtProvider.createJwt(generateMemberClaims(member));
         jwtRepository.saveRefreshToken(jwt.getRefreshToken(), member.getId());
-        return jwt;
+        String profile = memberRepository.findProfileById(member.getId());
+        return JwtLoginInformation.from(profile, jwt);
     }
 
     @Transactional

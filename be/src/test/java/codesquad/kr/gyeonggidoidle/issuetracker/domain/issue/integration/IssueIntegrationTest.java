@@ -192,7 +192,6 @@ class IssueIntegrationTest {
         // given
         IssueCreateRequest request = IssueCreateRequest.builder()
                 .title("제목")
-                .authorId(1L)
                 .assignees(List.of(1L))
                 .labels(List.of(2L))
                 .milestone(1L)

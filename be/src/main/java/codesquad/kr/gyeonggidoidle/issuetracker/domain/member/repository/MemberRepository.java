@@ -2,15 +2,11 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.Member;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
-
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -52,6 +48,15 @@ public class MemberRepository {
         String sql = "DELETE FROM issue_assignee WHERE issue_id = :issueId";
         template.update(sql, Map.of("issueId", issueId));
         addIssueAssignees(issueId, assigneeIds);
+    }
+
+    public String findProfileById(Long memberId){
+        String sql = "SELECT profile FROM member WHERE id = :memberId";
+        try {
+            return template.queryForObject(sql, Map.of("memberId", memberId), String.class);
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     private SqlParameterSource[] generateParameters(Long issueId, List<Long> assigneeIds) {
