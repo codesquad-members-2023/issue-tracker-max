@@ -2,6 +2,8 @@ package com.issuetrackermax.controller.milestone;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,7 +34,7 @@ public class MilestoneController {
 	private final LabelService labelService;
 
 	@GetMapping("/open")
-	public ApiResponse<MilestonesResponse> getOpenMilstone() {
+	public ApiResponse<MilestonesResponse> getOpenMilestone() {
 
 		Long labelSize = (long)labelService.getLabelList().size();
 		List<MilestoneDetailResponse> milestones = milestoneService.getOpenMilestone();
@@ -47,7 +49,7 @@ public class MilestoneController {
 	}
 
 	@GetMapping("/closed")
-	public ApiResponse<MilestonesResponse> getClosedilstone() {
+	public ApiResponse<MilestonesResponse> getClosedMilestone() {
 
 		Long labelSize = (long)labelService.getLabelList().size();
 		List<MilestoneDetailResponse> milestones = milestoneService.getClosedMilestone();
@@ -62,7 +64,9 @@ public class MilestoneController {
 	}
 
 	@PostMapping
-	public ApiResponse<MilestonePostResponse> post(@RequestBody MilestonePostRequest milestonePostRequest) {
+	public ApiResponse<MilestonePostResponse> post(
+		@RequestBody
+		@Valid MilestonePostRequest milestonePostRequest) {
 		Long id = milestoneService.save(milestonePostRequest);
 		MilestonePostResponse response = MilestonePostResponse
 			.builder()
@@ -72,7 +76,9 @@ public class MilestoneController {
 	}
 
 	@PutMapping("/{id}")
-	public ApiResponse<Void> modify(@PathVariable Long id, @RequestBody MilestoneModifyRequest milestoneModifyRequest) {
+	public ApiResponse<Void> modify(@PathVariable Long id,
+		@RequestBody
+		@Valid MilestoneModifyRequest milestoneModifyRequest) {
 		milestoneService.update(id, milestoneModifyRequest);
 		return ApiResponse.success();
 	}
