@@ -4,6 +4,7 @@ import static codesquad.issueTracker.global.exception.SuccessCode.*;
 
 import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
 import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
+import codesquad.issueTracker.issue.dto.IssueUserResponseDto;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -45,4 +46,11 @@ public class IssueController {
 		List<IssueMilestoneResponseDto> milestones = issueService.getIssueMilestones();
 		return ApiResponse.success(SUCCESS.getStatus(), milestones);
 	}
+
+	@GetMapping("/issues/participants")
+	public ApiResponse<List<IssueUserResponseDto>> getIssueUsers() {
+		List<IssueUserResponseDto> participants = issueService.getIssueUsers();
+		return ApiResponse.success(SUCCESS.getStatus(), participants);
+	}
+
 }

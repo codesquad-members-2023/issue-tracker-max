@@ -3,8 +3,10 @@ package codesquad.issueTracker.issue.service;
 import codesquad.issueTracker.global.common.Status;
 import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
 import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
+import codesquad.issueTracker.issue.dto.IssueUserResponseDto;
 import codesquad.issueTracker.label.dto.LabelResponseDto;
 import codesquad.issueTracker.milestone.vo.MilestoneVo;
+import codesquad.issueTracker.user.domain.User;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -83,6 +85,13 @@ public class IssueService {
 		List<MilestoneVo> milestones = milestoneService.findMilestonesByStatus(Status.OPEN.getStatus());
 		return milestones.stream()
 				.map(IssueMilestoneResponseDto::from)
+				.collect(Collectors.toList());
+	}
+
+	public List<IssueUserResponseDto> getIssueUsers() {
+		List<User> users = userService.getUsers();
+		return users.stream()
+				.map(IssueUserResponseDto::from)
 				.collect(Collectors.toList());
 	}
 }
