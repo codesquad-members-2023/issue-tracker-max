@@ -4,10 +4,14 @@ import MilestonesTableItem from "./MilestonesTableItem";
 
 export default function MilestonesTableBody({
   milestoneList,
+  updateOpenMilestone,
+  updateCloseMilestone,
 }: {
-  milestoneList: Milestone[] | null;
+  milestoneList: Milestone[];
+  updateOpenMilestone: () => void;
+  updateCloseMilestone: () => void;
 }) {
-  const hasMilestone = milestoneList && milestoneList.length !== 0;
+  const hasMilestone = milestoneList.length !== 0;
 
   return (
     <TableBody>
@@ -17,6 +21,7 @@ export default function MilestonesTableBody({
             <MilestonesTableItem
               key={milestone.milestoneId}
               milestone={milestone}
+              {...{ updateOpenMilestone, updateCloseMilestone }}
             />
           ))}
         </ul>

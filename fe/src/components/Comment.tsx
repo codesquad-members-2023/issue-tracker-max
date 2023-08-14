@@ -14,15 +14,15 @@ import TextAreaWrapper from "./common/TextArea/TextAreaWrapper";
 
 export default function Comment({
   issueNumber,
-  commentId,
   author,
   createdAt,
   content,
   isIssueAuthor,
-  updateContent,
+  commentId,
+  onUpdateContent,
+  onCommentEdit,
 }: {
   issueNumber: number;
-  commentId?: number;
   author: {
     username: string;
     profileUrl: string;
@@ -30,21 +30,17 @@ export default function Comment({
   createdAt: string;
   content: string;
   isIssueAuthor: boolean;
-  updateContent: (newContent: string, commendId?: number) => void;
+  commentId?: number;
+  onUpdateContent?: () => void;
+  onCommentEdit?: (commentId: number, newContent: string) => void;
 }) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [prevContent, setPrevContent] = useState<string>(content);
   const [newContent, setNewContent] = useState<string>(content);
 
   const { userInfo } = useAuth();
   const isAuthor = userInfo.username === author.username;
 
-  if (prevContent !== content) {
-    setPrevContent(content);
-    setNewContent(content);
-  }
-
-  const isChangedContent = prevContent !== newContent;
+  const isChangedContent = content !== newContent;
 
   const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewContent(e.target.value);
@@ -59,17 +55,33 @@ export default function Comment({
     setNewContent(content);
   };
 
-  const onEditComplete = async () => {
+  const onEditComment = async (commentId: number) => {
     setIsEditing(false);
-    const body = { content: newContent };
 
     try {
-      const { status } = commentId
-        ? await putIssueComment(issueNumber, commentId, body)
-        : await putIssueContent(issueNumber, body);
+      const { status } = await putIssueComment(issueNumber, commentId, {
+        content: newContent,
+      });
 
       if (status === 200) {
-        updateContent(newContent, commentId);
+        onCommentEdit?.(commentId, newContent);
+      }
+    } catch (error) {
+      // TODO: error handling
+      console.log(error);
+    }
+  };
+
+  const onEditContent = async () => {
+    setIsEditing(false);
+
+    try {
+      const { status } = await putIssueContent(issueNumber, {
+        content: newContent,
+      });
+
+      if (status === 200) {
+        onUpdateContent?.();
       }
     } catch (error) {
       // TODO: error handling
@@ -124,7 +136,7 @@ export default function Comment({
             </>
           ) : (
             <div className="comment-wrapper">
-              <ReactMarkdown children={content} />
+              <ReactMarkdown children={newContent} />
             </div>
           )}
         </Body>
@@ -143,7 +155,9 @@ export default function Comment({
             variant="container"
             size="S"
             disabled={!isChangedContent}
-            onClick={onEditComplete}>
+            onClick={
+              commentId ? () => onEditComment(commentId) : onEditContent
+            }>
             <img
               className="button-icon"
               src={editIcon}

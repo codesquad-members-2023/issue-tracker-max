@@ -5,7 +5,7 @@ import Button from "./Button";
 type TabBarInfo = {
   iconSrc: string;
   name: string;
-  count: number;
+  count?: number;
   callback?: () => void;
 };
 
@@ -46,7 +46,7 @@ export default function TabBar({
             alt={`${left.name}-icon`}
           />
           <span className="tab-button-text">
-            {left.name}({left.count})
+            {left.name}({left.count ?? ""})
           </span>
         </Button>
       </TabButtonWrapper>
@@ -58,7 +58,7 @@ export default function TabBar({
             alt={`${right.name}-icon`}
           />
           <span className="tab-button-text">
-            {right.name}({right.count})
+            {right.name}({right.count ?? ""})
           </span>
         </Button>
       </TabButtonWrapper>

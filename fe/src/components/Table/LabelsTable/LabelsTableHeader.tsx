@@ -4,7 +4,7 @@ import { TableHeader } from "../Table.style";
 export default function LabelsTableHeader({
   numLabels,
 }: {
-  numLabels: number;
+  numLabels?: number;
 }) {
   return (
     <TableHeader>

@@ -12,31 +12,16 @@ import { styled } from "styled-components";
 
 export default function IssueDetailHeader({
   issueDetails,
-  updateIssueTitle,
-  updateIssueIsOpen,
+  updateIssueDetails,
 }: {
-  issueDetails: IssueDetails | null;
-  updateIssueTitle: (newTitle: string) => void;
-  updateIssueIsOpen: () => void;
+  issueDetails: IssueDetails;
+  updateIssueDetails: () => void;
 }) {
   const { issueId, author, title, createdAt, isOpen, commentCount } =
-    issueDetails || {
-      issueId: 0,
-      author: { username: "", profileURl: "" },
-      title: "",
-      createdAt: new Date().toISOString(),
-      isOpen: true,
-      commentCount: 0,
-    };
+    issueDetails;
 
   const [isEditTitle, setIsEditTitle] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
-  const [prevTitle, setPrevTitle] = useState(title);
-
-  if (title !== prevTitle) {
-    setPrevTitle(title);
-    setNewTitle(title);
-  }
 
   const onNewTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewTitle(e.target.value);
@@ -51,8 +36,8 @@ export default function IssueDetailHeader({
       });
 
       if (res.status === 200) {
-        updateIssueTitle(newTitle);
         setIsEditTitle(false);
+        updateIssueDetails();
       }
     } catch (error) {
       // TODO
@@ -67,7 +52,7 @@ export default function IssueDetailHeader({
       });
 
       if (res.status === 200) {
-        updateIssueIsOpen();
+        updateIssueDetails();
       }
     } catch (error) {
       // TODO

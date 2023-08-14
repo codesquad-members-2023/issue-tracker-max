@@ -71,7 +71,7 @@ export const handlers = [
           expirationTime: 1791720452298,
         },
         user: {
-          loginId: loginId,
+          username: loginId,
           profileUrl: "https://avatars.githubusercontent.com/u/48426991?v=4",
         },
       })

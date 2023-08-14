@@ -25,17 +25,20 @@ export default function Sidebar({
   onEditMilestone?: () => void;
 }) {
   return (
-    <StyledSidebar>
-      <AssigneeField {...{ assignees, onAssigneeChange, onEditAssignees }} />
-      <LabelField {...{ labels, onLabelChange, onEditLabels }} />
-      <MilestoneField {...{ milestone, onMilestoneChange, onEditMilestone }} />
-    </StyledSidebar>
+    <div>
+      <StyledSidebar>
+        <AssigneeField {...{ assignees, onAssigneeChange, onEditAssignees }} />
+        <LabelField {...{ labels, onLabelChange, onEditLabels }} />
+        <MilestoneField
+          {...{ milestone, onMilestoneChange, onEditMilestone }}
+        />
+      </StyledSidebar>
+    </div>
   );
 }
 
 const StyledSidebar = styled.div`
   width: 288px;
-  max-height: 442px;
   border: ${({ theme: { border, neutral } }) =>
     `${border.default} ${neutral.border.default}`};
   border-radius: ${({ theme: { radius } }) => radius.l};

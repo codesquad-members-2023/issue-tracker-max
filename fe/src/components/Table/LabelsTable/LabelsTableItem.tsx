@@ -7,13 +7,16 @@ import { Label } from "@customTypes/index";
 import { deleteLabel } from "api";
 import { AxiosError } from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { TableBodyItem } from "../Table.style";
 
-export default function LabelsTableItem({ label }: { label: Label }) {
-  const navigate = useNavigate();
-
+export default function LabelsTableItem({
+  label,
+  updateLabelsList,
+}: {
+  label: Label;
+  updateLabelsList: () => void;
+}) {
   const [isEditing, setIsEditing] = useState(false);
 
   const openEditor = () => {
@@ -29,7 +32,7 @@ export default function LabelsTableItem({ label }: { label: Label }) {
       const res = await deleteLabel(label.labelId);
 
       if (res.status === 204) {
-        navigate(0);
+        updateLabelsList();
         return;
       }
 
@@ -45,7 +48,14 @@ export default function LabelsTableItem({ label }: { label: Label }) {
   return (
     <StyledTableBodyItemLabel>
       {isEditing ? (
-        <LabelEditor variant="edit" label={label} closeEditor={closeEditor} />
+        <LabelEditor
+          variant="edit"
+          {...{
+            label,
+            closeEditor,
+            updateLabelsList,
+          }}
+        />
       ) : (
         <>
           <LeftWrapper>

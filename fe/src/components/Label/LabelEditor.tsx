@@ -13,7 +13,6 @@ import { generateRandomHexColor, isValidHexColor } from "@utils/style";
 import { postLabel, putLabel } from "api";
 import { AxiosError } from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 const FontColor = {
@@ -42,13 +41,13 @@ export default function LabelEditor({
   variant,
   label,
   closeEditor,
+  updateLabelsList,
 }: {
   variant: "edit" | "add";
   label?: Label;
   closeEditor: () => void;
+  updateLabelsList: () => void;
 }) {
-  const navigate = useNavigate();
-
   const [newLabel, setNewLabel] = useState({
     newName: label ? label.name : "",
     newDescription: label ? (label.description ? label.description : "") : "",
@@ -120,7 +119,8 @@ export default function LabelEditor({
           : await putLabel(label!.labelId, newLabel);
 
       if (res.status === 200 || res.status === 201) {
-        navigate(0);
+        closeEditor();
+        updateLabelsList();
         return;
       }
 

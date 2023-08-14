@@ -17,5 +17,5 @@ export type EditLabelsBody = {
 };
 
 export type EditMilestoneBody = {
-  milestoneId: number | null;
+  milestoneId: number;
 };

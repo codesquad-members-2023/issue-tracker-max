@@ -4,15 +4,21 @@ import LabelsTableItem from "./LabelsTableItem";
 
 export default function LabelsTableBody({
   labelsList,
+  updateLabelsList,
 }: {
-  labelsList: Label[] | null;
+  labelsList: Label[];
+  updateLabelsList: () => void;
 }) {
   return (
     <TableBody>
-      {labelsList ? (
+      {labelsList.length ? (
         <ul>
           {labelsList.map((label) => (
-            <LabelsTableItem key={label.labelId} label={label} />
+            <LabelsTableItem
+              key={label.labelId}
+              label={label}
+              updateLabelsList={updateLabelsList}
+            />
           ))}
         </ul>
       ) : (

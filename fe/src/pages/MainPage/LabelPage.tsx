@@ -16,19 +16,19 @@ import { styled } from "styled-components";
 export default function LabelPage() {
   const navigate = useNavigate();
 
-  const { data: labelsList } = useFetch(getLabels);
+  const { data: labelsList, reFetch: updateLabelsList } = useFetch(getLabels);
   const { data: milestonesList } = useFetch(getMilestones);
   const [isLabelEditorOpen, setIsLabelEditorOpen] = useState(false);
 
   const tabBarLeftInfo = {
     name: "레이블",
-    count: labelsList ? labelsList.length : 0,
+    count: labelsList?.length,
     iconSrc: labelIcon,
     callback: () => navigate("/labels"),
   };
   const tabBarRightInfo = {
     name: "마일스톤",
-    count: milestonesList ? milestonesList.length : 0,
+    count: milestonesList?.length,
     iconSrc: milestoneIcon,
     callback: () => navigate("/milestones"),
   };
@@ -63,13 +63,24 @@ export default function LabelPage() {
 
       {isLabelEditorOpen && (
         <LabelEditorContainer>
-          <LabelEditor variant="add" closeEditor={closeLabelEditor} />
+          <LabelEditor
+            variant="add"
+            closeEditor={closeLabelEditor}
+            updateLabelsList={updateLabelsList}
+          />
         </LabelEditorContainer>
       )}
 
       <Table>
-        <LabelsTableHeader numLabels={labelsList ? labelsList.length : 0} />
-        <LabelsTableBody labelsList={labelsList} />
+        <LabelsTableHeader numLabels={labelsList?.length} />
+        {labelsList && (
+          <LabelsTableBody
+            {...{
+              labelsList,
+              updateLabelsList,
+            }}
+          />
+        )}
       </Table>
     </StyledLabelPage>
   );

@@ -12,16 +12,14 @@ import styled from "styled-components";
 export default function IssueCommentContainer({
   issueNumber,
   issueDetails,
-  updateIssueContent,
-  updateIssueCommentCount,
+  updateIssueDetails,
 }: {
   issueNumber: number;
-  issueDetails: IssueDetails | null;
-  updateIssueContent: (newContent: string) => void;
-  updateIssueCommentCount: () => void;
+  issueDetails: IssueDetails;
+  updateIssueDetails: () => void;
 }) {
   const [cursor, setCursor] = useState<number>(0);
-  const [allComments, setAllComments] = useState<IssueComment[]>([]); // TODO: comment 자료 구조 개선
+  const [allComments, setAllComments] = useState<IssueComment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
   const { userInfo } = useAuth();
 
@@ -53,11 +51,7 @@ export default function IssueCommentContainer({
 
   const isFilled = !!newComment;
 
-  const { author, createdAt, content } = issueDetails || {
-    author: { username: "", profileUrl: "" },
-    createdAt: new Date().toISOString(),
-    content: "",
-  };
+  const { author, createdAt, content } = issueDetails;
 
   const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const targetValue = e.target.value;
@@ -84,12 +78,11 @@ export default function IssueCommentContainer({
   };
 
   const onCommentAdd = (newComment: IssueComment) => {
-    updateIssueCommentCount();
     setAllComments((prev) => [...prev, newComment]);
+    updateIssueDetails();
   };
 
-  // TODO: comment 자료구조 개선 시 수정 필요
-  const updateCommentContent = (newContent: string, commentId?: number) => {
+  const onCommentEdit = (commentId: number, newContent: string) => {
     setAllComments((prev) => {
       return prev.map((comment) => {
         if (comment.commentId === commentId) {
@@ -109,7 +102,7 @@ export default function IssueCommentContainer({
       createdAt={comment.createdAt}
       content={comment.content}
       isIssueAuthor={comment.username === author.username}
-      updateContent={updateCommentContent}
+      onCommentEdit={onCommentEdit}
     />
   ));
 
@@ -122,7 +115,7 @@ export default function IssueCommentContainer({
           createdAt,
           content,
           isIssueAuthor: true,
-          updateContent: updateIssueContent,
+          onUpdateContent: updateIssueDetails,
         }}
       />
       {commentList}

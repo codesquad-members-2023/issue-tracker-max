@@ -134,7 +134,7 @@ export const issueDetails = {
   isOpen: true,
   createdAt: "2023-07-31 11:33:03",
   author: {
-    username: faker.internet.userName(),
+    username: "zoeyzoey",
     profileUrl: faker.image.avatar(),
   },
   content: `

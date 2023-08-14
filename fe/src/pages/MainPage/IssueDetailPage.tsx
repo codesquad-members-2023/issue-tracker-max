@@ -10,52 +10,30 @@ export default function IssueDetailPage() {
   const { issueId } = useParams();
   const issueNumber = parseInt(issueId!);
 
-  const { data: issueDetails, setData: setIssueDetails } =
+  const { data: issueDetails, reFetch: updateIssueDetails } =
     useFetch<IssueDetails>(
       useCallback(() => getIssueDetails(issueNumber), [issueNumber])
     );
 
-  const updateIssueTitle = (newTitle: string) => {
-    setIssueDetails((prev) => {
-      return prev ? { ...prev, title: newTitle } : prev;
-    });
-  };
-
-  const updateIssueIsOpen = () => {
-    setIssueDetails((prev) => {
-      return prev ? { ...prev, isOpen: !prev.isOpen } : prev;
-    });
-  };
-
-  const updateIssueContent = (newContent: string) => {
-    setIssueDetails((prev) => {
-      return prev ? { ...prev, content: newContent } : prev;
-    });
-  };
-
-  const updateIssueCommentCount = () => {
-    setIssueDetails((prev) => {
-      return prev ? { ...prev, commentCount: prev.commentCount + 1 } : prev;
-    });
-  };
-
   return (
     <>
-      <IssueDetailHeader
-        {...{
-          issueDetails,
-          updateIssueTitle,
-          updateIssueIsOpen,
-        }}
-      />
-      <IssueDetailBody
-        {...{
-          issueNumber,
-          issueDetails,
-          updateIssueContent,
-          updateIssueCommentCount,
-        }}
-      />
+      {issueDetails && (
+        <>
+          <IssueDetailHeader
+            {...{
+              issueDetails,
+              updateIssueDetails,
+            }}
+          />
+          <IssueDetailBody
+            {...{
+              issueNumber,
+              issueDetails,
+              updateIssueDetails,
+            }}
+          />
+        </>
+      )}
     </>
   );
 }

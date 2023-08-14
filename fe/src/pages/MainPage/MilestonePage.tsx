@@ -15,28 +15,13 @@ export default function MilestonePage() {
   const navigate = useNavigate();
 
   const { data: labelsList } = useFetch(getLabels);
-  const { data: openMilestone } = useFetch(getMilestones);
-  const { data: closedMilestone } = useFetch(
+  const { data: openMilestone, reFetch: updateOpenMilestone } =
+    useFetch(getMilestones);
+  const { data: closedMilestone, reFetch: updateCloseMilestone } = useFetch(
     useCallback(() => getMilestones("closed"), [])
   );
 
   const [isAddNewMilestone, setIsAddNewMilestone] = useState(false);
-
-  const openMilestoneCount = openMilestone?.length || 0;
-  const closedMilestoneCount = closedMilestone?.length || 0;
-
-  const tabBarLeftInfo = {
-    name: "레이블",
-    count: labelsList ? labelsList.length : 0,
-    iconSrc: labelIcon,
-    callback: () => navigate("/labels"),
-  };
-  const tabBarRightInfo = {
-    name: "마일스톤",
-    count: openMilestoneCount + closedMilestoneCount,
-    iconSrc: milestoneIcon,
-    callback: () => navigate("/milestones"),
-  };
 
   const openAddNewMilestone = () => {
     setIsAddNewMilestone(true);
@@ -45,18 +30,30 @@ export default function MilestonePage() {
   return (
     <StyledLabelPage>
       <LabelNav>
-        <TabBar
-          currentTabName="마일스톤"
-          left={tabBarLeftInfo}
-          right={tabBarRightInfo}
-          borderStyle="outline"
-        />
+        {labelsList && openMilestone && closedMilestone && (
+          <TabBar
+            currentTabName="마일스톤"
+            left={{
+              name: "레이블",
+              count: labelsList.length,
+              iconSrc: labelIcon,
+              callback: () => navigate("/labels"),
+            }}
+            right={{
+              name: "마일스톤",
+              count: openMilestone.length + closedMilestone.length,
+              iconSrc: milestoneIcon,
+              callback: () => navigate("/milestones"),
+            }}
+            borderStyle="outline"
+          />
+        )}
         <Button
           variant="container"
           size="S"
           disabled={isAddNewMilestone === true}
           onClick={openAddNewMilestone}>
-          <img src={plusIcon} alt="편집 취소" />
+          <img src={plusIcon} alt="마일스톤 추가 아이콘" />
           <span>마일스톤 추가</span>
         </Button>
       </LabelNav>
@@ -66,10 +63,20 @@ export default function MilestonePage() {
           <MilestoneEditor
             variant="add"
             closeEditor={() => setIsAddNewMilestone(false)}
+            updateOpenMilestone={updateOpenMilestone}
           />
         </MilestoneEditorContainer>
       )}
-      <MilestonesTable {...{ openMilestone, closedMilestone }} />
+      {openMilestone && closedMilestone && (
+        <MilestonesTable
+          {...{
+            openMilestone,
+            closedMilestone,
+            updateOpenMilestone,
+            updateCloseMilestone,
+          }}
+        />
+      )}
     </StyledLabelPage>
   );
 }

@@ -8,10 +8,13 @@ export default function ProgressBar({
 }: {
   variant?: "label" | "percent";
   name: string;
-  openCount: number;
-  closeCount: number;
+  openCount?: number;
+  closeCount?: number;
 }) {
-  const percentage = Math.round((closeCount / (openCount + closeCount)) * 100);
+  const percentage =
+    closeCount &&
+    openCount &&
+    Math.round((closeCount / (openCount + closeCount)) * 100);
 
   return (
     <Wrapper>

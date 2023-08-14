@@ -10,15 +10,13 @@ import IssueCommentContainer from "./IssueCommentContainer";
 export default function IssueDetailBody({
   issueNumber,
   issueDetails,
-  updateIssueContent,
-  updateIssueCommentCount,
+  updateIssueDetails,
 }: {
   issueNumber: number;
-  issueDetails: IssueDetails | null;
-  updateIssueContent: (newContent: string) => void;
-  updateIssueCommentCount: () => void;
+  issueDetails: IssueDetails;
+  updateIssueDetails: () => void;
 }) {
-  const { data: issueSidebar, setData: updateIssueSidebar } =
+  const { data: issueSidebar, reFetch: updateIssueSidebar } =
     useFetch<IssueSidebar>(
       useCallback(() => getIssueSidebar(issueNumber), [issueNumber])
     );
@@ -30,7 +28,7 @@ export default function IssueDetailBody({
   }>({
     assigneeIds: new Set<number>(issueSidebar?.assigneeIds),
     labelIds: new Set<number>(issueSidebar?.labelIds),
-    milestoneId: issueSidebar?.milestoneId || 0,
+    milestoneId: issueSidebar?.milestoneId || -1,
   });
 
   const prevIssueSidebar = useRef(newIssueSidebar);
@@ -50,24 +48,6 @@ export default function IssueDetailBody({
       });
     }
   }, [issueSidebar]);
-
-  const updateIssueAssignee = (assigneeIds: number[]) => {
-    updateIssueSidebar((prev) => {
-      return prev ? { ...prev, assigneeIds } : prev;
-    });
-  };
-
-  const updateIssueLabels = (labelIds: number[]) => {
-    updateIssueSidebar((prev) => {
-      return prev ? { ...prev, labelIds } : prev;
-    });
-  };
-
-  const updateIssueMilestone = (milestoneId: number) => {
-    updateIssueSidebar((prev) => {
-      return prev ? { ...prev, milestoneId } : prev;
-    });
-  };
 
   const onAssigneeChange = (assigneeIds: Set<number>) => {
     setNewIssueSidebar((prev) => ({ ...prev, assigneeIds }));
@@ -96,7 +76,7 @@ export default function IssueDetailBody({
         removeUserAccountId: removedElements,
       });
 
-      status === 200 && updateIssueAssignee([...newIssueSidebar.assigneeIds]);
+      status === 200 && updateIssueSidebar();
     } catch (e) {
       // TODO: error handling
       console.log(e);
@@ -118,7 +98,7 @@ export default function IssueDetailBody({
         removeLabelsId: removedElements,
       });
 
-      status === 200 && updateIssueLabels([...newIssueSidebar.labelIds]);
+      status === 200 && updateIssueSidebar();
     } catch (e) {
       // TODO: error handling
       console.log(e);
@@ -137,7 +117,7 @@ export default function IssueDetailBody({
         milestoneId: newIssueSidebar.milestoneId,
       });
 
-      status === 200 && updateIssueMilestone(newIssueSidebar.milestoneId);
+      status === 200 && updateIssueSidebar();
     } catch (e) {
       // TODO: error handling
       console.log(e);
@@ -150,8 +130,7 @@ export default function IssueDetailBody({
         {...{
           issueNumber,
           issueDetails,
-          updateIssueContent,
-          updateIssueCommentCount,
+          updateIssueDetails,
         }}
       />
       <Sidebar
@@ -175,7 +154,7 @@ const StyledIssueDetailBody = styled.div`
   width: 100%;
   padding-top: 24px;
   display: flex;
-  // justify-content: center;
+  justify-content: center;
   gap: 32px;
   border-top: ${({ theme: { border, neutral } }) =>
     `${border.default} ${neutral.border.default}`};

@@ -12,17 +12,18 @@ import ProgressBar from "@components/common/ProgressBar";
 import { Milestone } from "@customTypes/index";
 import { deleteMilestone, putMilestoneState } from "api";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { TableBodyItem } from "../Table.style";
 
 export default function MilestonesTableItem({
   milestone,
+  updateOpenMilestone,
+  updateCloseMilestone,
 }: {
   milestone: Milestone;
+  updateOpenMilestone: () => void;
+  updateCloseMilestone: () => void;
 }) {
-  const navigate = useNavigate();
-
   const [isEditing, setIsEditing] = useState(false);
 
   const openEditor = () => setIsEditing(true);
@@ -43,7 +44,8 @@ export default function MilestonesTableItem({
     try {
       const res = await deleteMilestone(milestoneId);
       if (res.status === 204) {
-        navigate(0);
+        updateOpenMilestone();
+        updateCloseMilestone();
         return;
       }
     } catch (error) {
@@ -56,7 +58,8 @@ export default function MilestonesTableItem({
     try {
       const res = await putMilestoneState(milestoneId, "closed");
       if (res.status === 200) {
-        navigate(0);
+        updateOpenMilestone();
+        updateCloseMilestone();
         return;
       }
     } catch (error) {
@@ -69,7 +72,8 @@ export default function MilestonesTableItem({
     try {
       const res = await putMilestoneState(milestoneId, "open");
       if (res.status === 200) {
-        navigate(0);
+        updateCloseMilestone();
+        updateOpenMilestone();
         return;
       }
     } catch (error) {
@@ -89,9 +93,7 @@ export default function MilestonesTableItem({
       {isEditing ? (
         <MilestoneEditor
           variant="edit"
-          milestoneId={milestoneId}
-          closeEditor={closeEditor}
-          milestoneInfo={milestoneInfo}
+          {...{ milestoneId, closeEditor, milestoneInfo, updateOpenMilestone }}
         />
       ) : (
         <>
@@ -136,8 +138,8 @@ export default function MilestonesTableItem({
             <ProgressBar
               variant="percent"
               name={milestoneName}
-              openCount={Number(openIssueCount)}
-              closeCount={Number(closedIssueCount)}
+              openCount={openIssueCount}
+              closeCount={closedIssueCount}
             />
           </RightWrapper>
         </>

@@ -5,7 +5,6 @@ import TextInput from "@components/common/TextInput";
 import { validateDate } from "@utils/time";
 import { postMilestone, putMilestoneContent } from "api";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export type MilestoneInfo = {
@@ -19,14 +18,14 @@ export default function MilestoneEditor({
   milestoneId,
   milestoneInfo,
   closeEditor,
+  updateOpenMilestone,
 }: {
   variant: "add" | "edit";
   milestoneId?: number;
-  milestoneInfo?: MilestoneInfo | null;
+  milestoneInfo?: MilestoneInfo;
   closeEditor: () => void;
+  updateOpenMilestone: () => void;
 }) {
-  const navigate = useNavigate();
-
   // TODO: dueDate useInput validate 개선 후 적용
   const [newMilestone, setNewMilestone] = useState({
     milestoneName: milestoneInfo?.milestoneName || "",
@@ -81,8 +80,8 @@ export default function MilestoneEditor({
         : await postMilestone(body);
 
       if (res.status === 201 || res.status === 200) {
-        // TODO: 마일스톤 상태 관리 필요
-        navigate(0);
+        closeEditor();
+        updateOpenMilestone();
       }
     } catch (error) {
       // TODO: error handling
@@ -137,7 +136,7 @@ export default function MilestoneEditor({
             size="S"
             disabled={!isReadyToSubmit[variant]}>
             <img src={plusIcon} alt="완료" />
-            <span>완료</span>
+            <span>{variant === "edit" ? "편집 완료" : "완료"}</span>
           </Button>
         </ButtonsWrapper>
       </EditForm>
