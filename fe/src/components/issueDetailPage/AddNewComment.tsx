@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react';
 import { Button } from '@components/common/Button';
-import { Comment } from '@components/common/comment/Commentt';
+import { Comment } from '@components/common/comment/Comment';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 
 type Props = {

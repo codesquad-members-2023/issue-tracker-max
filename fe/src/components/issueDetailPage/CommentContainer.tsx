@@ -1,4 +1,4 @@
-// import { Comment } from '@components/common/comment/Commentt';
+// import { Comment } from '@components/common/comment/Comment';
 import { AddNewComment } from './AddNewComment';
 
 type AuthorType = {

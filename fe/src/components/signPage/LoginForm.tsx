@@ -24,7 +24,7 @@ export const LoginForm: React.FC = () => {
           inputType="text"
           placeholder="아이디"
           isError={true}
-          captionString="아이디는 6자 이상 16자 이하로 입력해주세요."
+          caption="아이디는 6자 이상 16자 이하로 입력해주세요."
           onChange={() => console.log('id입력')}
         />
         <TextInput
@@ -34,7 +34,7 @@ export const LoginForm: React.FC = () => {
           inputType="password"
           placeholder="비밀번호"
           isError={false}
-          captionString="비밀번호는 6자 이상 12자 이하로 입력해주세요."
+          caption="비밀번호는 6자 이상 12자 이하로 입력해주세요."
           onChange={() => console.log('pw입력')}
         />
         <div
