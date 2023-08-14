@@ -7,12 +7,13 @@ import { IssueDetailPage } from '@pages/IssueDetailPage';
 import { AddIssuePage } from '@pages/AddIssuePage';
 import { LabelListPage } from '@pages/LabelListPage';
 
-
 import { NotFoundPage } from '@pages/NotFoundPage';
 import {
   ADD_ISSUE_PAGE,
   ISSUE_DETAIL_PAGE,
   LABEL_LIST_PAGE,
+  REGISTER_PAGE,
+  SIGN_PAGE,
 } from 'constants/PATH';
 
 type Props = {
@@ -23,8 +24,8 @@ type Props = {
 export const AppRoutes: React.FC<Props> = ({ currentTheme, toggleTheme }) => {
   return (
     <Routes>
-      <Route path="/sign" element={<SignPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+      <Route path={`/${SIGN_PAGE}`} element={<SignPage />} />
+      <Route path={`/${REGISTER_PAGE}`} element={<RegisterPage />} />
       <Route path="/" element={<Header {...{ currentTheme, toggleTheme }} />}>
         <Route index element={<IssueListPage />} />
         <Route path={ADD_ISSUE_PAGE} element={<AddIssuePage />} />
