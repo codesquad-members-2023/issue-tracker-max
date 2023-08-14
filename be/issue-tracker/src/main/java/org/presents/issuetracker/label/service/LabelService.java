@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.presents.issuetracker.global.dto.response.LabelIdResponse;
+import org.presents.issuetracker.global.dto.response.IdResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
 import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
@@ -48,7 +48,7 @@ public class LabelService {
 				.collect(Collectors.toCollection(LinkedList::new));
 	}
 
-	public LabelIdResponse create(LabelCreateRequest labelCreateRequest) {
+	public IdResponse create(LabelCreateRequest labelCreateRequest) {
 		Long createdId = labelRepository.save(
 			Label.of(
 				labelCreateRequest.getName(),
@@ -56,10 +56,10 @@ public class LabelService {
 				labelCreateRequest.getBackgroundColor(),
 				labelCreateRequest.getTextColor()));
 
-		return LabelIdResponse.from(createdId);
+		return IdResponse.from(createdId);
 	}
 
-	public LabelIdResponse update(LabelUpdateRequest labelUpdateRequest) {
+	public IdResponse update(LabelUpdateRequest labelUpdateRequest) {
 		Long id = labelUpdateRequest.getId();
 		Label label = labelRepository.findById(id);
 
@@ -82,7 +82,7 @@ public class LabelService {
 		Label updatedLabel = Label.of(label.getId(), name, description, backgroundColor, textColor);
 		labelRepository.update(updatedLabel);
 
-		return LabelIdResponse.from(updatedLabel.getId());
+		return IdResponse.from(updatedLabel.getId());
 	}
 
 	public void delete(Long id) {
