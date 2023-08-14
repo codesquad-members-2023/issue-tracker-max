@@ -33,6 +33,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈의 상세 내용을 조회한다.")
 	@Test
 	void getIssueDetail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int id = 1;
 		Long userId = 1L;
@@ -49,6 +52,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈의 상세 내용 조회에 실패한다.")
 	@Test
 	void getIssueDetail_Fail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+		
 		// given
 		int id = 1;
 		Long userId = 1L;
@@ -64,6 +70,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈를 등록한다.")
 	@Test
 	void create() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Controller", "내용", 1L, 1L);
 
