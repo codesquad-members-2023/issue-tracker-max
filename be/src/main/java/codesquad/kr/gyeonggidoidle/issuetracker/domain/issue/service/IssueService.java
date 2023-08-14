@@ -48,7 +48,7 @@ public class IssueService {
         Map<Long, List<LabelVO>> labelVOs = labelRepository.findAllByIssueIds(issueIds);
         Map<Long, List<String>> assigneeProfiles = memberRepository.findAllProfilesByIssueIds(issueIds);
 
-        return FilterInformation.from(statVO, issueVOs, labelVOs, assigneeProfiles);
+        return FilterInformation.from(statVO, issueVOs, labelVOs, assigneeProfiles, "is:open");
     }
 
     public FilterInformation readClosedIssues() {
@@ -58,7 +58,7 @@ public class IssueService {
         Map<Long, List<LabelVO>> labelVOs = labelRepository.findAllByIssueIds(issueIds);
         Map<Long, List<String>> assigneeProfiles = memberRepository.findAllProfilesByIssueIds(issueIds);
 
-        return FilterInformation.from(statVO, issueVOs, labelVOs, assigneeProfiles);
+        return FilterInformation.from(statVO, issueVOs, labelVOs, assigneeProfiles, "is:closed");
     }
 
     public FilterInformation readFilteredIssues(String filterCondition) {
@@ -69,7 +69,7 @@ public class IssueService {
         Map<Long, List<LabelVO>> labelVOs = labelRepository.findAllByIssueIds(issueIds);
         Map<Long, List<String>> assigneeProfiles = memberRepository.findAllProfilesByIssueIds(issueIds);
 
-        return FilterInformation.from(statVO, issueVOs, labelVOs, assigneeProfiles);
+        return FilterInformation.from(statVO, issueVOs, labelVOs, assigneeProfiles, filterCondition);
     }
 
     public void updateIssuesStatus(IssueStatusCondition condition) {

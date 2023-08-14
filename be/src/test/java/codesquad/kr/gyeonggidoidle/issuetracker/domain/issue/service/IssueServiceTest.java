@@ -62,6 +62,7 @@ class IssueServiceTest {
         assertSoftly(assertions -> {
             assertions.assertThat(actual.getOpenIssueCount()).isEqualTo(3);
             assertions.assertThat(actual.getLabelCount()).isEqualTo(4);
+            assertions.assertThat((actual.getFilter())).isEqualTo("is:open");
             assertions.assertThat(actual.getIssueInformations()).hasSize(5);
             assertions.assertThat(actual.getIssueInformations().get(3).getAuthor())
                     .isEqualTo("작성자 1");
@@ -90,6 +91,7 @@ class IssueServiceTest {
         assertSoftly(assertions -> {
             assertions.assertThat(actual.getClosedIssueCount()).isEqualTo(3);
             assertions.assertThat(actual.getMilestoneCount()).isEqualTo(2);
+            assertions.assertThat((actual.getFilter())).isEqualTo("is:closed");
             assertions.assertThat(actual.getIssueInformations()).hasSize(5);
             assertions.assertThat(actual.getIssueInformations().get(0).getMilestone())
                     .isEqualTo("마일스톤 1");

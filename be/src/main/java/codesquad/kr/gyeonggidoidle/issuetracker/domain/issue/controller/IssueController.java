@@ -31,7 +31,7 @@ public class IssueController {
     @GetMapping("/api/issues/filtered")
     public FilterResponse readFiltedIssues(@RequestParam(name = "q", required = false) String encodedQuery) {
         if (encodedQuery == null || encodedQuery.isEmpty()) {
-            return FilterResponse.from(issueService.readFilteredIssues("is=open"));
+            return FilterResponse.from(issueService.readFilteredIssues("is:open"));
         }
         String filterCondition = UriUtils.decode(encodedQuery, "UTF-8");
         return FilterResponse.from(issueService.readFilteredIssues(filterCondition));
