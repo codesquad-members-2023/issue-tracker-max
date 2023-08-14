@@ -1,5 +1,7 @@
 package codesquad.issueTracker.issue.service;
 
+import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
+import codesquad.issueTracker.label.dto.LabelResponseDto;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,5 +67,12 @@ public class IssueService {
 				throw new CustomException(ErrorCode.DUPLICATE_OBJECT_FOUND);
 			}
 		}
+	}
+
+	public List<IssueLabelResponseDto> getIssueLabels() {
+		LabelResponseDto allLabels = labelService.findAll();
+		return allLabels.getLabels().stream()
+				.map(IssueLabelResponseDto::from)
+				.collect(Collectors.toList());
 	}
 }
