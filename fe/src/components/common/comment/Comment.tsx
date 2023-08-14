@@ -12,6 +12,7 @@ import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { uploadFile } from 'apis/fileUpload';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
+import { editComment, patchIssueContents, postNewComment } from 'apis/api';
 // todo issueDetailPage에 들어가면 줄바꿈해서 작성한게 그대로 보여야하는데
 // 한줄로 보이는중
 type DefaultFileStatusType = {
@@ -46,6 +47,7 @@ export const Comment: React.FC<Props> = ({
 }) => {
   const theme = useTheme() as any;
 
+  //코멘트랑 textArea비슷한거 어케줄일지 생각하기..
   const [textAreaValue, setTextAreaValue] = useState<string>(defaultValue);
   const [placeholderValue, setPlaceholderValue] =
     useState<string>(defaultValue); //편집 취소시 돌아갈 값
@@ -126,27 +128,25 @@ export const Comment: React.FC<Props> = ({
   };
 
   const onAddSubmit = async () => {
-    // postNewComment(issueId, issueAuthor.userId, textAreaValue);
-
     try {
-      // const responseData = await postNewComment(
-      //   issueId,
-      //   issueAuthor.userId,
-      //   textAreaValue,
-      // );
-      // const newComment = responseData.data;
-      // console.log(newComment);
+      const responseData = await postNewComment(
+        issueId,
+        issueAuthor.userId,
+        textAreaValue,
+      );
+      const newComment = responseData.data;
+      console.log(newComment);
 
-      const newComment = {
-        id: issueId,
-        author: {
-          userId: issueAuthor.userId,
-          loginId: 'bono1234',
-          image: '이미지 url',
-        },
-        contents: textAreaValue,
-        createdAt: '2023-07-27T00:00:00',
-      };
+      // const newComment = {
+      //   id: issueId,
+      //   author: {
+      //     userId: issueAuthor.userId,
+      //     loginId: 'bono1234',
+      //     image: '이미지 url',
+      //   },
+      //   contents: textAreaValue,
+      //   createdAt: '2023-07-27T00:00:00',
+      // };
       if (onAddComment) {
         onAddComment(newComment);
         setTextAreaValue('');
@@ -157,38 +157,17 @@ export const Comment: React.FC<Props> = ({
     }
   };
 
-  // todo api에서 가져와서 바꾸기
   const onEditSubmit = async () => {
-    const path = typeVariant === 'issue' ? `issues/contents` : `comments`;
-    const method = typeVariant === 'issue' ? 'PATCH' : 'PUT';
-
-    const body = {
-      id: issueId,
-      contents: textAreaValue,
-    };
-
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_APP_BASE_URL}/${path}`,
-        {
-          method: method,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body),
-        },
-      );
+      typeVariant === 'issue'
+        ? patchIssueContents(issueId, textAreaValue)
+        : editComment(issueId, textAreaValue);
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const responseData = await response.json();
-      console.log('responseData', responseData);
-
-      setTextAreaValue(body.contents);
-      setPlaceholderValue(body.contents);
+      // 받아오는 응답: id만
+      setTextAreaValue(textAreaValue);
+      setPlaceholderValue(textAreaValue);
       setIsEditing(false);
+      console.log('에러를');
     } catch (error) {
       console.error('이슈 편집 에러:', error);
       // 에러처리
