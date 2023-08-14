@@ -1,15 +1,10 @@
 import { useState } from 'react';
 import { styled } from 'styled-components';
 
-type TextInputProps = React.HTMLAttributes<HTMLInputElement> & {
-  size: 'tall' | 'short';
+type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   id?: string;
-  name: string;
-  value: string;
+  sizeType: 'tall' | 'short';
   labelName?: string;
-  type?: string;
-  disabled?: boolean;
-  placeholder?: string;
   helpText?: string;
   hasError?: boolean;
 };
@@ -20,9 +15,8 @@ export default function TextInput(props: TextInputProps) {
   const {
     id,
     name,
-    size,
+    sizeType,
     type,
-    value,
     labelName,
     disabled,
     placeholder,
@@ -41,8 +35,8 @@ export default function TextInput(props: TextInputProps) {
   };
 
   return (
-    <InputContainer $size={size} $disabled={disabled} $hasError={hasError}>
-      {labelName && isFocused && <Label $size={size}>{labelName}</Label>}
+    <InputContainer $size={sizeType} $disabled={disabled} $hasError={hasError}>
+      {labelName && isFocused && <Label $size={sizeType}>{labelName}</Label>}
       <StyledTextInput
         type={type ? type : 'text'}
         id={id}

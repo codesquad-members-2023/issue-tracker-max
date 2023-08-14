@@ -5,24 +5,21 @@ import React from 'react';
 
 type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   labelName?: string;
-  placeholder?: string;
-  disabled?: boolean;
 };
 
 export default function TextArea(props: TextAreaProps) {
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [textValue, setTextValue] = useState<string>('');
-  const [isTyping, setIsTyping] = useState<boolean>(false);
-  const { labelName, placeholder, disabled } = props;
+  // const [isTyping, setIsTyping] = useState<boolean>(false);
+  const { value, labelName, placeholder, disabled, ...rest } = props;
 
-  useEffect(() => {
-    if (isFocused && !isTyping) {
-      setIsTyping(true);
-      setTimeout(() => {
-        setIsTyping(false);
-      }, 2000);
-    }
-  }, [textValue]);
+  // useEffect(() => {
+  //   if (isFocused && !isTyping) {
+  //     setIsTyping(true);
+  //     setTimeout(() => {
+  //       setIsTyping(false);
+  //     }, 2000);
+  //   }
+  // }, [value]);
 
   const handleBlur = () => {
     setIsFocused(false);
@@ -32,27 +29,21 @@ export default function TextArea(props: TextAreaProps) {
     setIsFocused(true);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextValue(e.target.value);
-  };
-
   return (
     <Wrapper $isFocused={isFocused} onFocus={handleFocus} onBlur={handleBlur}>
       <Section>
-        {(isFocused || textValue) && <Label>{labelName}</Label>}
+        {labelName && isFocused && <Label>{labelName}</Label>}
         <StyledTextArea
+          value={value}
           placeholder={placeholder}
-          value={textValue}
           disabled={disabled}
           spellCheck="false"
           $isFocused={isFocused}
-          onChange={handleChange}></StyledTextArea>
+          {...rest}></StyledTextArea>
       </Section>
       <Bottom>
-        {isTyping && (
-          <TextCounter>띄어쓰기 포함 {textValue.length}자</TextCounter>
-        )}
-        <ButtonSmall type="submit" ghost flexible iconName="paperClip">
+        {/* {isTyping && <TextCounter>띄어쓰기 포함 {value.length}자</TextCounter>} */}
+        <ButtonSmall type="button" ghost flexible iconName="paperClip">
           파일 첨부하기
         </ButtonSmall>
       </Bottom>
@@ -115,9 +106,9 @@ const Bottom = styled.div`
   ${({ theme }) => theme.color.neutral.border.default};
 `;
 
-const TextCounter = styled.span`
-  ${({ theme }) => theme.font.display.medium[12]};
-  position: absolute;
-  top: -32px;
-  right: 30px;
-`;
+// const TextCounter = styled.span`
+//   ${({ theme }) => theme.font.display.medium[12]};
+//   position: absolute;
+//   top: -32px;
+//   right: 30px;
+// `;

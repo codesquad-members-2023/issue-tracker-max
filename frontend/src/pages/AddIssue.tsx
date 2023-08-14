@@ -1,6 +1,6 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { styled } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppContext } from '../main';
 import ContextLogo from '../types/ContextLogo';
 import Layout from '../components/Layout';
@@ -13,8 +13,35 @@ import TextInput from '../components/common/TextInput';
 import TextArea from '../components/common/TextArea';
 import defaultUserImg from '../asset/images/defaultUserImg.png';
 
+type IssueInfo = {
+  title: string;
+  content: string;
+  assignees?: string[];
+  labels?: string[];
+  milestone?: string;
+};
+
 export default function AddIssue() {
   const { util } = useContext(AppContext);
+  const [issueInfo, setIssueInfo] = useState<IssueInfo>({
+    title: '',
+    content: '',
+  });
+  const navigate = useNavigate();
+
+  const isFilled = !!issueInfo.title;
+
+  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setIssueInfo((prev) => ({ ...prev, title: value }));
+    console.log(issueInfo);
+  };
+
+  const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setIssueInfo((prev) => ({ ...prev, content: value }));
+    console.log(issueInfo);
+  };
 
   return (
     <Layout>
@@ -35,22 +62,33 @@ export default function AddIssue() {
           <UserImg src={defaultUserImg} alt="" />
           <InputArea>
             <TextInput
-              size="tall"
+              sizeType="tall"
               name="issueTitle"
-              value=""
-              placeholder="제목"></TextInput>
+              value={issueInfo.title}
+              placeholder="제목"
+              onChange={onTitleChange}></TextInput>
             <TextArea
               name="issueContent"
-              value=""
-              placeholder="코멘트를 입력하세요"></TextArea>
+              value={issueInfo.content}
+              placeholder="코멘트를 입력하세요"
+              onChange={onContentChange}></TextArea>
           </InputArea>
           <SideBar></SideBar>
         </Container>
         <ButtonArea>
-          <Button type="button" ghost flexible iconName="xSquare">
+          <Button
+            type="button"
+            ghost
+            flexible
+            iconName="xSquare"
+            onClick={() => {
+              navigate('/issues');
+            }}>
             작성 취소
           </Button>
-          <ButtonLarge type="submit">완료</ButtonLarge>
+          <ButtonLarge type="submit" disabled={isFilled ? false : true}>
+            완료
+          </ButtonLarge>
         </ButtonArea>
       </Body>
     </Layout>
@@ -74,7 +112,7 @@ const Title = styled.p`
   ${({ theme }) => theme.font.display.bold[32]};
 `;
 
-const Container = styled.div`
+const Container = styled.form`
   padding-bottom: 24px;
   display: flex;
   align-items: flex-start;
