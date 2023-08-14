@@ -66,7 +66,9 @@ export const IssueDetailPage: React.FC = ({}) => {
       (assignee) => assignee.userId,
     );
     const initialLabels = issueDetailPageData.labels.map((label) => label.id);
-    const initialMilestone = issueDetailPageData.milestone.id;
+    const initialMilestone = issueDetailPageData.milestone
+      ? issueDetailPageData.milestone.id
+      : null;
 
     setSelectionsOptions({
       assignees: issueDetailPageData.assignees,
