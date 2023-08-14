@@ -24,7 +24,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
 	@DisplayName("로그인 아이디를 통해 멤버를 찾을 수 있다.")
 	@Test
-	void findByMemberEmail() {
+	void findByLoginId() {
 		// given
 		Member member = Member.builder()
 			.loginId("June")

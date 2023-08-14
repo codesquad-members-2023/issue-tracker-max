@@ -27,7 +27,7 @@ public class JwtAuthorizationFilter implements Filter {
 	private static final String TOKEN_PREFIX = "Bearer ";
 	private static final String HEADER_AUTHORIZATION = "Authorization";
 	private static final String MEMBER_ID = "memberId";
-	private static final String[] whiteListUris = {"/h2-console/**", "/api/signin", "/api/signup",
+	private static final String[] whiteListUris = {"/h2-console/**", "/api/signin", "/api/signup/**",
 		"/api/reissue-access-token", "/api/oauth/**", "/api/redirect/**"};
 
 	private final JwtProvider jwtProvider;
@@ -82,19 +82,19 @@ public class JwtAuthorizationFilter implements Filter {
 		return authorization.substring(7).replace("\"", "");
 	}
 
-	private void sendErrorApiResponse(ServletResponse response, RuntimeException e) throws IOException {
+	private void sendErrorApiResponse(ServletResponse response, RuntimeException ex) throws IOException {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		((HttpServletResponse)response).setStatus(HttpStatus.UNAUTHORIZED.value());
 
 		response.getWriter().write(
 			objectMapper.writeValueAsString(
-				generateErrorApiResponse(e))
+				generateErrorApiResponse(ex))
 		);
 	}
 
-	private ErrorResponse generateErrorApiResponse(RuntimeException e) {
-		JwtException jwtException = JwtException.from(e);
+	private ErrorResponse generateErrorApiResponse(RuntimeException ex) {
+		JwtException jwtException = JwtException.from(ex);
 		return new ErrorResponse(jwtException.getHttpStatus().value(), jwtException.getMessage());
 	}
 }
