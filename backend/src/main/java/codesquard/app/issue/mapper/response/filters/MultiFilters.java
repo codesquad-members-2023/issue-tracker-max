@@ -1,11 +1,9 @@
 package codesquard.app.issue.mapper.response.filters;
 
-import java.util.List;
-
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersAssignees;
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersAuthors;
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersLabels;
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersMilestones;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterAssignees;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterAuthors;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterLabels;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterMilestones;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
@@ -13,39 +11,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MultiFilters {
 
-	private List<MultiFiltersAssignees> assignees;
+	private MultiFilterAssignees assignees;
 
-	private List<MultiFiltersLabels> labels;
+	private MultiFilterLabels labels;
 
-	private List<MultiFiltersMilestones> milestones;
+	private MultiFilterMilestones milestones;
 
-	private List<MultiFiltersAuthors> authors;
+	private MultiFilterAuthors authors;
 
-	public void addNoneOptionToAssignee(boolean selected) {
-		assignees.add(new MultiFiltersAssignees(0L, "담당자가 없는 이슈", null, selected));
-	}
-
-	public void addNoneOptionToLabels(boolean selected) {
-		labels.add(new MultiFiltersLabels(0L, "라벨이 없는 이슈", null, null, selected));
-	}
-
-	public void addNoneOptionToMilestones(boolean selected) {
-		milestones.add(new MultiFiltersMilestones(0L, "마일스톤이 없는 이슈", selected));
-	}
-
-	public List<MultiFiltersAssignees> getAssignees() {
+	public MultiFilterAssignees getAssignees() {
 		return assignees;
 	}
 
-	public List<MultiFiltersLabels> getLabels() {
+	public MultiFilterLabels getLabels() {
 		return labels;
 	}
 
-	public List<MultiFiltersMilestones> getMilestones() {
+	public MultiFilterMilestones getMilestones() {
 		return milestones;
 	}
 
-	public List<MultiFiltersAuthors> getAuthors() {
+	public MultiFilterAuthors getAuthors() {
 		return authors;
 	}
 

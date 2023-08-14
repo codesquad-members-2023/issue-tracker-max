@@ -43,7 +43,7 @@
         <where>
             issue.`is_deleted` = 0
             <choose>
-                <when test="is == null and milestone == null and author == null and assignee == null and label == null">
+                <when test="is == null and milestone == null and author == null and assignee == null and label == null and mentions == null">
                     AND issue.`status` = "OPENED"
                 </when>
                 <otherwise>
@@ -106,9 +106,18 @@
                             </otherwise>
                         </choose>
                     </if>
+                    <if test="mentions != null">
+                        AND issue.`id` IN (
+                        SELECT DISTINCT(comment.`issue_id`)
+                        FROM comment AS comment
+                        LEFT OUTER JOIN user AS u
+                        ON u.`id` = comment.`user_id`
+                        WHERE u.`login_id` = #{mentions})
+                    </if>
                 </otherwise>
             </choose>
         </where>
+        ORDER BY issue.`created_at` DESC
     </select>
 
     <resultMap id="issueAssigneeResponse" type="codesquard.app.issue.mapper.response.IssueAssigneeResponse">
@@ -142,7 +151,7 @@
     </select>
 
     <select id="getMultiFiltersAssignees" parameterType="java.util.Map"
-            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersAssignees">
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFilterAssignee">
         SELECT id, login_id AS name, avatar_url AS avatarUrl
         <if test="check = true and request.assignee != null and request.assignee != 'none'">
             , (SELECT IF(login_id = #{request.assignee}, true, false)) AS `selected`
@@ -154,7 +163,7 @@
     </select>
 
     <select id="getMultiFiltersAuthors" parameterType="java.util.Map"
-            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersAuthors">
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFilterAuthor">
         SELECT id, login_id AS name, avatar_url AS avatarUrl
         <if test="check = true and request.author != null">
             , (SELECT IF(login_id = #{request.author}, true, false)) AS `selected`
@@ -166,7 +175,7 @@
     </select>
 
     <select id="getMultiFiltersLabels" parameterType="java.util.Map"
-            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersLabels">
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFilterLabel">
         SELECT id, name, color, background
         <if test="check = true and request.label != null and request.label.get(0) != 'none'">
             , (SELECT IF(name IN
@@ -182,7 +191,7 @@
     </select>
 
     <select id="getMultiFiltersMilestones" parameterType="java.util.Map"
-            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersMilestones">
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFilterMilestone">
         SELECT id, name
         <if test="check = true and request.milestone != null and request.milestone != 'none'">
             , (SELECT IF(name = #{request.milestone}, true, false)) AS `selected`

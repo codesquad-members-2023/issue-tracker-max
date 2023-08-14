@@ -5,11 +5,10 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class MultiFiltersAssignees {
+public class MultiFilterMilestone {
 
 	private Long id;
 	private String name;
-	private String avatarUrl;
 	private boolean selected;
 
 	public Long getId() {
@@ -18,10 +17,6 @@ public class MultiFiltersAssignees {
 
 	public String getName() {
 		return name;
-	}
-
-	public String getAvatarUrl() {
-		return avatarUrl;
 	}
 
 	public boolean isSelected() {
