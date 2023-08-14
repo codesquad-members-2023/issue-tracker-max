@@ -3,6 +3,7 @@ export type Label = {
   name: string;
   fontColor: string;
   backgroundColor: string;
+  description?: string;
 };
 
 export type Milestone = {
@@ -10,6 +11,9 @@ export type Milestone = {
   milestoneName: string;
   openIssueCount: number;
   closedIssueCount: number;
+  description: string;
+  dueDate: string;
+  isOpen: boolean;
 };
 
 export type Assignee = {
@@ -22,7 +26,11 @@ export type IssueItem = {
   issueNumber: number;
   isOpen: boolean;
   title: string;
-  authorName: string;
+  author: {
+    id: number;
+    username: string;
+    profileUrl: string;
+  };
   createdAt: string;
   labels: Label[];
   milestone: string;
@@ -41,4 +49,31 @@ export type IssueInfo = {
   assignees: Set<number>;
   labels: Set<number>;
   milestone: number;
+};
+
+export type IssueDetails = {
+  issueId: number;
+  title: string;
+  isOpen: boolean;
+  createdAt: string;
+  author: {
+    username: string;
+    profileUrl: string;
+  };
+  content: string;
+  commentCount: number;
+};
+
+export type IssueSidebar = {
+  assigneeIds: number[];
+  labelIds: number[];
+  milestoneId: number;
+};
+
+export type IssueComment = {
+  commentId: number;
+  username: string;
+  profileUrl: string;
+  content: string;
+  createdAt: string;
 };

@@ -46,7 +46,7 @@ export default function DropdownPanel({
               {dropdownList.map((item) => {
                 return (
                   <DropdownItem
-                    {...{ key: item.content, option: dropdownOption, item }}
+                    {...{ key: item.id, option: dropdownOption, item }}
                   />
                 );
               })}
@@ -63,7 +63,7 @@ export default function DropdownPanel({
               {dropdownList.map((item) => {
                 return (
                   <DropdownItem
-                    {...{ key: item.content, option: dropdownOption, item }}
+                    {...{ key: item.id, option: dropdownOption, item }}
                   />
                 );
               })}
@@ -80,7 +80,7 @@ export default function DropdownPanel({
               {dropdownList.map((item) => {
                 return (
                   <DropdownItem
-                    {...{ key: item.content, option: dropdownOption, item }}
+                    {...{ key: item.id, option: dropdownOption, item }}
                   />
                 );
               })}
@@ -130,4 +130,10 @@ const Header = styled.header`
 
 const DropdownList = styled.ul`
   width: 100%;
+  max-height: 20rem;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;

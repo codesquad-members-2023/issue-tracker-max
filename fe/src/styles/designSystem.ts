@@ -1,4 +1,4 @@
-import { decToHex } from "@utils/style";
+import { decToHexOpacity } from "@utils/style";
 
 const colors = {
   grey50: "#FEFEFE",
@@ -38,6 +38,7 @@ const border = {
 const font = {
   displayBold32: "700 32px Pretendard, sans-serif",
   displayBold24: "700 24px Pretendard, sans-serif",
+  displayBold20: "700 20px Pretendard, sans-serif",
   displayBold16: "700 16px Pretendard, sans-serif",
   displayBold14: "700 14px Pretendard, sans-serif",
   displayBold12: "700 12px Pretendard, sans-serif",
@@ -95,7 +96,7 @@ export const lightMode = {
     navy: colors.navy,
     red: colors.red,
   },
-  boxShadow: `0px 0px 8px 0px ${colors.grey900}${decToHex(
+  boxShadow: `0px 0px 8px 0px ${colors.grey900}${decToHexOpacity(
     opacity.transparent
   )}`,
   colors,
@@ -112,6 +113,8 @@ export const lightMode = {
       "brightness(0) saturate(100%) invert(100%) sepia(6%) saturate(2%) hue-rotate(48deg) brightness(105%) contrast(99%);",
     brandTextWeak:
       "brightness(0) saturate(100%) invert(29%) sepia(66%) saturate(2882%) hue-rotate(201deg) brightness(103%) contrast(105%);",
+    dangerTextDefault:
+      "brightness(0) saturate(100%) invert(44%) sepia(47%) saturate(7165%) hue-rotate(341deg) brightness(98%) contrast(106%);",
   },
 };
 
@@ -158,7 +161,9 @@ export const darkMode = {
     navy: colors.navy,
     red: colors.red,
   },
-  boxShadow: `0px 0px 16px 0px ${colors.grey900}${decToHex(opacity.hover)}`,
+  boxShadow: `0px 0px 16px 0px ${colors.grey900}${decToHexOpacity(
+    opacity.hover
+  )}`,
   colors,
   border,
   radius,
@@ -173,5 +178,7 @@ export const darkMode = {
       "brightness(0) saturate(100%) invert(100%) sepia(6%) saturate(2%) hue-rotate(48deg) brightness(105%) contrast(99%);",
     brandTextWeak:
       "brightness(0) saturate(100%) invert(39%) sepia(89%) saturate(4222%) hue-rotate(199deg) brightness(100%) contrast(112%);",
+    dangerTextDefault:
+      "brightness(0) saturate(100%) invert(44%) sepia(47%) saturate(7165%) hue-rotate(341deg) brightness(98%) contrast(106%);",
   },
 };

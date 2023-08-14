@@ -5,20 +5,22 @@ import Button from "./Button";
 type TabBarInfo = {
   iconSrc: string;
   name: string;
-  count: number;
+  count?: number;
   callback?: () => void;
 };
 
 export default function TabBar({
+  currentTabName,
   left,
   right,
   borderStyle,
 }: {
+  currentTabName: string;
   left: TabBarInfo;
   right: TabBarInfo;
   borderStyle: "outline" | "none";
 }) {
-  const [selectedTab, setSelectedTab] = useState<string | null>(null);
+  const [selectedTab, setSelectedTab] = useState<string>(currentTabName);
 
   const isRightSelected = selectedTab === right.name;
   const isLeftSelected = selectedTab === left.name;
@@ -44,7 +46,7 @@ export default function TabBar({
             alt={`${left.name}-icon`}
           />
           <span className="tab-button-text">
-            {left.name}({left.count})
+            {left.name}({left.count ?? ""})
           </span>
         </Button>
       </TabButtonWrapper>
@@ -56,7 +58,7 @@ export default function TabBar({
             alt={`${right.name}-icon`}
           />
           <span className="tab-button-text">
-            {right.name}({right.count})
+            {right.name}({right.count ?? ""})
           </span>
         </Button>
       </TabButtonWrapper>
@@ -68,24 +70,27 @@ const StyledTabBar = styled.div<{ $hasOutline: boolean }>`
   display: flex;
 
   ${({ $hasOutline }) =>
-    $hasOutline &&
-    css`
-      width: 320px;
-      height: 40px;
-      border: ${({ theme: { border, neutral } }) =>
-        `${border.default} ${neutral.border.default}`};
-      border-radius: ${({ theme: { radius } }) => radius.m};
+    $hasOutline
+      ? css`
+          width: 320px;
+          height: 40px;
+          border: ${({ theme: { border, neutral } }) =>
+            `${border.default} ${neutral.border.default}`};
+          border-radius: ${({ theme: { radius } }) => radius.m};
 
-      & > div:first-child {
-        border-radius: 11px 0 0 11px;
-      }
+          & > div:first-child {
+            border-radius: 11px 0 0 11px;
+          }
 
-      & > div:last-child {
-        border-radius: 0 11px 11px 0;
-        border-left: ${({ theme: { border, neutral } }) =>
-          `${border.default} ${neutral.border.default}`};
-      }
-    `}
+          & > div:last-child {
+            border-radius: 0 11px 11px 0;
+            border-left: ${({ theme: { border, neutral } }) =>
+              `${border.default} ${neutral.border.default}`};
+          }
+        `
+      : css`
+          gap: 24px;
+        `}
 `;
 
 const TabButtonWrapper = styled.div<{

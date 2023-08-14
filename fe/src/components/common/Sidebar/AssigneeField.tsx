@@ -6,28 +6,30 @@ import { getUsers } from "api";
 import styled from "styled-components";
 import { Avatar } from "../Avatar";
 import CheckboxGroup from "../Group/CheckboxGroup";
-import { Container } from "./Container";
+import { Container } from "./Container.style";
 
 export default function AssigneeField({
   assignees,
   onAssigneeChange,
-  onEditIssue,
+  onEditAssignees,
 }: {
   assignees: Set<number>;
   onAssigneeChange: (assignees: Set<number>) => void;
-  onEditIssue?: () => void;
+  onEditAssignees?: () => void;
 }) {
-  const [userList] = useFetch<User[]>([], getUsers);
+  const { data: userList } = useFetch(getUsers);
 
-  const assigneeDropdownList: DropdownItemType[] = userList.map((user) => ({
-    id: user.userAccountId,
-    variant: "withImg",
-    name: "assignee",
-    content: user.username,
-    imgSrc: user.profileUrl,
-  }));
+  const assigneeDropdownList: DropdownItemType[] | undefined = userList?.map(
+    (user) => ({
+      id: user.userAccountId,
+      variant: "withImg",
+      name: "assignee",
+      content: user.username,
+      imgSrc: user.profileUrl,
+    })
+  );
 
-  const generateAssignees = () => {
+  const generateAssignees = (userList: User[]) => {
     const currentAssignees = userList.filter((user) =>
       assignees.has(user.userAccountId)
     );
@@ -48,18 +50,20 @@ export default function AssigneeField({
 
   return (
     <Container>
-      <CheckboxGroup values={assignees} onChange={onAssigneeChange}>
-        <DropdownIndicator
-          displayName="담당자"
-          dropdownPanelVariant="select"
-          dropdownName="assignee"
-          dropdownList={assigneeDropdownList}
-          dropdownPanelPosition="right"
-          dropdownOption="multiple"
-          outsideClickHandler={onEditIssue}
-        />
-      </CheckboxGroup>
-      {generateAssignees()}
+      {assigneeDropdownList && (
+        <CheckboxGroup values={assignees} onChange={onAssigneeChange}>
+          <DropdownIndicator
+            displayName="담당자"
+            dropdownPanelVariant="select"
+            dropdownName="assignee"
+            dropdownList={assigneeDropdownList}
+            dropdownPanelPosition="right"
+            dropdownOption="multiple"
+            outsideClickHandler={onEditAssignees}
+          />
+        </CheckboxGroup>
+      )}
+      {userList && generateAssignees(userList)}
     </Container>
   );
 }

@@ -45,3 +45,8 @@ export const convertPastTimestamp = (timestamp: string) => {
     return `${year}/${month + 1}/${date}`;
   }
 };
+
+export const validateDate = (dueDate: string) => {
+  const regex = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+  return regex.test(dueDate);
+};

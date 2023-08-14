@@ -6,11 +6,12 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 import { Avatar } from "./common/Avatar";
+import Button from "./common/Button";
 import Logo from "./common/Logo";
 import ToggleSwitch from "./common/ToggleSwitch";
 
 export default function Header() {
-  const { userInfo } = useAuth();
+  const { userInfo, onLogout } = useAuth();
   const { toggleThemeMode } = useContext(ThemeModeContext);
 
   return (
@@ -29,6 +30,9 @@ export default function Header() {
           alt={`${userInfo.username}-avatar`}
           $size="M"
         />
+        <Button variant="ghost" size="M" onClick={onLogout}>
+          <span className="logout-btn-text">로그아웃</span>
+        </Button>
       </div>
     </StyledHeader>
   );
@@ -44,5 +48,9 @@ const StyledHeader = styled.header`
     display: flex;
     align-items: center;
     gap: 20px;
+
+    .logout-btn-text {
+      color: ${({ theme: { neutral } }) => neutral.text.default};
+    }
   }
 `;

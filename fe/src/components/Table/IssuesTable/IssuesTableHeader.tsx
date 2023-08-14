@@ -4,9 +4,9 @@ import DropdownIndicator from "@components/Dropdown/DropdownIndicator";
 import InputCheckbox from "@components/common/Input/InputCheckbox";
 import TabBar from "@components/common/TabBar";
 import { styled } from "styled-components";
-import TableHeader from "./TableHeader";
+import { TableHeader } from "../Table.style";
 
-export default function TableHeaderIssues({
+export default function IssuesTableHeader({
   numOpen,
   numClosed,
 }: {
@@ -32,6 +32,7 @@ export default function TableHeaderIssues({
         <div className="left-wrapper">
           <InputCheckbox />
           <TabBar
+            currentTabName="열린 이슈"
             left={tabBarLeftInfo}
             right={tabBarRightInfo}
             borderStyle="none"

@@ -1,20 +1,21 @@
 import alertIcon from "@assets/icon/alertCircle.svg";
 import archiveIcon from "@assets/icon/archive.svg";
 import milestoneIcon from "@assets/icon/milestone.svg";
-import LabelTag from "@components/LabelTag";
+import LabelTag from "@components/Label/LabelTag";
 import InputCheckbox from "@components/common/Input/InputCheckbox";
 import { IssueItem as IssueItemType } from "@customTypes/index";
 import { convertPastTimestamp } from "@utils/time";
+import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 
-export default function IssueItem({ issue }: { issue: IssueItemType }) {
+export default function IssuesTableItem({ issue }: { issue: IssueItemType }) {
   const {
     issueNumber,
     isOpen,
     title,
     labels,
     milestone,
-    authorName,
+    author,
     assignees,
     createdAt,
   } = issue;
@@ -30,9 +31,11 @@ export default function IssueItem({ issue }: { issue: IssueItemType }) {
             ) : (
               <img className="alert-icon" src={archiveIcon} alt="닫힌 이슈" />
             )}
-            <IssueTitle href={`/issues/${issueNumber}`}>{title}</IssueTitle>
-            {labels.map((label) => (
-              <LabelTag key={label.name} label={label} />
+            <Link to={`/issues/${issueNumber}`}>
+              <IssueTitle>{title}</IssueTitle>
+            </Link>
+            {labels.map(({ name, fontColor, backgroundColor }) => (
+              <LabelTag {...{ key: name, name, fontColor, backgroundColor }} />
             ))}
           </div>
         </IssueHeader>
@@ -40,8 +43,8 @@ export default function IssueItem({ issue }: { issue: IssueItemType }) {
         <IssueDetails>
           <span>#{issueNumber}</span>
           <span>
-            이 이슈는 {convertPastTimestamp(createdAt)}, {authorName}님에 의해
-            작성되었습니다
+            이 이슈는 {convertPastTimestamp(createdAt)}, {author.username}님에
+            의해 작성되었습니다
           </span>
           {milestone && (
             <span>
@@ -121,7 +124,7 @@ const IssueHeader = styled.div`
   }
 `;
 
-const IssueTitle = styled.a`
+const IssueTitle = styled.span`
   color: ${({ theme: { neutral } }) => neutral.text.strong};
   font: ${({ theme: { font } }) => font.availableMD20};
 

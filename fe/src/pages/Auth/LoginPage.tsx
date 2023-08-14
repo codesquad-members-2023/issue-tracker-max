@@ -30,7 +30,11 @@ export default function LoginPage() {
       const {
         data: { token, user },
       } = await postLogin(username.value, password.value);
-      onLogin({ accessToken: token.accessToken, userInfo: user });
+      onLogin({
+        accessToken: token.accessToken,
+        userInfo: user,
+        expirationTime: token.expirationTime,
+      });
       navigate("/");
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
@@ -74,7 +78,7 @@ export default function LoginPage() {
           아이디로 로그인
         </Button>
       </AuthForm>
-      <Link to="/auth/signup">
+      <Link to="/signup">
         <Button variant="ghost" size="XL" className="change-auth-btn">
           아직 계정이 없으신가요? 회원가입
         </Button>

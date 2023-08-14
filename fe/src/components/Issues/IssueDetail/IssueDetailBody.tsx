@@ -1,111 +1,161 @@
 import Sidebar from "@components/common/Sidebar/Sidebar";
+import { IssueDetails, IssueSidebar } from "@customTypes/index";
+import useFetch from "@hooks/useFetch";
 import { compareSet } from "@utils/compareSet";
-import { postEditField } from "api";
-import _ from "lodash";
-import { useRef, useState } from "react";
+import { getIssueSidebar, postEditField } from "api";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-
-type IssueDetailBodyProps = {
-  issueNumber: number;
-  assignees: number[];
-  labels: number[];
-  milestone: number;
-};
+import IssueCommentContainer from "./IssueCommentContainer";
 
 export default function IssueDetailBody({
   issueNumber,
-  assignees,
-  labels,
-  milestone,
-}: IssueDetailBodyProps) {
-  const [issueDetail, setIssueDetail] = useState<{
-    assignees: Set<number>;
-    labels: Set<number>;
-    milestone: number;
+  issueDetails,
+  updateIssueDetails,
+}: {
+  issueNumber: number;
+  issueDetails: IssueDetails;
+  updateIssueDetails: () => void;
+}) {
+  const { data: issueSidebar, reFetch: updateIssueSidebar } =
+    useFetch<IssueSidebar>(
+      useCallback(() => getIssueSidebar(issueNumber), [issueNumber])
+    );
+
+  const [newIssueSidebar, setNewIssueSidebar] = useState<{
+    assigneeIds: Set<number>;
+    labelIds: Set<number>;
+    milestoneId: number;
   }>({
-    assignees: new Set<number>(assignees),
-    labels: new Set<number>(labels),
-    milestone: milestone,
+    assigneeIds: new Set<number>(issueSidebar?.assigneeIds),
+    labelIds: new Set<number>(issueSidebar?.labelIds),
+    milestoneId: issueSidebar?.milestoneId || -1,
   });
 
-  const prevIssueDetail = useRef(_.cloneDeep(issueDetail));
+  const prevIssueSidebar = useRef(newIssueSidebar);
 
-  const onAssigneeChange = (assignees: Set<number>) => {
-    setIssueDetail((prev) => ({ ...prev, assignees }));
+  useEffect(() => {
+    if (issueSidebar) {
+      prevIssueSidebar.current = {
+        assigneeIds: new Set<number>(issueSidebar.assigneeIds),
+        labelIds: new Set<number>(issueSidebar.labelIds),
+        milestoneId: issueSidebar.milestoneId,
+      };
+
+      setNewIssueSidebar({
+        assigneeIds: new Set<number>(issueSidebar.assigneeIds),
+        labelIds: new Set<number>(issueSidebar.labelIds),
+        milestoneId: issueSidebar.milestoneId,
+      });
+    }
+  }, [issueSidebar]);
+
+  const onAssigneeChange = (assigneeIds: Set<number>) => {
+    setNewIssueSidebar((prev) => ({ ...prev, assigneeIds }));
   };
 
-  const onLabelChange = (labels: Set<number>) => {
-    setIssueDetail((prev) => ({ ...prev, labels }));
+  const onLabelChange = (labelIds: Set<number>) => {
+    setNewIssueSidebar((prev) => ({ ...prev, labelIds }));
   };
 
-  const onMilestoneChange = (milestone: number) => {
-    setIssueDetail((prev) => ({ ...prev, milestone }));
+  const onMilestoneChange = (milestoneId: number) => {
+    setNewIssueSidebar((prev) => ({ ...prev, milestoneId }));
   };
 
-  const onEditIssue = () => {
-    const editedInfo = compareSet(
-      prevIssueDetail.current.assignees,
-      issueDetail.assignees
-    );
-    postEditField(issueNumber, "assignees", editedInfo);
+  const onEditAssignees = async () => {
+    try {
+      const { addedElements, removedElements } = compareSet(
+        prevIssueSidebar.current.assigneeIds,
+        newIssueSidebar.assigneeIds
+      );
+
+      const isNotModified = !addedElements.length && !removedElements.length;
+      if (isNotModified) return;
+
+      const { status } = await postEditField(issueNumber, "assignees", {
+        addUserAccountId: addedElements,
+        removeUserAccountId: removedElements,
+      });
+
+      status === 200 && updateIssueSidebar();
+    } catch (e) {
+      // TODO: error handling
+      console.log(e);
+    }
   };
 
-  const onEditLabels = () => {
-    const editedInfo = compareSet(
-      prevIssueDetail.current.labels,
-      issueDetail.labels
-    );
-    postEditField(issueNumber, "labels", editedInfo);
+  const onEditLabels = async () => {
+    try {
+      const { addedElements, removedElements } = compareSet(
+        prevIssueSidebar.current.labelIds,
+        newIssueSidebar.labelIds
+      );
+
+      const isNotModified = !addedElements.length && !removedElements.length;
+      if (isNotModified) return;
+
+      const { status } = await postEditField(issueNumber, "labels", {
+        addLabelsId: addedElements,
+        removeLabelsId: removedElements,
+      });
+
+      status === 200 && updateIssueSidebar();
+    } catch (e) {
+      // TODO: error handling
+      console.log(e);
+    }
   };
 
   // TODO: 마일스톤 없는 이슈 DropdownItem 추가
-  const onEditMilestone = () => {
-    const isNotModified =
-      prevIssueDetail.current.milestone === issueDetail.milestone;
-    const isRemoved = issueDetail.milestone === 0;
+  const onEditMilestone = async () => {
+    try {
+      const isNotModified =
+        prevIssueSidebar.current.milestoneId === newIssueSidebar.milestoneId;
 
-    const editedInfo = {
-      milestoneId: isRemoved ? null : issueDetail.milestone,
-    };
-    !isNotModified && postEditField(issueNumber, "milestone", editedInfo);
+      if (isNotModified) return;
+
+      const { status } = await postEditField(issueNumber, "milestone", {
+        milestoneId: newIssueSidebar.milestoneId,
+      });
+
+      status === 200 && updateIssueSidebar();
+    } catch (e) {
+      // TODO: error handling
+      console.log(e);
+    }
   };
 
   return (
-    <Body>
-      <div className="comments-container">
-        {/* TODO: 이슈 Content Comment */}
-        {/* TODO: comments.map() */}
-        {/* TODO: 새 코멘트 작성 text area */}
-      </div>
+    <StyledIssueDetailBody>
+      <IssueCommentContainer
+        {...{
+          issueNumber,
+          issueDetails,
+          updateIssueDetails,
+        }}
+      />
       <Sidebar
         {...{
-          assignees: issueDetail.assignees,
-          labels: issueDetail.labels,
-          milestone: issueDetail.milestone,
+          assignees: newIssueSidebar.assigneeIds,
+          labels: newIssueSidebar.labelIds,
+          milestone: newIssueSidebar.milestoneId,
           onAssigneeChange,
           onLabelChange,
           onMilestoneChange,
-          onEditIssue,
+          onEditAssignees,
           onEditLabels,
           onEditMilestone,
         }}
       />
-    </Body>
+    </StyledIssueDetailBody>
   );
 }
 
-const Body = styled.div`
+const StyledIssueDetailBody = styled.div`
   width: 100%;
   padding-top: 24px;
   display: flex;
+  justify-content: center;
   gap: 32px;
   border-top: ${({ theme: { border, neutral } }) =>
     `${border.default} ${neutral.border.default}`};
-
-  .comments-container {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    flex-grow: 1;
-  }
 `;

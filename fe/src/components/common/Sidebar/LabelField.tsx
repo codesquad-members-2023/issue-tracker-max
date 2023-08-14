@@ -1,12 +1,12 @@
 import DropdownIndicator from "@components/Dropdown/DropdownIndicator";
 import { DropdownItemType } from "@components/Dropdown/types";
-import LabelTag from "@components/LabelTag";
+import LabelTag from "@components/Label/LabelTag";
 import { Label } from "@customTypes/index";
 import useFetch from "@hooks/useFetch";
 import { getLabels } from "api";
 import styled from "styled-components";
 import CheckboxGroup from "../Group/CheckboxGroup";
-import { Container } from "./Container";
+import { Container } from "./Container.style";
 
 export default function LabelField({
   labels,
@@ -17,39 +17,56 @@ export default function LabelField({
   onLabelChange: (labels: Set<number>) => void;
   onEditLabels?: () => void;
 }) {
-  const [labelList] = useFetch<Label[]>([], getLabels);
+  const { data: labelList } = useFetch(getLabels);
 
-  const labelDropdownList: DropdownItemType[] = labelList.map((label) => ({
-    id: label.labelId,
-    variant: "withColor",
-    name: "label",
-    content: label.name,
-    colorFill: label.backgroundColor,
-  }));
+  const labelDropdownList: DropdownItemType[] | undefined = labelList?.map(
+    (label) => ({
+      id: label.labelId,
+      variant: "withColor",
+      name: "label",
+      content: label.name,
+      colorFill: label.backgroundColor,
+    })
+  );
 
-  const generateLabels = () => {
+  const generateLabels = (labelList: Label[]) => {
     const currentLabels = labelList.filter((label) =>
       labels.has(label.labelId)
     );
-    return currentLabels.map((label) => {
-      return <LabelTag key={label.labelId} label={label} />;
-    });
+    return currentLabels.map(
+      ({ labelId, name, backgroundColor, fontColor }) => {
+        return (
+          <LabelTag
+            {...{
+              key: labelId,
+              name,
+              backgroundColor,
+              fontColor,
+            }}
+          />
+        );
+      }
+    );
   };
 
   return (
     <Container>
-      <CheckboxGroup values={labels} onChange={onLabelChange}>
-        <DropdownIndicator
-          displayName="레이블"
-          dropdownPanelVariant="select"
-          dropdownName="label"
-          dropdownList={labelDropdownList}
-          dropdownPanelPosition="right"
-          dropdownOption="multiple"
-          outsideClickHandler={onEditLabels}
-        />
-      </CheckboxGroup>
-      {!!labels.size && <Wrapper>{generateLabels()}</Wrapper>}
+      {labelDropdownList && (
+        <CheckboxGroup values={labels} onChange={onLabelChange}>
+          <DropdownIndicator
+            displayName="레이블"
+            dropdownPanelVariant="select"
+            dropdownName="label"
+            dropdownList={labelDropdownList}
+            dropdownPanelPosition="right"
+            dropdownOption="multiple"
+            outsideClickHandler={onEditLabels}
+          />
+        </CheckboxGroup>
+      )}
+      {labelList && !!labels.size && (
+        <Wrapper>{generateLabels(labelList)}</Wrapper>
+      )}
     </Container>
   );
 }

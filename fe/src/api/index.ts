@@ -1,6 +1,7 @@
 import {
-  IssueDetail,
+  IssueDetails,
   IssueItem,
+  IssueSidebar,
   Label,
   Milestone,
   User,
@@ -29,16 +30,79 @@ export const getIssues = async () => {
   return await fetcherWithBearer.get<IssueItem[]>("/issues");
 };
 
-export const getIssue = async (issueId: number) => {
-  return await fetcherWithBearer.get<IssueDetail>(`/issues/${issueId}`);
+export const getIssueDetails = async (issueId: number) => {
+  return await fetcherWithBearer.get<IssueDetails>(`/issues/${issueId}`);
+};
+
+export const putIssueTitle = async (
+  issueId: number,
+  body: { title: string }
+) => {
+  return await fetcherWithBearer.put(`/issues/${issueId}/title`, body);
+};
+
+export const putIssueIsOpen = async (
+  issueId: number,
+  body: { isOpen: boolean }
+) => {
+  return await fetcherWithBearer.put(`/issues/${issueId}/isOpen`, body);
+};
+
+export const putIssueContent = async (
+  issueId: number,
+  body: { content: string }
+) => {
+  return await fetcherWithBearer.put(`/issues/${issueId}/content`, body);
+};
+
+export const putIssueComment = async (
+  issueId: number,
+  commentId: number,
+  body: { content: string }
+) => {
+  return await fetcherWithBearer.put(
+    `/issues/${issueId}/comments/${commentId}`,
+    body
+  );
+};
+
+export const getIssueSidebar = async (issueId: number) => {
+  return await fetcherWithBearer.get<IssueSidebar>(
+    `/issues/${issueId}/sidebar`
+  );
 };
 
 export const getLabels = async () => {
   return await fetcherWithBearer.get<Label[]>("/labels");
 };
 
-export const getMilestones = async () => {
-  return await fetcherWithBearer.get<Milestone[]>("/milestones");
+export const postLabel = async (body: {
+  name: string;
+  description: string;
+  fontColor: string;
+  backgroundColor: string;
+}) => {
+  return await fetcherWithBearer.post("/labels", body);
+};
+
+export const putLabel = async (
+  labelId: number,
+  body: {
+    name: string;
+    description: string;
+    fontColor: string;
+    backgroundColor: string;
+  }
+) => {
+  return await fetcherWithBearer.put(`/labels/${labelId}`, body);
+};
+
+export const deleteLabel = async (labelId: number) => {
+  return await fetcherWithBearer.delete(`/labels/${labelId}`);
+};
+
+export const getMilestones = async (state: "open" | "closed" = "open") => {
+  return await fetcherWithBearer.get<Milestone[]>(`/milestones?state=${state}`);
 };
 
 export const getUsers = async () => {
@@ -54,7 +118,7 @@ export const postImage = async (file: File) => {
   formData.append("image", file);
 
   return await fetcherFormDataWithBearer.post<{ fileUrl: string }>(
-    "/upload",
+    "/images/upload",
     formData
   );
 };
@@ -65,4 +129,49 @@ export const postEditField = async (
   body: EditAssigneesBody | EditLabelsBody | EditMilestoneBody
 ) => {
   return await fetcherWithBearer.post(`/issues/${issuesId}/${field}`, body);
+};
+
+export const getComments = async (issueId: number, cursor: number) => {
+  return await fetcherWithBearer.get(
+    `/issues/${issueId}/comments?cursor=${cursor}`
+  );
+};
+
+export const postComment = async (
+  issueId: number,
+  body: { content: string }
+) => {
+  return await fetcherWithBearer.post(`/issues/${issueId}/comments`, body);
+};
+
+export const postMilestone = async (body: {
+  milestoneName: string;
+  dueDate: string;
+  description: string;
+}) => {
+  return await fetcherWithBearer.post("/milestones", body);
+};
+
+export const putMilestoneContent = async (
+  milestoneId: number,
+  body: {
+    milestoneName: string;
+    dueDate: string;
+    description: string;
+  }
+) => {
+  return await fetcherWithBearer.put(`/milestones/${milestoneId}`, body);
+};
+
+export const putMilestoneState = async (
+  milestoneId: number,
+  state: "open" | "closed"
+) => {
+  return await fetcherWithBearer.put(
+    `/milestones/${milestoneId}?state=${state}`
+  );
+};
+
+export const deleteMilestone = async (milestoneId: number) => {
+  return await fetcherWithBearer.delete(`/milestones/${milestoneId}`);
 };
