@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
 import { Button } from "../Button";
@@ -31,6 +31,8 @@ export function CommentItem({
   writer,
   fetchIssue,
 }: CommentItemProps) {
+  const theme = useTheme();
+
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(initialContent);
   const [invalidContent, setInvalidContent] = useState(false);
@@ -59,6 +61,14 @@ export function CommentItem({
         : "",
     );
   };
+
+  const deleteComment = async () => {
+    await fetch(`/api/comments/${id}`, {
+      method: "DELETE",
+    });
+
+    fetchIssue();
+  }
 
   const onEditButtonClick = () => {
     setIsEditing(true);
@@ -120,6 +130,19 @@ export function CommentItem({
               stroke="Default"
             />
           )}
+          <Button
+            height={32}
+            size="S"
+            buttonType="Ghost"
+            icon="Trash"
+            color={theme.color.dangerTextDefault}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              deleteComment();
+            }}
+          >
+            삭제
+          </Button>
           <Button
             height={32}
             size="S"

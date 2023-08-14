@@ -57,4 +57,26 @@ export const commentHandlers = [
       }),
     );
   }),
+  rest.delete("/api/comments/:commentId", async (req, res, ctx) => {
+    const { commentId } = req.params;
+
+    issue.data = {
+      ...issue.data,
+      comments: issue.data.comments.filter(
+        (comment) => comment.id !== Number(commentId),
+      ),
+    };
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        code: 200,
+        status: "OK",
+        message: "OK",
+        data: {
+          deletedCommentId: Number(commentId),
+        },
+      }),
+    );
+  })
 ]
