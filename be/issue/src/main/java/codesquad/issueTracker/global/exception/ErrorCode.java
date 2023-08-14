@@ -3,6 +3,7 @@ package codesquad.issueTracker.global.exception;
 import java.time.DateTimeException;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -55,8 +56,12 @@ public enum ErrorCode implements StatusCode {
 	DUPLICATE_OBJECT_FOUND(HttpStatus.BAD_REQUEST, "중복된 항목 선택입니다."),
 	NOT_EXIST_ISSUE(HttpStatus.BAD_REQUEST, "존재하지 않는 이슈입니다."),
 	ALREADY_DELETED_ISSUE(HttpStatus.BAD_REQUEST, "이미 삭제된 이슈입니다."),
-	NOT_FOUND_ISSUES(HttpStatus.BAD_REQUEST, "이슈를 찾을 수 없습니다.");
+	NOT_FOUND_ISSUES(HttpStatus.BAD_REQUEST, "이슈를 찾을 수 없습니다."),
 
+	// -- [File] -- //
+	EMPTY_FILE_EXCEPTION(HttpStatus.BAD_REQUEST, "파일을 선택해 주세요."),
+	FAILED_UPLOAD_FILE(HttpStatus.BAD_REQUEST, "파일 업로드에 실패했습니다."),
+	MAX_FILE_SIZE(HttpStatus.BAD_REQUEST, "업로드 할 수 있는 최대 크기는 20MB 입니다.");
 
 	private HttpStatus status;
 	private String message;
@@ -95,6 +100,9 @@ public enum ErrorCode implements StatusCode {
 		}
 		if (e instanceof DateTimeException) {
 			return ErrorCode.NOT_FOUND_DATE;
+		}
+		if (e instanceof MaxUploadSizeExceededException) {
+			return ErrorCode.MAX_FILE_SIZE;
 		}
 		return ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION;
 	}

@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import codesquad.issueTracker.global.common.ApiResponse;
+import codesquad.issueTracker.issue.dto.IssueFileResponseDto;
 import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
 import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
 import codesquad.issueTracker.issue.dto.IssueOptionResponseDto;
@@ -128,5 +131,11 @@ public class IssueController {
 	public ApiResponse<String> patchMilestone(@PathVariable Long id, @RequestBody ModifyIssueMilestoneDto request) {
 		issueService.modifyMilestone(id, request);
 		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+	}
+
+	@PostMapping("/upload")
+	public ApiResponse<IssueFileResponseDto> uploadFile(@RequestPart(value = "file") MultipartFile multipartFile) {
+		IssueFileResponseDto response = issueService.uploadImg(multipartFile);
+		return ApiResponse.success(SUCCESS.getStatus(), response);
 	}
 }

@@ -8,9 +8,9 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import codesquad.issueTracker.global.common.ApiResponse;
-import io.jsonwebtoken.ExpiredJwtException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -42,6 +42,14 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(DateTimeException.class)
 	public ResponseEntity<ApiResponse<String>> handleDateTimeException(DateTimeException e) {
+		StatusCode statusCode = ErrorCode.from(e);
+		return ResponseEntity.status(statusCode.getStatus())
+			.body(ApiResponse.fail(statusCode.getStatus(), statusCode.getMessage()));
+	}
+
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	protected ResponseEntity<ApiResponse<String>> handleMaxUploadSizeExceededException(
+		MaxUploadSizeExceededException e) {
 		StatusCode statusCode = ErrorCode.from(e);
 		return ResponseEntity.status(statusCode.getStatus())
 			.body(ApiResponse.fail(statusCode.getStatus(), statusCode.getMessage()));

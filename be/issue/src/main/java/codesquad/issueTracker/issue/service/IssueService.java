@@ -1,17 +1,27 @@
 package codesquad.issueTracker.issue.service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import codesquad.issueTracker.global.common.Status;
 import codesquad.issueTracker.global.exception.CustomException;
 import codesquad.issueTracker.global.exception.ErrorCode;
 import codesquad.issueTracker.issue.domain.Issue;
+import codesquad.issueTracker.issue.dto.IssueFileResponseDto;
 import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
 import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
 import codesquad.issueTracker.issue.dto.IssueOptionResponseDto;
@@ -43,10 +53,13 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class IssueService {
 
+	@Value("${cloud.aws.s3.bucket}")
+	private String bucketName;
 	private final IssueRepository issueRepository;
 	private final LabelService labelService;
 	private final UserService userService;
 	private final MilestoneService milestoneService;
+	private final AmazonS3Client amazonS3Client;
 
 	@Transactional
 	public Long save(IssueWriteRequestDto request, Long id) {
@@ -238,5 +251,28 @@ public class IssueService {
 			milestoneService.isExistMilestone(milestoneId);
 		}
 		return issueRepository.updateMilestone(id, milestoneId);
+	}
+
+	public IssueFileResponseDto uploadImg(MultipartFile multipartFile) {
+		validateFileExists(multipartFile);
+		String fileName = multipartFile.getOriginalFilename();
+		ObjectMetadata objectMetadata = new ObjectMetadata();
+		objectMetadata.setContentType(multipartFile.getContentType());
+
+		try (InputStream inputStream = multipartFile.getInputStream()) {
+			amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
+				.withCannedAcl(CannedAccessControlList.PublicRead));
+		} catch (IOException e) {
+			throw new CustomException(ErrorCode.FAILED_UPLOAD_FILE);
+		}
+		String url = amazonS3Client.getUrl(bucketName, fileName).toString();
+		IssueFileResponseDto response = new IssueFileResponseDto(url);
+		return response;
+	}
+
+	private void validateFileExists(MultipartFile multipartFile) {
+		if (multipartFile.isEmpty()) {
+			throw new CustomException(ErrorCode.EMPTY_FILE_EXCEPTION);
+		}
 	}
 }

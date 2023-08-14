@@ -38,7 +38,10 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     // 패스워드 암호화
     implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
+    // OAuth 서버 요청
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    // 파일 업로드
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
 }
 
