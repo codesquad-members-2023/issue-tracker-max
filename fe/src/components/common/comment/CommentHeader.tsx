@@ -5,7 +5,7 @@ import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { ReactComponent as Smile } from '@assets/icons/smile.svg';
 
 type Props = {
-  image: string;
+  image?: string;
   loginId?: string;
   createdAt?: string;
   isAuthor?: boolean;
@@ -33,15 +33,17 @@ export const CommentHeader: React.FC<Props> = ({
             <span className="author-label">작성자</span>
           </InformationTag>
         )}
-        <Button
-          className="header-right__button"
-          onClick={onClickEdit}
-          typeVariant="ghost"
-          size="S"
-        >
-          <Edit className="button-icon" />
-          편집
-        </Button>
+        {isAuthor && (
+          <Button
+            className="header-right__button"
+            onClick={onClickEdit}
+            typeVariant="ghost"
+            size="S"
+          >
+            <Edit className="button-icon" />
+            편집
+          </Button>
+        )}
         <Button className="header-right__button" typeVariant="ghost" size="S">
           <Smile className="button-icon" />
           반응

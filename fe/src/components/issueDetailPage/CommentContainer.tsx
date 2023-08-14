@@ -44,6 +44,7 @@ export const CommentContainer: React.FC<Props> = ({
             issueAuthor={author} //이슈 작성자 정보
             userId={comment.author.userId} //코멘트 작성자 id
             loginId={comment.author.loginId}
+            commentAuthor={comment.author} //코멘트 작성자 정보
             typeVariant="default"
             defaultValue={comment.contents}
           />
