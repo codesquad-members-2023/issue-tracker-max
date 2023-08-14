@@ -26,7 +26,7 @@ public class CommentModifyServiceRequest {
 
 	public Comment toEntity(LocalDateTime modifiedAt) {
 		validateContentLength(this.content);
-		return new Comment(id, userId, content, modifiedAt);
+		return new Comment(id, content, modifiedAt);
 	}
 
 	public Long getId() {
