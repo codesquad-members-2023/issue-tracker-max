@@ -53,8 +53,8 @@ public class IssueController {
 	}
 
 	@GetMapping("/issues/labels")
-	public ApiResponse<List<IssueLabelResponseDto>> getIssueLabels() {
-		List<IssueLabelResponseDto> labels = issueService.getIssueLabels();
+	public ApiResponse<IssueLabelResponseDto> getIssueLabels() {
+		IssueLabelResponseDto labels = issueService.getIssueLabels();
 		return ApiResponse.success(SUCCESS.getStatus(), labels);
 	}
 

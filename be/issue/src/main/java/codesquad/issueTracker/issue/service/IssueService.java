@@ -73,18 +73,18 @@ public class IssueService {
 		if (labels != null) {
 			duplicatedId(labels);
 			labels.stream()
-				.map(labelId -> labelService.validateLabelsId(labelId))
-				.map(existLabel -> issueRepository.insertLabels(savedIssueId, existLabel.getId()))
-				.collect(Collectors.toList());
+					.map(labelId -> labelService.validateLabelsId(labelId))
+					.map(existLabel -> issueRepository.insertLabels(savedIssueId, existLabel.getId()))
+					.collect(Collectors.toList());
 		}
 
 		// assignee 리스트가 null 이 아니면 assignees( 유저 id )가  존재하는지 검증 후  assignees 테이블에 insert
 		if (assignees != null) {
 			duplicatedId(assignees);
 			assignees.stream()
-				.map(assigneesId -> userService.validateUserId(assigneesId))
-				.map(existUser -> issueRepository.insertAssignees(savedIssueId, existUser.getId()))
-				.collect(Collectors.toList());
+					.map(assigneesId -> userService.validateUserId(assigneesId))
+					.map(existUser -> issueRepository.insertAssignees(savedIssueId, existUser.getId()))
+					.collect(Collectors.toList());
 		}
 		return savedIssueId;
 	}
@@ -98,25 +98,26 @@ public class IssueService {
 		}
 	}
 
-	public List<IssueLabelResponseDto> getIssueLabels() {
+	public IssueLabelResponseDto getIssueLabels() {
 		LabelResponseDto allLabels = labelService.findAll();
-		return allLabels.getLabels().stream()
-			.map(IssueLabelResponseDto::from)
-			.collect(Collectors.toList());
+		List<IssueLabelVo> labels = allLabels.getLabels().stream()
+				.map(IssueLabelVo::from)
+				.collect(Collectors.toList());
+		return IssueLabelResponseDto.from(labels);
 	}
 
 	public List<IssueMilestoneResponseDto> getIssueMilestones() {
 		List<MilestoneVo> milestones = milestoneService.findMilestonesByStatus(Status.OPEN.getStatus());
 		return milestones.stream()
-			.map(IssueMilestoneResponseDto::from)
-			.collect(Collectors.toList());
+				.map(IssueMilestoneResponseDto::from)
+				.collect(Collectors.toList());
 	}
 
 	public List<IssueUserResponseDto> getIssueUsers() {
 		List<User> users = userService.getUsers();
 		return users.stream()
-			.map(IssueUserResponseDto::from)
-			.collect(Collectors.toList());
+				.map(IssueUserResponseDto::from)
+				.collect(Collectors.toList());
 	}
 
 	public IssueResponseDto getIssueById(Long issueId) {
@@ -128,7 +129,7 @@ public class IssueService {
 
 	private Issue validateActiveIssueById(Long issueId) {
 		return issueRepository.findActiveIssueById(issueId)
-			.orElseThrow(() -> new CustomException(ErrorCode.ALREADY_DELETED_ISSUE));
+				.orElseThrow(() -> new CustomException(ErrorCode.ALREADY_DELETED_ISSUE));
 	}
 
 	public IssueOptionResponseDto getIssueOptions(Long issueId) {
@@ -155,9 +156,9 @@ public class IssueService {
 		if (issueIds != null) {
 			duplicatedId(issueIds);
 			issueIds.stream()
-				.map(issueId -> validateExistActiveIssue(issueId))
-				.map(existIssue -> issueRepository.modifyStatus(existIssue.getId(), status))
-				.collect(Collectors.toList());
+					.map(issueId -> validateExistActiveIssue(issueId))
+					.map(existIssue -> issueRepository.modifyStatus(existIssue.getId(), status))
+					.collect(Collectors.toList());
 		}
 		return issueIds;
 	}
@@ -171,12 +172,12 @@ public class IssueService {
 
 	private Issue validateExistActiveIssue(Long issuesIds) {
 		return issueRepository.findActiveIssueById(issuesIds)
-			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ISSUES));
+				.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ISSUES));
 	}
 
 	private void validateExistIssue(Long issueId) {
 		issueRepository.findById(issueId)
-			.orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ISSUE));
+				.orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ISSUE));
 	}
 
 	@Transactional
@@ -261,7 +262,7 @@ public class IssueService {
 
 		try (InputStream inputStream = multipartFile.getInputStream()) {
 			amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
-				.withCannedAcl(CannedAccessControlList.PublicRead));
+					.withCannedAcl(CannedAccessControlList.PublicRead));
 		} catch (IOException e) {
 			throw new CustomException(ErrorCode.FAILED_UPLOAD_FILE);
 		}
