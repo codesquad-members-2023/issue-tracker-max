@@ -21,6 +21,7 @@ export const PostInformationHeader: React.FC<Props> = ({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [titleInput, setTitleInput] = useState<string>(title);
   const [placeholderValue, setPlaceholderValue] = useState<string>(title); //편집 취소시 돌아갈 값
+  // 이렇게 말고 이전 값을 알고있을 방법 찾기
   //todo 길이제한 0이나 n0자 이상일때 버튼 비활성화
   console.log(title);
   console.log(titleInput);
