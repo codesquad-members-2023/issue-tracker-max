@@ -3,7 +3,6 @@ package com.issuetrackermax.domain.comment;
 import java.sql.Types;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,10 +49,9 @@ public class CommentRepository {
 		return jdbcTemplate.query(sql, Map.of("id", id), COMMENT_ROW_MAPPER);
 	}
 
-	public Optional<Comment> findById(Long id) {
+	public Comment findById(Long id) {
 		String sql = "SELECT id, content, issue_id, writer_id, created_at FROM comments WHERE id = :id ";
-		return Optional.ofNullable(
-			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), COMMENT_ROW_MAPPER)));
+		return DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), COMMENT_ROW_MAPPER));
 	}
 
 	public void updateComment(Comment comment, Long id) {

@@ -14,7 +14,7 @@ public class CommentValidator {
 	private final CommentRepository commentRepository;
 
 	public void checkWriter(Long commentId, Long memberId) {
-		Comment comment = commentRepository.findById(commentId).get();
+		Comment comment = commentRepository.findById(commentId);
 		if (!comment.getWriterId().equals(memberId)) {
 			throw new ApiException(CommentException.NOT_AUTHORIZED);
 		}

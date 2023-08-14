@@ -114,7 +114,7 @@ public class CommentServiceTest extends IntegrationTestSupport {
 		commentService.modifyComment(request, commentResponse.getId(), writerId);
 
 		// then
-		Comment modifiedComment = commentRepository.findById(commentResponse.getId()).get();
+		Comment modifiedComment = commentRepository.findById(commentResponse.getId());
 		assertThat(modifiedComment.getContent()).isEqualTo(request.getContent());
 	}
 

@@ -38,7 +38,7 @@ public class CommentRepositoryTest extends IntegrationTestSupport {
 		Long commentId = commentRepository.save(comment);
 
 		// then
-		Comment savedComment = commentRepository.findById(commentId).get();
+		Comment savedComment = commentRepository.findById(commentId);
 		assertAll(
 			() -> assertThat(savedComment.getId()).isEqualTo(commentId),
 			() -> assertThat(savedComment.getContent()).isEqualTo(comment.getContent()),
@@ -62,7 +62,7 @@ public class CommentRepositoryTest extends IntegrationTestSupport {
 		commentRepository.updateComment(updatedComment, commentId);
 
 		// then
-		Comment modifiedComment = commentRepository.findById(commentId).get();
+		Comment modifiedComment = commentRepository.findById(commentId);
 		assertThat(modifiedComment.getContent()).isEqualTo(newContent);
 	}
 

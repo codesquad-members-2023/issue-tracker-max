@@ -53,7 +53,7 @@ public class CommentService {
 	public CommentResponse save(CommentCreateRequest commentCreateRequest, Long memberId) {
 		memberValidator.existById(memberId);
 		Long commentId = commentRepository.save(Comment.from(commentCreateRequest, memberId));
-		return CommentResponse.from(commentRepository.findById(commentId).get());
+		return CommentResponse.from(commentRepository.findById(commentId));
 	}
 
 	@Transactional
