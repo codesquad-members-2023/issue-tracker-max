@@ -2,9 +2,12 @@ package codesquard.app.authenticate_user.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,13 +38,15 @@ public class AuthenticateUserService {
 	private final AuthenticateUserRepository authenticateUserRepository;
 	private final JwtProvider jwtProvider;
 	private final ObjectMapper objectMapper;
+	private final RedisTemplate<String, Object> redisTemplate;
 
 	public AuthenticateUserService(UserRepository userRepository, AuthenticateUserRepository authenticateUserRepository,
-		JwtProvider jwtProvider, ObjectMapper objectMapper) {
+		JwtProvider jwtProvider, ObjectMapper objectMapper, RedisTemplate<String, Object> redisTemplate) {
 		this.userRepository = userRepository;
 		this.authenticateUserRepository = authenticateUserRepository;
 		this.jwtProvider = jwtProvider;
 		this.objectMapper = objectMapper;
+		this.redisTemplate = redisTemplate;
 	}
 
 	public void updateRefreshToken(AuthenticateUser authenticateUser, Jwt jwt) {
@@ -61,7 +66,7 @@ public class AuthenticateUserService {
 		try {
 			// 1. 토큰이 유효한지 확인합니다. 유효하지 않은 경우 예외가 발생합니다.
 			Claims findClaims = jwtProvider.getClaims(refreshTokenServiceRequest.getRefreshToken());
-			logger.info("claims : {}", findClaims);
+			logger.debug("claims : {}", findClaims);
 			// 2. refreshToken 값을 가지는 유저를 조회합니다.
 			User findUser = userRepository.findByRefreshToken(refreshTokenServiceRequest.getRefreshToken());
 			HashMap<String, Object> claims = new HashMap<>();
@@ -70,7 +75,7 @@ public class AuthenticateUserService {
 			claims.put(VerifyUserFilter.AUTHENTICATE_USER, authenticateUserJson);
 			// 3. claims을 입력으로 jwt 토큰을 생성합니다.
 			Jwt jwt = jwtProvider.createJwt(claims);
-			logger.info("jwt : {}", jwt);
+			logger.debug("jwt : {}", jwt);
 			// 4. refreshToken을 갱신합니다.
 			updateRefreshToken(authenticateUser, jwt);
 			return jwt;
@@ -99,15 +104,31 @@ public class AuthenticateUserService {
 		try {
 			authenticateUserJson = objectMapper.writeValueAsString(authenticateUser);
 		} catch (JsonProcessingException e) {
-			logger.error("로그인 오류 : {}", e.getMessage());
+			logger.error("AuthenticateUser 직렬화 실패 : {}", e.getMessage());
 			throw new RestApiException(LoginErrorCode.NOT_MATCH_LOGIN);
 		}
 		// 2. key="authenticateUser" value=인증 객체의 json 데이터를 claims 맵에 저장
 		claims.put(VerifyUserFilter.AUTHENTICATE_USER, authenticateUserJson);
 		// 3. claims을 기반으로 JWT 객체(액세스 토큰, 갱신 토큰) 생성
 		Jwt jwt = jwtProvider.createJwt(claims);
-		// 4. 갱신 토큰 최신 업데이트
-		updateRefreshToken(authenticateUser, jwt);
+		// 4. redis에 RT:hong1234@gmail.com(key) / 23jijiofj2io3hi32hiongiodsninioda(value) 형태로 리프레시 토큰 저장하기
+		ValueOperations<String, Object> opsForValue = redisTemplate.opsForValue();
+		opsForValue.set(
+			authenticateUser.createRedisKey(),
+			jwt.getRefreshToken(),
+			jwt.getExpireDateRefreshToken(),
+			TimeUnit.MILLISECONDS);
 		return new AuthenticateUserLoginServiceResponse(authenticateUser, jwt);
+	}
+
+	public void logout(AuthenticateUser authenticateUser, Jwt jwt) {
+		// Redis에 유저 email로 저장된 RefreshToken이 있는지 확인
+		if (redisTemplate.opsForValue().get(authenticateUser.createRedisKey()) != null) {
+			// RefreshToken 삭제
+			redisTemplate.delete(authenticateUser.createRedisKey());
+		}
+		// 해당 액세스 토큰 유효시간을 가지고 와서 블랙리스트에 저장하기
+		long expiration = jwt.getExpireDateAccessToken();
+		redisTemplate.opsForValue().set(jwt.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 	}
 }

@@ -26,4 +26,9 @@ public class AuthenticateUserLoginServiceResponse {
 	public String createAccessTokenHeaderValue() {
 		return jwt.createAccessTokenHeaderValue();
 	}
+
+	public String getRefreshToken() {
+		return jwt.getRefreshToken();
+	}
+
 }

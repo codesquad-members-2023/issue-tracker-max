@@ -29,4 +29,8 @@ public class AuthenticateUser {
 	public User toEntity() {
 		return new User(id, loginId, email, null, avatarUrl);
 	}
+
+	public String createRedisKey() {
+		return "RT:" + email;
+	}
 }
