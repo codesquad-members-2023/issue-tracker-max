@@ -119,7 +119,7 @@ public class IssueQueryService {
 		}
 
 		if (builder.length() == 0) {
-			return "";
+			return "is:opened";
 		}
 
 		return builder.toString();
