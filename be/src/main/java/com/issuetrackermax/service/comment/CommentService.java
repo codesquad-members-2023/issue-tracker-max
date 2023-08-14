@@ -18,7 +18,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.issuetrackermax.common.exception.ApiException;
 import com.issuetrackermax.common.exception.domain.S3Exception;
 import com.issuetrackermax.controller.comment.dto.request.CommentCreateRequest;
-import com.issuetrackermax.controller.comment.dto.request.CommentModifyRequest;
+import com.issuetrackermax.controller.comment.dto.request.CommentRequest;
 import com.issuetrackermax.controller.comment.dto.response.CommentResponse;
 import com.issuetrackermax.domain.comment.CommentRepository;
 import com.issuetrackermax.domain.comment.CommentValidator;
@@ -43,10 +43,10 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void modifyComment(CommentModifyRequest commentModifyRequest, Long commentId, Long memberId) {
+	public void modifyComment(CommentRequest commentRequest, Long commentId, Long memberId) {
 		memberValidator.existById(memberId);
 		commentValidator.checkWriter(commentId, memberId);
-		commentRepository.updateComment(Comment.from(commentModifyRequest), commentId);
+		commentRepository.updateComment(Comment.from(commentRequest), commentId);
 	}
 
 	@Transactional
