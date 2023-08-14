@@ -17,12 +17,16 @@ public interface IssueMapper {
 
 	List<IssuesResponse> getIssues(IssueFilterRequest request);
 
-	List<MultiFiltersAssignees> getMultiFiltersAssignees(@Param("check") boolean check, @Param("request") IssueFilterRequest request);
+	List<MultiFiltersAssignees> getMultiFiltersAssignees(@Param("check") boolean check,
+		@Param("request") IssueFilterRequest request);
 
-	List<MultiFiltersAuthors> getMultiFiltersAuthors(@Param("check") boolean check, @Param("request") IssueFilterRequest request);
+	List<MultiFiltersAuthors> getMultiFiltersAuthors(@Param("check") boolean check,
+		@Param("request") IssueFilterRequest request);
 
-	List<MultiFiltersLabels> getMultiFiltersLabels(@Param("check") boolean check, @Param("request") IssueFilterRequest request);
+	List<MultiFiltersLabels> getMultiFiltersLabels(@Param("check") boolean check,
+		@Param("request") IssueFilterRequest request);
 
-	List<MultiFiltersMilestones> getMultiFiltersMilestones(@Param("check") boolean check, @Param("request") IssueFilterRequest request);
+	List<MultiFiltersMilestones> getMultiFiltersMilestones(@Param("check") boolean check,
+		@Param("request") IssueFilterRequest request);
 
 }
