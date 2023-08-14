@@ -100,7 +100,7 @@ public class UserService {
 	public void logout(HttpServletRequest request) {
 		Long userId = Long.parseLong(String.valueOf(request.getAttribute("userId")));
 		userRepository.deleteTokenByUserId(userId)
-			.orElseThrow(() -> new CustomException(ErrorCode.DB_EXCEPTION));
+				.orElseThrow(() -> new CustomException(ErrorCode.FAILED_LOGOUT_USER));
 	}
 
 	public void validateUserIds(List<Long> assignees) {
