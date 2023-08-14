@@ -2,15 +2,15 @@ import { Theme, css } from '@emotion/react';
 import { Button } from '@components/common/Button';
 import { TextInput } from '@components/common/textInput/TextInput';
 import { useState } from 'react';
-import { registerUser } from '@utils/apis/auth';
+import { signUpUser } from 'apis/api';
 
 export const RegisterForm: React.FC = () => {
-  const [id, setId] = useState('');
+  const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const onIdChange = (id: string) => {
-    setId(id);
+    setLoginId(id);
   };
 
   const onPasswordChange = (password: string) => {
@@ -22,16 +22,17 @@ export const RegisterForm: React.FC = () => {
   };
 
   const onSubmit = () => {
-    registerUser(id, password);
+    signUpUser(loginId, password);
   };
 
-  const isIdError = (id.length > 0 && id.length < 6) || id.length > 17;
+  const isIdError =
+    (loginId.length > 0 && loginId.length < 6) || loginId.length > 17;
   const isPasswordError =
     (password.length > 0 && password.length < 6) || password.length > 12;
   const isPasswordMatchingError =
     confirmPassword.length > 0 && password !== confirmPassword;
   const submitButtonEnabled =
-    id.length > 0 &&
+    loginId.length > 0 &&
     password.length > 0 &&
     confirmPassword.length > 0 &&
     !isIdError &&
@@ -41,7 +42,7 @@ export const RegisterForm: React.FC = () => {
   return (
     <form css={formStyle} onSubmit={onSubmit}>
       <TextInput
-        value={id}
+        value={loginId}
         label="아이디"
         height={56}
         inputType="text"
