@@ -57,4 +57,9 @@ public class CommentRepository {
 		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", id), Boolean.class));
 	}
 
+	public boolean isCommentAuthorMatching(Long id, Long userId) {
+		String sql = "SELECT CASE WHEN COUNT(id) > 0 THEN true ELSE false END FROM comment WHERE id = :id AND user_id = :userId AND is_deleted = false";
+		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", id, "userId", userId), Boolean.class));
+	}
+
 }
