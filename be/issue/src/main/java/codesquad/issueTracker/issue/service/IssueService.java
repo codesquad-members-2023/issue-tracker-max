@@ -116,4 +116,12 @@ public class IssueService {
 		issueRepository.updateTitle(id, modifiedTitle);
 		return new ModifyIssueTitleResponse(modifiedTitle);
 	}
+
+	@Transactional
+	public Long delete(Long id) {
+		validateExistIssue(id);
+		Long deletedId = issueRepository.delete(id);
+		return deletedId;
+
+	}
 }

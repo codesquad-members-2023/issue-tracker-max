@@ -5,6 +5,7 @@ import static codesquad.issueTracker.global.exception.SuccessCode.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,5 +63,11 @@ public class IssueController {
 		@Valid @RequestBody ModifyIssueTitleRequest request) {
 		ModifyIssueTitleResponse response = issueService.modifyIssueTitle(id, request);
 		return ApiResponse.success(SUCCESS.getStatus(), response);
+	}
+
+	@DeleteMapping("/issues/{id}")
+	public ApiResponse<String> deleteIssues(@PathVariable Long id) {
+		issueService.delete(id);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 }

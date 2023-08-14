@@ -100,4 +100,12 @@ public class IssueRepository {
 		jdbcTemplate.update(sql, parameterSource);
 		return id;
 	}
+
+	public Long delete(Long id) {
+		String sql = "UPDATE issues SET is_deleted = 1 where id = :id";
+		SqlParameterSource parameters = new MapSqlParameterSource()
+			.addValue("id", id);
+		jdbcTemplate.update(sql, parameters);
+		return id;
+	}
 }
