@@ -1,7 +1,10 @@
 package codesquad.issueTracker.issue.service;
 
+import codesquad.issueTracker.global.common.Status;
 import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
+import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
 import codesquad.issueTracker.label.dto.LabelResponseDto;
+import codesquad.issueTracker.milestone.vo.MilestoneVo;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -73,6 +76,13 @@ public class IssueService {
 		LabelResponseDto allLabels = labelService.findAll();
 		return allLabels.getLabels().stream()
 				.map(IssueLabelResponseDto::from)
+				.collect(Collectors.toList());
+	}
+
+	public List<IssueMilestoneResponseDto> getIssueMilestones() {
+		List<MilestoneVo> milestones = milestoneService.findMilestonesByStatus(Status.OPEN.getStatus());
+		return milestones.stream()
+				.map(IssueMilestoneResponseDto::from)
 				.collect(Collectors.toList());
 	}
 }

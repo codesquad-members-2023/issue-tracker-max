@@ -71,4 +71,7 @@ public class MilestoneService {
 		}
 	}
 
+	public List<MilestoneVo> findMilestonesByStatus(Boolean status) {
+		return milestoneRepository.findAll(status);
+	}
 }

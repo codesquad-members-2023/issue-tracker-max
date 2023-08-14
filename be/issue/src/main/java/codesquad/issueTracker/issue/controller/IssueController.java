@@ -3,6 +3,7 @@ package codesquad.issueTracker.issue.controller;
 import static codesquad.issueTracker.global.exception.SuccessCode.*;
 
 import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
+import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -37,5 +38,11 @@ public class IssueController {
 	public ApiResponse<List<IssueLabelResponseDto>> getIssueLabels() {
 		List<IssueLabelResponseDto> labels = issueService.getIssueLabels();
 		return ApiResponse.success(SUCCESS.getStatus(), labels);
+	}
+
+	@GetMapping("/issues/milestones")
+	public ApiResponse<List<IssueMilestoneResponseDto>> getIssueMilestones() {
+		List<IssueMilestoneResponseDto> milestones = issueService.getIssueMilestones();
+		return ApiResponse.success(SUCCESS.getStatus(), milestones);
 	}
 }
