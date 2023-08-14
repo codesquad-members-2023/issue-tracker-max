@@ -80,6 +80,7 @@ const Section = styled.div`
   margin: 16px;
   display: flex;
   flex-direction: column;
+  flex: 1;
 `;
 
 const Label = styled.label`

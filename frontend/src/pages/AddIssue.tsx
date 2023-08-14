@@ -11,6 +11,7 @@ import ButtonLarge from '../components/common/button/ButtonLarge';
 import SideBar from '../components/common/SideBar';
 import TextInput from '../components/common/TextInput';
 import TextArea from '../components/common/TextArea';
+import defaultUserImg from '../asset/images/defaultUserImg.png';
 
 export default function AddIssue() {
   const { util } = useContext(AppContext);
@@ -24,11 +25,14 @@ export default function AddIssue() {
             alt="이슈트래커"
           />
         </Link>
-        <Profile>유저 프로필</Profile>
+        <Profile>
+          <img src={defaultUserImg} alt="" />
+        </Profile>
       </Header>
       <Main>
-        <h2>새로운 이슈 작성</h2>
+        <Title>새로운 이슈 작성</Title>
         <Container>
+          <UserImg src={defaultUserImg} alt="" />
           <InputArea>
             <TextInput
               size="tall"
@@ -43,7 +47,7 @@ export default function AddIssue() {
           <SideBar></SideBar>
         </Container>
         <ButtonArea>
-          <Button type="button" ghost iconName="xSquare">
+          <Button type="button" ghost flexible iconName="xSquare">
             작성 취소
           </Button>
           <ButtonLarge type="submit">완료</ButtonLarge>
@@ -55,8 +59,41 @@ export default function AddIssue() {
 
 const Profile = styled.div``;
 
-const Container = styled.div``;
+const Title = styled.h2`
+  padding-bottom: 24px;
+  border-bottom: ${({ theme }) => theme.objectStyles.border.default};
+  border-bottom-color: ${({ theme }) => theme.color.neutral.border.default};
+  color: ${({ theme }) => theme.color.neutral.text.strong};
+  ${({ theme }) => theme.font.display.bold[32]};
+`;
 
-const InputArea = styled.div``;
+const Container = styled.div`
+  padding-bottom: 24px;
+  margin-top: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  border-bottom: ${({ theme }) => theme.objectStyles.border.default};
+  border-bottom-color: ${({ theme }) => theme.color.neutral.border.default};
+`;
 
-const ButtonArea = styled.div``;
+const UserImg = styled.img``;
+
+const InputArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+
+  & > div {
+    height: 552px;
+  }
+`;
+
+const ButtonArea = styled.div`
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 32px;
+`;
