@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,13 @@ public class IssueController {
 	@PatchMapping("/issues/status")
 	public ApiResponse<String> patchStatus(@RequestBody ModifyIssueStatusRequestDto request) {
 		issueService.modifyIssueStatus(request);
+		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+	}
+
+	@PatchMapping("/issues/{id}/status")
+	public ApiResponse<String> patchInDetailStatus(@PathVariable Long id,
+		@RequestBody ModifyIssueStatusRequestDto request) {
+		issueService.modifyIssueStatusInDetail(id, request);
 		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
 	}
 

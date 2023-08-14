@@ -73,15 +73,27 @@ public class IssueService {
 	public List<Long> modifyIssueStatus(ModifyIssueStatusRequestDto request) {
 		List<Long> issueIds = request.getIssueIds();
 		Boolean status = Status.from(request.getStatus()).getStatus();
-		duplicatedId(issueIds);
-		validateExistIssue(issueIds);
-		return issueIds.stream()
-			.map(issueId -> issueRepository.modifyStatus(issueId, status)).collect(Collectors.toList());
+		if (issueIds != null) {
+			duplicatedId(issueIds);
+			issueIds.stream()
+				.map(issueId -> validateExistIssue(issueId))
+				.map(existIssue -> issueRepository.modifyStatus(existIssue.getId(), status))
+				.collect(Collectors.toList());
+			;
+		}
+		return issueIds;
+
 	}
 
-	private void validateExistIssue(List<Long> issuesIds) {
-		for (Long issueId : issuesIds) {
-			issueRepository.findById(issueId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ISSUES));
-		}
+	@Transactional
+	public Long modifyIssueStatusInDetail(Long id, ModifyIssueStatusRequestDto request) {
+		Boolean status = Status.from(request.getStatus()).getStatus();
+		validateExistIssue(id);
+		return issueRepository.modifyStatus(id, status);
+
+	}
+
+	private Issue validateExistIssue(Long issuesIds) {
+		return issueRepository.findById(issuesIds).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ISSUES));
 	}
 }
