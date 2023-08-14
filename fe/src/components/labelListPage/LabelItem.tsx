@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTheme } from '@emotion/react';
+import { Theme, css } from '@emotion/react';
 import { InformationTag } from '@components/common/InformationTag';
 import { Button } from '@components/common/Button';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
@@ -15,7 +15,6 @@ type Props = {
 };
 
 export const LabelItem: React.FC<Props> = ({ label, fetchLabelList }) => {
-  const theme = useTheme() as any;
   const [isEditing, setIsEditing] = useState(false);
   const [isOpenAlert, setIsOpenAlert] = useState(false);
 
@@ -46,16 +45,7 @@ export const LabelItem: React.FC<Props> = ({ label, fetchLabelList }) => {
   };
 
   return (
-    <li
-      css={{
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '32px',
-        boxSizing: 'border-box',
-      }}
-    >
+    <li css={labelItemStyle}>
       {isEditing ? (
         <LabelEditTable
           header={<TableHeader title="레이블 편집" />}
@@ -66,13 +56,7 @@ export const LabelItem: React.FC<Props> = ({ label, fetchLabelList }) => {
         />
       ) : (
         <>
-          <div
-            css={{
-              width: '176px',
-              displayf: 'flex',
-              alignItems: 'center',
-            }}
-          >
+          <div className="label-area">
             <InformationTag
               size="S"
               typeVariant="filled"
@@ -83,45 +67,25 @@ export const LabelItem: React.FC<Props> = ({ label, fetchLabelList }) => {
             </InformationTag>
           </div>
 
-          <span
-            css={{
-              width: '870px',
-              color: theme.neutral.text.weak,
-              font: theme.fonts.displayMedium16,
-            }}
-          >
-            {label.description}
-          </span>
-          <div
-            css={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '24px',
-            }}
-          >
+          <div className="description">{label.description}</div>
+
+          <div className="button-container">
             <Button
+              className="edit-button"
               typeVariant="ghost"
               size="S"
-              css={{
-                width: 'fit-content',
-                padding: '0',
-              }}
               onClick={onEditLabelOpen}
             >
-              <Edit stroke={theme.neutral.text.default} />
+              <Edit />
               편집
             </Button>
             <Button
+              className="delete-button"
               typeVariant="ghost"
               size="S"
-              css={{
-                width: 'fit-content',
-                padding: '0',
-                color: theme.danger.text.default,
-              }}
               onClick={onAlertOpen}
             >
-              <Trash stroke={theme.danger.text.default} />
+              <Trash />
               삭제
             </Button>
           </div>
@@ -143,3 +107,42 @@ export const LabelItem: React.FC<Props> = ({ label, fetchLabelList }) => {
     </li>
   );
 };
+
+const labelItemStyle = (theme: Theme) => css`
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+
+  .label-area {
+    min-width: 176px;
+  }
+
+  .description {
+    width: 100%;
+    color: ${theme.neutral.text.weak};
+    font: ${theme.fonts.displayMedium16};
+  }
+
+  .button-container {
+    min-width: 106px;
+    display: flex;
+    gap: 24px;
+
+    .edit-button,
+    .delete-button {
+      width: 43px;
+      padding: 0;
+      gap: 4px;
+    }
+
+    .edit-button {
+      stroke: ${theme.neutral.text.default};
+    }
+
+    .delete-button {
+      color: ${theme.danger.text.default};
+      stroke: ${theme.danger.text.default};
+    }
+  }
+`;
