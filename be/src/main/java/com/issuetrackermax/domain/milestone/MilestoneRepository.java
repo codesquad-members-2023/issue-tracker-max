@@ -3,7 +3,6 @@ package com.issuetrackermax.domain.milestone;
 import java.sql.Types;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.dao.support.DataAccessUtils;
@@ -41,9 +40,9 @@ public class MilestoneRepository {
 			.addValue("isOpen", milestone.getIsOpen(), Types.TINYINT)
 			.addValue("dueDate", milestone.getDuedate(), Types.DATE);
 
-		jdbcTemplate.update(sql, parameters, keyHolder);
-		Map<String, Object> keys = keyHolder.getKeys();
-		return (Long)Objects.requireNonNull(keys).get("ID");
+		jdbcTemplate.update(sql, parameters, keyHolder, new String[] {"id"});
+		return keyHolder.getKey().longValue();
+
 	}
 
 	public Long update(Long id, Milestone milestone) {
@@ -54,9 +53,9 @@ public class MilestoneRepository {
 			.addValue("title", milestone.getTitle(), Types.VARCHAR)
 			.addValue("description", milestone.getDescription(), Types.VARCHAR)
 			.addValue("dueDate", milestone.getDuedate(), Types.DATE);
-		jdbcTemplate.update(sql, parameters, keyHolder);
-		Map<String, Object> keys = keyHolder.getKeys();
-		return (Long)Objects.requireNonNull(keys).get("ID");
+		jdbcTemplate.update(sql, parameters, keyHolder, new String[] {"id"});
+		return keyHolder.getKey().longValue();
+
 	}
 
 	public Long getMilestoneCount() {
@@ -78,6 +77,12 @@ public class MilestoneRepository {
 		String sql = "SELECT EXISTS (SELECT 1 FROM milestone WHERE id = :id)";
 		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
 			.addValue("id", id), Boolean.class);
+	}
+
+	public Boolean existByTitle(String title) {
+		String sql = "SELECT EXISTS(SELECT 1 FROM milestone WHERE title =:title)";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("title", title), Boolean.class);
 	}
 
 	public int deleteById(Long id) {

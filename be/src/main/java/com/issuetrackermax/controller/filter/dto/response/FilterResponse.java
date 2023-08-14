@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FilterResponse {
 	private Long labelCount;
-	private Long mileStoneCount;
+	private Long milestoneCount;
 	private Long openIssueCount;
 	private Long closedIssueCount;
 	private List<IssueResponse> issues;
 
 	@Builder
-	public FilterResponse(Long labelCount, Long mileStoneCount, Long openIssueCount, Long closedIssueCount,
+	public FilterResponse(Long labelCount, Long milestoneCount, Long openIssueCount, Long closedIssueCount,
 		List<IssueResponse> issues) {
 		this.labelCount = labelCount;
-		this.mileStoneCount = mileStoneCount;
+		this.milestoneCount = milestoneCount;
 		this.openIssueCount = openIssueCount;
 		this.closedIssueCount = closedIssueCount;
 		this.issues = issues;

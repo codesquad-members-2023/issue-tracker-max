@@ -28,6 +28,7 @@ public class LabelService {
 
 	@Transactional
 	public Long save(LabelPostRequest labelPostRequest) {
+		labelValidator.existByTitle(labelPostRequest.getTitle());
 		return labelRepository.save(Label.from(labelPostRequest));
 	}
 

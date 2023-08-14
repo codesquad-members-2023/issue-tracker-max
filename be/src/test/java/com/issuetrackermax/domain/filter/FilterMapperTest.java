@@ -261,9 +261,9 @@ class FilterMapperTest extends IntegrationTestSupport {
 		Long issueId1 = issueRepository.save(makeIssue(true, "issuetitle1", 1L, 1L));
 		Long issueId2 = issueRepository.save(makeIssue(true, "issuetitle2", 1L, 1L));
 		Long issueId3 = issueRepository.save(makeIssue(true, "issuetitle3", 1L, 1L));
-		Long commentId1 = commentRepository.save(makeComment("c1", "img1", 1L));
-		Long commentId2 = commentRepository.save(makeComment("c2", "img2", 1L));
-		Long commentId3 = commentRepository.save(makeComment("c3", "img3", 2L));
+		Long commentId1 = commentRepository.save(makeComment("c1", 1L));
+		Long commentId2 = commentRepository.save(makeComment("c2", 1L));
+		Long commentId3 = commentRepository.save(makeComment("c3", 2L));
 		issueCommentRepository.save(makeIssueWithComment(issueId1, commentId1));
 		issueCommentRepository.save(makeIssueWithComment(issueId2, commentId2));
 		issueCommentRepository.save(makeIssueWithComment(issueId3, commentId3));

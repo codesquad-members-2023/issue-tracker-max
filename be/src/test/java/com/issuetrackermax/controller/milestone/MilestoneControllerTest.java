@@ -56,12 +56,12 @@ class MilestoneControllerTest extends ControllerTestSupport {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value("true"))
 			.andExpect(jsonPath("$.data.labelCount").value(2L))
-			.andExpect(jsonPath("$.data.closedMilestoneCount").value(2L))
-			.andExpect(jsonPath("$.data.milestones[0].name").value("title"))
+			.andExpect(jsonPath("$.data.oppositeCount").value(2L))
+			.andExpect(jsonPath("$.data.milestones[0].title").value("title"))
 			.andExpect(jsonPath("$.data.milestones[0].description").value("description"))
 			.andExpect(jsonPath("$.data.milestones[0].openIssueCount").value(1L))
 			.andExpect(jsonPath("$.data.milestones[0].closedIssueCount").value(2L))
-			.andExpect(jsonPath("$.data.milestones[1].name").value("title2"))
+			.andExpect(jsonPath("$.data.milestones[1].title").value("title2"))
 			.andExpect(jsonPath("$.data.milestones[1].description").value("description2"))
 			.andExpect(jsonPath("$.data.milestones[1].openIssueCount").value(3L))
 			.andExpect(jsonPath("$.data.milestones[1].closedIssueCount").value(4L));
@@ -73,7 +73,7 @@ class MilestoneControllerTest extends ControllerTestSupport {
 
 		// given
 		MilestonePostRequest request = MilestonePostRequest.builder()
-			.name("title")
+			.title("title")
 			.description("description")
 			.dueDate(LocalDateTime.now())
 			.build();

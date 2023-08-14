@@ -10,6 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.issuetrackermax.common.exception.ApiException;
+import com.issuetrackermax.common.exception.domain.LabelException;
 import com.issuetrackermax.controller.label.dto.request.LabelModifyRequest;
 import com.issuetrackermax.controller.label.dto.request.LabelPostRequest;
 import com.issuetrackermax.controller.label.dto.response.LabelDetailResponse;
@@ -45,12 +47,12 @@ class LabelServiceTest extends IntegrationTestSupport {
 		// when
 		assertAll(
 			() -> assertThat(labelList.get(0).getId()).isEqualTo(labelId1),
-			() -> assertThat(labelList.get(0).getName()).isEqualTo("title1"),
+			() -> assertThat(labelList.get(0).getTitle()).isEqualTo("title1"),
 			() -> assertThat(labelList.get(0).getDescription()).isEqualTo("description1"),
 			() -> assertThat(labelList.get(0).getTextColor()).isEqualTo("0#1111"),
 			() -> assertThat(labelList.get(0).getBackgroundColor()).isEqualTo("0#2222"),
 			() -> assertThat(labelList.get(1).getId()).isEqualTo(labelId2),
-			() -> assertThat(labelList.get(1).getName()).isEqualTo("title2"),
+			() -> assertThat(labelList.get(1).getTitle()).isEqualTo("title2"),
 			() -> assertThat(labelList.get(1).getDescription()).isEqualTo("description2"),
 			() -> assertThat(labelList.get(1).getTextColor()).isEqualTo("0#3333"),
 			() -> assertThat(labelList.get(1).getBackgroundColor()).isEqualTo("0#4444")
@@ -76,6 +78,23 @@ class LabelServiceTest extends IntegrationTestSupport {
 			() -> assertThat(label.getBackgroundColor()).isEqualTo("0#2222")
 		);
 
+	}
+
+	@DisplayName("레이블을 저장하고,같은 이름의 레이블을 저장하면 오류가 발생한다..")
+	@Test
+	void saveDuplicateTitle() {
+		// given
+		LabelPostRequest labelPostRequest = new LabelPostRequest("title1", "description1", "0#1111", "0#2222");
+		Long id = labelService.save(labelPostRequest);
+		LabelPostRequest labelPostRequest2 = new LabelPostRequest("title1", "description1", "0#1111", "0#2222");
+
+		// when & then
+		assertThatThrownBy(() -> labelService.save(labelPostRequest2))
+			.isInstanceOf(ApiException.class)
+			.satisfies(exception -> {
+				ApiException apiException = (ApiException)exception;
+				assertThat(apiException.getCustomException()).isInstanceOf(LabelException.class);
+			});
 	}
 
 	@DisplayName("저장된 레이블을 수정하고, 수정된 값을 확인한다.")

@@ -4,18 +4,20 @@ import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class MilestoneCloseResponse {
+@NoArgsConstructor
+public class MilestonesResponse {
 	private Long labelCount;
-	private Long openMilestoneCount;
+	private Long oppositeCount;
 	private List<MilestoneDetailResponse> milestones;
 
 	@Builder
-	public MilestoneCloseResponse(Long labelCount, Long openMilestoneCount,
+	public MilestonesResponse(Long labelCount, Long oppositeCount,
 		List<MilestoneDetailResponse> milestones) {
 		this.labelCount = labelCount;
-		this.openMilestoneCount = openMilestoneCount;
+		this.oppositeCount = oppositeCount;
 		this.milestones = milestones;
 	}
 }

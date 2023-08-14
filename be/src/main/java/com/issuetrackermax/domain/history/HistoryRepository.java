@@ -3,7 +3,6 @@ package com.issuetrackermax.domain.history;
 import java.sql.Types;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -56,8 +55,7 @@ public class HistoryRepository {
 			.addValue("editor", history.getEditor(), Types.VARCHAR)
 			.addValue("issueId", history.getIssueId(), Types.BIGINT)
 			.addValue("issueIsOpen", history.getIssueIsOpen(), Types.TINYINT);
-		jdbcTemplate.update(sql, parameters, keyHolder);
-		Map<String, Object> keys = keyHolder.getKeys();
-		return (Long)Objects.requireNonNull(keys).get("ID");
+		jdbcTemplate.update(sql, parameters, keyHolder, new String[] {"id"});
+		return keyHolder.getKey().longValue();
 	}
 }

@@ -59,7 +59,7 @@ public class IssueService {
 		applyAssignees(issueId, request.toAssignee());
 		applyLabels(issueId, request.toLabel());
 
-		if (request.getContent() != null || request.getImageUrl() != null) {
+		if (request.getContent() != null) {
 			saveComment(request, writerId, issueId);
 		}
 		return IssuePostResponse.from(issueId);

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.PatternMatchUtils;
+import org.springframework.web.cors.CorsUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetrackermax.common.exception.domain.JwtException;
@@ -42,7 +43,10 @@ public class JwtAuthorizationFilter implements Filter {
 		throws ServletException, IOException {
 
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-
+		if (CorsUtils.isPreFlightRequest(httpServletRequest)) {
+			chain.doFilter(request, response);
+			return;
+		}
 		if (whiteListCheck(httpServletRequest.getRequestURI())) {
 			chain.doFilter(request, response);
 			return;

@@ -2,7 +2,6 @@ package com.issuetrackermax.domain.issue;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -58,9 +57,9 @@ public class IssueRepository {
 			.addValue("title", issue.getTitle())
 			.addValue("isOpen", issue.getIsOpen())
 			.addValue("writerId", issue.getWriterId())
-			.addValue("milestoneId", issue.getMilestoneId()), keyHolder);
-		Map<String, Object> keys = keyHolder.getKeys();
-		return (long)Objects.requireNonNull(keys).get("id");
+			.addValue("milestoneId", issue.getMilestoneId()), keyHolder, new String[] {"id"});
+		return keyHolder.getKey().longValue();
+
 	}
 
 	public int openByIds(List<Long> ids) {

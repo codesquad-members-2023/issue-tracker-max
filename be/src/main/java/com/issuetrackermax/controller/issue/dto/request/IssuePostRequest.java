@@ -17,17 +17,15 @@ public class IssuePostRequest {
 	@NotBlank(message = "이슈 제목을 입력해주세요.")
 	private String title;
 	private String content;
-	private String imageUrl;
 	private List<Long> assigneeIds;
 	private List<Long> labelIds;
 	private Long milestoneId;
 
 	@Builder
-	public IssuePostRequest(String title, String content, String imageUrl, List<Long> assigneeIds,
+	public IssuePostRequest(String title, String content, List<Long> assigneeIds,
 		List<Long> labelIds, Long milestoneId) {
 		this.title = title;
 		this.content = content;
-		this.imageUrl = imageUrl;
 		this.assigneeIds = assigneeIds;
 		this.labelIds = labelIds;
 		this.milestoneId = milestoneId;
@@ -58,7 +56,6 @@ public class IssuePostRequest {
 		return Comment.builder()
 			.content(content)
 			.writerId(writerId)
-			.imageUrl(imageUrl)
 			.build();
 	}
 }
