@@ -76,8 +76,7 @@ class AuthenticateUserServiceTest extends IntegrationTestSupport {
 		AuthenticateUser authenticateUser = userQueryService.verifyUser(
 			new UserLoginServiceRequest("hong1234", "hong1234"));
 		authenticateUserService.updateRefreshToken(authenticateUser, jwt);
-		RefreshTokenServiceRequest refreshTokenServiceRequest = new RefreshTokenServiceRequest(
-			jwt.createRefreshTokenCookie().getValue());
+		RefreshTokenServiceRequest refreshTokenServiceRequest = new RefreshTokenServiceRequest(jwt.getRefreshToken());
 		// when
 		Jwt refreshedJwt = authenticateUserService.refreshToken(refreshTokenServiceRequest);
 		// then
@@ -89,21 +88,26 @@ class AuthenticateUserServiceTest extends IntegrationTestSupport {
 
 	@Test
 	@DisplayName("처음 로그인하는 인증 유저와 JWT가 주어지고 RefreshToken 갱신을 요청할때 RefreshToken이 저장된다")
-	public void updateRefreshToken_givenAuthenticateUserAndJwt_whenUpdateRefreshToken_thenSaveTheRefreshToken() {
+	public void updateRefreshToken_givenAuthenticateUserAndJwt_whenUpdateRefreshToken_thenSaveTheRefreshToken() throws
+		JsonProcessingException {
 		// given
+		HashMap<String, Object> claims = new HashMap<>();
+
 		// 회원가입
 		userService.signUp(new UserSaveServiceRequest("hong1234", "hong1234@gmail.com", "hong1234", "hong1234", null));
+
 		// 인증 유저 및 jwt 생성
-		HashMap<String, Object> claims = new HashMap<>();
-		Jwt jwt = jwtProvider.createJwt(claims);
 		AuthenticateUser authenticateUser = userQueryService.verifyUser(
 			new UserLoginServiceRequest("hong1234", "hong1234"));
+		claims.put(VerifyUserFilter.AUTHENTICATE_USER, objectMapper.writeValueAsString(authenticateUser));
+		Jwt jwt = jwtProvider.createJwt(claims);
+
 		// when
 		authenticateUserService.updateRefreshToken(authenticateUser, jwt);
 		// then
-		boolean actual = authenticateUserRepository.isExistRefreshToken(authenticateUser.toEntity());
+		String refreshToken = (String)redisTemplate.opsForValue().get(authenticateUser.createRedisKey());
 		SoftAssertions.assertSoftly(softAssertions -> {
-			softAssertions.assertThat(actual).isTrue();
+			softAssertions.assertThat(refreshToken).isEqualTo(jwt.getRefreshToken());
 			softAssertions.assertAll();
 		});
 	}
