@@ -55,11 +55,6 @@ public class UserService {
 
 		Jwt jwt = jwtProvider.generateToken(Map.of("userId", user.getUserId()));
 		jwtService.saveRefreshToken(jwt.getRefreshToken(), loginId);
-		return LoginResponse.builder()
-			.loginId(user.getLoginId())
-			.image(user.getImage())
-			.accessToken(jwt.getAccessToken())
-			.refreshToken(jwt.getRefreshToken())
-			.build();
+		return LoginResponse.of(user, jwt);
 	}
 }
