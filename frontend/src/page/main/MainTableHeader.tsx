@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { styled } from "styled-components";
-import { Button } from "../Button";
-import { TabButton } from "../TabButton";
-import { DropdownContainer } from "../dropdown/DropdownContainer";
-import { IconType } from "../icon/Icon";
+import { Button } from "../../components/Button";
+import { TabButton } from "../../components/TabButton";
+import { DropdownContainer } from "../../components/dropdown/DropdownContainer";
+import { IconType } from "../../components/icon/Icon";
+import { MultiFilters, Option } from "./Main";
 
 type IssueState = {
   name: string;
@@ -14,13 +15,15 @@ type IssueState = {
 type TableHeaderProps = {
   openedIssueCount: number;
   closedIssueCount: number;
-  multiFilters: object;
+  multiFilters: MultiFilters;
+  setMultiFilterString: (value: string, multipleSelect: boolean) => void;
 };
 
-export function IssueTableHeader({
+export function MainTableHeader({
   openedIssueCount,
   closedIssueCount,
   multiFilters,
+  setMultiFilterString,
 }: TableHeaderProps) {
   const [issueStates, setIssueStates] = useState<IssueState[]>([
     {
@@ -40,6 +43,20 @@ export function IssueTableHeader({
       ),
     );
   };
+
+  const addOnClickToOptions = (
+    key: string,
+    options: Option[],
+    multipleSelect: boolean,
+  ) => {
+    return options.map((option) => ({
+      ...option,
+      onClick: () => {
+        setMultiFilterString(`${key}:${option.name}`, multipleSelect);
+      },
+    }));
+  };
+
   return (
     <Div>
       <CheckboxLabel>
@@ -66,8 +83,13 @@ export function IssueTableHeader({
             key={index}
             name={key}
             optionTitle={`${key} 필터`}
-            options={value}
+            options={addOnClickToOptions(
+              key,
+              value.options,
+              value.multipleSelect,
+            )}
             alignment="Right"
+            autoClose
           />
         ))}
       </MultiFiltersDiv>

@@ -1,11 +1,11 @@
 import { styled } from "styled-components";
-import { IssueData } from "../../page/main/Main";
+import { Avatar } from "../../components/Avatar";
+import { InformationTag } from "../../components/InformationTag";
+import { Icon, ThemeColorKeys } from "../../components/icon/Icon";
 import { getElapsedSince } from "../../utils/getElapsedSince";
-import { Avatar } from "../Avatar";
-import { InformationTag } from "../InformationTag";
-import { Icon, ThemeColorKeys } from "../icon/Icon";
+import { IssueData } from "./Main";
 
-export function Issue({ issue }: { issue: IssueData }) {
+export function MainTableElement({ issue }: { issue: IssueData }) {
   const iconColors: {
     [key: string]: ThemeColorKeys;
   } = {
@@ -41,19 +41,25 @@ export function Issue({ issue }: { issue: IssueData }) {
               issue.author.name
             }님에 의해 작성되었습니다.`}
           </span>
-          {issue.milestone && (
+          {issue.milestones && (
             <span>
               <Icon name="Milestone" color={iconColors.issueInfo} />
-              {issue.milestone.name}
+              {issue.milestones.name}
             </span>
           )}
         </IssueInfo>
       </IssueContent>
       <AssigneesDiv>
-        <Avatar
-          size="S"
-          src="https://avatars.githubusercontent.com/u/41321198?v=4"
-        />
+        {issue.assignees.map((assignee, index) => {
+          return (
+            <Avatar
+              key={index}
+              size="S"
+              src={assignee.avatarUrl}
+              userId={assignee.name}
+            />
+          );
+        })}
       </AssigneesDiv>
       <CommentDiv>
         {issue.commentCount !== 0 && (
@@ -122,8 +128,19 @@ const IssueInfo = styled.div`
 const AssigneesDiv = styled.div`
   width: 96px;
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+
+  & > div {
+    margin-left: -10px;
+    transition: all 0.3s ease;
+  }
+
+  &:hover > div {
+    margin-left: 0;
+  }
 `;
 
 const CommentDiv = styled.div`
