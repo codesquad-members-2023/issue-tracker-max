@@ -32,7 +32,7 @@ public class JwtService {
 		String loginId = jwtRepository.findByRefreshToken(refreshToken);
 		User user = userRepository.findByLoginId(loginId)
 			.orElseThrow(() -> {
-				throw new CustomException(JwtErrorCode.INVALID_JWT_TOKEN);
+				throw new CustomException(JwtErrorCode.NOT_VALID_LOGIN_INFO);
 			});
 
 		return jwtProvider.reissueToken(Map.of("userId", user.getUserId()), refreshToken);

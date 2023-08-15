@@ -33,6 +33,6 @@ public class JwtRepository {
 				rs.getString("login_id"))
 			.stream()
 			.findFirst()
-			.orElseThrow(() -> new CustomException(JwtErrorCode.NOT_VALID_LOGIN_INFO));
+			.orElseThrow(() -> new CustomException(JwtErrorCode.INVALID_JWT_TOKEN));
 	}
 }
