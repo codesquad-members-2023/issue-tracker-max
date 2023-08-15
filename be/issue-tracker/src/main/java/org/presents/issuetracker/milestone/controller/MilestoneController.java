@@ -2,14 +2,17 @@ package org.presents.issuetracker.milestone.controller;
 
 import java.util.List;
 
+import org.presents.issuetracker.global.dto.response.IdResponseDto;
+import org.presents.issuetracker.milestone.dto.request.MilestoneRequest;
 import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
 import org.presents.issuetracker.milestone.service.MilestoneService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/milestones")
@@ -23,5 +26,11 @@ public class MilestoneController {
 		// 필터링 뷰에서 '마일스톤이 없는 이슈'를 표시하기 위해서 0번째에 객체 추가
 		milestonePreviews.add(0, MilestonePreviewResponse.getMilestoneNotAssignedResponse());
 		return ResponseEntity.ok().body(milestonePreviews);
+	}
+
+	@PostMapping
+	public ResponseEntity<IdResponseDto> create(@RequestBody @Valid MilestoneRequest milestoneRequest) {
+		IdResponseDto idResponseDto = milestoneService.create(milestoneRequest);
+		return ResponseEntity.status(HttpStatus.CREATED).body(idResponseDto);
 	}
 }

@@ -3,7 +3,6 @@ package org.presents.issuetracker.milestone.entity;
 import java.time.LocalDateTime;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +23,15 @@ public class Milestone {
 		this.deadline = deadline;
 		this.description = description;
 		this.status = status;
+	}
+
+	private Milestone(String name, LocalDateTime deadline, String description) {
+		this.name = name;
+		this.deadline = deadline;
+		this.description = description;
+	}
+
+	public static Milestone create(String name, LocalDateTime deadline, String description) {
+		return new Milestone(name, deadline, description);
 	}
 }

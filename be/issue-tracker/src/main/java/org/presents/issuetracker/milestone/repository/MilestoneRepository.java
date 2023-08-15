@@ -2,11 +2,14 @@ package org.presents.issuetracker.milestone.repository;
 
 import java.util.List;
 
+import org.presents.issuetracker.milestone.entity.Milestone;
 import org.presents.issuetracker.milestone.entity.vo.MilestoneInfo;
 import org.presents.issuetracker.milestone.entity.vo.MilestonePreview;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -60,5 +63,19 @@ public class MilestoneRepository {
 			+ "WHERE status != 'deleted'";
 
 		return jdbcTemplate.query(sql, milestonePreviewRowMapper);
+	}
+
+	public Long save(Milestone milestone) {
+		final String sql = "INSERT INTO milestone(name, deadline, description) VALUES (:name, :deadline, :description)";
+
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("name", milestone.getName());
+		params.addValue("deadline", milestone.getDeadline());
+		params.addValue("description", milestone.getDescription());
+
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(sql, params, keyHolder);
+
+		return keyHolder.getKey().longValue();
 	}
 }
