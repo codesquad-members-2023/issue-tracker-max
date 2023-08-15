@@ -45,8 +45,9 @@ public class UserReactionController {
 	}
 
 	@DeleteMapping("/{userReactionId}")
-	public ApiResponse<UserReactionDeleteResponse> deleteIssueReaction(@PathVariable Long userReactionId) {
-		userReactionService.deleteIssueReaction(userReactionId);
+	public ApiResponse<UserReactionDeleteResponse> deleteReaction(@PathVariable Long userReactionId,
+		@Login AuthenticateUser user) {
+		userReactionService.deleteReaction(userReactionId, user.toEntity().getId());
 		return ApiResponse.ok(UserReactionDeleteResponse.success(userReactionId));
 	}
 }

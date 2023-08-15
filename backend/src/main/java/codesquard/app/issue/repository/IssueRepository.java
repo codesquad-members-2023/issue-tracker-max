@@ -50,4 +50,6 @@ public interface IssueRepository {
 	Long countIssueByStatus(IssueStatus status);
 
 	List<IssueCommentsResponse> findCommentsBy(Long issueId, Long userId);
+
+	boolean isSameIssueAuthor(Long issueId, Long userId);
 }

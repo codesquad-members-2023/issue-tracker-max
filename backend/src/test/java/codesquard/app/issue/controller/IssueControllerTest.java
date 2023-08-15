@@ -152,6 +152,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 상태를 수정한다.")
 	@Test
 	void modifyStatus() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest("CLOSED");
@@ -168,11 +171,14 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 상태 수정시 유효하지 않은 status 값이 오면 400 에러를 반환한다.")
 	@Test
 	void modifyInvalidStatus_Response400() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(INVALID_ISSUE_STATUS_NAME);
 		willThrow(new IllegalIssueStatusException(IssueErrorCode.INVALID_ISSUE_STATUS))
-			.given(issueService).modifyStatus(any(IssueModifyStatusRequest.class), anyLong());
+			.given(issueService).modifyStatus(any(IssueModifyStatusRequest.class), anyLong(), anyLong());
 
 		// when & then
 		mockMvc.perform(patch("/api/issues/" + issueId + "/status")
@@ -185,6 +191,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 제목을 수정한다.")
 	@Test
 	void modifyTitle() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		IssueModifyTitleRequest issueModifyTitleRequest = new IssueModifyTitleRequest("수정된 제목");
@@ -249,6 +258,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 내용을 수정한다.")
 	@Test
 	void modifyContent() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		IssueModifyContentRequest issueModifyContentRequest = new IssueModifyContentRequest("수정된 내용");
@@ -281,6 +293,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 마일스톤을 수정한다.")
 	@Test
 	void modifyMilestone() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		Long milestoneId = 2L;
@@ -298,6 +313,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 책임자를 수정한다.")
 	@Test
 	void modifyAssignees() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		List<Long> assigneesId = List.of(1L, 2L);
@@ -315,6 +333,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 라벨을 수정한다.")
 	@Test
 	void modifyLabels() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		List<Long> labelsId = List.of(1L, 2L);
@@ -332,6 +353,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈를 삭제한다.")
 	@Test
 	void deleteIssue() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 

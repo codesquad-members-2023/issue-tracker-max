@@ -91,6 +91,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("사용자 반응을 삭제한다.")
 	@Test
 	void deleteUserReaction() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int userReactionId = 1;
 
@@ -104,10 +107,14 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("사용자 반응이 존재하지 않을 때 사용자 반응 삭제에 실패한다.")
 	@Test
 	void deleteUserReaction_Fail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+		
 		// given
 		Long userReactionId = 1L;
+		Long userId = 1L;
 		willThrow(new NoSuchUserReactionException())
-			.given(userReactionService).deleteIssueReaction(userReactionId);
+			.given(userReactionService).deleteReaction(userReactionId, userId);
 
 		// when & then
 		mockMvc.perform(delete("/api/reactions/" + userReactionId))

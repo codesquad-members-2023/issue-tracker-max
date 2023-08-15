@@ -30,8 +30,8 @@ public class UserReactionService {
 		return userReactionRepository.saveCommentReaction(reactionId, userId, commentId);
 	}
 
-	public void deleteIssueReaction(Long id) {
-		userReactionQueryService.validateExistUserReactionId(id);
+	public void deleteReaction(Long id, Long userId) {
+		userReactionQueryService.validateUserReactionAuthor(id, userId);
 		userReactionRepository.delete(id);
 	}
 }

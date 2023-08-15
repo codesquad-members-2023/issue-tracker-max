@@ -15,6 +15,7 @@ import codesquard.app.api.errors.exception.NoSuchCommentException;
 import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.api.errors.exception.NoSuchReactionException;
 import codesquard.app.api.errors.exception.NoSuchUserReactionException;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.comment.service.CommentService;
 import codesquard.app.comment.service.request.CommentSaveServiceRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
@@ -148,14 +149,14 @@ class UserReactionServiceTest extends IntegrationTestSupport {
 	@Test
 	void delete() {
 		// given
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", null, loginId);
-		Long issueId = issueService.save(issueSaveRequest, loginId);
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", null, userId);
+		Long issueId = issueService.save(issueSaveRequest, userId);
 		Long reactionId = 1L;
-		Long id = userReactionService.saveIssueReaction(reactionId, loginId, issueId);
+		Long id = userReactionService.saveIssueReaction(reactionId, userId, issueId);
 
 		// when
-		userReactionService.deleteIssueReaction(id);
+		userReactionService.deleteReaction(id, userId);
 
 		// then
 		assertThatThrownBy(() -> userReactionQueryService.validateExistUserReactionId(id)).isInstanceOf(
@@ -167,9 +168,25 @@ class UserReactionServiceTest extends IntegrationTestSupport {
 	void delete_Fail() {
 		// given
 		Long id = 10000L;
-		
+		Long userId = 1L;
+
 		// when & then
-		assertThatThrownBy(() -> userReactionService.deleteIssueReaction(id)).isInstanceOf(
+		assertThatThrownBy(() -> userReactionService.deleteReaction(id, userId)).isInstanceOf(
 			NoSuchUserReactionException.class);
+	}
+
+	@DisplayName("사용자 반응을 삭제할 때 사용자 반응 작성자와 유저가 다를 시 403에러를 반환한다.")
+	@Test
+	void delete_IfNotSameAuthor_Response403() {
+		// given
+		Long authorId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", null, authorId);
+		Long issueId = issueService.save(issueSaveRequest, authorId);
+		Long reactionId = 1L;
+		Long id = userReactionService.saveIssueReaction(reactionId, authorId, issueId);
+		Long userId = 0L;
+
+		// when & then
+		assertThatThrownBy(() -> userReactionService.deleteReaction(id, userId)).isInstanceOf(RestApiException.class);
 	}
 }

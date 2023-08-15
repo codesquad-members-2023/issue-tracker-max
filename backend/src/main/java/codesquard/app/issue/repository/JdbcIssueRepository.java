@@ -208,6 +208,13 @@ public class JdbcIssueRepository implements IssueRepository {
 		return template.query(sql, Map.of("issueId", issueId), issueCommentsResponseRowMapper(userId));
 	}
 
+	@Override
+	public boolean isSameIssueAuthor(Long issueId, Long userId) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id AND user_id = :userId AND is_deleted = false)";
+		return Boolean.TRUE.equals(
+			template.queryForObject(sql, Map.of("id", issueId, "userId", userId), Boolean.class));
+	}
+
 	private RowMapper<IssueCommentsResponse> issueCommentsResponseRowMapper(Long userId) {
 		return ((rs, rowNum) -> new IssueCommentsResponse(
 			rs.getLong("id"),

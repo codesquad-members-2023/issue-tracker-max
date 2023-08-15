@@ -33,41 +33,41 @@ public class IssueService {
 		return id;
 	}
 
-	public void modifyStatus(IssueModifyStatusRequest issueModifyStatusRequest, Long issueId) {
+	public void modifyStatus(IssueModifyStatusRequest issueModifyStatusRequest, Long issueId, Long userId) {
 		IssueStatus issueStatus = IssueStatus.validateIssueStatus(issueModifyStatusRequest.getStatus());
-		issueQueryService.validateExistIssue(issueId);
+		issueQueryService.validateIssueAuthor(issueId, userId);
 		issueRepository.modifyStatus(issueStatus.name(), issueId, LocalDateTime.now());
 	}
 
-	public void modifyTitle(IssueModifyTitleRequest issueModifyTitleRequest, Long issueId) {
-		issueQueryService.validateExistIssue(issueId);
+	public void modifyTitle(IssueModifyTitleRequest issueModifyTitleRequest, Long issueId, Long userId) {
+		issueQueryService.validateIssueAuthor(issueId, userId);
 		issueRepository.modifyTitle(issueModifyTitleRequest.getTitle(), issueId, LocalDateTime.now());
 	}
 
-	public void modifyContent(IssueModifyContentRequest issueModifyTitleRequest, Long issueId) {
-		issueQueryService.validateExistIssue(issueId);
+	public void modifyContent(IssueModifyContentRequest issueModifyTitleRequest, Long issueId, Long userId) {
+		issueQueryService.validateIssueAuthor(issueId, userId);
 		issueRepository.modifyContent(issueModifyTitleRequest.getContent(), issueId, LocalDateTime.now());
 	}
 
-	public void modifyAssignees(IssueModifyAssigneesRequest issueModifyAssigneesRequest, Long issueId) {
-		issueQueryService.validateExistIssue(issueId);
+	public void modifyAssignees(IssueModifyAssigneesRequest issueModifyAssigneesRequest, Long issueId, Long userId) {
+		issueQueryService.validateIssueAuthor(issueId, userId);
 		issueRepository.deleteIssueAssigneesBy(issueId);
 		issueRepository.saveIssueAssignee(issueId, issueModifyAssigneesRequest.getAssignees());
 	}
 
-	public void modifyMilestone(IssueModifyMilestoneRequest issueModifyMilestoneRequest, Long issueId) {
-		issueQueryService.validateExistIssue(issueId);
+	public void modifyMilestone(IssueModifyMilestoneRequest issueModifyMilestoneRequest, Long issueId, Long userId) {
+		issueQueryService.validateIssueAuthor(issueId, userId);
 		issueRepository.modifyMilestone(issueModifyMilestoneRequest.getMilestone(), issueId);
 	}
 
-	public void modifyLabels(IssueModifyLabelsRequest issueModifyLabelsRequest, Long issueId) {
-		issueQueryService.validateExistIssue(issueId);
+	public void modifyLabels(IssueModifyLabelsRequest issueModifyLabelsRequest, Long issueId, Long userId) {
+		issueQueryService.validateIssueAuthor(issueId, userId);
 		issueRepository.deleteIssueLabelsBy(issueId);
 		issueRepository.saveIssueLabel(issueId, issueModifyLabelsRequest.getLabels());
 	}
 
-	public void delete(Long issueId) {
-		issueQueryService.validateExistIssue(issueId);
+	public void delete(Long issueId, Long userId) {
+		issueQueryService.validateIssueAuthor(issueId, userId);
 		issueRepository.deleteBy(issueId);
 		commentRepository.deleteByIssueId(issueId);
 	}
