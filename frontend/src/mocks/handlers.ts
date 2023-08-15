@@ -1,4 +1,7 @@
 import { rest } from "msw";
+import { assigneeHandlers } from "./assigneeHandlers";
+import { commentHandlers } from "./commentHandlers";
+import { issueHandlers } from "./issueHandlers";
 
 type LabelRequestBody = {
   name: string;
@@ -77,6 +80,8 @@ export const handlers = [
       return res(ctx.status(200), ctx.json(openedMilestones));
     } else if (state === "closed") {
       return res(ctx.status(200), ctx.json(closedMilestones));
+    } else {
+      return res(ctx.status(200), ctx.json(milestones));
     }
   }),
   rest.post("/api/milestones", (req, res, ctx) => {
@@ -247,9 +252,12 @@ export const handlers = [
 
     return res(ctx.status(200), ctx.json(issues));
   }),
+  ...issueHandlers,
+  ...commentHandlers,
+  ...assigneeHandlers,
 ];
 
-const labels = {
+export const labels = {
   code: 200,
   status: "OK",
   message: "라벨 조회에 성공했습니다.",
@@ -356,6 +364,80 @@ const closedMilestones = {
     labelCount: 5,
     status: "CLOSED",
     milestones: [
+      {
+        id: 21,
+        name: "Sprint#1",
+        description: "중복 수정 스프린트 1주차입니다.",
+        createdAt: "2023-08-07T15:33:37",
+        modifiedAt: "2023-08-08T14:54:32",
+        deadline: "2023-07-28",
+        issues: {
+          openedIssueCount: 0,
+          closedIssueCount: 9,
+        },
+      },
+      {
+        id: 22,
+        name: "Sprint#1",
+        description: "중복 수정 스프린트 2주차입니다.",
+        createdAt: "2023-08-17T15:33:37",
+        modifiedAt: "2023-08-18T14:54:32",
+        deadline: "2023-07-28",
+        issues: {
+          openedIssueCount: 0,
+          closedIssueCount: 0,
+        },
+      },
+    ],
+  },
+};
+
+export const milestones = {
+  code: 200,
+  status: "OK",
+  message: "마일스톤 조회에 성공했습니다.",
+  data: {
+    openedMilestoneCount: 3,
+    closedMilestoneCount: 1,
+    labelCount: 5,
+    status: "OPENED",
+    milestones: [
+      {
+        id: 1,
+        name: "Sprint#1",
+        description: "중복 수정 스프린트 1주차입니다.",
+        createdAt: "2023-08-07T15:33:37",
+        modifiedAt: "2023-08-08T14:46:14",
+        deadline: "2023-07-08",
+        issues: {
+          openedIssueCount: 22,
+          closedIssueCount: 10,
+        },
+      },
+      {
+        id: 13,
+        name: "Sprint#112",
+        description: "스프린트 2주차입니다.",
+        createdAt: "2023-08-08T14:39:29",
+        modifiedAt: null,
+        deadline: "2023-07-18",
+        issues: {
+          openedIssueCount: 2,
+          closedIssueCount: 7,
+        },
+      },
+      {
+        id: 15,
+        name: "Sprint#113",
+        description: "스프린트 3주차입니다.",
+        createdAt: "2023-08-08T14:43:51",
+        modifiedAt: null,
+        deadline: null,
+        issues: {
+          openedIssueCount: 1,
+          closedIssueCount: 0,
+        },
+      },
       {
         id: 21,
         name: "Sprint#1",

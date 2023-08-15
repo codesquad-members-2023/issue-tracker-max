@@ -1,7 +1,8 @@
 import { styled } from "styled-components";
 import { Avatar } from "../../components/Avatar";
 import { InformationTag } from "../../components/InformationTag";
-import { Icon, ThemeColorKeys } from "../../components/icon/Icon";
+import { Icon } from "../../components/icon/Icon";
+import { Color, ThemeColorKeys } from "../../types/colors";
 import { getElapsedSince } from "../../utils/getElapsedSince";
 import { IssueData } from "./Main";
 
@@ -41,7 +42,7 @@ export function MainTableElement({
               key={index}
               value={label.name}
               size="S"
-              fill={label.background}
+              fill={label.background as Color}
               fontColor="LIGHT"
             />
           ))}

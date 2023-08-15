@@ -1,17 +1,21 @@
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import { IssueAssignee } from "../../components/sidebar/AddAssignee";
+import { IssueLabel } from "../../components/sidebar/AddLabel";
+import { IssueMilestone } from "../../components/sidebar/AddMilestone";
 import { NewIssueBody } from "./NewIssueBody";
 import { NewIssueFooter } from "./NewIssueFooter";
 
 export function NewIssue() {
-  const [assignees, setAssignees] = useState<number[]>([]);
-  const [labels, setLabels] = useState<number[]>([]);
-  const [milestone, setMilestone] = useState<number | null>(null);
+  const navigate = useNavigate();
+
+  const [assignees, setAssignees] = useState<IssueAssignee[]>([]);
+  const [labels, setLabels] = useState<IssueLabel[]>([]);
+  const [milestone, setMilestone] = useState<IssueMilestone | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [invalidTitle, setInvalidTitle] = useState(false);
-  const navigate = useNavigate();
 
   const onTitleFocus = () => {
     setInvalidTitle(title.length === 0);
@@ -22,31 +26,24 @@ export function NewIssue() {
     setInvalidTitle(e.target.value.length === 0);
   };
 
-  const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+  const onContentChange = (value: string) => {
+    setContent(value);
   };
 
-  const onAssigneeClick = useCallback((id: number) => {
-    setAssignees((a) => {
-      if (a.includes(id)) {
-        return a.filter((a) => a !== id);
-      }
-      return [...a, id];
-    });
+  const updateIssueAssignees = useCallback((assignees: IssueAssignee[]) => {
+    setAssignees(assignees);
   }, []);
 
-  const onLabelClick = useCallback((id: number) => {
-    setLabels((l) => {
-      if (l.includes(id)) {
-        return l.filter((l) => l !== id);
-      }
-      return [...l, id];
-    });
+  const updateIssueLabels = useCallback((labels: IssueLabel[]) => {
+    setLabels(labels);
   }, []);
 
-  const onMilestoneClick = useCallback((id: number) => {
-    setMilestone((m) => (m === id ? null : id));
-  }, []);
+  const updateIssueMilestone = useCallback(
+    (milestone: IssueMilestone | null) => {
+      setMilestone(milestone);
+    },
+    [],
+  );
 
   const onSubmitButtonClick = async () => {
     const issueData = {
@@ -72,9 +69,12 @@ export function NewIssue() {
         title={title}
         content={content}
         invalidTitle={invalidTitle}
-        onAssigneeClick={onAssigneeClick}
-        onLabelClick={onLabelClick}
-        onMilestoneClick={onMilestoneClick}
+        issueAssignees={assignees}
+        issueLabels={labels}
+        issueMilestone={milestone}
+        onAssigneeClick={{ args: "DataArray", handler: updateIssueAssignees }}
+        onLabelClick={{ args: "DataArray", handler: updateIssueLabels }}
+        onMilestoneClick={{ args: "Data", handler: updateIssueMilestone }}
         onTitleChange={onTitleChange}
         onTitleFocus={onTitleFocus}
         onContentChange={onContentChange}

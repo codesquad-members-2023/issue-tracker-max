@@ -1,17 +1,24 @@
 import { ButtonHTMLAttributes } from "react";
 import { styled } from "styled-components";
-import { Icon, IconColor, IconType, ThemeColorKeys } from "./icon/Icon";
+import { getColorCode } from "../utils/getColorCode";
+import { Icon, IconType } from "./icon/Icon";
+import { Color, ThemeColorKeys } from "../types/colors";
 
 type ButtonProps = {
+  width?: string | number;
+  height?: string | number;
   size: "S" | "M" | "L";
   buttonType: "Container" | "Outline" | "Ghost";
   flexible?: "Flexible" | "Fixed";
   icon?: keyof IconType;
   selected?: boolean;
-  color?: IconColor;
+  color?: Color;
+  background?: Color;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
+  width,
+  height,
   size,
   buttonType,
   flexible,
@@ -19,7 +26,8 @@ export function Button({
   selected,
   children,
   color,
-  ...props
+  background,
+  ...rest
 }: ButtonProps) {
   const buttonMap = {
     Container: ContainerButton,
@@ -41,11 +49,14 @@ export function Button({
   return (
     <ButtonComponent
       className={selected ? "selected" : ""}
+      $width={width}
+      $height={height}
       $size={size}
       $flexible={flexible === "Flexible"}
       $selected={selected}
       $color={color}
-      {...props}
+      $background={background}
+      {...rest}
     >
       <div>
         {icon && <Icon name={icon} color={iconColor} />}
@@ -56,11 +67,17 @@ export function Button({
 }
 
 const StyledButton = styled.button<{
+  $width?: string | number;
+  $height?: string | number;
   $size: "S" | "M" | "L";
   $flexible?: boolean;
   $color?: string;
+  $background?: string;
 }>`
-  width: ${({ $size, $flexible }) => {
+  width: ${({ $size, $width, $flexible }) => {
+    if ($width) {
+      return typeof $width === "number" ? `${$width}px` : $width;
+    }
     if ($flexible) {
       return "fit-content";
     }
@@ -75,7 +92,11 @@ const StyledButton = styled.button<{
         return "";
     }
   }};
-  height: ${({ $size }) => {
+  height: ${({ $size, $height }) => {
+    if ($height) {
+      return typeof $height === "number" ? `${$height}px` : $height;
+    }
+
     switch ($size) {
       case "L":
         return "56px";
@@ -128,7 +149,10 @@ const StyledButton = styled.button<{
 `;
 
 const ContainerButton = styled(StyledButton)`
-  background-color: ${({ theme }) => theme.color.brandSurfaceDefault};
+  background-color: ${({ theme, $background }) =>
+    $background
+      ? getColorCode($background, theme)
+      : theme.color.brandSurfaceDefault};
   color: ${({ theme, $color }) => $color || theme.color.brandTextDefault};
 `;
 

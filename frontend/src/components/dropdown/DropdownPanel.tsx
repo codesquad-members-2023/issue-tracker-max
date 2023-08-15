@@ -1,5 +1,6 @@
 import { css, styled } from "styled-components";
-import { Icon, IconColor } from "../icon/Icon";
+import { Color } from "../../types/colors";
+import { Icon } from "../icon/Icon";
 import { DropdownOption } from "./DropdownOption";
 
 export function DropdownPanel({
@@ -15,7 +16,7 @@ export function DropdownPanel({
   options: {
     name: string;
     profile?: string;
-    background?: IconColor;
+    background?: Color;
     selected: boolean;
     onClick: () => void;
   }[];
@@ -118,6 +119,6 @@ const EmptyOption = styled.div`
     `0px 0px ${theme.radius.large} ${theme.radius.large}`};
   font: ${({ theme }) => theme.font.availableMedium16};
   font-style: italic;
-  background-color:  ${({ theme }) => theme.color.neutralSurfaceStrong};
+  background-color: ${({ theme }) => theme.color.neutralSurfaceStrong};
   color: ${({ theme }) => theme.color.neutralTextDefault};
 `;
