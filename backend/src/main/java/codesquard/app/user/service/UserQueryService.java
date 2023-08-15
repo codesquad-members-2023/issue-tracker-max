@@ -21,7 +21,8 @@ public class UserQueryService {
 	}
 
 	public AuthenticateUser verifyUser(UserLoginServiceRequest userLoginServiceRequest) {
-		User findUser = userRepository.findByLoginIdAndPassword(userLoginServiceRequest.toEntity());
+		UserLoginServiceRequest encryptServiceRequest = userLoginServiceRequest.encryptPassword();
+		User findUser = userRepository.findByLoginIdAndPassword(encryptServiceRequest.toEntity());
 		return findUser.toAuthenticateUser();
 	}
 

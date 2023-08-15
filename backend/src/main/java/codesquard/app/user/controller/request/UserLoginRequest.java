@@ -2,7 +2,7 @@ package codesquard.app.user.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import codesquard.app.authenticate_user.entity.AuthenticateUser;
+import codesquard.app.user.password.PasswordEncoder;
 import codesquard.app.user.service.request.UserLoginServiceRequest;
 import lombok.ToString;
 
@@ -23,10 +23,8 @@ public class UserLoginRequest {
 	}
 
 	public UserLoginServiceRequest toUserLoginServiceRequest() {
-		return new UserLoginServiceRequest(loginId, password);
-	}
-
-	public AuthenticateUser toAuthenticateUserEntity() {
-		return new AuthenticateUser(null, loginId, null, null);
+		PasswordEncoder passwordEncoder = new PasswordEncoder();
+		String encryptPassword = passwordEncoder.encrypt(password);
+		return new UserLoginServiceRequest(loginId, encryptPassword);
 	}
 }

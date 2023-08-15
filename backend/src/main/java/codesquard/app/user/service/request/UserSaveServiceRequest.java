@@ -3,6 +3,7 @@ package codesquard.app.user.service.request;
 import java.util.Objects;
 
 import codesquard.app.user.entity.User;
+import codesquard.app.user.password.PasswordEncoder;
 
 public class UserSaveServiceRequest {
 	private final String loginId;
@@ -26,5 +27,11 @@ public class UserSaveServiceRequest {
 
 	public boolean matchPasswordAndPasswordConfirm() {
 		return Objects.equals(password, passwordConfirm);
+	}
+
+	public UserSaveServiceRequest encryptPassword() {
+		PasswordEncoder passwordEncoder = new PasswordEncoder();
+		String encryptPassword = passwordEncoder.encrypt(password);
+		return new UserSaveServiceRequest(loginId, email, encryptPassword, passwordConfirm, avatarUrl);
 	}
 }

@@ -28,7 +28,9 @@ public class UserService {
 		validateDuplicatedLoginId(userSaveServiceRequest);
 		// 이메일이 이미 존재하는지 검증
 		validateDuplicatedEmail(userSaveServiceRequest);
-		Long saveId = userRepository.save(userSaveServiceRequest.toEntity());
+		// 비밀번호 암호화
+		UserSaveServiceRequest encryptedRequest = userSaveServiceRequest.encryptPassword();
+		Long saveId = userRepository.save(encryptedRequest.toEntity());
 		return userQueryService.findUserById(saveId);
 	}
 
