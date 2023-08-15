@@ -7,6 +7,13 @@ services:
       - 8080:8080
     volumes:
       - issue_tracker_app_dev:/app
+  redis:
+    container_name: issue_tracker_redis_dev
+    image: redis:latest
+    ports:
+      - 6379:6379
+    depends_on:
+      - app
   web:
     container_name: issue_tracker_web_dev
     image: yhkim951107/issue_tracker_web_dev:latest
