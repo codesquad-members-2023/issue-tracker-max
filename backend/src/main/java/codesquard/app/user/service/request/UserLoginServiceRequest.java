@@ -1,6 +1,7 @@
 package codesquard.app.user.service.request;
 
 import codesquard.app.user.entity.User;
+import codesquard.app.user.password.PasswordEncoder;
 
 public class UserLoginServiceRequest {
 	private final String loginId;
@@ -13,5 +14,11 @@ public class UserLoginServiceRequest {
 
 	public User toEntity() {
 		return new User(null, loginId, null, password, null);
+	}
+
+	public UserLoginServiceRequest encryptPassword() {
+		PasswordEncoder passwordEncoder = new PasswordEncoder();
+		String encryptPassword = passwordEncoder.encrypt(password);
+		return new UserLoginServiceRequest(loginId, encryptPassword);
 	}
 }
