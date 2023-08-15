@@ -9,6 +9,7 @@ import { ThemeProvider, styled } from "styled-components";
 import { Header } from "./components/Header";
 import { designSystem } from "./constants/designSystem";
 import { Error404 } from "./page/Error404";
+import { IssueDetail } from "./page/issueDetail/IssueDetail";
 import { Auth } from "./page/auth/Auth";
 import { Label } from "./page/label/Label";
 import { Main } from "./page/main/Main";
@@ -47,6 +48,7 @@ function MainRoutes({ changeThemeMode }: { changeThemeMode: () => void }) {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/issues/new" element={<NewIssue />} />
+        <Route path="/issues/:issueId" element={<IssueDetail />} />
         <Route path="/label" element={<Label />} />
         <Route path="/milestone" element={<Milestone />} />
         <Route path="/milestone/:state" element={<Milestone />} />
