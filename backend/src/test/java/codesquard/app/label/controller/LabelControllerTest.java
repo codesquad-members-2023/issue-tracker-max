@@ -8,9 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import codesquard.app.api.response.MilestoneResponseMessage;
 import codesquard.app.label.entity.Label;
 import codesquard.app.label_milestone.ControllerTestSupport;
-import codesquard.app.label.dto.request.LabelSaveRequest;
 
 class LabelControllerTest extends ControllerTestSupport {
 
@@ -26,6 +26,9 @@ class LabelControllerTest extends ControllerTestSupport {
 				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.success").value(true));
+			.andExpect(jsonPath("$.code").value("201"))
+			.andExpect(jsonPath("$.status").value("CREATED"))
+			.andExpect(jsonPath("$.message").value(MilestoneResponseMessage.MILESTONE_SAVE_SUCCESS))
+			.andExpect(jsonPath("$.data.id").isNotEmpty());
 	}
 }

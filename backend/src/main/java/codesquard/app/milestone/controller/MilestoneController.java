@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquard.app.api.response.ApiResponse;
@@ -45,6 +46,7 @@ public class MilestoneController {
 		return ApiResponse.of(HttpStatus.OK, MilestoneResponseMessage.MILESTONE_GET_SUCCESS, milestoneReadResponse);
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public ApiResponse<MilestoneSaveResponse> save(
 		@Valid @RequestBody final MilestoneSaveRequest milestoneSaveRequest) {
