@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { Avatar } from "../../components/Avatar";
 import { InformationTag } from "../../components/InformationTag";
@@ -15,11 +16,17 @@ export function MainTableElement({
   inputChecked: boolean;
   handleCheckedIssue: (value: number) => void;
 }) {
+  const navigate = useNavigate();
+
   const iconColors: {
     [key: string]: ThemeColorKeys;
   } = {
     issueTitle: "paletteBlue",
     issueInfo: "neutralTextWeak",
+  };
+
+  const navigateToIssueDetail = () => {
+    navigate(`/issues/${issue.id}`);
   };
 
   return (
@@ -36,7 +43,9 @@ export function MainTableElement({
       <IssueContent>
         <IssueTitle>
           <Icon name="AlertCircle" color={iconColors.issueTitle} />
-          <TitleAnchor>{issue.title}</TitleAnchor>
+          <TitleAnchor onClick={navigateToIssueDetail}>
+            {issue.title}
+          </TitleAnchor>
           {issue.labels.map((label, index) => (
             <InformationTag
               key={index}
@@ -76,10 +85,10 @@ export function MainTableElement({
       </AssigneesDiv>
       <CommentDiv>
         {issue.commentCount !== 0 && (
-          <>
+          <a onClick={navigateToIssueDetail}>
             <Icon name="Comment" color={iconColors.issueInfo} />
             <span>{issue.commentCount}</span>
-          </>
+          </a>
         )}
       </CommentDiv>
     </Div>
@@ -164,6 +173,11 @@ const CommentDiv = styled.div`
   align-items: center;
   gap: 4px;
   cursor: pointer;
+
+  & a {
+    display: flex;
+    gap: 5px;
+  }
 
   & span {
     color: ${({ theme }) => theme.color.neutralTextStrong};
