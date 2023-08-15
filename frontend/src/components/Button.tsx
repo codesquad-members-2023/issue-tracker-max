@@ -26,7 +26,7 @@ export function Button({
   children,
   color,
   background,
-  ...props
+  ...rest
 }: ButtonProps) {
   const buttonMap = {
     Container: ContainerButton,
@@ -55,7 +55,7 @@ export function Button({
       $selected={selected}
       $color={color}
       $background={background}
-      {...props}
+      {...rest}
     >
       <div>
         {icon && <Icon name={icon} color={iconColor} />}
