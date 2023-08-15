@@ -225,6 +225,28 @@ export const handlers = [
       return res(ctx.status(400), ctx.json(errorResponse));
     }
   }),
+  rest.get("/api/issues", (req, res, ctx) => {
+    const queryParams: { [key: string]: string[] } = {};
+
+    for (const [key, value] of req.url.searchParams.entries()) {
+      if (!queryParams[key]) {
+        queryParams[key] = [];
+      }
+      queryParams[key].push(value);
+    }
+
+    console.log(queryParams);
+
+    const newInput = Object.entries(queryParams)
+      .map(([key, values]) => {
+        return values.map((value) => `${key}:${value}`).join(" ");
+      })
+      .join(" ");
+
+    issues.data.input = newInput === "" ? "is:opened" : newInput;
+
+    return res(ctx.status(200), ctx.json(issues));
+  }),
 ];
 
 const labels = {
@@ -378,3 +400,225 @@ const users: UsersData = [
     },
   },
 ];
+
+const issues = {
+  code: 200,
+  status: "OK",
+  message: "OK",
+  data: {
+    input: "is:opened",
+    openedIssueCount: 2,
+    closedIssueCount: 1,
+    labelCount: 5,
+    milestoneCount: 3,
+    issues: [
+      {
+        id: 1,
+        title: "test issue 1",
+        status: "OPENED",
+        createdAt: "2023-08-07T10:42:27",
+        modifiedAt: "2023-08-10T00:15:20",
+        statusModifiedAt: "2023-08-10T00:15:20",
+        assignees: [
+          {
+            id: 1,
+            name: "yeon",
+            avatarUrl: "",
+          },
+          {
+            id: 2,
+            name: "jay",
+            avatarUrl: "https://avatars.githubusercontent.com/u/41321198?v=4",
+          },
+        ],
+        labels: [
+          {
+            id: 1,
+            name: "bug",
+            color: "#FFFFFF",
+            background: "#000000",
+          },
+          {
+            id: 2,
+            name: "docs",
+            color: "#FFFFFF",
+            background: "#000000",
+          },
+        ],
+        milestones: {
+          id: 1,
+          name: "week 1",
+        },
+        author: {
+          id: 1,
+          name: "yeon",
+        },
+        commentCount: 3,
+      },
+      {
+        id: 2,
+        title: "test issue222222222222",
+        status: "OPENED",
+        createdAt: "2023-08-07T10:42:27",
+        modifiedAt: "2023-08-10T00:15:20",
+        statusModifiedAt: "2023-08-10T00:15:20",
+        assignees: [
+          {
+            id: 1,
+            name: "yeon",
+            avatarUrl: "",
+          },
+          {
+            id: 2,
+            name: "jay",
+            avatarUrl: "https://avatars.githubusercontent.com/u/41321198?v=4",
+          },
+          {
+            id: 3,
+            name: "jello",
+            avatarUrl: "",
+          },
+        ],
+        labels: [
+          {
+            id: 1,
+            name: "bug",
+            color: "#FFFFFF",
+            background: "#000000",
+          },
+          {
+            id: 2,
+            name: "docs",
+            color: "#FFFFFF",
+            background: "#000000",
+          },
+        ],
+        milestones: {
+          id: 1,
+          name: "week 1",
+        },
+        author: {
+          id: 1,
+          name: "yeon",
+        },
+        commentCount: 3,
+      },
+    ],
+    singleFilters: [
+      {
+        id: 1,
+        name: "열린 이슈",
+        conditions: "is:opened",
+        selected: false,
+      },
+      {
+        id: 2,
+        name: "내가 작성한 이슈",
+        conditions: "is:opened author:@me",
+        selected: false,
+      },
+      {
+        id: 3,
+        name: "나에게 할당된 이슈",
+        conditions: "is:opened assignee:@me",
+        selected: false,
+      },
+      {
+        id: 4,
+        name: "내가 댓글을 남긴 이슈",
+        conditions: "is:opened mentions:@me",
+        selected: false,
+      },
+      {
+        id: 5,
+        name: "닫힌 이슈",
+        conditions: "is:closed",
+        selected: false,
+      },
+    ],
+    multiFilters: {
+      assignees: {
+        multipleSelect: false,
+        options: [
+          {
+            id: 1,
+            name: "yeon",
+            avatarUrl: "url path",
+            selected: false,
+          },
+        ],
+      },
+
+      labels: {
+        multipleSelect: true,
+        options: [
+          {
+            id: 1,
+            name: "bug",
+            color: "#FFFFFF",
+            background: "#000000",
+            selected: false,
+          },
+          {
+            id: 2,
+            name: "docs",
+            color: "#FFFFFF",
+            background: "#000000",
+            selected: false,
+          },
+          {
+            id: 3,
+            name: "feature",
+            color: "#FFFFFF",
+            background: "#000000",
+            selected: false,
+          },
+        ],
+      },
+      milestones: {
+        multipleSelect: false,
+        options: [
+          {
+            id: 1,
+            name: "week 1",
+            selected: false,
+          },
+          {
+            id: 2,
+            name: "week 2",
+            selected: false,
+          },
+        ],
+      },
+      authors: {
+        multipleSelect: false,
+        options: [
+          {
+            id: 1,
+            name: "yeon",
+            avatarUrl: "url path",
+            selected: false,
+          },
+          {
+            id: 2,
+            name: "jay",
+            avatarUrl: "url path",
+            selected: false,
+          },
+          {
+            id: 3,
+            name: "sully",
+            avatarUrl: "url path",
+            selected: false,
+          },
+          {
+            id: 4,
+            name: "hong1234",
+            avatarUrl: null,
+            selected: false,
+          },
+        ],
+      },
+    },
+  },
+};
