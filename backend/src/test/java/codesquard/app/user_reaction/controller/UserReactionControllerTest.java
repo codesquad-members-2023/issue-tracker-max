@@ -11,8 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
+import codesquard.app.api.errors.errorcode.IssueErrorCode;
 import codesquard.app.api.errors.exception.NoSuchReactionException;
 import codesquard.app.api.errors.exception.NoSuchUserReactionException;
+import codesquard.app.api.errors.exception.RestApiException;
+import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.api.errors.handler.UserReactionExceptionHandler;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
 
@@ -109,7 +112,7 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	void deleteUserReaction_Fail() throws Exception {
 		// mocking
 		mockingAuthenticateUser();
-		
+
 		// given
 		Long userReactionId = 1L;
 		Long userId = 1L;
@@ -122,9 +125,27 @@ class UserReactionControllerTest extends ControllerTestSupport {
 			.andDo(print());
 	}
 
+	@DisplayName("사용자 반응을 삭제할 때 작성자와 유저가 다를 시 403에러를 반환한다.")
+	@Test
+	void delete_IfNotSameAuthor_Response403() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
+		// given
+		Long userReactionId = 1L;
+		Long userId = 1L;
+		willThrow(new RestApiException(IssueErrorCode.FORBIDDEN_USER_REACTION))
+			.given(userReactionService).deleteReaction(userReactionId, userId);
+
+		// when & then
+		mockMvc.perform(delete("/api/reactions/" + userReactionId))
+			.andExpect(status().isForbidden())
+			.andDo(print());
+	}
+
 	private void mockingAuthenticateUser() {
 		mockMvc = MockMvcBuilders.standaloneSetup(new UserReactionController(userReactionService))
-			.setControllerAdvice(new UserReactionExceptionHandler())
+			.setControllerAdvice(new UserReactionExceptionHandler(), new GlobalExceptionHandler())
 			.setCustomArgumentResolvers(loginUserArgumentResolver)
 			.build();
 

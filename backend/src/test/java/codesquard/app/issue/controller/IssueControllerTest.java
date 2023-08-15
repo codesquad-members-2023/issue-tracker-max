@@ -16,6 +16,8 @@ import codesquard.app.ControllerTestSupport;
 import codesquard.app.api.errors.errorcode.IssueErrorCode;
 import codesquard.app.api.errors.exception.IllegalIssueStatusException;
 import codesquard.app.api.errors.exception.NoSuchIssueException;
+import codesquard.app.api.errors.exception.RestApiException;
+import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.api.errors.handler.IssueExceptionHandler;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
@@ -366,6 +368,23 @@ class IssueControllerTest extends ControllerTestSupport {
 			.andDo(print());
 	}
 
+	@DisplayName("이슈를 삭제할 때 이슈 작성자와 유저가 다를 시 403에러를 반환한다.")
+	@Test
+	void delete_IfNotSameAuthor_Response403() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
+		// given
+		int issueId = 1;
+		willThrow(new RestApiException(IssueErrorCode.FORBIDDEN_ISSUE))
+			.given(issueService).delete(anyLong(), anyLong());
+
+		// when & then
+		mockMvc.perform(delete("/api/issues/" + issueId))
+			.andExpect(status().isForbidden())
+			.andDo(print());
+	}
+
 	private String generateExceedingMaxLengthContent(int maxLength) {
 		StringBuilder builder = new StringBuilder();
 		while (builder.length() < maxLength) {
@@ -376,7 +395,7 @@ class IssueControllerTest extends ControllerTestSupport {
 
 	private void mockingAuthenticateUser() {
 		mockMvc = MockMvcBuilders.standaloneSetup(new IssueController(issueService, issueQueryService))
-			.setControllerAdvice(new IssueExceptionHandler())
+			.setControllerAdvice(new IssueExceptionHandler(), new GlobalExceptionHandler())
 			.setCustomArgumentResolvers(loginUserArgumentResolver)
 			.build();
 
