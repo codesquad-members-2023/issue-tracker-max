@@ -6,4 +6,6 @@ public interface AccountRepository {
 
 	Long save(Account account);
 
+	boolean existByEmail(String email);
+
 }

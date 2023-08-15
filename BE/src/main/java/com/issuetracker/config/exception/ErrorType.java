@@ -25,7 +25,9 @@ public enum ErrorType {
 	FILE_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "이미지 파일만 업로드 가능합니다."),
 	ISSUE_UPDATE_NULL(HttpStatus.BAD_REQUEST, "수정할 데이터가 존재하지 않습니다."),
 	ASSIGNEE_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 담당자입니다."),
-	ASSIGNED_LABEL_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 라벨입니다.");
+	ASSIGNED_LABEL_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 라벨입니다."),
+
+	ACCOUNT_EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 사용중인 email 입니다.");
 
 	private final HttpStatus status;
 	private final String message;

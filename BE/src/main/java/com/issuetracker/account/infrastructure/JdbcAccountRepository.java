@@ -20,6 +20,7 @@ public class JdbcAccountRepository implements AccountRepository {
 
 	private final String FIND_BY_EMAIL = "SELECT id, email, password, nickname, profile_image_url FROM member WHERE email = :email";
 	private final String SAVE_SQL = "INSERT INTO member(id, email, password, nickname, profile_image_url) VALUE (:id, :email, :password, :nickname, :profileImageUrl)";
+	private final String EXIST_BY_EMAIL = "SELECT EXISTS(SELECT id FROM member WHERE email = :email) AS exist";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -41,6 +42,12 @@ public class JdbcAccountRepository implements AccountRepository {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(account);
 		jdbcTemplate.update(SAVE_SQL, param, keyHolder);
 		return keyHolder.getKey().longValue();
+	}
+
+	public boolean existByEmail(String email) {
+		return Boolean.TRUE.equals(
+			jdbcTemplate.queryForObject(EXIST_BY_EMAIL, Map.of("email", email), Boolean.class)
+		);
 	}
 
 	private static final RowMapper<Account> ACCOUNT_ROW_MAPPER = (rs, rowNum) ->

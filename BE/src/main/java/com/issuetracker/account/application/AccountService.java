@@ -9,6 +9,8 @@ import com.issuetracker.account.application.dto.AccountInformation;
 import com.issuetracker.account.application.dto.JwtTokenInformation;
 import com.issuetracker.account.application.dto.SignUpInputData;
 import com.issuetracker.account.domain.AccountRepository;
+import com.issuetracker.config.exception.CustomHttpException;
+import com.issuetracker.config.exception.ErrorType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +33,9 @@ public class AccountService {
 
 	@Transactional
 	public Long signUp(SignUpInputData signUpInputData) {
+		if (accountRepository.existByEmail(signUpInputData.getEmail())) {
+			throw new CustomHttpException(ErrorType.ACCOUNT_EMAIL_DUPLICATION);
+		}
 		return accountRepository.save(signUpInputData.toAccount());
 	}
 }
