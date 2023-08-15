@@ -20,13 +20,9 @@ import { getAccessToken } from "./utils/localStorage";
 export default function App() {
   const [themeMode, setThemeMode] = useState<"LIGHT" | "DARK">("LIGHT");
 
-  const onClickThemeMode = () => {
-    if (themeMode === "LIGHT") {
-      setThemeMode("DARK");
-    } else {
-      setThemeMode("LIGHT");
-    }
-  }
+  const changeThemeMode = () => {
+    setThemeMode((prev) => (prev === "LIGHT" ? "DARK" : "LIGHT"));
+  };
 
   return (
     <ThemeProvider theme={designSystem[themeMode]}>
@@ -34,7 +30,10 @@ export default function App() {
         <Router>
           <Routes>
             <Route path="/auth" element={<AuthRoute />} />
-            <Route path="*" element={<MainRoutes themeMode={themeMode} onClickThemeMode={onClickThemeMode} />} />
+            <Route
+              path="*"
+              element={<MainRoutes changeThemeMode={changeThemeMode} />}
+            />
           </Routes>
         </Router>
       </Div>
@@ -42,10 +41,10 @@ export default function App() {
   );
 }
 
-function MainRoutes({ themeMode, onClickThemeMode }: { themeMode: "LIGHT" | "DARK", onClickThemeMode: () => void }) {
+function MainRoutes({ changeThemeMode }: { changeThemeMode: () => void }) {
   return (
     <PrivateRoute>
-      <Header themeMode={themeMode} onClickThemeMode={onClickThemeMode}/>
+      <Header changeThemeMode={changeThemeMode} />
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/issues/new" element={<NewIssue />} />

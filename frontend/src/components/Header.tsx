@@ -3,15 +3,10 @@ import { styled } from "styled-components";
 import { clearAuthInfo } from "../utils/localStorage";
 import { Avatar } from "./Avatar";
 import { Button } from "./Button";
+import { Toggle } from "./ToggleButton";
 import { Icon } from "./icon/Icon";
 
-export function Header({
-  themeMode,
-  onClickThemeMode,
-}: {
-  themeMode: "LIGHT" | "DARK";
-  onClickThemeMode: () => void;
-}) {
+export function Header({ changeThemeMode }: { changeThemeMode: () => void }) {
   const navigate = useNavigate();
 
   const logOut = () => {
@@ -25,19 +20,7 @@ export function Header({
         <Icon name="LogoMedium" color="neutralTextStrong" />
       </Anchor>
       <HeaderRight>
-        {themeMode === "LIGHT" ? (
-          <Icon
-            name="Moon"
-            color="neutralTextStrong"
-            onClick={onClickThemeMode}
-          />
-        ) : (
-          <Icon
-            name="Sun"
-            color="neutralTextStrong"
-            onClick={onClickThemeMode}
-          />
-        )}
+        <Toggle onClick={changeThemeMode} />
         <Avatar
           size="L"
           src="https://avatars.githubusercontent.com/u/41321198?v=4"
