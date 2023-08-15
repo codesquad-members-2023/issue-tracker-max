@@ -127,7 +127,6 @@ class UserServiceTest extends IntegrationTestSupport {
 		UserSaveServiceRequest serviceRequest = new UserSaveServiceRequest("hong1234", "hong1234@gmail.com",
 			"hong1234", "hong1234", null);
 		userService.signUp(serviceRequest);
-		;
 		// given
 		UserLoginServiceRequest userLoginServiceRequest = new UserLoginServiceRequest("hong1234", "hong1234");
 		// when

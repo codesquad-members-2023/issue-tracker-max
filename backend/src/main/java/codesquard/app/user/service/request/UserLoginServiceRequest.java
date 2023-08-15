@@ -2,7 +2,9 @@ package codesquard.app.user.service.request;
 
 import codesquard.app.user.entity.User;
 import codesquard.app.user.password.PasswordEncoder;
+import lombok.ToString;
 
+@ToString
 public class UserLoginServiceRequest {
 	private final String loginId;
 	private final String password;
