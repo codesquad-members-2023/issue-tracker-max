@@ -18,6 +18,12 @@ public class OauthAccessTokenResponse {
 	public OauthAccessTokenResponse() {
 	}
 
+	public OauthAccessTokenResponse(String accessToken, String scope, String tokenType) {
+		this.accessToken = accessToken;
+		this.scope = scope;
+		this.tokenType = tokenType;
+	}
+
 	public String getAccessToken() {
 		return accessToken;
 	}
