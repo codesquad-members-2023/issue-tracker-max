@@ -7,6 +7,11 @@ type IssueDetailBodyProps = {
   content: string;
   createdAt: Date;
   modifiedAt: Date | null;
+  reactions: {
+    unicode: string;
+    users: string[];
+    selectedUserReactionId: number;
+  }[];
   writer: {
     id: number;
     name: string;
@@ -19,6 +24,11 @@ type IssueDetailBodyProps = {
     content: string;
     createdAt: Date;
     modifiedAt: Date | null;
+    reactions: {
+      unicode: string;
+      users: string[];
+      selectedUserReactionId: number;
+    }[]
   }[];
   assignees: {
     id: number;

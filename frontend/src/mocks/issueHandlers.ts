@@ -10,6 +10,11 @@ type Issue = {
   statusModifiedAt: string;
   createdAt: string;
   modifiedAt: string | null;
+  reactions: {
+    unicode: string;
+    users: string[];
+    selectedUserReactionId: number;
+  }[];
   assignees: {
     id: number;
     name: string;
@@ -43,7 +48,7 @@ type Issue = {
     modifiedAt: string | null;
     reactions: {
       unicode: string;
-      users: number[];
+      users: string[];
       selected: number | null;
     }[];
   }[];
@@ -231,6 +236,18 @@ export const issue: {
       Eu volutpat odio facilisis mauris sit amet massa vitae. Ut eu sem integer vitae. Id leo in vitae turpis massa sed elementum tempus. Arcu non sodales neque sodales ut etiam. Arcu non odio euismod lacinia at quis risus sed. Eget mauris pharetra et ultrices neque ornare. Neque vitae tempus quam pellentesque nec nam. Nulla at volutpat diam ut venenatis tellus in metus. Faucibus in ornare quam viverra orci sagittis. Leo in vitae turpis massa sed elementum tempus. Augue mauris augue neque gravida in fermentum et sollicitudin ac. Lobortis elementum nibh tellus molestie nunc non blandit massa. Suspendisse in est ante in nibh mauris cursus. Sed lectus vestibulum mattis ullamcorper velit sed. Lectus proin nibh nisl condimentum id venenatis a condimentum vitae. At lectus urna duis convallis convallis tellus id. Scelerisque eleifend donec pretium vulputate. Est pellentesque elit ullamcorper dignissim cras tincidunt. Leo a diam sollicitudin tempor id eu nisl nunc mi.
       
       Magna sit amet purus gravida. Duis convallis convallis tellus id interdum velit laoreet id. Interdum consectetur libero id faucibus nisl tincidunt. Hac habitasse platea dictumst quisque sagittis purus sit amet. Tempus urna et pharetra pharetra massa. Egestas erat imperdiet sed euismod nisi porta lorem. Mauris pellentesque pulvinar pellentesque habitant morbi. Nibh ipsum consequat nisl vel pretium lectus quam. Purus sit amet luctus venenatis lectus magna fringilla urna porttitor. Vulputate sapien nec sagittis aliquam malesuada bibendum arcu. Imperdiet nulla malesuada pellentesque elit eget gravida cum sociis. Convallis posuere morbi leo urna molestie at elementum. Accumsan tortor posuere ac ut consequat semper viverra nam libero. Non tellus orci ac auctor augue mauris augue. Vulputate ut pharetra sit amet aliquam id. Id interdum velit laoreet id. Ut venenatis tellus in metus vulputate. Egestas sed tempus urna et pharetra pharetra massa massa ultricies. Tristique senectus et netus et malesuada fames ac turpis. A iaculis at erat pellentesque adipiscing commodo elit at.`,
+    reactions: [
+      {
+        unicode: "&#128077",
+        users: ["wis730", "wisdom"],
+        selectedUserReactionId: 1,
+      },
+      {
+        unicode: "&#128078",
+        users: [],
+        selectedUserReactionId: 0,
+      },
+    ],
     assignees: [
       {
         id: 1,
@@ -277,7 +294,7 @@ export const issue: {
           },
           {
             unicode: "&#128078",
-            users: [1],
+            users: ["wis730"],
             selected: 3,
           },
         ],

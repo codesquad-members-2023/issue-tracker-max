@@ -11,6 +11,11 @@ type IssueContentProps = {
   content: string;
   createdAt: Date;
   modifiedAt: Date | null;
+  reactions: {
+    unicode: string;
+    users: string[];
+    selectedUserReactionId: number;
+  }[];
   writer: {
     id: number;
     name: string;
@@ -24,6 +29,7 @@ export function IssueContent({
   content: initialContent,
   createdAt,
   modifiedAt,
+  reactions,
   writer,
   fetchIssue,
 }: IssueContentProps) {

@@ -12,6 +12,11 @@ type IssueData = {
   statusModifiedAt: Date;
   createdAt: Date;
   modifiedAt: Date | null;
+  reactions: {
+    unicode: string;
+    users: string[];
+    selectedUserReactionId: number;
+  }[];
   writer: {
     id: number;
     name: string;
@@ -43,6 +48,11 @@ type IssueData = {
     content: string;
     createdAt: Date;
     modifiedAt: Date | null;
+    reactions: {
+      unicode: string;
+      users: string[];
+      selectedUserReactionId: number;
+    }[]
   }[];
 };
 
@@ -56,6 +66,11 @@ export function IssueDetail() {
     statusModifiedAt: new Date(),
     createdAt: new Date(),
     modifiedAt: null,
+    reactions: [{
+      unicode: "",
+      users: [],
+      selectedUserReactionId: 0
+    }],
     writer: {
       id: 0,
       name: "",

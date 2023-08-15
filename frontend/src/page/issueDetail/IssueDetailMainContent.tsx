@@ -8,6 +8,11 @@ type IssueDetailMainContentProps = {
   content: string;
   createdAt: Date;
   modifiedAt: Date | null;
+  reactions: {
+    unicode: string;
+    users: string[];
+    selectedUserReactionId: number;
+  }[];
   writer: {
     id: number;
     name: string;
@@ -20,6 +25,11 @@ type IssueDetailMainContentProps = {
     content: string;
     createdAt: Date;
     modifiedAt: Date | null;
+    reactions: {
+      unicode: string;
+      users: string[];
+      selectedUserReactionId: number;
+    }[]
   }[];
   fetchIssue: () => void;
 };
