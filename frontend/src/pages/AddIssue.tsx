@@ -8,10 +8,13 @@ import Header from '../components/landmark/Header';
 import Main from '../components/landmark/Main';
 import Button from '../components/common/button/BaseButton';
 import ButtonLarge from '../components/common/button/ButtonLarge';
-import SideBar from '../components/common/SideBar';
+import SideBar from '../components/common/sideBar/SideBar';
 import TextInput from '../components/common/TextInput';
 import TextArea from '../components/common/TextArea';
 import defaultUserImg from '../asset/images/defaultUserImg.png';
+import ElementType from '../constant/ElementType';
+
+const { AddButton, Assignee, Label } = ElementType;
 
 type IssueInfo = {
   title: string;
@@ -71,7 +74,12 @@ export default function AddIssue() {
               placeholder="코멘트를 입력하세요"
               onChange={onContentChange}></TextArea>
           </InputArea>
-          <SideBar></SideBar>
+          <SideBar
+            sideBarItems={[
+              [{ type: AddButton, text: '담당자' }, []],
+              [{ type: AddButton, text: '레이블' }, []],
+              [{ type: AddButton, text: '마일스톤' }, []],
+            ]}></SideBar>
         </Container>
         <ButtonArea>
           <Button
