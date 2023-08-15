@@ -1,5 +1,6 @@
 import { Theme, css } from '@emotion/react';
 import { Button } from './Button';
+import { createPortal } from 'react-dom';
 
 type Props = {
   action: 'normal' | 'danger';
@@ -19,31 +20,36 @@ export const Alert: React.FC<Props> = ({
   children,
 }) => {
   return (
-    <div css={(theme) => alertStyle(theme, action)}>
-      <div className="dim" onClick={onClose} />
-      <div className="modal">
-        <div className="body">{children}</div>
+    <>
+      {createPortal(
+        <div css={(theme) => alertStyle(theme, action)}>
+          <div className="dim" onClick={onClose} />
+          <div className="modal">
+            <div className="body">{children}</div>
 
-        <div className="button-container">
-          <Button
-            className="left-button"
-            typeVariant="outline"
-            size="S"
-            onClick={onClose}
-          >
-            {leftButtonText}
-          </Button>
-          <Button
-            className="right-button"
-            typeVariant="outline"
-            size="S"
-            onClick={onConfirm}
-          >
-            {rightButtonText}
-          </Button>
-        </div>
-      </div>
-    </div>
+            <div className="button-container">
+              <Button
+                className="left-button"
+                typeVariant="outline"
+                size="S"
+                onClick={onClose}
+              >
+                {leftButtonText}
+              </Button>
+              <Button
+                className="right-button"
+                typeVariant="outline"
+                size="S"
+                onClick={onConfirm}
+              >
+                {rightButtonText}
+              </Button>
+            </div>
+          </div>
+        </div>,
+        document.body,
+      )}
+    </>
   );
 };
 
