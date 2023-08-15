@@ -2,18 +2,19 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TextInput } from "../../components/TextInput";
+import { IssueDetailHeaderProps } from "./IssueDetailHeader";
+
+type IssueDetailTitleProps = Omit<
+  IssueDetailHeaderProps,
+  "statusModifiedAt" | "writer" | "comments"
+>;
 
 export function IssueDetailTitleInfo({
   id,
   title: initialTitle,
   status,
   fetchIssue,
-}: {
-  id: number;
-  title: string;
-  status: "OPENED" | "CLOSED";
-  fetchIssue: () => void;
-}) {
+}: IssueDetailTitleProps) {
   const [isTitleEditing, setIsTitleEditing] = useState(false);
   const [title, setTitle] = useState("");
 

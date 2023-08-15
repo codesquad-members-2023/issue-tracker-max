@@ -1,28 +1,15 @@
 import { styled } from "styled-components";
 import { InformationTag } from "../../components/InformationTag";
 import { getElapsedSince } from "../../utils/getElapsedSince";
+import { IssueData } from "./IssueDetail";
 import { IssueDetailTitleInfo } from "./IssueDetailTitleInfo";
 
-type IssueDetailHeaderProps = {
-  id: number;
-  title: string;
-  status: "OPENED" | "CLOSED";
-  statusModifiedAt: Date;
-  writer: {
-    id: number;
-    name: string;
-    avatarUrl: string;
-  };
-  comments: {
-    id: number;
-    userId: string;
-    avatarUrl: string;
-    content: string;
-    createdAt: Date;
-    modifiedAt: Date | null;
-  }[];
+export type IssueDetailHeaderProps = {
   fetchIssue: () => void;
-};
+} & Pick<
+  IssueData,
+  "id" | "title" | "status" | "statusModifiedAt" | "writer" | "comments"
+>;
 
 export function IssueDetailHeader({
   id,

@@ -2,50 +2,23 @@ import { styled } from "styled-components";
 import { CommentEditor } from "../../components/comment/CommentEditor";
 import { CommentList } from "../../components/comment/CommentList";
 import { IssueContent } from "./IssueContent";
+import { IssueDetailBodyProps } from "./IssueDetailBody";
 
-type IssueDetailMainContentProps = {
-  id: number;
-  content: string;
-  createdAt: Date;
-  modifiedAt: Date | null;
-  reactions: {
-    unicode: string;
-    users: string[];
-    selectedUserReactionId: number;
-  }[];
-  writer: {
-    id: number;
-    name: string;
-    avatarUrl: string;
-  };
-  comments: {
-    id: number;
-    userId: string;
-    avatarUrl: string;
-    content: string;
-    createdAt: Date;
-    modifiedAt: Date | null;
-    reactions: {
-      unicode: string;
-      users: string[];
-      selectedUserReactionId: number;
-    }[]
-  }[];
-  fetchIssue: () => void;
-};
+export type IssueDetailMainContentProps = Omit<
+  IssueDetailBodyProps,
+  "assignees" | "labels" | "milestone"
+>;
 
 export function IssueDetailMainContent(props: IssueDetailMainContentProps) {
   return (
     <Div>
       <IssueContent {...props} />
       <CommentList
-        {...{
-          comments: props.comments,
-          writer: props.writer,
-          fetchIssue: props.fetchIssue,
-        }}
+        comments={props.comments}
+        writer={props.writer}
+        fetchIssue={props.fetchIssue}
       />
-      <CommentEditor {...{issueId: props.id, fetchIssue: props.fetchIssue}} />
+      <CommentEditor issueId={props.id} fetchIssue={props.fetchIssue} />
     </Div>
   );
 }

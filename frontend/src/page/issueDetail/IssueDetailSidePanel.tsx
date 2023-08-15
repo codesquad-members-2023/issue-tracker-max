@@ -2,30 +2,11 @@ import { styled, useTheme } from "styled-components";
 import { Button } from "../../components/Button";
 import { Sidebar } from "../../components/sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
+import { IssueData } from "./IssueDetail";
 
 type IssueDetailSidePanelProps = {
-  id: number;
-  assignees: {
-    id: number;
-    name: string;
-    avatarUrl: string;
-  }[];
-  labels: {
-    id: number;
-    name: string;
-    color: "LIGHT" | "DARK";
-    background: string;
-  }[];
-  milestone: {
-    id: number;
-    name: string;
-    issues: {
-      openedIssueCount: number;
-      closedIssueCount: number;
-    };
-  } | null;
   fetchIssue: () => void;
-};
+} & Pick<IssueData, "id" | "assignees" | "labels" | "milestone">;
 
 export function IssueDetailSidePanel({
   id: issueId,

@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 import { IssueDetailBody } from "./IssueDetailBody";
 import { IssueDetailHeader } from "./IssueDetailHeader";
 
-type IssueData = {
+export type IssueData = {
   id: number;
   title: string;
   content: string;

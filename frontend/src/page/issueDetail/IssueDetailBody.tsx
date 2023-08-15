@@ -1,61 +1,16 @@
 import { styled } from "styled-components";
+import { IssueData } from "./IssueDetail";
 import { IssueDetailMainContent } from "./IssueDetailMainContent";
 import { IssueDetailSidePanel } from "./IssueDetailSidePanel";
 
-type IssueDetailBodyProps = {
-  id: number;
-  content: string;
-  createdAt: Date;
-  modifiedAt: Date | null;
-  reactions: {
-    unicode: string;
-    users: string[];
-    selectedUserReactionId: number;
-  }[];
-  writer: {
-    id: number;
-    name: string;
-    avatarUrl: string;
-  };
-  comments: {
-    id: number;
-    userId: string;
-    avatarUrl: string;
-    content: string;
-    createdAt: Date;
-    modifiedAt: Date | null;
-    reactions: {
-      unicode: string;
-      users: string[];
-      selectedUserReactionId: number;
-    }[]
-  }[];
-  assignees: {
-    id: number;
-    name: string;
-    avatarUrl: string;
-  }[];
-  labels: {
-    id: number;
-    name: string;
-    color: "LIGHT" | "DARK";
-    background: string;
-  }[];
-  milestone: {
-    id: number;
-    name: string;
-    issues: {
-      openedIssueCount: number;
-      closedIssueCount: number;
-    };
-  } | null;
+export type IssueDetailBodyProps = {
   fetchIssue: () => void;
-};
+} & Omit<IssueData, "title" | "status" | "statusModifiedAt">;
 
 export function IssueDetailBody(props: IssueDetailBodyProps) {
   return (
     <Div>
-      <IssueDetailMainContent {...props}/>
+      <IssueDetailMainContent {...props} />
       <IssueDetailSidePanel {...props} />
     </Div>
   );

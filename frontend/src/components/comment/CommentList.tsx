@@ -1,22 +1,10 @@
 import { styled } from "styled-components";
 import { CommentItem } from "./CommentItem";
+import { IssueData } from "../../page/issueDetail/IssueDetail";
 
 type CommentListProps = {
-  comments: {
-    id: number;
-    userId: string;
-    avatarUrl: string;
-    content: string;
-    createdAt: Date;
-    modifiedAt: Date | null;
-  }[];
-  writer: {
-    id: number;
-    name: string;
-    avatarUrl: string;
-  };
   fetchIssue: () => void;
-};
+} & Pick<IssueData, "comments" | "writer">;
 
 export function CommentList({
   comments,

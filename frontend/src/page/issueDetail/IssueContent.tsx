@@ -5,24 +5,9 @@ import { InformationTag } from "../../components/InformationTag";
 import { TextArea } from "../../components/TextArea";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
+import { IssueDetailMainContentProps } from "./IssueDetailMainContent";
 
-type IssueContentProps = {
-  id: number;
-  content: string;
-  createdAt: Date;
-  modifiedAt: Date | null;
-  reactions: {
-    unicode: string;
-    users: string[];
-    selectedUserReactionId: number;
-  }[];
-  writer: {
-    id: number;
-    name: string;
-    avatarUrl: string;
-  };
-  fetchIssue: () => void;
-};
+type IssueContentProps = Omit<IssueDetailMainContentProps, "comments">;
 
 export function IssueContent({
   id,
