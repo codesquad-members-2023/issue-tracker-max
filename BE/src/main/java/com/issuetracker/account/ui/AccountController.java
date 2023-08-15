@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import com.issuetracker.account.application.AccountService;
 import com.issuetracker.account.ui.dto.AccountResponse;
 import com.issuetracker.account.ui.dto.JwtTokenResponse;
+import com.issuetracker.account.ui.dto.LoginRequest;
 import com.issuetracker.account.ui.dto.OauthAccessTokenRequest;
 import com.issuetracker.account.ui.dto.OauthAccessTokenResponse;
 import com.issuetracker.account.ui.dto.OauthAccountInfoResponse;
@@ -48,6 +49,19 @@ public class AccountController {
 		this.accountService = accountService;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<JwtTokenResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
+		AccountResponse accountResponse = AccountResponse.from(
+			accountService.findForLogin(loginRequest.toLoginInputData())
+		);
+
+		return ResponseEntity.ok(
+			JwtTokenResponse.from(
+				accountService.issueJwtToken(accountResponse.getId())
+			)
+		);
 	}
 
 	@PostMapping("/signup")

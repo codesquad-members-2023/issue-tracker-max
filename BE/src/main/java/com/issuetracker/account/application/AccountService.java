@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetracker.account.application.dto.AccountInformation;
 import com.issuetracker.account.application.dto.JwtTokenInformation;
+import com.issuetracker.account.application.dto.LoginInputData;
 import com.issuetracker.account.application.dto.SignUpInputData;
 import com.issuetracker.account.domain.AccountRepository;
 import com.issuetracker.config.exception.CustomHttpException;
@@ -29,6 +30,12 @@ public class AccountService {
 
 	public AccountInformation findByEmail(String email) {
 		return AccountInformation.from(accountRepository.findByEmail(email));
+	}
+
+	public AccountInformation findForLogin(LoginInputData loginInputData) {
+		return AccountInformation.from(
+			accountRepository.findByEmailAndPassword(loginInputData.toAccount())
+		);
 	}
 
 	@Transactional
