@@ -5,7 +5,15 @@ import { Icon, ThemeColorKeys } from "../../components/icon/Icon";
 import { getElapsedSince } from "../../utils/getElapsedSince";
 import { IssueData } from "./Main";
 
-export function MainTableElement({ issue }: { issue: IssueData }) {
+export function MainTableElement({
+  issue,
+  inputChecked,
+  handleCheckedIssue,
+}: {
+  issue: IssueData;
+  inputChecked: boolean;
+  handleCheckedIssue: (value: number) => void;
+}) {
   const iconColors: {
     [key: string]: ThemeColorKeys;
   } = {
@@ -17,7 +25,11 @@ export function MainTableElement({ issue }: { issue: IssueData }) {
     <Div>
       <div>
         <CheckboxLabel>
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            onChange={() => handleCheckedIssue(issue.id)}
+            checked={inputChecked}
+          />
         </CheckboxLabel>
       </div>
       <IssueContent>

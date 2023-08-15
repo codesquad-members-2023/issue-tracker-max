@@ -17,7 +17,11 @@ type TableHeaderProps = {
   closedIssueCount: number;
   multiFilters: MultiFilters;
   filterString: string;
+  checkedIssueId: number[];
+  totalIssueCount: number;
+  handleHeaderCheckbox: (value: boolean) => void;
   setMultiFilterString: (value: string, multipleSelect: boolean) => void;
+  onChangeIssuesState: (value: "OPENED" | "CLOSED") => void;
 };
 
 export function MainTableHeader({
@@ -25,7 +29,11 @@ export function MainTableHeader({
   closedIssueCount,
   multiFilters,
   filterString,
+  checkedIssueId,
+  totalIssueCount,
+  handleHeaderCheckbox,
   setMultiFilterString,
+  onChangeIssuesState,
 }: TableHeaderProps) {
   const issueStates: IssueState[] = [
     {
@@ -39,6 +47,19 @@ export function MainTableHeader({
       icon: "Archive",
       selected: filterString.includes("is:closed"),
       conditions: "is:closed",
+    },
+  ];
+
+  const issueStateDropdownOptions = [
+    {
+      name: "선택한 이슈 열기",
+      selected: false,
+      onClick: () => onChangeIssuesState("OPENED"),
+    },
+    {
+      name: "선택한 이슈 닫기",
+      selected: false,
+      onClick: () => onChangeIssuesState("CLOSED"),
     },
   ];
 
@@ -59,42 +80,69 @@ export function MainTableHeader({
     }));
   };
 
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleHeaderCheckbox(event.target.checked);
+  };
+
   return (
     <Div>
       <CheckboxLabel>
-        <input type="checkbox" />
+        <input
+          type="checkbox"
+          onChange={handleCheckboxChange}
+          checked={checkedIssueId.length === totalIssueCount}
+        />
       </CheckboxLabel>
-      <TabButton type="Ghost">
-        {issueStates.map(({ name, icon, selected, conditions }, index) => (
-          <Button
-            key={`tab-${index}`}
-            icon={icon}
-            size="M"
-            buttonType="Ghost"
-            flexible="Flexible"
-            selected={selected}
-            onClick={() => onIssueStateClick(conditions)}
-          >
-            {name}
-          </Button>
-        ))}
-      </TabButton>
-      <MultiFiltersDiv>
-        {Object.entries(multiFilters).map(([key, value], index) => (
-          <DropdownContainer
-            key={index}
-            name={key}
-            optionTitle={`${key} 필터`}
-            options={addOnClickToOptions(
-              key,
-              value.options,
-              value.multipleSelect,
-            )}
-            alignment="Right"
-            autoClose
-          />
-        ))}
-      </MultiFiltersDiv>
+      {!checkedIssueId.length ? (
+        <>
+          <TabButton type="Ghost">
+            {issueStates.map(({ name, icon, selected, conditions }, index) => (
+              <Button
+                key={`tab-${index}`}
+                icon={icon}
+                size="M"
+                buttonType="Ghost"
+                flexible="Flexible"
+                selected={selected}
+                onClick={() => onIssueStateClick(conditions)}
+              >
+                {name}
+              </Button>
+            ))}
+          </TabButton>
+          <MultiFiltersDiv>
+            {Object.entries(multiFilters).map(([key, value], index) => (
+              <DropdownContainer
+                key={index}
+                name={key}
+                optionTitle={`${key} 필터`}
+                options={addOnClickToOptions(
+                  key,
+                  value.options,
+                  value.multipleSelect,
+                )}
+                alignment="Right"
+                autoClose
+              />
+            ))}
+          </MultiFiltersDiv>
+        </>
+      ) : (
+        <>
+          <SelectedItemCounter>
+            {checkedIssueId.length}개 이슈 선택
+          </SelectedItemCounter>
+          <DropdownDiv>
+            <DropdownContainer
+              name="상태 수정"
+              optionTitle="상태 변경"
+              options={issueStateDropdownOptions}
+              alignment="Right"
+              autoClose
+            />
+          </DropdownDiv>
+        </>
+      )}
     </Div>
   );
 }
@@ -125,4 +173,18 @@ const MultiFiltersDiv = styled.div`
   justify-content: right;
   gap: 32px;
   padding-right: 64px;
+`;
+
+const SelectedItemCounter = styled.span`
+  padding: 0 4px;
+  color: ${({ theme }) => theme.color.neutralTextDefault};
+  font: ${({ theme }) => theme.font.displayBold16};
+`;
+
+const DropdownDiv = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: right;
+  gap: 32px;
+  padding-right: 32px;
 `;

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { styled } from "styled-components";
 import { IssueDataState } from "./Main";
 import { MainTableElement } from "./MainTableElement";
@@ -14,18 +15,49 @@ export function MainTable({
   setMultiFilterString,
   filterString,
 }: MainTableProps) {
+  const [checkedIssueId, setCheckedIssueId] = useState<number[]>([]);
+
+  const onChangeIssuesState = (state: "OPENED" | "CLOSED") => {
+    console.log(`${checkedIssueId} : ${state}`);
+  };
+
+  const handleHeaderCheckbox = (checked: boolean) => {
+    if (checked) {
+      setCheckedIssueId(issueData.issues.map((issue) => issue.id));
+    } else {
+      setCheckedIssueId([]);
+    }
+  };
+
+  const handleCheckedIssue = (issueId: number) => {
+    if (checkedIssueId.includes(issueId)) {
+      setCheckedIssueId(checkedIssueId.filter((id) => id !== issueId));
+    } else {
+      setCheckedIssueId([...checkedIssueId, issueId]);
+    }
+  };
+
   return (
     <Div>
       <MainTableHeader
         openedIssueCount={issueData.openedIssueCount}
         closedIssueCount={issueData.closedIssueCount}
         multiFilters={issueData.multiFilters}
-        setMultiFilterString={setMultiFilterString}
         filterString={filterString}
+        checkedIssueId={checkedIssueId}
+        totalIssueCount={issueData.issues.length}
+        setMultiFilterString={setMultiFilterString}
+        handleHeaderCheckbox={handleHeaderCheckbox}
+        onChangeIssuesState={onChangeIssuesState}
       />
       <MainTableBody>
         {issueData.issues.map((issue, index) => (
-          <MainTableElement key={index} issue={issue} />
+          <MainTableElement
+            key={index}
+            issue={issue}
+            handleCheckedIssue={handleCheckedIssue}
+            inputChecked={checkedIssueId.includes(issue.id)}
+          />
         ))}
       </MainTableBody>
     </Div>
