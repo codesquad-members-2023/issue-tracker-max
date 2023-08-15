@@ -1,5 +1,6 @@
 # 🐝 이슈 트래커
 - 2023 코드스쿼드 마스터즈 Max에서 진행한 "이슈 트래커"를 구현하는 그룹 프로젝트
+- 이슈 트래커는 문제를 해결할 이슈를 작성하고 이슈에 추가할 수 있는 옵션인 레이블, 마일스톤 등을 추가하여 이슈를 편리하게 관리할 수 있는 애플리케이션입니다.
 - 미션 기간: `2023-07-24 ~ 2023-08-18` (1달)
 
 <br/>
@@ -28,12 +29,6 @@
 - 추가예정
 
 ### Back-End
-![](https://img.shields.io/badge/Java-007396?style=flat&logo=Java&logoColor=white)
-![](https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white)
-![](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white)
-![](https://img.shields.io/badge/Amazon_AWS-232F3E?style=flat&logo=amazonaws)
-![](https://img.shields.io/badge/GitActions-2088FF?style=flat&logo=githubactions&logoColor=white)
-
 - Java: `JDK 11`
 - SpringBoot: `ver. 2.7.14`
 - MySQL: `ver. 8.0.33`
@@ -45,9 +40,8 @@
 <br/>
 
 ## ⚙️ 인프라 구조
-### Back-End
 
-<br/>
+![image](https://github.com/masters2023-3rd-project-bugbusters/issue-tracker-max/assets/33227831/b7e4a4e1-9dee-44d4-8e3c-774550abebea)
 
 ## 💾 ERD
 
