@@ -17,11 +17,11 @@ public interface MilestoneRepository {
 
 	Long countLabels();
 
-	void updateBy(final Long milestoneId, final Milestone milestone);
+	Long updateBy(final Long milestoneId, final Milestone milestone);
 
-	void updateBy(final Long milestoneId, final MilestoneStatus status);
+	Long updateBy(final Long milestoneId, final MilestoneStatus status);
 
-	void deleteBy(final Long milestoneId);
+	Long deleteBy(final Long milestoneId);
 
 	Long countAll();
 
