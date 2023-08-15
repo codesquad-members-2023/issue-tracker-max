@@ -4,7 +4,9 @@ import java.util.Objects;
 
 import codesquard.app.user.entity.User;
 import codesquard.app.user.password.PasswordEncoder;
+import lombok.ToString;
 
+@ToString
 public class UserSaveServiceRequest {
 	private final String loginId;
 	private final String email;
