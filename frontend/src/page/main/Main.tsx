@@ -1,30 +1,14 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import { IssueTableBody } from "../../components/issue/IssueTableBody";
-import { IssueTableHeader } from "../../components/issue/IssueTableHeader";
 import { MainHeader } from "./MainHeader";
-
-export type SingleFilterData = {
-  id: number;
-  name: string;
-  conditions: string;
-  selected: boolean;
-};
-
-type IssueDataState = {
-  closedIssueCount: number;
-  openedIssueCount: number;
-  issues: IssueData[];
-  multiFilters: object;
-  singleFilters: SingleFilterData[];
-  input: string;
-};
+import { MainTable } from "./MainTable";
 
 type LabelData = {
+  id: number;
   name: string;
-  background: string;
   color: string;
-  description: string;
+  background: string;
 };
 
 type MilestoneData = {
@@ -35,40 +19,151 @@ type MilestoneData = {
 type UserData = {
   id: number;
   name: string;
+  avatarUrl: string;
 };
 
 export type IssueData = {
   id: number;
   title: string;
-  status: boolean;
+  status: "OPENED" | "CLOSED";
   createdAt: Date;
-  modifiedAt: Date | null;
+  modifiedAt: Date;
   statusModifiedAt: Date;
+  assignees: UserData[];
   labels: LabelData[];
-  milestone: MilestoneData;
+  milestones: MilestoneData;
   author: UserData;
-  assignees: UserData;
   commentCount: number;
 };
 
+export type SingleFilterData = {
+  id: number;
+  name: string;
+  conditions: string;
+  selected: boolean;
+};
+
+export type Option = {
+  id: number;
+  name: string;
+  selected: boolean;
+};
+
+type AssigneeOption = Option & {
+  avatarUrl: string | null;
+};
+
+type LabelOption = Option & {
+  color: string;
+  background: string;
+};
+
+type MilestoneOption = Option;
+
+type FilterGroup<T> = {
+  multipleSelect: boolean;
+  options: T[];
+};
+
+export type MultiFilters = {
+  assignees: FilterGroup<AssigneeOption>;
+  authors: FilterGroup<AssigneeOption>;
+  labels: FilterGroup<LabelOption>;
+  milestones: FilterGroup<MilestoneOption>;
+};
+
+export type IssueDataState = {
+  input: string;
+  openedIssueCount: number;
+  closedIssueCount: number;
+  labelCount: number;
+  milestoneCount: number;
+  issues: IssueData[];
+  singleFilters: SingleFilterData[];
+  multiFilters: MultiFilters;
+};
+
 export function Main() {
+  const navigate = useNavigate();
   const [issueData, setIssueData] = useState<IssueDataState>();
+  const [filterString, setFilterString] = useState<string>();
+
+  const queryString = window.location.search;
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
-        "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/issues",
-      );
-
+      const res = await fetch(`/api/issues${queryString}`);
       const { code, data } = await res.json();
 
       if (code === 200) {
         setIssueData(data);
+        setFilterString(data.input);
       }
     };
 
     fetchData();
-  }, []);
+  }, [queryString]);
+
+  const convertToQueryString = (filterCondition: string) => {
+    return filterCondition
+      .split(/\s(?=[^:]*:)/)
+      .map((part) => {
+        const index = part.indexOf(":");
+        const key = part.substring(0, index);
+        const value = part.substring(index + 1);
+
+        return `${key}=${encodeURIComponent(value)}`;
+      })
+      .join("&");
+  };
+
+  const setSingleFilters = (filterCondition: string) => {
+    const newQueryString = convertToQueryString(filterCondition);
+
+    navigate(`/?${newQueryString}`);
+  };
+
+  const setMultiFilterString = (
+    filterCondition: string,
+    multipleSelect: boolean,
+  ) => {
+    if (!issueData) return;
+
+    const input = issueData.input;
+
+    if (input.includes(filterCondition)) {
+      const newInput = input
+        .split(/\s(?=[^:]*:)/)
+        .filter((part) => part !== filterCondition)
+        .join(" ");
+      const newQueryString = convertToQueryString(newInput);
+
+      navigate(`/?${newQueryString}`);
+      return;
+    }
+
+    const [keyToAdd, valueToAdd] = filterCondition.split(":");
+    const filteredParts = input
+      .split(/\s(?=[^:]*:)/)
+      .filter((part) => !part.startsWith(`${keyToAdd}:`) || multipleSelect);
+
+    const newInput = [...filteredParts, `${keyToAdd}:${valueToAdd}`].join(" ");
+    const newQueryString = convertToQueryString(newInput.trim());
+
+    navigate(`/?${newQueryString}`);
+  };
+
+  const onChangeFilterInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterString(event.target.value);
+  };
+
+  const handleFilterInput = () => {
+    if (filterString === undefined) return;
+
+    const newQueryString = convertToQueryString(filterString);
+
+    navigate(`/?${newQueryString}`);
+  };
 
   return (
     <Div>
@@ -76,18 +171,18 @@ export function Main() {
         <>
           <MainHeader
             singleFilters={issueData.singleFilters}
-            milestoneCount={3}
-            labelCount={2}
-            input={issueData.input}
+            milestoneCount={issueData.milestoneCount}
+            labelCount={issueData.labelCount}
+            input={filterString!}
+            setSingleFilters={setSingleFilters}
+            onChangeFilterInput={onChangeFilterInput}
+            handleFilterInput={handleFilterInput}
           />
-          <MainBody>
-            <IssueTableHeader
-              openedIssueCount={issueData.openedIssueCount}
-              closedIssueCount={issueData.closedIssueCount}
-              multiFilters={issueData.multiFilters}
-            />
-            <IssueTableBody issues={issueData.issues} />
-          </MainBody>
+          <MainTable
+            issueData={issueData}
+            setMultiFilterString={setMultiFilterString}
+            filterString={filterString!}
+          />
         </>
       )}
     </Div>
@@ -97,13 +192,4 @@ export function Main() {
 const Div = styled.div`
   width: 1280px;
   padding: 0px 80px;
-`;
-
-const MainBody = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid ${({ theme }) => theme.color.neutralBorderDefault};
-  border-radius: ${({ theme }) => theme.radius.large};
-  background: ${({ theme }) => theme.color.neutralSurfaceStrong};
 `;
