@@ -15,6 +15,7 @@ import org.presents.issuetracker.global.error.response.CommonApiResponse;
 import org.presents.issuetracker.global.error.statuscode.JwtErrorCode;
 import org.presents.issuetracker.global.error.statuscode.StatusCode;
 import org.presents.issuetracker.jwt.JwtProvider;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.PatternMatchUtils;
@@ -40,6 +41,11 @@ public class JwtAuthorizationFilter implements Filter {
 		throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpServletResponse res = (HttpServletResponse)response;
+
+		if (HttpMethod.OPTIONS.matches(req.getMethod())) {
+			chain.doFilter(request, response);
+			return;
+		}
 
 		if (matchesExcludeUris(req.getRequestURI())) {
 			chain.doFilter(request, response);

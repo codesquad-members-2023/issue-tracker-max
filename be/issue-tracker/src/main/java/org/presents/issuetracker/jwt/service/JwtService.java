@@ -3,7 +3,7 @@ package org.presents.issuetracker.jwt.service;
 import java.util.Map;
 
 import org.presents.issuetracker.global.error.exception.CustomException;
-import org.presents.issuetracker.global.error.statuscode.UserErrorCode;
+import org.presents.issuetracker.global.error.statuscode.JwtErrorCode;
 import org.presents.issuetracker.jwt.JwtProvider;
 import org.presents.issuetracker.jwt.dto.Jwt;
 import org.presents.issuetracker.jwt.entity.Token;
@@ -32,7 +32,7 @@ public class JwtService {
 		String loginId = jwtRepository.findByRefreshToken(refreshToken);
 		User user = userRepository.findByLoginId(loginId)
 			.orElseThrow(() -> {
-				throw new CustomException(UserErrorCode.NOT_FOUND_LOGIN_ID);
+				throw new CustomException(JwtErrorCode.INVALID_JWT_TOKEN);
 			});
 
 		return jwtProvider.reissueToken(Map.of("userId", user.getUserId()), refreshToken);

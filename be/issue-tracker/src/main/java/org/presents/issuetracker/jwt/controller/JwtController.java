@@ -1,6 +1,9 @@
 package org.presents.issuetracker.jwt.controller;
 
+import javax.validation.Valid;
+
 import org.presents.issuetracker.jwt.dto.Jwt;
+import org.presents.issuetracker.jwt.dto.ReissueAccessTokenRequest;
 import org.presents.issuetracker.jwt.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +18,7 @@ public class JwtController {
 	private final JwtService jwtService;
 
 	@PostMapping("/reissue-access-token")
-	public ResponseEntity<Jwt> reissueAccessToken(@RequestBody Jwt jwt) {
-		return ResponseEntity.ok().body(jwtService.reissueAccessToken(jwt.getRefreshToken()));
+	public ResponseEntity<Jwt> reissueAccessToken(@Valid @RequestBody ReissueAccessTokenRequest request) {
+		return ResponseEntity.ok().body(jwtService.reissueAccessToken(request.getRefreshToken()));
 	}
 }

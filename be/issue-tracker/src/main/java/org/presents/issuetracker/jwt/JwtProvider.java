@@ -62,7 +62,7 @@ public class JwtProvider {
 				.build();
 		} else {
 			// refresh token 만료 시 다시 로그인 요청을 위한 예외 발생
-			throw new CustomException(JwtErrorCode.NOT_VALID_LOGIN_INFO);
+			throw new CustomException(JwtErrorCode.EXPIRED_JWT_TOKEN);
 		}
 	}
 
