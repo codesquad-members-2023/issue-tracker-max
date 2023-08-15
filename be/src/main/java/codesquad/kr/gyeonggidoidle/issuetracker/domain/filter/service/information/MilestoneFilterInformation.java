@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.filter.service.information;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;

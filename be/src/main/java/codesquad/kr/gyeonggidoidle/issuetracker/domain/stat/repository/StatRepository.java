@@ -57,7 +57,7 @@ public class StatRepository {
         return template.queryForObject(sql, new MapSqlParameterSource(), countLabelStatsRowMapper());
     }
 
-    public Map<Long, IssueByMilestoneVO> findIssuesCountByMilestoneIds(List<Long> milestoneIds) {
+    public Map<Long, IssueByMilestoneVO> countIssuesByMilestoneIds(List<Long> milestoneIds) {
         return milestoneIds.stream()
                 .collect(Collectors.toUnmodifiableMap(
                         milestoneId -> milestoneId, this::findIssuesCountByMilestoneId

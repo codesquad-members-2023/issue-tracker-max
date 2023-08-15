@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,13 +6,13 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class IssueStatusVO {
+public class IssueStatusResult {
 
     private final boolean open;
     private final List<Long> issueIds;
 
     @Builder
-    private IssueStatusVO(boolean open, List<Long> issueIds) {
+    private IssueStatusResult(boolean open, List<Long> issueIds) {
         this.open = open;
         this.issueIds = issueIds;
     }

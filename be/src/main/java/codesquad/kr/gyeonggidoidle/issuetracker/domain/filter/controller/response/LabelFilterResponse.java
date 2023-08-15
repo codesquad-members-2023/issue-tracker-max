@@ -1,6 +1,6 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.filter.controller.response;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.LabelFilterInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.filter.service.information.LabelFilterInformation;
 import lombok.Builder;
 import lombok.Getter;
 

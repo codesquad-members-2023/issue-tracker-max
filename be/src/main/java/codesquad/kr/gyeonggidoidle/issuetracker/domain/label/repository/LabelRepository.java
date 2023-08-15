@@ -3,9 +3,6 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.Label;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelVO;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,6 +10,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
@@ -71,7 +72,7 @@ public class LabelRepository {
                 .addValue("label_id", labelId);
     }
 
-    public List<LabelDetailsVO> findAllFilters() {
+    public List<LabelDetailsVO> getLabelFilter() {
         String sql = "SELECT id, name, background_color, text_color " +
                 "FROM label " +
                 "ORDER BY name";

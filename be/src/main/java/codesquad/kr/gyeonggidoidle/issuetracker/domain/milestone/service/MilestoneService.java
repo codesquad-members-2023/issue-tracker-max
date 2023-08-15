@@ -26,7 +26,7 @@ public class MilestoneService {
         MilestoneStatVO milestoneStatVO = statRepository.countMilestoneStats();
         List<MilestoneDetailsVO> milestoneDetailsVOs = milestoneRepository.findOpenMilestones();
         List<Long> milestoneIds = getMilestoneIds(milestoneDetailsVOs);
-        Map<Long, IssueByMilestoneVO> issueByMilestoneVOs = statRepository.findIssuesCountByMilestoneIds(
+        Map<Long, IssueByMilestoneVO> issueByMilestoneVOs = statRepository.countIssuesByMilestoneIds(
                 milestoneIds);
         return MilestonePageInformation.from(milestoneStatVO, milestoneDetailsVOs, issueByMilestoneVOs);
     }
@@ -35,7 +35,7 @@ public class MilestoneService {
         MilestoneStatVO milestoneStatVO = statRepository.countMilestoneStats();
         List<MilestoneDetailsVO> milestoneDetailsVOs = milestoneRepository.findClosedMilestones();
         List<Long> milestoneIds = getMilestoneIds(milestoneDetailsVOs);
-        Map<Long, IssueByMilestoneVO> issueByMilestoneVOs = statRepository.findIssuesCountByMilestoneIds(
+        Map<Long, IssueByMilestoneVO> issueByMilestoneVOs = statRepository.countIssuesByMilestoneIds(
                 milestoneIds);
         return MilestonePageInformation.from(milestoneStatVO, milestoneDetailsVOs, issueByMilestoneVOs);
     }

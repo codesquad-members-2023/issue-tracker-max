@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class IssueVO {
+public class IssueSearchResult {
 
     private final Long id;
     private final String title;
@@ -15,7 +15,7 @@ public class IssueVO {
     private final LocalDateTime createdAt;
 
     @Builder
-    public IssueVO(Long id, String title, String author, String milestone, LocalDateTime createdAt) {
+    public IssueSearchResult(Long id, String title, String author, String milestone, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.author = author;

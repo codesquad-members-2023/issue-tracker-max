@@ -74,7 +74,7 @@ class StatRepositoryTest {
     @Test
     void countIssuesCountByMilestoneIds() {
         //when
-        Map<Long, IssueByMilestoneVO> actual = repository.findIssuesCountByMilestoneIds(List.of(1L, 2L, 3L));
+        Map<Long, IssueByMilestoneVO> actual = repository.countIssuesByMilestoneIds(List.of(1L, 2L, 3L));
 
         //then
         assertSoftly(assertions -> {

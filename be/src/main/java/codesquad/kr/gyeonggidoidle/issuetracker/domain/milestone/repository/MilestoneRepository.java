@@ -32,7 +32,7 @@ public class MilestoneRepository {
         return template.query(sql, new MapSqlParameterSource(), milestoneDetailsVORowMapper());
     }
 
-    public List<MilestoneDetailsVO> findAllFilters() {
+    public List<MilestoneDetailsVO> getMilestoneFilter() {
         String sql = "SELECT id, name " +
                 "FROM milestone " +
                 "ORDER BY name";

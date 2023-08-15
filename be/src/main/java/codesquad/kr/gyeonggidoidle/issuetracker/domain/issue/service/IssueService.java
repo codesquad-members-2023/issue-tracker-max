@@ -2,25 +2,19 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.comment.repository.CommentRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Comment;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Filter;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.SearchFilter;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Issue;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.FilteredIssueRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.IssueSearchRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.IssueRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueVO;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result.IssueSearchResult;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueCreateCondition;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueStatusCondition;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueStatusPatchCondition;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueUpdateCondition;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterInformation;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterListInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.SearchInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.LabelRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.MemberRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.MilestoneRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.StatRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.StatVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,50 +29,25 @@ public class IssueService {
 
     private final StatRepository statRepository;
     private final IssueRepository issueRepository;
+    private final IssueSearchRepository issueSearchRepository;
     private final LabelRepository labelRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final MilestoneRepository milestoneRepository;
-    private final FilteredIssueRepository filteredIssueRepository;
 
-    public FilterInformation readOpenIssues() {
+    public SearchInformation findIssuesBySearchFilter(String searchFilterCondition) {
         StatVO statVO = statRepository.countOverallStats();
-        List<IssueVO> issueVOs = issueRepository.findOpenIssues();
-        List<Long> issueIds = getIssueIds(issueVOs);
+        SearchFilter searchFilter = SearchFilter.from(searchFilterCondition);
+        List<IssueSearchResult> issueSearchResults = issueSearchRepository.findBySearchFilter(searchFilter);
+        List<Long> issueIds = getIssueIds(issueSearchResults);
         Map<Long, List<LabelVO>> labelVOs = labelRepository.findAllByIssueIds(issueIds);
         Map<Long, List<String>> assigneeProfiles = memberRepository.findAllProfilesByIssueIds(issueIds);
 
-        return FilterInformation.from(statVO, issueVOs, labelVOs, assigneeProfiles, "is:open");
-    }
-
-    public FilterInformation readClosedIssues() {
-        StatVO statVO = statRepository.countOverallStats();
-        List<IssueVO> issueVOs = issueRepository.findClosedIssues();
-        List<Long> issueIds = getIssueIds(issueVOs);
-        Map<Long, List<LabelVO>> labelVOs = labelRepository.findAllByIssueIds(issueIds);
-        Map<Long, List<String>> assigneeProfiles = memberRepository.findAllProfilesByIssueIds(issueIds);
-
-        return FilterInformation.from(statVO, issueVOs, labelVOs, assigneeProfiles, "is:closed");
-    }
-
-    public FilterInformation readFilteredIssues(String filterCondition) {
-        StatVO statVO = statRepository.countOverallStats();
-        Filter filter = Filter.from(filterCondition);
-        List<IssueVO> issueVOs = filteredIssueRepository.findByFilter(filter);
-        List<Long> issueIds = getIssueIds(issueVOs);
-        Map<Long, List<LabelVO>> labelVOs = labelRepository.findAllByIssueIds(issueIds);
-        Map<Long, List<String>> assigneeProfiles = memberRepository.findAllProfilesByIssueIds(issueIds);
-
-        return FilterInformation.from(statVO, issueVOs, labelVOs, assigneeProfiles, filterCondition);
-    }
-
-    public void updateIssuesStatus(IssueStatusCondition condition) {
-        issueRepository.updateIssuesStatus(IssueStatusCondition.to(condition));
+        return SearchInformation.from(statVO, issueSearchResults, labelVOs, assigneeProfiles, searchFilterCondition);
     }
 
     public void createIssue(IssueCreateCondition condition) {
         Issue issue = IssueCreateCondition.toIssue(condition);
-        Long createdId = issueRepository.createIssue(issue);
+        Long createdId = issueRepository.saveIssue(issue);
         Comment comment = IssueCreateCondition.toComment(createdId, condition);
         Long fileId = null;
         if (comment.isFileExist()) {
@@ -95,6 +64,10 @@ public class IssueService {
         }
     }
 
+    public void updateIssuesStatus(IssueStatusPatchCondition condition) {
+        issueRepository.updateIssuesStatus(IssueStatusPatchCondition.to(condition));
+    }
+
     public void deleteIssue(Long issueId) {
         issueRepository.deleteIssue(issueId);
     }
@@ -109,32 +82,9 @@ public class IssueService {
         }
     }
 
-    public FilterListInformation readFilters() {
-        List<MemberDetailsVO> members = memberRepository.findAllFilters();
-        List<LabelDetailsVO> labels = labelRepository.findAllFilters();
-        List<MilestoneDetailsVO> milestones = milestoneRepository.findAllFilters();
-        return FilterListInformation.from(members, members, labels, milestones);
-    }
-
-    public FilterListInformation readFiltersFromIssue() {
-        List<MemberDetailsVO> members = memberRepository.findAllFilters();
-        List<LabelDetailsVO> labels = labelRepository.findAllFilters();
-        List<MilestoneDetailsVO> milestones = milestoneRepository.findAllFilters();
-        List<Long> milestoneIds = getMilestoneIds(milestones);
-        Map<Long, IssueByMilestoneVO> issuesCountByMilestoneIds = statRepository.findIssuesCountByMilestoneIds(
-                milestoneIds);
-        return FilterListInformation.from(members, labels, milestones, issuesCountByMilestoneIds);
-    }
-
-    private List<Long> getIssueIds(List<IssueVO> issueVOs) {
-        return issueVOs.stream()
-                .map(IssueVO::getId)
-                .collect(Collectors.toUnmodifiableList());
-    }
-
-    private List<Long> getMilestoneIds(List<MilestoneDetailsVO> milestoneDetailsVOs) {
-        return milestoneDetailsVOs.stream()
-                .map(MilestoneDetailsVO::getId)
+    private List<Long> getIssueIds(List<IssueSearchResult> issueSearchResults) {
+        return issueSearchResults.stream()
+                .map(IssueSearchResult::getId)
                 .collect(Collectors.toUnmodifiableList());
     }
 }

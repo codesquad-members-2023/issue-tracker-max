@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-class FilterTest {
+class SearchFilterTest {
 
     @DisplayName("FilterCondition에서 Filter가 만들어진다.")
     @Test
@@ -14,7 +14,7 @@ class FilterTest {
         String filterCondition = "is:open author:nag milestone:마일스톤1";
 
         //when
-        Filter actual = Filter.from(filterCondition);
+        SearchFilter actual = SearchFilter.from(filterCondition);
 
         //then
         assertSoftly(assertions -> {
@@ -32,7 +32,7 @@ class FilterTest {
         String filterCondition = "author:nag milestone:마일스톤1";
 
         //when
-        Filter actual = Filter.from(filterCondition);
+        SearchFilter actual = SearchFilter.from(filterCondition);
 
         //then
         assertSoftly(assertions -> {
@@ -40,4 +40,22 @@ class FilterTest {
         });
     }
 
+    @DisplayName("FilterCondition을 파싱하다가 예외가 발생하면 NULL_SEARCH_FILTER를 반환한다.")
+    @Test
+    void createNullFilter() {
+        //given
+        String filterCondition = "author:nag milestone:마일스톤 1";
+
+        //when
+        SearchFilter actual = SearchFilter.from(filterCondition);
+
+        //then
+        assertSoftly(assertions -> {
+            assertions.assertThat(actual.getIsOpen()).isNull();
+            assertions.assertThat(actual.getAssignee()).isNull();
+            assertions.assertThat(actual.getAuthor()).isNull();
+            assertions.assertThat(actual.getMilestone()).isNull();
+            assertions.assertThat(actual.getLabel()).isNull();
+        });
+    }
 }

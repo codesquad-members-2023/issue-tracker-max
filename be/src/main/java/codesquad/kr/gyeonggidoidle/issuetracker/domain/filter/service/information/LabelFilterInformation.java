@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.filter.service.information;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
 import lombok.Builder;

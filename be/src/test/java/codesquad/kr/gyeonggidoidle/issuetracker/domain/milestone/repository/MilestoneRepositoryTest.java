@@ -42,7 +42,7 @@ class MilestoneRepositoryTest {
     @Test
     void findAll() {
         //when
-        List<MilestoneDetailsVO> actual = repository.findAllFilters();
+        List<MilestoneDetailsVO> actual = repository.getMilestoneFilter();
 
         //then
         assertSoftly(assertions -> {

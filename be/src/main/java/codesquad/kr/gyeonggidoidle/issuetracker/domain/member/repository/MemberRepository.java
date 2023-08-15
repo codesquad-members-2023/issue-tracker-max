@@ -2,9 +2,6 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.Member;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,13 +10,15 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
 public class MemberRepository {
 
     private final NamedParameterJdbcTemplate template;
-
 
     public Map<Long, List<String>> findAllProfilesByIssueIds(List<Long> issueIds) {
         return issueIds.stream()
@@ -50,7 +49,7 @@ public class MemberRepository {
         addIssueAssignees(issueId, assigneeIds);
     }
 
-    public String findProfileById(Long memberId){
+    public String findProfileById(Long memberId) {
         String sql = "SELECT profile FROM member WHERE id = :memberId";
         try {
             return template.queryForObject(sql, Map.of("memberId", memberId), String.class);
@@ -71,7 +70,7 @@ public class MemberRepository {
                 .addValue("assignee_id", assigneeId);
     }
 
-    public List<MemberDetailsVO> findAllFilters() {
+    public List<MemberDetailsVO> getMemberFilter() {
         String sql = "SELECT id, name, profile " +
                 "FROM member " +
                 "ORDER BY name";

@@ -1,6 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueUpdateVO;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result.IssueUpdateResult;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -24,8 +24,8 @@ public class IssueUpdateCondition {
         this.milestone = milestone;
     }
 
-    public static IssueUpdateVO to(IssueUpdateCondition condition) {
-        return IssueUpdateVO.builder()
+    public static IssueUpdateResult to(IssueUpdateCondition condition) {
+        return IssueUpdateResult.builder()
                 .issueId(condition.getIssueId())
                 .title(condition.getTitle())
                 .milestoneId(condition.getMilestone())

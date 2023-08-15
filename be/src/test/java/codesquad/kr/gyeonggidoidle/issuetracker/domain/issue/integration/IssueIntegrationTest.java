@@ -1,30 +1,27 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.integration;
 
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.IntegrationTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.IssueCreateRequest;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.IssueStatusRequest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.IssueStatusPatchRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.IssueUpdateRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.Jwt;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.JwtProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
 class IssueIntegrationTest {
@@ -45,7 +42,7 @@ class IssueIntegrationTest {
         Jwt jwt = makeToken();
 
         //when
-        ResultActions resultActions = mockMvc.perform(get("/api/issues/open")
+        ResultActions resultActions = mockMvc.perform(get("/api/issues?q=is%3Aopen")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 
         //then
@@ -68,7 +65,7 @@ class IssueIntegrationTest {
         Jwt jwt = makeToken();
 
         //when
-        ResultActions resultActions = mockMvc.perform(get("/api/issues/closed")
+        ResultActions resultActions = mockMvc.perform(get("/api/issues?q=is%3Aclosed")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 
         //then
@@ -91,18 +88,18 @@ class IssueIntegrationTest {
         Jwt jwt = makeToken();
 
         //when
-        ResultActions resultActions = mockMvc.perform(get("/api/filters")
+        ResultActions resultActions = mockMvc.perform(get("/api/filters/main")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 
         //then
         resultActions
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.assignees.length()").value(4),
-                        jsonPath("$.authors.length()").value(3),
-                        jsonPath("$.labels.length()").value(4),
-                        jsonPath("$.milestones.length()").value(4),
-                        jsonPath("$.assignees.[0].name").value("담당자가 없는 이슈")
+                        jsonPath("$.assignee.length()").value(4),
+                        jsonPath("$.author.length()").value(3),
+                        jsonPath("$.label.length()").value(4),
+                        jsonPath("$.milestone.length()").value(4),
+                        jsonPath("$.assignee.[0].name").value("담당자가 없는 이슈")
                 );
     }
 
@@ -113,21 +110,21 @@ class IssueIntegrationTest {
         Jwt jwt = makeToken();
 
         //when
-        ResultActions resultActions = mockMvc.perform(get("/api/issues")
+        ResultActions resultActions = mockMvc.perform(get("/api/filters/detail")
                 .header("Authorization", "Bearer " + jwt.getAccessToken()));
 
         //then
         resultActions
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.assignees.length()").value(3),
-                        jsonPath("$.authors.length()").value(0),
-                        jsonPath("$.labels.length()").value(4),
-                        jsonPath("$.milestones.length()").value(4),
-                        jsonPath("$.milestones.[0].openIssueCount").value(0),
-                        jsonPath("$.milestones.[0].closedIssueCount").value(0),
-                        jsonPath("$.milestones.[1].openIssueCount").value(1),
-                        jsonPath("$.milestones.[1].closedIssueCount").value(2)
+                        jsonPath("$.assignee.length()").value(3),
+                        jsonPath("$.author.length()").value(0),
+                        jsonPath("$.label.length()").value(4),
+                        jsonPath("$.milestone.length()").value(4),
+                        jsonPath("$.milestone.[0].openIssueCount").value(0),
+                        jsonPath("$.milestone.[0].closedIssueCount").value(0),
+                        jsonPath("$.milestone.[1].openIssueCount").value(1),
+                        jsonPath("$.milestone.[1].closedIssueCount").value(2)
                 );
     }
 
@@ -135,7 +132,7 @@ class IssueIntegrationTest {
     @Test
     void testUpdateIssuesStatusIntegrationTest() throws Exception {
         // given
-        IssueStatusRequest request = IssueStatusRequest.builder()
+        IssueStatusPatchRequest request = IssueStatusPatchRequest.builder()
                 .open(false)
                 .issues(List.of(4L, 5L))
                 .build();
@@ -171,7 +168,7 @@ class IssueIntegrationTest {
     @Test
     void testUpdateIssueStatus() throws Exception {
         // given
-        IssueStatusRequest request = IssueStatusRequest.builder()
+        IssueStatusPatchRequest request = IssueStatusPatchRequest.builder()
                 .open(false)
                 .build();
         Jwt jwt = makeToken();

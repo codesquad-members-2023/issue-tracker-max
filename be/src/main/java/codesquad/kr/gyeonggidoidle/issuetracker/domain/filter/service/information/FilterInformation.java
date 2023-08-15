@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.filter.service.information;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
-public class FilterListInformation {
+public class FilterInformation {
 
     private final List<AssigneeFilterInformation> assigneeFilterInformations;
     private final List<AuthorFilterInformation> authorFilterInformations;
@@ -20,19 +20,19 @@ public class FilterListInformation {
     private final List<MilestoneFilterInformation> milestoneFilterInformations;
 
     @Builder
-    private FilterListInformation(List<AssigneeFilterInformation> assigneeFilterInformations,
-                                  List<AuthorFilterInformation> authorFilterInformations,
-                                  List<LabelFilterInformation> labelFilterInformations,
-                                  List<MilestoneFilterInformation> milestoneFilterInformations) {
+    private FilterInformation(List<AssigneeFilterInformation> assigneeFilterInformations,
+                              List<AuthorFilterInformation> authorFilterInformations,
+                              List<LabelFilterInformation> labelFilterInformations,
+                              List<MilestoneFilterInformation> milestoneFilterInformations) {
         this.assigneeFilterInformations = assigneeFilterInformations;
         this.authorFilterInformations = authorFilterInformations;
         this.labelFilterInformations = labelFilterInformations;
         this.milestoneFilterInformations = milestoneFilterInformations;
     }
 
-    public static FilterListInformation from(List<MemberDetailsVO> assignees, List<MemberDetailsVO> authors,
-                                             List<LabelDetailsVO> labels, List<MilestoneDetailsVO> milestones) {
-        return FilterListInformation.builder()
+    public static FilterInformation from(List<MemberDetailsVO> assignees, List<MemberDetailsVO> authors,
+                                         List<LabelDetailsVO> labels, List<MilestoneDetailsVO> milestones) {
+        return FilterInformation.builder()
                 .assigneeFilterInformations(AssigneeFilterInformation.fromByMain(assignees))
                 .authorFilterInformations(AuthorFilterInformation.from(authors))
                 .labelFilterInformations(LabelFilterInformation.from(labels))
@@ -40,9 +40,9 @@ public class FilterListInformation {
                 .build();
     }
 
-    public static FilterListInformation from(List<MemberDetailsVO> assignees, List<LabelDetailsVO> labels,
-                                             List<MilestoneDetailsVO> milestones, Map<Long, IssueByMilestoneVO> issuesCountByMilestoneIds) {
-        return FilterListInformation.builder()
+    public static FilterInformation from(List<MemberDetailsVO> assignees, List<LabelDetailsVO> labels,
+                                         List<MilestoneDetailsVO> milestones, Map<Long, IssueByMilestoneVO> issuesCountByMilestoneIds) {
+        return FilterInformation.builder()
                 .assigneeFilterInformations(AssigneeFilterInformation.fromByIssue(assignees))
                 .authorFilterInformations(Collections.emptyList())
                 .labelFilterInformations(LabelFilterInformation.from(labels))

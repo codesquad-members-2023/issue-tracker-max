@@ -2,7 +2,8 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.ControllerTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.*;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.SearchInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.information.LabelInformation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -33,10 +35,10 @@ class IssueControllerTest {
     @Test
     void readOpenIssues() throws Exception {
         //given
-        given(issueService.readOpenIssues()).willReturn(createDummyFilterInformation());
+        given(issueService.findIssuesBySearchFilter(anyString())).willReturn(createDummyFilterInformation());
 
         //when
-        ResultActions resultActions = mockMvc.perform(get("/api/issues/open"));
+        ResultActions resultActions = mockMvc.perform(get("/api/issues?q=is%3Aopen"));
 
         //then
         resultActions
@@ -54,10 +56,10 @@ class IssueControllerTest {
     @Test
     void readClosedIssues() throws Exception {
         //given
-        given(issueService.readClosedIssues()).willReturn(createDummyFilterInformation());
+        given(issueService.findIssuesBySearchFilter(anyString())).willReturn(createDummyFilterInformation());
 
         //when
-        ResultActions resultActions = mockMvc.perform(get("/api/issues/closed"));
+        ResultActions resultActions = mockMvc.perform(get("/api/issues?q=is%3Aclosed"));
 
         //then
         resultActions
@@ -71,114 +73,8 @@ class IssueControllerTest {
                 );
     }
 
-    @DisplayName("메인 화면의 필터 내용을 담은 FilterListInformation을 FilterListResponse으로 변환한다.")
-    @Test
-    void readFilters() throws Exception {
-        //given
-        given(issueService.readFilters()).willReturn(createDummyFilterListInformation());
-
-        //when
-        ResultActions resultActions = mockMvc.perform(get("/api/filters"));
-
-        //then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpectAll(
-                        jsonPath("$.assignees.length()").value(3),
-                        jsonPath("$.authors.length()").value(2),
-                        jsonPath("$.authors.[0].name").value("a"),
-                        jsonPath("$.labels.length()").value(1),
-                        jsonPath("$.milestones.length()").value(0)
-                );
-    }
-
-    @DisplayName("이슈 화면의 필터 내용을 담은 FilterListInformation을 FilterListResponse으로 변환한다.")
-    @Test
-    void readFiltersFromIssue() throws Exception {
-        //given
-        given(issueService.readFiltersFromIssue()).willReturn(createDummyFilterListInformationByIssue());
-
-        //when
-        ResultActions resultActions = mockMvc.perform(get("/api/issues"));
-
-        //then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpectAll(
-                        jsonPath("$.assignees.length()").value(3),
-                        jsonPath("$.authors.length()").value(0),
-                        jsonPath("$.labels.length()").value(1),
-                        jsonPath("$.milestones.length()").value(0)
-                );
-    }
-
-    private FilterListInformation createDummyFilterListInformation() {
-        return FilterListInformation.builder()
-                .assigneeFilterInformations(createDummyAssigneeFilterInformations())
-                .authorFilterInformations(createDummyAuthorFilterInformations())
-                .labelFilterInformations(createDummyLabelFilterInformations())
-                .milestoneFilterInformations(createDummyMilestoneFilterInformations())
-                .build();
-    }
-
-    private FilterListInformation createDummyFilterListInformationByIssue() {
-        return FilterListInformation.builder()
-                .assigneeFilterInformations(createDummyAssigneeFilterInformations())
-                .authorFilterInformations(Collections.emptyList())
-                .labelFilterInformations(createDummyLabelFilterInformations())
-                .milestoneFilterInformations(createDummyMilestoneFilterInformations())
-                .build();
-    }
-
-    private List<AssigneeFilterInformation> createDummyAssigneeFilterInformations() {
-        AssigneeFilterInformation tmp1 = AssigneeFilterInformation.builder()
-                .id(0L)
-                .name("담당자가 없는 이슈")
-                .profile("")
-                .build();
-        AssigneeFilterInformation tmp2 = AssigneeFilterInformation.builder()
-                .id(1L)
-                .name("a")
-                .profile("aa")
-                .build();
-        AssigneeFilterInformation tmp3 = AssigneeFilterInformation.builder()
-                .id(2L)
-                .name("b")
-                .profile("bb")
-                .build();
-        return List.of(tmp1, tmp2, tmp3);
-    }
-
-    private List<AuthorFilterInformation> createDummyAuthorFilterInformations() {
-        AuthorFilterInformation tmp1 = AuthorFilterInformation.builder()
-                .id(1L)
-                .name("a")
-                .profile("aa")
-                .build();
-        AuthorFilterInformation tmp2 = AuthorFilterInformation.builder()
-                .id(2L)
-                .name("b")
-                .profile("bb")
-                .build();
-        return List.of(tmp1, tmp2);
-    }
-
-    private List<LabelFilterInformation> createDummyLabelFilterInformations() {
-        LabelFilterInformation tmp1 = LabelFilterInformation.builder()
-                .id(1L)
-                .name("label")
-                .backgroundColor("#FF")
-                .textColor("color")
-                .build();
-        return List.of(tmp1);
-    }
-
-    private List<MilestoneFilterInformation> createDummyMilestoneFilterInformations() {
-        return List.of();
-    }
-
-    private FilterInformation createDummyFilterInformation() {
-        return FilterInformation.builder()
+    private SearchInformation createDummyFilterInformation() {
+        return SearchInformation.builder()
                 .openIssueCount(3)
                 .closedIssueCount(3)
                 .milestoneCount(2)
