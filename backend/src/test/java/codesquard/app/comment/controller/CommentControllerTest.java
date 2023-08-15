@@ -1,5 +1,7 @@
 package codesquard.app.comment.controller;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -12,8 +14,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
+import codesquard.app.api.errors.handler.GlobalExceptionHandler;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.comment.controller.request.CommentModifyRequest;
 import codesquard.app.comment.controller.request.CommentSaveRequest;
 
@@ -23,7 +28,8 @@ class CommentControllerTest extends ControllerTestSupport {
 	@Test
 	void saveComment() throws Exception {
 		// given
-		CommentSaveRequest request = new CommentSaveRequest(1L, 1L, "controller comment");
+		mockingAuthenticateUser();
+		CommentSaveRequest request = new CommentSaveRequest(1L, "controller comment");
 
 		// when // then
 		mockMvc.perform(post("/api/comments")
@@ -46,7 +52,8 @@ class CommentControllerTest extends ControllerTestSupport {
 	@ParameterizedTest
 	void saveInvalidComment(String content) throws Exception {
 		// given
-		CommentSaveRequest request = new CommentSaveRequest(1L, 1L, content);
+		mockingAuthenticateUser();
+		CommentSaveRequest request = new CommentSaveRequest(1L, content);
 
 		// when // then
 		mockMvc.perform(post("/api/comments")
@@ -65,6 +72,7 @@ class CommentControllerTest extends ControllerTestSupport {
 	@Test
 	void modify() throws Exception {
 		// given
+		mockingAuthenticateUser();
 		CommentModifyRequest request = new CommentModifyRequest("controller comment");
 
 		// when // then
@@ -80,6 +88,7 @@ class CommentControllerTest extends ControllerTestSupport {
 	@ParameterizedTest
 	void modifyInvalidComment(String content) throws Exception {
 		// given
+		mockingAuthenticateUser();
 		CommentModifyRequest request = new CommentModifyRequest(content);
 
 		// when // then
@@ -98,10 +107,26 @@ class CommentControllerTest extends ControllerTestSupport {
 	@DisplayName("등록된 댓글을 삭제한다.")
 	@Test
 	void test() throws Exception {
+		// given
+		mockingAuthenticateUser();
+
 		// when // then
 		mockMvc.perform(delete("/api/comments/1"))
 			.andDo(print())
 			.andExpect(status().isOk());
+	}
+
+	private void mockingAuthenticateUser() {
+		mockMvc = MockMvcBuilders.standaloneSetup(new CommentController(commentService))
+			.setControllerAdvice(new GlobalExceptionHandler())
+			.setCustomArgumentResolvers(loginUserArgumentResolver)
+			.build();
+
+		AuthenticateUser authenticateUser = new AuthenticateUser(1L, "user", "user@email.com", null);
+		when(loginUserArgumentResolver.supportsParameter(any()))
+			.thenReturn(true);
+		when(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+			.thenReturn(authenticateUser);
 	}
 
 }

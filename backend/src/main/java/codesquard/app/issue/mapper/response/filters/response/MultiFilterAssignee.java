@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class MultiFiltersAuthors {
+public class MultiFilterAssignee {
 
 	private Long id;
 	private String name;
@@ -24,7 +24,7 @@ public class MultiFiltersAuthors {
 		return avatarUrl;
 	}
 
-	public boolean getSelected() {
+	public boolean isSelected() {
 		return selected;
 	}
 

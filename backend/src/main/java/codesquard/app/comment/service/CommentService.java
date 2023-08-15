@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquard.app.api.errors.exception.CommentAuthorMismatchException;
 import codesquard.app.api.errors.exception.NoSuchCommentException;
 import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.comment.entity.Comment;
@@ -35,15 +36,17 @@ public class CommentService {
 
 	public CommentModifyResponse modify(CommentModifyServiceRequest serviceRequest, LocalDateTime modifiedAt) {
 		validateCommentId(serviceRequest.getId());
+		validateAuthor(serviceRequest.getId(), serviceRequest.getUserId());
 		Comment comment = serviceRequest.toEntity(modifiedAt);
 		Long modifiedCommentId = commentRepository.modify(comment);
 
 		return new CommentModifyResponse(modifiedCommentId);
 	}
 
-	public CommentDeleteResponse delete(Long id) {
-		validateCommentId(id);
-		Long deletedCommentId = commentRepository.deleteById(id);
+	public CommentDeleteResponse delete(Long userId, Long commentId) {
+		validateCommentId(commentId);
+		validateAuthor(commentId, userId);
+		Long deletedCommentId = commentRepository.deleteById(commentId);
 
 		return new CommentDeleteResponse(deletedCommentId);
 	}
@@ -57,6 +60,12 @@ public class CommentService {
 	public void validateCommentId(Long commentId) {
 		if (!commentRepository.isExist(commentId)) {
 			throw new NoSuchCommentException();
+		}
+	}
+
+	private void validateAuthor(Long commentId, Long userId) {
+		if (!commentRepository.isCommentAuthorMatching(commentId, userId)) {
+			throw new CommentAuthorMismatchException();
 		}
 	}
 
