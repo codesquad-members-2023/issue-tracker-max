@@ -72,6 +72,7 @@ public class AuthenticateUserRestController {
 			claims.put(VerifyUserFilter.AUTHENTICATE_USER, objectMapper.writeValueAsString(user));
 			return jwtProvider.createJwt(claims);
 		} catch (JsonProcessingException e) {
+			logger.error("AuthenticateUser 객체를 json으로 변환중 오류 : {}", e.getMessage());
 			throw new RestApiException(JwtTokenErrorCode.FAIL_PARSE_JSON);
 		}
 	}
