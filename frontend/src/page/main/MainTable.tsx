@@ -5,10 +5,15 @@ import { MainTableHeader } from "./MainTableHeader";
 
 type MainTableProps = {
   issueData: IssueDataState;
+  filterString: string;
   setMultiFilterString: (value: string, multipleSelect: boolean) => void;
 };
 
-export function MainTable({ issueData, setMultiFilterString }: MainTableProps) {
+export function MainTable({
+  issueData,
+  setMultiFilterString,
+  filterString,
+}: MainTableProps) {
   return (
     <Div>
       <MainTableHeader
@@ -16,6 +21,7 @@ export function MainTable({ issueData, setMultiFilterString }: MainTableProps) {
         closedIssueCount={issueData.closedIssueCount}
         multiFilters={issueData.multiFilters}
         setMultiFilterString={setMultiFilterString}
+        filterString={filterString}
       />
       <MainTableBody>
         {issueData.issues.map((issue, index) => (

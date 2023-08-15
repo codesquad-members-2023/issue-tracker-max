@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TabButton } from "../../components/TabButton";
@@ -9,13 +8,15 @@ import { MultiFilters, Option } from "./Main";
 type IssueState = {
   name: string;
   icon: keyof IconType;
-  selected?: boolean;
+  selected: boolean;
+  conditions: string;
 };
 
 type TableHeaderProps = {
   openedIssueCount: number;
   closedIssueCount: number;
   multiFilters: MultiFilters;
+  filterString: string;
   setMultiFilterString: (value: string, multipleSelect: boolean) => void;
 };
 
@@ -23,25 +24,26 @@ export function MainTableHeader({
   openedIssueCount,
   closedIssueCount,
   multiFilters,
+  filterString,
   setMultiFilterString,
 }: TableHeaderProps) {
-  const [issueStates, setIssueStates] = useState<IssueState[]>([
+  const issueStates: IssueState[] = [
     {
       name: `열린 이슈${openedIssueCount}`,
       icon: "AlertCircle",
-      selected: true,
+      selected: filterString.includes("is:opened"),
+      conditions: "is:opened",
     },
-    { name: `닫힌 이슈${closedIssueCount}`, icon: "Archive" },
-  ]);
+    {
+      name: `닫힌 이슈${closedIssueCount}`,
+      icon: "Archive",
+      selected: filterString.includes("is:closed"),
+      conditions: "is:closed",
+    },
+  ];
 
-  const onIssueStateClick = (name: string) => {
-    setIssueStates((t) =>
-      t.map((issueState) =>
-        issueState.name === name
-          ? { ...issueState, selected: true }
-          : { ...issueState, selected: false },
-      ),
-    );
+  const onIssueStateClick = (conditions: string) => {
+    setMultiFilterString(conditions, false);
   };
 
   const addOnClickToOptions = (
@@ -63,7 +65,7 @@ export function MainTableHeader({
         <input type="checkbox" />
       </CheckboxLabel>
       <TabButton type="Ghost">
-        {issueStates.map(({ name, icon, selected }, index) => (
+        {issueStates.map(({ name, icon, selected, conditions }, index) => (
           <Button
             key={`tab-${index}`}
             icon={icon}
@@ -71,7 +73,7 @@ export function MainTableHeader({
             buttonType="Ghost"
             flexible="Flexible"
             selected={selected}
-            onClick={() => onIssueStateClick(name)}
+            onClick={() => onIssueStateClick(conditions)}
           >
             {name}
           </Button>

@@ -11,6 +11,9 @@ type MainHeaderProps = {
   milestoneCount: number;
   labelCount: number;
   input: string;
+  setSingleFilters: (value: string) => void;
+  onChangeFilterInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleFilterInput: () => void;
 };
 
 type Tab = {
@@ -25,6 +28,9 @@ export function MainHeader({
   milestoneCount,
   labelCount,
   input,
+  setSingleFilters,
+  onChangeFilterInput,
+  handleFilterInput,
 }: MainHeaderProps) {
   const navigate = useNavigate();
 
@@ -50,7 +56,7 @@ export function MainHeader({
         profile: "",
         selected: filter.selected,
         onClick: () => {
-          console.log(filter.name);
+          setSingleFilters(filter.conditions);
         },
       };
     });
@@ -64,6 +70,14 @@ export function MainHeader({
     matchingTab && matchingTab.onClick();
   };
 
+  const handleEnterKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (event.key === "Enter") {
+      handleFilterInput();
+    }
+  };
+
   return (
     <Div>
       <div>
@@ -71,7 +85,10 @@ export function MainHeader({
           name="필터"
           optionTitle={`이슈 필터`}
           options={setDropdownOptions(singleFilters)}
+          onChange={onChangeFilterInput}
           value={input}
+          onBlur={handleFilterInput}
+          onKeyDown={handleEnterKeyPress}
         />
       </div>
       <div style={{ display: "flex", gap: "16px" }}>
