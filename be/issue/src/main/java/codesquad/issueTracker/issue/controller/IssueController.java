@@ -53,20 +53,20 @@ public class IssueController {
 	}
 
 	@GetMapping("/issues/labels")
-	public ApiResponse<List<IssueLabelResponseDto>> getIssueLabels() {
-		List<IssueLabelResponseDto> labels = issueService.getIssueLabels();
+	public ApiResponse<IssueLabelResponseDto> getIssueLabels() {
+		IssueLabelResponseDto labels = issueService.getIssueLabels();
 		return ApiResponse.success(SUCCESS.getStatus(), labels);
 	}
 
 	@GetMapping("/issues/milestones")
-	public ApiResponse<List<IssueMilestoneResponseDto>> getIssueMilestones() {
-		List<IssueMilestoneResponseDto> milestones = issueService.getIssueMilestones();
+	public ApiResponse<IssueMilestoneResponseDto> getIssueMilestones() {
+		IssueMilestoneResponseDto milestones = issueService.getIssueMilestones();
 		return ApiResponse.success(SUCCESS.getStatus(), milestones);
 	}
 
 	@GetMapping("/issues/participants")
-	public ApiResponse<List<IssueUserResponseDto>> getIssueUsers() {
-		List<IssueUserResponseDto> participants = issueService.getIssueUsers();
+	public ApiResponse<IssueUserResponseDto> getIssueUsers() {
+		IssueUserResponseDto participants = issueService.getIssueUsers();
 		return ApiResponse.success(SUCCESS.getStatus(), participants);
 	}
 

@@ -1,6 +1,6 @@
 package codesquad.issueTracker.issue.vo;
 
-import codesquad.issueTracker.label.domain.Label;
+import codesquad.issueTracker.label.vo.LabelVo;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,12 +20,12 @@ public class IssueLabelVo {
         this.textColor = textColor;
     }
 
-    public static IssueLabelVo from(Label label) {
+    public static IssueLabelVo from(LabelVo labelVo) {
         return IssueLabelVo.builder()
-                .id(label.getId())
-                .name(label.getName())
-                .backgroundColor(label.getBackgroundColor())
-                .textColor(label.getTextColor())
+                .id(labelVo.getId())
+                .name(labelVo.getName())
+                .backgroundColor(labelVo.getBackgroundColor())
+                .textColor(labelVo.getTextColor())
                 .build();
     }
 }

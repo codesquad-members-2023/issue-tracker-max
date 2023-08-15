@@ -59,6 +59,7 @@ public class LabelService {
 
 	public List<IssueLabelVo> findByIssueId(Long issueId) {
 		return labelRepository.findLabelsById(issueId).stream()
+				.map(LabelVo::from)
 				.map(IssueLabelVo::from)
 				.collect(Collectors.toList());
 	}
