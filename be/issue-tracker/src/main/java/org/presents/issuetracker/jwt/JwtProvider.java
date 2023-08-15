@@ -23,7 +23,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtProvider {
 
 	private static final int ACCESS_TOKEN_EXPIRATION_TIME = 60 * 60;    // 1시간
-	private static final int REFRESH_TOKEN_EXPIRATION_TIME = 60 * 60 * 24;    // 24시간
+	private static final int REFRESH_TOKEN_EXPIRATION_TIME = 60 * 60 * 5;    // 5시간
 
 	@Value("${jwt.secret}")
 	private String secretKeyPlain;
