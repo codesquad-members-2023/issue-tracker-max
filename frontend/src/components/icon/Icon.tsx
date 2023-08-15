@@ -1,15 +1,10 @@
 import { styled, useTheme } from "styled-components";
-import { designSystem } from "../../constants/designSystem";
 import { getColorCode } from "../../utils/getColorCode";
 import { fillTypeComponents, iconComponents } from "./SvgIcons";
+import { Color } from "../../types/colors";
 
 const DefaultIconColor = "neutralTextDefault";
 
-type DarkThemeColorKeys = keyof typeof designSystem.DARK.color;
-type LightThemeColorKeys = keyof typeof designSystem.LIGHT.color;
-type HexColorCode = `#${string}`;
-export type ThemeColorKeys = DarkThemeColorKeys | LightThemeColorKeys;
-export type IconColor = ThemeColorKeys | HexColorCode;
 export type IconType = {
   [K in keyof typeof iconComponents]: React.FC<React.SVGProps<SVGSVGElement>>;
 };
@@ -18,10 +13,10 @@ export function Icon({
   name,
   color = DefaultIconColor,
   pointer = true,
-  onClick
+  onClick,
 }: {
   name: keyof IconType;
-  color?: IconColor;
+  color?: Color;
   pointer?: boolean;
   onClick?: () => void;
 }) {
@@ -46,12 +41,12 @@ export function Icon({
   );
 }
 
-const IconWrapper = styled.div<{$pointer: boolean}>`
+const IconWrapper = styled.div<{ $pointer: boolean }>`
   display: flex;
   align-items: center;
 
   &:hover {
-    cursor: ${({$pointer}) => $pointer ? "pointer" : "default"};
-    opacity: ${({theme}) => theme.opacity.hover};
+    cursor: ${({ $pointer }) => ($pointer ? "pointer" : "default")};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 `;

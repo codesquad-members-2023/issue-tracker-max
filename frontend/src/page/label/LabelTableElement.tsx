@@ -4,6 +4,7 @@ import { Button } from "../../components/Button";
 import { InformationTag } from "../../components/InformationTag";
 import { LabelData } from "./Label";
 import { LabelEditor } from "./LabelEditor";
+import { Color } from "../../types/colors";
 
 export function LabelTableElement({
   label,
@@ -47,7 +48,7 @@ export function LabelTableElement({
             <InformationTag
               size="S"
               value={label.name}
-              fill={label.background}
+              fill={label.background as Color}
               fontColor={label.color}
             />
           </LabelTag>

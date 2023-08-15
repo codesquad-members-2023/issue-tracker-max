@@ -1,13 +1,7 @@
 import { DefaultTheme, styled } from "styled-components";
-import { designSystem } from "../constants/designSystem";
+import { Color } from "../types/colors";
 import { getColorCode } from "../utils/getColorCode";
 import { Icon, IconType } from "./icon/Icon";
-
-type DarkThemeColorKeys = keyof typeof designSystem.DARK.color;
-type LightThemeColorKeys = keyof typeof designSystem.LIGHT.color;
-type ThemeColorKeys = DarkThemeColorKeys | LightThemeColorKeys;
-type HexColorCode = `#${string}`;
-type TagColor = ThemeColorKeys | HexColorCode;
 
 export function InformationTag({
   value,
@@ -22,7 +16,7 @@ export function InformationTag({
   size: "M" | "S";
   toolTip?: string;
   icon?: keyof IconType;
-  fill?: TagColor;
+  fill?: Color;
   stroke?: "Default" | "DefaultActive";
   fontColor?: "LIGHT" | "DARK";
 }) {

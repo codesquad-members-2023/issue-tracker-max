@@ -1,7 +1,8 @@
 import { ButtonHTMLAttributes } from "react";
 import { styled } from "styled-components";
 import { getColorCode } from "../utils/getColorCode";
-import { Icon, IconColor, IconType, ThemeColorKeys } from "./icon/Icon";
+import { Icon, IconType } from "./icon/Icon";
+import { Color, ThemeColorKeys } from "../types/colors";
 
 type ButtonProps = {
   width?: string | number;
@@ -11,8 +12,8 @@ type ButtonProps = {
   flexible?: "Flexible" | "Fixed";
   icon?: keyof IconType;
   selected?: boolean;
-  color?: IconColor;
-  background?: IconColor;
+  color?: Color;
+  background?: Color;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({

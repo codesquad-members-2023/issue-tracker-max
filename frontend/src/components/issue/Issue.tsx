@@ -3,7 +3,8 @@ import { IssueData } from "../../page/main/Main";
 import { getElapsedSince } from "../../utils/getElapsedSince";
 import { Avatar } from "../Avatar";
 import { InformationTag } from "../InformationTag";
-import { Icon, ThemeColorKeys } from "../icon/Icon";
+import { Icon } from "../icon/Icon";
+import { Color, ThemeColorKeys } from "../../types/colors";
 
 export function Issue({ issue }: { issue: IssueData }) {
   const iconColors: {
@@ -29,7 +30,7 @@ export function Issue({ issue }: { issue: IssueData }) {
               key={index}
               value={label.name}
               size="S"
-              fill={label.background}
+              fill={label.background as Color}
               fontColor="LIGHT"
             />
           ))}

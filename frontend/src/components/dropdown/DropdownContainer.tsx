@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { styled } from "styled-components";
-import { IconColor } from "../icon/Icon";
+import { Color } from "../../types/colors";
 import { DropdownIndicator } from "./DropdownIndicator";
 import { DropdownPanel } from "./DropdownPanel";
 
@@ -10,7 +10,7 @@ type DropdownContainerProps = {
   options: {
     name: string;
     profile?: string;
-    background?: IconColor;
+    background?: Color;
     selected: boolean;
     onClick: () => void;
   }[];
@@ -20,7 +20,7 @@ type DropdownContainerProps = {
   disabled?: boolean;
   autoClose?: boolean;
   onDimClick?: () => void;
-}
+};
 
 export function DropdownContainer({
   name,
@@ -31,7 +31,7 @@ export function DropdownContainer({
   alignment,
   disabled = false,
   autoClose = false,
-  onDimClick
+  onDimClick,
 }: DropdownContainerProps) {
   const [isPanelOpened, setIsPanelOpened] = useState(false);
 

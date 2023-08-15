@@ -1,7 +1,10 @@
 import { DefaultTheme } from "styled-components";
-import { ThemeColorKeys } from "../components/icon/Icon";
+import { ThemeColorKeys } from "../types/colors";
 
-export const getColorCode = (color: ThemeColorKeys | string, theme: DefaultTheme) => {
+export const getColorCode = (
+  color: ThemeColorKeys | string,
+  theme: DefaultTheme,
+) => {
   if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
     return color;
   }
