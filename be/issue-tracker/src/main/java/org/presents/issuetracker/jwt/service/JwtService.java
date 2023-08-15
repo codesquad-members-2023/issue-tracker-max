@@ -5,8 +5,8 @@ import java.util.Map;
 import org.presents.issuetracker.global.error.exception.CustomException;
 import org.presents.issuetracker.global.error.statuscode.UserErrorCode;
 import org.presents.issuetracker.jwt.JwtProvider;
-import org.presents.issuetracker.jwt.dto.TokenInfo;
-import org.presents.issuetracker.jwt.entity.Jwt;
+import org.presents.issuetracker.jwt.dto.Jwt;
+import org.presents.issuetracker.jwt.entity.Token;
 import org.presents.issuetracker.jwt.repository.JwtRepository;
 import org.presents.issuetracker.user.entity.User;
 import org.presents.issuetracker.user.repository.UserRepository;
@@ -22,13 +22,13 @@ public class JwtService {
 	private final JwtProvider jwtProvider;
 
 	public void saveRefreshToken(String refreshToken, String loginId) {
-		jwtRepository.save(Jwt.builder()
+		jwtRepository.save(Token.builder()
 			.refreshToken(refreshToken)
 			.loginId(loginId)
 			.build());
 	}
 
-	public TokenInfo reissueAccessToken(String refreshToken) {
+	public Jwt reissueAccessToken(String refreshToken) {
 		String loginId = jwtRepository.findByRefreshToken(refreshToken);
 		User user = userRepository.findByLoginId(loginId)
 			.orElseThrow(() -> {

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.presents.issuetracker.global.error.exception.CustomException;
 import org.presents.issuetracker.global.error.statuscode.UserErrorCode;
 import org.presents.issuetracker.jwt.JwtProvider;
-import org.presents.issuetracker.jwt.dto.TokenInfo;
+import org.presents.issuetracker.jwt.dto.Jwt;
 import org.presents.issuetracker.jwt.service.JwtService;
 import org.presents.issuetracker.user.dto.request.UserRequest;
 import org.presents.issuetracker.user.dto.response.LoginResponse;
@@ -53,13 +53,13 @@ public class UserService {
 			throw new CustomException(UserErrorCode.WRONG_PASSWORD);
 		}
 
-		TokenInfo tokenInfo = jwtProvider.generateToken(Map.of("userId", user.getUserId()));
-		jwtService.saveRefreshToken(tokenInfo.getRefreshToken(), loginId);
+		Jwt jwt = jwtProvider.generateToken(Map.of("userId", user.getUserId()));
+		jwtService.saveRefreshToken(jwt.getRefreshToken(), loginId);
 		return LoginResponse.builder()
 			.loginId(user.getLoginId())
 			.image(user.getImage())
-			.accessToken(tokenInfo.getAccessToken())
-			.refreshToken(tokenInfo.getRefreshToken())
+			.accessToken(jwt.getAccessToken())
+			.refreshToken(jwt.getRefreshToken())
 			.build();
 	}
 }

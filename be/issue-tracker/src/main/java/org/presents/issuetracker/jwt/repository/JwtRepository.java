@@ -2,7 +2,7 @@ package org.presents.issuetracker.jwt.repository;
 
 import org.presents.issuetracker.global.error.exception.CustomException;
 import org.presents.issuetracker.global.error.statuscode.JwtErrorCode;
-import org.presents.issuetracker.jwt.entity.Jwt;
+import org.presents.issuetracker.jwt.entity.Token;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -15,11 +15,11 @@ import lombok.RequiredArgsConstructor;
 public class JwtRepository {
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
-	public void save(Jwt jwt) {
+	public void save(Token token) {
 		final String sql = "INSERT INTO token(refresh_token, login_id) VALUES(:refreshToken, :loginId)";
 
-		MapSqlParameterSource params = new MapSqlParameterSource("refreshToken", jwt.getRefreshToken())
-			.addValue("loginId", jwt.getLoginId());
+		MapSqlParameterSource params = new MapSqlParameterSource("refreshToken", token.getRefreshToken())
+			.addValue("loginId", token.getLoginId());
 
 		jdbcTemplate.update(sql, params);
 	}

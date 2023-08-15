@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import org.presents.issuetracker.global.error.exception.CustomException;
 import org.presents.issuetracker.global.error.statuscode.JwtErrorCode;
 import org.presents.issuetracker.global.util.JsonUtil;
-import org.presents.issuetracker.jwt.dto.TokenInfo;
+import org.presents.issuetracker.jwt.dto.Jwt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -35,8 +35,8 @@ public class JwtProvider {
 		key = Keys.hmacShaKeyFor(keyBased64Encoded.getBytes());
 	}
 
-	public TokenInfo generateToken(Map<String, Object> claims) {
-		return TokenInfo.builder()
+	public Jwt generateToken(Map<String, Object> claims) {
+		return Jwt.builder()
 			.accessToken(createToken(claims, ACCESS_TOKEN_EXPIRATION_TIME))
 			.refreshToken(createToken(new HashMap<>(), REFRESH_TOKEN_EXPIRATION_TIME))
 			.build();
@@ -53,9 +53,10 @@ public class JwtProvider {
 			.compact();
 	}
 
-	public TokenInfo reissueToken(Map<String, Object> claims, String refreshToken) {
+	public Jwt reissueToken(Map<String, Object> claims, String refreshToken) {
 		if (verify(refreshToken)) {
-			return TokenInfo.builder()
+			// access token만 재발급
+			return Jwt.builder()
 				.accessToken(createToken(claims, ACCESS_TOKEN_EXPIRATION_TIME))
 				.refreshToken(refreshToken)
 				.build();
