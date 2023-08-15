@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { styled } from "styled-components";
+import { Icon } from "../../components/icon/Icon";
 import { IssueDataState } from "./Main";
 import { MainTableElement } from "./MainTableElement";
 import { MainTableHeader } from "./MainTableHeader";
@@ -59,6 +60,12 @@ export function MainTable({
             inputChecked={checkedIssueId.includes(issue.id)}
           />
         ))}
+        {!issueData.issues.length && (
+          <NoneElement>
+            <Icon name="AlertCircle" />
+            <span>이슈가 비어 있습니다.</span>
+          </NoneElement>
+        )}
       </MainTableBody>
     </Div>
   );
@@ -75,4 +82,16 @@ const Div = styled.div`
 
 const MainTableBody = styled.div`
   width: 100%;
+`;
+
+const NoneElement = styled.div`
+  width: 100%;
+  height: 96px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  font: ${({ theme }) => theme.font.displayBold16};
+  color: ${({ theme }) => theme.color.neutralTextStrong};
+  border-top: solid 1px ${({ theme }) => theme.color.neutralBorderDefault};
 `;
