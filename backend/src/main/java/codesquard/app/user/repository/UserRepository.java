@@ -24,5 +24,5 @@ public interface UserRepository {
 
 	User findByRefreshToken(String refreshToken);
 
-	User findByEmail(User user);
+	User findByEmail(String email);
 }
