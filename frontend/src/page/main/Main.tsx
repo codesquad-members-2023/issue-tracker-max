@@ -104,8 +104,8 @@ export function Main() {
     fetchData();
   }, [queryString]);
 
-  const convertToQueryString = (string: string) => {
-    return string
+  const convertToQueryString = (filterCondition: string) => {
+    return filterCondition
       .split(/\s(?=[^:]*:)/)
       .map((part) => {
         const index = part.indexOf(":");
@@ -117,21 +117,24 @@ export function Main() {
       .join("&");
   };
 
-  const setSingleFilters = (string: string) => {
-    const newQueryString = convertToQueryString(string);
+  const setSingleFilters = (filterCondition: string) => {
+    const newQueryString = convertToQueryString(filterCondition);
 
     navigate(`/?${newQueryString}`);
   };
 
-  const setMultiFilterString = (string: string, multipleSelect: boolean) => {
+  const setMultiFilterString = (
+    filterCondition: string,
+    multipleSelect: boolean,
+  ) => {
     if (!issueData) return;
 
     const input = issueData.input;
 
-    if (input.includes(string)) {
+    if (input.includes(filterCondition)) {
       const newInput = input
         .split(/\s(?=[^:]*:)/)
-        .filter((part) => part !== string)
+        .filter((part) => part !== filterCondition)
         .join(" ");
       const newQueryString = convertToQueryString(newInput);
 
@@ -139,7 +142,7 @@ export function Main() {
       return;
     }
 
-    const [keyToAdd, valueToAdd] = string.split(":");
+    const [keyToAdd, valueToAdd] = filterCondition.split(":");
     const filteredParts = input
       .split(/\s(?=[^:]*:)/)
       .filter((part) => !part.startsWith(`${keyToAdd}:`) || multipleSelect);
