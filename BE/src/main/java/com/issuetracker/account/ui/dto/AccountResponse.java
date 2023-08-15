@@ -1,6 +1,7 @@
 package com.issuetracker.account.ui.dto;
 
 import com.issuetracker.account.application.dto.AccountInformation;
+import com.issuetracker.account.application.dto.AccountInputData;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,15 @@ public class AccountResponse {
 			accountInformation.getEmail(),
 			accountInformation.getNickname(),
 			accountInformation.getProfileImageUrl()
+		);
+	}
+
+	public AccountInputData toAccountInputData() {
+		return new AccountInputData(
+			id,
+			email,
+			nickname,
+			profileImageUrl
 		);
 	}
 

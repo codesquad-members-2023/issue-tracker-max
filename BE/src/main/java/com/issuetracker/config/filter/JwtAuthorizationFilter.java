@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.issuetracker.account.application.JwtTokenGenerator;
+import com.issuetracker.account.infrastructure.JwtTokenGenerator;
 import com.issuetracker.config.ErrorResponse;
 
 import io.jsonwebtoken.Claims;

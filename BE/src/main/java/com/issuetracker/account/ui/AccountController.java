@@ -59,7 +59,7 @@ public class AccountController {
 
 		return ResponseEntity.ok(
 			JwtTokenResponse.from(
-				accountService.issueJwtToken(accountResponse.getId())
+				accountService.issueJwtToken(accountResponse.toAccountInputData())
 			)
 		);
 	}
@@ -84,7 +84,7 @@ public class AccountController {
 				new OauthLoginResponse(
 					true,
 					accountInfoResponse,
-					JwtTokenResponse.from(accountService.issueJwtToken(accountResponse.getId()))));
+					JwtTokenResponse.from(accountService.issueJwtToken(accountResponse.toAccountInputData()))));
 		}
 
 		return ResponseEntity.ok(

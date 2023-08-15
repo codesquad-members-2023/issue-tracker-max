@@ -1,6 +1,7 @@
-package com.issuetracker.account.application;
+package com.issuetracker.account.infrastructure;
 
 import java.security.Key;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.issuetracker.account.domain.JwtRefreshToken;
 import com.issuetracker.account.domain.JwtToken;
 
 import io.jsonwebtoken.Claims;
@@ -45,6 +47,18 @@ public class JwtTokenGenerator {
 			.build()
 			.parseClaimsJws(token)
 			.getBody();
+	}
+
+	public JwtRefreshToken convertFrom(Long memberId, String refreshToken) {
+		Claims claims = getClaims(refreshToken);
+
+		return new JwtRefreshToken(
+			memberId,
+			refreshToken,
+			claims.getExpiration().toInstant() // Date -> Instant
+				.atZone(ZoneId.systemDefault()) // Instant -> ZonedDateTime
+				.toLocalDateTime()
+		);
 	}
 
 	public JwtToken createJwt(Map<String, Object> claims) {

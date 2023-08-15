@@ -6,10 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetracker.account.application.dto.AccountInformation;
+import com.issuetracker.account.application.dto.AccountInputData;
 import com.issuetracker.account.application.dto.JwtTokenInformation;
 import com.issuetracker.account.application.dto.LoginInputData;
 import com.issuetracker.account.application.dto.SignUpInputData;
 import com.issuetracker.account.domain.AccountRepository;
+import com.issuetracker.account.domain.JwtRefreshToken;
+import com.issuetracker.account.infrastructure.JwtTokenGenerator;
+import com.issuetracker.account.infrastructure.MemoryJwtRepository;
 import com.issuetracker.config.exception.CustomHttpException;
 import com.issuetracker.config.exception.ErrorType;
 
@@ -21,11 +25,30 @@ import lombok.RequiredArgsConstructor;
 public class AccountService {
 
 	private final AccountRepository accountRepository;
+	private final MemoryJwtRepository memoryJwtRepository;
 	private final JwtTokenGenerator jwtTokenGenerator;
 
-	public JwtTokenInformation issueJwtToken(long id) {
-		Map<String, Object> claims = Map.of("id", id);
-		return JwtTokenInformation.from(jwtTokenGenerator.createJwt(claims));
+	@Transactional
+	public JwtTokenInformation issueJwtToken(AccountInputData accountInputData) {
+		Map<String, Object> claims = Map.of(
+			"memberId", accountInputData.getId(),
+			"email", accountInputData.getEmail(),
+			"nickname", accountInputData.getNickname(),
+			"profileImageUri", accountInputData.getProfileImageUrl()
+		);
+		JwtTokenInformation jwtTokenInformation = JwtTokenInformation.from(jwtTokenGenerator.createJwt(claims));
+		storeRefreshToken(
+			jwtTokenGenerator.convertFrom(
+				accountInputData.getId(),
+				jwtTokenInformation.getRefreshToken()
+			)
+		);
+
+		return jwtTokenInformation;
+	}
+
+	private void storeRefreshToken(JwtRefreshToken jwtRefreshToken) {
+		memoryJwtRepository.save(jwtRefreshToken);
 	}
 
 	public AccountInformation findByEmail(String email) {
