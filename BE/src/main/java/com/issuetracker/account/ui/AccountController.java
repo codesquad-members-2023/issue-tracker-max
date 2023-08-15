@@ -1,5 +1,7 @@
 package com.issuetracker.account.ui;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
@@ -7,6 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +23,7 @@ import com.issuetracker.account.ui.dto.OauthAccessTokenRequest;
 import com.issuetracker.account.ui.dto.OauthAccessTokenResponse;
 import com.issuetracker.account.ui.dto.OauthAccountInfoResponse;
 import com.issuetracker.account.ui.dto.OauthLoginResponse;
+import com.issuetracker.account.ui.dto.SignupRequest;
 
 @PropertySource("classpath:oauth.properties")
 @RestController
@@ -43,6 +48,12 @@ public class AccountController {
 		this.accountService = accountService;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+	}
+
+	@PostMapping("/signup")
+	public ResponseEntity<Void> signUp(@RequestBody @Valid SignupRequest signupRequest) {
+		accountService.signUp(signupRequest.toSignUpInputData());
+		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping("/oauth/callback")

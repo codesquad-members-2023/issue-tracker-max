@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetracker.account.application.dto.AccountInformation;
 import com.issuetracker.account.application.dto.JwtTokenInformation;
+import com.issuetracker.account.application.dto.SignUpInputData;
 import com.issuetracker.account.domain.AccountRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -26,5 +27,10 @@ public class AccountService {
 
 	public AccountInformation findByEmail(String email) {
 		return AccountInformation.from(accountRepository.findByEmail(email));
+	}
+
+	@Transactional
+	public Long signUp(SignUpInputData signUpInputData) {
+		return accountRepository.save(signUpInputData.toAccount());
 	}
 }

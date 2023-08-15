@@ -4,4 +4,6 @@ public interface AccountRepository {
 
 	Account findByEmail(String email);
 
+	Long save(Account account);
+
 }
