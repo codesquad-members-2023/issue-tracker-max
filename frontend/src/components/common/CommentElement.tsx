@@ -7,7 +7,7 @@ import DefaultUserImg from '../../asset/icons/userImageLarge.svg';
 type CommentProps = {
   userInfo: userInfoType;
   timeStamp: string;
-  comment: string;
+  content: string;
 };
 
 type userInfoType = {
@@ -18,7 +18,7 @@ type userInfoType = {
 export default function Comment(props: CommentProps) {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [textValue, setTextValue] = useState<string>(props.comment);
+  const [textValue, setTextValue] = useState<string>(props.content);
 
   useEffect(() => {
     if (isEdit && !isTyping) {
@@ -101,6 +101,7 @@ const Wrapper = styled.div`
   min-width: 640px;
   display: flex;
   flex-direction: column;
+  align-self: stretch;
   border: ${({ theme }) => theme.objectStyles.border.default};
   border-color: ${({ theme }) => theme.color.neutral.border.default};
   border-radius: ${({ theme }) => theme.objectStyles.radius.large};

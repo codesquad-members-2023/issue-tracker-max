@@ -57,6 +57,7 @@ const Wrapper = styled.div<{ $isFocused: boolean }>`
   min-height: 184px;
   display: flex;
   flex-direction: column;
+  align-self: stretch;
   background: ${({ theme, $isFocused }) =>
     $isFocused
       ? theme.color.neutral.surface.strong

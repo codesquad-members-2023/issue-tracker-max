@@ -67,19 +67,22 @@ export default function AddIssue() {
               name="issueTitle"
               value={issueInfo.title}
               placeholder="제목"
-              onChange={onTitleChange}></TextInput>
+              onChange={onTitleChange}
+            />
             <TextArea
               name="issueContent"
               value={issueInfo.content}
               placeholder="코멘트를 입력하세요"
-              onChange={onContentChange}></TextArea>
+              onChange={onContentChange}
+            />
           </InputArea>
           <SideBar
             sideBarItems={[
               [{ type: AddButton, text: '담당자' }, []],
               [{ type: AddButton, text: '레이블' }, []],
               [{ type: AddButton, text: '마일스톤' }, []],
-            ]}></SideBar>
+            ]}
+          />
         </Container>
         <ButtonArea>
           <Button
