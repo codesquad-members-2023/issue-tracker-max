@@ -45,7 +45,7 @@
 
 ## 💾 ERD
 
-![image](https://github.com/masters2023-3rd-project-bugbusters/issue-tracker-max/assets/33227831/ad126426-947b-497e-b8e4-20298d3fb151)
+![image](https://github.com/masters2023-3rd-project-bugbusters/issue-tracker-max/assets/33227831/4aa14773-5d9d-468c-a867-ab8d276c7461)
 
 <br/>
 
