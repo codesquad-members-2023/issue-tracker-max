@@ -12,12 +12,14 @@ type Props = {
   title: string;
   id: number;
   status: string;
+  onToggleIssueStatus: (status: string, id: number) => void;
 };
 
 export const PostInformationHeader: React.FC<Props> = ({
   title,
   id,
   status,
+  onToggleIssueStatus,
 }: Props) => {
   const theme = useTheme() as any;
 
@@ -58,10 +60,10 @@ export const PostInformationHeader: React.FC<Props> = ({
     }
   };
 
-  const onToggleIssueStatus = () => {
-    const newStatus = status === 'open' ? 'closed' : 'open';
-    editIssueStatus([id], newStatus);
-  };
+  // const onToggleIssueStatus = (status: string) => {
+  //   const newStatus = status === 'open' ? 'closed' : 'open';
+  //   editIssueStatus([id], newStatus);
+  // };
 
   return (
     <div css={postInformationHeaderStyle}>
@@ -108,7 +110,7 @@ export const PostInformationHeader: React.FC<Props> = ({
             <Button
               typeVariant="outline"
               size="S"
-              onClick={onToggleIssueStatus}
+              onClick={() => onToggleIssueStatus(status, id)}
             >
               <Archive stroke={theme.brand.text.weak} />
               {status === 'open' ? '이슈 닫기' : '이슈 열기'}

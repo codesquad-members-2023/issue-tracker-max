@@ -4,10 +4,12 @@ import { PostInformationHeaderMeta } from './PostInformationHeaderMeta';
 
 type Props = {
   issueDetailPageData: IssueDetailPageData;
+  onToggleIssueStatus: (status: string, id: number) => void;
 };
 
 export const PostInformation: React.FC<Props> = ({
   issueDetailPageData,
+  onToggleIssueStatus,
 }: Props) => {
   return (
     <>
@@ -16,6 +18,7 @@ export const PostInformation: React.FC<Props> = ({
           title={issueDetailPageData.title}
           id={issueDetailPageData.id}
           status={issueDetailPageData.status}
+          onToggleIssueStatus={onToggleIssueStatus}
         />
         <PostInformationHeaderMeta
           status={issueDetailPageData.status}

@@ -6,10 +6,12 @@ import {
   editIssueAssignees,
   editIssueLabel,
   editIssueMilestone,
+  editIssueStatus,
   getIssueDetail,
 } from 'apis/api';
 import { useParams } from 'react-router-dom';
 import { DetailPageDataProvider } from 'context/DetailContext';
+import { set } from 'firebase/database';
 
 type Props = {};
 
@@ -159,6 +161,15 @@ export const IssueDetailPage: React.FC = ({}) => {
     });
   };
 
+  const onToggleIssueStatus = (status: string, id: number) => {
+    const newStatus = status === 'open' ? 'closed' : 'open';
+    editIssueStatus([id], newStatus);
+    setIssueDetailPageData({
+      ...issueDetailPageData,
+      status: newStatus,
+    });
+  };
+
   return (
     <div
       css={{
@@ -168,7 +179,10 @@ export const IssueDetailPage: React.FC = ({}) => {
         gap: '24px',
       }}
     >
-      <PostInformation issueDetailPageData={issueDetailPageData} />
+      <PostInformation
+        issueDetailPageData={issueDetailPageData}
+        onToggleIssueStatus={onToggleIssueStatus}
+      />
       <Body
         issueDetailPageData={issueDetailPageData}
         onAddComment={onAddComment}

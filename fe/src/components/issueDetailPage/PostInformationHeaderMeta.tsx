@@ -6,7 +6,7 @@ type Props = {
   status?: string;
   createdAt?: string;
   author: User;
-  comments?: Comment[];
+  comments?: CommentType[];
 };
 
 export const PostInformationHeaderMeta: React.FC<Props> = ({
@@ -25,7 +25,9 @@ export const PostInformationHeaderMeta: React.FC<Props> = ({
         <InformationTag
           size="L"
           typeVariant="filled"
-          fillColor={theme.palette.blue}
+          fillColor={
+            status === 'open' ? theme.palette.blue : theme.neutral.text.weak
+          }
           textColor="light"
         >
           <AlertCircle stroke={theme.brand.text.default} />
