@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class MilestoneRepository {
-	private static final String CLOSED_FLAG = "close";
+	private static final int DELETED_FLAG = 1;
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -123,10 +123,10 @@ public class MilestoneRepository {
 	}
 
 	public void deleteById(Long id) {
-		final String sql = "UPDATE milestone SET status = :closed_flag WHERE milestone_id = :id";
+		final String sql = "UPDATE milestone SET is_deleted = :deleted_flag WHERE milestone_id = :id";
 
 		MapSqlParameterSource params = new MapSqlParameterSource()
-				.addValue("closed_flag", CLOSED_FLAG)
+				.addValue("deleted_flag", DELETED_FLAG)
 				.addValue("id", id);
 
 		jdbcTemplate.update(sql, params);

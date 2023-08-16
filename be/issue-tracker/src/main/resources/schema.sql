@@ -24,6 +24,7 @@ CREATE TABLE `milestone` (
     `deadline` datetime ,
     `description` varchar(200) ,
     `status` varchar(10)  NOT NULL DEFAULT 'open' ,
+    `is_deleted` boolean NOT NULL DEFAULT false ,
     PRIMARY KEY (
               `milestone_id`
      )
