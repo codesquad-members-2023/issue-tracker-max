@@ -17,8 +17,8 @@ import com.issuetracker.account.domain.AccountRepository;
 import com.issuetracker.account.domain.JwtRefreshToken;
 import com.issuetracker.account.infrastructure.JwtTokenGenerator;
 import com.issuetracker.account.infrastructure.MemoryJwtRepository;
-import com.issuetracker.config.exception.CustomHttpException;
-import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.common.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.ErrorType;
 
 import lombok.RequiredArgsConstructor;
 

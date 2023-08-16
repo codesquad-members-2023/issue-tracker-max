@@ -6,8 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Repository;
 
 import com.issuetracker.account.domain.JwtRefreshToken;
-import com.issuetracker.config.exception.CustomHttpException;
-import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.common.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.ErrorType;
 
 @Repository
 public class MemoryJwtRepository {

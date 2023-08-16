@@ -1,4 +1,4 @@
-package com.issuetracker.config.exception;
+package com.issuetracker.common.config.exception;
 
 import org.springframework.http.HttpStatus;
 
@@ -28,7 +28,7 @@ public enum ErrorType {
 	ASSIGNED_LABEL_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 라벨입니다."),
 	QUERY_STRING_VALUE_NOT_MATCH(HttpStatus.BAD_REQUEST, "올바른 QueryString Value가 아닙니다."),
 	MILESTONE_TITLE_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 제목입니다."),
-	LABEL_TITLE_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 제목입니다." ),
+	LABEL_TITLE_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 제목입니다."),
 
 	ACCOUNT_EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 사용중인 email 입니다."),
 	NO_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "해당 리프레시 토큰이 존재하지 않습니다.");
