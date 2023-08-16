@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.issuetrackermax.domain.comment.entity.Comment;
+import com.issuetrackermax.domain.comment.entity.CommentMemberVO;
 
 @Repository
 public class CommentRepository {
@@ -23,6 +24,17 @@ public class CommentRepository {
 			.id(rs.getLong("id"))
 			.content(rs.getString("content"))
 			.writerId(rs.getLong("writer_id"))
+			.issueId(rs.getLong("issue_id"))
+			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+			.build();
+
+	private static final RowMapper<CommentMemberVO> COMMENT_MEMBER_VO_ROW_MAPPER = (rs, rowNum) ->
+		CommentMemberVO.builder()
+			.id(rs.getLong("id"))
+			.content(rs.getString("content"))
+			.writerId(rs.getLong("writer_id"))
+			.writerLoginId(rs.getString("login_id"))
+			.writerImageUrl(rs.getString("image_url"))
 			.issueId(rs.getLong("issue_id"))
 			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
 			.build();
@@ -44,9 +56,13 @@ public class CommentRepository {
 		return keyHolder.getKey().longValue();
 	}
 
-	public List<Comment> findByIssueId(Long id) {
-		String sql = "SELECT id, content, issue_id, writer_id, created_at FROM comments WHERE issue_id= :id";
-		return jdbcTemplate.query(sql, Map.of("id", id), COMMENT_ROW_MAPPER);
+	public List<CommentMemberVO> findByIssueId(Long id) {
+		String sql =
+			"SELECT comments.id, comments.content, comments.issue_id, comments.writer_id, comments.created_at, member.login_id, member.image_url "
+				+ "FROM comments "
+				+ "LEFT JOIN member ON member.id = comments.writer_id "
+				+ "WHERE comments.issue_id= :id";
+		return jdbcTemplate.query(sql, Map.of("id", id), COMMENT_MEMBER_VO_ROW_MAPPER);
 	}
 
 	public Comment findById(Long id) {

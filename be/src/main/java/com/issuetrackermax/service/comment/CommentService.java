@@ -23,6 +23,8 @@ import com.issuetrackermax.controller.comment.dto.response.CommentResponse;
 import com.issuetrackermax.domain.comment.CommentRepository;
 import com.issuetrackermax.domain.comment.CommentValidator;
 import com.issuetrackermax.domain.comment.entity.Comment;
+import com.issuetrackermax.domain.comment.entity.CommentMemberVO;
+import com.issuetrackermax.domain.member.MemberRepository;
 import com.issuetrackermax.domain.member.MemberValidator;
 
 import lombok.RequiredArgsConstructor;
@@ -34,11 +36,12 @@ public class CommentService {
 	private final MemberValidator memberValidator;
 	private final CommentValidator commentValidator;
 	private final CommentRepository commentRepository;
+	private final MemberRepository memberRepository;
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucketName;
 
 	@Transactional(readOnly = true)
-	public List<Comment> findByIssueId(Long id) {
+	public List<CommentMemberVO> findByIssueId(Long id) {
 		return commentRepository.findByIssueId(id);
 	}
 
@@ -53,7 +56,8 @@ public class CommentService {
 	public CommentResponse save(CommentCreateRequest commentCreateRequest, Long issueId, Long memberId) {
 		memberValidator.existById(memberId);
 		Long commentId = commentRepository.save(Comment.from(commentCreateRequest, issueId, memberId));
-		return CommentResponse.from(commentRepository.findById(commentId));
+		Comment comment = commentRepository.findById(commentId);
+		return CommentResponse.from(comment, memberRepository.findById(comment.getWriterId()));
 	}
 
 	@Transactional
