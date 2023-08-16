@@ -21,6 +21,10 @@ export function IssueDetailSidePanel({
   const patchIssueAssignees = async (ids: number[]) => {
     await fetch(`/api/issues/${issueId}/assignees`, {
       method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "credentials": "include",
+      },
       body: JSON.stringify({
         assignees: ids,
       }),
@@ -32,6 +36,10 @@ export function IssueDetailSidePanel({
   const patchIssueLabels = async (ids: number[]) => {
     await fetch(`/api/issues/${issueId}/labels`, {
       method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "credentials": "include",
+      },
       body: JSON.stringify({
         labels: ids,
       }),
@@ -43,6 +51,10 @@ export function IssueDetailSidePanel({
   const patchIssueMilestone = async (id: number | null) => {
     await fetch(`/api/issues/${issueId}/milestones`, {
       method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "credentials": "include",
+      },
       body: JSON.stringify({
         milestone: id,
       }),
@@ -54,6 +66,10 @@ export function IssueDetailSidePanel({
   const deleteIssue = async () => {
     await fetch(`/api/issues/${issueId}`, {
       method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "credentials": "include",
+      },
     });
 
     navigate("/");

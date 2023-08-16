@@ -206,115 +206,172 @@ export const issueHandlers = [
     const { issueId } = req.params;
     const { content } = await req.json();
 
-    issue.data = {
-      ...issue.data,
-      content,
-      modifiedAt: new Date().toISOString(),
+    const issue = issues.find((i) => i.id === Number(issueId));
+
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.content = content;
+    issue.modifiedAt = new Date().toISOString();
+
+    const response = {
+      code: 200,
+      status: "OK",
+      message: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
     };
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        message: "OK",
-        data: {
-          modifiedIssueId: Number(issueId),
-        },
-      }),
-    );
+    return res(ctx.status(200), ctx.json(response));
   }),
   rest.patch("/api/issues/:issueId/assignees", async (req, res, ctx) => {
-    const { issueId, assignees: assigneeIds } = await req.json();
+    const {issueId} = req.params;
+    const { assignees: assigneeIds } = await req.json();
 
-    issue.data = {
-      ...issue.data,
-      assignees: assigneeIds.map((id: number) => {
-        const assigneeData = assignees.data.assignees.find((a) => a.id === id)!;
+    
+    const issue = issues.find((i) => i.id === Number(issueId));
 
-        return {
-          id: assigneeData.id,
-          name: assigneeData.loginId,
-          avatarUrl: assigneeData.avatarUrl,
-        };
-      }),
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.assignees = assigneeIds.map((id: number) => {
+      const assigneeData = assignees.data.assignees.find((a) => a.id === id)!;
+
+      return {
+        id: assigneeData.id,
+        name: assigneeData.loginId,
+        avatarUrl: assigneeData.avatarUrl,
+      };
+    });
+
+    const response = {
+      code: 200,
+      status: "OK",
+      messages: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
     };
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        messages: "OK",
-        data: {
-          modifiedIssueId: issueId,
-        },
-      }),
-    );
+    return res(ctx.status(200), ctx.json(response));
   }),
   rest.patch("/api/issues/:issueId/labels", async (req, res, ctx) => {
-    const { issueId, labels: labelIds } = await req.json();
+    const { issueId } = req.params;
+    const { labels: labelIds } = await req.json();
 
-    issue.data = {
-      ...issue.data,
-      labels: labelIds.map((id: number) => {
-        const labelData = labels.data.labels.find((l) => l.id === id)!;
+    const issue = issues.find((i) => i.id === Number(issueId));
 
-        return {
-          id: labelData.id,
-          name: labelData.name,
-          color: labelData.color,
-          background: labelData.background,
-        };
-      }),
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.labels = labelIds.map((id: number) => {
+      const labelData = labels.data.labels.find((l) => l.id === id)!;
+
+      return {
+        id: labelData.id,
+        name: labelData.name,
+        color: labelData.color,
+        background: labelData.background,
+      };
+    });
+
+    const response = {
+      code: 200,
+      status: "OK",
+      messages: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
     };
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        messages: "OK",
-        data: {
-          modifiedIssueId: issueId,
-        },
-      }),
-    );
+    return res(ctx.status(200), ctx.json(response));
   }),
   rest.patch("/api/issues/:issueId/milestones", async (req, res, ctx) => {
-    const { issueId, milestone: milestoneId } = await req.json();
+    const { issueId } = req.params;
+    const { milestone: milestoneId } = await req.json();
 
-    issue.data = {
-      ...issue.data,
-      milestone:
-        milestones.data.milestones.find((m) => m.id === milestoneId) ?? null,
+    const issue = issues.find((i) => i.id === Number(issueId));
+
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.milestone =
+      milestones.data.milestones.find((m) => m.id === milestoneId) ?? null;
+
+    const response = {
+      code: 200,
+      status: "OK",
+      messages: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
     };
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        messages: "OK",
-        data: {
-          modifiedIssueId: issueId,
-        },
-      }),
-    );
+    return res(ctx.status(200), ctx.json(response));
   }),
   rest.delete("/api/issues/:issueId", async (req, res, ctx) => {
     const { issueId } = req.params;
 
+    const issueIndex = issues.findIndex((i) => i.id === Number(issueId));
+
+    if (issueIndex === -1) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+    
+    const deletedIssue = issues.splice(issueIndex, 1);
+
+    const response = {
+      code: 200,
+      status: "OK",
+      messages: "OK",
+      data: {
+        deletedIssueId: deletedIssue[0].id,
+      },
+    }
+
     return res(
       ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        messages: "OK",
-        data: {
-          deletedIssueId: issueId,
-        },
-      }),
+      ctx.json(response),
     );
   }),
 ];

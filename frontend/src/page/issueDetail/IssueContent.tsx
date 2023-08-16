@@ -62,6 +62,10 @@ export function IssueContent({
   const onEditConfirmClick = async () => {
     await fetch(`/api/issues/${id}/content`, {
       method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "credentials": "include",
+      },
       body: JSON.stringify({
         content: content,
       }),
