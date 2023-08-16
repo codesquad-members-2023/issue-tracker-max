@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { DropDownPanel } from './dropDown/DropDownPanel';
 import { DropDownList } from './dropDown/DropDownList';
 import { DropDownContainer } from './dropDown/DropDownContainer';
-import { getLocalStorageLoginId } from '@utils/localStorage';
+import { getLocalStorageLoginId } from 'apis/localStorage';
 
 type Props = {
   filterValue: string;
