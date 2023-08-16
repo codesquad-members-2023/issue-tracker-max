@@ -17,15 +17,6 @@ import { getLocalStorageUserId } from 'apis/localStorage';
 // todo issueDetailPage에 들어가면 줄바꿈해서 작성한게 그대로 보여야하는데
 // 한줄로 보이는중
 
-const initialStatus = {
-  typeError: false,
-  sizeError: false,
-  isUploading: false,
-  uploadFailed: false,
-};
-
-const AVAILABLE_FILE_SIZE = 1048576; //1MB
-
 type DefaultFileStatusType = {
   typeError: boolean;
   sizeError: boolean;
@@ -294,3 +285,11 @@ export const Comment: React.FC<Props> = ({
     </>
   );
 };
+const initialStatus = {
+  typeError: false,
+  sizeError: false,
+  isUploading: false,
+  uploadFailed: false,
+};
+
+const AVAILABLE_FILE_SIZE = 1048576; //1MB

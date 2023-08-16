@@ -47,7 +47,6 @@ export const Body: React.FC<Props> = ({
       </div>
       <SideBarRightPanel
         issueId={issueDetailPageData.id}
-        issueDetailPageData={issueDetailPageData}
         selectionsOptions={selectionsOptions}
         selections={selections}
         onChangeSelect={onChangeSelect}

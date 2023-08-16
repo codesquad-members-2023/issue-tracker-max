@@ -12,12 +12,6 @@ import {
 } from 'apis/api';
 import { DropDownList } from '../dropDown/DropDownList';
 
-// type SelectionState = {
-//   assignees: number[];
-//   labels: number[];
-//   milestones: number | null;
-// };
-
 type FetchPath = 'users' | 'labels' | 'milestones';
 
 type UserData = {
@@ -123,9 +117,6 @@ export const ListSideBar: React.FC<Props> = ({
         )
       : selectionsOptions?.milestones;
 
-  console.log(milestoneOptions);
-  console.log(selectedMilestonesData);
-
   const openPanel = async (
     fetchDataFunction: () => Promise<
       UserData[] | LabelData[] | MilestoneData[]
@@ -153,7 +144,7 @@ export const ListSideBar: React.FC<Props> = ({
     setIsPanelOpen(null);
 
     if (onChangeSelect) {
-      onChangeSelect(key);
+      onChangeSelect!(key);
     }
   };
 

@@ -10,7 +10,6 @@ import { deleteIssue } from 'apis/api';
 
 type Props = {
   issueId: number;
-  issueDetailPageData: IssueDetailPageData;
   //이슈 데이터 받아와서 선택된 라벨, 마일스톤, 담당자 받아와야함
   selectionsOptions: SelectionState['detailPage'];
   selections: SelectionState['newIssuePage'];
@@ -22,7 +21,6 @@ type Props = {
 
 export const SideBarRightPanel: React.FC<Props> = ({
   issueId,
-  issueDetailPageData,
   //
   selections,
   selectionsOptions,
@@ -35,8 +33,6 @@ export const SideBarRightPanel: React.FC<Props> = ({
   const navigate = useNavigate();
 
   const [isDeleteError, setIsDeleteError] = useState<boolean>(false);
-
-  console.log(selections.milestones);
 
   const onDeleteIssue = async () => {
     try {
@@ -57,14 +53,13 @@ export const SideBarRightPanel: React.FC<Props> = ({
           onMultipleSelectedAssignee={onMultipleSelectedAssignee}
           onMultipleSelectedLabel={onMultipleSelectedLabel}
           selectionsOptions={selectionsOptions}
-          //
           selections={selections}
           onChangeSelect={onChangeSelect}
         />
       </SideBar>
       <Button typeVariant="ghost" size="S" onClick={onDeleteIssue}>
         <Trash stroke={theme.danger.text.default} />
-        <span>이슈 삭제</span>
+        <span className="button-delete">이슈 삭제</span>
       </Button>
       {isDeleteError && (
         <span css={{ color: theme.danger.text.default }}>
@@ -83,5 +78,8 @@ const rightPanelStyle = (theme: Theme) => css`
   & span {
     color: ${theme.neutral.text.default};
     font: ${theme.fonts.availableMedium16};
+  }
+  .button-delete {
+    color: ${theme.danger.text.default};
   }
 `;

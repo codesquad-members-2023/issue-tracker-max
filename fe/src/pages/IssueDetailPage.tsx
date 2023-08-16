@@ -11,7 +11,6 @@ import {
 } from 'apis/api';
 import { useParams } from 'react-router-dom';
 import { DetailPageDataProvider } from 'context/DetailContext';
-import { set } from 'firebase/database';
 
 type Props = {};
 
