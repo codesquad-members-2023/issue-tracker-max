@@ -18,7 +18,11 @@ export const fetchData = async (path: string, options?: RequestInit) => {
 };
 
 export const getIssuesWithQuery = (query: string) => {
-  return fetchData('/issues' + query);
+  return fetchData('/issues' + query, {
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
 };
 
 export const postNewIssue = (
@@ -131,7 +135,11 @@ export const editIssueStatus = (
 };
 
 export const getIssueDetail = (id: string | number) => {
-  return fetchData(`/issues/${id}`);
+  return fetchData(`/issues/${id}`, {
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
 };
 
 export const deleteIssue = (id: number) => {
@@ -164,21 +172,34 @@ export const signUpUser = (loginId: string, password: string) => {
 };
 
 export const getUserPreviews = () => {
-  return fetchData('/users/previews');
+  return fetchData('/users/previews', {
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
 };
 
 export const getLabelPreviews = () => {
-  return fetchData('/labels/previews');
+  return fetchData('/labels/previews', {
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
 };
-
 export const getMilestonePreviews = () => {
-  return fetchData('/milestones/previews');
+  return fetchData('/milestones/previews', {
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
 };
-
 export const getLabelList = () => {
-  return fetchData('/labels');
+  return fetchData('/labels', {
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
 };
-
 export const postNewLabel = (
   name: string,
   textColor: string,
@@ -233,7 +254,11 @@ export const deleteLabel = (id: string | number) => {
 };
 
 export const getMilestonesWithQuery = (query: string) => {
-  return fetchData('/milestones' + query);
+  return fetchData('/milestones' + query, {
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
 };
 
 export const postNewMilestone = (
