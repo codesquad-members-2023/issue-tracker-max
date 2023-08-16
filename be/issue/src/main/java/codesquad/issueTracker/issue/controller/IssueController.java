@@ -2,6 +2,7 @@ package codesquad.issueTracker.issue.controller;
 
 import codesquad.issueTracker.global.common.ApiResponse;
 import codesquad.issueTracker.issue.dto.*;
+import codesquad.issueTracker.issue.dto.filter.IssueFilteredResponseDto;
 import codesquad.issueTracker.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
