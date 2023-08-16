@@ -42,7 +42,7 @@ public class Milestone {
 		return new Milestone(name, deadline, description);
 	}
 
-	public static Milestone of(Long id, String name, LocalDateTime deadline, String description) {
-		return new Milestone(id, name, deadline, description);
+	public static Milestone of(Long id, String name, LocalDateTime deadline, String description, String status) {
+		return new Milestone(id, name, deadline, description, status);
 	}
 }

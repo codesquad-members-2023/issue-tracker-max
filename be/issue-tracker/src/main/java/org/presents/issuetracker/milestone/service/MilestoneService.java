@@ -10,6 +10,7 @@ import org.presents.issuetracker.milestone.dto.request.MilestoneRequest;
 import org.presents.issuetracker.milestone.dto.request.MilestoneStatusUpdateRequest;
 import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
 import org.presents.issuetracker.milestone.entity.Milestone;
+import org.presents.issuetracker.milestone.entity.vo.MilestoneInfo;
 import org.presents.issuetracker.milestone.repository.MilestoneRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,10 @@ public class MilestoneService {
         return milestoneRepository.findPreviews().stream()
                 .map(MilestonePreviewResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    public MilestoneInfo getMilestoneDetails(String status) {
+        return milestoneRepository.findDetailsByStatus(status);
     }
 
     public IdResponseDto create(MilestoneRequest milestoneRequest) {
@@ -53,7 +58,7 @@ public class MilestoneService {
                 .filter(newBackgroundColor -> !newBackgroundColor.equals(milestone.getDescription()))
                 .orElse(milestone.getDescription());
 
-        Milestone updatedMilestone = Milestone.of(milestone.getId(), name, deadline, description);
+        Milestone updatedMilestone = Milestone.of(milestone.getId(), name, deadline, description, milestone.getStatus());
 
         milestoneRepository.update(updatedMilestone);
 
