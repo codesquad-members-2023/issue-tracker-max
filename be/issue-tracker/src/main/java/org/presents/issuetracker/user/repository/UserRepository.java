@@ -1,12 +1,15 @@
 package org.presents.issuetracker.user.repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.presents.issuetracker.user.entity.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -49,14 +52,14 @@ public class UserRepository {
 
 	public User findById(Long id) {
 		final String sql = "SELECT user_id, login_id, image " +
-                "FROM user " +
-                "WHERE user_id = :user_id";
+			"FROM user " +
+			"WHERE user_id = :user_id";
 
 		MapSqlParameterSource params = new MapSqlParameterSource("user_id", id);
 
 		return jdbcTemplate.queryForObject(sql, params, userPreviewRowMapper);
-  }
-  
+	}
+
 	public Optional<User> findByLoginId(String loginId) {
 		final String sql = "SELECT user_id, login_id, password, image "
 			+ "FROM user WHERE login_id = :loginId";
@@ -68,12 +71,15 @@ public class UserRepository {
 			.findFirst();
 	}
 
-	public void save(User user) {
+	public Long save(User user) {
 		final String sql = "INSERT INTO user(login_id, password) VALUES(:loginId, :password)";
 
 		MapSqlParameterSource params = new MapSqlParameterSource("loginId", user.getLoginId())
 			.addValue("password", user.getPassword());
 
-		jdbcTemplate.update(sql, params);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(sql, params, keyHolder);
+
+		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
 }

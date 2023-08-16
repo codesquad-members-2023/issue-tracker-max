@@ -31,7 +31,7 @@ public class JwtAuthorizationFilter implements Filter {
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private static final String AUTHORIZATION_PREFIX = "Bearer ";
 	private static final String[] excludeUris = new String[] {
-		"/users/login", "/users/signup", "/reissue-access-token"
+		"/users/login", "/users/signup", "/reissue-access-token", "/login/oauth", "/login/oauth/callback"
 	};
 
 	private final JwtProvider jwtProvider;
