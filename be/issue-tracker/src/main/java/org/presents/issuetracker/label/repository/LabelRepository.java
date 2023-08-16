@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
 import org.presents.issuetracker.label.entity.Label;
+import org.presents.issuetracker.label.entity.vo.LabelInfo;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,7 +17,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class LabelRepository {
 
-    private static final int OPEN_FLAG = 0;
+    private static final String OPEN_FLAG = "open";
+    private static final String CLOSED_FLAG = "closed";
+    private static final int NOT_DELETED_FLAG = 0;
     private static final int DELETED_FLAG = 1;
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -80,10 +84,10 @@ public class LabelRepository {
     public List<Label> findAll() {
         String sql = "SELECT label_id, name, description, background_color, text_color " +
             "FROM label " +
-            "WHERE is_deleted = :openFlag " +
+            "WHERE is_deleted = :not_deleted_flag " +
             "ORDER BY label_id";
 
-        MapSqlParameterSource params = new MapSqlParameterSource("openFlag", OPEN_FLAG);
+        MapSqlParameterSource params = new MapSqlParameterSource("not_deleted_flag", NOT_DELETED_FLAG);
 
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
             long id = rs.getLong("label_id");
@@ -98,10 +102,10 @@ public class LabelRepository {
     public List<Label> findPreviews() {
         String sql = "SELECT label_id, name, background_color, text_color " +
             "FROM label " +
-            "WHERE is_deleted = :openFlag " +
+            "WHERE is_deleted = :not_deleted_flag " +
             "ORDER BY label_id";
 
-        MapSqlParameterSource params = new MapSqlParameterSource("openFlag", OPEN_FLAG);
+        MapSqlParameterSource params = new MapSqlParameterSource("not_deleted_flag", NOT_DELETED_FLAG);
 
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
             long id = rs.getLong("label_id");
@@ -126,5 +130,31 @@ public class LabelRepository {
             String textColor = rs.getString("text_color");
             return Label.of(id, name, backgroundColor, textColor);
         });
+    }
+
+    private int getLabelCount() {
+        String sql = "SELECT COALESCE(COUNT(*), 0) FROM label WHERE is_deleted = :not_deleted_flag";
+
+        MapSqlParameterSource params = new MapSqlParameterSource("not_deleted_flag", NOT_DELETED_FLAG);
+
+        return jdbcTemplate.queryForObject(sql, params, Integer.class);
+    }
+
+    private int getTotalMilestoneCount() {
+        String sql = "SELECT COALESCE(COUNT(*), 0) FROM milestone WHERE status IN (:open_flag, :closed_flag) AND is_deleted = :not_deleted_flag";
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("open_flag", OPEN_FLAG)
+                .addValue("closed_flag", CLOSED_FLAG)
+                .addValue("not_deleted_flag", NOT_DELETED_FLAG);
+
+        return jdbcTemplate.queryForObject(sql, params, Integer.class);
+    }
+
+    public LabelInfo findAllWithCounts(List<Label> labels, List<LabelDetailResponse> labelDetails) {
+        int labelCount = labels.size();
+        int milestoneCount = getTotalMilestoneCount();
+
+        return LabelInfo.of(labelCount, milestoneCount, labelDetails);
     }
 }

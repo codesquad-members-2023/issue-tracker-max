@@ -11,6 +11,7 @@ import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
 import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
 import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.label.entity.Label;
+import org.presents.issuetracker.label.entity.vo.LabelInfo;
 import org.presents.issuetracker.label.repository.LabelRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,10 @@ public class LabelService {
 		this.labelRepository = labelRepository;
 	}
 
-	public List<LabelDetailResponse> getLabelDetails() {
+	public LabelInfo getLabelDetails() {
 		List<Label> labels = labelRepository.findAll();
 
-		return labels.stream().map(label -> LabelDetailResponse.builder()
+		List<LabelDetailResponse> labelDetailResponses = labels.stream().map(label -> LabelDetailResponse.builder()
 				.id(label.getId())
 				.name(label.getName())
 				.description(label.getDescription())
@@ -34,6 +35,8 @@ public class LabelService {
 				.textColor(label.getTextColor())
 				.build())
 			.collect(Collectors.toList());
+
+		return labelRepository.findAllWithCounts(labels, labelDetailResponses);
 	}
 
 	public List<LabelPreviewResponse> getLabelPreviews() {
