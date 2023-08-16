@@ -33,11 +33,13 @@ export const postNewIssue = (
   labelIds: number[],
   milestoneId: number,
 ) => {
+  const accessToken = getAccessToken();
+
   return fetchData('issues/new', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       title,
@@ -51,11 +53,13 @@ export const postNewIssue = (
 };
 
 export const patchIssueTitle = (id: number, title: string) => {
+  const accessToken = getAccessToken();
+
   return fetchData('issues/title', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       id,
@@ -65,11 +69,13 @@ export const patchIssueTitle = (id: number, title: string) => {
 };
 
 export const patchIssueContents = (id: number, contents: string) => {
+  const accessToken = getAccessToken();
+
   return fetchData('issues/contents', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       id,
@@ -79,11 +85,13 @@ export const patchIssueContents = (id: number, contents: string) => {
 };
 
 export const editIssueLabel = (id: number, labelIds: number[]) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`issues/${id}/labels`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       labelIds,
@@ -92,11 +100,13 @@ export const editIssueLabel = (id: number, labelIds: number[]) => {
 };
 
 export const editIssueMilestone = (id: number, milestoneId: number) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`milestones/${id}/milestone`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       milestoneId,
@@ -105,11 +115,13 @@ export const editIssueMilestone = (id: number, milestoneId: number) => {
 };
 
 export const editIssueAssignees = (id: number, assigneeIds: number[]) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`issues/${id}/assignees`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       assigneeIds,
@@ -121,11 +133,13 @@ export const editIssueStatus = (
   issueIds: number[],
   status: 'open' | 'closed',
 ) => {
+  const accessToken = getAccessToken();
+
   return fetchData('issues/status', {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       issueIds,
@@ -135,18 +149,22 @@ export const editIssueStatus = (
 };
 
 export const getIssueDetail = (id: string | number) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`/issues/${id}`, {
     headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
 
 export const deleteIssue = (id: number) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`issues/delete/${id}`, {
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
@@ -172,31 +190,39 @@ export const signUpUser = (loginId: string, password: string) => {
 };
 
 export const getUserPreviews = () => {
+  const accessToken = getAccessToken();
+
   return fetchData('/users/previews', {
     headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
 
 export const getLabelPreviews = () => {
+  const accessToken = getAccessToken();
+
   return fetchData('/labels/previews', {
     headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
 export const getMilestonePreviews = () => {
+  const accessToken = getAccessToken();
+
   return fetchData('/milestones/previews', {
     headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
 export const getLabelList = () => {
+  const accessToken = getAccessToken();
+
   return fetchData('/labels', {
     headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
@@ -206,11 +232,13 @@ export const postNewLabel = (
   backgroundColor: string,
   description: string,
 ) => {
+  const accessToken = getAccessToken();
+
   return fetchData('/labels', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       name,
@@ -228,11 +256,13 @@ export const editLabel = (
   backgroundColor: string,
   description: string,
 ) => {
+  const accessToken = getAccessToken();
+
   return fetchData('/labels', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       id,
@@ -245,18 +275,22 @@ export const editLabel = (
 };
 
 export const deleteLabel = (id: string | number) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`/labels/${id}`, {
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
 
 export const getMilestonesWithQuery = (query: string) => {
+  const accessToken = getAccessToken();
+
   return fetchData('/milestones' + query, {
     headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
@@ -266,11 +300,13 @@ export const postNewMilestone = (
   deadline: string,
   description: string,
 ) => {
+  const accessToken = getAccessToken();
+
   return fetchData('/milestones', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       name,
@@ -286,11 +322,13 @@ export const editMilestone = (
   deadline: string,
   description: string,
 ) => {
+  const accessToken = getAccessToken();
+
   return fetchData('/milestones', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       id,
@@ -302,21 +340,25 @@ export const editMilestone = (
 };
 
 export const deleteMilestone = (id: string | number) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`/milestones/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
 
 export const editMilestoneStatus = (id: number, status: 'open' | 'closed') => {
+  const accessToken = getAccessToken();
+
   return fetchData(`/milestones/${status}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       id,
@@ -330,11 +372,13 @@ export const postNewComment = (
   authorId: number,
   contents: string,
 ) => {
+  const accessToken = getAccessToken();
+
   return fetchData('/comments', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       issueId,
@@ -345,11 +389,13 @@ export const postNewComment = (
 };
 
 export const editComment = (id: number, contents: string) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`/comments`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       id,
@@ -359,11 +405,13 @@ export const editComment = (id: number, contents: string) => {
 };
 
 export const deleteComment = (id: string | number) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`/comments/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
