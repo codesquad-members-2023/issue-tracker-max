@@ -1,4 +1,4 @@
-import { useTheme } from '@emotion/react';
+import { Theme, css } from '@emotion/react';
 import { InformationTag } from '@components/common/InformationTag';
 import { TextInput } from '@components/common/textInput/TextInput';
 import { ColorCodeInput } from '@components/common/ColorCodeInput';
@@ -45,31 +45,9 @@ export const LabelEditBody: React.FC<Props> = ({
   onColorCodeRandom,
   onSelectTextColor,
 }) => {
-  const theme = useTheme() as any;
-
-  const textColors = [
-    { id: 1, color: 'light', name: '밝은 색' },
-    { id: 2, color: 'dark', name: '어두운 색' },
-  ];
-
   return (
-    <div
-      css={{
-        display: 'flex',
-        gap: '24px',
-      }}
-    >
-      <div
-        css={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minWidth: '288px',
-          height: '153px',
-          borderRadius: '11px',
-          border: `${theme.border.default} ${theme.neutral.border.default}`,
-        }}
-      >
+    <div css={labelEditBodyStyle}>
+      <div className="label-preview">
         <InformationTag
           size="S"
           typeVariant="filled"
@@ -79,11 +57,8 @@ export const LabelEditBody: React.FC<Props> = ({
           {nameInput ? nameInput : 'Label'}
         </InformationTag>
       </div>
-      <div
-        css={{
-          width: '100%',
-        }}
-      >
+
+      <div className="input-container">
         <TextInput
           value={nameInput}
           label="이름"
@@ -102,14 +77,8 @@ export const LabelEditBody: React.FC<Props> = ({
           onChange={onDescriptionChange}
           height={40}
         />
-        <div
-          css={{
-            display: 'flex',
-            gap: '24px',
-            width: 'fit-content',
-            alignItems: 'baseline',
-          }}
-        >
+
+        <div className="color-code-input-container">
           <ColorCodeInput
             isError={isColorCodeError}
             caption="올바른 색상 코드를 입력해주세요"
@@ -144,3 +113,33 @@ export const LabelEditBody: React.FC<Props> = ({
     </div>
   );
 };
+
+const textColors = [
+  { id: 1, color: 'light', name: '밝은 색' },
+  { id: 2, color: 'dark', name: '어두운 색' },
+];
+
+const labelEditBodyStyle = (theme: Theme) => css`
+  display: flex;
+  gap: 24px;
+
+  .label-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 288px;
+    height: 160px;
+    border-radius: ${theme.radius.m};
+    border: ${`${theme.border.default} ${theme.neutral.border.default}`};
+  }
+
+  .input-container {
+    width: 100%;
+  }
+
+  .color-code-input-container {
+    display: flex;
+    gap: 24px;
+    align-items: baseline;
+  }
+`;
