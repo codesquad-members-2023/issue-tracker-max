@@ -30,10 +30,9 @@ export const Body: React.FC<Props> = ({
     <div css={bodyStyle}>
       <div className="container">
         <Comment
-          key={issueDetailPageData.id}
-          issueId={issueDetailPageData.id}
           typeVariant="issue"
-          issueAuthor={issueDetailPageData.author}
+          key={issueDetailPageData.id}
+          issueDetailPageData={issueDetailPageData}
           createdAt={issueDetailPageData.createdAt}
           defaultValue={issueDetailPageData.contents}
         />

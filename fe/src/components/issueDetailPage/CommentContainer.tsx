@@ -20,18 +20,20 @@ export const CommentContainer: React.FC<Props> = ({
           <Comment
             typeVariant="default"
             key={item.id}
+            issueDetailPageData={issueDetailPageData}
             comment={item}
-            issueId={issueDetailPageData.id}
-            issueAuthor={issueDetailPageData.author}
-            createdAt={item.createdAt}
+            // issueId={issueDetailPageData.id}
+            // issueAuthor={issueDetailPageData.author}
+            // createdAt={item.createdAt}
             defaultValue={item.contents}
             onDeleteComment={onDeleteComment}
           />
         ))}
 
       <AddNewComment
-        issueId={issueDetailPageData.id}
-        issueAuthor={issueDetailPageData.author}
+        // issueId={issueDetailPageData.id}
+        // issueAuthor={issueDetailPageData.author}
+        issueDetailPageData={issueDetailPageData}
         onAddComment={onAddComment}
       />
     </div>

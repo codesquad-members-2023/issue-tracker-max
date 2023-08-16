@@ -14,9 +14,6 @@ import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 import { editComment, patchIssueContents, postNewComment } from 'apis/api';
 import { getLocalStorageUserId } from 'apis/localStorage';
 
-// todo issueDetailPage에 들어가면 줄바꿈해서 작성한게 그대로 보여야하는데
-// 한줄로 보이는중
-
 type DefaultFileStatusType = {
   typeError: boolean;
   sizeError: boolean;
@@ -24,8 +21,7 @@ type DefaultFileStatusType = {
   uploadFailed: boolean;
 };
 type Props = {
-  issueId: number;
-  issueAuthor: User;
+  issueDetailPageData: IssueDetailPageData;
   typeVariant: 'issue' | 'default' | 'edit' | 'add';
   createdAt?: string;
   comment?: CommentType;
@@ -36,8 +32,7 @@ type Props = {
 };
 
 export const Comment: React.FC<Props> = ({
-  issueId,
-  issueAuthor,
+  issueDetailPageData,
   createdAt,
   comment,
   typeVariant = 'default',
@@ -117,7 +112,7 @@ export const Comment: React.FC<Props> = ({
   const onAddSubmit = async () => {
     try {
       const newComment = await postNewComment(
-        issueId,
+        issueDetailPageData.id,
         storagedUserId,
         textAreaValue,
       );
@@ -135,7 +130,7 @@ export const Comment: React.FC<Props> = ({
   const onEditSubmit = async () => {
     try {
       typeVariant === 'issue'
-        ? await patchIssueContents(issueId, textAreaValue)
+        ? await patchIssueContents(issueDetailPageData.id, textAreaValue)
         : await editComment(comment?.id, textAreaValue);
 
       setIsEditing(false);
@@ -164,7 +159,7 @@ export const Comment: React.FC<Props> = ({
 
   const isAuthor =
     storagedUserId === comment?.author?.userId ||
-    storagedUserId === issueAuthor.userId;
+    storagedUserId === issueDetailPageData.author.userId;
 
   const basicImage = '/basic-profile.jpeg';
   return (
@@ -202,12 +197,12 @@ export const Comment: React.FC<Props> = ({
                 onClickDelete={onDeleteComment}
                 image={
                   typeVariant === 'issue'
-                    ? issueAuthor.image || basicImage
+                    ? issueDetailPageData.author.image || basicImage
                     : comment?.author?.image || basicImage
                 }
                 loginId={
                   typeVariant === 'issue'
-                    ? issueAuthor.loginId
+                    ? issueDetailPageData.author.loginId
                     : comment?.author?.loginId
                 }
                 createdAt={createdAt}

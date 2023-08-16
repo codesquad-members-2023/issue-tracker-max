@@ -2,21 +2,18 @@ import { css } from '@emotion/react';
 import { Comment } from '@components/common/comment/Comment';
 
 type Props = {
-  issueId: number;
-  issueAuthor: User;
+  issueDetailPageData: IssueDetailPageData;
   onAddComment: (comment: any) => void;
 };
 
 export const AddNewComment: React.FC<Props> = ({
-  issueId,
-  issueAuthor,
+  issueDetailPageData,
   onAddComment,
 }) => {
   return (
     <div css={addNewCommentStyles}>
       <Comment
-        issueId={issueId}
-        issueAuthor={issueAuthor}
+        issueDetailPageData={issueDetailPageData}
         defaultValue=""
         typeVariant="add"
         onAddComment={onAddComment}
