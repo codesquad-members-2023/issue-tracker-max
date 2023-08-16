@@ -13,7 +13,6 @@ env:
   AWS_REGION: ap-northeast-2
   PROD_PROFILE_RESOURCE_PATH: ./src/main/resources/application-prodDB.yml
   CLOUD_PROFILE_RESOURCE_PATH: ./src/main/resources/application-cloud.yml
-<<<<<<< HEAD
   OAUTH_PROFILE_RESOURCE_PATH: ./src/main/resources/application-oauth.yml
   JWT_PROFILE_RESOURCE_PATH: ./src/main/resources/application-jwt.yml
   CODE_DEPLOY_APPLICATION_NAME: codedeploy-app
