@@ -19,15 +19,14 @@ export default function AssigneeField({
 }) {
   const { data: userList } = useFetch(getUsers);
 
-  const assigneeDropdownList: DropdownItemType[] | undefined = userList?.map(
-    (user) => ({
+  const assigneeDropdownList: DropdownItemType[] =
+    userList?.map((user) => ({
       id: user.userAccountId,
       variant: "withImg",
       name: "assignee",
       content: user.username,
       imgSrc: user.profileUrl,
-    })
-  );
+    })) || [];
 
   const generateAssignees = (userList: User[]) => {
     const currentAssignees = userList.filter((user) =>

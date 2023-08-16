@@ -19,15 +19,14 @@ export default function LabelField({
 }) {
   const { data: labelList } = useFetch(getLabels);
 
-  const labelDropdownList: DropdownItemType[] | undefined = labelList?.map(
-    (label) => ({
+  const labelDropdownList: DropdownItemType[] =
+    labelList?.map((label) => ({
       id: label.labelId,
       variant: "withColor",
       name: "label",
       content: label.name,
       colorFill: label.backgroundColor,
-    })
-  );
+    })) || [];
 
   const generateLabels = (labelList: Label[]) => {
     const currentLabels = labelList.filter((label) =>
