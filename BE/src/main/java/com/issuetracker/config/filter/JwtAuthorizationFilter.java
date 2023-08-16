@@ -59,13 +59,17 @@ public class JwtAuthorizationFilter implements Filter {
 		}
 
 		if (!isContainToken(httpServletRequest)) {
-			sendErrorApiResponse(response, new MalformedJwtException("토큰이 없거나 잘못된 형식 입니다."));
+			sendMalformedJwtException(response);
 			return;
 		}
 
 		try {
 			String token = getToken(httpServletRequest);
 			Claims claims = jwtTokenGenerator.getClaims(token);
+			if (!isAccessToken(claims)) {
+				sendMalformedJwtException(response);
+				return;
+			}
 			request.setAttribute("memberId", claims.get("memberId"));
 
 			chain.doFilter(request, response);
@@ -90,6 +94,10 @@ public class JwtAuthorizationFilter implements Filter {
 		return authorization.substring(7).replace("\"", "");
 	}
 
+	private boolean isAccessToken(Claims claims) {
+		return claims.get("memberId") != null;
+	}
+
 	private void sendErrorApiResponse(ServletResponse response, RuntimeException e) throws IOException {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -99,6 +107,10 @@ public class JwtAuthorizationFilter implements Filter {
 			objectMapper.writeValueAsString(
 				generateErrorApiResponse(e))
 		);
+	}
+
+	private void sendMalformedJwtException(ServletResponse response) throws IOException {
+		sendErrorApiResponse(response, new MalformedJwtException("토큰이 없거나 잘못된 형식 입니다."));
 	}
 
 	private void sendExpiredErrorApiResponse(ServletResponse response) throws IOException {
