@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 			.allowedOrigins("http://localhost:5173", "http://localhost:8080")
-			.allowedHeaders("Authorization", "Content-Type")
+			.exposedHeaders("Authorization") // 노출될 헤더 설정
 			.allowCredentials(true) // 쿠키 인증 요청 허용
 			.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
 			.maxAge(3600);
