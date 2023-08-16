@@ -14,7 +14,7 @@ import ElementType from '../constant/ElementType';
 import TextArea from '../components/common/TextArea';
 import InformationTag from '../components/common/InformationTag';
 
-const { AddButton, Assignee, Label } = ElementType;
+const { AddButton, Assignee, Label, milestone } = ElementType;
 
 export default function IssueDetail() {
   const { util } = useContext(AppContext);
@@ -73,9 +73,36 @@ export default function IssueDetail() {
           <RightPanel>
             <SideBar
               sideBarItems={[
-                [{ type: AddButton, text: '담당자' }, []],
-                [{ type: AddButton, text: '레이블' }, []],
-                [{ type: AddButton, text: '마일스톤' }, []],
+                [
+                  { type: AddButton, text: '담당자' },
+                  [
+                    { type: Assignee, text: 'fuse123', checked: false },
+                    { type: Assignee, text: 'geppetto', checked: false },
+                  ],
+                ],
+                [
+                  { type: AddButton, text: '레이블' },
+                  [
+                    {
+                      type: Label,
+                      labelProps: {
+                        textColor: 'AAA333',
+                        backgroundColor: 'FFF3FF',
+                        name: 'feat',
+                      },
+                    },
+                  ],
+                ],
+                [
+                  { type: AddButton, text: '마일스톤' },
+                  [
+                    {
+                      type: milestone,
+                      text: '그룹프로젝트: 이슈트래커',
+                      progress: 50,
+                    },
+                  ],
+                ],
               ]}
             />
             <ButtonSmall type="button" ghost iconName="trash">
@@ -153,4 +180,5 @@ const RightPanel = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  gap: 16px;
 `;
