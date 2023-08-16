@@ -12,7 +12,7 @@ export const CommentContainer: React.FC<Props> = ({
   issueDetailPageData,
   onAddComment,
   onDeleteComment,
-}: Props) => {
+}) => {
   return (
     <div css={commentContainerStyle}>
       {issueDetailPageData.comments &&
@@ -22,17 +22,13 @@ export const CommentContainer: React.FC<Props> = ({
             key={item.id}
             issueDetailPageData={issueDetailPageData}
             comment={item}
-            // issueId={issueDetailPageData.id}
-            // issueAuthor={issueDetailPageData.author}
-            // createdAt={item.createdAt}
+            createdAt={item.createdAt}
             defaultValue={item.contents}
             onDeleteComment={onDeleteComment}
           />
         ))}
 
       <AddNewComment
-        // issueId={issueDetailPageData.id}
-        // issueAuthor={issueDetailPageData.author}
         issueDetailPageData={issueDetailPageData}
         onAddComment={onAddComment}
       />
