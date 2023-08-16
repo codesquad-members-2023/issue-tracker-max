@@ -172,18 +172,24 @@ export const deleteIssue = (id: number) => {
 };
 
 export const loginUser = (id: string, password: string) => {
-  return fetchData('login', {
+  return fetchData('/users/login', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({
-      id,
+      loginId: id,
       password,
     }),
   });
 };
 
 export const signUpUser = (loginId: string, password: string) => {
-  return fetchData('users', {
+  return fetchData('/users/signup', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({
       loginId,
       password,
