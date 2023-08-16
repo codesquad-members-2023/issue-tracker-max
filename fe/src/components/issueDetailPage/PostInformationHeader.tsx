@@ -1,5 +1,5 @@
 import { Theme, css } from '@emotion/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { Button } from '@components/common/Button';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
@@ -25,38 +25,38 @@ export const PostInformationHeader: React.FC<Props> = ({
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [titleInput, setTitleInput] = useState<string>(title);
-  const [placeholderValue, setPlaceholderValue] = useState<string>(title); //편집 취소시 돌아갈 값
-  // 이렇게 말고 이전 값을 알고있을 방법 찾기
-  //todo 길이제한 0이나 n0자 이상일때 버튼 비활성화
+  const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
-  const isDisabled = title.length === 0;
+  const placeholderValueRef = useRef<string>(title);
 
   const onEditTitleOpen = () => {
+    placeholderValueRef.current = titleInput;
     setIsEditing(true);
   };
 
   const onEditTitleCancel = () => {
+    setTitleInput(placeholderValueRef.current);
     setIsEditing(false);
-    setTitleInput(placeholderValue);
   };
 
   const onChangeTitle = (value: string) => {
     setTitleInput(value);
-    //x버튼 호환 생각하기
   };
 
   const onClearInput = () => {
     setTitleInput('');
-    setPlaceholderValue('');
   };
 
   const onSubmitTitle = async () => {
     try {
+      setIsSubmiting(true);
       await patchIssueTitle(id, titleInput);
-      setPlaceholderValue(titleInput);
       setIsEditing(false);
     } catch (error) {
       console.log(error);
+      //에러처리
+    } finally {
+      setIsSubmiting(false);
     }
   };
 
@@ -65,16 +65,16 @@ export const PostInformationHeader: React.FC<Props> = ({
       {isEditing ? (
         <TextInput
           height={40}
-          value={titleInput ? titleInput : title}
+          value={titleInput}
           label="제목"
           inputType="text"
-          disabled={false}
+          disabled={isSubmiting}
           onChange={onChangeTitle}
           onClearInput={onClearInput}
         />
       ) : (
         <div className="title-container">
-          <h2>{titleInput ? titleInput : title}</h2>
+          <h2>{titleInput || title}</h2>
           <span>#{id}</span>
         </div>
       )}
@@ -89,7 +89,11 @@ export const PostInformationHeader: React.FC<Props> = ({
             <Button
               typeVariant="contained"
               size="S"
-              disabled={isDisabled}
+              disabled={
+                titleInput === placeholderValueRef.current ||
+                title.length === 0 ||
+                titleInput.length > 70
+              }
               onClick={onSubmitTitle}
             >
               <Edit stroke={theme.brand.text.default} />
