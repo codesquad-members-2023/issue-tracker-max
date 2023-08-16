@@ -53,7 +53,7 @@ public class CommentServiceTest extends IntegrationTestSupport {
 
 		// then
 		assertAll(() -> assertThat(commentResponse.getContent()).isEqualTo(request.getContent()),
-			() -> assertThat(commentResponse.getWriterId()).isEqualTo(writerId));
+			() -> assertThat(commentResponse.getWriter().getId()).isEqualTo(writerId));
 	}
 
 	@DisplayName("특정한 issueId로 댓글을 찾으면 해당하는 모든 댓글을 반환한다")
