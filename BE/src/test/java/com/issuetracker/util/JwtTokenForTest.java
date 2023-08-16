@@ -1,0 +1,6 @@
+package com.issuetracker.util;
+
+public class JwtTokenForTest {
+
+	public static final String accessToken = "eyJhbGciOiJIUzM4NCJ9.eyJwcm9maWxlSW1hZ2VVcmkiOiIiLCJlbWFpbCI6InVzZXIwNTZAZ21haWwuY29tIiwibWVtYmVySWQiOjEwLCJuaWNrbmFtZSI6InVzZXIwNTIiLCJleHAiOjExNjkyMjIzMzI5fQ.K-HeIBJMM-uUTFwyItOBfz274UDQqMpsPhwna8a_aHu-ntWRpn9COQaj_IIo2zsD";
+}
