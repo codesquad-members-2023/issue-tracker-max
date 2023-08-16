@@ -5,10 +5,11 @@ import org.springframework.http.HttpStatus;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum UserErrorCode implements StatusCode {
-	DUPLICATED_LOGIN_ID(HttpStatus.CONFLICT, "중복된 아이디가 존재합니다."),
-	NOT_FOUND_LOGIN_ID(HttpStatus.NOT_FOUND, "존재하지 않는 아이디입니다."),
-	WRONG_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다.");
+public enum JwtErrorCode implements StatusCode {
+	NOT_VALID_LOGIN_INFO(HttpStatus.UNAUTHORIZED, "로그인 정보가 유효하지 않습니다."),
+	INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
+	EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+	MALFORMED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "손상된 토큰입니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

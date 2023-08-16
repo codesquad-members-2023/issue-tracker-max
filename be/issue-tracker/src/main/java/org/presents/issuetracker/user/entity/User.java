@@ -21,6 +21,10 @@ public class User {
 		this.image = image;
 	}
 
+	public boolean matchesPassword(String password) {
+		return this.password.equals(password);
+	}
+
 	private User(Long userId, String loginId, String image) {
 		this.userId = userId;
 		this.loginId = loginId;

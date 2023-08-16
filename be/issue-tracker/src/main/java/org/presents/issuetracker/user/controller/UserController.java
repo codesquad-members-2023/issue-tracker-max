@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.presents.issuetracker.user.dto.request.UserRequest;
+import org.presents.issuetracker.user.dto.response.LoginResponse;
 import org.presents.issuetracker.user.dto.response.UserResponse;
 import org.presents.issuetracker.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +31,14 @@ public class UserController {
 		return ResponseEntity.ok().body(userPreviews);
 	}
 
-	@PostMapping
+	@PostMapping("/signup")
 	public ResponseEntity<Void> createUser(@Valid @RequestBody UserRequest userRequest) {
 		userService.createUser(userRequest);
 		return ResponseEntity.noContent().build();
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<LoginResponse> login(@Valid @RequestBody UserRequest userRequest) {
+		return ResponseEntity.ok().body(userService.login(userRequest));
 	}
 }
