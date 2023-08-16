@@ -5,6 +5,7 @@ import static com.issuetrackermax.fixture.EntityFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -46,6 +47,8 @@ class HistoryServiceTest extends IntegrationTestSupport {
 		IssuePostRequest issuePostRequest = IssuePostRequest.builder()
 			.title("title1")
 			.content("content1")
+			.labelIds(new ArrayList<>())
+			.assigneeIds(new ArrayList<>())
 			.build();
 
 		Member member = memberRepository.findById(writerId);
@@ -69,10 +72,14 @@ class HistoryServiceTest extends IntegrationTestSupport {
 		IssuePostRequest issuePostRequest = IssuePostRequest.builder()
 			.title("title1")
 			.content("content1")
+			.labelIds(new ArrayList<>())
+			.assigneeIds(new ArrayList<>())
 			.build();
 		IssuePostRequest issuePostRequest2 = IssuePostRequest.builder()
 			.title("title2")
 			.content("content2")
+			.labelIds(new ArrayList<>())
+			.assigneeIds(new ArrayList<>())
 			.build();
 		Long issueId1 = issueService.post(issuePostRequest, writerId).getId();
 		Long issueId2 = issueService.post(issuePostRequest2, writerId).getId();
@@ -109,10 +116,14 @@ class HistoryServiceTest extends IntegrationTestSupport {
 		IssuePostRequest issuePostRequest = IssuePostRequest.builder()
 			.title("title1")
 			.content("content1")
+			.labelIds(new ArrayList<>())
+			.assigneeIds(new ArrayList<>())
 			.build();
 		IssuePostRequest issuePostRequest2 = IssuePostRequest.builder()
 			.title("title2")
 			.content("content2")
+			.labelIds(new ArrayList<>())
+			.assigneeIds(new ArrayList<>())
 			.build();
 		Long issueId1 = issueService.post(issuePostRequest, writerId).getId();
 		Long issueId2 = issueService.post(issuePostRequest2, writerId).getId();

@@ -41,14 +41,22 @@ public class IssueDetailsResponse {
 			.id(resultVO.getWriterId())
 			.name(resultVO.getWriter())
 			.build();
-		this.milestone = MilestoneResponse.builder()
-			.id(resultVO.getMilestoneId())
-			.title(resultVO.getMilestoneTitle())
-			.build();
+		setMilestone(resultVO.getMilestoneId(), resultVO.getMilestoneTitle());
 		this.history = HistoryResponse.builder()
 			.editor(history.getEditor())
 			.modifiedAt(history.getModifiedAt())
 			.build();
 		this.comments = comments;
+	}
+
+	private void setMilestone(Long id, String title) {
+		if (title == null) {
+			this.milestone = null;
+		} else {
+			this.milestone = MilestoneResponse.builder()
+				.id(id)
+				.title(title)
+				.build();
+		}
 	}
 }

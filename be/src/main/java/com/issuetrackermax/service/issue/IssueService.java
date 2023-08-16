@@ -2,6 +2,7 @@ package com.issuetrackermax.service.issue;
 
 import static com.issuetrackermax.domain.issue.IssueStatus.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,9 +67,12 @@ public class IssueService {
 		IssueResultVO issueResultVO = issueRepository.findIssueDetailsById(id);
 		History history = historyService.findLatestByIssueId(id);
 		List<CommentMemberVO> comments = commentService.findByIssueId(id);
+		List<LabelResponse> labels = new ArrayList<>();
 
-		String[] labelIds = issueResultVO.getLabelIds().split(",");
-		List<LabelResponse> labels = getLabelResponse(labelIds);
+		if (issueResultVO.getLabelIds() != null) {
+			String[] labelIds = issueResultVO.getLabelIds().split(",");
+			labels = getLabelResponse(labelIds);
+		}
 		return IssueDetailsResponse
 			.builder()
 			.resultVO(issueResultVO)
@@ -99,7 +103,7 @@ public class IssueService {
 
 	@Transactional
 	public void applyLabels(Long issueId, IssueApplyRequest request) {
-		if (request.getIds() == null) {
+		if (request.getIds().isEmpty()) {
 			return;
 		}
 		issueValidator.existById(issueId);
@@ -112,7 +116,7 @@ public class IssueService {
 
 	@Transactional
 	public void applyAssignees(Long issueId, IssueApplyRequest request) {
-		if (request.getIds() == null) {
+		if (request.getIds().isEmpty()) {
 			return;
 		}
 		assigneeService.deleteAppliedAssignees(issueId);
