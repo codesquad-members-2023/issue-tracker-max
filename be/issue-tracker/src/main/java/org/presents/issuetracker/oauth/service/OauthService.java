@@ -2,6 +2,8 @@ package org.presents.issuetracker.oauth.service;
 
 import java.util.Map;
 
+import org.presents.issuetracker.global.error.exception.CustomException;
+import org.presents.issuetracker.global.error.statuscode.OauthErrorCode;
 import org.presents.issuetracker.jwt.JwtProvider;
 import org.presents.issuetracker.jwt.dto.Jwt;
 import org.presents.issuetracker.jwt.service.JwtService;
@@ -55,7 +57,7 @@ public class OauthService {
 
 			return accessToken;
 		} catch (Exception e) {
-			throw new RuntimeException();
+			throw new CustomException(OauthErrorCode.GITHUB_ACCESS_DENIED);
 		}
 	}
 
