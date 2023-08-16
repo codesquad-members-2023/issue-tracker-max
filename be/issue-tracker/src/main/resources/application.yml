@@ -1,8 +1,8 @@
 spring:
   profiles:
     group:
-      prod: prodDB, common, cloud, jwt
-      test: testDB, common, cloud, jwt
+      prod: prodDB, common, cloud, jwt, oauth
+      test: testDB, common, cloud, jwt, oauth
     active: prod
 ---
 spring:
