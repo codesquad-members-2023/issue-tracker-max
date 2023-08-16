@@ -12,6 +12,7 @@ import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { uploadFile } from 'apis/fileUpload';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 import { editComment, patchIssueContents, postNewComment } from 'apis/api';
+import { getLocalStorageUserId } from 'apis/localStorage';
 // todo issueDetailPage에 들어가면 줄바꿈해서 작성한게 그대로 보여야하는데
 // 한줄로 보이는중
 type DefaultFileStatusType = {
@@ -26,8 +27,8 @@ type Props = {
   issueAuthor: User;
   typeVariant: 'issue' | 'default' | 'edit' | 'add';
   createdAt?: string;
-  userId?: number;
-  loginId?: string;
+  // userId?: number;
+  // loginId?: string;
   commentAuthor?: User;
   isDisabled?: boolean;
   defaultValue: string;
@@ -40,8 +41,7 @@ export const Comment: React.FC<Props> = ({
   issueId,
   issueAuthor,
   createdAt,
-  userId,
-  loginId,
+  // loginId,
   commentAuthor,
   typeVariant = 'default',
   isDisabled = false,
@@ -132,12 +132,10 @@ export const Comment: React.FC<Props> = ({
 
   const onAddSubmit = async () => {
     try {
-      const responseData = await postNewComment(
-        issueId,
-        issueAuthor.userId,
-        textAreaValue,
-      );
+      const userId = getLocalStorageUserId();
+      const responseData = await postNewComment(issueId, userId, textAreaValue);
       const newComment = responseData.data;
+      console.log(newComment);
 
       // const newComment = {
       //   id: issueId,
@@ -185,7 +183,7 @@ export const Comment: React.FC<Props> = ({
     },
   };
 
-  const isAuthor = userId === issueAuthor?.userId;
+  const isAuthor = getLocalStorageUserId() === issueAuthor?.userId;
 
   return (
     <>
@@ -222,8 +220,12 @@ export const Comment: React.FC<Props> = ({
                     ? issueAuthor.image
                     : commentAuthor?.image
                 }
-                loginId={loginId}
-                createdAt={createdAt}
+                loginId={
+                  typeVariant === 'issue'
+                    ? issueAuthor.loginId
+                    : commentAuthor?.loginId
+                }
+                createdAt={createdAt} //이거 시간 표시로 바꾸기
                 isAuthor={isAuthor}
               />
             }

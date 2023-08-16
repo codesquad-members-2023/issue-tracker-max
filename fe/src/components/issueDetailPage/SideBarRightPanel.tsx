@@ -42,7 +42,7 @@ export const SideBarRightPanel: React.FC<Props> = ({
     try {
       setIsDeleteError(false);
       await deleteIssue(issueId);
-      navigate('/');
+      navigate('/issues');
     } catch (error) {
       console.error(error);
       setIsDeleteError(true);

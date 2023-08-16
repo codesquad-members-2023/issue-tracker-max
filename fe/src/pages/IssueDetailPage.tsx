@@ -75,22 +75,37 @@ export const IssueDetailPage: React.FC = ({}) => {
       switch (key) {
         case 'assignees':
           console.log('어사이니 변경', selectionsIds.assignees);
-
-          await editIssueAssignees(id, selectionsIds.assignees);
-
+          const updatedAssignees = await editIssueAssignees(
+            id,
+            selectionsIds.assignees,
+          );
+          setIssueDetailPageData((prev) => ({
+            ...prev,
+            assignees: updatedAssignees,
+          }));
           break;
+
         case 'labels':
           console.log('라벨 변경', selectionsIds.labels);
-
-          await editIssueLabel(id, selectionsIds.labels);
-
+          const updatedLabels = await editIssueLabel(id, selectionsIds.labels);
+          setIssueDetailPageData((prev) => ({
+            ...prev,
+            labels: updatedLabels,
+          }));
           break;
+
         case 'milestones':
           console.log('마일스톤 변경', selectionsIds.milestones);
-
-          await editIssueMilestone(id, selectionsIds.milestones);
-
+          const updatedMilestone = await editIssueMilestone(
+            id,
+            selectionsIds.milestones,
+          );
+          setIssueDetailPageData((prev) => ({
+            ...prev,
+            milestone: updatedMilestone,
+          }));
           break;
+
         default:
           break;
       }
@@ -127,6 +142,8 @@ export const IssueDetailPage: React.FC = ({}) => {
   };
 
   const onAddComment = (comment: any) => {
+    console.log(comment);
+
     setIssueDetailPageData({
       ...issueDetailPageData,
       comments: [...issueDetailPageData.comments, comment],
@@ -134,29 +151,27 @@ export const IssueDetailPage: React.FC = ({}) => {
   };
 
   return (
-    <DetailPageDataProvider>
-      <div
-        css={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '24px',
-        }}
-      >
-        <PostInformation issueDetailPageData={issueDetailPageData} />
-        <Body
-          issueDetailPageData={issueDetailPageData}
-          onAddComment={onAddComment}
-          //
-          selectionsOptions={selectionsOptions}
-          selections={selectionsIds}
-          onChangeSelect={onChangeSelect}
-          onSingleSelectedMilestone={onSingleSelectedMilestone}
-          onMultipleSelectedAssignee={onMultipleSelectedAssignee}
-          onMultipleSelectedLabel={onMultipleSelectedLabel}
-        />
-      </div>
-    </DetailPageDataProvider>
+    <div
+      css={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '24px',
+      }}
+    >
+      <PostInformation issueDetailPageData={issueDetailPageData} />
+      <Body
+        issueDetailPageData={issueDetailPageData}
+        onAddComment={onAddComment}
+        //
+        selectionsOptions={selectionsOptions}
+        selections={selectionsIds}
+        onChangeSelect={onChangeSelect}
+        onSingleSelectedMilestone={onSingleSelectedMilestone}
+        onMultipleSelectedAssignee={onMultipleSelectedAssignee}
+        onMultipleSelectedLabel={onMultipleSelectedLabel}
+      />
+    </div>
   );
 };
 
