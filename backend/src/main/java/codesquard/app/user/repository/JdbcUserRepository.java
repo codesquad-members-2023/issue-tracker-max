@@ -31,7 +31,8 @@ public class JdbcUserRepository implements UserRepository {
 	public Long save(User user) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		String sql = "INSERT INTO user(login_id, email, password, avatar_url) VALUES(:loginId, :email, :password, :avatarUrl)";
-		template.update(sql, user.createSaveParamSource(), keyHolder);
+		int update = template.update(sql, user.createSaveParamSource(), keyHolder);
+		logger.info("사용자 저장 결과 : {}", update);
 		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
 
