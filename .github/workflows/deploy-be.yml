@@ -13,6 +13,7 @@ env:
   AWS_REGION: ap-northeast-2
   PROD_PROFILE_RESOURCE_PATH: ./src/main/resources/application-prodDB.yml
   CLOUD_PROFILE_RESOURCE_PATH: ./src/main/resources/application-cloud.yml
+  OAUTH_PROFILE_RESOURCE_PATH: ./src/main/resources/application-oauth.yml
   JWT_PROFILE_RESOURCE_PATH: ./src/main/resources/application-jwt.yml
   CODE_DEPLOY_APPLICATION_NAME: codedeploy-app
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: issue-tracker-deploy-group
@@ -50,6 +51,12 @@ jobs:
         run: touch '${{ env.CLOUD_PROFILE_RESOURCE_PATH }}'
       - name: Set application-cloud.yml file
         run: echo '${{ secrets.APPLICATION_CLOUD_PROPERTIES }}' > '${{ env.CLOUD_PROFILE_RESOURCE_PATH }}'
+
+
+      - name: Create application-oauth.yml file
+        run: touch '${{ env.OAUTH_PROFILE_RESOURCE_PATH }}'
+      - name: Set application-oauth.yml file
+        run: echo '${{ secrets.APPLICATION_OAUTH_PROPERTIES }}' > '${{ env.OAUTH_PROFILE_RESOURCE_PATH }}'
 
       - name: Create application-jwt.yml file
         run: touch '${{ env.JWT_PROFILE_RESOURCE_PATH }}'

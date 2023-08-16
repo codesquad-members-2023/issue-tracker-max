@@ -34,4 +34,13 @@ public class User {
 	public static User of(Long userId, String loginId, String image) {
 		return new User(userId, loginId, image);
 	}
+
+	public static User of(User user, Long userId) {
+		return User.builder()
+			.userId(userId)
+			.loginId(user.getLoginId())
+			.password(user.getPassword())
+			.image(user.getImage())
+			.build();
+	}
 }
