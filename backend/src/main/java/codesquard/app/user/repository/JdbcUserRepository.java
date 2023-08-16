@@ -62,13 +62,17 @@ public class JdbcUserRepository implements UserRepository {
 	@Override
 	public Long modify(User user) {
 		String sql = "UPDATE user SET email = :email, avatar_url = :avatarUrl WHERE id = :id";
-		template.update(sql, user.createSaveParamSource());
+		int update = template.update(sql, user.createSaveParamSource());
+		logger.info("사용자 수정 결과 : {}", update);
 		return user.getId();
 	}
 
 	@Override
 	public Long deleteById(Long id) {
-		return null;
+		String sql = "DELETE FROM user WHERE id = :id";
+		int update = template.update(sql, new MapSqlParameterSource("id", id));
+		logger.info("사용자 삭제 결과 : {}", update);
+		return id;
 	}
 
 	@Override

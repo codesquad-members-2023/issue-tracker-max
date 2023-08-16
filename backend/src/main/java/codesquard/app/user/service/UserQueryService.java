@@ -25,6 +25,7 @@ public class UserQueryService {
 	}
 
 	public AuthenticateUser verifyUser(UserLoginServiceRequest userLoginServiceRequest) {
+		logger.info("사용자 확인 : {}", userLoginServiceRequest);
 		UserLoginServiceRequest encryptServiceRequest = userLoginServiceRequest.encryptPassword();
 		logger.debug("encryptServiceRequest : {}", encryptServiceRequest);
 		User findUser = userRepository.findByLoginIdAndPassword(encryptServiceRequest.toEntity());
@@ -32,14 +33,17 @@ public class UserQueryService {
 	}
 
 	public boolean verifyDuplicatedLoginId(UserSaveServiceRequest userSaveServiceRequest) {
+		logger.info("사용자 아이디 중복 확인 : {}", userSaveServiceRequest);
 		return userRepository.isExistLoginId(userSaveServiceRequest.toEntity());
 	}
 
 	public boolean verifyDuplicatedEmail(UserSaveServiceRequest userSaveServiceRequest) {
+		logger.info("사용자 이메일 중복 확인 : {}", userSaveServiceRequest);
 		return userRepository.isExistEmail(userSaveServiceRequest.toEntity());
 	}
 
 	public UserSaveServiceResponse findUserById(Long userId) {
+		logger.info("사용자 아이디로 조회 : {}", userId);
 		User findUser = userRepository.findById(userId);
 		return UserSaveServiceResponse.from(findUser);
 	}
