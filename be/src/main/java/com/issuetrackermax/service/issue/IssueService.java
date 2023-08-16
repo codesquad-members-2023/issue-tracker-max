@@ -16,7 +16,7 @@ import com.issuetrackermax.controller.issue.dto.request.IssueTitleRequest;
 import com.issuetrackermax.controller.issue.dto.request.IssuesStatusRequest;
 import com.issuetrackermax.controller.issue.dto.response.IssueDetailsResponse;
 import com.issuetrackermax.controller.issue.dto.response.IssuePostResponse;
-import com.issuetrackermax.domain.comment.entity.Comment;
+import com.issuetrackermax.domain.comment.entity.CommentMemberVO;
 import com.issuetrackermax.domain.history.entity.History;
 import com.issuetrackermax.domain.issue.IssueLabelRepository;
 import com.issuetrackermax.domain.issue.IssueRepository;
@@ -55,7 +55,7 @@ public class IssueService {
 		applyLabels(issueId, request.toLabel());
 
 		if (request.getContent() != null) {
-			commentService.save(request.toCommentCreateRequest(issueId), writerId);
+			commentService.save(request.toCommentCreateRequest(), issueId, writerId);
 		}
 		return IssuePostResponse.from(issueId);
 	}
@@ -65,7 +65,7 @@ public class IssueService {
 		issueValidator.existById(id);
 		IssueResultVO issueResultVO = issueRepository.findIssueDetailsById(id);
 		History history = historyService.findLatestByIssueId(id);
-		List<Comment> comments = commentService.findByIssueId(id);
+		List<CommentMemberVO> comments = commentService.findByIssueId(id);
 
 		String[] labelIds = issueResultVO.getLabelIds().split(",");
 		List<LabelResponse> labels = getLabelResponse(labelIds);

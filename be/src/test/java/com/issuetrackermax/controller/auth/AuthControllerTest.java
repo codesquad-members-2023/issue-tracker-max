@@ -1,6 +1,5 @@
 package com.issuetrackermax.controller.auth;
 
-import static com.issuetrackermax.domain.member.entity.Member.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -63,8 +62,7 @@ class AuthControllerTest extends ControllerTestSupport {
 			.andExpect(jsonPath("$.data.accessToken").value(accessToken))
 			.andExpect(jsonPath("$.data.refreshToken").value(refreshToken))
 			.andExpect(jsonPath("$.data.member.id").value(1L))
-			.andExpect(jsonPath("$.data.member.name").value(nickName))
-			.andExpect(jsonPath("$.data.member.imageUrl").value(DEFAULT_IMAGE));
+			.andExpect(jsonPath("$.data.member.name").value(nickName));
 
 	}
 

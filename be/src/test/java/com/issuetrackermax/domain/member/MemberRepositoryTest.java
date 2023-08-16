@@ -1,5 +1,6 @@
 package com.issuetrackermax.domain.member;
 
+import static com.issuetrackermax.fixture.EntityFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import org.junit.jupiter.api.DisplayName;
@@ -26,12 +27,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 	@Test
 	void findByLoginId() {
 		// given
-		Member member = Member.builder()
-			.loginId("June")
-			.password("1234")
-			.nickName("JOONSOO")
-			.loginType(LoginType.LOCAL)
-			.build();
+		Member member = makeMember("June", "1234", "JOONSOO", LoginType.LOCAL);
 		memberRepository.save(member);
 		// when
 		Member june = memberRepository.findByMemberLoginId("June");
@@ -42,12 +38,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 	@Test
 	void save() {
 		// given
-		Member member = Member.builder()
-			.loginId("June")
-			.password("1234")
-			.nickName("JOONSOO")
-			.loginType(LoginType.LOCAL)
-			.build();
+		Member member = makeMember("June", "1234", "JOONSOO", LoginType.LOCAL);
 
 		// when
 		Long saveId = memberRepository.save(member);

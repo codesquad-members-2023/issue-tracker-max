@@ -52,10 +52,9 @@ public class IssuePostRequest {
 			.build();
 	}
 
-	public CommentCreateRequest toCommentCreateRequest(Long issueId) {
+	public CommentCreateRequest toCommentCreateRequest() {
 		return CommentCreateRequest.builder()
 			.content(content)
-			.issueId(issueId)
 			.build();
 	}
 }

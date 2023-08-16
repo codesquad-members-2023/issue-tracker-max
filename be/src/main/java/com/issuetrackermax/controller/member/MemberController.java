@@ -3,6 +3,7 @@ package com.issuetrackermax.controller.member;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,10 +31,8 @@ public class MemberController {
 	}
 
 	@GetMapping("/check-member-email")
-	public ApiResponse<Void> checkLoginId(
-		@RequestBody
-		@Valid CheckLoginIdRequest checkLoginIdRequest) {
-		memberService.checkLoginIdDuplication(checkLoginIdRequest);
+	public ApiResponse<Void> checkLoginId(@ModelAttribute CheckLoginIdRequest request) {
+		memberService.checkLoginIdDuplication(request.getLoginId());
 		return ApiResponse.success();
 	}
 }

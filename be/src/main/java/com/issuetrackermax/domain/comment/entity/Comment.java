@@ -3,7 +3,7 @@ package com.issuetrackermax.domain.comment.entity;
 import java.time.LocalDateTime;
 
 import com.issuetrackermax.controller.comment.dto.request.CommentCreateRequest;
-import com.issuetrackermax.controller.comment.dto.request.CommentRequest;
+import com.issuetrackermax.controller.comment.dto.request.CommentModifyRequest;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -25,15 +25,15 @@ public class Comment {
 		this.createdAt = createdAt;
 	}
 
-	public static Comment from(CommentRequest commentRequest) {
+	public static Comment from(CommentModifyRequest commentModifyRequest) {
 		return Comment.builder()
-			.content(commentRequest.getContent())
+			.content(commentModifyRequest.getContent())
 			.build();
 	}
 
-	public static Comment from(CommentCreateRequest commentCreateRequest, Long memberId) {
+	public static Comment from(CommentCreateRequest commentCreateRequest, Long issueId, Long memberId) {
 		return Comment.builder()
-			.issueId(commentCreateRequest.getIssueId())
+			.issueId(issueId)
 			.content(commentCreateRequest.getContent())
 			.writerId(memberId)
 			.build();

@@ -27,7 +27,8 @@ public class JwtAuthorizationFilter implements Filter {
 	private static final String TOKEN_PREFIX = "Bearer ";
 	private static final String HEADER_AUTHORIZATION = "Authorization";
 	private static final String MEMBER_ID = "memberId";
-	private static final String[] whiteListUris = {"/h2-console/**", "/api/signin", "/api/signup/**",
+	private static final String[] whiteListUris = {"/h2-console/**", "/api/signin", "/api/signup",
+		"/api/signup/**",
 		"/api/reissue-access-token", "/api/oauth/**", "/api/redirect/**"};
 
 	private final JwtProvider jwtProvider;

@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.issuetrackermax.controller.ApiResponse;
 import com.issuetrackermax.controller.comment.dto.request.CommentCreateRequest;
-import com.issuetrackermax.controller.comment.dto.request.CommentRequest;
+import com.issuetrackermax.controller.comment.dto.request.CommentModifyRequest;
 import com.issuetrackermax.controller.comment.dto.response.CommentResponse;
 import com.issuetrackermax.service.comment.CommentService;
 
@@ -29,21 +29,18 @@ public class CommentController {
 
 	@PatchMapping("/{id}")
 	public ApiResponse<Void> modifyComment(@PathVariable Long id,
-		@RequestBody CommentRequest commentRequest,
+		@RequestBody CommentModifyRequest commentModifyRequest,
 		HttpServletRequest request) {
 		Integer memberId = (Integer)request.getAttribute(MEMBER_ID);
-		commentService.modifyComment(commentRequest, id, memberId.longValue());
+		commentService.modifyComment(commentModifyRequest, id, memberId.longValue());
 		return ApiResponse.success();
 	}
 
 	@PostMapping
-	public ApiResponse<CommentResponse> post(@RequestBody CommentRequest commentRequest,
+	public ApiResponse<CommentResponse> post(@RequestBody CommentCreateRequest commentCreateRequest,
 		HttpServletRequest request, @PathVariable Long issueId) {
 		Integer memberId = (Integer)request.getAttribute(MEMBER_ID);
-		CommentResponse commentResponse = commentService.save(CommentCreateRequest.builder()
-			.issueId(issueId)
-			.content(commentRequest.getContent())
-			.build(), memberId.longValue());
+		CommentResponse commentResponse = commentService.save(commentCreateRequest, issueId, memberId.longValue());
 		return ApiResponse.success(commentResponse);
 	}
 
