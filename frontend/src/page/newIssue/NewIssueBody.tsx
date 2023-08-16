@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { styled } from "styled-components";
 import { Avatar } from "../../components/Avatar";
 import { TextArea } from "../../components/TextArea";
@@ -9,7 +10,6 @@ type NewIssueBodyProps = {
   content: string;
   invalidTitle: boolean;
   onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onTitleFocus: () => void;
   onContentChange: (value: string) => void;
 } & SidebarProps;
 
@@ -18,13 +18,19 @@ export function NewIssueBody({
   content,
   invalidTitle,
   onTitleChange,
-  onTitleFocus,
   onContentChange,
   ...rest
 }: NewIssueBodyProps) {
-  const titleCaption = invalidTitle
-    ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
-    : "";
+  const [isFocused, setIsFocused] = useState(false);
+
+  const titleCaption =
+    isFocused && invalidTitle
+      ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
+      : "";
+
+  const onTitleFocus = () => {
+    setIsFocused(true);
+  };
 
   return (
     <Div>
@@ -39,7 +45,7 @@ export function NewIssueBody({
           label="제목"
           value={title}
           maxLength={50}
-          isError={invalidTitle}
+          isError={isFocused && invalidTitle}
           caption={titleCaption}
           onChange={onTitleChange}
           onFocus={onTitleFocus}

@@ -55,8 +55,92 @@ type Issue = {
 };
 
 export const issueHandlers = [
-  rest.get("/api/issues/:issueId", (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(issue));
+  rest.get("/api/issues/:issueId", (req, res, ctx) => {
+    const { issueId } = req.params;
+
+    const issue = issues.find((i) => i.id === Number(issueId));
+    
+    if (!issue) {
+      return res(
+        ctx.status(404),
+        ctx.json({
+          code: 404,
+          status: "Not Found",
+          message: "이슈를 찾을 수 없습니다.",
+          data: null,
+        }),
+      );
+    }
+    return res(
+      ctx.status(200),
+      ctx.json({
+        code: 200,
+        status: "OK",
+        message: "OK",
+        data: issue,
+      }),
+    );
+  }),
+  rest.post("/api/issues", async (req, res, ctx) => {
+    const {
+      title,
+      content,
+      milestone: milestoneId,
+      labels: labelIds,
+      assignees: assigneeIds,
+    } = await req.json();
+
+    const newIssue: Issue = {
+      id: Date.now(),
+      title,
+      content,
+      status: "OPENED",
+      statusModifiedAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      modifiedAt: null,
+      reactions: [],
+      assignees: assigneeIds.map((id: number) => {
+        const assigneeData = assignees.data.assignees.find((a) => a.id === id)!;
+
+        return {
+          id: assigneeData.id,
+          name: assigneeData.loginId,
+          avatarUrl: assigneeData.avatarUrl,
+        };
+      }),
+      labels: labelIds.map((id: number) => {
+        const labelData = labels.data.labels.find((l) => l.id === id)!;
+
+        return {
+          id: labelData.id,
+          name: labelData.name,
+          color: labelData.color,
+          background: labelData.background,
+        };
+      }),
+      milestone:
+        milestones.data.milestones.find((m) => m.id === milestoneId) ?? null,
+      writer: {
+        id: 0,
+        name: "test123",
+        avatarUrl: "https://avatars.githubusercontent.com/u/41321198?v=4",
+      },
+      comments: [],
+    };
+
+    issues.push(newIssue);
+
+    return res(
+      ctx.status(201),
+      ctx.json({
+        code: 201,
+        status: "CREATED",
+        message: "이슈 등록에 성공했습니다.",
+        data: {
+          savedIssueId: newIssue.id,
+        },
+      }),
+    );
   }),
   rest.patch("/api/issues/:issueId/title", async (req, res, ctx) => {
     const { issueId } = req.params;
@@ -213,6 +297,125 @@ export const issueHandlers = [
       }),
     );
   }),
+];
+
+const issues: Issue[] = [
+  {
+    id: 2,
+    title: "제목1",
+    status: "OPENED",
+    statusModifiedAt: "2023-08-09T06:01:37",
+    createdAt: "2023-08-09T06:01:37",
+    modifiedAt: "2023-08-10T06:01:37",
+    content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas fringilla phasellus faucibus scelerisque eleifend donec. Ultricies mi quis hendrerit dolor magna eget. Purus ut faucibus pulvinar elementum integer. Suspendisse ultrices gravida dictum fusce ut placerat orci. Auctor elit sed vulputate mi sit. Egestas fringilla phasellus faucibus scelerisque eleifend donec. Egestas pretium aenean pharetra magna ac placerat vestibulum lectus. Nunc sed blandit libero volutpat. Elementum eu facilisis sed odio morbi quis commodo. Sed augue lacus viverra vitae congue eu consequat ac felis.
+
+      Eu volutpat odio facilisis mauris sit amet massa vitae. Ut eu sem integer vitae. Id leo in vitae turpis massa sed elementum tempus. Arcu non sodales neque sodales ut etiam. Arcu non odio euismod lacinia at quis risus sed. Eget mauris pharetra et ultrices neque ornare. Neque vitae tempus quam pellentesque nec nam. Nulla at volutpat diam ut venenatis tellus in metus. Faucibus in ornare quam viverra orci sagittis. Leo in vitae turpis massa sed elementum tempus. Augue mauris augue neque gravida in fermentum et sollicitudin ac. Lobortis elementum nibh tellus molestie nunc non blandit massa. Suspendisse in est ante in nibh mauris cursus. Sed lectus vestibulum mattis ullamcorper velit sed. Lectus proin nibh nisl condimentum id venenatis a condimentum vitae. At lectus urna duis convallis convallis tellus id. Scelerisque eleifend donec pretium vulputate. Est pellentesque elit ullamcorper dignissim cras tincidunt. Leo a diam sollicitudin tempor id eu nisl nunc mi.
+      
+      Magna sit amet purus gravida. Duis convallis convallis tellus id interdum velit laoreet id. Interdum consectetur libero id faucibus nisl tincidunt. Hac habitasse platea dictumst quisque sagittis purus sit amet. Tempus urna et pharetra pharetra massa. Egestas erat imperdiet sed euismod nisi porta lorem. Mauris pellentesque pulvinar pellentesque habitant morbi. Nibh ipsum consequat nisl vel pretium lectus quam. Purus sit amet luctus venenatis lectus magna fringilla urna porttitor. Vulputate sapien nec sagittis aliquam malesuada bibendum arcu. Imperdiet nulla malesuada pellentesque elit eget gravida cum sociis. Convallis posuere morbi leo urna molestie at elementum. Accumsan tortor posuere ac ut consequat semper viverra nam libero. Non tellus orci ac auctor augue mauris augue. Vulputate ut pharetra sit amet aliquam id. Id interdum velit laoreet id. Ut venenatis tellus in metus vulputate. Egestas sed tempus urna et pharetra pharetra massa massa ultricies. Tristique senectus et netus et malesuada fames ac turpis. A iaculis at erat pellentesque adipiscing commodo elit at.`,
+    reactions: [
+      {
+        unicode: "&#128077",
+        users: ["wis730", "wisdom"],
+        selectedUserReactionId: 1,
+      },
+      {
+        unicode: "&#128078",
+        users: [],
+        selectedUserReactionId: 0,
+      },
+    ],
+    assignees: [
+      {
+        id: 1,
+        name: "hong1234",
+        avatarUrl: null,
+      },
+    ],
+    labels: [
+      {
+        id: 2,
+        name: "documentation",
+        color: "LIGHT",
+        background: "#0025E6",
+      },
+    ],
+    milestone: {
+      id: 1,
+      name: "Sprint#1",
+      issues: {
+        openedIssueCount: 22,
+        closedIssueCount: 10,
+      },
+    },
+    writer: {
+      id: 1,
+      name: "hong1234",
+      avatarUrl:
+        "https://i.namu.wiki/i/2KCzxN-etRYFHRQVHH9-ROMgsOvyU3X4y7A2wuqNV5apHBn8APhnhPuapmrXewTuRcVtgos2UIAdHOCDkKVOFQ.webp",
+    },
+    comments: [
+      {
+        id: 3,
+        userId: "wis730",
+        avatarUrl:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3j1RUWi4sAJkgFEdEFjtgvTOnd9kIpNZMp-GFc8zi&s",
+        content: "이 댓글을 읽은 당신은 앞으로 모든 일이 신기하게 잘풀립니다!",
+        createdAt: "2023-08-09T15:21:09",
+        modifiedAt: "2023-08-09T20:21:09",
+        reactions: [
+          {
+            unicode: "&#128077",
+            users: [],
+            selected: null,
+          },
+          {
+            unicode: "&#128078",
+            users: ["wis730"],
+            selected: 3,
+          },
+        ],
+      },
+      {
+        id: 5,
+        userId: "hjsong123",
+        avatarUrl: "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
+        content: "웃어보세요! 오늘 하루가 달라질 거에요!",
+        createdAt: "2023-08-10T10:21:09",
+        modifiedAt: "2023-08-10T13:21:09",
+        reactions: [],
+      },
+    ],
+  },
+  {
+    id: 5,
+    title: "테스트",
+    status: "OPENED",
+    statusModifiedAt: "2023-08-09T06:01:37",
+    createdAt: "2023-08-09T06:01:37",
+    modifiedAt: "2023-08-10T06:01:37",
+    content: `테스트`,
+    reactions: [
+      {
+        unicode: "&#128077",
+        users: ["wis730", "wisdom"],
+        selectedUserReactionId: 1,
+      },
+      {
+        unicode: "&#128078",
+        users: [],
+        selectedUserReactionId: 0,
+      },
+    ],
+    assignees: [],
+    labels: [],
+    milestone: null,
+    writer: {
+      id: 2,
+      name: "lee1234",
+      avatarUrl: "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
+    },
+    comments: [],
+  },
 ];
 
 export const issue: {
