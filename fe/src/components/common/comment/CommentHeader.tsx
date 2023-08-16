@@ -3,26 +3,35 @@ import { InformationTag } from '../InformationTag';
 import { Button } from '../Button';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { ReactComponent as Smile } from '@assets/icons/smile.svg';
+import { ReactComponent as Trash } from '@assets/icons/trash.svg';
 
 type Props = {
+  commentId?: number;
   image?: string;
   loginId?: string;
   createdAt?: string;
   isAuthor?: boolean;
   onClickEdit?: () => void;
+  onClickDelete?: (id?: number) => void;
 };
 
 export const CommentHeader: React.FC<Props> = ({
+  commentId,
   image,
   loginId,
   createdAt,
   isAuthor,
   onClickEdit,
+  onClickDelete,
 }) => {
   return (
     <div css={commentHeaderStyle}>
       <div className="header-left">
-        <img className="user-image" src={image} alt="작성자이미지" />
+        <img
+          className="user-image"
+          src={image || 'basic-profile.jpeg'}
+          alt="작성자이미지"
+        />
         <span className="user-name">{loginId}</span>
         <span className="created-at">{createdAt}</span>
       </div>
@@ -48,6 +57,21 @@ export const CommentHeader: React.FC<Props> = ({
           <Smile className="button-icon" />
           반응
         </Button>
+        {isAuthor && (
+          <Button
+            className="header-right__button__delete"
+            onClick={() => {
+              if (onClickDelete) {
+                onClickDelete(commentId);
+              }
+            }}
+            typeVariant="ghost"
+            size="S"
+          >
+            <Trash className="button-icon" />
+            삭제
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -99,6 +123,15 @@ const commentHeaderStyle = (theme: Theme) => css`
 
       .button-icon {
         stroke: ${theme.neutral.text.default};
+      }
+
+      &__delete {
+        width: fit-content;
+        padding: 0;
+        color: ${theme.danger.text.default};
+        .button-icon {
+          stroke: ${theme.danger.text.default};
+        }
       }
     }
   }

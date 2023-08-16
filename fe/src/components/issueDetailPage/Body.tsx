@@ -5,7 +5,8 @@ import { IssueContainer } from './IssueContainer';
 
 type Props = {
   issueDetailPageData: IssueDetailPageData;
-  onAddComment: (comment: Comment) => void;
+  onAddComment: (comment: CommentType) => void;
+  onDeleteComment?: (id?: number) => void;
   selectionsOptions: SelectionState['detailPage'];
   selections: SelectionState['newIssuePage'];
   onChangeSelect?: (key: string) => void;
@@ -17,6 +18,7 @@ type Props = {
 export const Body: React.FC<Props> = ({
   issueDetailPageData,
   onAddComment,
+  onDeleteComment,
   selectionsOptions,
   selections,
   onChangeSelect,
@@ -40,6 +42,7 @@ export const Body: React.FC<Props> = ({
           author={issueDetailPageData.author}
           comments={issueDetailPageData.comments}
           onAddComment={onAddComment}
+          onDeleteComment={onDeleteComment}
         />
       </div>
       <SideBarRightPanel

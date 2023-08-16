@@ -1,5 +1,4 @@
 import { useTheme } from '@emotion/react';
-import { ReactComponent as UserImageSmall } from '@assets/icons/userImageSmall.svg';
 
 type SelectedAssigneesData = {
   id: number;
@@ -13,28 +12,26 @@ type Props = {
 
 export const ListAssignee: React.FC<Props> = ({ selectedAssigneesData }) => {
   const theme = useTheme() as any;
+  const basicImage = 'basic-profile.jpeg';
+
   return (
     <>
       {selectedAssigneesData.map((assignee) => (
         <div
           key={assignee.id}
           css={{
-            position: 'relative',
             display: 'flex',
+            alignItems: 'center',
             gap: '8px',
           }}
         >
-          <UserImageSmall fill={theme.neutral.surface.bold} />
           <img
             alt="userImage"
-            src={assignee.image}
+            src={assignee.image || basicImage}
             css={{
               width: '20px',
               height: '20px',
-              position: 'absolute',
               borderRadius: theme.radius.half,
-              top: 0,
-              left: 0,
             }}
           />
           <span

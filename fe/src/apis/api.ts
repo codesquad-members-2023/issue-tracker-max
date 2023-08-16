@@ -411,7 +411,7 @@ export const editComment = (id: number | undefined, contents: string) => {
   });
 };
 
-export const deleteComment = (id: string | number) => {
+export const deleteComment = (id?: string | number) => {
   const accessToken = getAccessToken();
 
   return fetchData(`/comments/${id}`, {

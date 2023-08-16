@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Body } from '@components/issueDetailPage/Body';
 import { PostInformation } from '@components/issueDetailPage/PostInformation';
 import {
+  deleteComment,
   editIssueAssignees,
   editIssueLabel,
   editIssueMilestone,
@@ -142,11 +143,19 @@ export const IssueDetailPage: React.FC = ({}) => {
   };
 
   const onAddComment = (comment: any) => {
-    console.log(comment);
-
     setIssueDetailPageData({
       ...issueDetailPageData,
       comments: [...issueDetailPageData.comments, comment],
+    });
+  };
+
+  const onDeleteComment = (id?: number) => {
+    deleteComment(id);
+    setIssueDetailPageData({
+      ...issueDetailPageData,
+      comments: issueDetailPageData.comments.filter(
+        (comment) => comment.id !== id,
+      ),
     });
   };
 
@@ -163,6 +172,7 @@ export const IssueDetailPage: React.FC = ({}) => {
       <Body
         issueDetailPageData={issueDetailPageData}
         onAddComment={onAddComment}
+        onDeleteComment={onDeleteComment}
         //
         selectionsOptions={selectionsOptions}
         selections={selectionsIds}

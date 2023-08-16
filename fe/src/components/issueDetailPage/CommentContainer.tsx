@@ -9,6 +9,7 @@ type Props = {
   author: User;
   comments: CommentType[]; // todo 타입
   onAddComment: (comment: CommentType) => void;
+  onDeleteComment?: (id?: number) => void;
 };
 
 export const CommentContainer: React.FC<Props> = ({
@@ -16,6 +17,7 @@ export const CommentContainer: React.FC<Props> = ({
   issueId,
   comments,
   onAddComment,
+  onDeleteComment,
 }: Props) => {
   return (
     <div css={commentContainerStyle}>
@@ -29,6 +31,7 @@ export const CommentContainer: React.FC<Props> = ({
             issueAuthor={author}
             createdAt={item.createdAt}
             defaultValue={item.contents}
+            onDeleteComment={onDeleteComment}
           />
         ))}
 

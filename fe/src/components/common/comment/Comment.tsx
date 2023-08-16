@@ -13,6 +13,7 @@ import { uploadFile } from 'apis/fileUpload';
 import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 import { editComment, patchIssueContents, postNewComment } from 'apis/api';
 import { getLocalStorageUserId } from 'apis/localStorage';
+
 // todo issueDetailPage에 들어가면 줄바꿈해서 작성한게 그대로 보여야하는데
 // 한줄로 보이는중
 
@@ -40,6 +41,7 @@ type Props = {
   isDisabled?: boolean;
   defaultValue: string;
   onAddComment?: (comment: CommentType) => void;
+  onDeleteComment?: (id?: number) => void;
 };
 
 export const Comment: React.FC<Props> = ({
@@ -51,6 +53,7 @@ export const Comment: React.FC<Props> = ({
   isDisabled = false,
   defaultValue,
   onAddComment,
+  onDeleteComment,
 }) => {
   const theme = useTheme() as any;
 
@@ -182,6 +185,7 @@ export const Comment: React.FC<Props> = ({
     storagedUserId === comment?.author?.userId ||
     storagedUserId === issueAuthor.userId;
 
+  const basicImage = '/basic-profile.jpeg';
   return (
     <>
       {typeVariant === 'add' && (
@@ -211,11 +215,13 @@ export const Comment: React.FC<Props> = ({
           <Box
             header={
               <CommentHeader
+                commentId={comment?.id}
                 onClickEdit={onClickEdit}
+                onClickDelete={onDeleteComment}
                 image={
                   typeVariant === 'issue'
-                    ? issueAuthor.image
-                    : comment?.author?.image
+                    ? issueAuthor.image || basicImage
+                    : comment?.author?.image || basicImage
                 }
                 loginId={
                   typeVariant === 'issue'
