@@ -110,7 +110,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public void updateBy(final Long milestoneId, final Milestone milestone) {
+	public Long updateBy(final Long milestoneId, final Milestone milestone) {
 		validateExistMilestone(milestoneId);
 
 		String sql = "UPDATE `milestone` " +
@@ -125,13 +125,14 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 		try {
 			template.update(sql, param);
+			return milestoneId;
 		} catch (DataIntegrityViolationException e) {
 			throw new DuplicateMilestoneException();
 		}
 	}
 
 	@Override
-	public void updateBy(final Long milestoneId, final MilestoneStatus status) {
+	public Long updateBy(final Long milestoneId, final MilestoneStatus status) {
 		validateExistMilestone(milestoneId);
 
 		String sql = "UPDATE `milestone` " +
@@ -143,16 +144,18 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 			.addValue("id", milestoneId);
 
 		template.update(sql, param);
+		return milestoneId;
 	}
 
 	@Override
-	public void deleteBy(final Long milestoneId) {
+	public Long deleteBy(final Long milestoneId) {
 		validateExistMilestone(milestoneId);
 
 		String sql = "DELETE FROM `milestone` "
 			+ "WHERE `id` = :id";
 
 		template.update(sql, Map.of("id", milestoneId));
+		return milestoneId;
 	}
 
 	@Override

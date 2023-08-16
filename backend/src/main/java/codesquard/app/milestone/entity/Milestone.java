@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public class Milestone {
 	private Long id; // 등록번호
+	private Long userId; // 유저 번호
 	private MilestoneStatus status; // OPEN, CLOSE
 	private LocalDateTime statusModifiedAt; // 상태(open/close) 변경 시간
 	private LocalDateTime createdAt; // 생성 시간
@@ -17,6 +18,13 @@ public class Milestone {
 		this.name = name;
 		this.description = description;
 		this.deadline = deadline;
+	}
+
+	public Milestone(final String name, final String description, final LocalDate deadline, final Long userId) {
+		this.name = name;
+		this.description = description;
+		this.deadline = deadline;
+		this.userId = userId;
 	}
 
 	public Milestone(final Long id, final LocalDateTime createdAt, final LocalDateTime modifiedAt,
@@ -60,5 +68,9 @@ public class Milestone {
 
 	public LocalDate getDeadline() {
 		return deadline;
+	}
+
+	public Long getUserId() {
+		return userId;
 	}
 }
