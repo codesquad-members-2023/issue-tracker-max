@@ -1,6 +1,7 @@
 package com.issuetracker.account.application;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,9 @@ import com.issuetracker.account.application.dto.AccountInformation;
 import com.issuetracker.account.application.dto.AccountInputData;
 import com.issuetracker.account.application.dto.JwtTokenInformation;
 import com.issuetracker.account.application.dto.LoginInputData;
+import com.issuetracker.account.application.dto.OauthAccountInputData;
 import com.issuetracker.account.application.dto.SignUpInputData;
+import com.issuetracker.account.domain.Account;
 import com.issuetracker.account.domain.AccountRepository;
 import com.issuetracker.account.domain.JwtRefreshToken;
 import com.issuetracker.account.infrastructure.JwtTokenGenerator;
@@ -29,17 +32,46 @@ public class AccountService {
 	private final JwtTokenGenerator jwtTokenGenerator;
 
 	@Transactional
+	public JwtTokenInformation proceedToOauthLogin(OauthAccountInputData oauthAccountInputData) {
+
+		Account account = accountRepository.findByEmail(oauthAccountInputData.getEmail());
+
+		// [1] 이메일이 존재하지 않는 경우
+		if (!account.verify()) {
+			// 회원 가입
+			Long memberId = signUp(SignUpInputData.from(account));
+			mappingGitMember(memberId, oauthAccountInputData.getOauthId());
+
+			// 토큰 발급
+			return issueJwtTokenByEmail(oauthAccountInputData.getEmail());
+		}
+
+		// [2] 이메일이 존재하는 경우 1 - 이미 OAuth로 연동된 경우
+		if (account.isOauthMember()) {
+			// 토큰 발급
+			return issueJwtTokenByMemberId(account.getId());
+		}
+
+		// [3] 이메일이 존재하는 경우 2 - OAuth 연동이 안된 경우
+		// 계정 통합
+		mappingGitMember(account.getId(), oauthAccountInputData.getOauthId());
+
+		// 토큰 발급
+		return issueJwtTokenByMemberId(account.getId());
+	}
+
+	@Transactional
 	public JwtTokenInformation issueJwtToken(LoginInputData loginInputData) {
 		return issueJwtToken(findForLogin(loginInputData).toAccountInputData());
 	}
 
 	@Transactional
-	public JwtTokenInformation issueJwtToken(String email) {
+	public JwtTokenInformation issueJwtTokenByEmail(String email) {
 		return issueJwtToken(findByEmail(email).toAccountInputData());
 	}
 
 	@Transactional
-	public JwtTokenInformation issueJwtToken(Long memberId) {
+	public JwtTokenInformation issueJwtTokenByMemberId(Long memberId) {
 		return issueJwtToken(findByMemberId(memberId).toAccountInputData());
 	}
 
@@ -50,7 +82,7 @@ public class AccountService {
 			"memberId", accountInputData.getId(),
 			"email", accountInputData.getEmail(),
 			"nickname", accountInputData.getNickname(),
-			"profileImageUri", accountInputData.getProfileImageUrl()
+			"profileImageUri", Optional.ofNullable(accountInputData.getProfileImageUrl()).orElse("")
 		);
 		JwtTokenInformation jwtTokenInformation = JwtTokenInformation.from(jwtTokenGenerator.createJwt(claims));
 		storeRefreshToken(
@@ -66,7 +98,7 @@ public class AccountService {
 	@Transactional
 	public JwtTokenInformation reissueJwtToken(String refreshToken) {
 		Long memberId = memoryJwtRepository.getMemberId(refreshToken);
-		return issueJwtToken(memberId);
+		return issueJwtTokenByMemberId(memberId);
 	}
 
 	private void storeRefreshToken(JwtRefreshToken jwtRefreshToken) {
@@ -93,6 +125,11 @@ public class AccountService {
 			throw new CustomHttpException(ErrorType.ACCOUNT_EMAIL_DUPLICATION);
 		}
 		return accountRepository.save(signUpInputData.toAccount());
+	}
+
+	@Transactional
+	public void mappingGitMember(Long memberId, Long oauthId) {
+		accountRepository.saveGitMember(memberId, oauthId);
 	}
 
 	public void logout(Long memberId) {

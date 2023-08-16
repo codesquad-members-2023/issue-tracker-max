@@ -5,12 +5,11 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class AccountInputData {
+public class OauthAccountInputData {
 
-	private Long id;
+	private Long oauthId;
 	private String email;
 	private String nickname;
-	private String profileImageUrl;
-	private Long oauthId;
+	private String profileUrl;
 
 }

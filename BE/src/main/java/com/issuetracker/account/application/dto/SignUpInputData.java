@@ -13,6 +13,7 @@ public class SignUpInputData {
 	private String password;
 	private String nickname;
 	private String profileImageUrl;
+	private Long oauthId;
 
 	public Account toAccount() {
 		return Account.builder()
@@ -20,6 +21,17 @@ public class SignUpInputData {
 			.password(password)
 			.nickname(nickname)
 			.profileImageUrl(profileImageUrl)
+			.oauthId(oauthId)
 			.build();
+	}
+
+	public static SignUpInputData from(Account account) {
+		return new SignUpInputData(
+			account.getEmail(),
+			account.getPassword(),
+			account.getNickname(),
+			account.getProfileImageUrl(),
+			account.getOauthId()
+		);
 	}
 }

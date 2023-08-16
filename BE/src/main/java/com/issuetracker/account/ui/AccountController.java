@@ -18,13 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.issuetracker.account.application.AccountService;
-import com.issuetracker.account.ui.dto.AccountResponse;
 import com.issuetracker.account.ui.dto.JwtTokenResponse;
 import com.issuetracker.account.ui.dto.LoginRequest;
 import com.issuetracker.account.ui.dto.OauthAccessTokenRequest;
 import com.issuetracker.account.ui.dto.OauthAccessTokenResponse;
 import com.issuetracker.account.ui.dto.OauthAccountInfoResponse;
-import com.issuetracker.account.ui.dto.OauthLoginResponse;
 import com.issuetracker.account.ui.dto.RefreshTokenRequest;
 import com.issuetracker.account.ui.dto.SignupRequest;
 
@@ -82,25 +80,14 @@ public class AccountController {
 	}
 
 	@GetMapping("/oauth/callback")
-	public ResponseEntity<OauthLoginResponse> getMemberInfo(@RequestParam String code) {
+	public ResponseEntity<JwtTokenResponse> getMemberInfo(@RequestParam String code) {
 		OauthAccessTokenResponse accessTokenResponse = getAccessToken(code);
 		OauthAccountInfoResponse accountInfoResponse = getAccountInfo(accessTokenResponse.getAccessToken());
 
-		AccountResponse accountResponse = AccountResponse.from(
-			accountService.findByEmail(accountInfoResponse.getEmail())
-		);
-
-		if (accountResponse.verify()) {
-			return ResponseEntity.ok(
-				new OauthLoginResponse(
-					true,
-					accountInfoResponse,
-					JwtTokenResponse.from(accountService.issueJwtToken(accountInfoResponse.getEmail()))));
-		}
-
 		return ResponseEntity.ok(
-			new OauthLoginResponse(false, accountInfoResponse, null)
-		);
+			JwtTokenResponse.from(
+				accountService.proceedToOauthLogin(
+					accountInfoResponse.toOauthAccountInputData())));
 	}
 
 	private OauthAccessTokenResponse getAccessToken(String code) {

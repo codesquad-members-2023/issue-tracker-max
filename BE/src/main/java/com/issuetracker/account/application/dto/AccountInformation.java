@@ -11,17 +11,17 @@ public class AccountInformation {
 
 	private Long id;
 	private String email;
-	private String password;
 	private String nickname;
 	private String profileImageUrl;
+	private Long oauthId;
 
 	public static AccountInformation from(Account account) {
 		return new AccountInformation(
 			account.getId(),
 			account.getEmail(),
-			account.getPassword(),
 			account.getNickname(),
-			account.getProfileImageUrl()
+			account.getProfileImageUrl(),
+			account.getOauthId()
 		);
 	}
 
@@ -30,7 +30,8 @@ public class AccountInformation {
 			id,
 			email,
 			nickname,
-			profileImageUrl
+			profileImageUrl,
+			oauthId
 		);
 	}
 

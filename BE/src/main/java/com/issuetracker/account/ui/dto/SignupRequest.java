@@ -27,13 +27,15 @@ public class SignupRequest {
 	private String nickname;
 
 	private String profileImageUrl;
+	private Long oauthId;
 
 	public SignUpInputData toSignUpInputData() {
 		return new SignUpInputData(
 			email,
 			password,
 			nickname,
-			profileImageUrl
+			profileImageUrl,
+			oauthId
 		);
 	}
 }

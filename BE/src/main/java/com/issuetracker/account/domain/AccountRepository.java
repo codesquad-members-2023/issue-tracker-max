@@ -8,8 +8,12 @@ public interface AccountRepository {
 
 	Account findByMemberId(Long memberId);
 
+	Account findByOauthId(Long oauthId);
+
 	Long save(Account account);
 
 	boolean existByEmail(String email);
+
+	void saveGitMember(Long memberId, Long oauthId);
 
 }

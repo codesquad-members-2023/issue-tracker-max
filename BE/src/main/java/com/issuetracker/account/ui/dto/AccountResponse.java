@@ -17,13 +17,15 @@ public class AccountResponse {
 	private String email;
 	private String nickname;
 	private String profileImageUrl;
+	private Long oauthId;
 
 	public static AccountResponse from(AccountInformation accountInformation) {
 		return new AccountResponse(
 			accountInformation.getId(),
 			accountInformation.getEmail(),
 			accountInformation.getNickname(),
-			accountInformation.getProfileImageUrl()
+			accountInformation.getProfileImageUrl(),
+			accountInformation.getOauthId()
 		);
 	}
 
@@ -32,11 +34,8 @@ public class AccountResponse {
 			id,
 			email,
 			nickname,
-			profileImageUrl
+			profileImageUrl,
+			oauthId
 		);
-	}
-
-	public boolean verify() {
-		return id != null;
 	}
 }
