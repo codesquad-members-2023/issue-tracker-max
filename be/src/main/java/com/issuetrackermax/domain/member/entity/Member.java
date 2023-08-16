@@ -1,5 +1,9 @@
 package com.issuetrackermax.domain.member.entity;
 
+import java.util.Random;
+
+import com.issuetrackermax.domain.member.ProfileImage;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class Member {
-	public static final String DEFAULT_IMAGE = "https://kiosk-coffee.s3.ap-northeast-2.amazonaws.com/cafe_latte1_110424_870.jpeg";
 	private Long id;
 	private String loginId;
 	private String password;
@@ -22,15 +25,20 @@ public class Member {
 		this.loginId = loginId;
 		this.password = password;
 		this.nickName = nickName;
-		setImage_url(imageUrl);
+		this.imageUrl = imageUrl;
 		this.loginType = loginType;
 	}
 
-	private void setImage_url(String image_url) {
-		if (image_url == null) {
-			this.imageUrl = DEFAULT_IMAGE;
-		} else {
-			this.imageUrl = image_url;
-		}
+	public Member(String loginId, String password, String nickName, LoginType loginType) {
+		this.loginId = loginId;
+		this.password = password;
+		this.nickName = nickName;
+		imageUrl = setImageUrl();
+		this.loginType = loginType;
+	}
+
+	private String setImageUrl() {
+		int randomNum = new Random().nextInt(5) + 1;
+		return ProfileImage.valueOf("DEFAULT_" + randomNum).getImageUrl();
 	}
 }

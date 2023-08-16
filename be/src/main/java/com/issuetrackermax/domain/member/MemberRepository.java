@@ -37,7 +37,8 @@ public class MemberRepository {
 	}
 
 	public Member findByMemberLoginId(String loginId) {
-		String sql = "SELECT id, password, nick_name, login_id, image_url ,login_type FROM member WHERE login_id = :loginId ";
+		String sql = "SELECT id, password, nick_name, login_id, image_url ,login_type"
+			+ "FROM member WHERE login_id = :loginId ";
 		return DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("loginId", loginId), MEMBER_ROW_MAPPER));
 	}
 
@@ -47,13 +48,15 @@ public class MemberRepository {
 	}
 
 	public Long save(Member member) {
-		String sql = "INSERT INTO member(nick_name, password, login_id, login_type) VALUES (:nickName,:password, :loginId, :loginType)";
+		String sql = "INSERT INTO member(nick_name, password, login_id, login_type, image_url)"
+			+ "VALUES (:nickName,:password, :loginId, :loginType, :imageUrl)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		SqlParameterSource parameters = new MapSqlParameterSource()
 			.addValue("nickName", member.getNickName(), Types.VARCHAR)
 			.addValue("password", member.getPassword(), Types.VARCHAR)
 			.addValue("loginId", member.getLoginId(), Types.VARCHAR)
-			.addValue("loginType", member.getLoginType().getName(), Types.VARCHAR);
+			.addValue("loginType", member.getLoginType().getName(), Types.VARCHAR)
+			.addValue("imageUrl", member.getImageUrl(), Types.VARCHAR);
 
 		jdbcTemplate.update(sql, parameters, keyHolder);
 		return Objects.requireNonNull(keyHolder.getKey()).longValue();
