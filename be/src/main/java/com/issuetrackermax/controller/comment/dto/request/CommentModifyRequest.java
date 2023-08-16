@@ -4,11 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class CommentRequest {
+public class CommentModifyRequest {
 	private final String content;
 
 	@Builder
-	public CommentRequest(String content) {
+	public CommentModifyRequest(String content) {
 		this.content = content;
 	}
 }

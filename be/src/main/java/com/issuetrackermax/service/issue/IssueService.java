@@ -55,7 +55,7 @@ public class IssueService {
 		applyLabels(issueId, request.toLabel());
 
 		if (request.getContent() != null) {
-			commentService.save(request.toCommentCreateRequest(issueId), writerId);
+			commentService.save(request.toCommentCreateRequest(), issueId, writerId);
 		}
 		return IssuePostResponse.from(issueId);
 	}

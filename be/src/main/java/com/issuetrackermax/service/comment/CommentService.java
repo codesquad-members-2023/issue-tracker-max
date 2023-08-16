@@ -18,7 +18,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.issuetrackermax.common.exception.ApiException;
 import com.issuetrackermax.common.exception.domain.S3Exception;
 import com.issuetrackermax.controller.comment.dto.request.CommentCreateRequest;
-import com.issuetrackermax.controller.comment.dto.request.CommentRequest;
+import com.issuetrackermax.controller.comment.dto.request.CommentModifyRequest;
 import com.issuetrackermax.controller.comment.dto.response.CommentResponse;
 import com.issuetrackermax.domain.comment.CommentRepository;
 import com.issuetrackermax.domain.comment.CommentValidator;
@@ -43,23 +43,23 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void modifyComment(CommentRequest commentRequest, Long commentId, Long memberId) {
+	public void modifyComment(CommentModifyRequest commentModifyRequest, Long commentId, Long memberId) {
 		memberValidator.existById(memberId);
 		commentValidator.checkWriter(commentId, memberId);
-		commentRepository.updateComment(Comment.from(commentRequest), commentId);
+		commentRepository.updateComment(Comment.from(commentModifyRequest), commentId);
 	}
 
 	@Transactional
-	public CommentResponse save(CommentCreateRequest commentCreateRequest, Long memberId) {
+	public CommentResponse save(CommentCreateRequest commentCreateRequest, Long issueId, Long memberId) {
 		memberValidator.existById(memberId);
-		Long commentId = commentRepository.save(Comment.from(commentCreateRequest, memberId));
+		Long commentId = commentRepository.save(Comment.from(commentCreateRequest, issueId, memberId));
 		return CommentResponse.from(commentRepository.findById(commentId));
 	}
 
 	@Transactional
-	public void delete(Long commentId, Long memeberId) {
-		memberValidator.existById(memeberId);
-		commentValidator.checkWriter(commentId, memeberId);
+	public void delete(Long commentId, Long memberId) {
+		memberValidator.existById(memberId);
+		commentValidator.checkWriter(commentId, memberId);
 		commentRepository.deleteById(commentId);
 	}
 
