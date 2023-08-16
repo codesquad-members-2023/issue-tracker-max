@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import { clearAuthInfo } from "../utils/localStorage";
+import { clearAuthInfo, getUserInfo } from "../utils/localStorage";
 import { Avatar } from "./Avatar";
 import { Button } from "./Button";
 import { Toggle } from "./ToggleButton";
@@ -8,6 +8,8 @@ import { Icon } from "./icon/Icon";
 
 export function Header({ changeThemeMode }: { changeThemeMode: () => void }) {
   const navigate = useNavigate();
+  const userInfo = getUserInfo();
+  console.log(userInfo);
 
   const logOut = () => {
     clearAuthInfo();
@@ -21,10 +23,7 @@ export function Header({ changeThemeMode }: { changeThemeMode: () => void }) {
       </Anchor>
       <HeaderRight>
         <Toggle onClick={changeThemeMode} />
-        <Avatar
-          size="L"
-          src="https://avatars.githubusercontent.com/u/41321198?v=4"
-        />
+        <Avatar size="L" src={userInfo.avatarUrl} />
         <Button size="S" buttonType="Ghost" onClick={logOut}>
           로그아웃
         </Button>

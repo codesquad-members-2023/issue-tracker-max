@@ -252,6 +252,18 @@ export const handlers = [
 
     return res(ctx.status(200), ctx.json(issues));
   }),
+  rest.post("/login/oauth/github", (_, res, ctx) => {
+    const response = {
+      code: 200,
+      status: "OK",
+      message: "로그인에 성공하였습니다.",
+      data: {
+        ...users[1],
+      },
+    };
+
+    return res(ctx.status(200), ctx.json(response));
+  }),
   ...issueHandlers,
   ...commentHandlers,
   ...assigneeHandlers,
@@ -479,6 +491,20 @@ const users: UsersData = [
     jwt: {
       accessToken: "test123AccessToken",
       refreshToken: "test123RefreshToken",
+    },
+  },
+  {
+    user: {
+      id: 0,
+      loginId: "test1234",
+      password: "12341234",
+      passwordConfirm: "12341234",
+      email: "test1234@test.com",
+      avatarUrl: "https://avatars.githubusercontent.com/u/105152276?v=4",
+    },
+    jwt: {
+      accessToken: "test1234AccessToken",
+      refreshToken: "test1234RefreshToken",
     },
   },
 ];
