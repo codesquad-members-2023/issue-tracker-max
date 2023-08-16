@@ -4,6 +4,7 @@ import { Avatar } from "../../components/Avatar";
 import { TextArea } from "../../components/TextArea";
 import { TextInput } from "../../components/TextInput";
 import { Sidebar, SidebarProps } from "../../components/sidebar/Sidebar";
+import { getUserInfo } from "../../utils/localStorage";
 
 type NewIssueBodyProps = {
   title: string;
@@ -36,7 +37,7 @@ export function NewIssueBody({
     <Div>
       <Avatar
         size="L"
-        src="https://avatars.githubusercontent.com/u/41321198?v=4"
+        src={getUserInfo().avatarUrl}
       />
       <NewIssueContent>
         <TextInput

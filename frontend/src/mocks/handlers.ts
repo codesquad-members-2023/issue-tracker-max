@@ -264,6 +264,35 @@ export const handlers = [
 
     return res(ctx.status(200), ctx.json(response));
   }),
+  rest.post("/api/images", (req, res, ctx) => {
+    const authorizationToken = req.headers.get("authorization")!.split(" ")[1];
+
+    const user = users.find(
+      ({ jwt }) => jwt.accessToken === authorizationToken,
+    );
+
+    if (!user) {
+      const unauthorizedError = {
+        code: 401,
+        status: "UNAUTHORIZED",
+        message: "인증에 실패하였습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(401), ctx.json(unauthorizedError));
+    }
+
+    const response = {
+      code: 201,
+      status: "OK",
+      message: "이미지 저장에 성공하였습니다.",
+      data: {
+        url: "https://storage.enuri.info/pic_upload/knowbox/mobile_img/202101/2021011317170539419.gif"
+      }
+    }
+
+    return res(ctx.status(201), ctx.json(response));
+  }),
   ...issueHandlers,
   ...commentHandlers,
   ...assigneeHandlers,

@@ -6,9 +6,12 @@ import {
   useRef,
   useState,
 } from "react";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { keyframes, styled } from "styled-components";
 import { Button } from "./Button";
 import { Icon } from "./icon/Icon";
+import { getAccessToken } from "../utils/localStorage";
+import remarkGfm from "remark-gfm";
 
 type TextAreaProps = {
   value?: string;
@@ -24,7 +27,7 @@ type TextAreaProps = {
 type TextAreaState = "Active" | "Enabled" | "Disabled";
 
 export function TextArea({
-  value = "",
+  value = ``,
   label,
   width,
   height,
@@ -157,15 +160,19 @@ export function TextArea({
 
     try {
       const response = await fetch(
-        "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/images",
+        "/api/images",
         {
           method: "POST",
+          headers: {
+            "Authorization": `Bearer ${getAccessToken()}`,
+            "credentials": "include",
+          },
           body: formData,
         },
       );
-      const data = await response.text();
+      const data = await response.json();
 
-      return data;
+      return data.data.url;
     } catch (error) {
       setUploadErrorMessage("이미지 업로드에 실패했습니다.");
       throw new Error("이미지 업로드에 실패했습니다.");
@@ -183,7 +190,9 @@ export function TextArea({
       >
         {children && <Header>{children}</Header>}
         {children && state !== "Active" ? (
-          <TextViewer>{value}</TextViewer>
+          <TextViewer>
+            <ReactMarkdown children={value} remarkPlugins={[remarkGfm]}/>
+          </TextViewer>
         ) : (
           <>
             <InputContainer>
@@ -271,12 +280,8 @@ const Header = styled.div`
 `;
 
 const TextViewer = styled.div`
-  max-height: 200px;
-  overflow-y: auto;
   align-self: stretch;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  overflow: auto;
   padding: 16px 24px 24px 24px;
   border-radius: ${({ theme }) =>
     `0px 0px ${theme.radius.large} ${theme.radius.large}`};
