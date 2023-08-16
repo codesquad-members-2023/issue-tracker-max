@@ -75,9 +75,22 @@ public class IssueQueryService {
 		}
 	}
 
+	public void validateExistIssues(List<Long> issues) {
+		if (issueMapper.isNotExist(issues)) {
+			throw new NoSuchIssueException();
+		}
+	}
+
 	public void validateIssueAuthor(Long issueId, Long userId) {
 		validateExistIssue(issueId);
 		if (!issueRepository.isSameIssueAuthor(issueId, userId)) {
+			throw new RestApiException(IssueErrorCode.FORBIDDEN_ISSUE);
+		}
+	}
+
+	public void validateIssuesAuthor(List<Long> issues, Long userId) {
+		validateExistIssues(issues);
+		if (issues.size() > issueMapper.countIssueSameAuthor(issues, userId)) {
 			throw new RestApiException(IssueErrorCode.FORBIDDEN_ISSUE);
 		}
 	}

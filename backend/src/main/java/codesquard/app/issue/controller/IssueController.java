@@ -21,11 +21,12 @@ import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
 import codesquard.app.issue.dto.request.IssueModifyMilestoneRequest;
-import codesquard.app.issue.dto.request.IssueModifyStatusRequest;
+import codesquard.app.issue.dto.request.IssueModifyStatusesRequest;
 import codesquard.app.issue.dto.request.IssueModifyTitleRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.dto.response.IssueDeleteResponse;
 import codesquard.app.issue.dto.response.IssueModifyResponse;
+import codesquard.app.issue.dto.response.IssueModifyStatusesResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueSaveResponse;
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
@@ -65,12 +66,11 @@ public class IssueController {
 			IssueSaveResponse.success(issueId));
 	}
 
-	@PatchMapping("/{issueId}/status")
-	public ApiResponse<IssueModifyResponse> modifyStatus(
-		@RequestBody IssueModifyStatusRequest issueModifyStatusRequest, @PathVariable Long issueId,
-		@Login AuthenticateUser user) {
-		issueService.modifyStatus(issueModifyStatusRequest, issueId, user.toEntity().getId());
-		return ApiResponse.ok(IssueModifyResponse.success(issueId));
+	@PatchMapping("/status")
+	public ApiResponse<IssueModifyStatusesResponse> modifyStatuses(
+		@RequestBody IssueModifyStatusesRequest issueModifyStatusesRequest, @Login AuthenticateUser user) {
+		issueService.modifyStatuses(issueModifyStatusesRequest, user.toEntity().getId());
+		return ApiResponse.ok(IssueModifyStatusesResponse.success(issueModifyStatusesRequest.getIssues()));
 	}
 
 	@PatchMapping("/{issueId}/title")

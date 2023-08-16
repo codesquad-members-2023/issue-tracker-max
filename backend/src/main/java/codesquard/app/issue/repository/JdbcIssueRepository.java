@@ -132,12 +132,6 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public void modifyStatus(String status, Long issueId, LocalDateTime now) {
-		String sql = "UPDATE issue SET status = :status, status_modified_at = :now WHERE id = :id";
-		template.update(sql, Map.of("status", status, "id", issueId, "now", now));
-	}
-
-	@Override
 	public void modifyTitle(String title, Long issueId, LocalDateTime now) {
 		String sql = "UPDATE issue SET title = :title, modified_at = :now WHERE id = :id";
 		template.update(sql, Map.of("title", title, "id", issueId, "now", now));
@@ -213,6 +207,25 @@ public class JdbcIssueRepository implements IssueRepository {
 		String sql = "SELECT EXISTS (SELECT 1 FROM issue WHERE id = :id AND user_id = :userId AND is_deleted = false)";
 		return Boolean.TRUE.equals(
 			template.queryForObject(sql, Map.of("id", issueId, "userId", userId), Boolean.class));
+	}
+
+	@Override
+	public void modifyStatuses(String status, List<Long> issues, LocalDateTime now) {
+		String sql = "UPDATE issue SET status = :status, status_modified_at = :now WHERE id = :id";
+		template.batchUpdate(sql, generateStatusesParameters(status, issues, now));
+	}
+
+	private SqlParameterSource[] generateStatusesParameters(String status, List<Long> issues, LocalDateTime now) {
+		return issues.stream()
+			.map(id -> generateStatusesParameter(status, id, now))
+			.toArray(SqlParameterSource[]::new);
+	}
+
+	private SqlParameterSource generateStatusesParameter(String status, Long id, LocalDateTime now) {
+		return new MapSqlParameterSource()
+			.addValue("status", status)
+			.addValue("id", id)
+			.addValue("now", now);
 	}
 
 	private RowMapper<IssueCommentsResponse> issueCommentsResponseRowMapper(Long userId) {

@@ -193,4 +193,18 @@
         FROM milestone
     </select>
 
+    <select id="countIssueSameAuthor" parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(id) FROM issue WHERE user_id = #{user_id} AND is_deleted = false AND id IN
+        <foreach item="item" collection="id" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="isNotExist" parameterType="java.util.List" resultType="boolean">
+        SELECT false IN
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            (SELECT EXISTS (SELECT 1 FROM issue WHERE id = #{item} AND is_deleted = false))
+        </foreach>
+    </select>
+
 </mapper>

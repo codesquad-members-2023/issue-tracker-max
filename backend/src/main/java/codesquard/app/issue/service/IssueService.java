@@ -10,7 +10,7 @@ import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
 import codesquard.app.issue.dto.request.IssueModifyMilestoneRequest;
-import codesquard.app.issue.dto.request.IssueModifyStatusRequest;
+import codesquard.app.issue.dto.request.IssueModifyStatusesRequest;
 import codesquard.app.issue.dto.request.IssueModifyTitleRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.entity.IssueStatus;
@@ -31,12 +31,6 @@ public class IssueService {
 		issueRepository.saveIssueLabel(id, issueSaveRequest.getLabels());
 		issueRepository.saveIssueAssignee(id, issueSaveRequest.getAssignees());
 		return id;
-	}
-
-	public void modifyStatus(IssueModifyStatusRequest issueModifyStatusRequest, Long issueId, Long userId) {
-		IssueStatus issueStatus = IssueStatus.validateIssueStatus(issueModifyStatusRequest.getStatus());
-		issueQueryService.validateIssueAuthor(issueId, userId);
-		issueRepository.modifyStatus(issueStatus.name(), issueId, LocalDateTime.now());
 	}
 
 	public void modifyTitle(IssueModifyTitleRequest issueModifyTitleRequest, Long issueId, Long userId) {
@@ -70,5 +64,11 @@ public class IssueService {
 		issueQueryService.validateIssueAuthor(issueId, userId);
 		issueRepository.deleteBy(issueId);
 		commentRepository.deleteByIssueId(issueId);
+	}
+
+	public void modifyStatuses(IssueModifyStatusesRequest issueModifyStatusesRequest, Long userId) {
+		IssueStatus issueStatus = IssueStatus.validateIssueStatus(issueModifyStatusesRequest.getStatus());
+		issueQueryService.validateIssuesAuthor(issueModifyStatusesRequest.getIssues(), userId);
+		issueRepository.modifyStatuses(issueStatus.name(), issueModifyStatusesRequest.getIssues(), LocalDateTime.now());
 	}
 }
