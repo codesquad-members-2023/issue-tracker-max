@@ -24,4 +24,15 @@ public class CommentResponse {
 			.author(UserResponse.from(comment.getAuthor()))
 			.build();
 	}
+
+	private CommentResponse(Long id, String contents, LocalDateTime createdAt, UserResponse author) {
+		this.id = id;
+		this.contents = contents;
+		this.createdAt = createdAt;
+		this.author = author;
+	}
+
+	public static CommentResponse of(Long id, String contents, LocalDateTime createdAt, UserResponse author) {
+		return new CommentResponse(id, contents, createdAt, author);
+	}
 }
