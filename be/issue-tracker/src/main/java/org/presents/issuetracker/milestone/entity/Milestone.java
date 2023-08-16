@@ -31,7 +31,18 @@ public class Milestone {
 		this.description = description;
 	}
 
-	public static Milestone create(String name, LocalDateTime deadline, String description) {
+	private Milestone(Long id, String name, LocalDateTime deadline, String description) {
+		this.id = id;
+		this.name = name;
+		this.deadline = deadline;
+		this.description = description;
+	}
+
+	public static Milestone of(String name, LocalDateTime deadline, String description) {
 		return new Milestone(name, deadline, description);
+	}
+
+	public static Milestone of(Long id, String name, LocalDateTime deadline, String description) {
+		return new Milestone(id, name, deadline, description);
 	}
 }

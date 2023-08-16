@@ -33,4 +33,10 @@ public class MilestoneController {
 		IdResponseDto idResponseDto = milestoneService.create(milestoneRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(idResponseDto);
 	}
+
+	@PatchMapping
+	public ResponseEntity<IdResponseDto> update(@RequestBody @Valid MilestoneRequest milestoneRequest) {
+		IdResponseDto idResponseDto = milestoneService.update(milestoneRequest);
+		return ResponseEntity.status(HttpStatus.OK).body(idResponseDto);
+	}
 }

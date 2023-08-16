@@ -54,6 +54,21 @@ public class MilestoneRepository {
 			.orElse(null);
 	}
 
+	public Milestone findById(Long milestoneId) {
+		final String sql = "SELECT milestone_id, name, deadline, description FROM milestone WHERE milestone_id = :id";
+
+		MapSqlParameterSource params = new MapSqlParameterSource("id", milestoneId);
+
+		RowMapper<Milestone> mapper = (rs, rowNum) -> Milestone.of(
+				rs.getLong("milestone_id"),
+				rs.getString("name"),
+				rs.getTimestamp("deadLine").toLocalDateTime(),
+				rs.getString("description")
+		);
+
+		return jdbcTemplate.queryForObject(sql, params, mapper);
+	}
+
 	public List<MilestonePreview> findPreviews() {
 		final String sql = "SELECT milestone_id, name, "
 			+ "(SELECT IFNULL(FLOOR(COUNT(CASE WHEN status = 'closed' THEN 1 END) / COUNT(*) * 100), 0) "
@@ -77,5 +92,21 @@ public class MilestoneRepository {
 		jdbcTemplate.update(sql, params, keyHolder);
 
 		return keyHolder.getKey().longValue();
+	}
+
+	public void update(Milestone milestone) {
+		final String sql = "UPDATE milestone " +
+				"SET name = :name, " +
+				"deadline = :deadline, " +
+				"description = :description " +
+				"WHERE milestone_id = :id";
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("name", milestone.getName())
+				.addValue("deadline", milestone.getDeadline())
+				.addValue("description", milestone.getDescription())
+				.addValue("id", milestone.getId());
+
+		jdbcTemplate.update(sql, params);
 	}
 }

@@ -1,6 +1,8 @@
 package org.presents.issuetracker.milestone.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
@@ -24,7 +26,7 @@ public class MilestoneService {
     }
 
     public IdResponseDto create(MilestoneRequest milestoneRequest) {
-        Milestone milestone = Milestone.create(
+        Milestone milestone = Milestone.of(
                 milestoneRequest.getName(),
                 milestoneRequest.getDeadline(),
                 milestoneRequest.getDescription());
@@ -32,5 +34,28 @@ public class MilestoneService {
         Long id = milestoneRepository.save(milestone);
 
         return IdResponseDto.builder().id(id).build();
+    }
+
+    public IdResponseDto update(MilestoneRequest milestoneRequest) {
+        Long id = milestoneRequest.getId();
+        Milestone milestone = milestoneRepository.findById(id);
+
+        String name = Optional.ofNullable(milestoneRequest.getName())
+                .filter(newName -> !newName.equals(milestone.getName()))
+                .orElse(milestone.getName());
+
+        LocalDateTime deadline = Optional.ofNullable(milestoneRequest.getDeadline())
+                .filter(newDescription -> !newDescription.equals(milestone.getDeadline()))
+                .orElse(milestone.getDeadline());
+
+        String description = Optional.ofNullable(milestoneRequest.getDescription())
+                .filter(newBackgroundColor -> !newBackgroundColor.equals(milestone.getDescription()))
+                .orElse(milestone.getDescription());
+
+        Milestone updatedMilestone = Milestone.of(milestone.getId(), name, deadline, description);
+
+        milestoneRepository.update(updatedMilestone);
+
+        return IdResponseDto.builder().id(updatedMilestone.getId()).build();
     }
 }
