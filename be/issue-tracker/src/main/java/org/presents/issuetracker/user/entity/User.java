@@ -20,5 +20,14 @@ public class User {
 		this.password = password;
 		this.image = image;
 	}
-}
 
+	private User(Long userId, String loginId, String image) {
+		this.userId = userId;
+		this.loginId = loginId;
+		this.image = image;
+	}
+
+	public static User of(Long userId, String loginId, String image) {
+		return new User(userId, loginId, image);
+	}
+}
