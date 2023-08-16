@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum OauthErrorCode implements StatusCode {
 	// 500
-	LOGIN_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "github 로그인 실패");
+	GITHUB_ACCESS_DENIED(HttpStatus.INTERNAL_SERVER_ERROR, "github 접근 실패");
 
 	private final HttpStatus httpStatus;
 	private final String message;
