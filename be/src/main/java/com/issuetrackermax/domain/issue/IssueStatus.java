@@ -10,5 +10,4 @@ public enum IssueStatus {
 	IssueStatus(String status) {
 		this.status = status;
 	}
-
 }
