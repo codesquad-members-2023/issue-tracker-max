@@ -93,21 +93,19 @@ export function IssueDetail() {
   });
 
   const fetchIssue = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/issues/${issueId}`, {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
-          "credentials": "include",
-        },
-      });
-      const result = await response.json();
+    const response = await fetch(`/api/issues/${issueId}`, {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "credentials": "include",
+      },
+    });
+    const result = await response.json();
 
-      if (result.code === 404) {
-        throw new Error(result.message);
-      }
-
+    if (result.code === 200) {
       setIssue(result.data);
-    } catch (error) {
+      return;
+    }
+    if (result.code === 404) {
       navigatte("/404", { replace: true });
     }
   }, [issueId, navigatte]);
