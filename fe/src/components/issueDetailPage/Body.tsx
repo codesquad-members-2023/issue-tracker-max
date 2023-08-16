@@ -36,11 +36,12 @@ export const Body: React.FC<Props> = ({
           createdAt={issueDetailPageData.createdAt}
         />
         <CommentContainer
-          issueId={issueDetailPageData.id}
-          contents={issueDetailPageData.contents}
-          createdAt={issueDetailPageData.createdAt}
-          author={issueDetailPageData.author}
-          comments={issueDetailPageData.comments}
+          issueDetailPageData={issueDetailPageData}
+          // issueId={issueDetailPageData.id}
+          // contents={issueDetailPageData.contents}
+          // createdAt={issueDetailPageData.createdAt}
+          // author={issueDetailPageData.author}
+          // comments={issueDetailPageData.comments}
           onAddComment={onAddComment}
           onDeleteComment={onDeleteComment}
         />

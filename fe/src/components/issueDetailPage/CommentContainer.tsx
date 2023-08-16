@@ -3,32 +3,34 @@ import { Comment } from '@components/common/comment/Comment';
 import { AddNewComment } from './AddNewComment';
 
 type Props = {
-  issueId: number;
-  contents: string;
-  createdAt: string;
-  author: User;
-  comments: CommentType[]; // todo 타입
+  issueDetailPageData: IssueDetailPageData;
+  // issueId: number;
+  // contents: string;
+  // createdAt: string;
+  // author: User;
+  // comments: CommentType[]; // todo 타입
   onAddComment: (comment: CommentType) => void;
   onDeleteComment?: (id?: number) => void;
 };
 
 export const CommentContainer: React.FC<Props> = ({
-  author,
-  issueId,
-  comments,
+  issueDetailPageData,
+  // author,
+  // issueId,
+  // comments,
   onAddComment,
   onDeleteComment,
 }: Props) => {
   return (
     <div css={commentContainerStyle}>
-      {comments &&
-        comments.map((item) => (
+      {issueDetailPageData.comments &&
+        issueDetailPageData.comments.map((item) => (
           <Comment
             typeVariant="default"
             key={item.id}
             comment={item}
-            issueId={issueId}
-            issueAuthor={author}
+            issueId={issueDetailPageData.id}
+            issueAuthor={issueDetailPageData.author}
             createdAt={item.createdAt}
             defaultValue={item.contents}
             onDeleteComment={onDeleteComment}
@@ -36,8 +38,8 @@ export const CommentContainer: React.FC<Props> = ({
         ))}
 
       <AddNewComment
-        issueId={issueId}
-        issueAuthor={author}
+        issueId={issueDetailPageData.id}
+        issueAuthor={issueDetailPageData.author}
         onAddComment={onAddComment}
       />
     </div>
