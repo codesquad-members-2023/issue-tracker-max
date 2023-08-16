@@ -23,14 +23,14 @@ public class MilestoneUpdateRequest {
 	private MilestoneUpdateRequest() {
 	}
 
-	private MilestoneUpdateRequest(final String name, final LocalDate deadline, final String description) {
+	public MilestoneUpdateRequest(final String name, final LocalDate deadline, final String description) {
 		this.name = name;
 		this.deadline = deadline;
 		this.description = description;
 	}
 
-	public static Milestone toEntity(final MilestoneUpdateRequest milestoneUpdateRequest) {
+	public static Milestone toEntity(final MilestoneUpdateRequest milestoneUpdateRequest, final Long userId) {
 		return new Milestone(milestoneUpdateRequest.name, milestoneUpdateRequest.description,
-			milestoneUpdateRequest.deadline);
+			milestoneUpdateRequest.deadline, userId);
 	}
 }

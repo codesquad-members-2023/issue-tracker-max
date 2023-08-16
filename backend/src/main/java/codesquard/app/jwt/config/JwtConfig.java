@@ -5,6 +5,7 @@ import javax.servlet.Filter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,9 +39,10 @@ public class JwtConfig {
 	}
 
 	@Bean
-	public FilterRegistrationBean jwtAuthorizationFilter(JwtProvider provider, ObjectMapper objectMapper) {
+	public FilterRegistrationBean jwtAuthorizationFilter(JwtProvider provider, ObjectMapper objectMapper,
+		RedisTemplate<String, Object> redisTemplate) {
 		FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
-		filterFilterRegistrationBean.setFilter(new JwtAuthorizationFilter(provider, objectMapper));
+		filterFilterRegistrationBean.setFilter(new JwtAuthorizationFilter(provider, objectMapper, redisTemplate));
 		filterFilterRegistrationBean.addUrlPatterns("/api/*");
 		return filterFilterRegistrationBean;
 	}

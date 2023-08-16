@@ -54,8 +54,6 @@ public class User {
 	}
 
 	public User update(User changeUser) {
-		this.email = changeUser.email;
-		this.avatarUrl = changeUser.avatarUrl;
-		return this;
+		return new User(id, loginId, changeUser.email, password, changeUser.avatarUrl);
 	}
 }
