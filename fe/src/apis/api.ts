@@ -11,7 +11,6 @@ export const fetchData = async (path: string, options?: RequestInit) => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  // JSON 형식의 본문이 함께 오는 경우에만 해당 본문을 파싱하여 반환
   if (response.headers.get('content-type') === 'application/json') {
     const data = await response.json();
 
@@ -37,9 +36,7 @@ export const postNewIssue = (
   labelIds: number[],
   milestoneId: number,
 ) => {
-  const accessToken = getAccessToken();
-
-  return fetchData('issues/new', {
+  return fetchData('/issues/new', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -57,9 +54,7 @@ export const postNewIssue = (
 };
 
 export const patchIssueTitle = (id: number, title: string) => {
-  const accessToken = getAccessToken();
-
-  return fetchData('issues/title', {
+  return fetchData('/issues/title', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -73,9 +68,7 @@ export const patchIssueTitle = (id: number, title: string) => {
 };
 
 export const patchIssueContents = (id: number, contents: string) => {
-  const accessToken = getAccessToken();
-
-  return fetchData('issues/contents', {
+  return fetchData('/issues/contents', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -88,10 +81,8 @@ export const patchIssueContents = (id: number, contents: string) => {
   });
 };
 
-export const editIssueLabel = (id: number, labelIds: number[]) => {
-  const accessToken = getAccessToken();
-
-  return fetchData(`issues/${id}/labels`, {
+export const editIssueLabel = (id: string, labelIds: number[]) => {
+  return fetchData(`/issues/${id}/labels`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -103,10 +94,8 @@ export const editIssueLabel = (id: number, labelIds: number[]) => {
   });
 };
 
-export const editIssueMilestone = (id: number, milestoneId: number) => {
-  const accessToken = getAccessToken();
-
-  return fetchData(`milestones/${id}/milestone`, {
+export const editIssueMilestone = (id: string, milestoneId: number | null) => {
+  return fetchData(`/issues/${id}/milestone`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -118,10 +107,8 @@ export const editIssueMilestone = (id: number, milestoneId: number) => {
   });
 };
 
-export const editIssueAssignees = (id: number, assigneeIds: number[]) => {
-  const accessToken = getAccessToken();
-
-  return fetchData(`issues/${id}/assignees`, {
+export const editIssueAssignees = (id: string, assigneeIds: number[]) => {
+  return fetchData(`/issues/${id}/assignees`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -137,9 +124,7 @@ export const editIssueStatus = (
   issueIds: number[],
   status: 'open' | 'closed',
 ) => {
-  const accessToken = getAccessToken();
-
-  return fetchData('issues/status', {
+  return fetchData('/issues/status', {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -163,9 +148,7 @@ export const getIssueDetail = (id: string | number) => {
 };
 
 export const deleteIssue = (id: number) => {
-  const accessToken = getAccessToken();
-
-  return fetchData(`issues/delete/${id}`, {
+  return fetchData(`/issues/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -289,9 +272,6 @@ export const deleteLabel = (id: string | number) => {
 
   return fetchData(`/labels/${id}`, {
     method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
   });
 };
 
@@ -354,10 +334,6 @@ export const deleteMilestone = (id: string | number) => {
 
   return fetchData(`/milestones/${id}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    },
   });
 };
 
@@ -398,9 +374,7 @@ export const postNewComment = (
   });
 };
 
-export const editComment = (id: number, contents: string) => {
-  const accessToken = getAccessToken();
-
+export const editComment = (id: number | undefined, contents: string) => {
   return fetchData(`/comments`, {
     method: 'PUT',
     headers: {
@@ -419,9 +393,5 @@ export const deleteComment = (id: string | number) => {
 
   return fetchData(`/comments/${id}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    },
   });
 };
