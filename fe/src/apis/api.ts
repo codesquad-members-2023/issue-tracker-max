@@ -1,3 +1,5 @@
+import { getAccessToken } from './localStorage';
+
 const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
 export const fetchData = async (path: string, options?: RequestInit) => {
@@ -31,6 +33,7 @@ export const postNewIssue = (
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       title,
@@ -48,6 +51,7 @@ export const patchIssueTitle = (id: number, title: string) => {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       id,
@@ -61,6 +65,7 @@ export const patchIssueContents = (id: number, contents: string) => {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       id,
@@ -74,6 +79,7 @@ export const editIssueLabel = (id: number, labelIds: number[]) => {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       labelIds,
@@ -86,6 +92,7 @@ export const editIssueMilestone = (id: number, milestoneId: number) => {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       milestoneId,
@@ -98,6 +105,7 @@ export const editIssueAssignees = (id: number, assigneeIds: number[]) => {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       assigneeIds,
@@ -113,6 +121,7 @@ export const editIssueStatus = (
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       issueIds,
@@ -128,6 +137,9 @@ export const getIssueDetail = (id: string | number) => {
 export const deleteIssue = (id: number) => {
   return fetchData(`issues/delete/${id}`, {
     method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
   });
 };
 
@@ -177,6 +189,7 @@ export const postNewLabel = (
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       name,
@@ -198,6 +211,7 @@ export const editLabel = (
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       id,
@@ -212,6 +226,9 @@ export const editLabel = (
 export const deleteLabel = (id: string | number) => {
   return fetchData(`/labels/${id}`, {
     method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
   });
 };
 
@@ -228,6 +245,7 @@ export const postNewMilestone = (
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       name,
@@ -247,6 +265,7 @@ export const editMilestone = (
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       id,
@@ -262,6 +281,7 @@ export const deleteMilestone = (id: string | number) => {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
   });
 };
@@ -271,6 +291,7 @@ export const editMilestoneStatus = (id: number, status: 'open' | 'closed') => {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       id,
@@ -288,6 +309,7 @@ export const postNewComment = (
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       issueId,
@@ -302,6 +324,7 @@ export const editComment = (id: number, contents: string) => {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({
       id,
@@ -315,6 +338,7 @@ export const deleteComment = (id: string | number) => {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
     },
   });
 };

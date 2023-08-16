@@ -21,16 +21,16 @@ export const getLocalStorageLoginId = () => {
 };
 
 export const getAccessToken = () => {
-  const id = getLocalStorage('accessToken');
+  const token = getLocalStorage('accessToken');
 
-  if (!id) {
-    // throw new Error('사용자의 로컬스토리지에 loginId 가 없습니다.');
+  if (!token) {
+    // throw new Error('사용자의 로컬스토리지에 token이 없습니다.');
     console.log('accessToken이 로컬스토리지에 없습니다.');
 
     return '';
   }
 
-  return id;
+  return token;
 };
 
 export const setLocalStorageUserId = (value: string) => {
