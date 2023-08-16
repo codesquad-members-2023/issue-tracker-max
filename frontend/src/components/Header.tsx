@@ -23,7 +23,7 @@ export function Header({ changeThemeMode }: { changeThemeMode: () => void }) {
       </Anchor>
       <HeaderRight>
         <Toggle onClick={changeThemeMode} />
-        <Avatar size="L" src={userInfo.avatarUrl} />
+        <Avatar size="L" src={userInfo.avatarUrl} userId={userInfo.loginId} />
         <Button size="S" buttonType="Ghost" onClick={logOut}>
           로그아웃
         </Button>

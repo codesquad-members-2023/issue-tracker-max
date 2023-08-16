@@ -478,7 +478,7 @@ export const milestones = {
   },
 };
 
-const users: UsersData = [
+export const users: UsersData = [
   {
     user: {
       id: 0,

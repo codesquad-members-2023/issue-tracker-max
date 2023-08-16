@@ -1,7 +1,7 @@
 import { rest } from "msw";
 import { assignees } from "./assigneeHandlers";
 import { comments } from "./commentHandlers";
-import { labels, milestones } from "./handlers";
+import { labels, milestones, users } from "./handlers";
 
 type Issue = {
   id: number;
@@ -94,6 +94,7 @@ export const issueHandlers = [
     return res(ctx.status(200), ctx.json(response));
   }),
   rest.post("/api/issues", async (req, res, ctx) => {
+    const authorizationToken = req.headers.get("authorization")!.split(" ")[1];
     const {
       title,
       content,
@@ -101,6 +102,21 @@ export const issueHandlers = [
       labels: labelIds,
       assignees: assigneeIds,
     } = await req.json();
+
+    const user = users.find(
+      ({ jwt }) => jwt.accessToken === authorizationToken,
+    );
+
+    if (!user) {
+      const unauthorizedError = {
+        code: 401,
+        status: "UNAUTHORIZED",
+        message: "인증에 실패하였습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(401), ctx.json(unauthorizedError));
+    }
 
     const newIssue: Issue = {
       id: Date.now(),
@@ -133,9 +149,9 @@ export const issueHandlers = [
       milestone:
         milestones.data.milestones.find((m) => m.id === milestoneId) ?? null,
       writer: {
-        id: 0,
-        name: "test123",
-        avatarUrl: "https://avatars.githubusercontent.com/u/41321198?v=4",
+        id: user.user.id,
+        name: user.user.loginId,
+        avatarUrl: user.user.avatarUrl,
       },
       comments: [],
     };

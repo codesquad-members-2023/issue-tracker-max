@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { Avatar } from "../../components/Avatar";
 import { Button } from "../../components/Button";
 import { InformationTag } from "../../components/InformationTag";
 import { TextArea } from "../../components/TextArea";
@@ -63,8 +64,8 @@ export function IssueContent({
     await fetch(`/api/issues/${id}/content`, {
       method: "PATCH",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
-        "credentials": "include",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        credentials: "include",
       },
       body: JSON.stringify({
         content: content,
@@ -87,15 +88,7 @@ export function IssueContent({
         onChange={onContentChange}
       >
         <WriterInfo>
-          {writer.avatarUrl && (
-            <img
-              width="32"
-              height="32"
-              style={{ borderRadius: "50%" }}
-              src={writer.avatarUrl}
-              alt="아바타"
-            />
-          )}
+          <Avatar size="L" src={writer.avatarUrl} userId={writer.name} />
           <h3>{writer.name}</h3>
           <TimeStamp>{getElapsedSince(writtenAt)} 전</TimeStamp>
         </WriterInfo>

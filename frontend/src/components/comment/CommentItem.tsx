@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { styled, useTheme } from "styled-components";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
+import { Avatar } from "../Avatar";
 import { Button } from "../Button";
 import { InformationTag } from "../InformationTag";
 import { TextArea } from "../TextArea";
@@ -66,13 +67,13 @@ export function CommentItem({
     await fetch(`/api/comments/${id}`, {
       method: "DELETE",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
-        "credentials": "include",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        credentials: "include",
       },
     });
 
     fetchIssue();
-  }
+  };
 
   const onEditButtonClick = () => {
     setIsEditing(true);
@@ -93,8 +94,8 @@ export function CommentItem({
     await fetch(`/api/comments/${id}`, {
       method: "PATCH",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
-        "credentials": "include",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        credentials: "include",
       },
       body: JSON.stringify({
         content: content,
@@ -117,15 +118,7 @@ export function CommentItem({
         onChange={onContentChange}
       >
         <WriterInfo>
-          {avatarUrl && (
-            <img
-              width="32"
-              height="32"
-              style={{ borderRadius: "50%" }}
-              src={avatarUrl}
-              alt="아바타"
-            />
-          )}
+          <Avatar size="L" src={avatarUrl} userId={userId} />
           <h3>{userId}</h3>
           <TimeStamp>{getElapsedSince(writtenAt)} 전</TimeStamp>
         </WriterInfo>

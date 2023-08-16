@@ -50,7 +50,7 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
         "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
         "credentials": "include",
       },
-      body: JSON.stringify({ issueId, content, userId: "jello000" }),
+      body: JSON.stringify({ issueId, content }),
     });
 
     setContent("");

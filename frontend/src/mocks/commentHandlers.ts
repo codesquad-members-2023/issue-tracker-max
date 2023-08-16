@@ -1,4 +1,5 @@
 import { rest } from "msw";
+import { users } from "./handlers";
 import { issues } from "./issueHandlers";
 
 type Comment = {
@@ -18,7 +19,21 @@ type Comment = {
 
 export const commentHandlers = [
   rest.post("/api/comments", async (req, res, ctx) => {
-    const { issueId, content, userId } = await req.json();
+    const authorizationToken = req.headers.get("authorization")!.split(" ")[1];
+    const { issueId, content } = await req.json();
+
+    const user = users.find(({ jwt }) => jwt.accessToken === authorizationToken);
+
+    if (!user) {
+      const unauthorizedError = {
+        code: 401,
+        status: "UNAUTHORIZED",
+        message: "인증에 실패하였습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(401), ctx.json(unauthorizedError));
+    }
 
     const issue = issues.find((i) => i.id === issueId);
 
@@ -36,8 +51,8 @@ export const commentHandlers = [
     const comment = {
       id: Date.now(),
       issueId,
-      userId,
-      avatarUrl: "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
+      userId: user.user.loginId,
+      avatarUrl: user.user.avatarUrl,
       content,
       createdAt: new Date().toISOString(),
       modifiedAt: new Date().toISOString(),
