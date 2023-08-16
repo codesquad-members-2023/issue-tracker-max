@@ -36,6 +36,8 @@ export const postNewIssue = (
   labelIds: number[],
   milestoneId: number,
 ) => {
+  const accessToken = getAccessToken();
+
   return fetchData('/issues/new', {
     method: 'POST',
     headers: {
@@ -54,6 +56,8 @@ export const postNewIssue = (
 };
 
 export const patchIssueTitle = (id: number, title: string) => {
+  const accessToken = getAccessToken();
+
   return fetchData('/issues/title', {
     method: 'PATCH',
     headers: {
@@ -68,6 +72,8 @@ export const patchIssueTitle = (id: number, title: string) => {
 };
 
 export const patchIssueContents = (id: number, contents: string) => {
+  const accessToken = getAccessToken();
+
   return fetchData('/issues/contents', {
     method: 'PATCH',
     headers: {
@@ -82,6 +88,8 @@ export const patchIssueContents = (id: number, contents: string) => {
 };
 
 export const editIssueLabel = (id: string, labelIds: number[]) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`/issues/${id}/labels`, {
     method: 'PUT',
     headers: {
@@ -95,6 +103,7 @@ export const editIssueLabel = (id: string, labelIds: number[]) => {
 };
 
 export const editIssueMilestone = (id: string, milestoneId: number | null) => {
+  const accessToken = getAccessToken();
   return fetchData(`/issues/${id}/milestone`, {
     method: 'PUT',
     headers: {
@@ -108,6 +117,8 @@ export const editIssueMilestone = (id: string, milestoneId: number | null) => {
 };
 
 export const editIssueAssignees = (id: string, assigneeIds: number[]) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`/issues/${id}/assignees`, {
     method: 'PUT',
     headers: {
@@ -124,6 +135,8 @@ export const editIssueStatus = (
   issueIds: number[],
   status: 'open' | 'closed',
 ) => {
+  const accessToken = getAccessToken();
+
   return fetchData('/issues/status', {
     method: 'PUT',
     headers: {
@@ -148,6 +161,8 @@ export const getIssueDetail = (id: string | number) => {
 };
 
 export const deleteIssue = (id: number) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`/issues/${id}`, {
     method: 'DELETE',
     headers: {
@@ -272,6 +287,9 @@ export const deleteLabel = (id: string | number) => {
 
   return fetchData(`/labels/${id}`, {
     method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
 };
 
@@ -334,6 +352,9 @@ export const deleteMilestone = (id: string | number) => {
 
   return fetchData(`/milestones/${id}`, {
     method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
 };
 
@@ -375,6 +396,8 @@ export const postNewComment = (
 };
 
 export const editComment = (id: number | undefined, contents: string) => {
+  const accessToken = getAccessToken();
+
   return fetchData(`/comments`, {
     method: 'PUT',
     headers: {
@@ -393,5 +416,8 @@ export const deleteComment = (id: string | number) => {
 
   return fetchData(`/comments/${id}`, {
     method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
 };
