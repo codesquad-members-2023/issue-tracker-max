@@ -19,19 +19,19 @@ public class MultiFilters {
 
 	private MultiFilterAuthors author;
 
-	public MultiFilterAssignees getAssignees() {
+	public MultiFilterAssignees getAssignee() {
 		return assignee;
 	}
 
-	public MultiFilterLabels getLabels() {
+	public MultiFilterLabels getLabel() {
 		return label;
 	}
 
-	public MultiFilterMilestones getMilestones() {
+	public MultiFilterMilestones getMilestone() {
 		return milestone;
 	}
 
-	public MultiFilterAuthors getAuthors() {
+	public MultiFilterAuthors getAuthor() {
 		return author;
 	}
 
