@@ -1,14 +1,14 @@
 import { Theme, css } from '@emotion/react';
 import { SideBarRightPanel } from './SideBarRightPanel';
 import { CommentContainer } from './CommentContainer';
-import { IssueContainer } from './IssueContainer';
+import { Comment } from '@components/common/comment/Comment';
 
 type Props = {
   issueDetailPageData: IssueDetailPageData;
-  onAddComment: (comment: CommentType) => void;
-  onDeleteComment?: (id?: number) => void;
   selectionsOptions: SelectionState['detailPage'];
   selections: SelectionState['newIssuePage'];
+  onAddComment: (comment: CommentType) => void;
+  onDeleteComment?: (id?: number) => void;
   onChangeSelect?: (key: string) => void;
   onSingleSelectedMilestone: (id: number) => void;
   onMultipleSelectedAssignee: (id: number) => void;
@@ -17,31 +17,29 @@ type Props = {
 
 export const Body: React.FC<Props> = ({
   issueDetailPageData,
-  onAddComment,
-  onDeleteComment,
+
   selectionsOptions,
   selections,
+  onAddComment,
+  onDeleteComment,
   onChangeSelect,
   onSingleSelectedMilestone,
   onMultipleSelectedAssignee,
   onMultipleSelectedLabel,
-}: Props) => {
+}) => {
   return (
     <div css={bodyStyle}>
       <div className="container">
-        <IssueContainer
+        <Comment
+          key={issueDetailPageData.id}
           issueId={issueDetailPageData.id}
-          author={issueDetailPageData.author}
-          contents={issueDetailPageData.contents}
+          typeVariant="issue"
+          issueAuthor={issueDetailPageData.author}
           createdAt={issueDetailPageData.createdAt}
+          defaultValue={issueDetailPageData.contents}
         />
         <CommentContainer
           issueDetailPageData={issueDetailPageData}
-          // issueId={issueDetailPageData.id}
-          // contents={issueDetailPageData.contents}
-          // createdAt={issueDetailPageData.createdAt}
-          // author={issueDetailPageData.author}
-          // comments={issueDetailPageData.comments}
           onAddComment={onAddComment}
           onDeleteComment={onDeleteComment}
         />

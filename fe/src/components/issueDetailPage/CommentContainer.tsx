@@ -4,20 +4,12 @@ import { AddNewComment } from './AddNewComment';
 
 type Props = {
   issueDetailPageData: IssueDetailPageData;
-  // issueId: number;
-  // contents: string;
-  // createdAt: string;
-  // author: User;
-  // comments: CommentType[]; // todo 타입
   onAddComment: (comment: CommentType) => void;
   onDeleteComment?: (id?: number) => void;
 };
 
 export const CommentContainer: React.FC<Props> = ({
   issueDetailPageData,
-  // author,
-  // issueId,
-  // comments,
   onAddComment,
   onDeleteComment,
 }: Props) => {
