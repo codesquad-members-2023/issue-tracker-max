@@ -65,8 +65,8 @@ class OauthServiceTest extends IntegrationTestSupport {
 		OauthAccessTokenResponse response = FixedAuthenticateUserFactory.oauthAccessTokenResponse();
 		UserProfile userProfile = FixedAuthenticateUserFactory.userProfile();
 		// mocking
-		when(oauthClient.getAccessToken(any(), any())).thenReturn(response);
-		when(oauthClient.getUserProfile(any(), any(), any())).thenReturn(userProfile);
+		when(oauthClient.requestAccessTokenToOauthServer(any(), any())).thenReturn(response);
+		when(oauthClient.requestUserProfile(any(), any(), any())).thenReturn(userProfile);
 		// when
 		OauthLoginServiceResponse serviceResponse = oauthService.login(provider, code);
 		// then

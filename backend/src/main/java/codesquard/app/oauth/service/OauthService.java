@@ -59,11 +59,11 @@ public class OauthService {
 		logger.debug("oauthProvider : {}", oauthProvider);
 
 		// 2. accessToken 가져오기
-		OauthAccessTokenResponse accessTokenResponse = oauthClient.getAccessToken(oauthProvider, code);
+		OauthAccessTokenResponse accessTokenResponse = oauthClient.requestAccessTokenToOauthServer(oauthProvider, code);
 		logger.debug("OauthAcessTokenResponse : {}", accessTokenResponse);
 
 		// 3. 유저 정보 가져오기
-		UserProfile userProfile = oauthClient.getUserProfile(provider, accessTokenResponse, oauthProvider);
+		UserProfile userProfile = oauthClient.requestUserProfile(provider, accessTokenResponse, oauthProvider);
 		logger.debug("userProfile : {}", userProfile);
 
 		// 4. 유저 정보 DB에 저장
