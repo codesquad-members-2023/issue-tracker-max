@@ -6,7 +6,6 @@ import static com.issuetracker.util.fixture.MemberFixture.MEMBER1;
 import java.time.LocalDateTime;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,25 +13,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.issuetracker.issue.domain.comment.IssueComment;
 import com.issuetracker.issue.domain.comment.IssueCommentRepository;
 import com.issuetracker.issue.infrastrucure.JdbcIssueCommentRepository;
-import com.issuetracker.util.DatabaseInitialization;
-import com.issuetracker.util.RepositoryTest;
+import com.issuetracker.util.JdbcRepositoryTest;
 
-@RepositoryTest
-public class IssueCommentRepositoryTest {
+public class IssueCommentJdbcRepositoryTest extends JdbcRepositoryTest {
 
 	private IssueCommentRepository issueCommentRepository;
-	private DatabaseInitialization databaseInitialization;
 
 	@Autowired
-	public IssueCommentRepositoryTest(JdbcTemplate jdbcTemplate) {
+	public IssueCommentJdbcRepositoryTest(JdbcTemplate jdbcTemplate) {
+		super(jdbcTemplate);
 		this.issueCommentRepository = new JdbcIssueCommentRepository(jdbcTemplate);
-		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
-	}
-
-	@BeforeEach
-	void setUp() {
-		databaseInitialization.initialization();
-		databaseInitialization.loadData();
 	}
 
 	@Test

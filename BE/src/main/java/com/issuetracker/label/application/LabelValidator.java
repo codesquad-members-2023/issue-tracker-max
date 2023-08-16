@@ -32,4 +32,16 @@ public class LabelValidator {
 			throw new CustomHttpException(ErrorType.LABEL_NOT_FOUND);
 		}
 	}
+
+	public void verifyDuplicationTitle(String title) {
+		if (labelRepository.existsByTitle(title)) {
+			throw new CustomHttpException(ErrorType.LABEL_TITLE_DUPLICATION);
+		}
+	}
+
+	public void verifyUpdatedOrDeletedCount(int count) {
+		if (count != 1) {
+			throw new CustomHttpException(ErrorType.LABEL_NOT_FOUND);
+		}
+	}
 }

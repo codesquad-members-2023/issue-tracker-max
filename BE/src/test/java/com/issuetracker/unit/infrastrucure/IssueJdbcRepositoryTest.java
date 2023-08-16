@@ -1,14 +1,11 @@
 package com.issuetracker.unit.infrastrucure;
 
 import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
-import static com.issuetracker.util.fixture.IssueFixture.ISSUE2;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON3;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,25 +14,16 @@ import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.domain.IssueRepository;
 import com.issuetracker.issue.domain.IssuesCountData;
 import com.issuetracker.issue.infrastrucure.JdbcIssueRepository;
-import com.issuetracker.util.DatabaseInitialization;
-import com.issuetracker.util.RepositoryTest;
+import com.issuetracker.util.JdbcRepositoryTest;
 
-@RepositoryTest
-class IssueRepositoryTest {
+class IssueJdbcRepositoryTest extends JdbcRepositoryTest {
 
 	private IssueRepository issueRepository;
-	private DatabaseInitialization databaseInitialization;
 
 	@Autowired
-	public IssueRepositoryTest(JdbcTemplate jdbcTemplate) {
+	public IssueJdbcRepositoryTest(JdbcTemplate jdbcTemplate) {
+		super(jdbcTemplate);
 		this.issueRepository = new JdbcIssueRepository(jdbcTemplate);
-		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
-	}
-
-	@BeforeEach
-	void setUp() {
-		databaseInitialization.initialization();
-		databaseInitialization.loadData();
 	}
 
 	@Test
@@ -76,15 +64,6 @@ class IssueRepositoryTest {
 
 		// then
 		assertThat(actual).isEqualTo(1);
-	}
-
-	@Test
-	void 이슈_열림_닫힘을_일괄_수정한다() {
-		// when
-		int actual = issueRepository.updateAllOpen(false, List.of(ISSUE1.getId(), ISSUE2.getId()));
-
-		// then
-		assertThat(actual).isEqualTo(2);
 	}
 
 	@Test

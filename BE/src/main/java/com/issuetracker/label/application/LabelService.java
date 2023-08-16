@@ -22,9 +22,11 @@ import lombok.RequiredArgsConstructor;
 public class LabelService {
 
 	private final LabelRepository labelRepository;
+	private final LabelValidator labelValidator;
 
 	@Transactional
 	public LabelCreateInformation create(LabelCreateInputData labelCreateInputData) {
+		labelValidator.verifyDuplicationTitle(labelCreateInputData.getTitle());
 		return LabelCreateInformation.from(
 			labelRepository.save(labelCreateInputData.toLabelForCreate()));
 	}
@@ -32,19 +34,13 @@ public class LabelService {
 	@Transactional
 	public void update(LabelUpdateInputData labelUpdateInputData) {
 		int numberOfUpdatedRow = labelRepository.update(labelUpdateInputData.toLabelForUpdate());
-
-		if (numberOfUpdatedRow == 0) {
-			throw new CustomHttpException(ErrorType.LABEL_NOT_FOUND);
-		}
+		labelValidator.verifyUpdatedOrDeletedCount(numberOfUpdatedRow);
 	}
 
 	@Transactional
 	public void delete(LabelDeleteInputData labelDeleteInputData) {
 		int numberOfDeleteRow = labelRepository.delete(labelDeleteInputData.toLabelForDelete());
-
-		if (numberOfDeleteRow == 0) {
-			throw new CustomHttpException(ErrorType.LABEL_NOT_FOUND);
-		}
+		labelValidator.verifyUpdatedOrDeletedCount(numberOfDeleteRow);
 	}
 
 	public LabelsInformation search() {

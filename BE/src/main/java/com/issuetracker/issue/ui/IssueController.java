@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.issuetracker.issue.application.AssignedLabelService;
+import com.issuetracker.issue.application.AssigneeService;
+import com.issuetracker.issue.application.IssueCommentService;
 import com.issuetracker.issue.application.IssueService;
 import com.issuetracker.issue.application.dto.IssueCreateInputData;
 import com.issuetracker.issue.application.dto.assignedlabel.AssignedLabelCreateData;
@@ -53,6 +56,9 @@ public class IssueController {
 	private final IssueService issueService;
 	private final MemberService memberService;
 	private final MilestoneService milestoneService;
+	private final AssigneeService assigneeService;
+	private final AssignedLabelService assignedLabelService;
+	private final IssueCommentService issueCommentService;
 
 	@GetMapping
 	public ResponseEntity<IssuesSearchResponse> showIssues(IssueSearchRequest issueSearchRequest) {
@@ -83,13 +89,13 @@ public class IssueController {
 
 	@GetMapping("/assignees")
 	public ResponseEntity<AssigneesResponses> showAssignees() {
-		AssigneesResponses assigneesResponses = AssigneesResponses.from(issueService.searchAssignee());
+		AssigneesResponses assigneesResponses = AssigneesResponses.from(assigneeService.searchAssignee());
 		return ResponseEntity.ok().body(assigneesResponses);
 	}
 
 	@GetMapping("/labels")
 	public ResponseEntity<AssignedLabelResponses> showLabels() {
-		AssignedLabelResponses assignedLabelResponses = AssignedLabelResponses.from(issueService.searchAssignedLabel());
+		AssignedLabelResponses assignedLabelResponses = AssignedLabelResponses.from(assignedLabelService.searchAssignedLabel());
 		return ResponseEntity.ok().body(assignedLabelResponses);
 	}
 
@@ -145,7 +151,7 @@ public class IssueController {
 	IssueCommentCreateRequest issueCommentCreateRequest) {
 		IssueCommentCreateData issueCommentCreateData = issueCommentCreateRequest.toIssueCommentCreateData(id, 1L);
 		IssueCommentCreateResponse issueCommentCreateResponse = IssueCommentCreateResponse.from(
-			issueService.createIssueComment(issueCommentCreateData));
+			issueCommentService.createIssueComment(issueCommentCreateData));
 		return ResponseEntity.ok().body(issueCommentCreateResponse);
 	}
 
@@ -153,7 +159,7 @@ public class IssueController {
 	public ResponseEntity<Void> updateIssueCommentContent(@PathVariable Long id,
 		@PathVariable("comment-id") Long commentId,
 		@RequestBody @Valid IssueCommentUpdateRequest issueCommentUpdateRequest) {
-		issueService.updateIssueCommentContent(issueCommentUpdateRequest.toIssueCommentUpdateData(id, commentId));
+		issueCommentService.updateIssueCommentContent(issueCommentUpdateRequest.toIssueCommentUpdateData(id, commentId));
 		return ResponseEntity.noContent().build();
 	}
 
@@ -164,7 +170,7 @@ public class IssueController {
 		return ResponseEntity.ok()
 			.body(
 				AssigneeCandidatesResponse.from(
-					issueService.searchAssigneeCandidates(id)
+					assigneeService.searchAssigneeCandidates(id)
 				)
 			);
 	}
@@ -176,7 +182,7 @@ public class IssueController {
 		return ResponseEntity.ok()
 			.body(
 				AssignedLabelCandidatesResponse.from(
-					issueService.searchLabelCandidates(id)
+					assignedLabelService.searchLabelCandidates(id)
 				)
 			);
 	}
@@ -198,13 +204,13 @@ public class IssueController {
 		@RequestBody AssigneeCreateRequest assigneeCreateRequest) {
 		AssigneeCreateData assigneeCreateData = assigneeCreateRequest.toAssigneeCreateData(id);
 		AssigneesCreateResponse assigneesCreateResponse = AssigneesCreateResponse.from(
-			issueService.createAssignee(assigneeCreateData));
+			assigneeService.createAssignee(assigneeCreateData));
 		return ResponseEntity.ok().body(assigneesCreateResponse);
 	}
 
 	@DeleteMapping("/{id}/assignees/{assignee-id}")
 	public ResponseEntity<Void> deleteAssignee(@PathVariable("assignee-id") Long assigneeId) {
-		issueService.deleteAssignee(assigneeId);
+		assigneeService.deleteAssignee(assigneeId);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -213,13 +219,13 @@ public class IssueController {
 		@RequestBody AssignedLabelCreateRequest assignedLabelCreateRequest) {
 		AssignedLabelCreateData assignedLabelCreateData = assignedLabelCreateRequest.toAssignedLabelCreateData(id);
 		AssignedLabelCreateResponse assignedLabelCreateResponse = AssignedLabelCreateResponse.from(
-			issueService.createAssignedLabel(assignedLabelCreateData));
+			assignedLabelService.createAssignedLabel(assignedLabelCreateData));
 		return ResponseEntity.ok().body(assignedLabelCreateResponse);
 	}
 
 	@DeleteMapping("/{id}/assigned-labels/{assigned-label-id}")
 	public ResponseEntity<Void> deleteAssignedLabel(@PathVariable("assigned-label-id") Long assignedLabelId) {
-		issueService.deleteAssignedLabel(assignedLabelId);
+		assignedLabelService.deleteAssignedLabel(assignedLabelId);
 		return ResponseEntity.noContent().build();
 	}
 }

@@ -8,6 +8,16 @@ spring:
 spring:
   config:
     activate:
+      on-profile: testDB
+  datasource:
+    url: jdbc:tc:mysql:8.0.34:///test
+    username: root
+    password: root
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+---
+spring:
+  config:
+    activate:
       on-profile: common
   mvc:
     throw-exception-if-no-handler-found: true

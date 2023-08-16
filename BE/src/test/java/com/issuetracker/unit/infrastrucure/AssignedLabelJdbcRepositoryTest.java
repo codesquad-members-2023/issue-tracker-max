@@ -1,45 +1,31 @@
 package com.issuetracker.unit.infrastrucure;
 
 import static com.issuetracker.util.fixture.AssignedLabelFixture.ASSIGNED_LABEL1;
-import static com.issuetracker.util.fixture.AssigneeFixture.ASSIGNEE1;
 import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
-import static com.issuetracker.util.fixture.MemberFixture.MEMBER4;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.issuetracker.issue.domain.assignedlabel.AssignedLabel;
 import com.issuetracker.issue.domain.assignedlabel.AssignedLabelRepository;
-import com.issuetracker.issue.domain.assignee.Assignee;
 import com.issuetracker.issue.infrastrucure.JdbcAssignedLabelRepository;
 import com.issuetracker.label.domain.Label;
-import com.issuetracker.util.DatabaseInitialization;
-import com.issuetracker.util.RepositoryTest;
+import com.issuetracker.util.JdbcRepositoryTest;
 import com.issuetracker.util.fixture.AssignedLabelFixture;
-import com.issuetracker.util.fixture.AssigneeFixture;
 
-@RepositoryTest
-class AssignedLabelRepositoryTest {
+class AssignedLabelJdbcRepositoryTest extends JdbcRepositoryTest {
 
 	private AssignedLabelRepository assignedLabelRepository;
-	private DatabaseInitialization databaseInitialization;
 
 	@Autowired
-	public AssignedLabelRepositoryTest(JdbcTemplate jdbcTemplate) {
+	public AssignedLabelJdbcRepositoryTest(JdbcTemplate jdbcTemplate) {
+		super(jdbcTemplate);
 		this.assignedLabelRepository = new JdbcAssignedLabelRepository(jdbcTemplate);
-		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
-	}
-
-	@BeforeEach
-	void setUp() {
-		databaseInitialization.initialization();
-		databaseInitialization.loadData();
 	}
 
 	@Test

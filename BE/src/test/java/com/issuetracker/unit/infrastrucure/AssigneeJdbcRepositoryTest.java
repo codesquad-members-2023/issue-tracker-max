@@ -3,12 +3,10 @@ package com.issuetracker.unit.infrastrucure;
 import static com.issuetracker.util.fixture.AssigneeFixture.ASSIGNEE1;
 import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
 import static com.issuetracker.util.fixture.MemberFixture.MEMBER4;
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,26 +15,17 @@ import com.issuetracker.issue.domain.assignee.Assignee;
 import com.issuetracker.issue.domain.assignee.AssigneeRepository;
 import com.issuetracker.issue.infrastrucure.JdbcAssigneeRepository;
 import com.issuetracker.member.domain.Member;
-import com.issuetracker.util.DatabaseInitialization;
-import com.issuetracker.util.RepositoryTest;
+import com.issuetracker.util.JdbcRepositoryTest;
 import com.issuetracker.util.fixture.AssigneeFixture;
 
-@RepositoryTest
-class AssigneeRepositoryTest {
+class AssigneeJdbcRepositoryTest extends JdbcRepositoryTest {
 
 	private AssigneeRepository assigneeRepository;
-	private DatabaseInitialization databaseInitialization;
 
 	@Autowired
-	public AssigneeRepositoryTest(JdbcTemplate jdbcTemplate) {
+	public AssigneeJdbcRepositoryTest(JdbcTemplate jdbcTemplate) {
+		super(jdbcTemplate);
 		this.assigneeRepository = new JdbcAssigneeRepository(jdbcTemplate);
-		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
-	}
-
-	@BeforeEach
-	void setUp() {
-		databaseInitialization.initialization();
-		databaseInitialization.loadData();
 	}
 
 	@Test

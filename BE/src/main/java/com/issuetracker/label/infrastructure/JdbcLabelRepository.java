@@ -20,6 +20,7 @@ import com.issuetracker.label.domain.LabelRepository;
 public class JdbcLabelRepository implements LabelRepository {
 
 	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM label WHERE id = :id AND is_deleted = false)";
+	private static final String EXIST_BY_TITLE_SQL = "SELECT EXISTS(SELECT 1 FROM label WHERE is_deleted = false AND title = :title)";
 	private static final String EXIST_BY_IDS_SQL = "SELECT IF(COUNT(id) = :size, TRUE, FALSE) FROM label WHERE is_deleted = false AND id IN(:labelIds)";
 	private static final String SAVE_SQL = "INSERT INTO label(title, description, color) VALUE(:title, :description, :color)";
 	private static final String UPDATE_SQL = "UPDATE label SET title = :title, description = :description, color = :color WHERE id = :id";
@@ -47,6 +48,11 @@ public class JdbcLabelRepository implements LabelRepository {
 			.addValue("labelIds", labelIds)
 			.addValue("size", labelIds.size());
 		return jdbcTemplate.queryForObject(EXIST_BY_IDS_SQL, params, Boolean.class);
+	}
+
+	@Override
+	public boolean existsByTitle(String title) {
+		return jdbcTemplate.queryForObject(EXIST_BY_TITLE_SQL, Map.of("title", title), Boolean.class);
 	}
 
 	@Override

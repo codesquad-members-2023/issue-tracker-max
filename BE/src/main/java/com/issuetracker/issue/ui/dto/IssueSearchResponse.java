@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.issuetracker.issue.application.dto.IssueSearchInformation;
 import com.issuetracker.label.ui.dto.LabelResponse;
+import com.issuetracker.member.ui.dto.MemberResponse;
 import com.issuetracker.milestone.ui.dto.MilestoneSearchResponse;
 
 import lombok.AccessLevel;
@@ -26,6 +27,7 @@ public class IssueSearchResponse {
 	private String authorProfileUrl;
 	private List<LabelResponse> labels;
 	private MilestoneSearchResponse milestone;
+	private List<MemberResponse> assignees;
 
 	public static IssueSearchResponse from(IssueSearchInformation issueSearchInformation) {
 		return new IssueSearchResponse(
@@ -36,7 +38,8 @@ public class IssueSearchResponse {
 			issueSearchInformation.getAuthor(),
 			issueSearchInformation.getAuthorProfileUrl(),
 			LabelResponse.from(issueSearchInformation.getLabels()),
-			MilestoneSearchResponse.from(issueSearchInformation.getMilestone())
+			MilestoneSearchResponse.from(issueSearchInformation.getMilestone()),
+			MemberResponse.from(issueSearchInformation.getAssignees())
 		);
 	}
 

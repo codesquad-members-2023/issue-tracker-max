@@ -21,4 +21,16 @@ public class MilestoneValidator {
 			throw new CustomHttpException(ErrorType.MILESTONE_NOT_FOUND);
 		}
 	}
+
+	public void verifyDuplicationTitle(String title) {
+		if (milestoneRepository.existsByTitle(title)) {
+			throw new CustomHttpException(ErrorType.MILESTONE_TITLE_DUPLICATION);
+		}
+	}
+
+	public void verifyUpdatedOrDeletedCount(int count) {
+		if (count != 1) {
+			throw new CustomHttpException(ErrorType.MILESTONE_NOT_FOUND);
+		}
+	}
 }

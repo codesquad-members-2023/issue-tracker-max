@@ -24,10 +24,11 @@ public class IssueRead {
 	private Member author;
 	private Milestone milestone;
 	private List<Label> labels;
+	private List<Member> assignees;
 
 	@Builder
-	private IssueRead(Long id, String title, String content, Boolean isOpen, LocalDateTime createAt, Member author,
-		Milestone milestone, List<Label> labels) {
+	public IssueRead(Long id, String title, String content, Boolean isOpen, LocalDateTime createAt, Member author,
+		Milestone milestone, List<Label> labels, List<Member> assignees) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
@@ -36,5 +37,6 @@ public class IssueRead {
 		this.author = author;
 		this.milestone = milestone;
 		this.labels = labels;
+		this.assignees = assignees;
 	}
 }
