@@ -215,6 +215,7 @@ export const Comment: React.FC<Props> = ({
           <Box
             header={
               <CommentHeader
+                typeVariant={typeVariant}
                 commentId={comment?.id}
                 onClickEdit={onClickEdit}
                 onClickDelete={onDeleteComment}

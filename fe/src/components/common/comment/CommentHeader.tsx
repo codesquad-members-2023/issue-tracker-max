@@ -6,6 +6,7 @@ import { ReactComponent as Smile } from '@assets/icons/smile.svg';
 import { ReactComponent as Trash } from '@assets/icons/trash.svg';
 
 type Props = {
+  typeVariant: string;
   commentId?: number;
   image?: string;
   loginId?: string;
@@ -16,6 +17,7 @@ type Props = {
 };
 
 export const CommentHeader: React.FC<Props> = ({
+  typeVariant,
   commentId,
   image,
   loginId,
@@ -57,7 +59,7 @@ export const CommentHeader: React.FC<Props> = ({
           <Smile className="button-icon" />
           반응
         </Button>
-        {isAuthor && (
+        {isAuthor && typeVariant === 'default' && (
           <Button
             className="header-right__button__delete"
             onClick={() => {
