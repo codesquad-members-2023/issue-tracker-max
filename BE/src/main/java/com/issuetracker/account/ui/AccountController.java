@@ -1,5 +1,6 @@
 package com.issuetracker.account.ui;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -59,6 +60,13 @@ public class AccountController {
 				accountService.issueJwtToken(loginRequest.toLoginInputData())
 			)
 		);
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout(HttpServletRequest request) {
+		accountService.logout(Long.valueOf(String.valueOf(request.getAttribute("memberId"))));
+
+		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/signup")

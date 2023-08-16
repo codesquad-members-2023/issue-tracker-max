@@ -94,4 +94,8 @@ public class AccountService {
 		}
 		return accountRepository.save(signUpInputData.toAccount());
 	}
+
+	public void logout(Long memberId) {
+		memoryJwtRepository.removeRefreshToken(memberId);
+	}
 }
