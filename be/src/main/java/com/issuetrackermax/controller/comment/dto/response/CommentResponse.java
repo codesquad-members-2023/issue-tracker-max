@@ -2,6 +2,7 @@ package com.issuetrackermax.controller.comment.dto.response;
 
 import java.time.LocalDateTime;
 
+import com.issuetrackermax.controller.filter.dto.response.WriterResponse;
 import com.issuetrackermax.domain.comment.entity.Comment;
 import com.issuetrackermax.domain.member.entity.Member;
 
@@ -12,19 +13,14 @@ import lombok.Getter;
 public class CommentResponse {
 	private final Long id;
 	private final String content;
-	private final Long writerId;
-	private final String writerLoginId;
-	private final String writerImageUrl;
+	private final WriterResponse writer;
 	private final LocalDateTime createdAt;
 
 	@Builder
-	public CommentResponse(Long id, String content, Long writerId, String writerLoginId, String writerImageUrl,
-		LocalDateTime createdAt) {
+	public CommentResponse(Long id, String content, WriterResponse writer, LocalDateTime createdAt) {
 		this.id = id;
 		this.content = content;
-		this.writerId = writerId;
-		this.writerLoginId = writerLoginId;
-		this.writerImageUrl = writerImageUrl;
+		this.writer = writer;
 		this.createdAt = createdAt;
 	}
 
@@ -32,9 +28,10 @@ public class CommentResponse {
 		return CommentResponse.builder()
 			.id(comment.getId())
 			.content(comment.getContent())
-			.writerId(comment.getWriterId())
-			.writerLoginId(member.getLoginId())
-			.writerImageUrl(member.getImageUrl())
+			.writer(WriterResponse.builder()
+				.id(member.getId())
+				.name(member.getNickName())
+				.imageUrl(member.getImageUrl()).build())
 			.createdAt(comment.getCreatedAt())
 			.build();
 	}

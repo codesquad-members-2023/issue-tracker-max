@@ -14,6 +14,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.issuetrackermax.controller.filter.dto.response.WriterResponse;
 import com.issuetrackermax.domain.comment.entity.Comment;
 import com.issuetrackermax.domain.comment.entity.CommentMemberVO;
 
@@ -32,12 +33,15 @@ public class CommentRepository {
 		CommentMemberVO.builder()
 			.id(rs.getLong("id"))
 			.content(rs.getString("content"))
-			.writerId(rs.getLong("writer_id"))
-			.writerLoginId(rs.getString("login_id"))
-			.writerImageUrl(rs.getString("image_url"))
+			.writer(WriterResponse.builder()
+				.id(rs.getLong("writer_id"))
+				.name(rs.getString("nick_name"))
+				.imageUrl(rs.getString("image_url"))
+				.build())
 			.issueId(rs.getLong("issue_id"))
 			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
 			.build();
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public CommentRepository(JdbcTemplate jdbcTemplate) {
@@ -58,7 +62,8 @@ public class CommentRepository {
 
 	public List<CommentMemberVO> findByIssueId(Long id) {
 		String sql =
-			"SELECT comments.id, comments.content, comments.issue_id, comments.writer_id, comments.created_at, member.login_id, member.image_url "
+			"SELECT comments.id, comments.content, comments.issue_id, comments.writer_id, "
+				+ "comments.created_at, member.nick_name, member.image_url "
 				+ "FROM comments "
 				+ "LEFT JOIN member ON member.id = comments.writer_id "
 				+ "WHERE comments.issue_id= :id";
