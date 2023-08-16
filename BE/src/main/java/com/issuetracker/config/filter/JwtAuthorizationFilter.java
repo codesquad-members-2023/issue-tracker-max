@@ -23,6 +23,7 @@ import com.issuetracker.account.infrastructure.JwtTokenGenerator;
 import com.issuetracker.config.ErrorResponse;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 
 @Component
@@ -68,8 +69,10 @@ public class JwtAuthorizationFilter implements Filter {
 			request.setAttribute("memberId", claims.get("memberId"));
 
 			chain.doFilter(request, response);
-		} catch (RuntimeException e) {
-			sendErrorApiResponse(response, e);
+		} catch (ExpiredJwtException e1) {
+			sendExpiredErrorApiResponse(response);
+		} catch (RuntimeException e2) {
+			sendErrorApiResponse(response, e2);
 		}
 	}
 
@@ -95,6 +98,21 @@ public class JwtAuthorizationFilter implements Filter {
 		response.getWriter().write(
 			objectMapper.writeValueAsString(
 				generateErrorApiResponse(e))
+		);
+	}
+
+	private void sendExpiredErrorApiResponse(ServletResponse response) throws IOException {
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		((HttpServletResponse)response).setStatus(HttpStatus.UNAUTHORIZED.value());
+
+		response.getWriter().write(
+			objectMapper.writeValueAsString(
+				new ResponseEntity<ErrorResponse>(
+					new ErrorResponse(HttpStatus.UNAUTHORIZED, "기한이 만료된 토큰입니다."),
+					HttpStatus.UNAUTHORIZED
+				)
+			)
 		);
 	}
 
