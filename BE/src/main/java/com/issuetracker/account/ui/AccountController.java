@@ -24,6 +24,7 @@ import com.issuetracker.account.ui.dto.OauthAccessTokenRequest;
 import com.issuetracker.account.ui.dto.OauthAccessTokenResponse;
 import com.issuetracker.account.ui.dto.OauthAccountInfoResponse;
 import com.issuetracker.account.ui.dto.OauthLoginResponse;
+import com.issuetracker.account.ui.dto.RefreshTokenRequest;
 import com.issuetracker.account.ui.dto.SignupRequest;
 
 @PropertySource("classpath:oauth.properties")
@@ -53,13 +54,9 @@ public class AccountController {
 
 	@PostMapping("/login")
 	public ResponseEntity<JwtTokenResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
-		AccountResponse accountResponse = AccountResponse.from(
-			accountService.findForLogin(loginRequest.toLoginInputData())
-		);
-
 		return ResponseEntity.ok(
 			JwtTokenResponse.from(
-				accountService.issueJwtToken(accountResponse.toAccountInputData())
+				accountService.issueJwtToken(loginRequest.toLoginInputData())
 			)
 		);
 	}
@@ -68,6 +65,12 @@ public class AccountController {
 	public ResponseEntity<Void> signUp(@RequestBody @Valid SignupRequest signupRequest) {
 		accountService.signUp(signupRequest.toSignUpInputData());
 		return ResponseEntity.noContent().build();
+	}
+
+	@PostMapping("/reissue-access-token")
+	public ResponseEntity<JwtTokenResponse> reissueAccessToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+		return ResponseEntity.ok(
+			JwtTokenResponse.from(accountService.reissueJwtToken(refreshTokenRequest.getRefreshToken())));
 	}
 
 	@GetMapping("/oauth/callback")
@@ -84,7 +87,7 @@ public class AccountController {
 				new OauthLoginResponse(
 					true,
 					accountInfoResponse,
-					JwtTokenResponse.from(accountService.issueJwtToken(accountResponse.toAccountInputData()))));
+					JwtTokenResponse.from(accountService.issueJwtToken(accountInfoResponse.getEmail()))));
 		}
 
 		return ResponseEntity.ok(

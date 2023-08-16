@@ -29,7 +29,23 @@ public class AccountService {
 	private final JwtTokenGenerator jwtTokenGenerator;
 
 	@Transactional
+	public JwtTokenInformation issueJwtToken(LoginInputData loginInputData) {
+		return issueJwtToken(findForLogin(loginInputData).toAccountInputData());
+	}
+
+	@Transactional
+	public JwtTokenInformation issueJwtToken(String email) {
+		return issueJwtToken(findByEmail(email).toAccountInputData());
+	}
+
+	@Transactional
+	public JwtTokenInformation issueJwtToken(Long memberId) {
+		return issueJwtToken(findByMemberId(memberId).toAccountInputData());
+	}
+
+	@Transactional
 	public JwtTokenInformation issueJwtToken(AccountInputData accountInputData) {
+
 		Map<String, Object> claims = Map.of(
 			"memberId", accountInputData.getId(),
 			"email", accountInputData.getEmail(),
@@ -47,6 +63,12 @@ public class AccountService {
 		return jwtTokenInformation;
 	}
 
+	@Transactional
+	public JwtTokenInformation reissueJwtToken(String refreshToken) {
+		Long memberId = memoryJwtRepository.getMemberId(refreshToken);
+		return issueJwtToken(memberId);
+	}
+
 	private void storeRefreshToken(JwtRefreshToken jwtRefreshToken) {
 		memoryJwtRepository.save(jwtRefreshToken);
 	}
@@ -59,6 +81,10 @@ public class AccountService {
 		return AccountInformation.from(
 			accountRepository.findByEmailAndPassword(loginInputData.toAccount())
 		);
+	}
+
+	public AccountInformation findByMemberId(Long memberId) {
+		return AccountInformation.from(accountRepository.findByMemberId(memberId));
 	}
 
 	@Transactional

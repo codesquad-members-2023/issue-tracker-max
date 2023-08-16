@@ -65,7 +65,7 @@ public class JwtAuthorizationFilter implements Filter {
 		try {
 			String token = getToken(httpServletRequest);
 			Claims claims = jwtTokenGenerator.getClaims(token);
-			request.setAttribute("memberId", claims.get("id"));
+			request.setAttribute("memberId", claims.get("memberId"));
 
 			chain.doFilter(request, response);
 		} catch (RuntimeException e) {

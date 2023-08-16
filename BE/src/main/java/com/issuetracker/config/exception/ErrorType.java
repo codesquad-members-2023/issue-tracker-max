@@ -27,7 +27,8 @@ public enum ErrorType {
 	ASSIGNEE_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 담당자입니다."),
 	ASSIGNED_LABEL_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 라벨입니다."),
 
-	ACCOUNT_EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 사용중인 email 입니다.");
+	ACCOUNT_EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 사용중인 email 입니다."),
+	NO_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "해당 리프레시 토큰이 존재하지 않습니다.");
 
 	private final HttpStatus status;
 	private final String message;

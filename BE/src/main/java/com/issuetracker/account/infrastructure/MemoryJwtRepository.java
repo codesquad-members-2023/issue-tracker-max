@@ -6,6 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Repository;
 
 import com.issuetracker.account.domain.JwtRefreshToken;
+import com.issuetracker.config.exception.CustomHttpException;
+import com.issuetracker.config.exception.ErrorType;
 
 @Repository
 public class MemoryJwtRepository {
@@ -18,6 +20,16 @@ public class MemoryJwtRepository {
 
 	public JwtRefreshToken get(Long memberId) {
 		return refreshTokenStorage.get(memberId);
+	}
+
+	public Long getMemberId(String refreshToken) {
+		for (Long memberId : refreshTokenStorage.keySet()) {
+			JwtRefreshToken jwtRefreshToken = refreshTokenStorage.get(memberId);
+			if (jwtRefreshToken.equalsRefreshToken(refreshToken)) {
+				return jwtRefreshToken.getMemberId();
+			}
+		}
+		throw new CustomHttpException(ErrorType.NO_REFRESH_TOKEN);
 	}
 
 	public void removeRefreshToken(Long memberId) {

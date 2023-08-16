@@ -25,4 +25,13 @@ public class AccountInformation {
 		);
 	}
 
+	public AccountInputData toAccountInputData() {
+		return new AccountInputData(
+			id,
+			email,
+			nickname,
+			profileImageUrl
+		);
+	}
+
 }

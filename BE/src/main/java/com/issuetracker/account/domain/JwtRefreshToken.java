@@ -24,4 +24,8 @@ public class JwtRefreshToken {
 	public boolean isExpired() {
 		return LocalDateTime.now().isAfter(expirationDateTime);
 	}
+
+	public boolean equalsRefreshToken(String refreshToken) {
+		return this.refreshToken.equals(refreshToken);
+	}
 }

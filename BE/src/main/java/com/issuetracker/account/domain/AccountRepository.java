@@ -6,6 +6,8 @@ public interface AccountRepository {
 
 	Account findByEmailAndPassword(Account account);
 
+	Account findByMemberId(Long memberId);
+
 	Long save(Account account);
 
 	boolean existByEmail(String email);
