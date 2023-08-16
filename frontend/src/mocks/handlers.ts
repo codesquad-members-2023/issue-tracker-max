@@ -252,6 +252,28 @@ export const handlers = [
 
     return res(ctx.status(200), ctx.json(issues));
   }),
+  rest.post("/api/issues/status", (req, res, ctx) => {
+    const body = JSON.parse(req.body as string) as {
+      issues: number[];
+      status: "OPENED" | "CLOSED";
+    };
+
+    issues.data.issues.forEach((issue) => {
+      issue.status = body.status;
+    });
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        code: 200,
+        status: "OK",
+        message: "OK",
+        data: {
+          modifiedIssueId: body.issues,
+        },
+      }),
+    );
+  }),
   rest.post("/login/oauth/github", (_, res, ctx) => {
     const response = {
       code: 200,
@@ -649,6 +671,12 @@ const issues = {
         multipleSelect: false,
         options: [
           {
+            id: 0,
+            name: "담당자가 없는 이슈",
+            avatarUrl: null,
+            selected: false,
+          },
+          {
             id: 1,
             name: "yeon",
             avatarUrl: "url path",
@@ -660,6 +688,11 @@ const issues = {
       labels: {
         multipleSelect: true,
         options: [
+          {
+            id: 0,
+            name: "레이블이 없는 이슈",
+            selected: false,
+          },
           {
             id: 1,
             name: "bug",
@@ -686,6 +719,11 @@ const issues = {
       milestones: {
         multipleSelect: false,
         options: [
+          {
+            id: 0,
+            name: "마일스톤이 없는 이슈",
+            selected: false,
+          },
           {
             id: 1,
             name: "week 1",

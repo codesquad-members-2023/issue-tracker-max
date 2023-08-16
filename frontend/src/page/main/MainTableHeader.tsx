@@ -75,7 +75,10 @@ export function MainTableHeader({
     return options.map((option) => ({
       ...option,
       onClick: () => {
-        setMultiFilterString(`${key}:${option.name}`, multipleSelect);
+        setMultiFilterString(
+          `${key}:${option.id === 0 ? "none" : option.name}`,
+          multipleSelect,
+        );
       },
     }));
   };
@@ -90,7 +93,10 @@ export function MainTableHeader({
         <input
           type="checkbox"
           onChange={handleCheckboxChange}
-          checked={checkedIssueId.length === totalIssueCount}
+          checked={
+            checkedIssueId.length !== 0 &&
+            checkedIssueId.length === totalIssueCount
+          }
         />
       </CheckboxLabel>
       {!checkedIssueId.length ? (
