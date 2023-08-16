@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
-import codesquard.app.authenticate_user.repository.AuthenticateUserRepository;
 import codesquard.app.authenticate_user.service.request.RefreshTokenServiceRequest;
 import codesquard.app.jwt.Jwt;
 import codesquard.app.jwt.JwtProvider;
@@ -35,9 +34,6 @@ class AuthenticateUserServiceTest extends IntegrationTestSupport {
 
 	@Autowired
 	private AuthenticateUserService authenticateUserService;
-
-	@Autowired
-	private AuthenticateUserRepository authenticateUserRepository;
 
 	@Autowired
 	private UserService userService;
