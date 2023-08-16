@@ -1,54 +1,38 @@
 package codesquad.issueTracker.issue.service;
 
-import codesquad.issueTracker.issue.vo.IssueMileStoneDetailVo;
-import codesquad.issueTracker.issue.vo.IssueUserVo;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-
 import codesquad.issueTracker.global.common.Status;
 import codesquad.issueTracker.global.exception.CustomException;
 import codesquad.issueTracker.global.exception.ErrorCode;
 import codesquad.issueTracker.issue.domain.Issue;
-import codesquad.issueTracker.issue.dto.IssueFileResponseDto;
-import codesquad.issueTracker.issue.dto.IssueLabelResponseDto;
-import codesquad.issueTracker.issue.dto.IssueMilestoneResponseDto;
-import codesquad.issueTracker.issue.dto.IssueOptionResponseDto;
-import codesquad.issueTracker.issue.dto.IssueResponseDto;
-import codesquad.issueTracker.issue.dto.IssueUserResponseDto;
-import codesquad.issueTracker.issue.dto.IssueWriteRequestDto;
-import codesquad.issueTracker.issue.dto.ModifyAssigneeRequestDto;
-import codesquad.issueTracker.issue.dto.ModifyIssueContentRequestDto;
-import codesquad.issueTracker.issue.dto.ModifyIssueContentResponseDto;
-import codesquad.issueTracker.issue.dto.ModifyIssueMilestoneDto;
-import codesquad.issueTracker.issue.dto.ModifyIssueStatusRequestDto;
-import codesquad.issueTracker.issue.dto.ModifyIssueTitleRequest;
-import codesquad.issueTracker.issue.dto.ModifyIssueTitleResponse;
-import codesquad.issueTracker.issue.dto.ModifyLabelRequestDto;
+import codesquad.issueTracker.issue.domain.IssueRead;
+import codesquad.issueTracker.issue.domain.IssueSearch;
+import codesquad.issueTracker.issue.dto.*;
+import codesquad.issueTracker.issue.dto.filter.IssueFilteredResponseDto;
+import codesquad.issueTracker.issue.repository.IssueMapperRepository;
 import codesquad.issueTracker.issue.repository.IssueRepository;
-import codesquad.issueTracker.issue.vo.AssigneeVo;
-import codesquad.issueTracker.issue.vo.IssueLabelVo;
-import codesquad.issueTracker.issue.vo.IssueMilestoneVo;
+import codesquad.issueTracker.issue.vo.*;
 import codesquad.issueTracker.label.dto.LabelResponseDto;
 import codesquad.issueTracker.label.service.LabelService;
 import codesquad.issueTracker.milestone.service.MilestoneService;
 import codesquad.issueTracker.milestone.vo.MilestoneVo;
 import codesquad.issueTracker.user.domain.User;
 import codesquad.issueTracker.user.service.UserService;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -62,6 +46,17 @@ public class IssueService {
     private final UserService userService;
     private final MilestoneService milestoneService;
     private final AmazonS3Client amazonS3Client;
+    private final IssueMapperRepository issueMapperRepository;
+
+    public IssueFilteredResponseDto findByFilter(IssueSearch issueSearch) {
+        // 1. count 가져오는 로직도 하나 필요
+        IssueCountResponseDto issueCountResponseDto = issueRepository.findIssueCounts();
+        // 2. issueReads 가져오기
+        List<IssueRead> issueReads = issueMapperRepository.findFilteredIssue(issueSearch);
+        List<IssueFilteredVo> issueFilteredVo = IssueFilteredVo.of(issueReads);
+        // response에서 1,2를 묶어주는 메서드 필요
+        return IssueFilteredResponseDto.of(issueCountResponseDto, issueFilteredVo);
+    }
 
     @Transactional
     public Long save(IssueWriteRequestDto request, Long id) {
