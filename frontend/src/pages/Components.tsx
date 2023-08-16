@@ -13,16 +13,16 @@ import { styled } from 'styled-components';
 // import SideBar from '../components/common/SideBar';
 // import FilterBar from '../components/common/FilterBar';
 // import Comment from '../components/common/CommentElements';
-import { AppContext } from '../main';
-import { useContext } from 'react';
+// import { AppContext } from '../main';
+// import { useContext } from 'react';
 import SideBar from '../components/common/sideBar/SideBar';
 import ElementType from '../constant/ElementType';
 
 const { AddButton, Assignee, Label } = ElementType;
 
 export default function Components() {
-  const appContext = useContext(AppContext);
-  const { changeTheme } = appContext.control;
+  // const appContext = useContext(AppContext);
+  // const { changeTheme } = appContext.control;
   return (
     <StyledComponents>
       <Wrapper>
@@ -90,11 +90,16 @@ export default function Components() {
             ],
             [
               { type: AddButton, text: '마일스톤' },
-              [{ type: Label, labelProps: {
-                textColor: 'AAA333',
-                backgroundColor: 'FFF3FF',
-                name: 'refactor',
-              } }],
+              [
+                {
+                  type: Label,
+                  labelProps: {
+                    textColor: 'AAA333',
+                    backgroundColor: 'FFF3FF',
+                    name: 'refactor',
+                  },
+                },
+              ],
             ],
           ]}
         />

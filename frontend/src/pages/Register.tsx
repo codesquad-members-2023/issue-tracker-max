@@ -58,14 +58,14 @@ export default function Register() {
         <TextInput
           id="id"
           name="userId"
-          size="tall"
+          sizeType="tall"
           labelName="아이디"
           placeholder="아이디"
         />
         <TextInput
           id="password"
           name="password"
-          size="tall"
+          sizeType="tall"
           type="password"
           labelName="비밀번호"
           placeholder="비밀번호"
@@ -73,7 +73,7 @@ export default function Register() {
         <TextInput
           id="name"
           name="userName"
-          size="tall"
+          sizeType="tall"
           labelName="닉네임"
           placeholder="닉네임"
         />

@@ -105,7 +105,7 @@ export default function Login() {
         <TextInput
           id="userId"
           name="userId"
-          size="tall"
+          sizeType="tall"
           labelName="아이디"
           value={userId}
           onChange={handleChange}
@@ -116,7 +116,7 @@ export default function Login() {
         <TextInput
           id="password"
           name="password"
-          size="tall"
+          sizeType="tall"
           type="password"
           value={password}
           onChange={handleChange}
