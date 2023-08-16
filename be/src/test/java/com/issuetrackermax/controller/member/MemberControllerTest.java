@@ -13,7 +13,7 @@ import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
 
 class MemberControllerTest extends ControllerTestSupport {
 
-	@DisplayName("이메일, 페스워드, 닉네임을 입력하여 회원가입을 성공한다.")
+	@DisplayName("이메일, 패스워드, 닉네임을 입력하여 회원가입을 성공한다.")
 	@Test
 	void signup() throws Exception {
 		// given
@@ -31,6 +31,5 @@ class MemberControllerTest extends ControllerTestSupport {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value("true"));
-
 	}
 }

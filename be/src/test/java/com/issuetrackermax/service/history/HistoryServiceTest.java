@@ -48,7 +48,7 @@ class HistoryServiceTest extends IntegrationTestSupport {
 			.content("content1")
 			.build();
 
-		Member member = memberRepository.findById(writerId).get();
+		Member member = memberRepository.findById(writerId);
 		// when
 		Long issueId = issueService.post(issuePostRequest, writerId).getId();
 

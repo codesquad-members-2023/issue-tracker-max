@@ -96,10 +96,6 @@ class MilestoneServiceTest extends IntegrationTestSupport {
 	}
 
 	@Test
-	void getClosedMilestone() {
-	}
-
-	@Test
 	void post() {
 		// given
 		MilestonePostRequest milestonePostRequet = MilestonePostRequest

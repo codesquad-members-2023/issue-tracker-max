@@ -33,11 +33,6 @@ public class SignUpRequest {
 	}
 
 	public Member toMember() {
-		return Member.builder()
-			.loginId(loginId)
-			.loginType(LoginType.LOCAL)
-			.password(password)
-			.nickName(nickName)
-			.build();
+		return new Member(loginId, password, nickName, LoginType.LOCAL);
 	}
 }

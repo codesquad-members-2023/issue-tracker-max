@@ -3,7 +3,6 @@ package com.issuetrackermax.domain.milestone;
 import java.sql.Types;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,8 +26,7 @@ public class MilestoneRepository {
 
 	public Milestone findbyId(Long id) {
 		String sql = "SELECT id, title, is_open, duedate, description FROM milestone WHERE id = :id ";
-		return Optional.ofNullable(
-			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), MILESTONE_ROW_MAPPER))).get();
+		return DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), MILESTONE_ROW_MAPPER));
 	}
 
 	public Long save(Milestone milestone) {
