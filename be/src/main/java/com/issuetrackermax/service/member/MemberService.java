@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetrackermax.controller.auth.dto.response.MemberProfileResponse;
-import com.issuetrackermax.controller.member.dto.request.CheckLoginIdRequest;
 import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
 import com.issuetrackermax.domain.member.MemberRepository;
 import com.issuetrackermax.domain.member.MemberValidator;
@@ -18,8 +17,8 @@ public class MemberService {
 	private final MemberValidator memberValidator;
 	private final MemberRepository memberRepository;
 
-	public void checkLoginIdDuplication(CheckLoginIdRequest checkLoginIdRequest) {
-		memberValidator.existLoginId(checkLoginIdRequest.getLoginId());
+	public void checkLoginIdDuplication(String loginId) {
+		memberValidator.existLoginId(loginId);
 	}
 
 	@Transactional
