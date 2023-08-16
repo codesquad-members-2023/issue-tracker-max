@@ -18,9 +18,11 @@ export const fetchData = async (path: string, options?: RequestInit) => {
 };
 
 export const getIssuesWithQuery = (query: string) => {
+  const accessToken = getAccessToken();
+
   return fetchData('/issues' + query, {
     headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
