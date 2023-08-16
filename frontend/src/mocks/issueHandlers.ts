@@ -1,5 +1,6 @@
 import { rest } from "msw";
 import { assignees } from "./assigneeHandlers";
+import { comments } from "./commentHandlers";
 import { labels, milestones } from "./handlers";
 
 type Issue = {
@@ -70,6 +71,18 @@ export const issueHandlers = [
 
       return res(ctx.status(404), ctx.json(notFoundError));
     }
+
+    issue.comments = comments
+      .filter((c) => c.issueId === Number(issueId))
+      .map((c) => ({
+        id: c.id,
+        userId: c.userId,
+        avatarUrl: c.avatarUrl,
+        content: c.content,
+        createdAt: c.createdAt,
+        modifiedAt: c.modifiedAt,
+        reactions: c.reactions,
+      }));
 
     const response = {
       code: 200,
@@ -234,10 +247,9 @@ export const issueHandlers = [
     return res(ctx.status(200), ctx.json(response));
   }),
   rest.patch("/api/issues/:issueId/assignees", async (req, res, ctx) => {
-    const {issueId} = req.params;
+    const { issueId } = req.params;
     const { assignees: assigneeIds } = await req.json();
 
-    
     const issue = issues.find((i) => i.id === Number(issueId));
 
     if (!issue) {
@@ -357,7 +369,7 @@ export const issueHandlers = [
 
       return res(ctx.status(404), ctx.json(notFoundError));
     }
-    
+
     const deletedIssue = issues.splice(issueIndex, 1);
 
     const response = {
@@ -367,16 +379,13 @@ export const issueHandlers = [
       data: {
         deletedIssueId: deletedIssue[0].id,
       },
-    }
+    };
 
-    return res(
-      ctx.status(200),
-      ctx.json(response),
-    );
+    return res(ctx.status(200), ctx.json(response));
   }),
 ];
 
-const issues: Issue[] = [
+export const issues: Issue[] = [
   {
     id: 2,
     title: "제목1",
@@ -430,38 +439,7 @@ const issues: Issue[] = [
       avatarUrl:
         "https://i.namu.wiki/i/2KCzxN-etRYFHRQVHH9-ROMgsOvyU3X4y7A2wuqNV5apHBn8APhnhPuapmrXewTuRcVtgos2UIAdHOCDkKVOFQ.webp",
     },
-    comments: [
-      {
-        id: 3,
-        userId: "wis730",
-        avatarUrl:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3j1RUWi4sAJkgFEdEFjtgvTOnd9kIpNZMp-GFc8zi&s",
-        content: "이 댓글을 읽은 당신은 앞으로 모든 일이 신기하게 잘풀립니다!",
-        createdAt: "2023-08-09T15:21:09",
-        modifiedAt: "2023-08-09T20:21:09",
-        reactions: [
-          {
-            unicode: "&#128077",
-            users: [],
-            selected: null,
-          },
-          {
-            unicode: "&#128078",
-            users: ["wis730"],
-            selected: 3,
-          },
-        ],
-      },
-      {
-        id: 5,
-        userId: "hjsong123",
-        avatarUrl: "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
-        content: "웃어보세요! 오늘 하루가 달라질 거에요!",
-        createdAt: "2023-08-10T10:21:09",
-        modifiedAt: "2023-08-10T13:21:09",
-        reactions: [],
-      },
-    ],
+    comments: [],
   },
   {
     id: 5,
@@ -494,100 +472,3 @@ const issues: Issue[] = [
     comments: [],
   },
 ];
-
-export const issue: {
-  code: number;
-  status: string;
-  message: string;
-  data: Issue;
-} = {
-  code: 200,
-  status: "OK",
-  message: "OK",
-  data: {
-    id: 2,
-    title: "제목1",
-    status: "OPENED",
-    statusModifiedAt: "2023-08-09T06:01:37",
-    createdAt: "2023-08-09T06:01:37",
-    modifiedAt: "2023-08-10T06:01:37",
-    content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas fringilla phasellus faucibus scelerisque eleifend donec. Ultricies mi quis hendrerit dolor magna eget. Purus ut faucibus pulvinar elementum integer. Suspendisse ultrices gravida dictum fusce ut placerat orci. Auctor elit sed vulputate mi sit. Egestas fringilla phasellus faucibus scelerisque eleifend donec. Egestas pretium aenean pharetra magna ac placerat vestibulum lectus. Nunc sed blandit libero volutpat. Elementum eu facilisis sed odio morbi quis commodo. Sed augue lacus viverra vitae congue eu consequat ac felis.
-
-      Eu volutpat odio facilisis mauris sit amet massa vitae. Ut eu sem integer vitae. Id leo in vitae turpis massa sed elementum tempus. Arcu non sodales neque sodales ut etiam. Arcu non odio euismod lacinia at quis risus sed. Eget mauris pharetra et ultrices neque ornare. Neque vitae tempus quam pellentesque nec nam. Nulla at volutpat diam ut venenatis tellus in metus. Faucibus in ornare quam viverra orci sagittis. Leo in vitae turpis massa sed elementum tempus. Augue mauris augue neque gravida in fermentum et sollicitudin ac. Lobortis elementum nibh tellus molestie nunc non blandit massa. Suspendisse in est ante in nibh mauris cursus. Sed lectus vestibulum mattis ullamcorper velit sed. Lectus proin nibh nisl condimentum id venenatis a condimentum vitae. At lectus urna duis convallis convallis tellus id. Scelerisque eleifend donec pretium vulputate. Est pellentesque elit ullamcorper dignissim cras tincidunt. Leo a diam sollicitudin tempor id eu nisl nunc mi.
-      
-      Magna sit amet purus gravida. Duis convallis convallis tellus id interdum velit laoreet id. Interdum consectetur libero id faucibus nisl tincidunt. Hac habitasse platea dictumst quisque sagittis purus sit amet. Tempus urna et pharetra pharetra massa. Egestas erat imperdiet sed euismod nisi porta lorem. Mauris pellentesque pulvinar pellentesque habitant morbi. Nibh ipsum consequat nisl vel pretium lectus quam. Purus sit amet luctus venenatis lectus magna fringilla urna porttitor. Vulputate sapien nec sagittis aliquam malesuada bibendum arcu. Imperdiet nulla malesuada pellentesque elit eget gravida cum sociis. Convallis posuere morbi leo urna molestie at elementum. Accumsan tortor posuere ac ut consequat semper viverra nam libero. Non tellus orci ac auctor augue mauris augue. Vulputate ut pharetra sit amet aliquam id. Id interdum velit laoreet id. Ut venenatis tellus in metus vulputate. Egestas sed tempus urna et pharetra pharetra massa massa ultricies. Tristique senectus et netus et malesuada fames ac turpis. A iaculis at erat pellentesque adipiscing commodo elit at.`,
-    reactions: [
-      {
-        unicode: "&#128077",
-        users: ["wis730", "wisdom"],
-        selectedUserReactionId: 1,
-      },
-      {
-        unicode: "&#128078",
-        users: [],
-        selectedUserReactionId: 0,
-      },
-    ],
-    assignees: [
-      {
-        id: 1,
-        name: "hong1234",
-        avatarUrl: null,
-      },
-    ],
-    labels: [
-      {
-        id: 2,
-        name: "documentation",
-        color: "LIGHT",
-        background: "#0025E6",
-      },
-    ],
-    milestone: {
-      id: 1,
-      name: "Sprint#1",
-      issues: {
-        openedIssueCount: 22,
-        closedIssueCount: 10,
-      },
-    },
-    writer: {
-      id: 1,
-      name: "wis730",
-      avatarUrl:
-        "https://i.namu.wiki/i/2KCzxN-etRYFHRQVHH9-ROMgsOvyU3X4y7A2wuqNV5apHBn8APhnhPuapmrXewTuRcVtgos2UIAdHOCDkKVOFQ.webp",
-    },
-    comments: [
-      {
-        id: 1,
-        userId: "wis730",
-        avatarUrl:
-          "https://i.namu.wiki/i/2KCzxN-etRYFHRQVHH9-ROMgsOvyU3X4y7A2wuqNV5apHBn8APhnhPuapmrXewTuRcVtgos2UIAdHOCDkKVOFQ.webp",
-        content: "이 댓글을 읽은 당신은 앞으로 모든 일이 신기하게 잘풀립니다!",
-        createdAt: "2023-08-09T15:21:09",
-        modifiedAt: "2023-08-09T20:21:09",
-        reactions: [
-          {
-            unicode: "&#128077",
-            users: [],
-            selected: null,
-          },
-          {
-            unicode: "&#128078",
-            users: ["wis730"],
-            selected: 3,
-          },
-        ],
-      },
-      {
-        id: 2,
-        userId: "hjsong123",
-        avatarUrl: "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
-        content: "웃어보세요! 오늘 하루가 달라질 거에요!",
-        createdAt: "2023-08-10T10:21:09",
-        modifiedAt: "2023-08-10T13:21:09",
-        reactions: [],
-      },
-    ],
-  },
-};

@@ -46,6 +46,10 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
 
     await fetch("/api/comments", {
       method: "POST",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "credentials": "include",
+      },
       body: JSON.stringify({ issueId, content, userId: "jello000" }),
     });
 

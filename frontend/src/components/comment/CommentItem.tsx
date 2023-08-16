@@ -65,6 +65,10 @@ export function CommentItem({
   const deleteComment = async () => {
     await fetch(`/api/comments/${id}`, {
       method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "credentials": "include",
+      },
     });
 
     fetchIssue();
@@ -88,6 +92,10 @@ export function CommentItem({
   const onEditConfirmClick = async () => {
     await fetch(`/api/comments/${id}`, {
       method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "credentials": "include",
+      },
       body: JSON.stringify({
         content: content,
       }),
