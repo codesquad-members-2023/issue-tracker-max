@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import { getAccessToken } from "../../utils/localStorage";
 import { MainHeader } from "./MainHeader";
 import { MainTable } from "./MainTable";
 
@@ -92,7 +93,12 @@ export function Main() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`/api/issues${queryString}`);
+      const res = await fetch(`/api/issues${queryString}`, {
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      });
       const { code, data } = await res.json();
 
       if (code === 200) {

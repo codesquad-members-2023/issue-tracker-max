@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 import { Icon } from "../../components/icon/Icon";
+import { getAccessToken } from "../../utils/localStorage";
 import { IssueDataState } from "./Main";
 import { MainTableElement } from "./MainTableElement";
 import { MainTableHeader } from "./MainTableHeader";
@@ -18,8 +19,20 @@ export function MainTable({
 }: MainTableProps) {
   const [checkedIssueId, setCheckedIssueId] = useState<number[]>([]);
 
-  const onChangeIssuesState = (state: "OPENED" | "CLOSED") => {
-    console.log(`${checkedIssueId} : ${state}`);
+  const onChangeIssuesState = async (state: "OPENED" | "CLOSED") => {
+    const body = {
+      issues: checkedIssueId,
+      status: state,
+    };
+
+    await fetch("/api/issues/status", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+      body: JSON.stringify(body),
+    });
   };
 
   const handleHeaderCheckbox = (checked: boolean) => {
