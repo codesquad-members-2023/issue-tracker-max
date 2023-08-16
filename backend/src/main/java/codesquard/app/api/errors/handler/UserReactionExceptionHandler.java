@@ -19,7 +19,7 @@ public class UserReactionExceptionHandler {
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(NoSuchReactionException.class)
 	public ApiResponse<Object> handleNoSuchReactionException(NoSuchReactionException e) {
-		logger.info("NoSuchReactionException handling : {}", e.toString());
+		logger.warn("NoSuchReactionException handling : {}", e.toString());
 		return ApiResponse.of(
 			HttpStatus.NOT_FOUND,
 			e.getMessage(),
@@ -30,7 +30,7 @@ public class UserReactionExceptionHandler {
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(NoSuchUserReactionException.class)
 	public ApiResponse<Object> handleNoSuchUserReactionException(NoSuchUserReactionException e) {
-		logger.info("NoSuchUserReactionException handling : {}", e.toString());
+		logger.warn("NoSuchUserReactionException handling : {}", e.toString());
 		return ApiResponse.of(
 			HttpStatus.NOT_FOUND,
 			e.getMessage(),
