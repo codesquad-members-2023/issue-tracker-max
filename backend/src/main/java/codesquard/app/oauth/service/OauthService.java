@@ -63,7 +63,7 @@ public class OauthService {
 		logger.debug("OauthAcessTokenResponse : {}", accessTokenResponse);
 
 		// 3. 유저 정보 가져오기
-		UserProfile userProfile = oauthClient.requestUserProfile(provider, accessTokenResponse, oauthProvider);
+		UserProfile userProfile = requestUserProfile(provider, accessTokenResponse, oauthProvider);
 		logger.debug("userProfile : {}", userProfile);
 
 		// 4. 유저 정보 DB에 저장
@@ -89,6 +89,18 @@ public class OauthService {
 		// 8. 리프레쉬 토큰 갱신
 		authenticateUserService.updateRefreshToken(authenticateUser, jwt);
 		return new OauthLoginServiceResponse(authenticateUser, jwt, "Bearer");
+	}
+
+	private UserProfile requestUserProfile(String provider, OauthAccessTokenResponse accessTokenResponse,
+		OauthProvider oauthProvider) {
+		// 중복되지 않은 로그인 ID가 나오지 않으면 UserProfile을 반환하고, 중복되는 로그인 ID라면 다시 요청합니다.
+		while (true) {
+			UserProfile userProfile = oauthClient.requestUserProfile(provider, accessTokenResponse, oauthProvider);
+			if (userRepository.isExistLoginId(userProfile.toUserEntity())) {
+				continue;
+			}
+			return userProfile;
+		}
 	}
 
 	private User saveOrUpdate(UserProfile userProfile) {
