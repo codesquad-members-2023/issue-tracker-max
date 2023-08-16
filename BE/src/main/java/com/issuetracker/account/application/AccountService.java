@@ -3,6 +3,7 @@ package com.issuetracker.account.application;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -134,5 +135,10 @@ public class AccountService {
 
 	public void logout(Long memberId) {
 		memoryJwtRepository.removeRefreshToken(memberId);
+	}
+
+	@Scheduled(initialDelay = 1000 * 60 * 60, fixedDelay = 1000 * 60 * 60)
+	public void removeAllExpiredRefreshTokens() {
+		memoryJwtRepository.removeAllExpiredRefreshTokens();
 	}
 }
