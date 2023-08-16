@@ -49,6 +49,7 @@ public class AuthenticateUserService {
 
 	// redis에 저장된 이메일 키값에 따른 리프레쉬 토큰의 값을 갱신합니다.
 	public void updateRefreshToken(AuthenticateUser authenticateUser, Jwt jwt) {
+		logger.info("리프레쉬 토큰 갱신 : {}, {}", authenticateUser, jwt);
 		redisTemplate.opsForValue().set(authenticateUser.createRedisKey(),
 			jwt.getRefreshToken(),
 			jwt.getExpireDateRefreshToken(),
@@ -57,6 +58,7 @@ public class AuthenticateUserService {
 
 	// 입력으로 주어진 리프레쉬 토큰을 이용하여 JWT 객체를 생성하고 갱신합니다.
 	public Jwt refreshToken(RefreshTokenServiceRequest refreshTokenServiceRequest) {
+		logger.info("리프레쉬 토큰 갱신 서비스 : {}", refreshTokenServiceRequest);
 		try {
 			HashMap<String, Object> claims = new HashMap<>();
 
@@ -107,6 +109,7 @@ public class AuthenticateUserService {
 	}
 
 	public AuthenticateUserLoginServiceResponse login(AuthenticateUser authenticateUser) {
+		logger.info("로그아웃 서비스 : {}", authenticateUser);
 		Map<String, Object> claims = new HashMap<>();
 		// 1. AuthenticateUser 객체를 json으로 변환
 		String authenticateUserJson = null;
@@ -130,6 +133,7 @@ public class AuthenticateUserService {
 	}
 
 	public void logout(AuthenticateUser authenticateUser, Jwt jwt) {
+		logger.info("로그아웃 서비스 요청 : {}, {}", authenticateUser, jwt);
 		// Redis에 유저 email로 저장된 RefreshToken이 있는지 확인
 		if (redisTemplate.opsForValue().get(authenticateUser.createRedisKey()) != null) {
 			// RefreshToken 삭제
