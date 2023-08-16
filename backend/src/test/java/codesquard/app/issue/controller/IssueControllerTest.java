@@ -24,7 +24,7 @@ import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
 import codesquard.app.issue.dto.request.IssueModifyMilestoneRequest;
-import codesquard.app.issue.dto.request.IssueModifyStatusRequest;
+import codesquard.app.issue.dto.request.IssueModifyStatusesRequest;
 import codesquard.app.issue.dto.request.IssueModifyTitleRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.fixture.FixtureFactory;
@@ -151,40 +151,43 @@ class IssueControllerTest extends ControllerTestSupport {
 			.andDo(print());
 	}
 
-	@DisplayName("이슈 상태를 수정한다.")
+	@DisplayName("이슈들의 상태를 수정한다.")
 	@Test
-	void modifyStatus() throws Exception {
+	void modifyStatuses() throws Exception {
 		// mocking
 		mockingAuthenticateUser();
 
 		// given
-		int issueId = 1;
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest("CLOSED");
+		List<Long> issueId = List.of(1L, 2L);
+		String status = "CLOSED";
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId, status);
 
 		// when & then
-		mockMvc.perform(patch("/api/issues/" + issueId + "/status")
-				.content(objectMapper.writeValueAsString(issueModifyStatusRequest))
+		mockMvc.perform(patch("/api/issues/status")
+				.content(objectMapper.writeValueAsString(issueModifyStatusesRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
+			.andExpect(jsonPath("$.data.modifiedIssueId[0]").value(issueId.get(0)))
+			.andExpect(jsonPath("$.data.modifiedIssueId[1]").value(issueId.get(1)))
 			.andDo(print());
 	}
 
-	@DisplayName("이슈 상태 수정시 유효하지 않은 status 값이 오면 400 에러를 반환한다.")
+	@DisplayName("이슈들 상태 수정시 유효하지 않은 status 값이 오면 400 에러를 반환한다.")
 	@Test
 	void modifyInvalidStatus_Response400() throws Exception {
 		// mocking
 		mockingAuthenticateUser();
 
 		// given
-		int issueId = 1;
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(INVALID_ISSUE_STATUS_NAME);
+		List<Long> issueId = List.of(1L, 2L);
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId,
+			INVALID_ISSUE_STATUS_NAME);
 		willThrow(new IllegalIssueStatusException(IssueErrorCode.INVALID_ISSUE_STATUS))
-			.given(issueService).modifyStatus(any(IssueModifyStatusRequest.class), anyLong(), anyLong());
+			.given(issueService).modifyStatuses(any(IssueModifyStatusesRequest.class), anyLong());
 
 		// when & then
-		mockMvc.perform(patch("/api/issues/" + issueId + "/status")
-				.content(objectMapper.writeValueAsString(issueModifyStatusRequest))
+		mockMvc.perform(patch("/api/issues/status")
+				.content(objectMapper.writeValueAsString(issueModifyStatusesRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isBadRequest())
 			.andDo(print());

@@ -3,6 +3,7 @@ package codesquard.app.issue.repository;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -83,21 +84,28 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		assertThat(id).isNotNull();
 	}
 
-	@DisplayName("이슈를 등록하고 그 등록 번호의 이슈 상태를 수정한다.")
+	@DisplayName("이슈들을 등록하고 그 등록 번호의 이슈 상태들을 수정한다.")
 	@Test
-	void modifyStatus() {
+	void modifyStatuses() {
 		// given
 		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long id = createIssue(userId);
+		Long id1 = createIssue(userId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", null,
+			userId);
+		Issue issue = issueSaveRequest.toEntity(userId);
+		Long id2 = issueRepository.save(issue);
+		List<Long> issueId = List.of(id1, id2);
+
+		String issueStatus = "CLOSED";
 
 		// when
-		IssueStatus issueStatus = IssueStatus.CLOSED;
 		LocalDateTime status_modified_at = LocalDateTime.now().withNano(0);
-		issueRepository.modifyStatus(issueStatus.name(), id, status_modified_at);
+		issueRepository.modifyStatuses(issueStatus, issueId, status_modified_at);
 
 		// then
-		assertThat(issueRepository.findBy(id).getStatus()).isEqualTo(issueStatus);
-		assertThat(issueRepository.findBy(id).getStatusModifiedAt()).isEqualTo(status_modified_at);
+		assertThat(issueRepository.findBy(id1).getStatus()).isEqualTo(IssueStatus.valueOf(issueStatus));
+		assertThat(issueRepository.findBy(id1).getStatusModifiedAt()).isEqualTo(status_modified_at);
+		assertThat(issueRepository.findBy(id2).getStatus()).isEqualTo(IssueStatus.valueOf(issueStatus));
 	}
 
 	@DisplayName("이슈를 등록하고 그 등록 번호의 이슈 제목을 수정한다.")

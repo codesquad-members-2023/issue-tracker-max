@@ -18,7 +18,7 @@ import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
 import codesquard.app.issue.dto.request.IssueModifyMilestoneRequest;
-import codesquard.app.issue.dto.request.IssueModifyStatusRequest;
+import codesquard.app.issue.dto.request.IssueModifyStatusesRequest;
 import codesquard.app.issue.dto.request.IssueModifyTitleRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.dto.response.IssueLabelResponse;
@@ -93,69 +93,81 @@ class IssueServiceTest extends IntegrationTestSupport {
 		assertThat(id).isNotNull();
 	}
 
-	@DisplayName("이슈 상태를 수정한다.")
+	@DisplayName("이슈들의 상태를 수정한다.")
 	@Test
-	void modifyStatus() {
+	void modifyStatuses() {
 		// given
 		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long id = createIssue(userId);
+		Long id1 = createIssue(userId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", null,
+			userId);
+		Long id2 = issueService.save(issueSaveRequest, userId);
+		List<Long> issueId = List.of(id1, id2);
 
 		String issueStatus = "CLOSED";
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(issueStatus);
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId, issueStatus);
 
 		// when
-		issueService.modifyStatus(issueModifyStatusRequest, id, userId);
+		issueService.modifyStatuses(issueModifyStatusesRequest, userId);
 
 		// then
-		assertThat(issueQueryService.findById(id).getStatus().name()).isEqualTo(issueStatus);
+		assertThat(issueQueryService.findById(id1).getStatus().name()).isEqualTo(issueStatus);
+		assertThat(issueQueryService.findById(id2).getStatus().name()).isEqualTo(issueStatus);
 	}
 
-	@DisplayName("이슈 상태를 수정시 이슈가 없다면 400 에러를 반환한다.")
+	@DisplayName("이슈들의 상태를 수정시 이슈가 없다면 400 에러를 반환한다.")
 	@Test
-	void modifyStatus_IfNoIssue_Response400() {
+	void modifyStatuses_IfNoIssue_Response400() {
 		// given
-		Long id = 10000L;
-		Long userId = 1L;
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		List<Long> issueId = List.of(0L);
 
 		String issueStatus = "CLOSED";
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(issueStatus);
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId, issueStatus);
 
 		// when & then
 		assertThatThrownBy(
-			() -> issueService.modifyStatus(issueModifyStatusRequest, id, userId)).isInstanceOf(
+			() -> issueService.modifyStatuses(issueModifyStatusesRequest, userId)).isInstanceOf(
 			NoSuchIssueException.class);
 	}
 
-	@DisplayName("이슈 상태 수정시 유효하지 않은 status 값이 오면 400 에러를 반환한다.")
+	@DisplayName("이슈들의 상태 수정시 유효하지 않은 status 값이 오면 400 에러를 반환한다.")
 	@Test
-	void modifyInvalidStatus_Response400() {
+	void modifyInvalidStatuses_Response400() {
 		// given
 		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long id = createIssue(userId);
+		Long id1 = createIssue(userId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", null,
+			userId);
+		Long id2 = issueService.save(issueSaveRequest, userId);
+		List<Long> issueId = List.of(id1, id2);
 
 		String invalidIssueStatus = "OPEN";
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(invalidIssueStatus);
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId,
+			invalidIssueStatus);
 
 		// when & then
 		assertThatThrownBy(
-			() -> issueService.modifyStatus(issueModifyStatusRequest, id, userId)).isInstanceOf(
+			() -> issueService.modifyStatuses(issueModifyStatusesRequest, userId)).isInstanceOf(
 			IllegalIssueStatusException.class);
 	}
 
-	@DisplayName("이슈 상태를 수정할 때 이슈 작성자와 유저가 다를 시 403에러를 반환한다.")
+	@DisplayName("이슈들의 상태를 수정할 때 하나의 이슈 작성자와 유저가 다를 시 403에러를 반환한다.")
 	@Test
-	void modifyStatus_IfNotSameAuthor_Response403() {
-		// given
-		Long authorId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long userId = 0L;
-		Long id = createIssue(authorId);
+	void modifyStatuses_IfNotSameAuthor_Response403() {
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id1 = createIssue(userId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", null,
+			userId);
+		Long id2 = issueService.save(issueSaveRequest, userId);
+		List<Long> issueId = List.of(id1, id2);
 
 		String issueStatus = "CLOSED";
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(issueStatus);
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId, issueStatus);
 
 		// when & then
 		assertThatThrownBy(
-			() -> issueService.modifyStatus(issueModifyStatusRequest, id, userId)).isInstanceOf(
+			() -> issueService.modifyStatuses(issueModifyStatusesRequest, 0L)).isInstanceOf(
 			RestApiException.class);
 	}
 
