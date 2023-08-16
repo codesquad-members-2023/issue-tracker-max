@@ -19,8 +19,6 @@ export const IssueContainer: React.FC<Props> = ({
   contents,
   createdAt,
 }: Props) => {
-  console.log(contents); // 123
-
   return (
     <Comment
       key={issueId}

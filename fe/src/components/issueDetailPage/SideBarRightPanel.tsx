@@ -1,4 +1,5 @@
 import { useTheme } from '@emotion/react';
+import { Theme, css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Button } from '@components/common/Button';
@@ -49,18 +50,7 @@ export const SideBarRightPanel: React.FC<Props> = ({
   };
 
   return (
-    <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-        alignItems: 'flex-end',
-        '& span': {
-          color: theme.neutral.text.default,
-          font: theme.fonts.availableMedium16,
-        },
-      }}
-    >
+    <div css={rightPanelStyle}>
       <SideBar>
         <ListSideBar
           onSingleSelectedMilestone={onSingleSelectedMilestone}
@@ -84,3 +74,14 @@ export const SideBarRightPanel: React.FC<Props> = ({
     </div>
   );
 };
+
+const rightPanelStyle = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-end;
+  & span {
+    color: ${theme.neutral.text.default};
+    font: ${theme.fonts.availableMedium16};
+  }
+`;

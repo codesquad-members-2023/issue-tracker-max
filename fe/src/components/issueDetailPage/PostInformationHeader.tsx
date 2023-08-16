@@ -1,3 +1,4 @@
+import { Theme, css } from '@emotion/react';
 import { useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { Button } from '@components/common/Button';
@@ -63,16 +64,7 @@ export const PostInformationHeader: React.FC<Props> = ({
   };
 
   return (
-    <div
-      css={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        gap: '16px',
-        boxSizing: 'border-box',
-      }}
-    >
+    <div css={postInformationHeaderStyle}>
       {isEditing ? (
         <TextInput
           height={40}
@@ -84,39 +76,13 @@ export const PostInformationHeader: React.FC<Props> = ({
           onClearInput={onClearInput}
         />
       ) : (
-        <div
-          css={{
-            display: 'flex',
-            gap: '8px',
-          }}
-        >
-          <h2
-            css={{
-              color: theme.neutral.text.strong,
-              font: theme.fonts.displayBold32,
-            }}
-          >
-            {titleInput ? titleInput : title}
-          </h2>
-
-          <span
-            css={{
-              color: theme.neutral.text.weak,
-              font: theme.fonts.displayBold32,
-            }}
-          >
-            #{id}
-          </span>
+        <div className="title-container">
+          <h2>{titleInput ? titleInput : title}</h2>
+          <span>#{id}</span>
         </div>
       )}
 
-      <div
-        css={{
-          display: 'flex',
-          gap: '16px',
-          alignItems: 'center',
-        }}
-      >
+      <div className="button-container">
         {isEditing ? (
           <>
             <Button typeVariant="outline" size="S" onClick={onEditTitleCancel}>
@@ -153,3 +119,33 @@ export const PostInformationHeader: React.FC<Props> = ({
     </div>
   );
 };
+
+const postInformationHeaderStyle = (theme: Theme) => css`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  box-sizing: border-box;
+
+  .title-container {
+    display: flex;
+    gap: 8px;
+  }
+
+  h2 {
+    color: ${theme.neutral.text.strong};
+    font: ${theme.fonts.displayBold32};
+  }
+
+  span {
+    color: ${theme.neutral.text.weak};
+    font: ${theme.fonts.displayBold32};
+  }
+
+  .button-container {
+    display: flex;
+    gap: 16px;
+    alignitems: center;
+  }
+`;

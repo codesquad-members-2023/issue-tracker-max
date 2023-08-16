@@ -1,3 +1,4 @@
+import { Theme, css } from '@emotion/react';
 import { InformationTag } from '@components/common/InformationTag';
 import { useTheme } from '@emotion/react';
 import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
@@ -20,18 +21,7 @@ export const PostInformationHeaderMeta: React.FC<Props> = ({
 
   return (
     <>
-      <div
-        css={{
-          display: 'flex',
-          gap: '8px',
-          alignItems: 'center',
-
-          '& span': {
-            color: theme.neutral.text.weak,
-            font: theme.fonts.displayMedium16,
-          },
-        }}
-      >
+      <div css={headerMetaStyle}>
         <InformationTag
           size="L"
           typeVariant="filled"
@@ -54,3 +44,14 @@ export const PostInformationHeaderMeta: React.FC<Props> = ({
     </>
   );
 };
+
+const headerMetaStyle = (theme: Theme) => css`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  & span {
+    color: ${theme.neutral.text.weak};
+    font: ${theme.fonts.displayMedium16};
+  }
+`;

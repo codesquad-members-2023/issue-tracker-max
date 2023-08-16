@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import { PostInformationHeader } from './PostInformationHeader';
 import { PostInformationHeaderMeta } from './PostInformationHeaderMeta';
 
@@ -10,14 +11,7 @@ export const PostInformation: React.FC<Props> = ({
 }: Props) => {
   return (
     <>
-      <div
-        css={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-        }}
-      >
+      <div css={postInformationStyle}>
         <PostInformationHeader
           title={issueDetailPageData.title}
           id={issueDetailPageData.id}
@@ -33,3 +27,10 @@ export const PostInformation: React.FC<Props> = ({
     </>
   );
 };
+
+const postInformationStyle = css`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;

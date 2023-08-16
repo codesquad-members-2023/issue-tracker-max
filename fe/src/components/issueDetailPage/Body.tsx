@@ -1,4 +1,4 @@
-import { useTheme } from '@emotion/react';
+import { Theme, css } from '@emotion/react';
 import { SideBarRightPanel } from './SideBarRightPanel';
 import { CommentContainer } from './CommentContainer';
 import { IssueContainer } from './IssueContainer';
@@ -6,7 +6,6 @@ import { IssueContainer } from './IssueContainer';
 type Props = {
   issueDetailPageData: IssueDetailPageData;
   onAddComment: (comment: Comment) => void;
-  //
   selectionsOptions: SelectionState['detailPage'];
   selections: SelectionState['newIssuePage'];
   onChangeSelect?: (key: string) => void;
@@ -18,7 +17,6 @@ type Props = {
 export const Body: React.FC<Props> = ({
   issueDetailPageData,
   onAddComment,
-  //
   selectionsOptions,
   selections,
   onChangeSelect,
@@ -26,28 +24,11 @@ export const Body: React.FC<Props> = ({
   onMultipleSelectedAssignee,
   onMultipleSelectedLabel,
 }: Props) => {
-  const theme = useTheme() as any;
-
   return (
-    <div
-      css={{
-        width: '100%',
-        display: 'flex',
-        gap: '32px',
-        borderTop: `${theme.border.default} ${theme.neutral.border.default}`,
-        paddingTop: '24px',
-      }}
-    >
-      <div
-        css={{
-          width: '960px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '24px',
-        }}
-      >
+    <div css={bodyStyle}>
+      <div className="container">
         <IssueContainer
-          issueId={issueDetailPageData.id} // 페이지 데이터만 내리기?
+          issueId={issueDetailPageData.id}
           author={issueDetailPageData.author}
           contents={issueDetailPageData.contents}
           createdAt={issueDetailPageData.createdAt}
@@ -61,12 +42,10 @@ export const Body: React.FC<Props> = ({
           onAddComment={onAddComment}
         />
       </div>
-
       <SideBarRightPanel
         issueId={issueDetailPageData.id}
         issueDetailPageData={issueDetailPageData}
         selectionsOptions={selectionsOptions}
-        //
         selections={selections}
         onChangeSelect={onChangeSelect}
         onSingleSelectedMilestone={onSingleSelectedMilestone}
@@ -76,3 +55,18 @@ export const Body: React.FC<Props> = ({
     </div>
   );
 };
+
+const bodyStyle = (theme: Theme) => css`
+  width: 100%;
+  display: flex;
+  gap: 32px;
+  bordertop: ${theme.border.default} ${theme.neutral.border.default};
+  paddingtop: 24px;
+
+  .container {
+    width: 960px;
+    display: flex;
+    flexdirection: column;
+    gap: 24px;
+  }
+`;
