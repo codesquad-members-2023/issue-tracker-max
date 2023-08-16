@@ -13,6 +13,7 @@ env:
   AWS_REGION: ap-northeast-2
   PROD_PROFILE_RESOURCE_PATH: ./src/main/resources/application-prodDB.yml
   CLOUD_PROFILE_RESOURCE_PATH: ./src/main/resources/application-cloud.yml
+<<<<<<< HEAD
   OAUTH_PROFILE_RESOURCE_PATH: ./src/main/resources/application-oauth.yml
   JWT_PROFILE_RESOURCE_PATH: ./src/main/resources/application-jwt.yml
   CODE_DEPLOY_APPLICATION_NAME: codedeploy-app
@@ -52,10 +53,17 @@ jobs:
       - name: Set application-cloud.yml file
         run: echo '${{ secrets.APPLICATION_CLOUD_PROPERTIES }}' > '${{ env.CLOUD_PROFILE_RESOURCE_PATH }}'
 
+<<<<<<< HEAD
       - name: Create application-oauth.yml file
         run: touch '${{ env.OAUTH_PROFILE_RESOURCE_PATH }}'
       - name: Set application-oauth.yml file
         run: echo '${{ secrets.APPLICATION_OAUTH_PROPERTIES }}' > '${{ env.OAUTH_PROFILE_RESOURCE_PATH }}'
+=======
+      - name: Create application-jwt.yml file
+        run: touch '${{ env.JWT_PROFILE_RESOURCE_PATH }}'
+      - name: Set application-jwt.yml file
+        run: echo '${{ secrets.APPLICATION_JWT_PROPERTIES }}' > '${{ env.JWT_PROFILE_RESOURCE_PATH }}'
+>>>>>>> dev-be
 
       - name: Create application-jwt.yml file
         run: touch '${{ env.JWT_PROFILE_RESOURCE_PATH }}'

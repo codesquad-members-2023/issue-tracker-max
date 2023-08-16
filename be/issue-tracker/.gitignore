@@ -39,6 +39,7 @@ out/
 .DS_Store
 be/issue-tracker/src/main/resources/application-testDB.yml
 be/issue-tracker/src/main/resources/application-cloud.yml
+<<<<<<< HEAD
 be/issue-tracker/src/main/resources/application-oauth.yml
 be/issue-tracker/src/main/resources/application-jwt.yml
 be/issue-tracker/docker-compose.yml
