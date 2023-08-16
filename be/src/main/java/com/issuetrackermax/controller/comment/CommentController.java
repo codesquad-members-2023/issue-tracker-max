@@ -22,12 +22,12 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/issues/{issueId}/comments")
+@RequestMapping("/api/issues")
 public class CommentController {
 	private static final String MEMBER_ID = "memberId";
 	private final CommentService commentService;
 
-	@PatchMapping("/{id}")
+	@PatchMapping("/{issueId}/comments/{id}")
 	public ApiResponse<Void> modifyComment(@PathVariable Long id,
 		@RequestBody CommentModifyRequest commentModifyRequest,
 		HttpServletRequest request) {
@@ -36,7 +36,7 @@ public class CommentController {
 		return ApiResponse.success();
 	}
 
-	@PostMapping
+	@PostMapping("/{issueId}/comments")
 	public ApiResponse<CommentResponse> post(@RequestBody CommentCreateRequest commentCreateRequest,
 		HttpServletRequest request, @PathVariable Long issueId) {
 		Integer memberId = (Integer)request.getAttribute(MEMBER_ID);
@@ -44,7 +44,7 @@ public class CommentController {
 		return ApiResponse.success(commentResponse);
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("(/{issueId}/comments/{id}")
 	public ApiResponse<Void> deleteComment(@PathVariable Long id, HttpServletRequest request) {
 		Integer memberId = (Integer)request.getAttribute(MEMBER_ID);
 		commentService.delete(id, memberId.longValue());
