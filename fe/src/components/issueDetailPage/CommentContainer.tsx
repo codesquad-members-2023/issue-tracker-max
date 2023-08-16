@@ -1,4 +1,4 @@
-import { useTheme, css } from '@emotion/react';
+import { css } from '@emotion/react';
 import { Comment } from '@components/common/comment/Comment';
 import { AddNewComment } from './AddNewComment';
 
@@ -56,7 +56,7 @@ export const CommentContainer: React.FC<Props> = ({
 
 const commentContainerStyle = css`
   display: flex;
-  flexdirection: column;
+  flex-direction: column;
   gap: 24px;
   width: 960px;
 `;

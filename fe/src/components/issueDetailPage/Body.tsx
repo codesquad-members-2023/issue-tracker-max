@@ -66,7 +66,7 @@ const bodyStyle = (theme: Theme) => css`
   .container {
     width: 960px;
     display: flex;
-    flexdirection: column;
+    flex-direction: column;
     gap: 24px;
   }
 `;
