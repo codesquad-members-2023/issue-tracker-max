@@ -12,8 +12,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import codesquard.app.api.errors.errorcode.LoginErrorCode;
-import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.user.annotation.Login;
 
@@ -34,9 +32,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 		HttpServletRequest request = (HttpServletRequest)webRequest.getNativeRequest();
 		AuthenticateUser authenticateUser = (AuthenticateUser)request.getAttribute(AUTHENTICATE_USER);
-		if (authenticateUser == null) {
-			throw new RestApiException(LoginErrorCode.UNAUTHORIZED);
-		}
 		logger.info("resolveArgument, authenticateUser : {}", authenticateUser);
 		return authenticateUser;
 	}
