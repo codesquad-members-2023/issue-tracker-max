@@ -53,6 +53,13 @@ public enum MilestoneFixture {
 			.orElseThrow();
 	}
 
+	public static MilestoneFixture findByTitle(String title) {
+		return Arrays.stream(values())
+			.filter(m -> m.title.equals(title))
+			.findAny()
+			.orElseThrow();
+	}
+
 	public static String createInsertSQL() {
 		return String.format(
 			"INSERT INTO milestone(title, description, deadline, is_open) VALUES %s",

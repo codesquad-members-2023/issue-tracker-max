@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,25 +14,16 @@ import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.domain.IssueRepository;
 import com.issuetracker.issue.domain.IssuesCountData;
 import com.issuetracker.issue.infrastrucure.JdbcIssueRepository;
-import com.issuetracker.util.DatabaseInitialization;
-import com.issuetracker.util.RepositoryTest;
+import com.issuetracker.util.JdbcRepositoryTest;
 
-@RepositoryTest
-class IssueRepositoryTest {
+class IssueJdbcRepositoryTest extends JdbcRepositoryTest {
 
 	private IssueRepository issueRepository;
-	private DatabaseInitialization databaseInitialization;
 
 	@Autowired
-	public IssueRepositoryTest(JdbcTemplate jdbcTemplate) {
+	public IssueJdbcRepositoryTest(JdbcTemplate jdbcTemplate) {
+		super(jdbcTemplate);
 		this.issueRepository = new JdbcIssueRepository(jdbcTemplate);
-		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
-	}
-
-	@BeforeEach
-	void setUp() {
-		databaseInitialization.initialization();
-		databaseInitialization.loadData();
 	}
 
 	@Test
@@ -70,7 +60,7 @@ class IssueRepositoryTest {
 	@Test
 	void 이슈_열림_닫힘을_수정한다() {
 		// when
-		int actual = issueRepository.updateOpen(ISSUE1.getId(), false);
+		int actual = issueRepository.updateOpen(false, ISSUE1.getId());
 
 		// then
 		assertThat(actual).isEqualTo(1);

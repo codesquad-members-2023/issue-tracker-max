@@ -1,4 +1,4 @@
-package com.issuetracker.config;
+package com.issuetracker.common.config;
 
 import java.util.stream.Collectors;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import com.issuetracker.config.exception.CustomHttpException;
-import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.common.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.ErrorType;
 
 import io.jsonwebtoken.ExpiredJwtException;
 

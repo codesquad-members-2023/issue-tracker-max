@@ -1,6 +1,5 @@
 package com.issuetracker.unit.infrastrucure;
 
-import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
 import static com.issuetracker.util.fixture.IssueFixture.ISSUE2;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL5;
@@ -14,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,29 +21,19 @@ import com.issuetracker.issue.domain.IssueDetailRead;
 import com.issuetracker.issue.domain.IssueMapper;
 import com.issuetracker.issue.domain.IssueRead;
 import com.issuetracker.issue.domain.IssueSearch;
-import com.issuetracker.util.DatabaseInitialization;
-import com.issuetracker.util.MyBatisMapperTest;
+import com.issuetracker.util.MyBatisRepositoryTest;
 import com.issuetracker.util.fixture.IssueCommentFixture;
 import com.issuetracker.util.fixture.LabelFixture;
 import com.issuetracker.util.fixture.MemberFixture;
 
-@MyBatisMapperTest
-public class IssueMapperTest {
+public class IssueMapperTestJdbc extends MyBatisRepositoryTest {
 
 	@Autowired
 	private IssueMapper issueMapper;
 
-	private DatabaseInitialization databaseInitialization;
-
 	@Autowired
-	public IssueMapperTest(JdbcTemplate jdbcTemplate) {
-		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
-	}
-
-	@BeforeEach
-	void setUp() {
-		databaseInitialization.initialization();
-		databaseInitialization.loadData();
+	public IssueMapperTestJdbc(JdbcTemplate jdbcTemplate) {
+		super(jdbcTemplate);
 	}
 
 	@Test
@@ -53,12 +41,12 @@ public class IssueMapperTest {
 		// given
 		IssueSearch issueSearch = IssueSearch.builder()
 			.isOpen(true)
-			.assigneeIds(Collections.emptyList())
-			.labelIds(List.of(LABEL5.getId()))
-			.milestoneId(MILESTON1.getId())
-			.authorId(MEMBER1.getId())
-			.commentAuthorId(null)
+			.assigneeNames(Collections.emptyList())
+			.labelTitles(List.of(LABEL5.getTitle()))
+			.milestoneTitle(MILESTON1.getTitle())
+			.authorName(MEMBER1.getNickname())
 			.build();
+
 
 		// when
 		List<IssueRead> actual = issueMapper.search(issueSearch);
@@ -72,11 +60,10 @@ public class IssueMapperTest {
 		// given
 		IssueSearch issueSearch = IssueSearch.builder()
 			.isOpen(false)
-			.assigneeIds(Collections.emptyList())
-			.labelIds(List.of(LABEL1.getId()))
-			.milestoneId(MILESTON3.getId())
-			.authorId(MEMBER4.getId())
-			.commentAuthorId(null)
+			.assigneeNames(Collections.emptyList())
+			.labelTitles(List.of(LABEL1.getTitle()))
+			.milestoneTitle(MILESTON3.getTitle())
+			.authorName(MEMBER4.getNickname())
 			.build();
 
 		// when

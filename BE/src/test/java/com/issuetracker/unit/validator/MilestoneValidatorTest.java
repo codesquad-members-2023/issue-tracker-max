@@ -10,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.issuetracker.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.CustomHttpException;
 import com.issuetracker.milestone.application.MilestoneValidator;
 import com.issuetracker.milestone.domain.MilestoneRepository;
 import com.issuetracker.util.MockTest;

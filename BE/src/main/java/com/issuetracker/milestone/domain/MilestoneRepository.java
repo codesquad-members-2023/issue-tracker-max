@@ -6,6 +6,8 @@ public interface MilestoneRepository {
 
 	boolean existById(Long id);
 
+	boolean existsByTitle(String title);
+
 	List<Milestone> findAllForFilter();
 
 	Long save(Milestone milestone);

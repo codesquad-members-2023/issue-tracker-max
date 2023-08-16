@@ -52,6 +52,19 @@ public enum MemberFixture {
 			.orElseThrow();
 	}
 
+	public static MemberFixture findByNickname(String nickname) {
+		return Arrays.stream(values())
+			.filter(m -> m.nickname.equals(nickname))
+			.findAny()
+			.orElseThrow();
+	}
+
+	public static List<MemberFixture> findAllByNickname(List<String> names) {
+		return names.stream()
+			.map(MemberFixture::findByNickname)
+			.collect(Collectors.toUnmodifiableList());
+	}
+
 	public static List<MemberFixture> findByIssueId(Long issueId) {
 		return Arrays.stream(AssigneeFixture.values())
 			.filter(a -> a.getIssueId() == issueId)

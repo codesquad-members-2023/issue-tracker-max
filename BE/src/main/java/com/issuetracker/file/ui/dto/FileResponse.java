@@ -1,6 +1,6 @@
 package com.issuetracker.file.ui.dto;
 
-import com.issuetracker.file.application.dto.FileInformation;
+import com.issuetracker.file.application.dto.FileMetadata;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,9 +12,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class FileResponse {
 
+	private String fileName;
 	private String url;
 
-	public static FileResponse from(FileInformation fileInformation) {
-		return new FileResponse(fileInformation.getUrl());
+	public static FileResponse from(FileMetadata fileMetadata) {
+		return new FileResponse(fileMetadata.getFileName(), fileMetadata.getUrl());
 	}
 }

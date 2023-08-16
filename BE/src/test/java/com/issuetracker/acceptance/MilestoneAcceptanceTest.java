@@ -1,5 +1,6 @@
 package com.issuetracker.acceptance;
 
+import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON1;
 import static com.issuetracker.util.steps.MilestoneSteps.*;
 
 import java.util.List;
@@ -99,6 +100,26 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 			"마일스톤 제목",
 			"마일스톤 설명",
 			"2023.09.09"
+		);
+
+		// when
+		var response = 마일스톤_생성_요청(milestoneCreateRequest);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * When 마일스톤 생성시 제목이 중복인 경우
+	 * Then 요청이 실패한다
+	 */
+	@Test
+	void 마일스톤_생성시_제목이_중복인_경우_요청이_실패한다() {
+		// given
+		MilestoneCreateRequest milestoneCreateRequest = new MilestoneCreateRequest(
+			MILESTON1.getTitle(),
+			"마일스톤 설명",
+			"2023-09-09"
 		);
 
 		// when

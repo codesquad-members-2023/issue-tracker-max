@@ -12,20 +12,22 @@ import lombok.NoArgsConstructor;
 public class IssueSearch {
 
 	private Boolean isOpen;
-	private List<Long> assigneeIds;
-	private List<Long> labelIds;
-	private Long milestoneId;
-	private Long authorId;
+	private List<String> assigneeNames;
+	private List<String> labelTitles;
+	private String milestoneTitle;
+	private String authorName;
 	private Long commentAuthorId;
+	private List<String> no;
 
 	@Builder
-	private IssueSearch(Boolean isOpen, List<Long> assigneeIds, List<Long> labelIds, Long milestoneId, Long authorId,
-		Long commentAuthorId) {
+	public IssueSearch(Boolean isOpen, List<String> assigneeNames, List<String> labelTitles, String milestoneTitle,
+		String authorName, Long commentAuthorId, List<String> no) {
 		this.isOpen = isOpen;
-		this.assigneeIds = assigneeIds;
-		this.labelIds = labelIds;
-		this.milestoneId = milestoneId;
-		this.authorId = authorId;
+		this.assigneeNames = assigneeNames;
+		this.labelTitles = labelTitles;
+		this.milestoneTitle = milestoneTitle;
+		this.authorName = authorName;
 		this.commentAuthorId = commentAuthorId;
+		this.no = no;
 	}
 }

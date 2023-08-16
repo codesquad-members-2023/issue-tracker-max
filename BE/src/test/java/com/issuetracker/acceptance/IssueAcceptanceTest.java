@@ -1,25 +1,28 @@
 package com.issuetracker.acceptance;
 
 import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
+import static com.issuetracker.util.fixture.IssueFixture.ISSUE2;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL2;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL4;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL7;
 import static com.issuetracker.util.fixture.MemberFixture.MEMBER1;
 import static com.issuetracker.util.fixture.MemberFixture.MEMBER2;
-import static com.issuetracker.util.fixture.MemberFixture.MEMBER3;
 import static com.issuetracker.util.fixture.MemberFixture.MEMBER4;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON1;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON2;
 import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON4;
+import static com.issuetracker.util.steps.IssueSteps.마일스톤_목록_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_내용_수정_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_마일스톤_수정_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_목록_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_삭제_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_상세_조회_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_열림_닫힘_수정_요청;
+import static com.issuetracker.util.steps.IssueSteps.이슈_열림_닫힘_일괄_수정_요쳥;
 import static com.issuetracker.util.steps.IssueSteps.이슈_작성_요청;
 import static com.issuetracker.util.steps.IssueSteps.이슈_제목_수정_요청;
+import static com.issuetracker.util.steps.IssueSteps.작성자_목록_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
@@ -46,6 +49,8 @@ import com.issuetracker.issue.ui.dto.IssueDetailResponse;
 import com.issuetracker.issue.ui.dto.IssueSearchRequest;
 import com.issuetracker.issue.ui.dto.IssueSearchResponse;
 import com.issuetracker.issue.ui.dto.IssuesSearchResponse;
+import com.issuetracker.issue.ui.dto.assignee.AuthorResponses;
+import com.issuetracker.milestone.ui.dto.MilestonesSearchResponse;
 import com.issuetracker.util.AcceptanceTest;
 import com.issuetracker.util.fixture.IssueCommentFixture;
 import com.issuetracker.util.fixture.IssueFixture;
@@ -65,7 +70,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 	 */
 	@ParameterizedTest
 	@MethodSource("providerIssueSearchRequest")
-	void 이슈를_목록을_조회한다(IssueSearchRequest issueSearchRequest) {
+	void 이슈_목록을_조회한다(IssueSearchRequest issueSearchRequest) {
 		// when
 		var response = 이슈_목록_조회_요청(issueSearchRequest);
 
@@ -84,11 +89,12 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		// when
 		var issueSearchRequest = new IssueSearchRequest(
 			false,
-			List.of(MEMBER4.getId()),
-			List.of(LABEL1.getId(), LABEL2.getId()),
-			MILESTON4.getId(),
-			MEMBER1.getId(),
-			true
+			List.of(MEMBER4.getNickname()),
+			List.of(LABEL1.getTitle(), LABEL2.getTitle()),
+			MILESTON4.getTitle(),
+			MEMBER1.getNickname(),
+			true,
+			null
 		);
 		var response = 이슈_목록_조회_요청(issueSearchRequest);
 
@@ -246,11 +252,11 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 이슈_열림_닫힘_수정한다() {
 		// when
-		var response = 이슈_열림_닫힘_수정_요청(ISSUE1.getId(), false);
+		var response = 이슈_열림_닫힘_수정_요청(true, ISSUE1.getId());
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
-		이슈_상세_조회에서_수정한_값_검증(ISSUE1.getId(), "isOpen", false);
+		이슈_상세_조회에서_수정한_값_검증(ISSUE1.getId(), "isOpen", true);
 	}
 
 	/**
@@ -263,7 +269,39 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		Long 존재하지_않는_이슈_아이디 = 20L;
 
 		// when
-		var response = 이슈_열림_닫힘_수정_요청(존재하지_않는_이슈_아이디, false);
+		var response = 이슈_열림_닫힘_수정_요청(false, 존재하지_않는_이슈_아이디);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Given 라벨, 마일스톤, 회원, 이슈를 생성하고
+	 * When 이슈 열림/닫힘을 일괄 수정하면
+	 * Then 이슈 목록에서 변경된 열림/닫힘을 확인 할 수 있다.
+	 */
+	@ParameterizedTest
+	@MethodSource("providerUpdateOpenAll")
+	void 이슈_열림_닫힘을_일괄_수정한다(boolean isOpen, List<Long> ids) {
+		// when
+		var response = 이슈_열림_닫힘_일괄_수정_요쳥(isOpen, ids);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		이슈_목록에서_수정된_열림_닫힘_검증(isOpen, ids);
+	}
+
+	/**
+	 * When 존재하지 않는 이슈로 열림/닫힘을 일괄 수정하면
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 존재하지_않는_이슈로_열림_닫힘을_일괄_수정_시_요청이_실패된다() {
+		// given
+		Long 존재하지_않는_이슈_아이디 = 20L;
+
+		// when
+		var response = 이슈_열림_닫힘_일괄_수정_요쳥( false, List.of(존재하지_않는_이슈_아이디));
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
@@ -427,34 +465,65 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		이슈_상세_조회에서_삭제_되었는지_검증(ISSUE1.getId());
 	}
 
+	/**
+	 * When 마일스톤 목록을 조회하면
+	 * Then 마일스톤 목록을 반환한다.
+	 */
+	@Test
+	void 마일스톤_목록을_조회한다() {
+		// when
+		var response = 마일스톤_목록_조회_요청();
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.OK);
+		마일스톤_목록_검증(response);
+	}
+
+	/**
+	 * When 작성자 목록을 조회하면
+	 * Then 작성자 목록을 반환한다.
+	 */
+	@Test
+	void 작성자_목록을_조회한다() {
+		// when
+		var response = 작성자_목록_조회_요청();
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.OK);
+		작성자_목록_검증(response);
+	}
+
 	private static Stream<Arguments> providerIssueSearchRequest() {
 		return Stream.of(
 			Arguments.of(
 				new IssueSearchRequest(
 					true,
-					List.of(MEMBER2.getId(), MEMBER3.getId()),
-					List.of(LABEL4.getId(), LABEL7.getId()),
-					MILESTON2.getId(),
-					MEMBER4.getId(),
+					null,
+					List.of(LABEL4.getTitle(), LABEL7.getTitle()),
+					MILESTON1.getTitle(),
+					MEMBER2.getNickname(),
+					true,
 					null)
 			),
 			Arguments.of(
 				new IssueSearchRequest(
-					true,
 					null,
-					List.of(LABEL4.getId(), LABEL7.getId()),
-					MILESTON1.getId(),
-					MEMBER2.getId(),
-					true)
+					null,
+					null,
+					MILESTON1.getTitle(),
+					MEMBER2.getNickname(),
+					true,
+					null)
 			),
 			Arguments.of(
 				new IssueSearchRequest(
 					null,
 					null,
 					null,
-					MILESTON1.getId(),
-					MEMBER2.getId(),
-					true)
+					null,
+					null,
+					null,
+					null)
 			)
 		);
 	}
@@ -471,6 +540,17 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		return Stream.of(
 			Arguments.of(
 				"content".repeat(3000)
+			)
+		);
+	}
+
+	private static Stream<Arguments> providerUpdateOpenAll() {
+		return Stream.of(
+			Arguments.of(
+				true, Arrays.asList(ISSUE1.getId(), ISSUE2.getId())
+			),
+			Arguments.of(
+				false, Arrays.asList(ISSUE1.getId(), ISSUE2.getId())
 			)
 		);
 	}
@@ -494,9 +574,9 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 			assertThat(isOpens).containsOnly(issueSearchRequest.getIsOpen());
 		}
 
-		if (issueSearchRequest.getLabelIds() != null) {
+		if (issueSearchRequest.getLabelTitles() != null) {
 			List<String> labelTitles = response.jsonPath().getList("issues.labels.title", String.class);
-			List<String> expectedTitles = LabelFixture.findAllById(issueSearchRequest.getLabelIds())
+			List<String> expectedTitles = LabelFixture.findAllByTitles(issueSearchRequest.getLabelTitles())
 				.stream()
 				.map(LabelFixture::getTitle)
 				.collect(Collectors.toUnmodifiableList());
@@ -504,18 +584,29 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 			assertThat(labelTitles).containsOnly(expectedTitles.toString());
 		}
 
-		if (issueSearchRequest.getAuthorId() != null) {
+		if (issueSearchRequest.getAuthorName() != null) {
 			List<String> authorNickname = response.jsonPath().getList("issues.author", String.class);
-			MemberFixture findMember = MemberFixture.findById(issueSearchRequest.getAuthorId());
+			MemberFixture findMember = MemberFixture.findByNickname(issueSearchRequest.getAuthorName());
 
 			assertThat(authorNickname).containsOnly(findMember.getNickname());
 		}
 
-		if (issueSearchRequest.getMilestoneId() != null) {
+		if (issueSearchRequest.getMilestoneTitle() != null) {
 			List<String> milestoneTitles = response.jsonPath().getList("issues.milestone.title", String.class);
-			MilestoneFixture findMilestone = MilestoneFixture.findById(issueSearchRequest.getMilestoneId());
+			MilestoneFixture findMilestone = MilestoneFixture.findByTitle(issueSearchRequest.getMilestoneTitle());
 
 			assertThat(milestoneTitles).containsOnly(findMilestone.getTitle());
+		}
+
+		if (issueSearchRequest.getAssigneeNames() != null) {
+			List<String> assigneeNicknames = response.jsonPath().getList("issues.assignees.nickname", String.class);
+
+			List<String> expectedNicknames = MemberFixture.findAllByNickname(issueSearchRequest.getAssigneeNames())
+				.stream()
+				.map(MemberFixture::getNickname)
+				.collect(Collectors.toUnmodifiableList());
+
+			assertThat(assigneeNicknames).containsOnly(expectedNicknames.toString());
 		}
 	}
 
@@ -526,7 +617,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 	}
 
 	private void 이슈_목록_조회_시_생성된_이슈를_검증(ExtractableResponse<Response> response, IssueCreateRequest issueCreateRequest) {
-		var findResponse =  이슈_목록_조회_요청(new IssueSearchRequest(true, null, null, null, null, null));
+		var findResponse =  이슈_목록_조회_요청(new IssueSearchRequest(true, null, null, null, null, null, null));
 		List<IssueSearchResponse> issueSearchResponses = findResponse.as(IssuesSearchResponse.class).getIssues();
 		IssueSearchResponse lastIssueSearchResponse = issueSearchResponses.get(0);
 
@@ -579,5 +670,31 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		var response = 이슈_상세_조회_요청(id);
 
 		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	private void 이슈_목록에서_수정된_열림_닫힘_검증(boolean isOpen, List<Long> ids) {
+		List<IssueSearchResponse> issues = 이슈_목록_조회_요청(Map.of("isOpen", isOpen)).as(IssuesSearchResponse.class)
+			.getIssues();
+		boolean result = issues.stream()
+			.map(IssueSearchResponse::getId)
+			.collect(Collectors.toUnmodifiableList())
+			.containsAll(ids);
+
+		assertThat(result).isTrue();
+		assertThat(issues.get(0).getIsOpen()).isEqualTo(isOpen);
+	}
+
+	private void 마일스톤_목록_검증(ExtractableResponse<Response> response) {
+		var findResponse = 마일스톤_목록_조회_요청();
+		MilestonesSearchResponse milestonesSearchResponse = findResponse.as(MilestonesSearchResponse.class);
+
+		assertThat(milestonesSearchResponse.getMilestones()).isNotEmpty();
+	}
+
+	private void 작성자_목록_검증(ExtractableResponse<Response> response) {
+		var findResponse = 작성자_목록_조회_요청();
+		AuthorResponses authorResponses = findResponse.as(AuthorResponses.class);
+
+		assertThat(authorResponses.getAuthors()).isNotEmpty();
 	}
 }

@@ -1,5 +1,6 @@
 package com.issuetracker.issue.infrastrucure;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,6 +23,7 @@ public class JdbcIssueRepository implements IssueRepository {
 	private static final String SAVE_SQL = "INSERT INTO issue(title, content, is_open, create_at, milestone_id, author_id) VALUES(:title, :content, :isOpen, :createAt, :milestoneId, :authorId)";
 	private static final String FIND_ALL_COUNT_SQL = "SELECT SUM(CASE WHEN is_open = false THEN true ELSE false END) AS issue_close_count, SUM(CASE WHEN is_open = 1 THEN 1 ELSE 0 END) AS issue_open_count, (SELECT COUNT(id) FROM label WHERE label.is_deleted = false) AS label_count, (SELECT COUNT(id) FROM milestone WHERE milestone.is_deleted = false) AS milestone_count FROM issue WHERE issue.is_deleted = false";
 	private static final String UPDATE_IS_OPEN_SQL = "UPDATE issue SET is_open = :isOpen WHERE id = :id";
+	private static final String UPDATE_ALL_IS_OPEN_SQL = "UPDATE issue SET is_open = :isOpen WHERE id in (:ids)";
 	private static final String UPDATE_TITLE_SQL = "UPDATE issue SET title = :title WHERE id = :id";
 	private static final String UPDATE_CONTENT_SQL = "UPDATE issue SET content = :content WHERE id = :id";
 	private static final String UPDATE_MILESTONE_SQL = "UPDATE issue SET milestone_id = :milestoneId WHERE id = :id";
@@ -48,11 +50,19 @@ public class JdbcIssueRepository implements IssueRepository {
 	}
 
 	@Override
-	public int updateOpen(long id, boolean isOpen) {
+	public int updateOpen(boolean isOpen, long id) {
 		SqlParameterSource param = new MapSqlParameterSource()
-			.addValue("id", id)
-			.addValue("isOpen", isOpen);
+			.addValue("isOpen", isOpen)
+			.addValue("id", id);
 		return jdbcTemplate.update(UPDATE_IS_OPEN_SQL, param);
+	}
+
+	@Override
+	public int updateAllOpen(boolean isOpen, List<Long> ids) {
+		SqlParameterSource param = new MapSqlParameterSource()
+			.addValue("isOpen", isOpen)
+			.addValue("ids", ids);
+		return jdbcTemplate.update(UPDATE_ALL_IS_OPEN_SQL, param);
 	}
 
 	@Override

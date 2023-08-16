@@ -1,8 +1,7 @@
-package com.issuetracker.config.exception;
+package com.issuetracker.common.config.exception;
 
 import org.springframework.http.HttpStatus;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

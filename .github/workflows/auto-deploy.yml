@@ -40,12 +40,6 @@ jobs:
       - run: echo "${{ secrets.APPLICATION_PROD_DB }}" > ${{ env.APPLICATION_PROD_DB_FILE_PATH }}
         shell: bash
 
-      - name: Create application-testDB.yml
-        run: touch ${{ env.APPLICATION_TEST_DB_FILE_PATH }}
-        shell: bash
-      - run: echo "${{ secrets.APPLICATION_TEST_DB }}" > ${{ env.APPLICATION_TEST_DB_FILE_PATH }}
-        shell: bash
-
       - name: Create application-awsConfig.yml
         run: touch ${{ env.APPLICATION_AWS_CONFIG_PATH }}
         shell: bash

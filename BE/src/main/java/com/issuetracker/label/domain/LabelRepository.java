@@ -6,6 +6,8 @@ public interface LabelRepository {
 
 	boolean existByIds(List<Long> labelIds);
 
+	boolean existsByTitle(String title);
+
 	Long save(Label label);
 
 	int update(Label label);

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,25 +12,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.issuetracker.milestone.domain.Milestone;
 import com.issuetracker.milestone.domain.MilestoneRepository;
 import com.issuetracker.milestone.infrastructure.JdbcMilestoneRepository;
-import com.issuetracker.util.DatabaseInitialization;
-import com.issuetracker.util.RepositoryTest;
+import com.issuetracker.util.JdbcRepositoryTest;
 
-@RepositoryTest
-class MilestoneRepositoryTest {
+class MilestoneJdbcRepositoryTest extends JdbcRepositoryTest {
 
 	private MilestoneRepository milestoneRepository;
-	private DatabaseInitialization databaseInitialization;
 
 	@Autowired
-	public MilestoneRepositoryTest(JdbcTemplate jdbcTemplate) {
+	public MilestoneJdbcRepositoryTest(JdbcTemplate jdbcTemplate) {
+		super(jdbcTemplate);
 		this.milestoneRepository = new JdbcMilestoneRepository(jdbcTemplate);
-		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
-	}
-
-	@BeforeEach
-	void setUp() {
-		databaseInitialization.initialization();
-		databaseInitialization.loadData();
 	}
 
 	@Test

@@ -1,36 +1,27 @@
 package com.issuetracker.unit.infrastrucure;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.domain.LabelRepository;
 import com.issuetracker.label.infrastructure.JdbcLabelRepository;
-import com.issuetracker.util.DatabaseInitialization;
-import com.issuetracker.util.RepositoryTest;
+import com.issuetracker.util.JdbcRepositoryTest;
 
-@RepositoryTest
-class LabelRepositoryTest {
+class LabelJdbcRepositoryTest extends JdbcRepositoryTest {
 
 	private LabelRepository labelRepository;
-	private DatabaseInitialization databaseInitialization;
 
 	@Autowired
-	public LabelRepositoryTest(JdbcTemplate jdbcTemplate) {
+	public LabelJdbcRepositoryTest(JdbcTemplate jdbcTemplate) {
+		super(jdbcTemplate);
 		this.labelRepository = new JdbcLabelRepository(jdbcTemplate);
-		this.databaseInitialization = new DatabaseInitialization(jdbcTemplate);
-	}
-
-	@BeforeEach
-	void setUp() {
-		databaseInitialization.initialization();
-		databaseInitialization.loadData();
 	}
 
 	@Test

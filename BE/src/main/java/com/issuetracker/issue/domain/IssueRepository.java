@@ -1,12 +1,16 @@
 package com.issuetracker.issue.domain;
 
+import java.util.List;
+
 public interface IssueRepository {
 
 	Long save(Issue issue);
 
 	IssuesCountData findAllCount();
 
-	int updateOpen(long id, boolean isOpen);
+	int updateOpen(boolean isOpen, long id);
+
+	int updateAllOpen(boolean isOpen, List<Long> ids);
 
 	int updateTitle(long id, String title);
 
@@ -18,3 +22,4 @@ public interface IssueRepository {
 
 	boolean existById(long id);
 }
+

@@ -12,20 +12,22 @@ import lombok.Getter;
 public class IssueSearchInputData {
 
 	private Boolean isOpen;
-	private List<Long> assigneeIds;
-	private List<Long> labelIds;
-	private Long milestoneId;
-	private Long authorId;
+	private List<String> assigneeNames;
+	private List<String> labelTitles;
+	private String milestoneTitle;
+	private String authorName;
 	private Long commentAuthorId;
+	private List<String> no;
 
 	public IssueSearch toIssueSearch() {
 		return IssueSearch.builder()
 			.isOpen(isOpen)
-			.assigneeIds(assigneeIds)
-			.labelIds(labelIds)
-			.milestoneId(milestoneId)
-			.authorId(authorId)
+			.assigneeNames(assigneeNames)
+			.labelTitles(labelTitles)
+			.milestoneTitle(milestoneTitle)
+			.authorName(authorName)
 			.commentAuthorId(commentAuthorId)
+			.no(no)
 			.build();
 	}
 }

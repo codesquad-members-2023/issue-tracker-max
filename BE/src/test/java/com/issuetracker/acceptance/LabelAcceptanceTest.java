@@ -1,6 +1,9 @@
 package com.issuetracker.acceptance;
 
+import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
+import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON1;
 import static com.issuetracker.util.steps.LabelSteps.*;
+import static com.issuetracker.util.steps.MilestoneSteps.마일스톤_생성_요청;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +17,7 @@ import com.issuetracker.label.ui.dto.LabelCreateRequest;
 import com.issuetracker.label.ui.dto.LabelResponse;
 import com.issuetracker.label.ui.dto.LabelUpdateRequest;
 import com.issuetracker.label.ui.dto.LabelsResponse;
+import com.issuetracker.milestone.ui.dto.MilestoneCreateRequest;
 import com.issuetracker.util.AcceptanceTest;
 
 import io.restassured.response.ExtractableResponse;
@@ -98,6 +102,26 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 			"레이블 제목",
 			"레이블 설명",
 			"#HEX코드가아니다"
+		);
+
+		// when
+		var response = 레이블_생성_요청(labelCreateRequest);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * When 레이블 생성시 제목이 중복인 경우
+	 * Then 요청이 실패한다
+	 */
+	@Test
+	void 레이블_생성시_제목이_중복인_경우_요청이_실패한다() {
+		// given
+		LabelCreateRequest labelCreateRequest = new LabelCreateRequest(
+			LABEL1.getTitle(),
+			"레이블 설명",
+			"#ffffff"
 		);
 
 		// when
