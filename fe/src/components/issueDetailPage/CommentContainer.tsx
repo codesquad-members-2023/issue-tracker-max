@@ -2,12 +2,6 @@ import { css } from '@emotion/react';
 import { Comment } from '@components/common/comment/Comment';
 import { AddNewComment } from './AddNewComment';
 
-// type AuthorType = {
-//   userId: number;
-//   loginId: string;
-//   image: string;
-// };
-
 type Props = {
   issueId: number;
   contents: string;
@@ -23,13 +17,9 @@ export const CommentContainer: React.FC<Props> = ({
   comments,
   onAddComment,
 }: Props) => {
-  const isCommentsExist = comments.length > 0;
-
-  console.log(comments);
-
   return (
     <div css={commentContainerStyle}>
-      {isCommentsExist &&
+      {comments &&
         comments.map((comment) => (
           <Comment
             key={comment.id}
