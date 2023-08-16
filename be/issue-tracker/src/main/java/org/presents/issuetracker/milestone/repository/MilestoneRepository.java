@@ -2,6 +2,7 @@ package org.presents.issuetracker.milestone.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.presents.issuetracker.milestone.dto.response.MilestoneResponse;
 import org.presents.issuetracker.milestone.entity.Milestone;
@@ -76,56 +77,6 @@ public class MilestoneRepository {
         return jdbcTemplate.query(sql, milestonePreviewRowMapper);
     }
 
-    public MilestoneInfo findDetailsByStatus(String status) {
-        final String sql = "SELECT milestone_id, name, deadline, description, status " +
-                "FROM milestone " +
-                "WHERE status = :status " +
-                "AND is_deleted = :not_deleted_flag " +
-                "ORDER BY milestone_id";
-
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("status", status)
-                .addValue("not_deleted_flag", NOT_DELETED_FLAG)
-                .addValue("open_flag", OPEN_FLAG)
-                .addValue("closed_flag", CLOSED_FLAG);
-
-        List<MilestoneResponse> milestoneResponses = jdbcTemplate.query(sql, params, (rs, rowNum) -> {
-            Long id = rs.getLong("milestone_id");
-            String name = rs.getString("name");
-            LocalDateTime deadline = rs.getTimestamp("deadline").toLocalDateTime();
-            String description = rs.getString("description");
-            return MilestoneResponse.of(id, name, deadline, description, status);
-        });
-
-        int labelCount = jdbcTemplate.queryForObject(
-                "SELECT COALESCE(COUNT(*), 0) FROM label WHERE is_deleted = :not_deleted_flag",
-                params,
-                Integer.class
-        );
-
-        int openMilestoneCount = jdbcTemplate.queryForObject(
-                "SELECT COALESCE(COUNT(*), 0) FROM milestone WHERE status = :open_flag AND is_deleted = :not_deleted_flag",
-                params,
-                Integer.class
-        );
-
-        int closedMilestoneCount = jdbcTemplate.queryForObject(
-                "SELECT COALESCE(COUNT(*), 0) FROM milestone WHERE status = :closed_flag AND is_deleted = :not_deleted_flag",
-                params,
-                Integer.class
-        );
-
-        int totalMilestoneCount = openMilestoneCount + closedMilestoneCount;
-
-        return MilestoneInfo.builder()
-                .labelCount(labelCount)
-                .milestoneCount(totalMilestoneCount)
-                .openMilestoneCount(openMilestoneCount)
-                .closedMilestoneCount(closedMilestoneCount)
-                .milestoneResponses(milestoneResponses)
-                .build();
-    }
-
     public Long save(Milestone milestone) {
         final String sql = "INSERT INTO milestone(name, deadline, description) VALUES (:name, :deadline, :description)";
 
@@ -174,5 +125,74 @@ public class MilestoneRepository {
                 .addValue("id", id);
 
         jdbcTemplate.update(sql, params);
+    }
+
+    public MilestoneInfo findDetailsByStatus(String status) {
+        List<MilestoneResponse> milestoneResponses = fetchMilestoneResponsesWithProgress(status);
+
+        int labelCount = countLabels();
+        int openMilestoneCount = countMilestonesByStatus(OPEN_FLAG);
+        int closedMilestoneCount = countMilestonesByStatus(CLOSED_FLAG);
+        int totalMilestoneCount = openMilestoneCount + closedMilestoneCount;
+
+        return MilestoneInfo.builder()
+                .labelCount(labelCount)
+                .milestoneCount(totalMilestoneCount)
+                .openMilestoneCount(openMilestoneCount)
+                .closedMilestoneCount(closedMilestoneCount)
+                .milestones(milestoneResponses)
+                .build();
+    }
+
+    private List<MilestoneResponse> fetchMilestoneResponsesWithProgress(String status) {
+        final String sql = "SELECT milestone_id, name, deadline, description, status " +
+                "FROM milestone " +
+                "WHERE status = :status " +
+                "AND is_deleted = :not_deleted_flag " +
+                "ORDER BY milestone_id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("status", status)
+                .addValue("not_deleted_flag", NOT_DELETED_FLAG);
+
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            Long id = rs.getLong("milestone_id");
+            String name = rs.getString("name");
+            LocalDateTime deadline = rs.getTimestamp("deadline").toLocalDateTime();
+            String description = rs.getString("description");
+            int progress = calculateMilestoneProgress(id);
+            return MilestoneResponse.of(id, name, deadline, description, status, progress);
+        });
+    }
+
+    private int calculateMilestoneProgress(Long milestoneId) {
+        int openIssueCount = countIssuesByStatusAndMilestoneId("open", milestoneId);
+        int closedIssueCount = countIssuesByStatusAndMilestoneId("closed", milestoneId);
+        int totalIssueCount = openIssueCount + closedIssueCount;
+        return totalIssueCount > 0 ? (int) ((double) closedIssueCount / totalIssueCount * 100) : 0;
+    }
+
+    private int countLabels() {
+        return jdbcTemplate.queryForObject(
+                "SELECT COALESCE(COUNT(*), 0) FROM label WHERE is_deleted = :not_deleted_flag",
+                Map.of("not_deleted_flag", NOT_DELETED_FLAG),
+                Integer.class
+        );
+    }
+
+    private int countMilestonesByStatus(String status) {
+        return jdbcTemplate.queryForObject(
+                "SELECT COALESCE(COUNT(*), 0) FROM milestone WHERE status = :status AND is_deleted = :not_deleted_flag",
+                Map.of("status", status, "not_deleted_flag", NOT_DELETED_FLAG),
+                Integer.class
+        );
+    }
+
+    private int countIssuesByStatusAndMilestoneId(String status, Long milestoneId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT COALESCE(COUNT(*), 0) FROM issue WHERE milestone_id = :milestoneId AND status = :status",
+                Map.of("milestoneId", milestoneId, "status", status),
+                Integer.class
+        );
     }
 }

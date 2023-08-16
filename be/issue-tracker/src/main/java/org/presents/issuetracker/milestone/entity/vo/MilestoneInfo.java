@@ -12,14 +12,14 @@ public class MilestoneInfo {
     private int milestoneCount;
     private int openMilestoneCount;
     private int closedMilestoneCount;
-    private List<MilestoneResponse> milestoneResponses;
+    private List<MilestoneResponse> milestones;
 
     @Builder
-    public MilestoneInfo(int labelCount, int milestoneCount, int openMilestoneCount, int closedMilestoneCount, List<MilestoneResponse> milestoneResponses) {
+    public MilestoneInfo(int labelCount, int milestoneCount, int openMilestoneCount, int closedMilestoneCount, List<MilestoneResponse> milestones) {
         this.labelCount = labelCount;
         this.milestoneCount = milestoneCount;
         this.openMilestoneCount = openMilestoneCount;
         this.closedMilestoneCount = closedMilestoneCount;
-        this.milestoneResponses = milestoneResponses;
+        this.milestones = milestones;
     }
 }

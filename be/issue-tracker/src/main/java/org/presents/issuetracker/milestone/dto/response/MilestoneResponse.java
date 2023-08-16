@@ -11,16 +11,18 @@ public class MilestoneResponse {
     private LocalDateTime deadline;
     private String description;
     private String status;
+    private int progress;
 
-    private MilestoneResponse(Long id, String name, LocalDateTime deadline, String description, String status) {
+    private MilestoneResponse(Long id, String name, LocalDateTime deadline, String description, String status, int progress) {
         this.id = id;
         this.name = name;
         this.deadline = deadline;
         this.description = description;
         this.status = status;
+        this.progress = progress;
     }
 
-    public static MilestoneResponse of(Long id, String name, LocalDateTime deadline, String description, String status) {
-        return new MilestoneResponse(id, name, deadline, description, status);
+    public static MilestoneResponse of(Long id, String name, LocalDateTime deadline, String description, String status, int progress) {
+        return new MilestoneResponse(id, name, deadline, description, status, progress);
     }
 }
