@@ -3,9 +3,11 @@ package codesquard.app.issue.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.issue.dto.response.IssueCommentsResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneResponse;
@@ -81,7 +84,9 @@ public class JdbcIssueRepository implements IssueRepository {
 			+ "LEFT JOIN milestone as m ON m.id = i.milestone_id "
 			+ "LEFT JOIN user as u ON u.id = i.user_id "
 			+ "WHERE i.id = :id AND is_deleted = false";
-		return template.queryForObject(sql, Map.of("id", id), issueReadResponseRowMapper);
+		return Optional.ofNullable(
+				DataAccessUtils.singleResult(template.query(sql, Map.of("id", id), issueReadResponseRowMapper)))
+			.orElseThrow(NoSuchIssueException::new);
 	}
 
 	@Override

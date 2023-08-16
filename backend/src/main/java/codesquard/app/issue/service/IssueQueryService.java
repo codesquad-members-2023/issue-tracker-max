@@ -51,7 +51,6 @@ public class IssueQueryService {
 	private boolean multiFiltersCheck = false;
 
 	public IssueReadResponse get(Long issueId, Long userId) {
-		validateExistIssue(issueId);
 		IssueReadResponse issueReadResponse = issueRepository.findBy(issueId);
 		List<userReactionResponse> users = userReactionRepository.findIssueReactionBy(issueId, userId);
 		List<IssueUserResponse> assignees = IssueUserResponse.from(issueRepository.findAssigneesBy(issueId));

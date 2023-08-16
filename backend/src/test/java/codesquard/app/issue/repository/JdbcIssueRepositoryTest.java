@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.IntegrationTestSupport;
+import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.entity.Issue;
@@ -61,6 +62,16 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		assertThat(issueRepository.findAssigneesBy(issueId).get(0).getLoginId()).isEqualTo("wis");
 		assertThat(issueRepository.findLabelsBy(issueId)).isEmpty();
 		assertThat(issueRepository.findCommentsBy(issueId, userId)).isEmpty();
+	}
+
+	@DisplayName("등록되지 않은 번호의 이슈를 조회하면 예외가 발생한다.")
+	@Test
+	void getDetail_Fail() {
+		// given
+		Long issueId = 0L;
+
+		// when & then
+		assertThatThrownBy(() -> issueRepository.findBy(issueId)).isInstanceOf(NoSuchIssueException.class);
 	}
 
 	@DisplayName("이슈를 등록하고 그 등록 번호를 반환한다.")
