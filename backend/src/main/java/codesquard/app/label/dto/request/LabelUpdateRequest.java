@@ -27,8 +27,15 @@ public class LabelUpdateRequest {
 	private LabelUpdateRequest() {
 	}
 
-	public static Label toEntity(final LabelUpdateRequest labelUpdateRequest) {
+	public LabelUpdateRequest(String name, String color, String background, String description) {
+		this.name = name;
+		this.color = color;
+		this.background = background;
+		this.description = description;
+	}
+
+	public static Label toEntity(final LabelUpdateRequest labelUpdateRequest, final Long userId) {
 		return new Label(labelUpdateRequest.name, labelUpdateRequest.color, labelUpdateRequest.background,
-			labelUpdateRequest.description);
+			labelUpdateRequest.description, userId);
 	}
 }
