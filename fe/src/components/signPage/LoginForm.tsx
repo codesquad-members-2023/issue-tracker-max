@@ -33,7 +33,9 @@ export const LoginForm: React.FC = () => {
     try {
       const data = await loginUser(id, password);
       const { loginId, image, accessToken, refreshToken } = data;
-      const userId = JSON.parse(atob(accessToken.split('.')[1])).body;
+      const userId = JSON.parse(
+        JSON.parse(atob(accessToken.split('.')[1])).body,
+      ).userId;
 
       setLocalStorageUserId(userId);
       setLocalStorageLoginId(loginId);
