@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import { IssueDetailBody } from "./IssueDetailBody";
 import { IssueDetailHeader } from "./IssueDetailHeader";
@@ -52,11 +52,12 @@ export type IssueData = {
       unicode: string;
       users: string[];
       selectedUserReactionId: number;
-    }[]
+    }[];
   }[];
 };
 
 export function IssueDetail() {
+  const navigatte = useNavigate();
   const { issueId } = useParams();
   const [issue, setIssue] = useState<IssueData>({
     id: 0,
@@ -66,11 +67,13 @@ export function IssueDetail() {
     statusModifiedAt: new Date(),
     createdAt: new Date(),
     modifiedAt: null,
-    reactions: [{
-      unicode: "",
-      users: [],
-      selectedUserReactionId: 0
-    }],
+    reactions: [
+      {
+        unicode: "",
+        users: [],
+        selectedUserReactionId: 0,
+      },
+    ],
     writer: {
       id: 0,
       name: "",
@@ -90,11 +93,24 @@ export function IssueDetail() {
   });
 
   const fetchIssue = useCallback(async () => {
-    const response = await fetch(`/api/issues/${issueId}`);
-    const result = await response.json();
+    try {
+      const response = await fetch(`/api/issues/${issueId}`, {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+          "credentials": "include",
+        },
+      });
+      const result = await response.json();
 
-    setIssue(result.data);
-  }, [issueId]);
+      if (result.code === 404) {
+        throw new Error(result.message);
+      }
+
+      setIssue(result.data);
+    } catch (error) {
+      navigatte("/404", { replace: true });
+    }
+  }, [issueId, navigatte]);
 
   useEffect(() => {
     fetchIssue();

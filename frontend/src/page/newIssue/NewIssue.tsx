@@ -54,7 +54,8 @@ export function NewIssue() {
     const response = await fetch("/api/issues", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`
+        "Authorization": `Bearer ${getAccessToken()}`,
+        "credentials": "include",
       },
       body: JSON.stringify(issueData),
     })

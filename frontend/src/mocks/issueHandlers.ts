@@ -59,27 +59,26 @@ export const issueHandlers = [
     const { issueId } = req.params;
 
     const issue = issues.find((i) => i.id === Number(issueId));
-    
+
     if (!issue) {
-      return res(
-        ctx.status(404),
-        ctx.json({
-          code: 404,
-          status: "Not Found",
-          message: "이슈를 찾을 수 없습니다.",
-          data: null,
-        }),
-      );
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
     }
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        message: "OK",
-        data: issue,
-      }),
-    );
+
+    const response = {
+      code: 200,
+      status: "OK",
+      message: "OK",
+      data: issue,
+    };
+
+    return res(ctx.status(200), ctx.json(response));
   }),
   rest.post("/api/issues", async (req, res, ctx) => {
     const {
@@ -146,41 +145,62 @@ export const issueHandlers = [
     const { issueId } = req.params;
     const { title } = await req.json();
 
-    issue.data.title = title;
+    const issue = issues.find((i) => i.id === Number(issueId));
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        message: "OK",
-        data: {
-          modifiedIssueId: Number(issueId),
-        },
-      }),
-    );
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.title = title;
+
+    const response = {
+      code: 200,
+      status: "OK",
+      message: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
+    };
+
+    return res(ctx.status(200), ctx.json(response));
   }),
   rest.patch("/api/issues/:issueId/status", async (req, res, ctx) => {
     const { issueId } = req.params;
     const { status } = await req.json();
 
-    issue.data = {
-      ...issue.data,
-      status,
-      statusModifiedAt: new Date().toISOString(),
+    const issue = issues.find((i) => i.id === Number(issueId));
+
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.status = status;
+    issue.statusModifiedAt = new Date().toISOString();
+
+    const response = {
+      code: 200,
+      status: "OK",
+      message: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
     };
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        message: "OK",
-        data: {
-          modifiedIssueId: Number(issueId),
-        },
-      }),
-    );
+    return res(ctx.status(200), ctx.json(response));
   }),
   rest.patch("/api/issues/:issueId/content", async (req, res, ctx) => {
     const { issueId } = req.params;

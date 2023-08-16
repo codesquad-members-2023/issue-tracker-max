@@ -41,6 +41,10 @@ export function IssueDetailTitleInfo({
   const onEditClick = async () => {
     await fetch(`/api/issues/${id}/title`, {
       method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "credentials": "include",
+      },
       body: JSON.stringify({ title }),
     });
 
@@ -51,6 +55,10 @@ export function IssueDetailTitleInfo({
   const onStatusChangeClick = async () => {
     await fetch(`/api/issues/${id}/status`, {
       method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "credentials": "include",
+      },
       body: JSON.stringify({
         status: status === "OPENED" ? "CLOSED" : "OPENED",
       }),
