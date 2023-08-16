@@ -4,13 +4,15 @@ import { TextInput } from '@components/common/textInput/TextInput';
 import { useState } from 'react';
 import { validateId, validatePassword } from './validateInput';
 import { loginUser } from 'apis/api';
-import {
-  setLocalStorageImageUrl,
-  setLocalStorageLoginId,
-  setLocalStorageUserId,
-} from '@utils/localStorage';
 import { useNavigate } from 'react-router-dom';
 import { ISSUE_LIST_PAGE } from 'constants/PATH';
+import {
+  setLocalStorageAccessToken,
+  setLocalStorageImage,
+  setLocalStorageLoginId,
+  setLocalStorageRefreshToken,
+  setLocalStorageUserId,
+} from 'apis/localStorage';
 
 export const LoginForm: React.FC = () => {
   const [id, setId] = useState('');
@@ -25,15 +27,19 @@ export const LoginForm: React.FC = () => {
     setPassword(password);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     try {
-      const response = await loginUser(id, password);
-      const data = await response.json();
-      const { userId, loginId, image } = data;
+      const data = await loginUser(id, password);
+      const { loginId, image, accessToken, refreshToken } = data;
+      const userId = JSON.parse(atob(accessToken.split('.')[1])).body;
 
       setLocalStorageUserId(userId);
       setLocalStorageLoginId(loginId);
-      setLocalStorageImageUrl(image);
+      setLocalStorageImage(image);
+      setLocalStorageAccessToken(accessToken);
+      setLocalStorageRefreshToken(refreshToken);
 
       navigate(`/${ISSUE_LIST_PAGE}`);
     } catch (error) {

@@ -25,11 +25,13 @@ export const RegisterForm: React.FC = () => {
     setConfirmPassword(password);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     try {
       await signUpUser(loginId, password);
 
-      navigate(`/${SIGN_PAGE}`);
+      navigate(SIGN_PAGE);
     } catch (error) {
       console.error(error);
     }
