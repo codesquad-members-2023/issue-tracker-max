@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
 import org.presents.issuetracker.milestone.dto.request.MilestoneRequest;
+import org.presents.issuetracker.milestone.dto.request.MilestoneStatusUpdateRequest;
 import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
 import org.presents.issuetracker.milestone.service.MilestoneService;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,12 @@ public class MilestoneController {
 	public ResponseEntity<IdResponseDto> update(@RequestBody @Valid MilestoneRequest milestoneRequest) {
 		IdResponseDto idResponseDto = milestoneService.update(milestoneRequest);
 		return ResponseEntity.status(HttpStatus.OK).body(idResponseDto);
+	}
+
+	@PutMapping
+	public ResponseEntity<Void> updateStatus(@RequestBody @Valid MilestoneStatusUpdateRequest milestoneStatusUpdateRequest) {
+		milestoneService.updateStatus(milestoneStatusUpdateRequest);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@DeleteMapping("/{id}")

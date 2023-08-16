@@ -112,6 +112,16 @@ public class MilestoneRepository {
 		jdbcTemplate.update(sql, params);
 	}
 
+	public void updateStatus(Long id, String status) {
+		final String sql = "UPDATE milestone SET status = :status WHERE milestone_id = :id";
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("status", status)
+				.addValue("id", id);
+
+		jdbcTemplate.update(sql, params);
+	}
+
 	public void deleteById(Long id) {
 		final String sql = "UPDATE milestone SET status = :closed_flag WHERE milestone_id = :id";
 

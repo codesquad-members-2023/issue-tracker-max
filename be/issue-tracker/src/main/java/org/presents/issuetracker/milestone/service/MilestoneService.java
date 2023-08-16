@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.presents.issuetracker.global.dto.response.IdResponseDto;
 import org.presents.issuetracker.milestone.dto.request.MilestoneRequest;
+import org.presents.issuetracker.milestone.dto.request.MilestoneStatusUpdateRequest;
 import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
 import org.presents.issuetracker.milestone.entity.Milestone;
 import org.presents.issuetracker.milestone.repository.MilestoneRepository;
@@ -57,6 +58,10 @@ public class MilestoneService {
         milestoneRepository.update(updatedMilestone);
 
         return IdResponseDto.builder().id(updatedMilestone.getId()).build();
+    }
+
+    public void updateStatus(MilestoneStatusUpdateRequest milestoneStatusUpdateRequest) {
+        milestoneRepository.updateStatus(milestoneStatusUpdateRequest.getId(), milestoneStatusUpdateRequest.getStatus());
     }
 
     public void delete(Long id) {
