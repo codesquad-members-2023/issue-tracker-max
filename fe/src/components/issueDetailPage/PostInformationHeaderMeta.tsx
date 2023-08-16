@@ -2,9 +2,10 @@ import { Theme, css } from '@emotion/react';
 import { InformationTag } from '@components/common/InformationTag';
 import { useTheme } from '@emotion/react';
 import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
+import { formatISODateString, getFormattedTimeDifference } from '@utils/time';
 type Props = {
   status?: string;
-  createdAt?: string;
+  createdAt: string;
   author: User;
   comments?: CommentType[];
 };
@@ -18,6 +19,12 @@ export const PostInformationHeaderMeta: React.FC<Props> = ({
   const theme = useTheme() as any;
   const statusText = status === 'open' ? '열린' : '닫힌';
   const statusResultText = status === 'open' ? '열렸' : '닫혔';
+
+  const diff = Date.now() - new Date(createdAt).getTime();
+  const date =
+    diff < FIVE_DAYS_IN_MS
+      ? getFormattedTimeDifference(createdAt)
+      : formatISODateString(createdAt);
 
   return (
     <>
@@ -34,7 +41,7 @@ export const PostInformationHeaderMeta: React.FC<Props> = ({
           {statusText}이슈
         </InformationTag>
         <span>
-          이 이슈가 {createdAt}전에 {author.loginId}님에 의해 {statusResultText}
+          이 이슈가 {date}에 {author.loginId}님에 의해 {statusResultText}
           습니다
         </span>
         <span>∙</span>
@@ -57,3 +64,5 @@ const headerMetaStyle = (theme: Theme) => css`
     font: ${theme.fonts.displayMedium16};
   }
 `;
+
+const FIVE_DAYS_IN_MS = 432000000;

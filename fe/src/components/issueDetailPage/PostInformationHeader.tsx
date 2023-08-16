@@ -6,7 +6,7 @@ import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/textInput/TextInput';
-import { editIssueStatus, patchIssueTitle } from 'apis/api';
+import { patchIssueTitle } from 'apis/api';
 
 type Props = {
   title: string;
@@ -59,11 +59,6 @@ export const PostInformationHeader: React.FC<Props> = ({
       console.log(error);
     }
   };
-
-  // const onToggleIssueStatus = (status: string) => {
-  //   const newStatus = status === 'open' ? 'closed' : 'open';
-  //   editIssueStatus([id], newStatus);
-  // };
 
   return (
     <div css={postInformationHeaderStyle}>

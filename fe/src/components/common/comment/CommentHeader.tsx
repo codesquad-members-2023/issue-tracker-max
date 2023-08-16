@@ -4,6 +4,7 @@ import { Button } from '../Button';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { ReactComponent as Smile } from '@assets/icons/smile.svg';
 import { ReactComponent as Trash } from '@assets/icons/trash.svg';
+import { formatISODateString, getFormattedTimeDifference } from '@utils/time';
 
 type Props = {
   typeVariant: string;
@@ -26,6 +27,13 @@ export const CommentHeader: React.FC<Props> = ({
   onClickEdit,
   onClickDelete,
 }) => {
+  const diff = createdAt ? Date.now() - new Date(createdAt).getTime() : 0;
+  const date = createdAt
+    ? diff < FIVE_DAYS_IN_MS
+      ? getFormattedTimeDifference(createdAt)
+      : formatISODateString(createdAt)
+    : '';
+
   return (
     <div css={commentHeaderStyle}>
       <div className="header-left">
@@ -35,7 +43,7 @@ export const CommentHeader: React.FC<Props> = ({
           alt="작성자이미지"
         />
         <span className="user-name">{loginId}</span>
-        <span className="created-at">{createdAt}</span>
+        <span className="created-at">{date}</span>
       </div>
 
       <div className="header-right">
@@ -138,3 +146,5 @@ const commentHeaderStyle = (theme: Theme) => css`
     }
   }
 `;
+
+const FIVE_DAYS_IN_MS = 432000000;
