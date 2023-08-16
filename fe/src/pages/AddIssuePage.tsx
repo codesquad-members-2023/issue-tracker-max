@@ -14,6 +14,8 @@ import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/textInput/TextInput';
 import { ISSUE_LIST_PAGE } from 'constants/PATH';
+import { postNewIssue } from 'apis/api';
+import { getLocalStorageUserId } from 'apis/localStorage';
 // import { ISSUE_DETAIL_PAGE } from 'constants/PATH';
 
 type SelectionState = {
@@ -44,40 +46,22 @@ export const AddIssuePage: React.FC = ({}) => {
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
   const onSubmit = async () => {
-    const bodyData = {
-      title: titleInput,
-      contents: textAreaValue,
-      authorId: 1,
-      assigneeIds: selections.assignees,
-      labelIds: selections.labels,
-      milestoneId: selections.milestones,
-    };
-
     try {
       setIsSubmiting(true);
       setIsSubmitError(false);
-      const response = await fetch(
-        `${import.meta.env.VITE_APP_BASE_URL}/issues/new`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(bodyData),
-        },
+
+      const authorId = getLocalStorageUserId();
+
+      const data = await postNewIssue(
+        titleInput,
+        textAreaValue,
+        authorId,
+        selections.assignees,
+        selections.labels,
+        selections.milestones,
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('API Response Error:', errorData);
-        setIsSubmitError(true);
-        return;
-      }
-
-      const data = await response.json();
-
       navigate(`/issue/${data.id}`);
-
       return data;
     } catch (error) {
       console.error('API Call Error:', error);

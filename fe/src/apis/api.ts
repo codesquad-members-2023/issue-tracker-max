@@ -34,7 +34,7 @@ export const postNewIssue = (
   authorId: number,
   assigneeIds: number[],
   labelIds: number[],
-  milestoneId: number,
+  milestoneId: number | null,
 ) => {
   const accessToken = getAccessToken();
 
