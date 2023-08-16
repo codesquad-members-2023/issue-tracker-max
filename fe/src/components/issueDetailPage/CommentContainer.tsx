@@ -1,3 +1,4 @@
+import { useTheme, css } from '@emotion/react';
 import { Comment } from '@components/common/comment/Comment';
 import { AddNewComment } from './AddNewComment';
 
@@ -27,14 +28,7 @@ export const CommentContainer: React.FC<Props> = ({
   console.log(comments);
 
   return (
-    <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '24px',
-        width: '960px',
-      }}
-    >
+    <div css={commentContainerStyle}>
       {isCommentsExist &&
         comments.map((comment) => (
           <Comment
@@ -59,3 +53,10 @@ export const CommentContainer: React.FC<Props> = ({
     </div>
   );
 };
+
+const commentContainerStyle = css`
+  display: flex;
+  flexdirection: column;
+  gap: 24px;
+  width: 960px;
+`;

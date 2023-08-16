@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import { Comment } from '@components/common/comment/Comment';
 
 type Props = {
@@ -18,14 +19,7 @@ export const AddNewComment: React.FC<Props> = ({
   // console.log('userId', userId);
 
   return (
-    <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        gap: '24px',
-      }}
-    >
+    <div css={addNewCommentStyles}>
       <Comment
         issueId={issueId}
         issueAuthor={issueAuthor}
@@ -36,3 +30,10 @@ export const AddNewComment: React.FC<Props> = ({
     </div>
   );
 };
+
+const addNewCommentStyles = css`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 24px;
+`;
