@@ -39,4 +39,10 @@ public class MilestoneController {
 		IdResponseDto idResponseDto = milestoneService.update(milestoneRequest);
 		return ResponseEntity.status(HttpStatus.OK).body(idResponseDto);
 	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		milestoneService.delete(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
 }

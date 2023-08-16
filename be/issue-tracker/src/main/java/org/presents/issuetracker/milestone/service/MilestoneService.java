@@ -58,4 +58,8 @@ public class MilestoneService {
 
         return IdResponseDto.builder().id(updatedMilestone.getId()).build();
     }
+
+    public void delete(Long id) {
+        milestoneRepository.deleteById(id);
+    }
 }
