@@ -2,7 +2,7 @@ package org.presents.issuetracker.label.controller;
 
 import java.util.List;
 
-import org.presents.issuetracker.global.dto.response.LabelIdResponse;
+import org.presents.issuetracker.global.dto.response.IdResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
 import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
@@ -52,15 +52,15 @@ public class LabelController {
 	}
 
 	@PostMapping
-	public ResponseEntity<LabelIdResponse> create(@Valid @RequestBody LabelCreateRequest labelCreateRequest) {
-		LabelIdResponse labelIdResponse = labelService.create(labelCreateRequest);
-		return ResponseEntity.ok().body(labelIdResponse);
+	public ResponseEntity<IdResponse> create(@Valid @RequestBody LabelCreateRequest labelCreateRequest) {
+		IdResponse idResponse = labelService.create(labelCreateRequest);
+		return ResponseEntity.ok().body(idResponse);
 	}
 
 	@PatchMapping
-	public ResponseEntity<LabelIdResponse> update(@Valid @RequestBody LabelUpdateRequest dto) {
-		LabelIdResponse labelIdResponse = labelService.update(dto);
-		return ResponseEntity.ok().body(labelIdResponse);
+	public ResponseEntity<IdResponse> update(@Valid @RequestBody LabelUpdateRequest dto) {
+		IdResponse idResponse = labelService.update(dto);
+		return ResponseEntity.ok().body(idResponse);
 	}
 
 	@DeleteMapping("/{id}")

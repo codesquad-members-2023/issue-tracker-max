@@ -24,5 +24,14 @@ public class User {
 	public boolean matchesPassword(String password) {
 		return this.password.equals(password);
 	}
-}
 
+	private User(Long userId, String loginId, String image) {
+		this.userId = userId;
+		this.loginId = loginId;
+		this.image = image;
+	}
+
+	public static User of(Long userId, String loginId, String image) {
+		return new User(userId, loginId, image);
+	}
+}
