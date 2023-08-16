@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react';
 import { Box } from '../box/Box';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { TextArea } from '../textArea/TextArea';
 import { TextAreaInput } from '../textArea/TextAreaInput';
 import { CommentHeader } from './CommentHeader';
@@ -59,10 +59,9 @@ export const Comment: React.FC<Props> = ({
 
   //코멘트랑 textArea비슷한거 어케줄일지 생각하기..
   const [textAreaValue, setTextAreaValue] = useState<string>(defaultValue);
-  const [placeholderValue, setPlaceholderValue] =
-    useState<string>(defaultValue); //편집 취소시 돌아갈 값
   const [isEditing, setIsEditing] = useState(false);
   const [isDisplayingCount, setIsDisplayingCount] = useState(false);
+  const placeholderValueRef = useRef<string>(defaultValue);
   const storagedUserId = getLocalStorageUserId();
 
   useEffect(() => {
@@ -107,8 +106,7 @@ export const Comment: React.FC<Props> = ({
         setFileStatus((prev) => ({ ...prev, isUploading: true }));
 
         const fileUrl = await uploadFile(file);
-
-        onAddFileUrl(fileName, fileUrl.fileUrl);
+        onAppendMarkdownFileUrl(fileName, fileUrl.fileUrl);
       } catch {
         setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
       } finally {
@@ -117,25 +115,12 @@ export const Comment: React.FC<Props> = ({
     }
   };
 
-  useEffect(() => {
-    if (textAreaValue) {
-      setIsDisplayingCount(true);
-      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [textAreaValue]);
-
   const onChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextAreaValue(e.target.value);
   };
 
-  const onAddFileUrl = (fileName: string, fileUrl: string) => {
+  const onAppendMarkdownFileUrl = (fileName: string, fileUrl: string) => {
     setTextAreaValue((prevValue) => `${prevValue}![${fileName}](${fileUrl})`);
-  };
-
-  const onClickEdit = () => {
-    setIsEditing(true);
   };
 
   const onAddSubmit = async () => {
@@ -169,9 +154,14 @@ export const Comment: React.FC<Props> = ({
     }
   };
 
+  const onClickEdit = () => {
+    placeholderValueRef.current = textAreaValue;
+    setIsEditing(true);
+  };
+
   const onEditCancel = () => {
     setIsEditing(false);
-    setTextAreaValue(placeholderValue);
+    setTextAreaValue(placeholderValueRef.current);
   };
 
   const wrapperStyle = {
@@ -192,17 +182,17 @@ export const Comment: React.FC<Props> = ({
         <>
           <TextArea
             size="S"
+            typeVariant="add"
             letterCount={textAreaValue.length}
             textAreaValue={textAreaValue}
-            onAddFileUrl={onAddFileUrl}
+            onAppendMarkdownFileUrl={onAppendMarkdownFileUrl}
             onChangeTextArea={onChangeTextArea}
-            typeVariant="add"
           />
 
           <Button
             typeVariant="contained"
             size="S"
-            disabled={false}
+            disabled={textAreaValue === ''}
             onClick={onAddSubmit}
           >
             <Plus stroke={theme.brand.text.default} />
@@ -229,7 +219,7 @@ export const Comment: React.FC<Props> = ({
                     ? issueAuthor.loginId
                     : comment?.author?.loginId
                 }
-                createdAt={createdAt} //이거 시간 표시로 바꾸기
+                createdAt={createdAt}
                 isAuthor={isAuthor}
               />
             }
@@ -242,7 +232,6 @@ export const Comment: React.FC<Props> = ({
                 placeholder={defaultValue}
                 isDisabled={isDisabled}
                 onChangeTextArea={onChangeTextArea}
-                // fileUrl={'이걸 어떻게 주지??'}
               />
             </div>
             {isEditing && (
@@ -251,6 +240,7 @@ export const Comment: React.FC<Props> = ({
                   css={{
                     background: theme.neutral.surface.strong,
                     paddingTop: '16px',
+                    borderRadius: `0 0 ${theme.radius.l} ${theme.radius.l}`,
                   }}
                 >
                   <Caption
@@ -292,7 +282,7 @@ export const Comment: React.FC<Props> = ({
               <Button
                 typeVariant="contained"
                 size="S"
-                // disabled={titleInput === '' || isSubmiting}
+                disabled={textAreaValue === placeholderValueRef.current}
                 onClick={onEditSubmit}
               >
                 편집 완료

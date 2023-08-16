@@ -15,7 +15,7 @@ type Props = {
   textAreaValue: string;
   typeVariant: 'default' | 'add';
   onChangeTextArea: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onAddFileUrl: (fileName: string, fileUrl: string) => void;
+  onAppendMarkdownFileUrl: (fileName: string, fileUrl: string) => void;
 };
 
 export const TextArea: React.FC<Props> = ({
@@ -25,14 +25,21 @@ export const TextArea: React.FC<Props> = ({
   textAreaValue,
   typeVariant,
   onChangeTextArea,
-  onAddFileUrl,
+  onAppendMarkdownFileUrl,
 }) => {
   const theme = useTheme() as any;
 
   const [isDisplayingCount, setIsDisplayingCount] = useState(false);
-  const [fileUrl, setFileUrl] = useState<string>(''); /* 여러개 넣을때는...?? */
   const [fileStatus, setFileStatus] =
     useState<DefaultFileStatusType>(initialStatus);
+
+  useEffect(() => {
+    if (textAreaValue) {
+      setIsDisplayingCount(true);
+      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [textAreaValue]);
 
   const initFileStatus = () => {
     setFileStatus(initialStatus);
@@ -65,9 +72,7 @@ export const TextArea: React.FC<Props> = ({
         setFileStatus((prev) => ({ ...prev, isUploading: true }));
 
         const fileUrl = await uploadFile(file);
-
-        setFileUrl(fileUrl.fileUrl);
-        onAddFileUrl(fileName, fileUrl.fileUrl);
+        onAppendMarkdownFileUrl(fileName, fileUrl.fileUrl);
       } catch {
         setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
       } finally {
@@ -75,14 +80,6 @@ export const TextArea: React.FC<Props> = ({
       }
     }
   };
-
-  useEffect(() => {
-    if (textAreaValue) {
-      setIsDisplayingCount(true);
-      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [textAreaValue]);
 
   const isTyping = textAreaValue.length > 0;
 
@@ -105,7 +102,6 @@ export const TextArea: React.FC<Props> = ({
           onChangeTextArea={onChangeTextArea}
           isDisabled={isDisabled}
           typeVariant={typeVariant}
-          fileUrl={fileUrl} /* 여러개 넣을때는...?? */
         />
 
         <Caption

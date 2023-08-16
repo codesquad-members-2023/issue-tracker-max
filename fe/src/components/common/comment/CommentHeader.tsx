@@ -94,6 +94,7 @@ const commentHeaderStyle = (theme: Theme) => css`
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
+  border-radius: ${theme.radius.l};
   background: ${theme.neutral.surface.default};
 
   .header-left {

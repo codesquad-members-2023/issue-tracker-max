@@ -6,7 +6,7 @@ type Props = {
   placeholder?: string;
   onChangeTextArea?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   typeVariant: 'default' | 'add';
-  fileUrl?: string;
+  fileUrls?: string[];
 };
 
 export const TextAreaInput: React.FC<Props> = ({
@@ -15,7 +15,7 @@ export const TextAreaInput: React.FC<Props> = ({
   placeholder,
   onChangeTextArea,
   typeVariant,
-  fileUrl,
+  fileUrls,
 }) => {
   const theme = useTheme() as any;
 
@@ -65,12 +65,8 @@ export const TextAreaInput: React.FC<Props> = ({
           >
             {textAreaValue}
           </p>
-          {fileUrl && (
-            /* 배열로 만들어서 여러개 추가 */
-            <>
-              <img src={fileUrl} alt="image" />
-            </>
-          )}
+          {fileUrls &&
+            fileUrls.map((fileUrl) => <img src={fileUrl} alt="image" />)}
         </div>
       )}
     </>
