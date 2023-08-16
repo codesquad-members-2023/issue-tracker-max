@@ -21,19 +21,17 @@ export const CommentContainer: React.FC<Props> = ({
     <div css={commentContainerStyle}>
       {comments &&
         comments.map(
-          (comment) =>
-            comment && (
+          (item) =>
+            item && (
               <Comment
                 typeVariant="default"
-                key={comment.id}
-                commentId={comment.id}
+                key={item.id}
+                comment={item}
                 issueId={issueId}
-                issueAuthor={author} //이슈 작성자 정보
-                // userId={comment.author.userId} //코멘트 작성자 id
-                // loginId={comment.author.loginId}
-                createdAt={comment.createdAt}
-                commentAuthor={comment.author} //코멘트 작성자 정보
-                defaultValue={comment.contents}
+                issueAuthor={author}
+                // commentAuthor={item.author}
+                createdAt={item.createdAt}
+                defaultValue={item.contents}
               />
             ),
         )}

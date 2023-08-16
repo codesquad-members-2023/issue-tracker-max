@@ -93,7 +93,7 @@ type IssueDetailMilestone = {
   progress: number;
 };
 
-type Comment = {
+type CommentType = {
   id: number;
   author: User;
   contents: string;
@@ -110,7 +110,7 @@ type IssueDetailPageData = {
   assignees: User[];
   labels: IssueDetailLabel[];
   milestone: IssueDetailMilestone;
-  comments: Comment[];
+  comments: CommentType[];
 };
 
 // SIDE_BAR_SELECTED_OPTION

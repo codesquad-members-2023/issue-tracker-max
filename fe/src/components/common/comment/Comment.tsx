@@ -22,27 +22,23 @@ type DefaultFileStatusType = {
   uploadFailed: boolean;
 };
 type Props = {
-  commentId?: number;
   issueId: number;
   issueAuthor: User;
   typeVariant: 'issue' | 'default' | 'edit' | 'add';
   createdAt?: string;
-  // userId?: number;
-  // loginId?: string;
-  commentAuthor?: User;
+  comment?: CommentType;
+  // commentAuthor?: User;
   isDisabled?: boolean;
   defaultValue: string;
-  onAddComment?: (comment: any) => void;
-  lastComment?: boolean; //임시 props
+  onAddComment?: (comment: CommentType) => void;
 };
 
 export const Comment: React.FC<Props> = ({
-  commentId,
   issueId,
   issueAuthor,
   createdAt,
-  // loginId,
-  commentAuthor,
+  comment,
+  // commentAuthor,
   typeVariant = 'default',
   isDisabled = false,
   defaultValue,
@@ -133,20 +129,8 @@ export const Comment: React.FC<Props> = ({
   const onAddSubmit = async () => {
     try {
       const userId = getLocalStorageUserId();
-      const responseData = await postNewComment(issueId, userId, textAreaValue);
-      const newComment = responseData.data;
-      console.log(newComment);
+      const newComment = await postNewComment(issueId, userId, textAreaValue);
 
-      // const newComment = {
-      //   id: issueId,
-      //   author: {
-      //     userId: issueAuthor.userId,
-      //     loginId: 'bono1234',
-      //     image: '이미지 url',
-      //   },
-      //   contents: textAreaValue,
-      //   createdAt: '2023-07-27T00:00:00',
-      // };
       if (onAddComment) {
         onAddComment(newComment);
         setTextAreaValue('');
@@ -161,9 +145,8 @@ export const Comment: React.FC<Props> = ({
     try {
       typeVariant === 'issue'
         ? await patchIssueContents(issueId, textAreaValue)
-        : await editComment(commentId, textAreaValue);
+        : await editComment(comment?.id, textAreaValue);
 
-      // 받아오는 응답: id만
       setIsEditing(false);
     } catch (error) {
       console.error('이슈 편집 에러:', error);
@@ -218,12 +201,12 @@ export const Comment: React.FC<Props> = ({
                 image={
                   typeVariant === 'issue'
                     ? issueAuthor.image
-                    : commentAuthor?.image
+                    : comment?.author?.image
                 }
                 loginId={
                   typeVariant === 'issue'
                     ? issueAuthor.loginId
-                    : commentAuthor?.loginId
+                    : comment?.author?.loginId
                 }
                 createdAt={createdAt} //이거 시간 표시로 바꾸기
                 isAuthor={isAuthor}

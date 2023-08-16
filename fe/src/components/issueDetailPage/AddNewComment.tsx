@@ -4,14 +4,12 @@ import { Comment } from '@components/common/comment/Comment';
 type Props = {
   issueId: number;
   issueAuthor: User;
-  userId: number;
   onAddComment: (comment: any) => void;
 };
 
 export const AddNewComment: React.FC<Props> = ({
   issueId,
   issueAuthor,
-  userId,
   onAddComment,
 }) => {
   return (
