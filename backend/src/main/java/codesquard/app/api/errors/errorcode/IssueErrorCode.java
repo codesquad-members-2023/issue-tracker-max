@@ -2,6 +2,9 @@ package codesquard.app.api.errors.errorcode;
 
 import org.springframework.http.HttpStatus;
 
+import lombok.ToString;
+
+@ToString
 public enum IssueErrorCode implements ErrorCode {
 
 	INVALID_ISSUE_STATUS(HttpStatus.BAD_REQUEST, "유효하지 않은 이슈 상태입니다."),

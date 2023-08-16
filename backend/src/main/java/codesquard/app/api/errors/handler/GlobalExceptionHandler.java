@@ -39,6 +39,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(RestApiException.class)
 	public ResponseEntity<ApiResponse<Object>> handleUserRestApiException(RestApiException e) {
+		logger.error("RestApiException 발생 : {}", e.toString());
 		ApiResponse<Object> body = ApiResponse.of(
 			e.getErrorCode().getHttpStatus(),
 			e.getErrorCode().getMessage(),

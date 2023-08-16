@@ -3,8 +3,10 @@ package codesquard.app.api.errors.errorcode;
 import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public enum UserErrorCode implements ErrorCode {
 
 	ALREADY_EXIST_LOGINID(HttpStatus.CONFLICT, "이미 존재하는 아이디입니다."),

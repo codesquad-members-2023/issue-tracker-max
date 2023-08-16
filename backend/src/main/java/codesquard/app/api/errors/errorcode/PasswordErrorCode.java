@@ -3,8 +3,10 @@ package codesquard.app.api.errors.errorcode;
 import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public enum PasswordErrorCode implements ErrorCode {
 
 	FAIL_PASSWORD_ENCRYPT(HttpStatus.INTERNAL_SERVER_ERROR, "패스워드 암호화에 실패하였습니다.");
