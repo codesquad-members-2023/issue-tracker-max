@@ -1,4 +1,4 @@
-package com.issuetracker.config.filter;
+package com.issuetracker.common.config.filter;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ import org.springframework.util.PatternMatchUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetracker.account.infrastructure.JwtTokenGenerator;
-import com.issuetracker.config.ErrorResponse;
+import com.issuetracker.common.config.ErrorResponse;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

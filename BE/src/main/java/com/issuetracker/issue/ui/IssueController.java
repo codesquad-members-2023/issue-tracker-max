@@ -2,6 +2,7 @@ package com.issuetracker.issue.ui;
 
 import java.net.URI;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.issuetracker.common.util.MemberIdExtractor;
 import com.issuetracker.issue.application.AssignedLabelService;
 import com.issuetracker.issue.application.AssigneeService;
 import com.issuetracker.issue.application.IssueCommentService;
@@ -61,17 +63,20 @@ public class IssueController {
 	private final IssueCommentService issueCommentService;
 
 	@GetMapping
-	public ResponseEntity<IssuesSearchResponse> showIssues(IssueSearchRequest issueSearchRequest) {
+	public ResponseEntity<IssuesSearchResponse> showIssues(IssueSearchRequest issueSearchRequest,
+		HttpServletRequest request) {
 		IssuesSearchResponse issuesSearchResponse = IssuesSearchResponse.of(
 			issueService.findIssuesCount(),
-			issueService.search(issueSearchRequest.toIssueSearchData(1L))
+			issueService.search(issueSearchRequest.toIssueSearchData(MemberIdExtractor.extractMemberId(request)))
 		);
 		return ResponseEntity.ok().body(issuesSearchResponse);
 	}
 
 	@PostMapping
-	public ResponseEntity<IssueCreateResponse> createIssue(@RequestBody @Valid IssueCreateRequest issueCreateRequest) {
-		IssueCreateInputData issueCreateInputData = issueCreateRequest.toIssueCreateData(1L);
+	public ResponseEntity<IssueCreateResponse> createIssue(@RequestBody @Valid IssueCreateRequest issueCreateRequest,
+		HttpServletRequest request) {
+		IssueCreateInputData issueCreateInputData = issueCreateRequest.toIssueCreateData(
+			MemberIdExtractor.extractMemberId(request));
 		IssueCreateResponse issueCreateResponse = IssueCreateResponse.from(issueService.create(issueCreateInputData));
 		return ResponseEntity.created(URI.create("/issues/" + issueCreateResponse.getId()))
 			.body(issueCreateResponse);
@@ -95,7 +100,8 @@ public class IssueController {
 
 	@GetMapping("/labels")
 	public ResponseEntity<AssignedLabelResponses> showLabels() {
-		AssignedLabelResponses assignedLabelResponses = AssignedLabelResponses.from(assignedLabelService.searchAssignedLabel());
+		AssignedLabelResponses assignedLabelResponses = AssignedLabelResponses.from(
+			assignedLabelService.searchAssignedLabel());
 		return ResponseEntity.ok().body(assignedLabelResponses);
 	}
 
@@ -145,11 +151,11 @@ public class IssueController {
 		return ResponseEntity.noContent().build();
 	}
 
-
 	@PostMapping("/{id}/comments")
 	public ResponseEntity<IssueCommentCreateResponse> createIssueComment(@PathVariable Long id, @RequestBody @Valid
-	IssueCommentCreateRequest issueCommentCreateRequest) {
-		IssueCommentCreateData issueCommentCreateData = issueCommentCreateRequest.toIssueCommentCreateData(id, 1L);
+	IssueCommentCreateRequest issueCommentCreateRequest, HttpServletRequest request) {
+		IssueCommentCreateData issueCommentCreateData = issueCommentCreateRequest.toIssueCommentCreateData(id,
+			MemberIdExtractor.extractMemberId(request));
 		IssueCommentCreateResponse issueCommentCreateResponse = IssueCommentCreateResponse.from(
 			issueCommentService.createIssueComment(issueCommentCreateData));
 		return ResponseEntity.ok().body(issueCommentCreateResponse);
@@ -159,7 +165,8 @@ public class IssueController {
 	public ResponseEntity<Void> updateIssueCommentContent(@PathVariable Long id,
 		@PathVariable("comment-id") Long commentId,
 		@RequestBody @Valid IssueCommentUpdateRequest issueCommentUpdateRequest) {
-		issueCommentService.updateIssueCommentContent(issueCommentUpdateRequest.toIssueCommentUpdateData(id, commentId));
+		issueCommentService.updateIssueCommentContent(
+			issueCommentUpdateRequest.toIssueCommentUpdateData(id, commentId));
 		return ResponseEntity.noContent().build();
 	}
 

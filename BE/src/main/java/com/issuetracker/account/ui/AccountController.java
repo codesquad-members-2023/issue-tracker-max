@@ -25,6 +25,7 @@ import com.issuetracker.account.ui.dto.OauthAccessTokenResponse;
 import com.issuetracker.account.ui.dto.OauthAccountInfoResponse;
 import com.issuetracker.account.ui.dto.RefreshTokenRequest;
 import com.issuetracker.account.ui.dto.SignupRequest;
+import com.issuetracker.common.util.MemberIdExtractor;
 
 @PropertySource("classpath:oauth.properties")
 @RestController
@@ -62,7 +63,7 @@ public class AccountController {
 
 	@PostMapping("/logout")
 	public ResponseEntity<Void> logout(HttpServletRequest request) {
-		accountService.logout(Long.valueOf(String.valueOf(request.getAttribute("memberId"))));
+		accountService.logout(MemberIdExtractor.extractMemberId(request));
 
 		return ResponseEntity.noContent().build();
 	}

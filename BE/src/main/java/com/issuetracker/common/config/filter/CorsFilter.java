@@ -1,4 +1,4 @@
-package com.issuetracker.config.filter;
+package com.issuetracker.common.config.filter;
 
 import java.io.IOException;
 
