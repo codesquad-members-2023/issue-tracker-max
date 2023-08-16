@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TextInput } from "../../components/TextInput";
 import { IssueDetailHeaderProps } from "./IssueDetailHeader";
+import { getAccessToken } from "../../utils/localStorage";
 
 type IssueDetailTitleProps = Omit<
   IssueDetailHeaderProps,
@@ -41,6 +42,10 @@ export function IssueDetailTitleInfo({
   const onEditClick = async () => {
     await fetch(`/api/issues/${id}/title`, {
       method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${getAccessToken()}`,
+        "credentials": "include",
+      },
       body: JSON.stringify({ title }),
     });
 
@@ -51,6 +56,10 @@ export function IssueDetailTitleInfo({
   const onStatusChangeClick = async () => {
     await fetch(`/api/issues/${id}/status`, {
       method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${getAccessToken()}`,
+        "credentials": "include",
+      },
       body: JSON.stringify({
         status: status === "OPENED" ? "CLOSED" : "OPENED",
       }),

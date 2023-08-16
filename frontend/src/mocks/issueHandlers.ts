@@ -1,6 +1,7 @@
 import { rest } from "msw";
 import { assignees } from "./assigneeHandlers";
-import { labels, milestones } from "./handlers";
+import { comments } from "./commentHandlers";
+import { labels, milestones, users } from "./handlers";
 
 type Issue = {
   id: number;
@@ -55,76 +56,77 @@ type Issue = {
 };
 
 export const issueHandlers = [
-  rest.get("/api/issues/:issueId", (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(issue));
-  }),
-  rest.patch("/api/issues/:issueId/title", async (req, res, ctx) => {
+  rest.get("/api/issues/:issueId", (req, res, ctx) => {
     const { issueId } = req.params;
-    const { title } = await req.json();
 
-    issue.data.title = title;
+    const issue = issues.find((i) => i.id === Number(issueId));
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        message: "OK",
-        data: {
-          modifiedIssueId: Number(issueId),
-        },
-      }),
-    );
-  }),
-  rest.patch("/api/issues/:issueId/status", async (req, res, ctx) => {
-    const { issueId } = req.params;
-    const { status } = await req.json();
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
 
-    issue.data = {
-      ...issue.data,
-      status,
-      statusModifiedAt: new Date().toISOString(),
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.comments = comments
+      .filter((c) => c.issueId === Number(issueId))
+      .map((c) => ({
+        id: c.id,
+        userId: c.userId,
+        avatarUrl: c.avatarUrl,
+        content: c.content,
+        createdAt: c.createdAt,
+        modifiedAt: c.modifiedAt,
+        reactions: c.reactions,
+      }));
+
+    const response = {
+      code: 200,
+      status: "OK",
+      message: "OK",
+      data: issue,
     };
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        message: "OK",
-        data: {
-          modifiedIssueId: Number(issueId),
-        },
-      }),
-    );
+    return res(ctx.status(200), ctx.json(response));
   }),
-  rest.patch("/api/issues/:issueId/content", async (req, res, ctx) => {
-    const { issueId } = req.params;
-    const { content } = await req.json();
-
-    issue.data = {
-      ...issue.data,
+  rest.post("/api/issues", async (req, res, ctx) => {
+    const authorizationToken = req.headers.get("authorization")!.split(" ")[1];
+    const {
+      title,
       content,
-      modifiedAt: new Date().toISOString(),
-    };
+      milestone: milestoneId,
+      labels: labelIds,
+      assignees: assigneeIds,
+    } = await req.json();
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        message: "OK",
-        data: {
-          modifiedIssueId: Number(issueId),
-        },
-      }),
+    const user = users.find(
+      ({ jwt }) => jwt.accessToken === authorizationToken,
     );
-  }),
-  rest.patch("/api/issues/:issueId/assignees", async (req, res, ctx) => {
-    const { issueId, assignees: assigneeIds } = await req.json();
 
-    issue.data = {
-      ...issue.data,
+    if (!user) {
+      const unauthorizedError = {
+        code: 401,
+        status: "UNAUTHORIZED",
+        message: "인증에 실패하였습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(401), ctx.json(unauthorizedError));
+    }
+
+    const newIssue: Issue = {
+      id: Date.now(),
+      title,
+      content,
+      status: "OPENED",
+      statusModifiedAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      modifiedAt: null,
+      reactions: [],
       assignees: assigneeIds.map((id: number) => {
         const assigneeData = assignees.data.assignees.find((a) => a.id === id)!;
 
@@ -134,25 +136,6 @@ export const issueHandlers = [
           avatarUrl: assigneeData.avatarUrl,
         };
       }),
-    };
-
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        messages: "OK",
-        data: {
-          modifiedIssueId: issueId,
-        },
-      }),
-    );
-  }),
-  rest.patch("/api/issues/:issueId/labels", async (req, res, ctx) => {
-    const { issueId, labels: labelIds } = await req.json();
-
-    issue.data = {
-      ...issue.data,
       labels: labelIds.map((id: number) => {
         const labelData = labels.data.labels.find((l) => l.id === id)!;
 
@@ -163,68 +146,263 @@ export const issueHandlers = [
           background: labelData.background,
         };
       }),
+      milestone:
+        milestones.data.milestones.find((m) => m.id === milestoneId) ?? null,
+      writer: {
+        id: user.user.id,
+        name: user.user.loginId,
+        avatarUrl: user.user.avatarUrl,
+      },
+      comments: [],
     };
 
+    issues.push(newIssue);
+
     return res(
-      ctx.status(200),
+      ctx.status(201),
       ctx.json({
-        code: 200,
-        status: "OK",
-        messages: "OK",
+        code: 201,
+        status: "CREATED",
+        message: "이슈 등록에 성공했습니다.",
         data: {
-          modifiedIssueId: issueId,
+          savedIssueId: newIssue.id,
         },
       }),
     );
   }),
-  rest.patch("/api/issues/:issueId/milestones", async (req, res, ctx) => {
-    const { issueId, milestone: milestoneId } = await req.json();
+  rest.patch("/api/issues/:issueId/title", async (req, res, ctx) => {
+    const { issueId } = req.params;
+    const { title } = await req.json();
 
-    issue.data = {
-      ...issue.data,
-      milestone:
-        milestones.data.milestones.find((m) => m.id === milestoneId) ?? null,
+    const issue = issues.find((i) => i.id === Number(issueId));
+
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.title = title;
+
+    const response = {
+      code: 200,
+      status: "OK",
+      message: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
     };
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        messages: "OK",
-        data: {
-          modifiedIssueId: issueId,
-        },
-      }),
-    );
+    return res(ctx.status(200), ctx.json(response));
+  }),
+  rest.patch("/api/issues/:issueId/status", async (req, res, ctx) => {
+    const { issueId } = req.params;
+    const { status } = await req.json();
+
+    const issue = issues.find((i) => i.id === Number(issueId));
+
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.status = status;
+    issue.statusModifiedAt = new Date().toISOString();
+
+    const response = {
+      code: 200,
+      status: "OK",
+      message: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
+    };
+
+    return res(ctx.status(200), ctx.json(response));
+  }),
+  rest.patch("/api/issues/:issueId/content", async (req, res, ctx) => {
+    const { issueId } = req.params;
+    const { content } = await req.json();
+
+    const issue = issues.find((i) => i.id === Number(issueId));
+
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.content = content;
+    issue.modifiedAt = new Date().toISOString();
+
+    const response = {
+      code: 200,
+      status: "OK",
+      message: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
+    };
+
+    return res(ctx.status(200), ctx.json(response));
+  }),
+  rest.patch("/api/issues/:issueId/assignees", async (req, res, ctx) => {
+    const { issueId } = req.params;
+    const { assignees: assigneeIds } = await req.json();
+
+    const issue = issues.find((i) => i.id === Number(issueId));
+
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.assignees = assigneeIds.map((id: number) => {
+      const assigneeData = assignees.data.assignees.find((a) => a.id === id)!;
+
+      return {
+        id: assigneeData.id,
+        name: assigneeData.loginId,
+        avatarUrl: assigneeData.avatarUrl,
+      };
+    });
+
+    const response = {
+      code: 200,
+      status: "OK",
+      messages: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
+    };
+
+    return res(ctx.status(200), ctx.json(response));
+  }),
+  rest.patch("/api/issues/:issueId/labels", async (req, res, ctx) => {
+    const { issueId } = req.params;
+    const { labels: labelIds } = await req.json();
+
+    const issue = issues.find((i) => i.id === Number(issueId));
+
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.labels = labelIds.map((id: number) => {
+      const labelData = labels.data.labels.find((l) => l.id === id)!;
+
+      return {
+        id: labelData.id,
+        name: labelData.name,
+        color: labelData.color,
+        background: labelData.background,
+      };
+    });
+
+    const response = {
+      code: 200,
+      status: "OK",
+      messages: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
+    };
+
+    return res(ctx.status(200), ctx.json(response));
+  }),
+  rest.patch("/api/issues/:issueId/milestones", async (req, res, ctx) => {
+    const { issueId } = req.params;
+    const { milestone: milestoneId } = await req.json();
+
+    const issue = issues.find((i) => i.id === Number(issueId));
+
+    if (!issue) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    issue.milestone =
+      milestones.data.milestones.find((m) => m.id === milestoneId) ?? null;
+
+    const response = {
+      code: 200,
+      status: "OK",
+      messages: "OK",
+      data: {
+        modifiedIssueId: issue.id,
+      },
+    };
+
+    return res(ctx.status(200), ctx.json(response));
   }),
   rest.delete("/api/issues/:issueId", async (req, res, ctx) => {
     const { issueId } = req.params;
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        code: 200,
-        status: "OK",
-        messages: "OK",
-        data: {
-          deletedIssueId: issueId,
-        },
-      }),
-    );
+    const issueIndex = issues.findIndex((i) => i.id === Number(issueId));
+
+    if (issueIndex === -1) {
+      const notFoundError = {
+        code: 404,
+        status: "Not Found",
+        message: "이슈를 찾을 수 없습니다.",
+        data: null,
+      };
+
+      return res(ctx.status(404), ctx.json(notFoundError));
+    }
+
+    const deletedIssue = issues.splice(issueIndex, 1);
+
+    const response = {
+      code: 200,
+      status: "OK",
+      messages: "OK",
+      data: {
+        deletedIssueId: deletedIssue[0].id,
+      },
+    };
+
+    return res(ctx.status(200), ctx.json(response));
   }),
 ];
 
-export const issue: {
-  code: number;
-  status: string;
-  message: string;
-  data: Issue;
-} = {
-  code: 200,
-  status: "OK",
-  message: "OK",
-  data: {
+export const issues: Issue[] = [
+  {
     id: 2,
     title: "제목1",
     status: "OPENED",
@@ -273,41 +451,40 @@ export const issue: {
     },
     writer: {
       id: 1,
-      name: "wis730",
+      name: "hong1234",
       avatarUrl:
         "https://i.namu.wiki/i/2KCzxN-etRYFHRQVHH9-ROMgsOvyU3X4y7A2wuqNV5apHBn8APhnhPuapmrXewTuRcVtgos2UIAdHOCDkKVOFQ.webp",
     },
-    comments: [
+    comments: [],
+  },
+  {
+    id: 5,
+    title: "테스트",
+    status: "OPENED",
+    statusModifiedAt: "2023-08-09T06:01:37",
+    createdAt: "2023-08-09T06:01:37",
+    modifiedAt: "2023-08-10T06:01:37",
+    content: `테스트`,
+    reactions: [
       {
-        id: 1,
-        userId: "wis730",
-        avatarUrl:
-          "https://i.namu.wiki/i/2KCzxN-etRYFHRQVHH9-ROMgsOvyU3X4y7A2wuqNV5apHBn8APhnhPuapmrXewTuRcVtgos2UIAdHOCDkKVOFQ.webp",
-        content: "이 댓글을 읽은 당신은 앞으로 모든 일이 신기하게 잘풀립니다!",
-        createdAt: "2023-08-09T15:21:09",
-        modifiedAt: "2023-08-09T20:21:09",
-        reactions: [
-          {
-            unicode: "&#128077",
-            users: [],
-            selected: null,
-          },
-          {
-            unicode: "&#128078",
-            users: ["wis730"],
-            selected: 3,
-          },
-        ],
+        unicode: "&#128077",
+        users: ["wis730", "wisdom"],
+        selectedUserReactionId: 1,
       },
       {
-        id: 2,
-        userId: "hjsong123",
-        avatarUrl: "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
-        content: "웃어보세요! 오늘 하루가 달라질 거에요!",
-        createdAt: "2023-08-10T10:21:09",
-        modifiedAt: "2023-08-10T13:21:09",
-        reactions: [],
+        unicode: "&#128078",
+        users: [],
+        selectedUserReactionId: 0,
       },
     ],
+    assignees: [],
+    labels: [],
+    milestone: null,
+    writer: {
+      id: 2,
+      name: "lee1234",
+      avatarUrl: "https://pbs.twimg.com/media/EUplmpsU0AcR9jc.jpg",
+    },
+    comments: [],
   },
-};
+];

@@ -6,6 +6,7 @@ import { IssueLabel } from "../../components/sidebar/AddLabel";
 import { IssueMilestone } from "../../components/sidebar/AddMilestone";
 import { NewIssueBody } from "./NewIssueBody";
 import { NewIssueFooter } from "./NewIssueFooter";
+import { getAccessToken } from "../../utils/localStorage";
 
 export function NewIssue() {
   const navigate = useNavigate();
@@ -15,15 +16,11 @@ export function NewIssue() {
   const [milestone, setMilestone] = useState<IssueMilestone | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [invalidTitle, setInvalidTitle] = useState(false);
 
-  const onTitleFocus = () => {
-    setInvalidTitle(title.length === 0);
-  };
+  const invalidTitle = title.length === 0;
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
-    setInvalidTitle(e.target.value.length === 0);
   };
 
   const onContentChange = (value: string) => {
@@ -49,12 +46,24 @@ export function NewIssue() {
     const issueData = {
       title: title,
       content: content,
-      assignees: assignees,
-      labels: labels,
-      milestone: milestone,
+      assignees: assignees.map((assignee) => assignee.id),
+      labels: labels.map((label) => label.id),
+      milestone: milestone?.id ?? null,
     };
 
-    console.log("이슈 등록 데이터", issueData);
+    const response = await fetch("/api/issues", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${getAccessToken()}`,
+        "credentials": "include",
+      },
+      body: JSON.stringify(issueData),
+    })
+    const result = await response.json();
+
+    if (result.code === 201) {
+      navigate(`/issues/${result.data.savedIssueId}`);
+    }
   };
 
   const onCancelButtonClick = () => {
@@ -76,7 +85,6 @@ export function NewIssue() {
         onLabelClick={{ args: "DataArray", handler: updateIssueLabels }}
         onMilestoneClick={{ args: "Data", handler: updateIssueMilestone }}
         onTitleChange={onTitleChange}
-        onTitleFocus={onTitleFocus}
         onContentChange={onContentChange}
       />
       <Line />
