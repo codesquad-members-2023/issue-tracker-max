@@ -17,7 +17,6 @@ type Props = {
 
 export const Body: React.FC<Props> = ({
   issueDetailPageData,
-
   selectionsOptions,
   selections,
   onAddComment,

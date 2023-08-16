@@ -55,6 +55,7 @@ export const TextAreaInput: React.FC<Props> = ({
             width: '100%',
             background: 'transparent',
             overflowY: 'auto',
+            whiteSpace: 'pre-line',
           }}
         >
           <p
