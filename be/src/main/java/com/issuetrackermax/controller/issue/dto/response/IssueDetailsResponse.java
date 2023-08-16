@@ -40,6 +40,7 @@ public class IssueDetailsResponse {
 		this.writer = WriterResponse.builder()
 			.id(resultVO.getWriterId())
 			.name(resultVO.getWriter())
+			.imageUrl(resultVO.getWriterImageUrl())
 			.build();
 		setMilestone(resultVO.getMilestoneId(), resultVO.getMilestoneTitle());
 		this.history = HistoryResponse.builder()

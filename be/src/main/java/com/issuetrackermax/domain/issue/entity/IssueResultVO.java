@@ -13,6 +13,7 @@ public class IssueResultVO {
 	private String labelIds;
 	private Long writerId;
 	private String writer;
+	private String writerImageUrl;
 	private String assigneeIds;
 	private String assigneeNames;
 	private Long milestoneId;
@@ -20,14 +21,14 @@ public class IssueResultVO {
 
 	@Builder
 	public IssueResultVO(Long id, Boolean isOpen, String title, String labelIds, Long writerId, String writer,
-		String assigneeIds,
-		String assigneeNames, Long milestoneId, String milestoneTitle) {
+		String writerImageUrl, String assigneeIds, String assigneeNames, Long milestoneId, String milestoneTitle) {
 		this.id = id;
 		this.isOpen = isOpen;
 		this.title = title;
 		this.labelIds = labelIds;
 		this.writerId = writerId;
 		this.writer = writer;
+		this.writerImageUrl = writerImageUrl;
 		this.assigneeIds = assigneeIds;
 		this.assigneeNames = assigneeNames;
 		this.milestoneId = milestoneId;
