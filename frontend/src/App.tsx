@@ -9,8 +9,9 @@ import { ThemeProvider, styled } from "styled-components";
 import { Header } from "./components/Header";
 import { designSystem } from "./constants/designSystem";
 import { Error404 } from "./page/Error404";
-import { IssueDetail } from "./page/issueDetail/IssueDetail";
 import { Auth } from "./page/auth/Auth";
+import { OauthLoading } from "./page/auth/OauthLoading";
+import { IssueDetail } from "./page/issueDetail/IssueDetail";
 import { Label } from "./page/label/Label";
 import { Main } from "./page/main/Main";
 import { Milestone } from "./page/milestone/Milestone";
@@ -30,6 +31,7 @@ export default function App() {
         <Router>
           <Routes>
             <Route path="/auth" element={<AuthRoute />} />
+            <Route path="/redirect/oauth" element={<OauthLoading />} />
             <Route
               path="*"
               element={<MainRoutes changeThemeMode={changeThemeMode} />}
