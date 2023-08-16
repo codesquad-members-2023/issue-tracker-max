@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { Button } from "../Button";
 import { TextArea } from "../TextArea";
+import { getAccessToken } from "../../utils/localStorage";
 
 type CommentEditorProps = {
   issueId: number;
@@ -47,7 +48,7 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
     await fetch("/api/comments", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "Authorization": `Bearer ${getAccessToken()}`,
         "credentials": "include",
       },
       body: JSON.stringify({ issueId, content }),

@@ -7,6 +7,7 @@ import { TextArea } from "../../components/TextArea";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
 import { IssueDetailMainContentProps } from "./IssueDetailMainContent";
+import { getAccessToken } from "../../utils/localStorage";
 
 type IssueContentProps = Omit<IssueDetailMainContentProps, "comments">;
 
@@ -64,7 +65,7 @@ export function IssueContent({
     await fetch(`/api/issues/${id}/content`, {
       method: "PATCH",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        Authorization: `Bearer ${getAccessToken()}`,
         credentials: "include",
       },
       body: JSON.stringify({

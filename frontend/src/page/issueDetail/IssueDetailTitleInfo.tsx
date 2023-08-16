@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TextInput } from "../../components/TextInput";
 import { IssueDetailHeaderProps } from "./IssueDetailHeader";
+import { getAccessToken } from "../../utils/localStorage";
 
 type IssueDetailTitleProps = Omit<
   IssueDetailHeaderProps,
@@ -42,7 +43,7 @@ export function IssueDetailTitleInfo({
     await fetch(`/api/issues/${id}/title`, {
       method: "PATCH",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "Authorization": `Bearer ${getAccessToken()}`,
         "credentials": "include",
       },
       body: JSON.stringify({ title }),
@@ -56,7 +57,7 @@ export function IssueDetailTitleInfo({
     await fetch(`/api/issues/${id}/status`, {
       method: "PATCH",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "Authorization": `Bearer ${getAccessToken()}`,
         "credentials": "include",
       },
       body: JSON.stringify({

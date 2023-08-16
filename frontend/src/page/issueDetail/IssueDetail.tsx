@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import { IssueDetailBody } from "./IssueDetailBody";
 import { IssueDetailHeader } from "./IssueDetailHeader";
+import { getAccessToken } from "../../utils/localStorage";
 
 export type IssueData = {
   id: number;
@@ -95,7 +96,7 @@ export function IssueDetail() {
   const fetchIssue = useCallback(async () => {
     const response = await fetch(`/api/issues/${issueId}`, {
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "Authorization": `Bearer ${getAccessToken()}`,
         "credentials": "include",
       },
     });

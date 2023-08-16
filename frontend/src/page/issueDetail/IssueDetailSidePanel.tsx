@@ -3,6 +3,7 @@ import { Button } from "../../components/Button";
 import { Sidebar } from "../../components/sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { IssueData } from "./IssueDetail";
+import { getAccessToken } from "../../utils/localStorage";
 
 type IssueDetailSidePanelProps = {
   fetchIssue: () => void;
@@ -22,7 +23,7 @@ export function IssueDetailSidePanel({
     await fetch(`/api/issues/${issueId}/assignees`, {
       method: "PATCH",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "Authorization": `Bearer ${getAccessToken()}`,
         "credentials": "include",
       },
       body: JSON.stringify({
@@ -37,7 +38,7 @@ export function IssueDetailSidePanel({
     await fetch(`/api/issues/${issueId}/labels`, {
       method: "PATCH",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "Authorization": `Bearer ${getAccessToken()}`,
         "credentials": "include",
       },
       body: JSON.stringify({
@@ -52,7 +53,7 @@ export function IssueDetailSidePanel({
     await fetch(`/api/issues/${issueId}/milestones`, {
       method: "PATCH",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "Authorization": `Bearer ${getAccessToken()}`,
         "credentials": "include",
       },
       body: JSON.stringify({
@@ -67,7 +68,7 @@ export function IssueDetailSidePanel({
     await fetch(`/api/issues/${issueId}`, {
       method: "DELETE",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        "Authorization": `Bearer ${getAccessToken()}`,
         "credentials": "include",
       },
     });

@@ -6,6 +6,7 @@ import { Avatar } from "../Avatar";
 import { Button } from "../Button";
 import { InformationTag } from "../InformationTag";
 import { TextArea } from "../TextArea";
+import { getAccessToken } from "../../utils/localStorage";
 
 type CommentItemProps = {
   id: number;
@@ -67,7 +68,7 @@ export function CommentItem({
     await fetch(`/api/comments/${id}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        Authorization: `Bearer ${getAccessToken()}`,
         credentials: "include",
       },
     });
@@ -94,7 +95,7 @@ export function CommentItem({
     await fetch(`/api/comments/${id}`, {
       method: "PATCH",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        Authorization: `Bearer ${getAccessToken()}`,
         credentials: "include",
       },
       body: JSON.stringify({
