@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,6 +31,7 @@ import codesquard.app.jwt.JwtProvider;
 import codesquard.app.jwt.filter.VerifyUserFilter;
 import codesquard.app.user.annotation.Login;
 
+@RequestMapping(path = "/api/auth")
 @RestController
 public class AuthenticateUserRestController {
 
@@ -46,10 +48,10 @@ public class AuthenticateUserRestController {
 		this.objectMapper = objectMapper;
 	}
 
-	@PostMapping("/api/auth/refresh/token")
+	@PostMapping("/refresh/token")
 	public ApiResponse<RefreshTokenResponse> refreshToken(@CookieValue String refreshToken,
 		HttpServletResponse response) {
-		logger.info("refreshToken : {}", refreshToken);
+		logger.info("리프레쉬 토큰 갱신 매핑 : {}", refreshToken);
 		Jwt jwt = authenticateUserService.refreshToken(new RefreshTokenServiceRequest(refreshToken));
 		if (jwt == null) {
 			throw new RestApiException(LoginErrorCode.FAIL_REFRESHTOKEN);
@@ -59,8 +61,9 @@ public class AuthenticateUserRestController {
 		return ApiResponse.of(OK, REFRESHTOKEN_UPDATE_SUCCESS, new RefreshTokenResponse(jwt));
 	}
 
-	@PostMapping("/api/auth/logout")
+	@PostMapping("/logout")
 	public ApiResponse<AuthenticateUser> logout(@Login AuthenticateUser user) {
+		logger.info("로그아웃 매핑 : {}", user);
 		Jwt jwt = getJwt(user);
 		authenticateUserService.logout(user, jwt);
 		return ApiResponse.of(OK, LOGOUT_SUCCESS, user);

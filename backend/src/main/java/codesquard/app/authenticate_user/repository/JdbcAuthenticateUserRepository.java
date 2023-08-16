@@ -36,7 +36,7 @@ public class JdbcAuthenticateUserRepository implements AuthenticateUserRepositor
 		parameterSource.addValues(jwt.createParamSource().getValues());
 
 		int update = template.update(sql, parameterSource);
-		logger.info("updateRefreshToken update query row : {}", update);
+		logger.info("토큰 갱신 결과 : {}", update);
 	}
 
 	@Override
@@ -45,6 +45,7 @@ public class JdbcAuthenticateUserRepository implements AuthenticateUserRepositor
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValues(user.createSaveParamSource().getValues());
 		paramSource.addValues(jwt.createParamSource().getValues());
-		template.update(sql, paramSource);
+		int update = template.update(sql, paramSource);
+		logger.info("토큰 저장 결과 : {}", update);
 	}
 }
