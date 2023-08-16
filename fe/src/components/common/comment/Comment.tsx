@@ -15,6 +15,16 @@ import { editComment, patchIssueContents, postNewComment } from 'apis/api';
 import { getLocalStorageUserId } from 'apis/localStorage';
 // todo issueDetailPage에 들어가면 줄바꿈해서 작성한게 그대로 보여야하는데
 // 한줄로 보이는중
+
+const initialStatus = {
+  typeError: false,
+  sizeError: false,
+  isUploading: false,
+  uploadFailed: false,
+};
+
+const AVAILABLE_FILE_SIZE = 1048576; //1MB
+
 type DefaultFileStatusType = {
   typeError: boolean;
   sizeError: boolean;
@@ -27,7 +37,6 @@ type Props = {
   typeVariant: 'issue' | 'default' | 'edit' | 'add';
   createdAt?: string;
   comment?: CommentType;
-  // commentAuthor?: User;
   isDisabled?: boolean;
   defaultValue: string;
   onAddComment?: (comment: CommentType) => void;
@@ -38,7 +47,6 @@ export const Comment: React.FC<Props> = ({
   issueAuthor,
   createdAt,
   comment,
-  // commentAuthor,
   typeVariant = 'default',
   isDisabled = false,
   defaultValue,
@@ -52,6 +60,7 @@ export const Comment: React.FC<Props> = ({
     useState<string>(defaultValue); //편집 취소시 돌아갈 값
   const [isEditing, setIsEditing] = useState(false);
   const [isDisplayingCount, setIsDisplayingCount] = useState(false);
+  const storagedUserId = getLocalStorageUserId();
 
   useEffect(() => {
     if (textAreaValue) {
@@ -128,8 +137,11 @@ export const Comment: React.FC<Props> = ({
 
   const onAddSubmit = async () => {
     try {
-      const userId = getLocalStorageUserId();
-      const newComment = await postNewComment(issueId, userId, textAreaValue);
+      const newComment = await postNewComment(
+        issueId,
+        storagedUserId,
+        textAreaValue,
+      );
 
       if (onAddComment) {
         onAddComment(newComment);
@@ -166,7 +178,9 @@ export const Comment: React.FC<Props> = ({
     },
   };
 
-  const isAuthor = getLocalStorageUserId() === issueAuthor?.userId;
+  const isAuthor =
+    storagedUserId === comment?.author?.userId ||
+    storagedUserId === issueAuthor.userId;
 
   return (
     <>
@@ -283,12 +297,3 @@ export const Comment: React.FC<Props> = ({
     </>
   );
 };
-
-const initialStatus = {
-  typeError: false,
-  sizeError: false,
-  isUploading: false,
-  uploadFailed: false,
-};
-
-const AVAILABLE_FILE_SIZE = 1048576; //1MB

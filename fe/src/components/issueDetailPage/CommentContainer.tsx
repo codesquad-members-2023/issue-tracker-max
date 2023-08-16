@@ -7,8 +7,8 @@ type Props = {
   contents: string;
   createdAt: string;
   author: User;
-  comments: any[]; // todo 타입
-  onAddComment: (comment: Comment) => void;
+  comments: CommentType[]; // todo 타입
+  onAddComment: (comment: CommentType) => void;
 };
 
 export const CommentContainer: React.FC<Props> = ({
@@ -20,26 +20,21 @@ export const CommentContainer: React.FC<Props> = ({
   return (
     <div css={commentContainerStyle}>
       {comments &&
-        comments.map(
-          (item) =>
-            item && (
-              <Comment
-                typeVariant="default"
-                key={item.id}
-                comment={item}
-                issueId={issueId}
-                issueAuthor={author}
-                // commentAuthor={item.author}
-                createdAt={item.createdAt}
-                defaultValue={item.contents}
-              />
-            ),
-        )}
+        comments.map((item) => (
+          <Comment
+            typeVariant="default"
+            key={item.id}
+            comment={item}
+            issueId={issueId}
+            issueAuthor={author}
+            createdAt={item.createdAt}
+            defaultValue={item.contents}
+          />
+        ))}
 
       <AddNewComment
         issueId={issueId}
         issueAuthor={author}
-        userId={author.userId}
         onAddComment={onAddComment}
       />
     </div>
