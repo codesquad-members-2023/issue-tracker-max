@@ -29,6 +29,10 @@ public class FixedUserFactory {
 		return new UserSaveServiceRequest(LOGIN_ID, EMAIL, PASSWORD, PASSWORD, null);
 	}
 
+	public static UserSaveServiceRequest userSaveServiceRequest(String loginId){
+		return new UserSaveServiceRequest(loginId, EMAIL, PASSWORD, PASSWORD, null);
+	}
+
 	public static UserSaveRequest invalidEmailUserSaveRequest(String email) {
 		return new UserSaveRequest(LOGIN_ID, email, PASSWORD, PASSWORD);
 	}

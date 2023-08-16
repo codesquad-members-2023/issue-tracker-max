@@ -91,7 +91,7 @@ class UserServiceTest extends IntegrationTestSupport {
 		// sample
 		userService.signUp(FixedUserFactory.userSaveServiceRequest());
 		// given
-		UserSaveServiceRequest request = FixedUserFactory.userSaveServiceRequest();
+		UserSaveServiceRequest request = FixedUserFactory.userSaveServiceRequest("lee1234");
 		// when & then
 		assertThatThrownBy(() -> userService.signUp(request))
 			.isInstanceOf(RestApiException.class)
