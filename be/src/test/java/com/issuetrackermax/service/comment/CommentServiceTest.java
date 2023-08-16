@@ -19,6 +19,7 @@ import com.issuetrackermax.controller.comment.dto.response.CommentResponse;
 import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.comment.CommentRepository;
 import com.issuetrackermax.domain.comment.entity.Comment;
+import com.issuetrackermax.domain.comment.entity.CommentMemberVO;
 import com.issuetrackermax.domain.member.MemberRepository;
 import com.issuetrackermax.domain.member.entity.LoginType;
 import com.issuetrackermax.domain.member.entity.Member;
@@ -74,7 +75,7 @@ public class CommentServiceTest extends IntegrationTestSupport {
 		commentService.save(request3, issueId2, writerId1);
 
 		// when
-		List<Comment> comments = commentService.findByIssueId(issueId);
+		List<CommentMemberVO> comments = commentService.findByIssueId(issueId);
 
 		// then
 		assertThat(comments.size()).isEqualTo(2);

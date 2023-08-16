@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.comment.entity.Comment;
+import com.issuetrackermax.domain.comment.entity.CommentMemberVO;
 import com.issuetrackermax.util.DatabaseCleaner;
 
 public class CommentRepositoryTest extends IntegrationTestSupport {
@@ -78,7 +79,7 @@ public class CommentRepositoryTest extends IntegrationTestSupport {
 		Long commentId2 = commentRepository.save(comment2);
 
 		// when
-		List<Comment> comments = commentRepository.findByIssueId(issueId);
+		List<CommentMemberVO> comments = commentRepository.findByIssueId(issueId);
 
 		// then
 		assertThat(comments.size()).isEqualTo(2);
