@@ -67,7 +67,6 @@ const Container = styled.article`
   border-radius: ${({ theme }) => theme.objectStyles.radius.large};
   border: 1px solid ${({ theme }) => theme.color.neutral.border.default};
   overflow: hidden;
-  margin: auto;
 `;
 
 const Header = styled.h2`

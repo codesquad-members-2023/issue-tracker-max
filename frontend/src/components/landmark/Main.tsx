@@ -15,4 +15,8 @@ export default function Main({
   );
 }
 
-const Container = styled.main``;
+const Container = styled.main`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;

@@ -2,6 +2,9 @@ import { styled } from 'styled-components';
 import Icons from '../../design/Icons';
 import ProgressIndicator from '../common/ProgressIndicator';
 import Button from '../common/button/BaseButton';
+import MilestoneProps from '../../types/MilestoneProps';
+import { useState } from 'react';
+import EditMilestone from './EditMilestone';
 
 export default function Milestone({
   id,
@@ -10,14 +13,29 @@ export default function Milestone({
   doneDate,
   closedIssueCount,
   openIssueCount,
-}: {
-  id: number;
-  name: string;
-  description: string;
-  doneDate: string;
-  closedIssueCount: number;
-  openIssueCount: number;
-}) {
+}: MilestoneProps) {
+  const [isEdit, setIsEdit] = useState(false);
+
+  if (isEdit) {
+    return (
+      <Container>
+        <EditMilestone
+          {...{
+            id,
+            name,
+            description,
+            doneDate,
+            closedIssueCount,
+            openIssueCount,
+            cancel: () => {
+              setIsEdit(false);
+            },
+          }}
+        />
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <Body>
@@ -41,7 +59,12 @@ export default function Milestone({
             </Button>
           </li>
           <li>
-            <Button type="button" iconName="edit" ghost flexible>
+            <Button
+              type="button"
+              iconName="edit"
+              ghost
+              flexible
+              onClick={() => setIsEdit(true)}>
               편집
             </Button>
           </li>
