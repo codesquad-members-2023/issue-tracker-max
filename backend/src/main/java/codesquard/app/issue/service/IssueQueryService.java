@@ -116,7 +116,7 @@ public class IssueQueryService {
 
 		return new IssueFilterResponse(generateInput(request), counts.get(IssueStatus.OPENED.name()),
 			counts.get(IssueStatus.CLOSED.name()), labelRepository.countAll(), milestoneRepository.countAll(),
-			findIssues(loginId, request), generateSingleFilters(request),
+			findIssues(loginId, request), generateSingleFilters(loginId, request),
 			checkMultiFilters(multiFiltersCheck, request));
 	}
 
@@ -159,31 +159,34 @@ public class IssueQueryService {
 		return issueMapper.getIssues(request.convertMe(loginId));
 	}
 
-	public List<SingleFilter> generateSingleFilters(IssueFilterRequest request) {
+	public List<SingleFilter> generateSingleFilters(String loginId, IssueFilterRequest request) {
 		List<SingleFilter> singleFilters = new ArrayList<>();
-		String generated = generateInput(request);
+		String generated = generateInput(request).stripTrailing();
 
-		boolean selectedOpened = generated.strip().equals(SingleFilter.IS.OPENED.getResponse());
+		boolean selectedOpened = generated.equals(SingleFilter.IS.OPENED.getResponse());
 		singleFilters.add(
 			new SingleFilter(OPENED_ID, SingleFilter.IS.OPENED.getName(), SingleFilter.IS.OPENED.getResponse(),
 				selectedOpened));
 
-		boolean selectedAuthor = generated.strip().equals(SingleFilter.ME.AUTHOR.getResponse());
+		boolean selectedAuthor = generated.equals("author:" + loginId);
 		singleFilters.add(
-			new SingleFilter(AUTHOR_ID, SingleFilter.ME.AUTHOR.getName(), SingleFilter.ME.AUTHOR.getResponse(),
+			new SingleFilter(AUTHOR_ID, SingleFilter.ME.AUTHOR.getName(),
+				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.AUTHOR.getResponse(),
 				selectedAuthor));
 
-		boolean selectedAssignee = generated.strip().equals(SingleFilter.ME.ASSIGNEE.getResponse());
+		boolean selectedAssignee = generated.equals("assignee:" + loginId);
 		singleFilters.add(
-			new SingleFilter(ASSIGNEE_ID, SingleFilter.ME.ASSIGNEE.getName(), SingleFilter.ME.ASSIGNEE.getResponse(),
+			new SingleFilter(ASSIGNEE_ID, SingleFilter.ME.ASSIGNEE.getName(),
+				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.ASSIGNEE.getResponse(),
 				selectedAssignee));
 
-		boolean selectedMentions = generated.strip().equals(SingleFilter.ME.MENTIONS.getResponse());
+		boolean selectedMentions = generated.equals("mentions:" + loginId);
 		singleFilters.add(
-			new SingleFilter(MENTIONS_ID, SingleFilter.ME.MENTIONS.getName(), SingleFilter.ME.MENTIONS.getResponse(),
+			new SingleFilter(MENTIONS_ID, SingleFilter.ME.MENTIONS.getName(),
+				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.MENTIONS.getResponse(),
 				selectedMentions));
 
-		boolean selectedClosed = generated.strip().equals(SingleFilter.IS.CLOSED.getResponse());
+		boolean selectedClosed = generated.equals(SingleFilter.IS.CLOSED.getResponse());
 		singleFilters.add(
 			new SingleFilter(CLOSED_ID, SingleFilter.IS.CLOSED.getName(), SingleFilter.IS.CLOSED.getResponse(),
 				selectedClosed));
