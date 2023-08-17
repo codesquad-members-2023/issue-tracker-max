@@ -37,5 +37,5 @@ public class CommentExceptionHandler {
 		logger.debug("CommentAuthorMismatchException handling : {}", e.getMessage());
 		return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage(), null);
 	}
-	
+
 }

@@ -35,10 +35,12 @@ public class MilestoneService {
 
 	public Long updateMilestone(final Long milestoneId, final MilestoneUpdateRequest milestoneUpdateRequest,
 		final Long userId) {
-		return milestoneRepository.updateBy(milestoneId, MilestoneUpdateRequest.toEntity(milestoneUpdateRequest, userId));
+		return milestoneRepository.updateBy(milestoneId,
+			MilestoneUpdateRequest.toEntity(milestoneUpdateRequest, userId));
 	}
 
-	public Long updateMilestoneStatus(final Long milestoneId, final MilestoneStatusUpdateRequest milestoneStatusUpdateRequest) {
+	public Long updateMilestoneStatus(final Long milestoneId,
+		final MilestoneStatusUpdateRequest milestoneStatusUpdateRequest) {
 		return milestoneRepository.updateBy(milestoneId, MilestoneStatusUpdateRequest.toStatus(
 			milestoneStatusUpdateRequest));
 	}
