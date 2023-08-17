@@ -35,6 +35,7 @@ export const LabelEditTable: React.FC<Props> = ({
     label ? (label.textColor === 'light' ? 'light' : 'dark') : null,
   );
   const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false);
+  const trimedName = nameInput.trim();
 
   const onNameChange = (value: string) => {
     if (value.length > 21) return;
@@ -73,14 +74,14 @@ export const LabelEditTable: React.FC<Props> = ({
       if (typeVariant === 'edit' && label?.id) {
         await editLabel(
           label.id,
-          nameInput,
+          trimedName,
           textColor,
           colorCodeInput,
           descriptionInput || '',
         );
       } else {
         await postNewLabel(
-          nameInput,
+          trimedName,
           textColor,
           colorCodeInput,
           descriptionInput || '',
@@ -143,7 +144,7 @@ export const LabelEditTable: React.FC<Props> = ({
     >
       {header}
       <LabelEditBody
-        nameInput={nameInput}
+        nameInput={trimedName}
         descriptionInput={descriptionInput}
         colorCodeInput={colorCodeInput}
         selectedTextColor={selectedTextColor}

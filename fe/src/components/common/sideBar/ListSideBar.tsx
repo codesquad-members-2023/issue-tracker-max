@@ -66,42 +66,12 @@ export const ListSideBar: React.FC<Props> = ({
     null | 'users' | 'labels' | 'milestones'
   >(null);
 
-  // // todo
-  // const [isFetched, setIsFetched] = useState({
-  //   //ref 리렌더가 필요x
-  //   users: false,
-  //   labels: false,
-  //   milestones: false,
-  // });
-
+  //ref 리렌더가 필요x
   const isFetched = useRef({
     users: false,
     labels: false,
     milestones: false,
   });
-
-  // const openPanel = async (
-  //   fetchDataFunction: () => Promise<
-  //     UserData[] | LabelData[] | MilestoneData[]
-  //   >,
-  //   panelName: FetchPath,
-  // ) => {
-  //   if (!isFetched[panelName]) {
-  //     const data = await fetchDataFunction();
-
-  //     setListData((prev) => ({
-  //       ...prev,
-  //       [panelName]: data,
-  //     }));
-
-  //     setIsFetched((prev) => ({
-  //       ...prev,
-  //       [panelName]: true,
-  //     }));
-  //   }
-
-  //   setIsPanelOpen(panelName);
-  // };
 
   const openPanel = async (
     fetchDataFunction: () => Promise<
