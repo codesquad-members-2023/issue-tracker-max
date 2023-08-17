@@ -14,14 +14,16 @@ public class LabelInformation {
 
 	private Long id;
 	private String title;
-	private String color;
+	private String backgroundColor;
+	private String textColor;
 	private String description;
 
 	public static LabelInformation from(Label label) {
 		return new LabelInformation(
 			label.getId(),
 			label.getTitle(),
-			label.getColor(),
+			label.getBackgroundColor(),
+			label.getTextColor(),
 			label.getDescription()
 		);
 	}

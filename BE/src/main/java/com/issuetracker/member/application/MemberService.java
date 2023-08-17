@@ -25,7 +25,7 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final FileService fileService;
 
-	public List<MemberInformation> searchAuthors() {
+	public List<MemberInformation> searchMember() {
 		return MemberInformation.from(memberRepository.search());
 	}
 
@@ -39,8 +39,10 @@ public class MemberService {
 	public void updateMember(MemberUpdateData memberUpdateData) {
 		Member member = memberRepository.findById(memberUpdateData.getId())
 			.orElseThrow(() -> new CustomHttpException(ErrorType.MEMBER_NOT_FOUND));
-		String profileUrl = getProfileUrl(member.getProfileImageUrl(), memberUpdateData.getMultipartFile());
-		memberRepository.update(memberUpdateData.toMember(profileUrl));
+		String profileImageUrl = getProfileUrl(member.getProfileImageUrl(), memberUpdateData.getMultipartFile());
+
+		member.update(memberUpdateData.getNickname(), memberUpdateData.getPassword(), profileImageUrl);
+		memberRepository.update(member);
 	}
 
 	private String getProfileUrl(String originProfileUrl, MultipartFile multipartFile) {

@@ -22,7 +22,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM milestone WHERE is_deleted = false AND id = :id)";
 	private static final String EXIST_BY_TITLE_SQL = "SELECT EXISTS(SELECT 1 FROM milestone WHERE is_deleted = false AND title = :title)";
-	private static final String FIND_ALL_FOR_FILTER = "SELECT milestone.id, milestone.title FROM milestone INNER JOIN issue ON issue.milestone_id = milestone.id WHERE milestone.is_deleted = false GROUP BY milestone.id ORDER BY milestone.title DESC";
+	private static final String FIND_ALL_FOR_FILTER = "SELECT id, title FROM milestone WHERE milestone.is_deleted = false  ORDER BY title";
 	private static final String SAVE_SQL = "INSERT INTO milestone(title, description, deadline, is_open) VALUE(:title, :description, :deadline, true)";
 	private static final String UPDATE_SQL = "UPDATE milestone SET title = :title, description = :description, deadline = :deadline WHERE id = :id";
 	private static final String UPDATE_OPEN_STATUS_SQL = "UPDATE milestone SET is_open = :isOpen WHERE id = :id";

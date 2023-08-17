@@ -12,14 +12,16 @@ public class Label {
 	private Long id;
 	private String title;
 	private String description;
-	private String color;
+	private String backgroundColor;
+	private String textColor;
 
 	@Builder
-	private Label(Long id, String title, String description, String color) {
+	public Label(Long id, String title, String description, String backgroundColor, String textColor) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
-		this.color = color;
+		this.backgroundColor = backgroundColor;
+		this.textColor = textColor;
 	}
 
 	public boolean equalsId(Long id) {

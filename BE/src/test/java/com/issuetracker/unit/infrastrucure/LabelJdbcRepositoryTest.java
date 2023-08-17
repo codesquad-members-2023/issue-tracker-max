@@ -52,7 +52,8 @@ class LabelJdbcRepositoryTest extends JdbcRepositoryTest {
 			.id(1L)
 			.title("수정된 제목")
 			.description("수정된 설명")
-			.color("#000000")
+			.backgroundColor("#000000")
+			.textColor("#000000")
 			.build();
 
 		// when

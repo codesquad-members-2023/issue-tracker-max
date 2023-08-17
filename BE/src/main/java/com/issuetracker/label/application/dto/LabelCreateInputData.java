@@ -1,5 +1,8 @@
 package com.issuetracker.label.application.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 import com.issuetracker.label.domain.Label;
 
 import lombok.Getter;
@@ -9,19 +12,22 @@ public class LabelCreateInputData {
 
 	private String title;
 	private String description;
-	private String color;
+	private String backgroundColor;
+	private String textColor;
 
-	public LabelCreateInputData(String title, String description, String color) {
+	public LabelCreateInputData(String title, String description, String backgroundColor, String textColor) {
 		this.title = title;
 		this.description = description;
-		this.color = color;
+		this.backgroundColor = backgroundColor;
+		this.textColor = textColor;
 	}
 
 	public Label toLabelForCreate() {
 		return Label.builder()
 			.title(title)
 			.description(description)
-			.color(color)
+			.backgroundColor(backgroundColor)
+			.textColor(textColor)
 			.build();
 	}
 }

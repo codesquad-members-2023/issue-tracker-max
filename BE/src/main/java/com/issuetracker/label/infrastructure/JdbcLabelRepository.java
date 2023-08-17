@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -22,10 +23,11 @@ public class JdbcLabelRepository implements LabelRepository {
 	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM label WHERE id = :id AND is_deleted = false)";
 	private static final String EXIST_BY_TITLE_SQL = "SELECT EXISTS(SELECT 1 FROM label WHERE is_deleted = false AND title = :title)";
 	private static final String EXIST_BY_IDS_SQL = "SELECT IF(COUNT(id) = :size, TRUE, FALSE) FROM label WHERE is_deleted = false AND id IN(:labelIds)";
-	private static final String SAVE_SQL = "INSERT INTO label(title, description, color) VALUE(:title, :description, :color)";
-	private static final String UPDATE_SQL = "UPDATE label SET title = :title, description = :description, color = :color WHERE id = :id";
+	private static final String SAVE_SQL = "INSERT INTO label(title, description, background_color, text_color) VALUE(:title, :description, :backgroundColor, :textColor)";
+	private static final String UPDATE_SQL = "UPDATE label SET title = :title, description = :description, background_color = :backgroundColor, text_color =:textColor WHERE id = :id";
 	private static final String DELETE_SQL = "UPDATE label SET is_deleted = true WHERE id = :id";
-	private static final String FIND_ALL_SQL = "SELECT id, title, description, color FROM label WHERE is_deleted = false ORDER BY id desc";
+	private static final String FIND_ALL_SQL = "SELECT id, title, description, background_color, text_color FROM label WHERE is_deleted = false ORDER BY id desc";
+	private static final String FIND_ALL_SEARCH_SQL = "SELECT id, title, background_color, text_color, description FROM label WHERE label.is_deleted = 0 ORDER BY title";
 	private static final String CALCULATE_COUNT_METADATA
 		= "SELECT "
 		+ "    (SELECT COUNT(id) FROM label WHERE is_deleted = false) AS total_label_count, "
@@ -57,10 +59,7 @@ public class JdbcLabelRepository implements LabelRepository {
 
 	@Override
 	public Long save(Label label) {
-		MapSqlParameterSource param = new MapSqlParameterSource()
-			.addValue("title", label.getTitle())
-			.addValue("description", label.getDescription())
-			.addValue("color", label.getColor());
+		SqlParameterSource param = new BeanPropertySqlParameterSource(label);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
 		jdbcTemplate.update(SAVE_SQL, param, keyHolder);
@@ -69,12 +68,7 @@ public class JdbcLabelRepository implements LabelRepository {
 
 	@Override
 	public int update(Label label) {
-		MapSqlParameterSource param = new MapSqlParameterSource()
-			.addValue("id", label.getId())
-			.addValue("title", label.getTitle())
-			.addValue("description", label.getDescription())
-			.addValue("color", label.getColor());
-
+		SqlParameterSource param = new BeanPropertySqlParameterSource(label);
 		return jdbcTemplate.update(UPDATE_SQL, param);
 	}
 
@@ -91,6 +85,11 @@ public class JdbcLabelRepository implements LabelRepository {
 	}
 
 	@Override
+	public List<Label> searchOrderByTitle() {
+		return jdbcTemplate.query(FIND_ALL_SEARCH_SQL, LABEL_ROW_MAPPER);
+	}
+
+	@Override
 	public LabelCountMetadata calculateMetadata() {
 		return jdbcTemplate.queryForObject(CALCULATE_COUNT_METADATA, Map.of(), LABEL_METADATA_MAPPER);
 	}
@@ -100,7 +99,8 @@ public class JdbcLabelRepository implements LabelRepository {
 			.id(rs.getLong("id"))
 			.title(rs.getString("title"))
 			.description(rs.getString("description"))
-			.color(rs.getString("color"))
+			.backgroundColor(rs.getString("background_color"))
+			.textColor(rs.getString("text_color"))
 			.build();
 
 	private static final RowMapper<LabelCountMetadata> LABEL_METADATA_MAPPER = (rs, rowNum) ->

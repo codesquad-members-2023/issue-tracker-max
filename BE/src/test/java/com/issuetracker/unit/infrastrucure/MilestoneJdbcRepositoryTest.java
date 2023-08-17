@@ -37,7 +37,7 @@ class MilestoneJdbcRepositoryTest extends JdbcRepositoryTest {
 	}
 
 	@Test
-	void 필터용_마일스톤_목록을_조회할_수_있다() {
+	void 마일스톤_목록을_조회할_수_있다() {
 		// when
 		List<Milestone> milestones = milestoneRepository.findAllForFilter();
 

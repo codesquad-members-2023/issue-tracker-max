@@ -16,6 +16,8 @@ public interface LabelRepository {
 
 	List<Label> findAll();
 
+	List<Label> searchOrderByTitle();
+
 	boolean existById(Long id);
 
 	LabelCountMetadata calculateMetadata();
