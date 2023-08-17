@@ -47,6 +47,7 @@ export function LabelEditor({
   const [isFocus, setIsFocus] = useState(false);
   const [fontColorOptions, setFontColorOptions] = useState([
     {
+      id: 1,
       name: "밝은 색",
       profile: "",
       selected: isEditMode ? colorDictionary[label.color] === "밝은 색" : true,
@@ -55,6 +56,7 @@ export function LabelEditor({
       },
     },
     {
+      id: 2,
       name: "어두운 색",
       profile: "",
       selected: isEditMode
@@ -115,7 +117,7 @@ export function LabelEditor({
   const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.value;
 
-    setLabelName(name.trim());
+    setLabelName(name);
   };
 
   const onChangeDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,8 +130,8 @@ export function LabelEditor({
     const method = type === "add" ? "POST" : "PUT";
     const path = type === "add" ? "" : `/${label.id}`;
     const obj = {
-      name: labelName,
-      description: labelDescription,
+      name: labelName.trim(),
+      description: labelDescription.trim(),
       background: background,
       color: color,
     };

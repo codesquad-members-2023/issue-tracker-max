@@ -77,7 +77,7 @@ export function MainTableHeader({
       onClick: () => {
         setMultiFilterString(
           `${key}:${option.id === 0 ? "none" : option.name}`,
-          multipleSelect,
+          option.id === 0 ? false : multipleSelect,
         );
       },
     }));
