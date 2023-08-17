@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -15,9 +16,15 @@ import org.mockito.BDDMockito;
 import org.presents.issuetracker.annotation.ControllerTest;
 import org.presents.issuetracker.issue.controller.IssueController;
 import org.presents.issuetracker.issue.dto.request.IssueCreateRequest;
+import org.presents.issuetracker.issue.dto.request.IssueSearchParam;
 import org.presents.issuetracker.issue.dto.request.IssueStatusUpdateRequest;
 import org.presents.issuetracker.issue.dto.request.IssueUpdateRequest;
+import org.presents.issuetracker.issue.dto.response.AssigneeSearch;
 import org.presents.issuetracker.issue.dto.response.IssueDetailResponse;
+import org.presents.issuetracker.issue.dto.response.IssueSearch;
+import org.presents.issuetracker.issue.dto.response.IssueSearchResponse;
+import org.presents.issuetracker.issue.dto.response.LabelSearch;
+import org.presents.issuetracker.issue.dto.response.MilestoneSearch;
 import org.presents.issuetracker.issue.service.IssueService;
 import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.milestone.dto.response.MilestonePreviewResponse;
@@ -26,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -201,4 +209,145 @@ public class IssueControllerTest {
 			.andExpect(status().isNoContent())
 			.andDo(print());
 	}
+
+	/* 이슈 목록 조회
+		1. 기본 목록 조회 페이지 /issues
+		2. 필터 적용 시 /issues?query=comment:jian
+		3. 필터 삭제 시 /issues?query=
+	 */
+
+	@Test
+	@DisplayName("이슈 목록 조회 시 status:open 인 이슈를 반환한다.")
+	void showIssuesMainTest() throws Exception {
+		// given
+		IssueSearchParam param = null;
+		AssigneeSearch assigneeSearch = dummyAssigneeSearch1();
+		LabelSearch labelSearch = dummyLabelSearch1();
+		MilestoneSearch milestoneSearch = dummyMilestoneSearch1();
+		List<IssueSearch> issues = List.of(
+			dummyIssueSearch1(List.of(assigneeSearch), List.of(labelSearch), milestoneSearch));
+		IssueSearchResponse response = dummyIssueSearchResponse(issues);
+
+		given(issueService.getIssues(param)).willReturn(response);
+
+		// when
+		ResultActions resultActions = mockMvc.perform(get("/issues"));
+
+		// then
+		resultActions.andExpect(status().isOk())
+			.andExpect(jsonPath("$.labelCount").value(3))
+			.andExpect(jsonPath("$.milestoneCount").value(2))
+			.andExpect(jsonPath("$.openIssueCount").value(1))
+			.andExpect(jsonPath("$.closedIssueCount").value(5))
+			.andExpect(jsonPath("$.issues[0].id").value(1))
+			.andExpect(jsonPath("$.issues[0].title").value("이슈제목1"))
+			.andExpect(jsonPath("$.issues[0].authorLoginId").value("jian"))
+			.andExpect(jsonPath("$.issues[0].assignees[0].userId").value(2L))
+			.andExpect(jsonPath("$.issues[0].assignees[0].image").value("담당자 이미지"))
+			.andExpect(jsonPath("$.issues[0].labels[0].id").value(1))
+			.andExpect(jsonPath("$.issues[0].labels[0].name").value("be"))
+			.andExpect(jsonPath("$.issues[0].labels[0].textColor").value("dark"))
+			.andExpect(jsonPath("$.issues[0].labels[0].backgroundColor").value("#99CCFF"))
+			.andExpect(jsonPath("$.issues[0].milestone.id").value(1))
+			.andExpect(jsonPath("$.issues[0].milestone.name").value("sprint1"))
+			.andExpect(jsonPath("$.issues[0].createdAt").exists())
+			.andExpect(jsonPath("$.issues[0].status").value("open"));
+	}
+
+	@Test
+	@DisplayName("필터를 적용한 이슈 목록 조회 시 해당 필터에 맞는 이슈를 반환한다.")
+	void showIssuesFilterTest() throws Exception {
+		// given
+		String query = "status:open label:be";
+		IssueSearchParam param = IssueSearchParam.from(query);
+		List<IssueSearch> issues = List.of(
+			dummyIssueSearchStatusLabel("open", "be"), dummyIssueSearchStatusLabel("open", "fix"),
+			dummyIssueSearchStatusLabel("closed", "be"));
+		IssueSearchResponse response = dummyIssueSearchResponse(issues);
+
+		given(issueService.getIssues(param)).willReturn(response);
+
+		// when
+		ResultActions resultActions = mockMvc.perform(get("/issues" + "?query=" + query));
+
+		// then
+		resultActions.andExpect(status().isOk())
+			.andExpect(jsonPath("$.openIssueCount").value(1))
+			.andExpect(jsonPath("$.closedIssueCount").value(1))
+			.andExpect(jsonPath("$.issues[0].labels[0].name").value("be"))
+			.andExpect(jsonPath("$.issues[0].status").value("open"));
+	}
+
+	@Test
+	@DisplayName("필터를 제거한 이슈 목록 조회 시 status가 open인 이슈와 closed인 이슈를 반환 한다")
+	void showIssuesRemovedFilterTest() {
+		// given
+		String query = "";
+		IssueSearchParam param = IssueSearchParam.from(query);
+		// when
+		// then
+	}
+
+	LabelSearch dummyLabelSearch1() {
+		return LabelSearch.builder()
+			.id(1L)
+			.name("be")
+			.textColor("dark")
+			.backgroundColor("#99CCFF")
+			.build();
+	}
+
+	LabelSearch dummyLabelSearchName(String name) {
+		return LabelSearch.builder()
+			.id(1L)
+			.name(name)
+			.textColor("dark")
+			.backgroundColor("#99CCFF")
+			.build();
+	}
+
+	MilestoneSearch dummyMilestoneSearch1() {
+		return MilestoneSearch.builder().id(1L).name("sprint1").build();
+	}
+
+	AssigneeSearch dummyAssigneeSearch1() {
+		return AssigneeSearch.builder().userId(2L).image("담당자 이미지").build();
+	}
+
+	IssueSearch dummyIssueSearch1(List<AssigneeSearch> assignees, List<LabelSearch> labels, MilestoneSearch milestone) {
+		return IssueSearch.builder()
+			.id(1L)
+			.title("이슈제목1")
+			.authorLoginId("jian")
+			.assignees(assignees)
+			.labels(labels)
+			.milestone(milestone)
+			.createdAt(
+				LocalDateTime.parse("2023-08-07T16:34:30.388"))
+			.status("open").build();
+	}
+
+	IssueSearch dummyIssueSearchStatusLabel(String status, String labelName) {
+		return IssueSearch.builder()
+			.id(1L)
+			.title("이슈제목1")
+			.authorLoginId("jian")
+			.assignees(List.of(dummyAssigneeSearch1()))
+			.labels(List.of(dummyLabelSearchName(labelName)))
+			.milestone(dummyMilestoneSearch1())
+			.createdAt(
+				LocalDateTime.parse("2023-08-07T16:34:30.388"))
+			.status(status).build();
+	}
+
+	IssueSearchResponse dummyIssueSearchResponse(List<IssueSearch> issues) {
+		return IssueSearchResponse.builder()
+			.labelCount(3L)
+			.milestoneCount(2L)
+			.openIssueCount(1L)
+			.closedIssueCount(5L)
+			.issues(issues)
+			.build();
+	}
+
 }
