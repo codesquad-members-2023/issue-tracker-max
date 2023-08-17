@@ -12,6 +12,7 @@ export function MarkdownViewer({ markdown }: MarkdownViewerProps) {
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
+          a: Anchor,
           code: InlineBlock,
           pre: Pre,
           blockquote: BlockQuote,
@@ -21,6 +22,10 @@ export function MarkdownViewer({ markdown }: MarkdownViewerProps) {
       </ReactMarkdown>
     </Div>
   );
+}
+
+function Anchor(props: { href?: string; children: React.ReactNode }) {
+  return <a href={props.href}>{props.children}</a>;
 }
 
 function InlineBlock(props: { children: React.ReactNode }) {

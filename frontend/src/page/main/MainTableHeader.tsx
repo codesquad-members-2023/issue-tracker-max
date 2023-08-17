@@ -118,7 +118,6 @@ export function MainTableHeader({
                   : "background" in value.options[0]
                   ? "Palette"
                   : "None";
-              console.log("iconType", iconType, value.options[0]);
 
               return (
                 <DropdownContainer

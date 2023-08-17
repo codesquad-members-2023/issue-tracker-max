@@ -126,6 +126,7 @@ export function TextArea({
         return `${textBefore}![image](${data})${textAfter}`;
       };
 
+      onFocus();
       setInputValue(dataIntoTextArea);
       setCountHidden(false);
       onChange?.(dataIntoTextArea(inputValue));
@@ -180,7 +181,6 @@ export function TextArea({
       <Div
         $state={state}
         $children={children}
-        onFocus={onFocus}
         onBlur={onBlur}
         ref={componentRef}
       >
@@ -189,7 +189,7 @@ export function TextArea({
           <MarkdownViewer markdown={value} />
         ) : (
           <>
-            <InputContainer>
+            <InputContainer onFocus={onFocus}>
               {inputValue && label && <Label>{label}</Label>}
               <ResizableDiv $children={children}>
                 <Input
