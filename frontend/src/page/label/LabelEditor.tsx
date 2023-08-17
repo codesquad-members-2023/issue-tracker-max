@@ -47,6 +47,7 @@ export function LabelEditor({
   const [isFocus, setIsFocus] = useState(false);
   const [fontColorOptions, setFontColorOptions] = useState([
     {
+      id: 1,
       name: "밝은 색",
       profile: "",
       selected: isEditMode ? colorDictionary[label.color] === "밝은 색" : true,
@@ -55,6 +56,7 @@ export function LabelEditor({
       },
     },
     {
+      id: 2,
       name: "어두운 색",
       profile: "",
       selected: isEditMode
