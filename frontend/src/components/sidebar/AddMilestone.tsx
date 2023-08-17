@@ -44,6 +44,16 @@ export function AddMilestone({
   onMilestoneClick,
 }: AddMilestoneProps) {
   const [milestones, setMilestones] = useState<MilestoneData[]>([]);
+  const [milestonesRes, setMilestonesRes] = useState<
+    {
+      id: number;
+      name: string;
+      issues: {
+        openedIssueCount: number;
+        closedIssueCount: number;
+      };
+    }[]
+  >([]);
 
   const handleMilestoneClick = useCallback(
     (clickedMilestone: {
@@ -80,7 +90,15 @@ export function AddMilestone({
     });
     const result = await response.json();
 
-    const milestonesData = result.data.milestones.map(
+    setMilestonesRes(result.data.milestones);
+  }, []);
+
+  useEffect(() => {
+    fetchMilestones();
+  }, [fetchMilestones]);
+
+  useEffect(() => {
+    const milestonesData = milestonesRes.map(
       (milestone: {
         id: number;
         name: string;
@@ -100,11 +118,7 @@ export function AddMilestone({
     );
 
     setMilestones(milestonesData);
-  }, [handleMilestoneClick]);
-
-  useEffect(() => {
-    fetchMilestones();
-  }, [fetchMilestones]);
+  }, [milestonesRes, handleMilestoneClick]);
 
   useEffect(() => {
     setMilestones((milestones) =>
