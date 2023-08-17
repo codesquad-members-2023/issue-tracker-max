@@ -45,6 +45,10 @@ export const setLocalStorageImage = (value: string) => {
   return setLocalStorage('image', value);
 };
 
+export const getLocalStorageImage = () => {
+  return getLocalStorage('image');
+};
+
 export const setLocalStorageAccessToken = (value: string) => {
   return setLocalStorage('accessToken', value);
 };
