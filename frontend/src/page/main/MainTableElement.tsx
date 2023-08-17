@@ -148,8 +148,8 @@ const IssueInfo = styled.div`
 `;
 
 const AssigneesDiv = styled.div`
-  width: 96px;
   display: flex;
+  flex: 1;
   justify-content: flex-end;
   align-items: center;
   position: relative;
