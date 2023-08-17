@@ -8,7 +8,7 @@ import Components from './pages/Components';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Callback from './pages/GitHubCallback';
-import Main from './pages/Main';
+// import Main from './pages/Main';
 import Issues from './pages/Issues';
 import AddIssue from './pages/AddIssue';
 import IssueDetail from './pages/IssueDetail';
