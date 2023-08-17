@@ -104,10 +104,6 @@ export const IssueDetailPage: React.FC = () => {
     });
   };
 
-  useEffect(() => {
-    console.log('selectionsIds 확인중..', selectionsIds);
-  }, [selectionsIds]);
-
   const onAddComment = (comment: any) => {
     setIssueDetailPageData({
       ...issueDetailPageData,

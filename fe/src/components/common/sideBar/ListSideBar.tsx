@@ -60,7 +60,6 @@ export const ListSideBar: React.FC<Props> = ({
     labels: [],
     milestones: [],
   });
-  console.log(selections);
 
   const [isPanelOpen, setIsPanelOpen] = useState<
     null | 'users' | 'labels' | 'milestones'
