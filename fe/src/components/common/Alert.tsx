@@ -77,7 +77,7 @@ const alertStyle = (theme: Theme, action: 'normal' | 'danger') => css`
     z-index: 9999;
     width: 359px;
     padding: 32px;
-    border: ${`${theme.border.default} ${theme.neutral.border.default} `};
+    border: ${`${theme.border.default} ${theme.neutral.border.default}`};
     border-radius: ${theme.radius.l};
     background-color: ${theme.neutral.surface.strong};
     display: flex;
