@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { getAccessToken } from "../../utils/localStorage";
 import { LabelEditor } from "./LabelEditor";
 import { LabelHeader } from "./LabelHeader";
 import { LabelTable } from "./LabelTable";
@@ -35,7 +36,12 @@ export function Label() {
   }, []);
 
   const fetchData = async () => {
-    const res = await fetch("/api/labels");
+    const res = await fetch("/api/labels", {
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    });
     const labelsData = await res.json();
 
     if (labelsData.code === 200) {
