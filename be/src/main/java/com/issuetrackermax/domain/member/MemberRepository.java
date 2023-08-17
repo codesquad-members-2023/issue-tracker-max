@@ -36,6 +36,12 @@ public class MemberRepository {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
+	public List<Member> findAll() {
+		String sql = "SELECT id, password, nick_name, login_id, image_url, login_type "
+			+ "FROM member";
+		return jdbcTemplate.query(sql, MEMBER_ROW_MAPPER);
+	}
+
 	public Member findByMemberLoginId(String loginId) {
 		String sql = "SELECT id, password, nick_name, login_id, image_url ,login_type "
 			+ "FROM member WHERE login_id = :loginId ";

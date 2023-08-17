@@ -28,7 +28,7 @@ public class IssueLabelRepository {
 			.addValue("issueId", issueWithLabel.getIssueId(), Types.BIGINT)
 			.addValue("labelId", issueWithLabel.getLabelId(), Types.BIGINT);
 		jdbcTemplate.update(sql, parameters, keyHolder);
-		return (Long)Objects.requireNonNull(keyHolder.getKey());
+		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
 
 	public int deleteAppliedLabels(Long issueId) {

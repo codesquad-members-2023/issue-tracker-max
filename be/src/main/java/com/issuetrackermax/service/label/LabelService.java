@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetrackermax.controller.label.dto.request.LabelModifyRequest;
 import com.issuetrackermax.controller.label.dto.request.LabelPostRequest;
+import com.issuetrackermax.controller.label.dto.response.LabelContentResponse;
 import com.issuetrackermax.controller.label.dto.response.LabelDetailResponse;
 import com.issuetrackermax.domain.label.LabelRepository;
 import com.issuetrackermax.domain.label.LabelValidator;
@@ -24,6 +25,11 @@ public class LabelService {
 	public List<LabelDetailResponse> getLabelList() {
 		List<Label> labels = labelRepository.getLabels();
 		return labels.stream().map(LabelDetailResponse::from).collect(Collectors.toList());
+	}
+
+	public List<LabelContentResponse> getLabelContent() {
+		List<Label> labels = labelRepository.getLabels();
+		return labels.stream().map(LabelContentResponse::from).collect(Collectors.toList());
 	}
 
 	@Transactional

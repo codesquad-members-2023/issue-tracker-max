@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.issuetrackermax.controller.ApiResponse;
 import com.issuetrackermax.controller.label.dto.request.LabelModifyRequest;
 import com.issuetrackermax.controller.label.dto.request.LabelPostRequest;
+import com.issuetrackermax.controller.label.dto.response.LabelContentResponse;
 import com.issuetrackermax.controller.label.dto.response.LabelDetailResponse;
 import com.issuetrackermax.controller.label.dto.response.LabelPostResponse;
 import com.issuetrackermax.controller.label.dto.response.LabelsResponse;
@@ -41,6 +42,11 @@ public class LabelController {
 			.labels(labelList)
 			.build();
 		return ApiResponse.success(response);
+	}
+
+	@GetMapping("/show-content")
+	ApiResponse<List<LabelContentResponse>> showContent() {
+		return ApiResponse.success(labelService.getLabelContent());
 	}
 
 	@PostMapping

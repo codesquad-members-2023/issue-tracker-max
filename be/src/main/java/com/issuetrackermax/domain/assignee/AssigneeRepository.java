@@ -28,7 +28,7 @@ public class AssigneeRepository {
 			.addValue("issueId", assignee.getIssueId(), Types.BIGINT)
 			.addValue("memberId", assignee.getMemberId(), Types.BIGINT);
 		jdbcTemplate.update(sql, parameters, keyHolder);
-		return (Long)Objects.requireNonNull(keyHolder.getKey());
+		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
 
 	public int applyAssigneesToIssue(Long issueId, Long memberId) {

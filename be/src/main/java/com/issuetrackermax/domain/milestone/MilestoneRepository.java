@@ -88,6 +88,11 @@ public class MilestoneRepository {
 		return jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
 	}
 
+	public List<Milestone> findAll() {
+		String sql = "SELECT id, title, is_open, description, duedate FROM milestone";
+		return jdbcTemplate.query(sql, MILESTONE_ROW_MAPPER);
+	}
+
 	private static final RowMapper<Milestone> MILESTONE_ROW_MAPPER = (rs, rowNum) ->
 		Milestone.builder()
 			.id(rs.getLong("id"))
