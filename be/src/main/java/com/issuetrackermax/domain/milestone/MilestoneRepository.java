@@ -18,6 +18,14 @@ import com.issuetrackermax.domain.milestone.entity.Milestone;
 
 @Repository
 public class MilestoneRepository {
+	private static final RowMapper<Milestone> MILESTONE_ROW_MAPPER = (rs, rowNum) ->
+		Milestone.builder()
+			.id(rs.getLong("id"))
+			.title(rs.getString("title"))
+			.isOpen(rs.getBoolean("is_open"))
+			.description(rs.getString("description"))
+			.duedate(rs.getTimestamp("duedate").toLocalDateTime())
+			.build();
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public MilestoneRepository(JdbcTemplate jdbcTemplate) {
@@ -92,15 +100,6 @@ public class MilestoneRepository {
 		String sql = "SELECT id, title, is_open, description, duedate FROM milestone";
 		return jdbcTemplate.query(sql, MILESTONE_ROW_MAPPER);
 	}
-
-	private static final RowMapper<Milestone> MILESTONE_ROW_MAPPER = (rs, rowNum) ->
-		Milestone.builder()
-			.id(rs.getLong("id"))
-			.title(rs.getString("title"))
-			.isOpen(rs.getBoolean("is_open"))
-			.description(rs.getString("description"))
-			.duedate(rs.getTimestamp("duedate").toLocalDateTime())
-			.build();
 
 	public int updateStatus(Long id) {
 		String sql = "UPDATE milestone SET is_open = NOT is_open WHERE id = :id";
