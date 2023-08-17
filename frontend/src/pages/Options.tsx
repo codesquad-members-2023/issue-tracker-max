@@ -11,6 +11,8 @@ import Button from '../components/common/button/BaseButton';
 import Labels from '../components/label/Labels';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import Milestones from '../components/milestone/Milestones';
+import AddLabel from '../components/label/AddLabel';
+import AddMilestone from '../components/milestone/AddMilestone';
 
 enum Option {
   labels,
@@ -23,10 +25,15 @@ const TabButton = React.memo(TabButtonComponent);
 
 export default function Options() {
   const { util } = useContext(AppContext);
-  const [activeOption, setActiveOption] = useState<Option>(labels);
+  const [activeOption, setActiveOption] = useState<Option>(milestones);
   const [labelData, setLabelData] = useState([]);
   const [milestoneData, setMilestoneData] = useState([]);
+  const [addFormActive, setAddFormActive] = useState(true);
   const axiosPrivate = useAxiosPrivate();
+
+  function addCancelHandler() {
+    setAddFormActive(false);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,19 +76,35 @@ export default function Options() {
               {
                 iconName: 'label',
                 text: '레이블',
-                event: () => setActiveOption(labels),
+                event: () => {
+                  setAddFormActive(false);
+                  setActiveOption(labels);
+                },
               },
               {
                 iconName: 'milestone',
                 text: '마일스톤',
-                event: () => setActiveOption(milestones),
+                event: () => {
+                  setAddFormActive(false);
+                  setActiveOption(milestones);
+                },
               },
             ]}
           />
-          <Button type="button" flexible iconName="plus">
+          <Button
+            type="button"
+            flexible
+            iconName="plus"
+            onClick={() => setAddFormActive((bool) => !bool)}>
             {activeOption === labels ? '레이블' : '마일스톤'} 추가
           </Button>
         </Toolbar>
+        {addFormActive &&
+          (activeOption === labels ? (
+            <AddLabel cancel={addCancelHandler} />
+          ) : (
+            <AddMilestone cancel={addCancelHandler} />
+          ))}
         {activeOption === labels ? (
           <Labels data={labelData} />
         ) : (
