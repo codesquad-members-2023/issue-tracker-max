@@ -29,7 +29,7 @@ export function MilestoneTableElement({
     const id = milestone.id;
 
     await fetch(`/api/milestones/${id}/status`, {
-      method: "POST",
+      method: "PATCH",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
