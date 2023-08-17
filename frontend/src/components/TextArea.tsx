@@ -6,11 +6,10 @@ import {
   useRef,
   useState,
 } from "react";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import remarkGfm from "remark-gfm";
 import { keyframes, styled } from "styled-components";
 import { getAccessToken } from "../utils/localStorage";
 import { Button } from "./Button";
+import { MarkdownViewer } from "./MarkdownViewer";
 import { Icon } from "./icon/Icon";
 
 type TextAreaProps = {
@@ -187,9 +186,7 @@ export function TextArea({
       >
         {children && <Header>{children}</Header>}
         {children && state !== "Active" ? (
-          <TextViewer>
-            <ReactMarkdown children={value} remarkPlugins={[remarkGfm]} />
-          </TextViewer>
+          <MarkdownViewer markdown={value} />
         ) : (
           <>
             <InputContainer>
@@ -274,17 +271,6 @@ const Header = styled.div`
   border-radius: ${({ theme }) =>
     `${theme.radius.large} ${theme.radius.large} 0px 0px`};
   background-color: ${({ theme }) => theme.color.neutralSurfaceDefault};
-`;
-
-const TextViewer = styled.div`
-  align-self: stretch;
-  overflow: auto;
-  padding: 16px 24px 24px 24px;
-  border-radius: ${({ theme }) =>
-    `0px 0px ${theme.radius.large} ${theme.radius.large}`};
-  font: ${({ theme }) => theme.font.displayMedium16};
-  color: ${({ theme }) => theme.color.neutralTextDefault};
-  background-color: ${({ theme }) => theme.color.neutralSurfaceStrong};
 `;
 
 const InputContainer = styled.div`
