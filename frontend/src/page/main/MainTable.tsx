@@ -9,11 +9,13 @@ import { MainTableHeader } from "./MainTableHeader";
 type MainTableProps = {
   issueData: IssueDataState;
   filterString: string;
+  fetchData: () => void;
   setMultiFilterString: (value: string, multipleSelect: boolean) => void;
 };
 
 export function MainTable({
   issueData,
+  fetchData,
   setMultiFilterString,
   filterString,
 }: MainTableProps) {
@@ -34,6 +36,8 @@ export function MainTable({
       },
       body: JSON.stringify(body),
     });
+
+    fetchData();
   };
 
   const handleHeaderCheckbox = (checked: boolean) => {
