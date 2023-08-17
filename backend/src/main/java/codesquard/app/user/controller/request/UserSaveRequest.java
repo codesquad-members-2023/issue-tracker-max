@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquard.app.user.service.request.UserSaveServiceRequest;
+import lombok.ToString;
 
+@ToString
 public class UserSaveRequest {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserSaveRequest.class);

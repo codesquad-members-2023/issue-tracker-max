@@ -26,6 +26,7 @@ public class UserService {
 	}
 
 	public UserSaveServiceResponse signUp(UserSaveServiceRequest userSaveServiceRequest) {
+		logger.info("일반 회원가입 서비스 요청: {}", userSaveServiceRequest);
 		// 비밀번호와 비밀번호 확인이 서로 일치하는지 검증
 		validatePasswordMatching(userSaveServiceRequest);
 		// 로그인아이디가 이미 존재하는지 검증

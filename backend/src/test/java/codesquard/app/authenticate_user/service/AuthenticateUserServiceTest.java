@@ -1,7 +1,8 @@
 package codesquard.app.authenticate_user.service;
 
+import static codesquard.app.user.fixture.FixedUserFactory.*;
+
 import java.util.HashMap;
-import java.util.Map;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
-import codesquard.app.authenticate_user.repository.AuthenticateUserRepository;
 import codesquard.app.authenticate_user.service.request.RefreshTokenServiceRequest;
 import codesquard.app.jwt.Jwt;
 import codesquard.app.jwt.JwtProvider;
@@ -25,7 +25,6 @@ import codesquard.app.jwt.filter.VerifyUserFilter;
 import codesquard.app.user.service.UserQueryService;
 import codesquard.app.user.service.UserService;
 import codesquard.app.user.service.request.UserLoginServiceRequest;
-import codesquard.app.user.service.request.UserSaveServiceRequest;
 
 @Transactional
 class AuthenticateUserServiceTest extends IntegrationTestSupport {
@@ -35,9 +34,6 @@ class AuthenticateUserServiceTest extends IntegrationTestSupport {
 
 	@Autowired
 	private AuthenticateUserService authenticateUserService;
-
-	@Autowired
-	private AuthenticateUserRepository authenticateUserRepository;
 
 	@Autowired
 	private UserService userService;
@@ -66,16 +62,13 @@ class AuthenticateUserServiceTest extends IntegrationTestSupport {
 
 	@Test
 	@DisplayName("refreshToken이 주어지고 토큰 갱신을 요청할때 토큰이 갱신된다")
-	public void refreshToken_givenRefreshToken_whenRefreshToken_thenResponseJwt() {
+	public void refreshToken_givenRefreshToken_whenRefreshToken_thenResponseJwt() throws JsonProcessingException {
+		// sample
+		signUp();
 		// given
-		// 회원가입
-		userService.signUp(new UserSaveServiceRequest("hong1234", "hong1234@gmail.com", "hong1234", "hong1234", null));
-		// 인증 유저 및 jwt 생성
-		HashMap<String, Object> claims = new HashMap<>();
-		Jwt jwt = jwtProvider.createJwt(claims);
-		AuthenticateUser authenticateUser = userQueryService.verifyUser(
-			new UserLoginServiceRequest("hong1234", "hong1234"));
-		authenticateUserService.updateRefreshToken(authenticateUser, jwt);
+		AuthenticateUser user = authenticateUser();
+		Jwt jwt = jwtWithAuthenticateUser(user);
+		authenticateUserService.updateRefreshToken(user, jwt);
 		RefreshTokenServiceRequest refreshTokenServiceRequest = new RefreshTokenServiceRequest(jwt.getRefreshToken());
 		// when
 		Jwt refreshedJwt = authenticateUserService.refreshToken(refreshTokenServiceRequest);
@@ -90,22 +83,15 @@ class AuthenticateUserServiceTest extends IntegrationTestSupport {
 	@DisplayName("처음 로그인하는 인증 유저와 JWT가 주어지고 RefreshToken 갱신을 요청할때 RefreshToken이 저장된다")
 	public void updateRefreshToken_givenAuthenticateUserAndJwt_whenUpdateRefreshToken_thenSaveTheRefreshToken() throws
 		JsonProcessingException {
+		// sample
+		signUp();
 		// given
-		HashMap<String, Object> claims = new HashMap<>();
-
-		// 회원가입
-		userService.signUp(new UserSaveServiceRequest("hong1234", "hong1234@gmail.com", "hong1234", "hong1234", null));
-
-		// 인증 유저 및 jwt 생성
-		AuthenticateUser authenticateUser = userQueryService.verifyUser(
-			new UserLoginServiceRequest("hong1234", "hong1234"));
-		claims.put(VerifyUserFilter.AUTHENTICATE_USER, objectMapper.writeValueAsString(authenticateUser));
-		Jwt jwt = jwtProvider.createJwt(claims);
-
+		AuthenticateUser user = authenticateUser();
+		Jwt jwt = jwtWithAuthenticateUser(user);
 		// when
-		authenticateUserService.updateRefreshToken(authenticateUser, jwt);
+		authenticateUserService.updateRefreshToken(user, jwt);
 		// then
-		String refreshToken = (String)redisTemplate.opsForValue().get(authenticateUser.createRedisKey());
+		String refreshToken = (String)redisTemplate.opsForValue().get(user.createRedisKey());
 		SoftAssertions.assertSoftly(softAssertions -> {
 			softAssertions.assertThat(refreshToken).isEqualTo(jwt.getRefreshToken());
 			softAssertions.assertAll();
@@ -116,12 +102,10 @@ class AuthenticateUserServiceTest extends IntegrationTestSupport {
 	@DisplayName("인증 유저 객체와 JWT 객체가 주어지고 로그아웃을 요청할때 로그아웃 된다")
 	public void givenAuthenticateUserAndJwt_whenRequestLogout_thenLogout() throws JsonProcessingException {
 		// given
-		AuthenticateUser user = new AuthenticateUser(1L, "hong1234", "hong1234@gmail.com", null);
-		Map<String, Object> claims = new HashMap<>();
-		claims.put(VerifyUserFilter.AUTHENTICATE_USER, objectMapper.writeValueAsString(user));
-		Jwt jwt = jwtProvider.createJwt(claims);
-		// 로그인
-		authenticateUserService.login(user);
+		signUp();
+		AuthenticateUser user = authenticateUser();
+		Jwt jwt = jwtWithAuthenticateUser(user);
+		login(user);
 		// when
 		authenticateUserService.logout(user, jwt);
 		// then
@@ -129,5 +113,25 @@ class AuthenticateUserServiceTest extends IntegrationTestSupport {
 			softAssertions.assertThat(redisTemplate.opsForValue().get(jwt.getAccessToken())).isEqualTo("logout");
 			softAssertions.assertThat(redisTemplate.opsForValue().get(user.createRedisKey())).isNull();
 		});
+	}
+
+	private void signUp() {
+		userService.signUp(userSaveServiceRequest());
+	}
+
+	private void login(AuthenticateUser user) {
+		authenticateUserService.login(user);
+	}
+
+	private AuthenticateUser authenticateUser() {
+		UserLoginServiceRequest request = userLoginServiceRequest();
+		return userQueryService.verifyUser(request);
+	}
+
+	private Jwt jwtWithAuthenticateUser(AuthenticateUser user) throws JsonProcessingException {
+		// 인증 유저 및 jwt 생성
+		HashMap<String, Object> claims = new HashMap<>();
+		claims.put(VerifyUserFilter.AUTHENTICATE_USER, objectMapper.writeValueAsString(user));
+		return jwtProvider.createJwt(claims);
 	}
 }

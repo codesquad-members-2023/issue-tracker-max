@@ -18,6 +18,7 @@ import codesquard.app.authenticate_user.service.AuthenticateUserService;
 import codesquard.app.jwt.JwtProvider;
 import codesquard.app.oauth.InMemoryProviderRepository;
 import codesquard.app.oauth.client.GithubOauthClient;
+import codesquard.app.oauth.fixture.FixedAuthenticateUserFactory;
 import codesquard.app.oauth.profile.UserProfile;
 import codesquard.app.oauth.service.response.OauthAccessTokenResponse;
 import codesquard.app.oauth.service.response.OauthLoginServiceResponse;
@@ -61,12 +62,11 @@ class OauthServiceTest extends IntegrationTestSupport {
 		// given
 		String provider = "github";
 		String code = "authorizationcode";
-		OauthAccessTokenResponse oauthAccessTokenResponse = new OauthAccessTokenResponse("accessToken", "login",
-			"Bearer");
-		UserProfile userProfile = new UserProfile("hong1234", "hong1234@gmail.com", null);
+		OauthAccessTokenResponse response = FixedAuthenticateUserFactory.oauthAccessTokenResponse();
+		UserProfile userProfile = FixedAuthenticateUserFactory.userProfile();
 		// mocking
-		when(oauthClient.getAccessToken(any(), any())).thenReturn(oauthAccessTokenResponse);
-		when(oauthClient.getUserProfile(any(), any(), any())).thenReturn(userProfile);
+		when(oauthClient.requestAccessTokenToOauthServer(any(), any())).thenReturn(response);
+		when(oauthClient.requestUserProfile(any(), any(), any())).thenReturn(userProfile);
 		// when
 		OauthLoginServiceResponse serviceResponse = oauthService.login(provider, code);
 		// then
@@ -78,5 +78,4 @@ class OauthServiceTest extends IntegrationTestSupport {
 			softAssertions.assertAll();
 		});
 	}
-
 }
