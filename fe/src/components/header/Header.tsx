@@ -73,6 +73,6 @@ const headerStyle = (theme: Theme) => css`
 
   .profile-image {
     width: 32px;
-    border-radius: theme.radius.half;
+    border-radius: ${theme.radius.half};
   }
 `;
