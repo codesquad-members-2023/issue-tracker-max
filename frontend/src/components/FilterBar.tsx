@@ -7,6 +7,7 @@ type FilterBarProps = {
   name: string;
   optionTitle: string;
   options: {
+    id: number;
     name: string;
     profile?: string;
     selected: boolean;
