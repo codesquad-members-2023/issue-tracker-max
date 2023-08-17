@@ -16,19 +16,12 @@ import { TextInput } from '@components/common/textInput/TextInput';
 import { ISSUE_LIST_PAGE } from 'constants/PATH';
 import { postNewIssue } from 'apis/api';
 import { getLocalStorageUserId } from 'apis/localStorage';
-// import { ISSUE_DETAIL_PAGE } from 'constants/PATH';
 
 type SelectionState = {
   assignees: number[];
   labels: number[];
   milestones: number | null;
 };
-
-// 추후 구현 보완시 추가
-// type Props = {
-//   authorId: number;
-//   userImage: string;
-// };
 
 export const AddIssuePage: React.FC = ({}) => {
   const theme = useTheme() as any;

@@ -120,7 +120,7 @@ export const editIssueMilestone = (
 };
 
 export const editIssueAssignees = (
-  id: string | number ,
+  id: string | number,
   assigneeIds: number[],
 ) => {
   const accessToken = getAccessToken();
@@ -222,6 +222,7 @@ export const getLabelPreviews = () => {
     },
   });
 };
+
 export const getMilestonePreviews = () => {
   const accessToken = getAccessToken();
 
@@ -231,6 +232,7 @@ export const getMilestonePreviews = () => {
     },
   });
 };
+
 export const getLabelList = () => {
   const accessToken = getAccessToken();
 
@@ -240,6 +242,7 @@ export const getLabelList = () => {
     },
   });
 };
+
 export const postNewLabel = (
   name: string,
   textColor: string,
