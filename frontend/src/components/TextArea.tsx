@@ -11,6 +11,7 @@ import { getAccessToken } from "../utils/localStorage";
 import { Button } from "./Button";
 import { MarkdownViewer } from "./MarkdownViewer";
 import { Icon } from "./icon/Icon";
+import { text } from "stream/consumers";
 
 type TextAreaProps = {
   value?: string;
@@ -45,8 +46,8 @@ export function TextArea({
   const [countHidden, setCountHidden] = useState(true);
   const [uploadErrorMessage, setUploadErrorMessage] = useState("");
   const componentRef = useRef<HTMLDivElement>(null);
-  const textArea = useRef<HTMLTextAreaElement>(null);
-  const fileInput = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setInputValue(value);
@@ -54,11 +55,19 @@ export function TextArea({
 
   useEffect(() => {
     if (isEditing) {
-      textArea.current?.focus();
+      setState("Active");
     } else {
       setState("Enabled");
     }
   }, [isEditing]);
+
+  useEffect(() => {
+    if (state === "Active" && textAreaRef.current) {
+      textAreaRef.current.selectionStart = textAreaRef.current.value.length;
+      textAreaRef.current.selectionStart = textAreaRef.current.value.length;
+      textAreaRef.current.focus();
+    }
+  }, [state]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -103,7 +112,7 @@ export function TextArea({
   };
 
   const onFileInputClick = () => {
-    fileInput.current?.click();
+    fileInputRef.current?.click();
   };
 
   const onFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -113,8 +122,8 @@ export function TextArea({
       const data = await fetchImageText(file);
 
       const dataIntoTextArea = (i: string) => {
-        const start = textArea.current?.selectionStart;
-        const end = textArea.current?.selectionEnd;
+        const start = textAreaRef.current?.selectionStart;
+        const end = textAreaRef.current?.selectionEnd;
 
         if (start === undefined || end === undefined) {
           return i;
@@ -201,7 +210,7 @@ export function TextArea({
                   maxLength={maxLength}
                   onChange={onTextChange}
                   disabled={disabled}
-                  ref={textArea}
+                  ref={textAreaRef}
                 />
                 <TextCount $hidden={countHidden}>
                   띄어쓰기 포함 {inputValue.length}글자
@@ -222,7 +231,7 @@ export function TextArea({
                 type="file"
                 accept="image/*"
                 onChange={onFileInputChange}
-                ref={fileInput}
+                ref={fileInputRef}
                 hidden
               />
             </Footer>
