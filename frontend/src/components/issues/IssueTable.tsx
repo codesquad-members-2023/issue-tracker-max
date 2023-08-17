@@ -5,6 +5,7 @@ import CheckBox from '../../constant/CheckBox';
 import Button from '../common/button/BaseButton';
 import DropdownIndicator from '../common/DropdownIndicator';
 import { Issue } from '../../types/index';
+import TableElement from './TableElement';
 
 const { initial, active } = CheckBox;
 
@@ -64,9 +65,9 @@ export default function IssueTable({ issues }: { issues: Issue[] }) {
       <Body>
         {issues ? (
           issues.map((issue, index) => (
-            <li key={index}>
-              <IssueItem {...issue} />
-            </li>
+            <Item key={index}>
+              <TableElement {...issue} />
+            </Item>
           ))
         ) : (
           <li>이슈가 없습니다</li>
@@ -130,16 +131,11 @@ const Right = styled.ul``;
 
 const Body = styled.ul``;
 
-function IssueItem({ id, title, createdAt, user, labels, milestone }: Issue) {
-  return (
-    <article>
-      <h2 className="blind">이슈</h2>
-      <p>{id}</p>
-      <p>{title}</p>
-      <p>{createdAt}</p>
-      <p>{user.name}</p>
-      <p>{labels[0].name}</p>
-      <p>{milestone.name}</p>
-    </article>
-  );
-}
+const Item = styled.li`
+  background: ${({ theme }) => theme.color.neutral.surface.strong};
+  border-bottom: ${({ theme }) => theme.objectStyles.border.default};
+  border-color: ${({ theme }) => theme.color.neutral.border.default};
+  & > :last-child {
+    border-bottom: 0;
+  }
+`;
