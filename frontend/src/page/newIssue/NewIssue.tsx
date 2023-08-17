@@ -60,11 +60,15 @@ export function NewIssue() {
       },
       body: JSON.stringify(issueData),
     });
-    const result = await response.json();
+    const { code, data} = await response.json();
 
-    if (result.code === 201) {
-      navigate(`/issues/${result.data.savedIssueId}`);
+    if (code === 201) {
+      navigate(`/issues/${data.savedIssueId}`);
+      return;
     }
+
+    alert(data[0].defaultMessage);
+    throw new Error(data[0].defaultMessage);
   };
 
   const onCancelButtonClick = () => {
