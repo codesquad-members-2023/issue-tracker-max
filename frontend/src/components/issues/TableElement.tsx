@@ -111,6 +111,7 @@ const Labels = styled.ul`
   display: flex;
   align-items: center;
   gap: 8px;
+  line-height: 0;
 `;
 
 const Description = styled.p`

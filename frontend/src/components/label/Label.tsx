@@ -18,6 +18,8 @@ const Container = styled.span<{ $textColor: string; $backgroundColor: string }>`
   flex-shrink: 0;
   display: inline-block;
   border-radius: ${({ theme }) => theme.objectStyles.radius.large};
-  color: ${({ $textColor }) => $textColor};
   background: ${({ $backgroundColor }) => $backgroundColor};
+  & > span > span {
+    color: ${({ $textColor }) => $textColor};
+  }
 `;
