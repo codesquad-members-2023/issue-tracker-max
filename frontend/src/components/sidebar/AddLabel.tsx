@@ -111,6 +111,7 @@ export function AddLabel({ issueLabels, onLabelClick }: AddLabelProps) {
         optionTitle="레이블 설정"
         options={labels}
         type="Long"
+        iconType="Palette"
         alignment="Center"
         onDimClick={patchIssueLabels}
       />

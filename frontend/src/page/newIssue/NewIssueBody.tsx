@@ -24,6 +24,7 @@ export function NewIssueBody({
 }: NewIssueBodyProps) {
   const [isFocused, setIsFocused] = useState(false);
 
+  const loginUserInfo = getUserInfo();
   const titleCaption =
     isFocused && invalidTitle
       ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
@@ -37,7 +38,8 @@ export function NewIssueBody({
     <Div>
       <Avatar
         size="L"
-        src={getUserInfo().avatarUrl}
+        src={loginUserInfo.avatarUrl}
+        userId={loginUserInfo.loginId}
       />
       <NewIssueContent>
         <TextInput

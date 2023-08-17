@@ -96,6 +96,10 @@ const Div = styled.div`
     max-width: 100%;
     box-sizing: border-box;
   }
+
+  p {
+    word-wrap: break-word;
+  }
 `;
 
 const Code = styled.code`

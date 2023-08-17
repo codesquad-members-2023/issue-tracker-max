@@ -113,8 +113,8 @@ export function AddMilestone({
     <OptionDiv>
       <DropdownContainer
         key="assignees"
-        name="담당자"
-        optionTitle="담당자 설정"
+        name="마일스톤"
+        optionTitle="마일스톤 설정"
         options={milestones}
         type="Long"
         alignment="Center"

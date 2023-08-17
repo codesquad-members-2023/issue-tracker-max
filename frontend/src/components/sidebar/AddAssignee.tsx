@@ -105,6 +105,7 @@ export function AddAssignee({
         optionTitle="담당자 설정"
         options={assignees}
         type="Long"
+        iconType="Profile"
         alignment="Center"
         onDimClick={patchIssueAssignees}
       />
