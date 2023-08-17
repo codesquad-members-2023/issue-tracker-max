@@ -8,6 +8,7 @@ import IssueDetail from './components/Issue/IssueDetail/IssueDetail';
 import LabelList from './components/Label/LabelList';
 import MilestoneList from './components/Milestone/MilestoneList';
 import UserProvider from './components/Context/UserContext';
+import ApiTest from './components/ApiTest';
 
 export default function App() {
   const location = useLocation();
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/issue/:id" element={<IssueDetail />} />
         <Route path="/label" element={<LabelList />} />
         <Route path="/milestone" element={<MilestoneList />} />
+        <Route path="/test" element={<ApiTest />} />
       </Routes>
     </UserProvider>
   );
