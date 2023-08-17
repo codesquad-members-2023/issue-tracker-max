@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppContext } from '../main';
+import { AxiosError } from 'axios';
 import ContextLogo from '../types/ContextLogo';
 import ButtonSmall from '../components/common/button/ButtonSmall';
 import Layout from '../components/Layout';
@@ -29,9 +30,13 @@ type CommentType = {
 
 export default function IssueDetail() {
   const { util } = useContext(AppContext);
+  const navigate = useNavigate();
   const location = useLocation();
   const axiosPrivate = useAxiosPrivate();
   const [comments, setComments] = useState<CommentType[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+
+  const isFilled = !!newComment;
 
   useEffect(() => {
     const getIssueDetail = async () => {
@@ -53,6 +58,35 @@ export default function IssueDetail() {
     };
     getIssueDetail();
   }, []);
+
+  const onNewCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setNewComment(value);
+  };
+
+  const onAddFileMarkdown = (url: string) => {
+    setNewComment((prev) => prev + `\n![image](${url})`);
+  };
+
+  const onSubmitNewComment = async () => {
+    const endpoint = '/api' + location.pathname + '/comments';
+    try {
+      const res = await axiosPrivate.post(
+        endpoint,
+        { content: newComment },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      console.log(res.data);
+      navigate('/');
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        alert('에러가 발생했습니다.\n' + '실패 사유: ' + err.message);
+        console.error(err);
+      }
+    }
+  };
 
   return (
     <Layout>
@@ -108,8 +142,18 @@ export default function IssueDetail() {
                 />
               );
             })}
-            <TextArea name="newComment" placeholder="코멘트를 입력하세요" />
-            <ButtonSmall type="submit" disabled iconName="plus">
+            <TextArea
+              name="newComment"
+              value={newComment}
+              onChange={onNewCommentChange}
+              placeholder="코멘트를 입력하세요"
+              onAddFileMarkdown={onAddFileMarkdown}
+            />
+            <ButtonSmall
+              type="submit"
+              disabled={isFilled ? false : true}
+              iconName="plus"
+              onClick={onSubmitNewComment}>
               코멘트 작성
             </ButtonSmall>
           </CommentArea>
