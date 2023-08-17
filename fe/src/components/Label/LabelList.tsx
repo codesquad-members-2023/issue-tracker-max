@@ -21,7 +21,14 @@ export default function LabelList() {
           subUrl: 'api/labels',
         });
 
-        if (response.success && response.data) {
+        if (!response.success) {
+          if (response.errorCode?.status === 401) {
+            navigate('/sign-in');
+            return;
+          }
+        }
+
+        if (response.data) {
           setLabelList(response.data);
         }
       } catch (error) {

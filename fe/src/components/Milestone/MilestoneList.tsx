@@ -25,7 +25,14 @@ export default function MilestoneList() {
           subUrl: 'api/milestones/' + milestoneFilter,
         });
 
-        if (response.success && response.data) {
+        if (!response.success) {
+          if (response.errorCode?.status === 401) {
+            navigate('/sign-in');
+            return;
+          }
+        }
+
+        if (response.data) {
           setMilestoneList(response.data);
         }
       } catch (error) {
