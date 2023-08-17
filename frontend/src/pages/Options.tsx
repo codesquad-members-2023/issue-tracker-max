@@ -83,9 +83,9 @@ export default function Options() {
           </Button>
         </Toolbar>
         {activeOption === labels ? (
-          <Milestones data={milestoneData} />
-        ) : (
           <Labels data={labelData} />
+        ) : (
+          <Milestones data={milestoneData} />
         )}
       </Main>
     </Layout>
