@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import { useTokenRefresh } from "../../hooks/useTokenRefresh";
 import { getAccessToken } from "../../utils/localStorage";
 import { MainHeader } from "./MainHeader";
 import { MainTable } from "./MainTable";
@@ -89,7 +88,6 @@ export function Main() {
   const navigate = useNavigate();
   const [issueData, setIssueData] = useState<IssueDataState>();
   const [filterString, setFilterString] = useState<string>();
-  const tokenRefresh = useTokenRefresh();
 
   const queryString = window.location.search;
 
@@ -106,14 +104,13 @@ export function Main() {
       if (code === 200) {
         setIssueData(data);
         setFilterString(data.input);
-      }
-      if (code === 403) {
-        tokenRefresh(fetchData);
+
+        return;
       }
     };
 
     fetchData();
-  }, [queryString]);
+  }, [queryString, navigate]);
 
   const convertToQueryString = (filterCondition: string) => {
     return filterCondition
