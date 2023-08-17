@@ -124,8 +124,8 @@ public class IssueService {
     public IssueResponseDto getIssueById(Long issueId) {
         validateExistIssue(issueId);
         Issue issue = validateActiveIssueById(issueId);
-
-        return IssueResponseDto.from(issue);
+        User user = userService.validateUserId(issue.getUserId());
+        return IssueResponseDto.from(issue, IssueUserVo.from(user));
     }
 
     private Issue validateActiveIssueById(Long issueId) {
