@@ -16,7 +16,6 @@ export function IssueContent({
   content: initialContent,
   createdAt,
   modifiedAt,
-  reactions,
   writer,
   fetchIssue,
 }: IssueContentProps) {
@@ -35,10 +34,10 @@ export function IssueContent({
   const overflowContent = content.length > maxContentLength;
   const invalidContent = sameContent || overflowContent;
   const errorDescription = sameContent
-  ? "기존 내용과 동일합니다"
-  : overflowContent
-  ? `내용은 ${addCommasToNumber(maxContentLength)}자 이내로 입력해주세요`
-  : "";
+    ? "기존 내용과 동일합니다"
+    : overflowContent
+    ? `내용은 ${addCommasToNumber(maxContentLength)}자 이내로 입력해주세요`
+    : "";
 
   const onEditButtonClick = () => {
     setIsEditing(true);
