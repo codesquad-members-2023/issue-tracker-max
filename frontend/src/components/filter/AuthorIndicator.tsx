@@ -13,7 +13,7 @@ export default function AuthorIndicator() {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await axiosPrivate.get('api/assignees');
+      const res = await axiosPrivate.get('/api/issues/participants');
       const { participants } = res.data.message;
       try {
         setAuthors(participants);

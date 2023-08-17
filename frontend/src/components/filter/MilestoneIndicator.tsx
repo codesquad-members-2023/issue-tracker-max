@@ -14,7 +14,7 @@ export default function MilestoneIndicator() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await axiosPrivate.get('api/assignees');
+        const res = await axiosPrivate.get('/api/issues/milestones');
         const { milestones } = res.data.message;
         setMilestones(milestones);
       } catch (error) {

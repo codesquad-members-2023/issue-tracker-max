@@ -13,7 +13,7 @@ export default function LabelIndicator() {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await axiosPrivate.get('api/labels');
+      const res = await axiosPrivate.get('/api/issues/labels');
       const { labels } = res.data.message;
       try {
         setLabels(labels);
