@@ -48,8 +48,7 @@ public class HistoryRepository {
 			+ "SELECT MAX(id) "
 			+ "FROM history "
 			+ "WHERE issue_id = :issueId)";
-		SqlParameterSource parameters = new MapSqlParameterSource()
-			.addValue("issueId", issueId, Types.BIGINT);
+
 		return jdbcTemplate.query(sql, Map.of("issueId", issueId), HISTORY_ROW_MAPPER).stream()
 			.findAny()
 			.orElseThrow(() -> new ApiException(HistoryException.NOT_FOUND_HISTORY));
