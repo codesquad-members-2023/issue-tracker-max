@@ -5,6 +5,8 @@ import { InformationTag } from "../../components/InformationTag";
 import { TextInput } from "../../components/TextInput";
 import { DropdownContainer } from "../../components/dropdown/DropdownContainer";
 import { Icon } from "../../components/icon/Icon";
+import { Color } from "../../types/colors";
+import { getAccessToken } from "../../utils/localStorage";
 import { LabelData } from "./Label";
 
 const colorDictionary = {
@@ -134,8 +136,10 @@ export function LabelEditor({
 
     await fetch(`/api/labels${path}`, {
       method: method,
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify(obj),
     });
@@ -152,7 +156,7 @@ export function LabelEditor({
           <InformationTag
             value={labelName === "" ? "label" : labelName}
             size="S"
-            fill={background}
+            fill={background as Color}
             fontColor={color}
           />
         </Preview>
