@@ -16,7 +16,7 @@ public class MultiFilterLabels {
 	}
 
 	public void addNoneOptionToLabels(boolean selected) {
-		options.add(new MultiFilterLabel(0L, "라벨이 없는 이슈", null, null, selected));
+		options.add(0, new MultiFilterLabel(0L, "라벨이 없는 이슈", null, null, selected));
 	}
 
 	public boolean isMultipleSelect() {
