@@ -71,7 +71,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "LEFT JOIN issue "
 		+ "ON milestone.id = issue.milestone_id "
 		+ "WHERE milestone.is_deleted = false "
-		+ "AND milestone.id NOT IN (SELECT sub_issue.milestone_id FROM issue sub_issue WHERE sub_issue.id = :issueId) "
+		+ "AND milestone.id != (CASE WHEN (SELECT sub_issue.milestone_id FROM issue sub_issue WHERE sub_issue.id = 13) IS NULL THEN 0 END) "
 		+ "GROUP BY milestone.id "
 		+ "ORDER BY milestone.title";
 	private static final String CALCULATE_COUNT_METADATA
