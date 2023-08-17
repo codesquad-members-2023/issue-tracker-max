@@ -15,6 +15,12 @@ import Layout from '../components/Layout';
 import Button from '../components/common/button/BaseButton';
 import { Data } from '../types';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import DropdownPanel from '../components/common/DropdownPanel';
+
+enum Option {
+  Available,
+  Selected,
+}
 
 export default function Issues() {
   const { util } = useContext(AppContext);
@@ -22,6 +28,7 @@ export default function Issues() {
   const logo = (util.getLogoByTheme() as ContextLogo).medium;
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
+  const [filterValue, setFilterValue] = useState<string>('status:open');
 
   const [data, setData] = useState<Data>({
     openCount: 1,
@@ -141,7 +148,22 @@ export default function Issues() {
         </div>
       </Header>
       <Toolbar>
-        <FilterBar />
+        <FilterBar
+          filterValue="hi"
+          openPanel={() => {
+            console.log('open filterbar');
+          }}
+        />
+        <FilterBarPanel
+          elements={[
+            ['열린 이슈', Option.Selected],
+            ['내가 작성한 이슈', Option.Available],
+            ['나에게 할당된 이슈', Option.Available],
+            ['내가 댓글을 남긴 이슈', Option.Available],
+            ['닫힌 이슈', Option.Available],
+          ]}
+          label="이슈 필터"
+        />
         <ActionGroup>
           <TabButton
             tabs={[
@@ -174,4 +196,11 @@ const ActionGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+`;
+
+const FilterBarPanel = styled(DropdownPanel)`
+  position: absolute;
+  z-index: 1;
+  top: 50px;
+  background-color: ${({ theme }) => theme.color.neutral.surface.strong};
 `;

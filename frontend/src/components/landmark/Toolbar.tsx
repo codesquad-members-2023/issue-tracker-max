@@ -9,4 +9,5 @@ const Container = styled.div`
   justify-content: space-between;
   margin-bottom: 24px;
   align-items: center;
+  position: relative;
 `;

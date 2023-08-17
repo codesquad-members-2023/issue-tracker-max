@@ -3,22 +3,27 @@ import { styled } from 'styled-components';
 import DropdownIndicator from './DropdownIndicator';
 import Icons from '../../design/Icons';
 
-export default function FilterBar() {
-  const [filterValue, setFilterValue] = useState<string>(
-    'default filter option'
-  );
+type FilterBarProps = {
+  filterValue: string;
+  openPanel: () => void;
+};
+
+export default function FilterBar({ filterValue, openPanel }: FilterBarProps) {
+  // const [filterValue, setFilterValue] = useState<string>(
+  //   'default filter option'
+  // );
   const SearchIcon = Icons['search'];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterValue(e.target.value);
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setFilterValue(e.target.value);
+  // };
 
   return (
     <Bar>
-      <StyledDropdownIndicator text="Button" />
+      <StyledDropdownIndicator text="Button" onClick={openPanel} />
       <TextFilter>
         <SearchIcon />
-        <TextInput value={filterValue} onChange={handleChange}></TextInput>
+        <TextInput value={filterValue}></TextInput>
       </TextFilter>
     </Bar>
   );

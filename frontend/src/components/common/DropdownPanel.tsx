@@ -7,18 +7,25 @@ enum Option {
   Selected,
 }
 
-const dummy = [
-  ['label', Option.Selected],
-  ['label', Option.Available],
-] as [string, Option][];
+// const dummy = [
+//   ['label', Option.Selected],
+//   ['label', Option.Available],
+// ] as [string, Option][];
 
-export default function DropdownPanel({ label }: { label: string }) {
+export default function DropdownPanel({
+  elements,
+  label,
+  ...rest
+}: {
+  elements: [text: string, option: Option][];
+  label: string;
+}) {
   return (
-    <Container>
+    <Container {...rest}>
       <Header>{label}</Header>
       <DropdownElements>
-        {dummy.map(([text, option]) => {
-          const key = uuidV4()
+        {elements.map(([text, option]) => {
+          const key = uuidV4();
           const Icon = Icons.userImageSmall;
           return (
             <li key={key}>
