@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
+import ReactMarkdown from 'react-markdown';
 import InformationTag from './InformationTag';
 import ButtonSmall from './button/ButtonSmall';
 import DefaultUserImg from '../../asset/icons/userImageLarge.svg';
@@ -11,6 +12,7 @@ type CommentProps = {
 };
 
 type userInfoType = {
+  userId?: number;
   userImg?: string;
   userName: string;
 };
@@ -80,7 +82,9 @@ export default function Comment(props: CommentProps) {
             value={textValue}
             onChange={handleChange}></TextArea>
         ) : (
-          <TextBox>{textValue}</TextBox>
+          <TextBox>
+            <ReactMarkdown children={textValue} />
+          </TextBox>
         )}
       </Body>
       {isEdit && (

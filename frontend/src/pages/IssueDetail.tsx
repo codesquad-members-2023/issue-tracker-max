@@ -18,6 +18,40 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 const { AddButton, Assignee, Label, milestone } = ElementType;
 
+type IssueDetail = {
+  id: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  user: {
+    id: number;
+    name: string;
+    imgUrl: string;
+  };
+  close: boolean;
+};
+
+type IssueOptions = [Assignees[], Labels[], Milestone];
+
+type Assignees = {
+  id: number;
+  name: string;
+  imgUrl: string;
+};
+
+type Labels = {
+  id: number;
+  name: string;
+  backgroundColor: string;
+  textColor: string;
+};
+
+type Milestone = {
+  id: number;
+  name: string;
+  completedRatio: number;
+};
+
 type CommentType = {
   id: number;
   createdAt: string;
@@ -33,6 +67,8 @@ export default function IssueDetail() {
   const navigate = useNavigate();
   const location = useLocation();
   const axiosPrivate = useAxiosPrivate();
+  const [issueDetail, setIssueDetail] = useState<IssueDetail>({});
+  const [issueOptions, setIssueOptions] = useState<IssueOptions>([]);
   const [comments, setComments] = useState<CommentType[]>([]);
   const [newComment, setNewComment] = useState<string>('');
 
@@ -49,8 +85,8 @@ export default function IssueDetail() {
         const issueComment = await axiosPrivate.get(
           '/api' + endpoint + '/comments'
         );
-        console.log(issueDetails.data);
-        console.log(issueOptions.data);
+        setIssueDetail(issueDetails.data.message);
+        setIssueOptions(issueOptions.data.message);
         setComments(issueComment.data.message);
       } catch (err) {
         console.error(err);
@@ -78,8 +114,13 @@ export default function IssueDetail() {
           headers: { 'Content-Type': 'application/json' },
         }
       );
-      console.log(res.data);
-      navigate('/');
+      if (res.status === 200) {
+        setNewComment('');
+        const updatedComments = await axiosPrivate.get(
+          '/api' + location.pathname + '/comments'
+        );
+        setComments(updatedComments.data.message);
+      }
     } catch (err) {
       if (err instanceof AxiosError) {
         alert('에러가 발생했습니다.\n' + '실패 사유: ' + err.message);
@@ -105,8 +146,8 @@ export default function IssueDetail() {
         <PostInfo>
           <TitleAndButtons>
             <Title>
-              <IssueTitle>FE 이슈트래커 디자인 시스템 구현</IssueTitle>
-              <IssueId>#2</IssueId>
+              <IssueTitle>{issueDetail.title}</IssueTitle>
+              <IssueId>#{issueDetail.id}</IssueId>
             </Title>
             <ButtonSmall type="button" outline iconName="edit">
               제목 편집
@@ -117,17 +158,26 @@ export default function IssueDetail() {
           </TitleAndButtons>
           <StateInfo>
             <InformationTag size="medium" iconName="alertCircle">
-              열린 이슈
+              {issueDetail.close ? '닫힌 이슈' : '열린 이슈'}
             </InformationTag>
-            <span>이 이슈가 3분 전에 fuse123 님에 의해 열렸습니다.</span>
+            {/* <span>
+              이 이슈가 {issueDetail?.createdAt}에 {issueDetail?.user.name}님에
+              의해 열렸습니다.
+            </span> */}
           </StateInfo>
         </PostInfo>
         <Container>
           <CommentArea>
             <CommentElement
-              userInfo={{ userName: '퓨즈' }}
-              timeStamp="2023-08-15"
-              content="하이"
+              userInfo={{
+                userId: 1,
+                userName: 'fuse123',
+                // userId: issueDetail?.user.id,
+                // userName: issueDetail?.user.name,
+                // userImg: issueDetail?.user.imgUrl,
+              }}
+              timeStamp={issueDetail.createdAt}
+              content={issueDetail.content}
             />
             {comments.map((comment) => {
               return (
