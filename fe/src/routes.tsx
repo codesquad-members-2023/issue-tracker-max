@@ -6,6 +6,7 @@ import { IssueListPage } from '@pages/IssueListPage';
 import { IssueDetailPage } from '@pages/IssueDetailPage';
 import { AddIssuePage } from '@pages/AddIssuePage';
 import { LabelListPage } from '@pages/LabelListPage';
+import { MileStoneListPage } from '@pages/MileStoneListPage';
 import { NotFoundPage } from '@pages/NotFoundPage';
 import { OAuthLoadingPage } from '@pages/OAuthLoadingPage';
 import { PATH } from 'constants/PATH';
@@ -28,7 +29,10 @@ export const AppRoutes: React.FC<Props> = ({ currentTheme, toggleTheme }) => {
           element={<IssueDetailPage />}
         />
         <Route path={PATH.LABEL_LIST_PAGE} element={<LabelListPage />} />
-        {/* <Route path={MILESTONE_LIST_PAGE} element={<MileStoneListPage />} /> */}
+        <Route
+          path={PATH.MILESTONE_LIST_PAGE}
+          element={<MileStoneListPage />}
+        />
         <Route
           path={`/${PATH.OAUTH_LOADING_PAGE}/*`}
           element={<OAuthLoadingPage />}

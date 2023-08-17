@@ -1,37 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SubNav } from '@components/milestoneListPage/SubNav';
 import { Body } from '@components/milestoneListPage/Body';
-type Props = {};
+import { getMilestonesWithQuery } from 'apis/api';
+import { useLocation } from 'react-router-dom';
 
-const mockData: MilestonePageData = {
-  openMilestonesCount: 1,
-  closedMilestoneCount: 2,
-  milestones: [
-    {
-      id: 1,
-      name: '마일스톤1',
-      description: '마일스톤 설명',
-      progress: 70,
-      status: 'open',
-      openIssueCount: 3,
-      closedIssueCount: 7,
-      deadline: '2023-08-01T00:00:00',
-    },
-    {
-      id: 2,
-      name: '마일스톤2',
-      description: '마일스톤 설명',
-      progress: 100,
-      status: 'open',
-      openIssueCount: 0,
-      closedIssueCount: 3,
-      deadline: '2023-08-01T00:00:00',
-    },
-  ],
-};
-
-export const MileStoneListPage: React.FC<Props> = ({}) => {
+export const MileStoneListPage: React.FC = () => {
   const [isAddTableOpen, setIsAddTableOpen] = useState(false);
+  const [filterValue, setFilterValue] = useState('');
+  const [milestoneListData, setMilestoneListData] =
+    useState<MilestonePageData>(initialData);
+  const location = useLocation();
 
   const onAddTableOpen = () => {
     setIsAddTableOpen(true);
@@ -39,6 +17,28 @@ export const MileStoneListPage: React.FC<Props> = ({}) => {
   const onAddTableClose = () => {
     setIsAddTableOpen(false);
   };
+
+  const fetchPageData = async () => {
+    const pageData: MilestonePageData = await getMilestonesWithQuery(
+      location.search,
+    );
+    setMilestoneListData(pageData);
+  };
+
+  const initPageWithFilter = () => {
+    if (location.search === '') {
+      setFilterValue('isOpen');
+    } else {
+      const value = decodeURIComponent(location.search.replace('?', ''));
+      setFilterValue(value);
+    }
+
+    fetchPageData();
+  };
+
+  useEffect(() => {
+    initPageWithFilter();
+  }, [window.location.search]);
 
   return (
     <div
@@ -52,16 +52,34 @@ export const MileStoneListPage: React.FC<Props> = ({}) => {
     >
       <SubNav
         onAddTableOpen={onAddTableOpen}
-        labelCount={17}
-        milestoneCount={mockData.milestones.length}
+        labelCount={milestoneListData.labelCount}
+        milestoneCount={milestoneListData.milestoneCount}
       />
       <Body
         isAddTableOpen={isAddTableOpen}
-        milestoneList={mockData.milestones}
-        openMilestonesCount={mockData.openMilestonesCount}
-        closedMilestoneCount={mockData.closedMilestoneCount}
+        milestoneList={milestoneListData.milestones}
+        openMilestonesCount={milestoneListData.openMilestonesCount}
+        closedMilestoneCount={milestoneListData.closedMilestoneCount}
         onAddTableClose={onAddTableClose}
       />
     </div>
   );
+};
+const initialData = {
+  openMilestonesCount: 0,
+  closedMilestoneCount: 0,
+  labelCount: 0,
+  milestoneCount: 0,
+  milestones: [
+    {
+      id: 0,
+      name: '',
+      description: '',
+      progress: 0,
+      status: 'open', // 'open' 또는 'closed'로 명시적으로 설정합니다.
+      openIssueCount: 0,
+      closedIssueCount: 0,
+      deadline: '2023-08-01T00:00:00',
+    },
+  ],
 };
