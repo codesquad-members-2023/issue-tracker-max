@@ -1,7 +1,8 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppContext } from '../main';
+import { AxiosError } from 'axios';
 import ContextLogo from '../types/ContextLogo';
 import ButtonSmall from '../components/common/button/ButtonSmall';
 import Layout from '../components/Layout';
@@ -13,11 +14,79 @@ import defaultUserImg from '../asset/images/defaultUserImg.png';
 import ElementType from '../constant/ElementType';
 import TextArea from '../components/common/TextArea';
 import InformationTag from '../components/common/InformationTag';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 const { AddButton, Assignee, Label, milestone } = ElementType;
 
+type CommentType = {
+  id: number;
+  createdAt: string;
+  content: string;
+  writer: {
+    name: string;
+    profileImg: string;
+  };
+};
+
 export default function IssueDetail() {
   const { util } = useContext(AppContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const axiosPrivate = useAxiosPrivate();
+  const [comments, setComments] = useState<CommentType[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+
+  const isFilled = !!newComment;
+
+  useEffect(() => {
+    const getIssueDetail = async () => {
+      const endpoint = location.pathname;
+      try {
+        const issueDetails = await axiosPrivate.get('/api' + endpoint);
+        const issueOptions = await axiosPrivate.get(
+          '/api' + endpoint + '/options'
+        );
+        const issueComment = await axiosPrivate.get(
+          '/api' + endpoint + '/comments'
+        );
+        console.log(issueDetails.data);
+        console.log(issueOptions.data);
+        setComments(issueComment.data.message);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getIssueDetail();
+  }, []);
+
+  const onNewCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setNewComment(value);
+  };
+
+  const onAddFileMarkdown = (url: string) => {
+    setNewComment((prev) => prev + `\n![image](${url})`);
+  };
+
+  const onSubmitNewComment = async () => {
+    const endpoint = '/api' + location.pathname + '/comments';
+    try {
+      const res = await axiosPrivate.post(
+        endpoint,
+        { content: newComment },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      console.log(res.data);
+      navigate('/');
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        alert('에러가 발생했습니다.\n' + '실패 사유: ' + err.message);
+        console.error(err);
+      }
+    }
+  };
 
   return (
     <Layout>
@@ -60,13 +129,31 @@ export default function IssueDetail() {
               timeStamp="2023-08-15"
               content="하이"
             />
-            <CommentElement
-              userInfo={{ userName: '제페토' }}
-              timeStamp="2023-08-15"
-              content="하이요"
+            {comments.map((comment) => {
+              return (
+                <CommentElement
+                  key={comment.id}
+                  userInfo={{
+                    userName: comment.writer.name,
+                    userImg: comment.writer.profileImg,
+                  }}
+                  content={comment.content}
+                  timeStamp={comment.createdAt}
+                />
+              );
+            })}
+            <TextArea
+              name="newComment"
+              value={newComment}
+              onChange={onNewCommentChange}
+              placeholder="코멘트를 입력하세요"
+              onAddFileMarkdown={onAddFileMarkdown}
             />
-            <TextArea name="newComment" placeholder="코멘트를 입력하세요" />
-            <ButtonSmall type="submit" disabled iconName="plus">
+            <ButtonSmall
+              type="submit"
+              disabled={isFilled ? false : true}
+              iconName="plus"
+              onClick={onSubmitNewComment}>
               코멘트 작성
             </ButtonSmall>
           </CommentArea>

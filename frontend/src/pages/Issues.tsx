@@ -5,7 +5,7 @@ import useAuth from '../hooks/useAuth';
 import Header from '../components/landmark/Header';
 import IssueTable from '../components/issues/IssueTable';
 import Main from '../components/landmark/Main';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ContextLogo from '../types/ContextLogo';
 import FilterBar from '../components/common/FilterBar';
 import Toolbar from '../components/landmark/Toolbar';
@@ -21,6 +21,7 @@ export default function Issues() {
   const { auth, logout } = useAuth();
   const logo = (util.getLogoByTheme() as ContextLogo).medium;
   const navigate = useNavigate();
+
   const axiosPrivate = useAxiosPrivate();
 
   const [data, setData] = useState<Data>({
@@ -151,7 +152,12 @@ export default function Issues() {
               },
             ]}
           />
-          <Button type="button" iconName="plus">
+          <Button
+            type="button"
+            iconName="plus"
+            onClick={() => {
+              navigate('/addIssue');
+            }}>
             이슈 작성
           </Button>
         </ActionGroup>

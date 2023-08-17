@@ -10,7 +10,6 @@ type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
   outline?: boolean;
   ghost?: boolean;
   selected?: boolean;
-  onClick?: () => void;
 };
 
 export default function Button(props: ButtonProps) {

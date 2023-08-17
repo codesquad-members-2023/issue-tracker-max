@@ -1,16 +1,28 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useEffect, useState, useRef } from 'react';
 import { styled } from 'styled-components';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import ButtonSmall from './button/ButtonSmall';
 import React from 'react';
 
 type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   labelName?: string;
+  onAddFileMarkdown?: (url: string) => void;
 };
 
 export default function TextArea(props: TextAreaProps) {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const { value, labelName, placeholder, disabled, ...rest } = props;
+  const axiosPrivate = useAxiosPrivate();
+  const fileInput = useRef<HTMLInputElement>(null);
+  const {
+    value,
+    labelName,
+    placeholder,
+    disabled,
+    onAddFileMarkdown,
+    ...rest
+  } = props;
 
   useEffect(() => {
     if (isFocused && !isTyping) {
@@ -29,6 +41,35 @@ export default function TextArea(props: TextAreaProps) {
     setIsFocused(true);
   };
 
+  const onUploadFile = () => {
+    if (!fileInput.current) {
+      return;
+    }
+    fileInput.current.click();
+  };
+
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append('fileName', file.name);
+    formData.append('file', file as File);
+
+    try {
+      const res = await axiosPrivate.post('/api/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      if (res.data) {
+        console.log(res.data);
+        onAddFileMarkdown?.(res.data.message.imgUrl);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <Wrapper $isFocused={isFocused} onFocus={handleFocus} onBlur={handleBlur}>
       <Section>
@@ -45,9 +86,23 @@ export default function TextArea(props: TextAreaProps) {
         {isTyping && typeof value === 'string' && (
           <TextCounter>띄어쓰기 포함 {value.length}자</TextCounter>
         )}
-        <ButtonSmall type="button" ghost flexible iconName="paperClip">
+        <ButtonSmall
+          type="button"
+          ghost
+          flexible
+          iconName="paperClip"
+          onClick={onUploadFile}>
           파일 첨부하기
         </ButtonSmall>
+        <FileInputForm>
+          <FileInput
+            name="file"
+            type="file"
+            ref={fileInput}
+            hidden
+            onChange={onFileChange}
+          />
+        </FileInputForm>
       </Bottom>
     </Wrapper>
   );
@@ -115,3 +170,7 @@ const TextCounter = styled.span`
   top: -32px;
   right: 30px;
 `;
+
+const FileInputForm = styled.form``;
+
+const FileInput = styled.input``;

@@ -1,6 +1,8 @@
 import { useContext, useState } from 'react';
 import { styled } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { AxiosError } from 'axios';
 import { AppContext } from '../main';
 import ContextLogo from '../types/ContextLogo';
 import Layout from '../components/Layout';
@@ -16,12 +18,12 @@ import ElementType from '../constant/ElementType';
 
 const { AddButton, Assignee, Label } = ElementType;
 
-type IssueInfo = {
+export type IssueInfo = {
   title: string;
   content: string;
-  assignees?: string[];
-  labels?: string[];
-  milestone?: string;
+  assignees?: number[] | null;
+  labels?: number[] | null;
+  milestoneId?: number | null;
 };
 
 export default function AddIssue() {
@@ -29,8 +31,12 @@ export default function AddIssue() {
   const [issueInfo, setIssueInfo] = useState<IssueInfo>({
     title: '',
     content: '',
+    assignees: [],
+    labels: [],
+    milestoneId: null,
   });
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
 
   const isFilled = !!issueInfo.title;
 
@@ -42,6 +48,33 @@ export default function AddIssue() {
   const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setIssueInfo((prev) => ({ ...prev, content: value }));
+  };
+
+  const onSubmit = async () => {
+    const data = await postNewIssue(issueInfo);
+    console.log(data);
+  };
+
+  const postNewIssue = async (issueInfo: IssueInfo) => {
+    try {
+      const res = await axiosPrivate.post('/api/issues', issueInfo, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      console.log(res.data);
+      navigate('/');
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        alert('에러가 발생했습니다.\n' + '실패 사유: ' + err.message);
+        console.error(err);
+      }
+    }
+  };
+
+  const onAddFileMarkdown = (url: string) => {
+    setIssueInfo((prev) => ({
+      ...prev,
+      content: prev.content + `\n![image](${url})`,
+    }));
   };
 
   return (
@@ -74,6 +107,7 @@ export default function AddIssue() {
               value={issueInfo.content}
               placeholder="코멘트를 입력하세요"
               onChange={onContentChange}
+              onAddFileMarkdown={onAddFileMarkdown}
             />
           </InputArea>
           <SideBar
@@ -95,7 +129,10 @@ export default function AddIssue() {
             }}>
             작성 취소
           </Button>
-          <ButtonLarge type="submit" disabled={isFilled ? false : true}>
+          <ButtonLarge
+            type="submit"
+            disabled={isFilled ? false : true}
+            onClick={onSubmit}>
             완료
           </ButtonLarge>
         </ButtonArea>
@@ -121,7 +158,7 @@ const Title = styled.p`
   ${({ theme }) => theme.font.display.bold[32]};
 `;
 
-const Container = styled.form`
+const Container = styled.div`
   padding-bottom: 24px;
   display: flex;
   align-items: flex-start;
