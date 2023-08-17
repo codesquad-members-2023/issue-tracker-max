@@ -4,10 +4,12 @@ import Icons from '../../design/Icons';
 import CheckBox from '../../constant/CheckBox';
 import Button from '../common/button/BaseButton';
 import DropdownIndicator from '../common/DropdownIndicator';
+import { Issue } from '../../types/index';
+import TableElement from './TableElement';
 
 const { initial, active } = CheckBox;
 
-export default function IssueTable() {
+export default function IssueTable({ issues }: { issues: Issue[] }) {
   const [totalCheckBox, setTotalCheckBox] = useState<CheckBox>(initial);
 
   function totalCheckBoxHandler(e: React.MouseEvent) {
@@ -21,7 +23,7 @@ export default function IssueTable() {
 
   return (
     <Container>
-      <IssueTableHeading>
+      <Title>
         <TotalCheckBox htmlFor="total-check">
           <CheckboxIcon checkBox={totalCheckBox} />
           <input
@@ -46,23 +48,47 @@ export default function IssueTable() {
           </Left>
           <Right>
             <li>
-              <DropdownIndicator text="담당자" />
+              <DropdownIndicator
+                text="담당자"
+                label="담당자 필터"
+                elements={[]}
+              />
             </li>
             <li>
-              <DropdownIndicator text="레이블" />
+              <DropdownIndicator
+                text="레이블"
+                label="레이블 필터"
+                elements={[]}
+              />
             </li>
             <li>
-              <DropdownIndicator text="마일스톤" />
+              <DropdownIndicator
+                text="마일스톤"
+                label="마일스톤 필터"
+                elements={[]}
+              />
             </li>
             <li>
-              <DropdownIndicator text="작성자" />
+              <DropdownIndicator
+                text="작성자"
+                label="작성자 필터"
+                elements={[]}
+              />
             </li>
           </Right>
         </Buttons>
-      </IssueTableHeading>
-      <IssueTableBody>
-        <IssueTableItem></IssueTableItem>
-      </IssueTableBody>
+      </Title>
+      <Body>
+        {issues ? (
+          issues.map((issue, index) => (
+            <Item key={index}>
+              <TableElement {...issue} />
+            </Item>
+          ))
+        ) : (
+          <li>이슈가 없습니다</li>
+        )}
+      </Body>
     </Container>
   );
 }
@@ -94,7 +120,7 @@ function CheckboxIcon({ checkBox }: { checkBox: CheckBox }) {
   return <Icon />;
 }
 
-const IssueTableHeading = styled.h3`
+const Title = styled.h3`
   padding: 16px 32px;
   display: flex;
   align-items: center;
@@ -119,6 +145,13 @@ const Left = styled.ul``;
 
 const Right = styled.ul``;
 
-const IssueTableBody = styled.ul``;
+const Body = styled.ul``;
 
-const IssueTableItem = styled.li``;
+const Item = styled.li`
+  background: ${({ theme }) => theme.color.neutral.surface.strong};
+  border-bottom: ${({ theme }) => theme.objectStyles.border.default};
+  border-color: ${({ theme }) => theme.color.neutral.border.default};
+  & > :last-child {
+    border-bottom: 0;
+  }
+`;

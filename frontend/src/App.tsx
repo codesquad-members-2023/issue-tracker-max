@@ -49,6 +49,8 @@ function App() {
         <Route path="/callback" element={<Callback />} />
         <Route path="/addIssue" element={<AddIssue />} />
         <Route path="/issues/:issueId" element={<IssueDetail />} />
+        <Route path="/issues" element={<Issues />} />
+
 
         {/* protected routes */}
         <Route element={<RequireAuth />}>

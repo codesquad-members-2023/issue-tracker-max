@@ -49,6 +49,9 @@ export default function Login() {
       );
 
       if (res.status === 200) {
+        localStorage.setItem('userId', res.data.message.userId);
+        localStorage.setItem('userName', res.data.message.userName);
+        localStorage.setItem('profileImg', res.data.message.profileImgUrl);
         localStorage.setItem('accessToken', res.data.message.accessToken);
         localStorage.setItem('refreshToken', res.data.message.refreshToken);
         login({

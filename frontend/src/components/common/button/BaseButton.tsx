@@ -144,11 +144,13 @@ const RealButton = styled.button<StyledButtonProps>`
 `;
 
 const TextLabel = styled.span<{ $ghost?: boolean }>`
-  text-align: center;
+  display: flex;
+  gap: 4px;
+  align-items: center;
   ${({ $ghost }) => {
     if (!$ghost) {
       return 'padding: 0 8px;';
     }
-    return 'padding: 0;';
+    return '';
   }}
 `;
