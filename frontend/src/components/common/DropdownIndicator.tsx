@@ -4,16 +4,19 @@ import DropdownPanel from './DropdownPanel';
 import { useState } from 'react';
 import DropdownPanelElement from '../../types/DropdownPanelElement';
 import ButtonComponent from './button/BaseButton';
+import DropdownType from '../../constant/DropdownType';
 
-export default function DropdownIndicator({
+export default function DropdownIndicator<T extends DropdownType>({
+  type,
   text,
   label,
   elements,
   ...props
 }: {
+  type: T;
   text: string;
   label: string;
-  elements: DropdownPanelElement[];
+  elements: DropdownPanelElement<T>[];
 }) {
   const [isOpenPanel, setIsOpenPanel] = useState(false);
 
@@ -34,7 +37,7 @@ export default function DropdownIndicator({
       </Button>
       <Panel>
         {isOpenPanel && (
-          <DropdownPanel {...{ label, baseElements: elements }} />
+          <DropdownPanel {...{ type, label, baseElements: elements }} />
         )}
       </Panel>
     </Container>

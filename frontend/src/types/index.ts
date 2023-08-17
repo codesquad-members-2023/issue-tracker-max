@@ -8,6 +8,7 @@ export type Label = {
   name: string;
   backgroundColor: string;
   textColor: string;
+  description: string;
 };
 
 export type Milestone = {

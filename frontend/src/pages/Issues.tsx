@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppContext } from '../main';
 import useAuth from '../hooks/useAuth';
@@ -43,12 +43,14 @@ export default function Issues() {
             name: 'documentation',
             backgroundColor: '#0025E6',
             textColor: '#0025E6',
+            description: '설명',
           },
           {
             id: 2,
             name: 'documentation',
             backgroundColor: '#0025E6',
             textColor: '#0025E6',
+            description: '설명',
           },
         ],
         milestone: {
@@ -70,6 +72,7 @@ export default function Issues() {
             name: 'fix',
             backgroundColor: '#0025E6',
             textColor: '#0025E6',
+            description: '설명',
           },
         ],
         milestone: {
@@ -126,13 +129,13 @@ export default function Issues() {
         <Link to="/">
           <img src={logo} alt="이슈트래커" />
         </Link>
-        <Button type="button" ghost onClick={handleLogout}>
-          로그아웃
-        </Button>
-        <div>
+        <UserInfo>
           {/* profile */}
           popopo
-        </div>
+          <Button type="button" ghost flexible onClick={handleLogout}>
+            로그아웃
+          </Button>
+        </UserInfo>
       </Header>
       <Toolbar>
         <FilterBar />
@@ -168,6 +171,18 @@ export default function Issues() {
     </Layout>
   );
 }
+
+const UserInfo = styled.div`
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  & > button {
+    color: ${({ theme }) => theme.color.neutral.surface.strong};
+    background-color: ${({ theme }) => theme.color.danger.text.default};
+    padding: 8px 24px;
+    border-radius: ${({ theme }) => theme.objectStyles.radius.large};
+  }
+`;
 
 const ActionGroup = styled.div`
   display: flex;

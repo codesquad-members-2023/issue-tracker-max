@@ -2,20 +2,20 @@ import { styled } from 'styled-components';
 import Icons from '../../design/Icons';
 import Option from '../../constant/Option';
 import DropdownPanelElement from '../../types/DropdownPanelElement';
-import { User } from '../../types';
 import { useState } from 'react';
+import DropdownType from '../../constant/DropdownType';
+import Label from '../label/Label';
 
-export default function DropdownPanel({
-  user,
+export default function DropdownPanel<T extends DropdownType>({
   label,
   baseElements,
 }: {
-  user?: User;
+  type: T;
   label: string;
-  baseElements: DropdownPanelElement[];
+  baseElements: DropdownPanelElement<T>[];
 }) {
   const [elements, setElements] =
-    useState<DropdownPanelElement[]>(baseElements);
+    useState<DropdownPanelElement<T>[]>(baseElements);
 
   const itemCheckHandler = (e: React.ChangeEvent, index: number) => {
     const input = e.target as HTMLInputElement;
@@ -35,25 +35,55 @@ export default function DropdownPanel({
     <Container>
       <Header>{label}</Header>
       <DropdownElements>
-        {elements.map(({ text, option }, index) => (
-          <li key={text}>
-            <Element htmlFor={text} $option={option}>
-              {user && <img src={user.profileImg} alt={user.name + '아바타'} />}
-              <Text>{text}</Text>
-              <input
-                type="checkbox"
-                id={text}
-                name={textToName(text)}
-                onChange={(e) => itemCheckHandler(e, index)}
-              />
-              {option === Option.Selected ? (
-                <Icons.checkOnCircle />
-              ) : (
-                <Icons.checkOffCircle />
-              )}
-            </Element>
-          </li>
-        ))}
+        {elements.map((element, index) => {
+          const {
+            text,
+            option,
+            imageUrl,
+            textColor,
+            backgroundColor,
+            name,
+          }: {
+            text: string;
+            option: Option;
+            imageUrl?: string;
+            textColor?: string;
+            backgroundColor?: string;
+            name?: string;
+          } = element;
+
+          return (
+            <li key={text}>
+              <Element htmlFor={text} $option={option}>
+                {textColor ? (
+                  <Label
+                    {...{
+                      textColor: textColor!,
+                      backgroundColor: backgroundColor!,
+                      name: name!,
+                    }}
+                  />
+                ) : imageUrl ? (
+                  <img src={imageUrl} alt={text} />
+                ) : (
+                  <Text>{text}</Text>
+                )}
+
+                <input
+                  type="checkbox"
+                  id={text}
+                  name={textToName(text)}
+                  onChange={(e) => itemCheckHandler(e, index)}
+                />
+                {option === Option.Selected ? (
+                  <Icons.checkOnCircle />
+                ) : (
+                  <Icons.checkOffCircle />
+                )}
+              </Element>
+            </li>
+          );
+        })}
       </DropdownElements>
     </Container>
   );

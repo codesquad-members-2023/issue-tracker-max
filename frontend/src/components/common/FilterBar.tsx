@@ -5,6 +5,7 @@ import Icons from '../../design/Icons';
 import React from 'react';
 import Option from '../../constant/Option';
 import { AppContext } from '../../main';
+import DropdownType from '../../constant/DropdownType';
 
 export default function FilterBar({ baseKeyword = 'status:open' }) {
   const [keyword, setKeyword] = useState(baseKeyword);
@@ -22,16 +23,37 @@ export default function FilterBar({ baseKeyword = 'status:open' }) {
 
   return (
     <Container>
-      <h3 className='blind'>필터바</h3>
+      <h3 className="blind">필터바</h3>
       <StyledDropdownIndicator
+        type={DropdownType.state}
         text="필터"
         label="이슈 필터"
         elements={[
-          { text: '열린 이슈', option: Option.Selected },
-          { text: '내가 작성한 이슈', option: Option.Available },
-          { text: '나에게 할당된 이슈', option: Option.Available },
-          { text: '내가 댓글을 남긴 이슈', option: Option.Available },
-          { text: '닫힌 이슈', option: Option.Available },
+          {
+            type: DropdownType.state,
+            text: '열린 이슈',
+            option: Option.Selected,
+          },
+          {
+            type: DropdownType.state,
+            text: '내가 작성한 이슈',
+            option: Option.Available,
+          },
+          {
+            type: DropdownType.state,
+            text: '나에게 할당된 이슈',
+            option: Option.Available,
+          },
+          {
+            type: DropdownType.state,
+            text: '내가 댓글을 남긴 이슈',
+            option: Option.Available,
+          },
+          {
+            type: DropdownType.state,
+            text: '닫힌 이슈',
+            option: Option.Available,
+          },
         ]}
       />
       <TextFilter onSubmit={submitHandler}>
@@ -62,7 +84,7 @@ const Container = styled.section`
     border-color: ${({ theme }) => theme.color.neutral.border.active};
     background: ${({ theme }) => theme.color.neutral.surface.strong};
   }
-  
+
   &:focus > form > input {
     color: ${({ theme }) => theme.color.neutral.text.default};
   }
@@ -78,6 +100,11 @@ const StyledDropdownIndicator = styled(DropdownIndicator)`
 
   & > button {
     padding: 8px 24px;
+    & > span > span {
+      display: inline-block;
+      width: 60px;
+      text-align: left;
+    }
   }
 `;
 
@@ -98,5 +125,4 @@ const TextInput = styled.input`
   background: transparent;
   color: ${({ theme }) => theme.color.neutral.text.weak};
   ${({ theme }) => theme.font.display.medium[16]};
-
 `;

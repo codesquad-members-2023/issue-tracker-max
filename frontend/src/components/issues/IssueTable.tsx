@@ -3,9 +3,12 @@ import { useState } from 'react';
 import Icons from '../../design/Icons';
 import CheckBox from '../../constant/CheckBox';
 import Button from '../common/button/BaseButton';
-import DropdownIndicator from '../common/DropdownIndicator';
 import { Issue } from '../../types/index';
 import TableElement from './TableElement';
+import AssigneeIndicator from '../filter/AssigneeIndicator';
+import LabelIndicator from '../filter/LabelIndicator';
+import MilestoneIndicator from '../filter/MilestoneIndicator';
+import AuthorIndicator from '../filter/AuthorIndicator';
 
 const { initial, active } = CheckBox;
 
@@ -47,34 +50,10 @@ export default function IssueTable({ issues }: { issues: Issue[] }) {
             </li>
           </Left>
           <Right>
-            <li>
-              <DropdownIndicator
-                text="담당자"
-                label="담당자 필터"
-                elements={[]}
-              />
-            </li>
-            <li>
-              <DropdownIndicator
-                text="레이블"
-                label="레이블 필터"
-                elements={[]}
-              />
-            </li>
-            <li>
-              <DropdownIndicator
-                text="마일스톤"
-                label="마일스톤 필터"
-                elements={[]}
-              />
-            </li>
-            <li>
-              <DropdownIndicator
-                text="작성자"
-                label="작성자 필터"
-                elements={[]}
-              />
-            </li>
+            <AssigneeIndicator />
+            <LabelIndicator />
+            <MilestoneIndicator />
+            <AuthorIndicator />
           </Right>
         </Buttons>
       </Title>
@@ -143,7 +122,10 @@ const Buttons = styled.div`
 
 const Left = styled.ul``;
 
-const Right = styled.ul``;
+const Right = styled.div`
+  display: flex;
+  gap: 32px;
+`;
 
 const Body = styled.ul``;
 
