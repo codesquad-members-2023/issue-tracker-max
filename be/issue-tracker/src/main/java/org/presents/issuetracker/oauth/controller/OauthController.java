@@ -3,9 +3,6 @@ package org.presents.issuetracker.oauth.controller;
 import org.presents.issuetracker.oauth.entity.GithubUser;
 import org.presents.issuetracker.oauth.service.OauthService;
 import org.presents.issuetracker.user.dto.response.LoginResponse;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,16 +15,6 @@ import lombok.RequiredArgsConstructor;
 public class OauthController {
 
 	private final OauthService oauthService;
-
-	// https://github.com/login/oauth/authorize?client_id=9531d38d8aa9bd9a4602
-	@Value("${security.oauth.github.client-id}")
-	private String clientId;
-
-	@GetMapping("/login/oauth")
-	public ResponseEntity<Void> oauthLogin() {
-		String githubUrl = "https://github.com/login/oauth/authorize?client_id=" + clientId;
-		return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, githubUrl).build();
-	}
 
 	@GetMapping("/login/oauth/callback")
 	public ResponseEntity<LoginResponse> getUserInfo(@RequestParam String code) {
