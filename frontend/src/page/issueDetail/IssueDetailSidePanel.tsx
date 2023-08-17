@@ -27,6 +27,7 @@ export function IssueDetailSidePanel({
       method: "PATCH",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
@@ -42,6 +43,7 @@ export function IssueDetailSidePanel({
       method: "PATCH",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
@@ -57,6 +59,7 @@ export function IssueDetailSidePanel({
       method: "PATCH",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
@@ -72,6 +75,7 @@ export function IssueDetailSidePanel({
       method: "DELETE",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });

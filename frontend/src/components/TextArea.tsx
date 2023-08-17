@@ -163,6 +163,7 @@ export function TextArea({
         method: "POST",
         credentials: "include",
         headers: {
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${getAccessToken()}`,
         },
         body: formData,

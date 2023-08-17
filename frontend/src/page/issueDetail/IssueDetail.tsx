@@ -97,6 +97,7 @@ export function IssueDetail() {
     const response = await fetch(`/api/issues/${issueId}`, {
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });

@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
+import { Color } from "../../types/colors";
+import { getAccessToken } from "../../utils/localStorage";
 import { sameNumbers } from "../../utils/sameNumbers";
 import { InformationTag } from "../InformationTag";
 import { DropdownContainer } from "../dropdown/DropdownContainer";
-import { IconColor } from "../icon/Icon";
 import { ElementContainer } from "./ElementContainer";
 import { OptionDiv } from "./Sidebar";
 
@@ -17,7 +18,7 @@ export type LabelData = {
   id: number;
   name: string;
   color: "LIGHT" | "DARK";
-  background: IconColor;
+  background: Color;
   selected: boolean;
   onClick: () => void;
 };
@@ -33,7 +34,14 @@ export function AddLabel({ issueLabels, onLabelClick }: AddLabelProps) {
   const [labels, setLabels] = useState<LabelData[]>([]);
 
   const fetchLabels = useCallback(async () => {
-    const response = await fetch("/api/labels");
+    const response = await fetch("/api/labels", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    });
     const result = await response.json();
 
     const labelsData = result.data.labels.map(
@@ -122,7 +130,7 @@ export function AddLabel({ issueLabels, onLabelClick }: AddLabelProps) {
               key={id}
               value={name}
               size="S"
-              fill={background as IconColor}
+              fill={background as Color}
               fontColor={color}
             />
           ))}

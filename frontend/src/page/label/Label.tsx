@@ -39,6 +39,7 @@ export function Label() {
     const res = await fetch("/api/labels", {
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });

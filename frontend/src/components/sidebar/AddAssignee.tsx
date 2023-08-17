@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { getAccessToken } from "../../utils/localStorage";
 import { sameNumbers } from "../../utils/sameNumbers";
 import { DropdownContainer } from "../dropdown/DropdownContainer";
 import { AssigneeElement } from "./AssigneeElement";
@@ -33,7 +34,14 @@ export function AddAssignee({
   const [assignees, setAssignees] = useState<AssigneeData[]>([]);
 
   const fetchAssignees = useCallback(async () => {
-    const response = await fetch("/api/assignees");
+    const response = await fetch("/api/assignees", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    });
     const result = await response.json();
 
     const assigneesData = result.data.assignees.map(

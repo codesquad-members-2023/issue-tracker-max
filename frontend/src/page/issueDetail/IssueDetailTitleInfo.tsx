@@ -46,6 +46,7 @@ export function IssueDetailTitleInfo({
       method: "PATCH",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({ title }),
@@ -60,6 +61,7 @@ export function IssueDetailTitleInfo({
       method: "PATCH",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({

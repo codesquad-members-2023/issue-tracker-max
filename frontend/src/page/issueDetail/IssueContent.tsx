@@ -67,6 +67,7 @@ export function IssueContent({
       method: "PATCH",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({

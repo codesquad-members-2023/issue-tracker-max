@@ -49,6 +49,7 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
       method: "POST",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({ issueId, content }),

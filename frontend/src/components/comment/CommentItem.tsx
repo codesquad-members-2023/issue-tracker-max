@@ -70,6 +70,7 @@ export function CommentItem({
       method: "DELETE",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
@@ -97,6 +98,7 @@ export function CommentItem({
       method: "PATCH",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
