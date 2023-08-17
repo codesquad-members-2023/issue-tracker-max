@@ -15,7 +15,6 @@ type Props = {
 
 export const Header: React.FC<Props> = ({ currentTheme, toggleTheme }) => {
   const navigate = useNavigate();
-  const theme = useTheme() as any;
 
   const onLogoutClick = () => {
     localStorage.clear();
@@ -29,7 +28,6 @@ export const Header: React.FC<Props> = ({ currentTheme, toggleTheme }) => {
       <header css={headerStyle}>
         <MediumLogo
           className="logo"
-          fill={theme.neutral.text.strong}
           onClick={() => {
             navigate(PATH.ISSUE_LIST_PAGE);
           }}
@@ -43,9 +41,9 @@ export const Header: React.FC<Props> = ({ currentTheme, toggleTheme }) => {
           </Button>
 
           <img
+            className="profile-image"
             src={image || 'basic-profile.jpeg'}
             alt="프로필 사진"
-            css={{ width: '32px', borderRadius: theme.radius.half }}
           />
         </div>
       </header>
@@ -64,11 +62,17 @@ const headerStyle = (theme: Theme) => css`
 
   .logo {
     cursor: pointer;
+    fill: ${theme.neutral.text.strong};
   }
 
   .header-right {
     display: flex;
     align-items: center;
     gap: 8px;
+  }
+
+  .profile-image {
+    width: 32px;
+    border-radius: theme.radius.half;
   }
 `;
