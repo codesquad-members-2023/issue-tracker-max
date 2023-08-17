@@ -39,6 +39,8 @@ export function MilestoneTableElement({
         status: status === "OPENED" ? "CLOSED" : "OPENED",
       }),
     });
+
+    fetchData();
   };
 
   const deleteMilestone = async () => {
