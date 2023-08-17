@@ -16,7 +16,7 @@ public class MultiFilterAssignees {
 	}
 
 	public void addNoneOptionToAssignee(boolean selected) {
-		options.add(new MultiFilterAssignee(0L, "담당자가 없는 이슈", null, selected));
+		options.add(0, new MultiFilterAssignee(0L, "담당자가 없는 이슈", null, selected));
 	}
 
 	public boolean isMultipleSelect() {

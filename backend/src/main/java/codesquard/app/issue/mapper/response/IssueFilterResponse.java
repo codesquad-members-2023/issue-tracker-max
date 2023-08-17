@@ -17,10 +17,10 @@ public class IssueFilterResponse {
 	private String input;
 
 	@JsonProperty("openedIssueCount")
-	private Long openedIssueCount;
+	private int openedIssueCount;
 
 	@JsonProperty("closedIssueCount")
-	private Long closedIssueCount;
+	private int closedIssueCount;
 
 	@JsonProperty("labelCount")
 	private Long labelCount;

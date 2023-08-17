@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
+import codesquard.app.issue.mapper.response.IssueCount;
 import codesquard.app.issue.mapper.response.IssuesResponse;
 import codesquard.app.issue.mapper.response.filters.response.MultiFilterAssignee;
 import codesquard.app.issue.mapper.response.filters.response.MultiFilterAuthor;
@@ -15,6 +16,8 @@ import codesquard.app.issue.mapper.response.filters.response.MultiFilterMileston
 @Mapper
 public interface IssueMapper {
 
+	List<IssueCount> countIssues(IssueFilterRequest request);
+	
 	List<IssuesResponse> getIssues(IssueFilterRequest request);
 
 	List<MultiFilterAssignee> getMultiFiltersAssignees(@Param("check") boolean check,
