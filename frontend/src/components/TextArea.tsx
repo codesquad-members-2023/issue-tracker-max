@@ -167,23 +167,22 @@ export function TextArea({
     const formData = new FormData();
     formData.append("image", file as File);
 
-    try {
-      const response = await fetch("/api/images", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-        body: formData,
-      });
-      const data = await response.json();
+    const response = await fetch("/api/images", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+      body: formData,
+    });
+    const { code, message, data} = await response.json();
 
-      return data.data.url;
-    } catch (error) {
-      setUploadErrorMessage("이미지 업로드에 실패했습니다.");
-      throw new Error("이미지 업로드에 실패했습니다.");
-    }
+    if (code === 201) {
+      return data.url;
+    } 
+
+    setUploadErrorMessage(message);
+    throw new Error(message);
   };
 
   return (
