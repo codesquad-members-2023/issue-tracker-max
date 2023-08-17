@@ -1,6 +1,7 @@
 package com.issuetrackermax.controller.comment;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,7 +30,8 @@ public class CommentController {
 
 	@PatchMapping("/{issueId}/comments/{id}")
 	public ApiResponse<Void> modifyComment(@PathVariable Long id,
-		@RequestBody CommentModifyRequest commentModifyRequest,
+		@RequestBody
+		@Valid CommentModifyRequest commentModifyRequest,
 		HttpServletRequest request) {
 		Integer memberId = (Integer)request.getAttribute(MEMBER_ID);
 		commentService.modifyComment(commentModifyRequest, id, memberId.longValue());
@@ -37,7 +39,9 @@ public class CommentController {
 	}
 
 	@PostMapping("/{issueId}/comments")
-	public ApiResponse<CommentResponse> post(@RequestBody CommentCreateRequest commentCreateRequest,
+	public ApiResponse<CommentResponse> post(
+		@RequestBody
+		@Valid CommentCreateRequest commentCreateRequest,
 		HttpServletRequest request, @PathVariable Long issueId) {
 		Integer memberId = (Integer)request.getAttribute(MEMBER_ID);
 		CommentResponse commentResponse = commentService.save(commentCreateRequest, issueId, memberId.longValue());
