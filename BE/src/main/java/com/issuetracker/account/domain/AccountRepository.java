@@ -14,6 +14,8 @@ public interface AccountRepository {
 
 	boolean existByEmail(String email);
 
+	boolean existByNickname(String nickname);
+
 	void saveGitMember(Long memberId, Long oauthId);
 
 }

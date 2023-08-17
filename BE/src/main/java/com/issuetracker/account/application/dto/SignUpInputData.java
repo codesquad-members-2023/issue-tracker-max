@@ -1,5 +1,7 @@
 package com.issuetracker.account.application.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.issuetracker.account.domain.Account;
 
 import lombok.AllArgsConstructor;
@@ -14,6 +16,7 @@ public class SignUpInputData {
 	private String nickname;
 	private String profileImageUrl;
 	private Long oauthId;
+	private MultipartFile multipartFile;
 
 	public Account toAccount() {
 		return Account.builder()
@@ -31,7 +34,12 @@ public class SignUpInputData {
 			account.getPassword(),
 			account.getNickname(),
 			account.getProfileImageUrl(),
-			account.getOauthId()
+			account.getOauthId(),
+			null
 		);
+	}
+
+	public void setProfileImageUrl(String profileImageUrl) {
+		this.profileImageUrl = profileImageUrl;
 	}
 }

@@ -45,6 +45,7 @@ public class JdbcAccountRepository implements AccountRepository {
 		+ "WHERE git.oauth_id = :oauthId";
 	private final String SAVE_SQL = "INSERT INTO member(id, email, password, nickname, profile_image_url) VALUE (:id, :email, :password, :nickname, :profileImageUrl)";
 	private final String EXIST_BY_EMAIL_SQL = "SELECT EXISTS(SELECT id FROM member WHERE email = :email) AS exist";
+	private final String EXIST_BY_NICKNAME_SQL = "SELECT EXISTS(SELECT id FROM member WHERE nickname = :nickname) AS exist";
 	private final String SAVE_GIT_MEMBER_SQL = "INSERT INTO git_member(oauth_id, member_id) VALUE(:oauthId, :memberId)";
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -102,6 +103,12 @@ public class JdbcAccountRepository implements AccountRepository {
 	public boolean existByEmail(String email) {
 		return Boolean.TRUE.equals(
 			jdbcTemplate.queryForObject(EXIST_BY_EMAIL_SQL, Map.of("email", email), Boolean.class)
+		);
+	}
+
+	public boolean existByNickname(String nickname) {
+		return Boolean.TRUE.equals(
+			jdbcTemplate.queryForObject(EXIST_BY_NICKNAME_SQL, Map.of("nickname", nickname), Boolean.class)
 		);
 	}
 

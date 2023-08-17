@@ -20,6 +20,7 @@ public enum ErrorType {
 	// MEMBER
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 멤버가 존재하지 않습니다."),
 	ACCOUNT_EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 사용중인 email 입니다."),
+  ACCOUNT_NICKNAME_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 사용중인 nickname 입니다."),
 
 	// ASSIGNEE
 	ASSIGNEE_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 담당자입니다."),
