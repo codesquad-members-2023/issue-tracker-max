@@ -72,10 +72,11 @@ public class UserRepository {
 	}
 
 	public Long save(User user) {
-		final String sql = "INSERT INTO user(login_id, password) VALUES(:loginId, :password)";
+		final String sql = "INSERT INTO user(login_id, password, image) VALUES(:loginId, :password, :image)";
 
 		MapSqlParameterSource params = new MapSqlParameterSource("loginId", user.getLoginId())
-			.addValue("password", user.getPassword());
+			.addValue("password", user.getPassword())
+			.addValue("image", user.getImage());
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(sql, params, keyHolder);
