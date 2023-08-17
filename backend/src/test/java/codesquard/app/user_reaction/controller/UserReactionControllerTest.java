@@ -8,16 +8,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
 import codesquard.app.api.errors.exception.NoSuchReactionException;
 import codesquard.app.api.errors.exception.NoSuchUserReactionException;
+import codesquard.app.api.errors.handler.GlobalExceptionHandler;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 
 class UserReactionControllerTest extends ControllerTestSupport {
 
 	@DisplayName("이슈 사용자 반응을 등록한다.")
 	@Test
 	void createIssue() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int issueId = 1;
@@ -32,6 +38,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 사용자 반응 등록에 실패한다.")
 	@Test
 	void createIssue_Fail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int issueId = 1;
@@ -47,6 +56,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("댓글 사용자 반응을 등록한다.")
 	@Test
 	void createComment() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int commentId = 1;
@@ -61,6 +73,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("댓글 사용자 반응 등록에 실패한다.")
 	@Test
 	void createComment_Fail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int commentId = 1;
@@ -99,4 +114,18 @@ class UserReactionControllerTest extends ControllerTestSupport {
 			.andExpect(status().isNotFound())
 			.andDo(print());
 	}
+
+	private void mockingAuthenticateUser() {
+		mockMvc = MockMvcBuilders.standaloneSetup(new UserReactionController(userReactionService))
+			.setControllerAdvice(new GlobalExceptionHandler())
+			.setCustomArgumentResolvers(loginUserArgumentResolver)
+			.build();
+
+		AuthenticateUser authenticateUser = new AuthenticateUser(1L, "user", "user@email.com", null);
+		when(loginUserArgumentResolver.supportsParameter(any()))
+			.thenReturn(true);
+		when(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+			.thenReturn(authenticateUser);
+	}
+
 }

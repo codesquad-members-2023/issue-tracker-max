@@ -1,6 +1,5 @@
 package codesquard.app.image.controller;
 
-import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -25,8 +24,7 @@ public class ImageController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping()
-	public ApiResponse<Object> uploadImage(@RequestPart(value = "image") MultipartFile multipartFile) throws
-		IOException {
+	public ApiResponse<Object> uploadImage(@RequestPart(value = "image") MultipartFile multipartFile) {
 		return ApiResponse.of(HttpStatus.CREATED, ResponseMessage.IMAGE_SAVE_SUCCESS,
 			Map.of("url", imageService.upload(multipartFile)));
 	}

@@ -1,11 +1,9 @@
 package codesquard.app.issue.mapper.response.filters;
 
-import java.util.List;
-
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersAssignees;
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersAuthors;
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersLabels;
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersMilestones;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterAssignees;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterAuthors;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterLabels;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterMilestones;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
@@ -13,28 +11,28 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MultiFilters {
 
-	private List<MultiFiltersAssignees> assignees;
+	private MultiFilterAssignees assignee;
 
-	private List<MultiFiltersLabels> labels;
+	private MultiFilterLabels label;
 
-	private List<MultiFiltersMilestones> milestones;
+	private MultiFilterMilestones milestone;
 
-	private List<MultiFiltersAuthors> authors;
+	private MultiFilterAuthors author;
 
-	public List<MultiFiltersAssignees> getAssignees() {
-		return assignees;
+	public MultiFilterAssignees getAssignee() {
+		return assignee;
 	}
 
-	public List<MultiFiltersLabels> getLabels() {
-		return labels;
+	public MultiFilterLabels getLabel() {
+		return label;
 	}
 
-	public List<MultiFiltersMilestones> getMilestones() {
-		return milestones;
+	public MultiFilterMilestones getMilestone() {
+		return milestone;
 	}
 
-	public List<MultiFiltersAuthors> getAuthors() {
-		return authors;
+	public MultiFilterAuthors getAuthor() {
+		return author;
 	}
 
 }

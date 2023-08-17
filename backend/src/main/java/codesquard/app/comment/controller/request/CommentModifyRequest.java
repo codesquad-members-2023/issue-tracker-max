@@ -17,8 +17,8 @@ public class CommentModifyRequest {
 	@NotBlank(message = "내용은 필수입니다.")
 	private String content;
 
-	public CommentModifyServiceRequest toServiceRequest(Long id) {
-		return new CommentModifyServiceRequest(id, content);
+	public CommentModifyServiceRequest toServiceRequest(Long commentId, Long userId) {
+		return new CommentModifyServiceRequest(commentId, userId, content);
 	}
 
 }

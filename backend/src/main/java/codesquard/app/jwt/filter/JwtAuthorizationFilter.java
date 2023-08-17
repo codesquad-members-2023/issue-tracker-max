@@ -3,6 +3,7 @@ package codesquard.app.jwt.filter;
 import static codesquard.app.jwt.filter.VerifyUserFilter.*;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.PatternMatchUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -22,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquard.app.api.errors.errorcode.ErrorCode;
 import codesquard.app.api.errors.errorcode.JwtTokenErrorCode;
+import codesquard.app.api.errors.errorcode.LoginErrorCode;
 import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.api.response.ApiResponse;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
@@ -41,10 +44,13 @@ public class JwtAuthorizationFilter implements Filter {
 
 	private final JwtProvider jwtProvider;
 	private final ObjectMapper objectMapper;
+	private final RedisTemplate<String, Object> redisTemplate;
 
-	public JwtAuthorizationFilter(JwtProvider jwtProvider, ObjectMapper objectMapper) {
+	public JwtAuthorizationFilter(JwtProvider jwtProvider, ObjectMapper objectMapper,
+		RedisTemplate<String, Object> redisTemplate) {
 		this.jwtProvider = jwtProvider;
 		this.objectMapper = objectMapper;
+		this.redisTemplate = redisTemplate;
 	}
 
 	@Override
@@ -67,10 +73,15 @@ public class JwtAuthorizationFilter implements Filter {
 		try {
 			// 1. 액세스 토큰값 추출
 			String token = parseToken(httpServletRequest);
-			// 2. 액세스 토큰 복호화하여 AuthenticateUser 객체로 읽기
+			// 2. Redis에 해당 액세스토큰 로그아웃 여부를 확인
+			// isLogout이 "logout"이 아닌 경우 인가 절차를 계속 진행합니다.
+			String isLogout = (String)redisTemplate.opsForValue().get(token);
+			logger.debug("isLogout : {}", isLogout);
+			validateIsLogout(isLogout);
+			// 3. 액세스 토큰 복호화하여 AuthenticateUser 객체로 읽기
 			AuthenticateUser authenticateUser = getAuthenticateUser(token);
-			logger.info("authenticateUser : {}", authenticateUser);
-			// 3. Request user 속성에 AuthenticateUser 객체 저장
+			logger.debug("authenticateUser : {}", authenticateUser);
+			// 4. Request user 속성에 AuthenticateUser 객체 저장
 			httpServletRequest.setAttribute(AUTHENTICATE_USER, authenticateUser);
 			chain.doFilter(request, response);
 		} catch (JsonParseException e) {
@@ -83,8 +94,8 @@ public class JwtAuthorizationFilter implements Filter {
 			logger.error("JwtTokenExpired");
 			setErrorResponse(httpServletResponse, JwtTokenErrorCode.EXPIRE_TOKEN);
 		} catch (RestApiException e) {
-			logger.error("AuthorizationException");
-			setErrorResponse(httpServletResponse, JwtTokenErrorCode.NOT_HAVE_AUTHORIZED);
+			logger.error("RestApiException : " + e.getMessage());
+			setErrorResponse(httpServletResponse, e.getErrorCode());
 		}
 	}
 
@@ -118,5 +129,11 @@ public class JwtAuthorizationFilter implements Filter {
 		Claims claims = jwtProvider.getClaims(token);
 		String authenticateUserJson = claims.get(AUTHENTICATE_USER, String.class);
 		return objectMapper.readValue(authenticateUserJson, AuthenticateUser.class);
+	}
+
+	private void validateIsLogout(String isLogout) {
+		if (Objects.equals(isLogout, "logout")) {
+			throw new RestApiException(LoginErrorCode.UNAUTHORIZED);
+		}
 	}
 }

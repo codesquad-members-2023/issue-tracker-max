@@ -43,7 +43,6 @@ public class IssueController {
 	private final IssueService issueService;
 	private final IssueQueryService issueQueryService;
 
-	// TODO: 유효하지 않은 값이 들어왔을 경우 빈 리스트 반환
 	@GetMapping()
 	public ApiResponse<IssueFilterResponse> listIssues(@ModelAttribute IssueFilterRequest request,
 		@Login AuthenticateUser user) {

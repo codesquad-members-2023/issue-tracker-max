@@ -29,8 +29,8 @@ public class MilestoneSaveRequest {
 		this.description = description;
 	}
 
-	public static Milestone toEntity(final MilestoneSaveRequest milestoneSaveRequest) {
+	public static Milestone toEntity(final MilestoneSaveRequest milestoneSaveRequest, final Long userId) {
 		return new Milestone(milestoneSaveRequest.name, milestoneSaveRequest.description,
-			milestoneSaveRequest.deadline);
+			milestoneSaveRequest.deadline, userId);
 	}
 }
