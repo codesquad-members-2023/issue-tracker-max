@@ -19,6 +19,14 @@ import com.issuetrackermax.domain.label.entity.Label;
 
 @Repository
 public class LabelRepository {
+	private static final RowMapper<Label> LABEL_ROW_MAPPER = (rs, rowNum) ->
+		Label.builder()
+			.id(rs.getLong("id"))
+			.title(rs.getString("title"))
+			.description(rs.getString("description"))
+			.textColor(rs.getString("text_color"))
+			.backgroundColor(rs.getString("background_color"))
+			.build();
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public LabelRepository(JdbcTemplate jdbcTemplate) {
@@ -34,20 +42,19 @@ public class LabelRepository {
 			.addValue("textColor", label.getTextColor(), Types.VARCHAR)
 			.addValue("backgroundColor", label.getBackgroundColor(), Types.VARCHAR);
 		jdbcTemplate.update(sql, parameters, keyHolder);
-		return (Long)Objects.requireNonNull(keyHolder.getKey());
+		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
 
 	public Long update(Long id, Label label) {
 		String sql = "UPDATE label SET title = :title, description = :description, text_color = :textColor, background_color=:backgroundColor WHERE id = :labelId";
-		KeyHolder keyHolder = new GeneratedKeyHolder();
 		SqlParameterSource parameters = new MapSqlParameterSource()
 			.addValue("labelId", id)
 			.addValue("title", label.getTitle(), Types.VARCHAR)
 			.addValue("description", label.getDescription(), Types.VARCHAR)
 			.addValue("textColor", label.getTextColor(), Types.VARCHAR)
 			.addValue("backgroundColor", label.getBackgroundColor(), Types.VARCHAR);
-		jdbcTemplate.update(sql, parameters, keyHolder);
-		return (Long)Objects.requireNonNull(keyHolder.getKey());
+		jdbcTemplate.update(sql, parameters);
+		return id;
 	}
 
 	public Long getLabelCount() {
@@ -89,13 +96,4 @@ public class LabelRepository {
 		String sql = "DELETE FROM label WHERE id = :id";
 		return jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
 	}
-
-	private static final RowMapper<Label> LABEL_ROW_MAPPER = (rs, rowNum) ->
-		Label.builder()
-			.id(rs.getLong("id"))
-			.title(rs.getString("title"))
-			.description(rs.getString("description"))
-			.textColor(rs.getString("text_color"))
-			.backgroundColor(rs.getString("background_color"))
-			.build();
 }

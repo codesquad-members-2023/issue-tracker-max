@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LabelModifyRequest {
 	@NotBlank(message = "이름을 입력해주세요.")
-	private String name;
+	private String title;
 	private String description;
 	@NotBlank(message = "텍스트 색상을 선택해주세요.")
 	private String textColor;
@@ -18,8 +18,8 @@ public class LabelModifyRequest {
 	private String backgroundColor;
 
 	@Builder
-	public LabelModifyRequest(String name, String description, String textColor, String backgroundColor) {
-		this.name = name;
+	public LabelModifyRequest(String title, String description, String textColor, String backgroundColor) {
+		this.title = title;
 		this.description = description;
 		this.textColor = textColor;
 		this.backgroundColor = backgroundColor;

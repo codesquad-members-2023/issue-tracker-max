@@ -1,10 +1,13 @@
 package com.issuetrackermax.service.member;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.issuetrackermax.controller.auth.dto.response.MemberProfileResponse;
 import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
+import com.issuetrackermax.controller.member.dto.response.MemberContentResponse;
 import com.issuetrackermax.domain.member.MemberRepository;
 import com.issuetrackermax.domain.member.MemberValidator;
 import com.issuetrackermax.domain.member.entity.Member;
@@ -19,6 +22,11 @@ public class MemberService {
 
 	public void checkLoginIdDuplication(String loginId) {
 		memberValidator.existLoginId(loginId);
+	}
+
+	@Transactional(readOnly = true)
+	public List<MemberContentResponse> getMemberList() {
+		return MemberContentResponse.from(memberRepository.findAll());
 	}
 
 	@Transactional

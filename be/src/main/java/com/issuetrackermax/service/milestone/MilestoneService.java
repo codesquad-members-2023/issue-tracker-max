@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.issuetrackermax.controller.filter.dto.response.MilestoneResponse;
 import com.issuetrackermax.controller.milestone.dto.request.MilestoneModifyRequest;
 import com.issuetrackermax.controller.milestone.dto.request.MilestonePostRequest;
 import com.issuetrackermax.controller.milestone.dto.response.MilestoneDetailResponse;
@@ -70,6 +71,12 @@ public class MilestoneService {
 	public Boolean existById(Long id) {
 		milestoneValidator.existById(id);
 		return milestoneRepository.existById(id);
+	}
+
+	@Transactional(readOnly = true)
+	public List<MilestoneResponse> findMilestoneList() {
+		return milestoneRepository.findAll().stream().map(MilestoneResponse::from).collect(
+			Collectors.toList());
 	}
 
 	private List<MilestoneDetailResponse> getMilestoneDetailResponses(List<Milestone> openMilestone) {

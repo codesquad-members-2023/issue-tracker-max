@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.issuetrackermax.controller.ApiResponse;
+import com.issuetrackermax.controller.filter.dto.response.MilestoneResponse;
 import com.issuetrackermax.controller.milestone.dto.request.MilestoneModifyRequest;
 import com.issuetrackermax.controller.milestone.dto.request.MilestonePostRequest;
 import com.issuetrackermax.controller.milestone.dto.response.MilestoneDetailResponse;
@@ -94,5 +95,10 @@ public class MilestoneController {
 		milestoneService.updateStatus(id);
 		return ApiResponse.success();
 
+	}
+
+	@GetMapping("/show-content")
+	public ApiResponse<List<MilestoneResponse>> showMilestoneList() {
+		return ApiResponse.success(milestoneService.findMilestoneList());
 	}
 }
