@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { getAccessToken } from "../../utils/localStorage";
@@ -91,27 +91,26 @@ export function Main() {
 
   const queryString = window.location.search;
 
+  const fetchData = useCallback(async () => {
+    const res = await fetch(`/api/issues${queryString}`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    });
+
+    const { code, data } = await res.json();
+
+    if (code === 200) {
+      setIssueData(data);
+      setFilterString(data.input);
+    }
+  }, [queryString]);
+
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch(`/api/issues${queryString}`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      });
-      const { code, data } = await res.json();
-
-      if (code === 200) {
-        setIssueData(data);
-        setFilterString(data.input);
-
-        return;
-      }
-    };
-
     fetchData();
-  }, [queryString, navigate]);
+  }, [queryString, navigate, fetchData]);
 
   const convertToQueryString = (filterCondition: string) => {
     return filterCondition
@@ -196,6 +195,7 @@ export function Main() {
           <MainTable
             issueData={issueData}
             setMultiFilterString={setMultiFilterString}
+            fetchData={fetchData}
             filterString={filterString!}
           />
         </>
