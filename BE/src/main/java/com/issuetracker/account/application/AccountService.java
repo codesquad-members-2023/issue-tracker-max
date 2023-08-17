@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.issuetracker.account.application.dto.AccountInformation;
 import com.issuetracker.account.application.dto.AccountInputData;
@@ -20,6 +21,7 @@ import com.issuetracker.account.infrastructure.JwtTokenGenerator;
 import com.issuetracker.account.infrastructure.MemoryJwtRepository;
 import com.issuetracker.common.config.exception.CustomHttpException;
 import com.issuetracker.common.config.exception.ErrorType;
+import com.issuetracker.file.application.FileService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +33,7 @@ public class AccountService {
 	private final AccountRepository accountRepository;
 	private final MemoryJwtRepository memoryJwtRepository;
 	private final JwtTokenGenerator jwtTokenGenerator;
+	private final FileService fileService;
 
 	@Transactional
 	public JwtTokenInformation proceedToOauthLogin(OauthAccountInputData oauthAccountInputData) {
@@ -124,6 +127,14 @@ public class AccountService {
 	public Long signUp(SignUpInputData signUpInputData) {
 		if (accountRepository.existByEmail(signUpInputData.getEmail())) {
 			throw new CustomHttpException(ErrorType.ACCOUNT_EMAIL_DUPLICATION);
+		}
+		if (accountRepository.existByNickname(signUpInputData.getNickname())) {
+			throw new CustomHttpException(ErrorType.ACCOUNT_NICKNAME_DUPLICATION);
+		}
+		MultipartFile multipartFile = signUpInputData.getMultipartFile();
+		if (multipartFile != null && multipartFile.getSize() != 0) {
+			String profileUrl = fileService.upload(multipartFile).getUrl();
+			signUpInputData.setProfileImageUrl(profileUrl);
 		}
 		return accountRepository.save(signUpInputData.toAccount());
 	}

@@ -4,6 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.issuetracker.account.application.dto.SignUpInputData;
 
@@ -29,13 +30,14 @@ public class SignupRequest {
 	private String profileImageUrl;
 	private Long oauthId;
 
-	public SignUpInputData toSignUpInputData() {
+	public SignUpInputData toSignUpInputData(MultipartFile multipartFile) {
 		return new SignUpInputData(
 			email,
 			password,
 			nickname,
 			profileImageUrl,
-			oauthId
+			oauthId,
+			multipartFile
 		);
 	}
 }

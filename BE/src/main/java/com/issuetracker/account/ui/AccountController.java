@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.issuetracker.account.application.AccountService;
 import com.issuetracker.account.ui.dto.JwtTokenResponse;
@@ -69,8 +71,10 @@ public class AccountController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<Void> signUp(@RequestBody @Valid SignupRequest signupRequest) {
-		accountService.signUp(signupRequest.toSignUpInputData());
+	public ResponseEntity<Void> signUp(@RequestPart SignupRequest request,
+		@RequestPart(required = false) MultipartFile file) {
+
+		accountService.signUp(request.toSignUpInputData(file));
 		return ResponseEntity.noContent().build();
 	}
 
