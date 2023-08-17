@@ -10,8 +10,8 @@ permissions:
 
 env:
   APPLICATION_PROD_DB_FILE_PATH: ./BE/src/main/resources/application-prodDB.yml
-  APPLICATION_TEST_DB_FILE_PATH: ./BE/src/main/resources/application-testDB.yml
   APPLICATION_AWS_CONFIG_PATH: ./BE/src/main/resources/application-awsConfig.yml
+  OAUTH_PROPERTIES_PATH: ./BE/src/main/resources/oauth.properties
   DEPLOYMENT_APPLICATION_NAME: issue
   DEPLOYMENT_GROUP_NAME: issue-group
   AWS_REGION: ap-northeast-2
@@ -44,6 +44,12 @@ jobs:
         run: touch ${{ env.APPLICATION_AWS_CONFIG_PATH }}
         shell: bash
       - run: echo "${{ secrets.APPLICATION_AWS_CONFIG }}" > ${{ env.APPLICATION_AWS_CONFIG_PATH }}
+        shell: bash
+
+      - name: Create oauth.properties
+        run: touch ${{ env.OAUTH_PROPERTIES_PATH }}
+        shell: bash
+      - run: echo "${{ secrets.OAUTH_PROPERTIES_CONFIG }}" > ${{ env.OAUTH_PROPERTIES_PATH }}
         shell: bash
 
       - name: Grant execute gradlew
