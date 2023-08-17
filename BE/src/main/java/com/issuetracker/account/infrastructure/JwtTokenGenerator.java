@@ -19,8 +19,8 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtTokenGenerator {
 
-	private static final long EXPIRED_TIME_OF_ACCESS_TOKEN_IN_MILLISECOND = 1000L * 60 * 60;
-	private static final long EXPIRED_TIME_OF_REFRESH_TOKEN_IN_MILLISECOND = 1000L * 60 * 60 * 24 * 60;
+	private static final long EXPIRED_TIME_OF_ACCESS_TOKEN_IN_MILLISECOND = 1000L * 60 * 60; // 1시간
+	private static final long EXPIRED_TIME_OF_REFRESH_TOKEN_IN_MILLISECOND = 1000L * 60 * 60 * 24 * 60; // 60일
 
 	private final Key key;
 
