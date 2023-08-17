@@ -26,14 +26,19 @@ public class LabelUpdateRequest {
 
 	@NotBlank(message = "컬러는 필수 값 입니다.")
 	@Pattern(regexp = "^#[0-9A-Fa-f]{6}$", message = "올바른 컬러 형식이 아닙니다.")
-	private String color;
+	private String backgroundColor;
+
+	@NotBlank(message = "컬러는 필수 값 입니다.")
+	@Pattern(regexp = "^#[0-9A-Fa-f]{6}$", message = "올바른 컬러 형식이 아닙니다.")
+	private String textColor;
 
 	public LabelUpdateInputData toLabelUpdateInputData(Long id) {
 		return new LabelUpdateInputData(
 			id,
 			title,
 			description,
-			color
+			backgroundColor,
+			textColor
 		);
 	}
 }

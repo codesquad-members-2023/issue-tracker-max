@@ -27,7 +27,8 @@ public class AssignedLabelCandidatesInformation {
 		return new LabelInformation(
 			label.getId(),
 			label.getTitle(),
-			label.getColor(),
+			label.getBackgroundColor(),
+			label.getTextColor(),
 			label.getDescription()
 		);
 	}

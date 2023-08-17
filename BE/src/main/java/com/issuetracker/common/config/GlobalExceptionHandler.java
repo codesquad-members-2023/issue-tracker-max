@@ -1,7 +1,15 @@
 package com.issuetracker.common.config;
 
+import static com.issuetracker.common.config.exception.ErrorType.EXPIRED_TOKEN;
+import static com.issuetracker.common.config.exception.ErrorType.FILE_UPLOAD_MAX_SIZE;
+import static com.issuetracker.common.config.exception.ErrorType.HTTP_MESSAGE_NOT_READABLE;
+import static com.issuetracker.common.config.exception.ErrorType.NO_HANDLER_FOUND;
+import static com.issuetracker.common.config.exception.ErrorType.SERVER_ERROR;
+
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -20,56 +28,58 @@ import io.jsonwebtoken.ExpiredJwtException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorResponse> methodValidHandler(MethodArgumentNotValidException e) {
+		LOGGER.error("MethodArgumentNotValidException: ", e);
 		String messages = e.getBindingResult()
 			.getFieldErrors()
 			.stream()
 			.map(FieldError::getDefaultMessage)
 			.collect(Collectors.joining(", ", "[", "]"));
-		return ResponseEntity.badRequest().body(new ErrorResponse(HttpStatus.BAD_REQUEST, messages));
+		return ResponseEntity.badRequest().body(new ErrorResponse(messages));
 	}
 
 	@ExceptionHandler(CustomHttpException.class)
 	public ResponseEntity<ErrorResponse> customHandler(CustomHttpException e) {
+		LOGGER.error("CustomHttpException: ", e);
 		return ResponseEntity.status(e.getHttpStatus())
-			.body(new ErrorResponse(e.getHttpStatus(), e.getMessage()));
+			.body(new ErrorResponse(e.getErrorType()));
 	}
 
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public ResponseEntity<ErrorResponse> maxUploadSizeHandler(MaxUploadSizeExceededException e) {
-		ErrorType errorType = ErrorType.FILE_UPLOAD_MAX_SIZE;
-		return ResponseEntity.status(errorType.getStatus())
-			.body(new ErrorResponse(errorType.getStatus(), errorType.getMessage()));
+		LOGGER.error("MaxUploadSizeExceededException: ", e);
+		return ResponseEntity.status(FILE_UPLOAD_MAX_SIZE.getStatus())
+			.body(new ErrorResponse(FILE_UPLOAD_MAX_SIZE));
 	}
 
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public ResponseEntity<ErrorResponse> handleNotFoundException(NoHandlerFoundException e) {
-		e.printStackTrace();
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-			.body(new ErrorResponse(HttpStatus.NOT_FOUND, "해당 API 경로로는 요청할 수 없습니다."));
+		LOGGER.error("NoHandlerFoundException: ", e);
+		return ResponseEntity.status(NO_HANDLER_FOUND.getStatus())
+			.body(new ErrorResponse(NO_HANDLER_FOUND));
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-		return ResponseEntity.badRequest().body(new ErrorResponse(
-			HttpStatus.BAD_REQUEST,
-			"JSON 필드 값은 String, Number, Array, Object 객체 또는 'null', 'true', 'false'만 입력 가능합니다.")
-		);
+		LOGGER.error("HttpMessageNotReadableException: ", e);
+		return ResponseEntity.badRequest()
+			.body(new ErrorResponse(HTTP_MESSAGE_NOT_READABLE));
 	}
 
 	@ExceptionHandler(ExpiredJwtException.class)
 	public ResponseEntity<ErrorResponse> expiredJwtException(ExpiredJwtException e) {
-		return new ResponseEntity<ErrorResponse>(
-			new ErrorResponse(HttpStatus.UNAUTHORIZED, "기한이 만료된 토큰입니다."),
-			HttpStatus.UNAUTHORIZED
-		);
+		LOGGER.error("ExpiredJwtException: ", e);
+		return ResponseEntity.status(EXPIRED_TOKEN.getStatus())
+			.body(new ErrorResponse(EXPIRED_TOKEN));
 	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse> exceptionHandler(Exception e) {
-		e.printStackTrace();
+		LOGGER.error("Exception: ", e);
 		return ResponseEntity.internalServerError()
-			.body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다"));
+			.body(new ErrorResponse(SERVER_ERROR));
 	}
 }

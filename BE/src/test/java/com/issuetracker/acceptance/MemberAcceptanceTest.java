@@ -25,6 +25,7 @@ import com.issuetracker.file.application.FileService;
 import com.issuetracker.file.application.dto.FileMetadata;
 import com.issuetracker.member.ui.dto.MemberResponse;
 import com.issuetracker.util.AcceptanceTest;
+import com.issuetracker.util.fixture.MemberFixture;
 
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
@@ -86,7 +87,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
-		회원_정보를_조회하여_수정된_회원_정보_검증(MEMBER1.getId(), nickname, multiPartSpecification, MEMBER1.getProFileImageUrl());
+		회원_정보를_조회하여_수정된_회원_정보_검증(MEMBER1, nickname, multiPartSpecification);
 	}
 
 	/**
@@ -123,24 +124,45 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 				"test",
 				"password2",
 				null
+			),
+			Arguments.of(
+				null,
+				"password2",
+				null
+			),
+			Arguments.of(
+				"test",
+				null,
+				null
+			),
+			Arguments.of(
+				null,
+				null,
+				null
 			)
 		);
 	}
 
-	private void 회원_정보를_조회하여_수정된_회원_정보_검증(Long id, String nickname, MultiPartSpecification multiPartSpecification,
-		String profileImageUrl) {
-		MemberResponse memberResponse = 회원_정보_조회_요청(id).as(MemberResponse.class);
+	private void 회원_정보를_조회하여_수정된_회원_정보_검증(MemberFixture memberFixture, String nickname, MultiPartSpecification multiPartSpecification) {
+		MemberResponse memberResponse = 회원_정보_조회_요청(memberFixture.getId()).as(MemberResponse.class);
 
 		Assertions.assertAll(
-			() -> assertThat(memberResponse.getId()).isEqualTo(id),
-			() -> assertThat(memberResponse.getNickname()).isEqualTo(nickname),
+			() -> assertThat(memberResponse.getId()).isEqualTo(memberFixture.getId()),
 			() -> {
-				if (Objects.isNull(multiPartSpecification)) {
-					assertThat(memberResponse.getProfileImageUrl()).isEqualTo(profileImageUrl);
+				if (Objects.isNull(nickname)) {
+					assertThat(memberResponse.getNickname()).isEqualTo(memberFixture.getNickname());
 					return;
 				}
 
-				assertThat(memberResponse.getProfileImageUrl()).isNotEqualTo(profileImageUrl);
+				assertThat(memberResponse.getNickname()).isEqualTo(nickname);
+			},
+			() -> {
+				if (Objects.isNull(multiPartSpecification)) {
+					assertThat(memberResponse.getProfileImageUrl()).isEqualTo(memberFixture.getProFileImageUrl());
+					return;
+				}
+
+				assertThat(memberResponse.getProfileImageUrl()).isNotEqualTo(memberFixture.getProFileImageUrl());
 			}
 		);
 	}

@@ -25,7 +25,8 @@
         <collection property="labels" ofType="Label">
             <id property="id" column="label_id" />
             <result property="title" column="label_title" />
-            <result property="color" column="label_color" />
+            <result property="backgroundColor" column="label_background_color" />
+            <result property="textColor" column="label_text_color" />
             <result property="description" column="label_description" />
         </collection>
 
@@ -79,7 +80,8 @@
         <collection property="labels" ofType="Label">
             <id property="id" column="label_id" />
             <result property="title" column="label_title" />
-            <result property="color" column="label_color" />
+            <result property="backgroundColor" column="label_background_color" />
+            <result property="textColor" column="label_text_color" />
             <result property="description" column="label_description" />
         </collection>
     </resultMap>
@@ -97,7 +99,8 @@
                 milestone.title as milestone_title,
                 label.id as label_id,
                 label.title as label_title,
-                label.color as label_color,
+                label.background_color as label_background_color,
+                label.text_color as label_text_color,
                 label.description as label_description,
                 member.id as assignees_id,
                 member.nickname as assignees_nickname,
@@ -194,7 +197,8 @@
                         milestone.progress as milestone_progress,
                         label.id as label_id,
                         label.title as label_title,
-                        label.color as label_color,
+                        label.background_color as label_background_color,
+                        label.text_color as label_text_color,
                         label.description as label_description,
                         member.id as assignees_id,
                         member.nickname as assignees_nickname,

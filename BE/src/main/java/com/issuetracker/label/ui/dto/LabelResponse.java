@@ -17,14 +17,16 @@ public class LabelResponse {
 
 	private Long id;
 	private String title;
-	private String color;
+	private String backgroundColor;
+	private String textColor;
 	private String description;
 
 	public static LabelResponse from(LabelInformation labelInformation) {
 		return new LabelResponse(
 			labelInformation.getId(),
 			labelInformation.getTitle(),
-			labelInformation.getColor(),
+			labelInformation.getBackgroundColor(),
+			labelInformation.getTextColor(),
 			labelInformation.getDescription()
 		);
 	}

@@ -1,9 +1,7 @@
 package com.issuetracker.acceptance;
 
 import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
-import static com.issuetracker.util.fixture.MilestoneFixture.MILESTON1;
 import static com.issuetracker.util.steps.LabelSteps.*;
-import static com.issuetracker.util.steps.MilestoneSteps.마일스톤_생성_요청;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +15,6 @@ import com.issuetracker.label.ui.dto.LabelCreateRequest;
 import com.issuetracker.label.ui.dto.LabelResponse;
 import com.issuetracker.label.ui.dto.LabelUpdateRequest;
 import com.issuetracker.label.ui.dto.LabelsResponse;
-import com.issuetracker.milestone.ui.dto.MilestoneCreateRequest;
 import com.issuetracker.util.AcceptanceTest;
 
 import io.restassured.response.ExtractableResponse;
@@ -36,6 +33,7 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelCreateRequest labelCreateRequest = new LabelCreateRequest(
 			"레이블 제목",
 			"레이블 설명",
+			"#ffffff",
 			"#ffffff"
 		);
 
@@ -58,6 +56,7 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelCreateRequest labelCreateRequest = new LabelCreateRequest(
 			"",
 			"레이블 설명",
+			"#ffffff",
 			"#ffffff"
 		);
 
@@ -79,6 +78,7 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelCreateRequest labelCreateRequest = new LabelCreateRequest(
 			"레이블 제목",
 			null,
+			"#ffffff",
 			"#ffffff"
 		);
 
@@ -101,7 +101,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelCreateRequest labelCreateRequest = new LabelCreateRequest(
 			"레이블 제목",
 			"레이블 설명",
-			"#HEX코드가아니다"
+			"#HEX코드가아니다",
+			"#ffffff"
 		);
 
 		// when
@@ -121,6 +122,7 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelCreateRequest labelCreateRequest = new LabelCreateRequest(
 			LABEL1.getTitle(),
 			"레이블 설명",
+			"#ffffff",
 			"#ffffff"
 		);
 
@@ -143,7 +145,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelUpdateRequest labelUpdateRequest = new LabelUpdateRequest(
 			"수정된 레이블 제목",
 			"수정된 레이블 설명",
-			"#000000"
+			"#000000",
+			"#ffffff"
 		);
 
 		// when
@@ -166,7 +169,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelUpdateRequest labelUpdateRequest = new LabelUpdateRequest(
 			"",
 			"수정된 레이블 설명",
-			"#000000"
+			"#000000",
+			"#ffffff"
 		);
 
 		// when
@@ -188,7 +192,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelUpdateRequest labelUpdateRequest = new LabelUpdateRequest(
 			"수정된 레이블 제목",
 			null,
-			"#000000"
+			"#000000",
+			"#ffffff"
 		);
 
 		// when
@@ -211,7 +216,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelUpdateRequest labelUpdateRequest = new LabelUpdateRequest(
 			"수정된 레이블 제목",
 			"수정된 레이블 설명",
-			"#HEX코드가아니다"
+			"#HEX코드가아니다",
+			"#ffffff"
 		);
 
 		// when
@@ -265,7 +271,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		SoftAssertions softAssertions = new SoftAssertions();
 		softAssertions.assertThat(lastLabelResponse.getId()).isEqualTo(response.jsonPath().getLong("id"));
 		softAssertions.assertThat(lastLabelResponse.getTitle()).isEqualTo(labelCreateRequest.getTitle());
-		softAssertions.assertThat(lastLabelResponse.getColor()).isEqualTo(labelCreateRequest.getColor());
+		softAssertions.assertThat(lastLabelResponse.getTextColor()).isEqualTo(labelCreateRequest.getTextColor());
+		softAssertions.assertThat(lastLabelResponse.getBackgroundColor()).isEqualTo(labelCreateRequest.getBackgroundColor());
 		softAssertions.assertAll();
 	}
 
@@ -281,7 +288,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		SoftAssertions softAssertions = new SoftAssertions();
 		softAssertions.assertThat(lastLabelResponse.getId()).isEqualTo(labelId);
 		softAssertions.assertThat(lastLabelResponse.getTitle()).isEqualTo(labelUpdateRequest.getTitle());
-		softAssertions.assertThat(lastLabelResponse.getColor()).isEqualTo(labelUpdateRequest.getColor());
+		softAssertions.assertThat(lastLabelResponse.getTextColor()).isEqualTo(labelUpdateRequest.getTextColor());
+		softAssertions.assertThat(lastLabelResponse.getBackgroundColor()).isEqualTo(labelUpdateRequest.getBackgroundColor());
 		softAssertions.assertAll();
 	}
 

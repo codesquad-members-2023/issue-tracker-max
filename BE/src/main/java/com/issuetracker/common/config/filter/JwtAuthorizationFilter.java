@@ -1,5 +1,7 @@
 package com.issuetracker.common.config.filter;
 
+import static com.issuetracker.common.config.exception.ErrorType.EXPIRED_TOKEN;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -21,6 +23,7 @@ import org.springframework.util.PatternMatchUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetracker.account.infrastructure.JwtTokenGenerator;
 import com.issuetracker.common.config.ErrorResponse;
+import com.issuetracker.common.config.exception.ErrorType;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -121,8 +124,8 @@ public class JwtAuthorizationFilter implements Filter {
 		response.getWriter().write(
 			objectMapper.writeValueAsString(
 				new ResponseEntity<ErrorResponse>(
-					new ErrorResponse(HttpStatus.UNAUTHORIZED, "기한이 만료된 토큰입니다."),
-					HttpStatus.UNAUTHORIZED
+					new ErrorResponse(EXPIRED_TOKEN),
+					EXPIRED_TOKEN.getStatus()
 				)
 			)
 		);
@@ -130,7 +133,7 @@ public class JwtAuthorizationFilter implements Filter {
 
 	private ResponseEntity<ErrorResponse> generateErrorApiResponse(RuntimeException e) {
 		return ResponseEntity.badRequest().body(
-			new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage())
+			new ErrorResponse(e.getMessage())
 		);
 	}
 

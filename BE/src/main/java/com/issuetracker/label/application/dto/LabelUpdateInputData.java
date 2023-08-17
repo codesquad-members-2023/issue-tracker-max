@@ -10,13 +10,15 @@ public class LabelUpdateInputData {
 	private Long id;
 	private String title;
 	private String description;
-	private String color;
+	private String backgroundColor;
+	private String textColor;
 
-	public LabelUpdateInputData(Long id, String title, String description, String color) {
+	public LabelUpdateInputData(Long id, String title, String description, String backgroundColor, String textColor) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
-		this.color = color;
+		this.backgroundColor = backgroundColor;
+		this.textColor = textColor;
 	}
 
 	public Label toLabelForUpdate() {
@@ -24,7 +26,8 @@ public class LabelUpdateInputData {
 			.id(id)
 			.title(title)
 			.description(description)
-			.color(color)
+			.backgroundColor(backgroundColor)
+			.textColor(textColor)
 			.build();
 	}
 }

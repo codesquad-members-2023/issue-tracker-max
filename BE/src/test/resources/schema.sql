@@ -43,11 +43,12 @@ CREATE TABLE assigned_label (
 )ENGINE=memory;
 
 CREATE TABLE label (
-   id           bigint        NOT NULL AUTO_INCREMENT,
-   title        varchar(50)   NOT NULL,
-   description  varchar(100)  DEFAULT NULL,
-   color        varchar(7)    NOT NULL,
-   is_deleted     tinyint(1)  NOT NULL DEFAULT 0,
+   id               bigint        NOT NULL AUTO_INCREMENT,
+   title            varchar(50)   NOT NULL,
+   description      varchar(100)  DEFAULT NULL,
+   background_color varchar(7)    NOT NULL,
+   text_color       varchar(7)    NOT NULL,
+   is_deleted       tinyint(1)    NOT NULL DEFAULT 0,
    PRIMARY KEY (id)
 )ENGINE=memory;
 

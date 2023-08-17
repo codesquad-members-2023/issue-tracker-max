@@ -1,5 +1,9 @@
 package com.issuetracker.member.domain;
 
+import java.util.Objects;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,5 +30,19 @@ public class Member {
 
 	public boolean equalsId(Long id) {
 		return this.id.equals(id);
+	}
+
+	public void update(String nickname, String password, String profileImageUrl) {
+		if (Objects.nonNull(nickname)) {
+			this.nickname = nickname;
+		}
+
+		if (Objects.nonNull(password)) {
+			this.password = password;
+		}
+
+		if (Objects.nonNull(profileImageUrl)) {
+			this.profileImageUrl = profileImageUrl;
+		}
 	}
 }

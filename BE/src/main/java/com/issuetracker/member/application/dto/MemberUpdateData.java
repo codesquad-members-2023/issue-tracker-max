@@ -15,13 +15,4 @@ public class MemberUpdateData {
 	private String nickname;
 	private String password;
 	private MultipartFile multipartFile;
-
-	public Member toMember(String profileUrl) {
-		return Member.builder()
-			.id(id)
-			.nickname(nickname)
-			.password(password)
-			.profileImageUrl(profileUrl)
-			.build();
-	}
 }

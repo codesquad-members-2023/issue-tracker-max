@@ -44,6 +44,7 @@ import com.issuetracker.issue.ui.dto.comment.IssueCommentCreateRequest;
 import com.issuetracker.issue.ui.dto.comment.IssueCommentCreateResponse;
 import com.issuetracker.issue.ui.dto.comment.IssueCommentUpdateRequest;
 import com.issuetracker.issue.ui.dto.milestone.MilestoneCandidatesResponse;
+import com.issuetracker.label.application.LabelService;
 import com.issuetracker.member.application.MemberService;
 import com.issuetracker.milestone.application.MilestoneService;
 import com.issuetracker.milestone.ui.dto.MilestonesSearchResponse;
@@ -61,6 +62,7 @@ public class IssueController {
 	private final AssigneeService assigneeService;
 	private final AssignedLabelService assignedLabelService;
 	private final IssueCommentService issueCommentService;
+	private final LabelService labelService;
 
 	@GetMapping
 	public ResponseEntity<IssuesSearchResponse> showIssues(IssueSearchRequest issueSearchRequest,
@@ -89,19 +91,19 @@ public class IssueController {
 
 	@GetMapping("/authors")
 	public ResponseEntity<AuthorResponses> showAuthors() {
-		return ResponseEntity.ok().body(AuthorResponses.from(memberService.searchAuthors()));
+		return ResponseEntity.ok().body(AuthorResponses.from(memberService.searchMember()));
 	}
 
 	@GetMapping("/assignees")
 	public ResponseEntity<AssigneesResponses> showAssignees() {
-		AssigneesResponses assigneesResponses = AssigneesResponses.from(assigneeService.searchAssignee());
+		AssigneesResponses assigneesResponses = AssigneesResponses.from(memberService.searchMember());
 		return ResponseEntity.ok().body(assigneesResponses);
 	}
 
 	@GetMapping("/labels")
 	public ResponseEntity<AssignedLabelResponses> showLabels() {
 		AssignedLabelResponses assignedLabelResponses = AssignedLabelResponses.from(
-			assignedLabelService.searchAssignedLabel());
+			labelService.searchOrderByTitle());
 		return ResponseEntity.ok().body(assignedLabelResponses);
 	}
 

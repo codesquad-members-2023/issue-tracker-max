@@ -1,21 +1,17 @@
 package com.issuetracker.common.config;
 
-import org.springframework.http.HttpStatus;
+import com.issuetracker.common.config.exception.ErrorType;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 public class ErrorResponse {
 
-	private HttpStatus status;
 	private String message;
 
-	public int getStatusCode() {
-		return status.value();
+	public ErrorResponse(String message) {
+		this.message = message;
 	}
 
-	public String getStatus() {
-		return status.getReasonPhrase();
+	public ErrorResponse(ErrorType errorType) {
+		this.message = errorType.getMessage();
 	}
 
 	public String getMessage() {

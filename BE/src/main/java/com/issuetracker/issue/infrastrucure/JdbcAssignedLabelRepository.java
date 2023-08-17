@@ -21,9 +21,9 @@ public class JdbcAssignedLabelRepository implements AssignedLabelRepository {
 
 	private static final String SAVE_SQL = "INSERT INTO assigned_label(issue_id, label_id) VALUES(:issueId, :labelId)";
 	private static final String DELETE_SQL = "DELETE FROM assigned_label WHERE id = :id";
-	private static final String FIND_ALL_SEARCH_SQL = "SELECT DISTINCT label.id, label.title, label.color, label.description FROM label INNER JOIN assigned_label ON label.id = assigned_label.label_id WHERE label.is_deleted = 0 ORDER BY label.id";
+	private static final String FIND_ALL_SEARCH_SQL = "SELECT DISTINCT label.id, label.title, label.background_color, label.text_color, label.description FROM label INNER JOIN assigned_label ON label.id = assigned_label.label_id WHERE label.is_deleted = 0 ORDER BY label.id";
 	private static final String FIND_ALL_ASSIGNED_TO_ISSUE
-		= "SELECT label.id, label.title, label.color, label.description "
+		= "SELECT label.id, label.title, label.background_color, label.text_color, label.description "
 		+ "FROM assigned_label "
 		+ "LEFT JOIN label "
 		+ "ON assigned_label.label_id = label.id "
@@ -31,7 +31,7 @@ public class JdbcAssignedLabelRepository implements AssignedLabelRepository {
 		+ "AND label.is_deleted = false "
 		+ "ORDER BY label.title ";
 	private static final String FIND_ALL_UNASSIGNED_TO_ISSUE
-		= "SELECT label.id, label.title, label.color, label.description "
+		= "SELECT label.id, label.title, label.background_color, label.text_color, label.description "
 		+ "FROM label "
 		+ "WHERE label.is_deleted = false "
 		+ "AND label.id NOT IN( "
@@ -86,7 +86,8 @@ public class JdbcAssignedLabelRepository implements AssignedLabelRepository {
 		Label.builder()
 			.id(rs.getLong("id"))
 			.title(rs.getString("title"))
-			.color(rs.getString("color"))
+			.backgroundColor(rs.getString("background_color"))
+			.textColor(rs.getString("text_color"))
 			.description(rs.getString("description"))
 			.build();
 }
