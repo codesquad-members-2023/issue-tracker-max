@@ -2,7 +2,6 @@ package codesquard.app.issue.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,6 @@ import codesquard.app.issue.dto.response.IssueMilestoneResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueUserResponse;
 import codesquard.app.issue.dto.response.userReactionResponse;
-import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.issue.mapper.IssueMapper;
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
 import codesquard.app.issue.mapper.response.IssueCount;
@@ -114,11 +112,13 @@ public class IssueQueryService {
 
 	// Issue Filtering
 	public IssueFilterResponse findFilterIssues(String loginId, IssueFilterRequest request) {
+		final String input = generateInput(request);
+		final List<SingleFilter> singleFilters = generateSingleFilters(loginId, request);
 		IssueCountResponse issueCountResponse = new IssueCountResponse(countIssues(loginId, request));
 
-		return new IssueFilterResponse(generateInput(request), issueCountResponse.getOpenedIssueCount(),
+		return new IssueFilterResponse(input, issueCountResponse.getOpenedIssueCount(),
 			issueCountResponse.getClosedIssueCount(), labelRepository.countAll(), milestoneRepository.countAll(),
-			findIssues(loginId, request), generateSingleFilters(loginId, request),
+			findIssues(loginId, request), singleFilters,
 			checkMultiFilters(multiFiltersCheck, request));
 	}
 
@@ -169,19 +169,19 @@ public class IssueQueryService {
 			new SingleFilter(OPENED_ID, SingleFilter.IS.OPENED.getName(), SingleFilter.IS.OPENED.getResponse(),
 				selectedOpened));
 
-		boolean selectedAuthor = generated.equals("author:" + loginId);
+		boolean selectedAuthor = generated.equals(SingleFilter.IS.OPENED.getResponse() + " author:@me");
 		singleFilters.add(
 			new SingleFilter(AUTHOR_ID, SingleFilter.ME.AUTHOR.getName(),
 				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.AUTHOR.getResponse(),
 				selectedAuthor));
 
-		boolean selectedAssignee = generated.equals("assignee:" + loginId);
+		boolean selectedAssignee = generated.equals(SingleFilter.IS.OPENED.getResponse() + " assignee::@me");
 		singleFilters.add(
 			new SingleFilter(ASSIGNEE_ID, SingleFilter.ME.ASSIGNEE.getName(),
 				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.ASSIGNEE.getResponse(),
 				selectedAssignee));
 
-		boolean selectedMentions = generated.equals("mentions:" + loginId);
+		boolean selectedMentions = generated.equals(SingleFilter.IS.OPENED.getResponse() + " mentions:@me");
 		singleFilters.add(
 			new SingleFilter(MENTIONS_ID, SingleFilter.ME.MENTIONS.getName(),
 				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.MENTIONS.getResponse(),
