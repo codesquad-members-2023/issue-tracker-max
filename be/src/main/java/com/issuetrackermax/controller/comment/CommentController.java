@@ -32,6 +32,7 @@ public class CommentController {
 	public ApiResponse<Void> modifyComment(@PathVariable Long id,
 		@RequestBody
 		@Valid CommentModifyRequest commentModifyRequest,
+		@PathVariable Long issueId,
 		HttpServletRequest request) {
 		Integer memberId = (Integer)request.getAttribute(MEMBER_ID);
 		commentService.modifyComment(commentModifyRequest, id, memberId.longValue());
@@ -48,8 +49,9 @@ public class CommentController {
 		return ApiResponse.success(commentResponse);
 	}
 
-	@DeleteMapping("(/{issueId}/comments/{id}")
-	public ApiResponse<Void> deleteComment(@PathVariable Long id, HttpServletRequest request) {
+	@DeleteMapping("/{issueId}/comments/{id}")
+	public ApiResponse<Void> deleteComment(@PathVariable Long issueId, @PathVariable Long id,
+		HttpServletRequest request) {
 		Integer memberId = (Integer)request.getAttribute(MEMBER_ID);
 		commentService.delete(id, memberId.longValue());
 		return ApiResponse.success();

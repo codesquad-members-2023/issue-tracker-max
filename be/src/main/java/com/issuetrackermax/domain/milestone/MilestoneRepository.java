@@ -53,14 +53,13 @@ public class MilestoneRepository {
 
 	public Long update(Long id, Milestone milestone) {
 		String sql = "UPDATE milestone SET title = :title, description = :description, duedate = :dueDate WHERE id = :milestoneId";
-		KeyHolder keyHolder = new GeneratedKeyHolder();
 		SqlParameterSource parameters = new MapSqlParameterSource()
 			.addValue("milestoneId", id)
 			.addValue("title", milestone.getTitle(), Types.VARCHAR)
 			.addValue("description", milestone.getDescription(), Types.VARCHAR)
 			.addValue("dueDate", milestone.getDuedate(), Types.DATE);
-		jdbcTemplate.update(sql, parameters, keyHolder, new String[] {"id"});
-		return keyHolder.getKey().longValue();
+		jdbcTemplate.update(sql, parameters);
+		return id;
 
 	}
 

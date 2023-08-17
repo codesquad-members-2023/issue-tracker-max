@@ -47,15 +47,14 @@ public class LabelRepository {
 
 	public Long update(Long id, Label label) {
 		String sql = "UPDATE label SET title = :title, description = :description, text_color = :textColor, background_color=:backgroundColor WHERE id = :labelId";
-		KeyHolder keyHolder = new GeneratedKeyHolder();
 		SqlParameterSource parameters = new MapSqlParameterSource()
 			.addValue("labelId", id)
 			.addValue("title", label.getTitle(), Types.VARCHAR)
 			.addValue("description", label.getDescription(), Types.VARCHAR)
 			.addValue("textColor", label.getTextColor(), Types.VARCHAR)
 			.addValue("backgroundColor", label.getBackgroundColor(), Types.VARCHAR);
-		jdbcTemplate.update(sql, parameters, keyHolder);
-		return Objects.requireNonNull(keyHolder.getKey()).longValue();
+		jdbcTemplate.update(sql, parameters);
+		return id;
 	}
 
 	public Long getLabelCount() {
