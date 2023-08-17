@@ -17,7 +17,9 @@ public class IssueCountResponse {
 	}
 
 	public int getOpenedIssueCount() {
-		if (issueCounts.get(0).isStatus(IssueStatus.OPENED.name())) {
+		if (issueCounts.isEmpty()) {
+			return 0;
+		} else if (issueCounts.get(0).isStatus(IssueStatus.OPENED.name())) {
 			return issueCounts.get(0).getCount();
 		} else if (issueCounts.size() < 2) {
 			return 0;
@@ -27,7 +29,9 @@ public class IssueCountResponse {
 	}
 
 	public int getClosedIssueCount() {
-		if (issueCounts.get(0).isStatus(IssueStatus.CLOSED.name())) {
+		if (issueCounts.isEmpty()) {
+			return 0;
+		} else if (issueCounts.get(0).isStatus(IssueStatus.CLOSED.name())) {
 			return issueCounts.get(0).getCount();
 		} else if (issueCounts.size() < 2) {
 			return 0;
