@@ -1,10 +1,10 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueCreateCondition;
+import java.util.List;
+import javax.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.List;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class IssueCreateRequest {
 
     private Long authorId;
+    @NotEmpty
     private String title;
     private String comment;
     private List<Long> assignees;

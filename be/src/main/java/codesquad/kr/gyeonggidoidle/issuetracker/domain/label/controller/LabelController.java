@@ -5,6 +5,7 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.controller.request.
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.controller.response.LabelDetailsResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.controller.response.LabelPageResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.LabelService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +28,7 @@ public class LabelController {
     }
 
     @PostMapping("/api/labels")
-    public ApiResponse create(@RequestBody LabelRequest request) {
+    public ApiResponse create(@RequestBody @Valid LabelRequest request) {
         labelService.create(LabelRequest.to(request));
         return ApiResponse.success(HttpStatus.OK);
     }
@@ -38,7 +39,7 @@ public class LabelController {
     }
 
     @PatchMapping("/api/labels/{labelId}")
-    public ApiResponse update(@PathVariable Long labelId, @RequestBody LabelRequest request) {
+    public ApiResponse update(@PathVariable Long labelId, @RequestBody @Valid LabelRequest request) {
         labelService.update(LabelRequest.to(labelId, request));
         return ApiResponse.success(HttpStatus.OK);
     }

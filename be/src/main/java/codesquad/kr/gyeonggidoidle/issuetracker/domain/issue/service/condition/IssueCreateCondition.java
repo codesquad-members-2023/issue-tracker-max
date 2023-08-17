@@ -46,4 +46,16 @@ public class IssueCreateCondition {
                 .file(condition.getFile())
                 .build();
     }
+
+    public boolean hasComment() {
+        return this.comment != null && this.file != null;
+    }
+
+    public boolean hasAssignees() {
+        return this.assignees != null && !this.assignees.isEmpty();
+    }
+
+    public boolean hasLabels() {
+        return this.labels != null && !this.labels.isEmpty();
+    }
 }

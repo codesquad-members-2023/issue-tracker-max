@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller.request;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.auth.controller.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

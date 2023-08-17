@@ -48,18 +48,19 @@ public class IssueService {
     public void createIssue(IssueCreateCondition condition) {
         Issue issue = IssueCreateCondition.toIssue(condition);
         Long createdId = issueRepository.saveIssue(issue);
-        Comment comment = IssueCreateCondition.toComment(createdId, condition);
-        Long fileId = null;
-        if (comment.isFileExist()) {
-            fileId = commentRepository.updateFile(comment.getFile());
+        Comment comment = null;
+
+        if (condition.hasComment()) {
+            comment = IssueCreateCondition.toComment(createdId, condition);
+            Long fileUrl = comment.isFileExist()? commentRepository.updateFile(comment.getFile()) : null;
+            if (comment.isContentsExist()) {
+                commentRepository.createComment(fileUrl, comment);
+            }
         }
-        if (comment.isContentsExist()) {
-            commentRepository.createComment(fileId, comment);
-        }
-        if (condition.getAssignees() != null) {
+        if (condition.hasAssignees()) {
             memberRepository.addIssueAssignees(createdId, condition.getAssignees());
         }
-        if (condition.getLabels() != null) {
+        if (condition.hasLabels()) {
             labelRepository.addIssueLabels(createdId, condition.getLabels());
         }
     }

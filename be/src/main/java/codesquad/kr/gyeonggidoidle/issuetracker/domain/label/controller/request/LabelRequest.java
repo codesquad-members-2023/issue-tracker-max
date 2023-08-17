@@ -2,6 +2,8 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.label.controller.request
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.condition.LabelCreateCondition;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.condition.LabelUpdateCondition;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +12,12 @@ import lombok.NoArgsConstructor;
 @Getter
 public class LabelRequest {
 
+    @NotEmpty
     private String name;
     private String description;
+    @NotBlank
     private String backgroundColor;
+    @NotBlank
     private String textColor;
 
     @Builder

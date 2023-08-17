@@ -9,7 +9,14 @@ spring:
       mode: always
       schema-locations: classpath*:schema.sql
     encoding: UTF-8
+  profiles:
+    include: oauth
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: codesquad.kr.gyeonggidoidle.issuetracker.domain
+
+jwt:
+  secret: Y29kZXNxdWFkLWlzc3VlLXRyYWNrZXItbWF4LTAxLWd5ZW9uZ2dpZG9pZGxl
+  access-expiration-milliseconds: 3600000 # 1시간
+  refresh-expiration-milliseconds: 5184000000 # 60일

@@ -1,7 +1,7 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt;
+package codesquad.kr.gyeonggidoidle.issuetracker.config.filter;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.ApiResponse;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.JwtProvider;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.auth.entity.JwtProvider;
 import codesquad.kr.gyeonggidoidle.issuetracker.exception.JwtExceptionType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -22,11 +22,12 @@ import org.springframework.util.PatternMatchUtils;
 
 public class JwtAuthorizationFilter implements Filter {
 
-    private final String[] whiteListUris = new String[]{"/api/login", "/api/signup", "/api/auth/reissue"};
-    private final JwtProvider jwtProvider = new JwtProvider();
+    private final String[] whiteListUris = new String[]{"/api/login", "/api/signup", "/api/auth/reissue", "/api/login/**"};
+    private final JwtProvider jwtProvider;
     private final ObjectMapper objectMapper;
 
-    public JwtAuthorizationFilter(ObjectMapper objectMapper) {
+    public JwtAuthorizationFilter(JwtProvider jwtProvider, ObjectMapper objectMapper) {
+        this.jwtProvider = jwtProvider;
         this.objectMapper = objectMapper;
     }
 
@@ -50,7 +51,7 @@ public class JwtAuthorizationFilter implements Filter {
         try {
             String token = getToken(httpServletRequest);
             Claims claims = jwtProvider.getClaims(token);
-            request.setAttribute("memberId", claims.get("memberId")); // TODO: email으로 수정 고려
+            request.setAttribute("memberId", claims.get("memberId"));
             chain.doFilter(request, response);
         } catch (RuntimeException e) {
             sendErrorApiResponse(response, e);

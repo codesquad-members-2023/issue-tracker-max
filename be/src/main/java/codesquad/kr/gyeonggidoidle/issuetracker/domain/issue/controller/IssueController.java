@@ -6,6 +6,7 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.ApiResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.SearchResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class IssueController {
     }
 
     @PostMapping
-    public ApiResponse createIssue(@RequestBody IssueCreateRequest request, HttpServletRequest httpServletRequest) {
+    public ApiResponse createIssue(@RequestBody @Valid IssueCreateRequest request, HttpServletRequest httpServletRequest) {
         issueService.createIssue(IssueCreateRequest.to(request,
                         Long.valueOf(String.valueOf(httpServletRequest.getAttribute("memberId")))
                 )
@@ -39,19 +40,19 @@ public class IssueController {
     }
 
     @PatchMapping
-    public ApiResponse updateIssuesStatus(@RequestBody IssueStatusPatchRequest request) {
+    public ApiResponse updateIssuesStatus(@RequestBody @Valid IssueStatusPatchRequest request) {
         issueService.updateIssuesStatus(IssueStatusPatchRequest.to(request));
         return ApiResponse.success(HttpStatus.OK);
     }
 
     @PutMapping("/{issueId}")
-    public ApiResponse updateIssue(@PathVariable Long issueId, @RequestBody IssueUpdateRequest request) {
+    public ApiResponse updateIssue(@PathVariable Long issueId, @RequestBody @Valid IssueUpdateRequest request) {
         issueService.updateIssue(IssueUpdateRequest.to(issueId, request));
         return ApiResponse.success(HttpStatus.OK);
     }
 
     @PatchMapping("/{issueId}")
-    public ApiResponse updateIssueStatus(@PathVariable Long issueId, @RequestBody IssueStatusPatchRequest request) {
+    public ApiResponse updateIssueStatus(@PathVariable Long issueId, @RequestBody @Valid IssueStatusPatchRequest request) {
         issueService.updateIssuesStatus(IssueStatusPatchRequest.to(issueId, request));
         return ApiResponse.success(HttpStatus.OK);
     }

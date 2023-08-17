@@ -13,7 +13,7 @@ CREATE TABLE member
     id       bigint AUTO_INCREMENT,
     email    varchar(255) NOT NULL UNIQUE,
     name     varchar(50)  NOT NULL,
-    password varchar(50)  NOT NULL,
+    password varchar(50)  ,
     profile  varchar(255) NOT NULL,
     PRIMARY KEY (id)
 );

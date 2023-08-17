@@ -1,6 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.exception;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.controller.response.JwtTokenType;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.auth.controller.response.JwtTokenType;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

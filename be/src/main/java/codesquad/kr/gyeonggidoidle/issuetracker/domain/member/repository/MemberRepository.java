@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -86,14 +88,16 @@ public class MemberRepository {
         }
     }
 
-    public void saveMember(Member member) {
+    public Long saveMember(Member member) {
         String sql = "INSERT INTO member(name, email, password, profile) VALUES(:name, :email, :password, :profile) ";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", member.getName())
                 .addValue("email", member.getEmail())
                 .addValue("password", member.getPassword())
                 .addValue("profile", member.getProfile());
-        template.update(sql, params);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        template.update(sql, params, keyHolder, new String[]{"id"});
+        return keyHolder.getKey().longValue();
     }
 
     private final RowMapper<MemberDetailsVO> memberDetailsVORowMapper() {

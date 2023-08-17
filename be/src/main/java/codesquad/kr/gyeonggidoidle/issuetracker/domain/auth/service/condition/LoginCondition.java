@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.service.condition;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.auth.service.condition;
 
 import lombok.Builder;
 import lombok.Getter;

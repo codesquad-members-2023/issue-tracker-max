@@ -1,17 +1,17 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.repository;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.auth.repository;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.Member;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
 @Repository
-public class JwtRepository {
+public class JwtTokenRepository {
 
     private final NamedParameterJdbcTemplate template;
 
@@ -21,13 +21,11 @@ public class JwtRepository {
                 + "JOIN refresh_token "
                 + "ON member.id = refresh_token.member_id "
                 + "WHERE refresh_token.refresh_token = :refreshToken";
-        try {
-            Member member = template.queryForObject(sql, Map.of("refreshToken", refreshToken),
-                    memberRowMapper());
-            return Optional.ofNullable(member);
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
+
+        return Optional.ofNullable(
+                DataAccessUtils.singleResult(
+                template.query(sql, Map.of("refreshToken", refreshToken), memberRowMapper())
+        ));
     }
 
     public void saveRefreshToken(String refreshToken, Long memberId) {

@@ -4,6 +4,7 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response
 import codesquad.kr.gyeonggidoidle.issuetracker.exception.CustomException;
 import codesquad.kr.gyeonggidoidle.issuetracker.exception.JwtExceptionType;
 import io.jsonwebtoken.JwtException;
+import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -33,6 +34,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse> handleException(MethodArgumentNotValidException e) {
+        return new ResponseEntity<>(ApiResponse.fail(HttpStatus.BAD_REQUEST, "올바른 입력 값이 아닙니다."),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse> handleException(ConstraintViolationException e) {
         return new ResponseEntity<>(ApiResponse.fail(HttpStatus.BAD_REQUEST, "올바른 입력 값이 아닙니다."),
                 HttpStatus.BAD_REQUEST);
     }

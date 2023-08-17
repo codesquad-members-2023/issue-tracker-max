@@ -20,15 +20,17 @@ public class CommentRepository {
         this.template = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public void createComment(Long fileId, Comment comment) {
+    public Long createComment(Long fileId, Comment comment) {
         String sql = "INERT INTO comment (issue_id, author_id, file_id, contents) " +
                 "VALUES (:issue_id, :author_id, :file_id, :contents)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("issue_id", comment.getIssueId())
                 .addValue("author_id", comment.getAuthorId())
                 .addValue("file_id", fileId)
                 .addValue("contents", comment.getContents());
-        template.update(sql, params);
+        template.update(sql, params, keyHolder, new String[]{"id"});
+        return keyHolder.getKey().longValue();
     }
 
     public Long updateFile(String url) {
