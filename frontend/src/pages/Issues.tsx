@@ -1,11 +1,10 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppContext } from '../main';
 import useAuth from '../hooks/useAuth';
 import Header from '../components/landmark/Header';
 import IssueTable from '../components/issues/IssueTable';
 import Main from '../components/landmark/Main';
-import { Link, useNavigate } from 'react-router-dom';
 import ContextLogo from '../types/ContextLogo';
 import FilterBar from '../components/common/FilterBar';
 import Toolbar from '../components/landmark/Toolbar';
