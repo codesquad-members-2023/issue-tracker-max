@@ -32,6 +32,7 @@ export function MilestoneTableElement({
       method: "POST",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
