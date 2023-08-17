@@ -82,6 +82,11 @@ const Div = styled.div`
   ol {
     list-style: disc;
     padding-left: 2em;
+
+  }
+  
+  .contains-task-list {
+    list-style: none;
   }
 
   div,

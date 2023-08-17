@@ -109,7 +109,10 @@ export function IssueDetail() {
     }
     if (result.code === 404) {
       navigatte("/404", { replace: true });
+      return;
     }
+
+    throw new Error(result.message);
   }, [issueId, navigatte]);
 
   useEffect(() => {

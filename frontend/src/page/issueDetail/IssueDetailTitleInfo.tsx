@@ -42,7 +42,7 @@ export function IssueDetailTitleInfo({
   };
 
   const onEditClick = async () => {
-    await fetch(`/api/issues/${id}/title`, {
+    const response = await fetch(`/api/issues/${id}/title`, {
       method: "PATCH",
       credentials: "include",
       headers: {
@@ -51,13 +51,19 @@ export function IssueDetailTitleInfo({
       },
       body: JSON.stringify({ title }),
     });
+    const { code, message } = await response.json();
 
-    setIsTitleEditing(false);
-    fetchIssue();
+    if (code === 200) {
+      setIsTitleEditing(false);
+      fetchIssue();
+      return;
+    }
+
+    throw new Error(message);
   };
 
   const onStatusChangeClick = async () => {
-    await fetch(`/api/issues/${id}/status`, {
+    const response = await fetch(`/api/issues/${id}/status`, {
       method: "PATCH",
       credentials: "include",
       headers: {
@@ -65,11 +71,22 @@ export function IssueDetailTitleInfo({
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
+        issues: [id],
         status: status === "OPENED" ? "CLOSED" : "OPENED",
       }),
     });
+    const { code, message, data } = await response.json();
 
-    fetchIssue();
+    if (code === 200) {
+      fetchIssue();
+      return;      
+    }
+
+    if (code === 400) {
+      throw new Error(data[0].defaultMessage);
+    }
+
+    throw new Error(message);
   };
 
   return (

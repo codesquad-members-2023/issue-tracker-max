@@ -23,7 +23,7 @@ export function IssueDetailSidePanel({
   const loginUserInfo = getUserInfo();
 
   const patchIssueAssignees = async (ids: number[]) => {
-    await fetch(`/api/issues/${issueId}/assignees`, {
+    const response = await fetch(`/api/issues/${issueId}/assignees`, {
       method: "PATCH",
       credentials: "include",
       headers: {
@@ -34,12 +34,18 @@ export function IssueDetailSidePanel({
         assignees: ids,
       }),
     });
+    const { code, message } = await response.json();
 
-    fetchIssue();
+    if (code === 200) {
+      fetchIssue();
+      return;
+    }
+
+    throw new Error(message);
   };
 
   const patchIssueLabels = async (ids: number[]) => {
-    await fetch(`/api/issues/${issueId}/labels`, {
+    const response = await fetch(`/api/issues/${issueId}/labels`, {
       method: "PATCH",
       credentials: "include",
       headers: {
@@ -50,12 +56,18 @@ export function IssueDetailSidePanel({
         labels: ids,
       }),
     });
+    const { code, message } = await response.json();
 
-    fetchIssue();
+    if (code === 200) {
+      fetchIssue();
+      return;
+    }
+
+    throw new Error(message);
   };
 
   const patchIssueMilestone = async (id: number | null) => {
-    await fetch(`/api/issues/${issueId}/milestones`, {
+    const response = await fetch(`/api/issues/${issueId}/milestones`, {
       method: "PATCH",
       credentials: "include",
       headers: {
@@ -66,12 +78,18 @@ export function IssueDetailSidePanel({
         milestone: id,
       }),
     });
+    const { code, message } = await response.json();
 
-    fetchIssue();
+    if (code === 200) {
+      fetchIssue();
+      return;
+    }
+
+    throw new Error(message);
   };
 
   const deleteIssue = async () => {
-    await fetch(`/api/issues/${issueId}`, {
+    const response = await fetch(`/api/issues/${issueId}`, {
       method: "DELETE",
       credentials: "include",
       headers: {
@@ -79,8 +97,14 @@ export function IssueDetailSidePanel({
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
+    const { code, message } = await response.json();
 
-    navigate("/");
+    if (code === 200) {
+      navigate("/");
+      return;
+    }
+
+    throw new Error(message);
   };
 
   return (
