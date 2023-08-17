@@ -4,9 +4,9 @@ import { styled } from "styled-components";
 import { IssueAssignee } from "../../components/sidebar/AddAssignee";
 import { IssueLabel } from "../../components/sidebar/AddLabel";
 import { IssueMilestone } from "../../components/sidebar/AddMilestone";
+import { getAccessToken } from "../../utils/localStorage";
 import { NewIssueBody } from "./NewIssueBody";
 import { NewIssueFooter } from "./NewIssueFooter";
-import { getAccessToken } from "../../utils/localStorage";
 
 export function NewIssue() {
   const navigate = useNavigate();
@@ -53,12 +53,12 @@ export function NewIssue() {
 
     const response = await fetch("/api/issues", {
       method: "POST",
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify(issueData),
-    })
+    });
     const result = await response.json();
 
     if (result.code === 201) {

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
+import { getAccessToken } from "../../utils/localStorage";
 import { Button } from "../Button";
 import { TextArea } from "../TextArea";
-import { getAccessToken } from "../../utils/localStorage";
 
 type CommentEditorProps = {
   issueId: number;
@@ -47,9 +47,9 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
 
     await fetch("/api/comments", {
       method: "POST",
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({ issueId, content }),
     });

@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { styled, useTheme } from "styled-components";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
+import { getAccessToken } from "../../utils/localStorage";
 import { Avatar } from "../Avatar";
 import { Button } from "../Button";
 import { InformationTag } from "../InformationTag";
 import { TextArea } from "../TextArea";
-import { getAccessToken } from "../../utils/localStorage";
 
 type CommentItemProps = {
   id: number;
@@ -67,9 +67,9 @@ export function CommentItem({
   const deleteComment = async () => {
     await fetch(`/api/comments/${id}`, {
       method: "DELETE",
+      credentials: "include",
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
-        credentials: "include",
       },
     });
 
@@ -94,9 +94,9 @@ export function CommentItem({
   const onEditConfirmClick = async () => {
     await fetch(`/api/comments/${id}`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
-        credentials: "include",
       },
       body: JSON.stringify({
         content: content,

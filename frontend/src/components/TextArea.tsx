@@ -7,11 +7,11 @@ import {
   useState,
 } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import remarkGfm from "remark-gfm";
 import { keyframes, styled } from "styled-components";
+import { getAccessToken } from "../utils/localStorage";
 import { Button } from "./Button";
 import { Icon } from "./icon/Icon";
-import { getAccessToken } from "../utils/localStorage";
-import remarkGfm from "remark-gfm";
 
 type TextAreaProps = {
   value?: string;
@@ -159,17 +159,14 @@ export function TextArea({
     formData.append("image", file as File);
 
     try {
-      const response = await fetch(
-        "/api/images",
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${getAccessToken()}`,
-            "credentials": "include",
-          },
-          body: formData,
+      const response = await fetch("/api/images", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
         },
-      );
+        body: formData,
+      });
       const data = await response.json();
 
       return data.data.url;
@@ -191,7 +188,7 @@ export function TextArea({
         {children && <Header>{children}</Header>}
         {children && state !== "Active" ? (
           <TextViewer>
-            <ReactMarkdown children={value} remarkPlugins={[remarkGfm]}/>
+            <ReactMarkdown children={value} remarkPlugins={[remarkGfm]} />
           </TextViewer>
         ) : (
           <>

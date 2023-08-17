@@ -2,8 +2,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TextInput } from "../../components/TextInput";
-import { IssueDetailHeaderProps } from "./IssueDetailHeader";
 import { getAccessToken } from "../../utils/localStorage";
+import { IssueDetailHeaderProps } from "./IssueDetailHeader";
 
 type IssueDetailTitleProps = Omit<
   IssueDetailHeaderProps,
@@ -42,9 +42,9 @@ export function IssueDetailTitleInfo({
   const onEditClick = async () => {
     await fetch(`/api/issues/${id}/title`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({ title }),
     });
@@ -56,9 +56,9 @@ export function IssueDetailTitleInfo({
   const onStatusChangeClick = async () => {
     await fetch(`/api/issues/${id}/status`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
         status: status === "OPENED" ? "CLOSED" : "OPENED",

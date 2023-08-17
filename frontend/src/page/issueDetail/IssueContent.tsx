@@ -6,8 +6,8 @@ import { InformationTag } from "../../components/InformationTag";
 import { TextArea } from "../../components/TextArea";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
-import { IssueDetailMainContentProps } from "./IssueDetailMainContent";
 import { getAccessToken } from "../../utils/localStorage";
+import { IssueDetailMainContentProps } from "./IssueDetailMainContent";
 
 type IssueContentProps = Omit<IssueDetailMainContentProps, "comments">;
 
@@ -64,9 +64,9 @@ export function IssueContent({
   const onEditConfirmClick = async () => {
     await fetch(`/api/issues/${id}/content`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
-        credentials: "include",
       },
       body: JSON.stringify({
         content: content,
