@@ -200,32 +200,21 @@ export const issueHandlers = [
 
     return res(ctx.status(200), ctx.json(response));
   }),
-  rest.patch("/api/issues/:issueId/status", async (req, res, ctx) => {
-    const { issueId } = req.params;
-    const { status } = await req.json();
+  rest.patch("/api/issues/status", async (req, res, ctx) => {
+    const { issues:issueIds, status } = await req.json();
 
-    const issue = issues.find((i) => i.id === Number(issueId));
-
-    if (!issue) {
-      const notFoundError = {
-        code: 404,
-        status: "Not Found",
-        message: "이슈를 찾을 수 없습니다.",
-        data: null,
-      };
-
-      return res(ctx.status(404), ctx.json(notFoundError));
-    }
-
-    issue.status = status;
-    issue.statusModifiedAt = new Date().toISOString();
+    const targetIssues = issues.filter((i) => issueIds.includes(i.id))
+    targetIssues.forEach((i) => {
+      i.status = status;
+      i.statusModifiedAt = new Date().toISOString();
+    });
 
     const response = {
       code: 200,
       status: "OK",
       message: "OK",
       data: {
-        modifiedIssueId: issue.id,
+        modifiedIssueId: targetIssues.map(i => i.id),
       },
     };
 

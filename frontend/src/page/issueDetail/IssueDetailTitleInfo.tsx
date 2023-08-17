@@ -63,7 +63,7 @@ export function IssueDetailTitleInfo({
   };
 
   const onStatusChangeClick = async () => {
-    const response = await fetch(`/api/issues/${id}/status`, {
+    const response = await fetch(`/api/issues/status`, {
       method: "PATCH",
       credentials: "include",
       headers: {
