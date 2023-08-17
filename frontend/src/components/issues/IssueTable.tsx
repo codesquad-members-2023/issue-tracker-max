@@ -4,10 +4,11 @@ import Icons from '../../design/Icons';
 import CheckBox from '../../constant/CheckBox';
 import Button from '../common/button/BaseButton';
 import DropdownIndicator from '../common/DropdownIndicator';
+import { Issue } from '../../types/index';
 
 const { initial, active } = CheckBox;
 
-export default function IssueTable() {
+export default function IssueTable({ issues }: { issues: Issue[] }) {
   const [totalCheckBox, setTotalCheckBox] = useState<CheckBox>(initial);
 
   function totalCheckBoxHandler(e: React.MouseEvent) {
@@ -21,7 +22,7 @@ export default function IssueTable() {
 
   return (
     <Container>
-      <IssueTableHeading>
+      <Title>
         <TotalCheckBox htmlFor="total-check">
           <CheckboxIcon checkBox={totalCheckBox} />
           <input
@@ -59,10 +60,18 @@ export default function IssueTable() {
             </li>
           </Right>
         </Buttons>
-      </IssueTableHeading>
-      <IssueTableBody>
-        <IssueTableItem></IssueTableItem>
-      </IssueTableBody>
+      </Title>
+      <Body>
+        {issues ? (
+          issues.map((issue, index) => (
+            <li key={index}>
+              <IssueItem {...issue} />
+            </li>
+          ))
+        ) : (
+          <li>이슈가 없습니다</li>
+        )}
+      </Body>
     </Container>
   );
 }
@@ -94,7 +103,7 @@ function CheckboxIcon({ checkBox }: { checkBox: CheckBox }) {
   return <Icon />;
 }
 
-const IssueTableHeading = styled.h3`
+const Title = styled.h3`
   padding: 16px 32px;
   display: flex;
   align-items: center;
@@ -119,6 +128,18 @@ const Left = styled.ul``;
 
 const Right = styled.ul``;
 
-const IssueTableBody = styled.ul``;
+const Body = styled.ul``;
 
-const IssueTableItem = styled.li``;
+function IssueItem({ id, title, createdAt, user, labels, milestone }: Issue) {
+  return (
+    <article>
+      <h2 className="blind">이슈</h2>
+      <p>{id}</p>
+      <p>{title}</p>
+      <p>{createdAt}</p>
+      <p>{user.name}</p>
+      <p>{labels[0].name}</p>
+      <p>{milestone.name}</p>
+    </article>
+  );
+}

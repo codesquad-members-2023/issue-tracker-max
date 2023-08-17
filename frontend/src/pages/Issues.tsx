@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../main';
 import Header from '../components/landmark/Header';
 import IssueTable from '../components/issues/IssueTable';
@@ -11,10 +11,95 @@ import { styled } from 'styled-components';
 import TabButton from '../components/common/TabButton';
 import Layout from '../components/Layout';
 import Button from '../components/common/button/BaseButton';
+import { Data } from '../types';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 export default function Issues() {
   const { util } = useContext(AppContext);
   const logo = (util.getLogoByTheme() as ContextLogo).medium;
+  const axiosPrivate = useAxiosPrivate();
+
+  const [data, setData] = useState<Data>({
+    openCount: 1,
+    closedCount: 1,
+    labelCount: 1,
+    milestoneCount: 1,
+    issues: [
+      {
+        id: 1,
+        title: '제목',
+        createdAt: '2023-07-24 17:22',
+        user: {
+          name: '감귤',
+          profileImg: 'ddd.png',
+        },
+        labels: [
+          {
+            id: 1,
+            name: 'documentation',
+            backgroundColor: '#0025E6',
+            textColor: '#0025E6',
+          },
+          {
+            id: 2,
+            name: 'documentation',
+            backgroundColor: '#0025E6',
+            textColor: '#0025E6',
+          },
+        ],
+        milestone: {
+          id: 1,
+          name: 'sprint1',
+        },
+      },
+      {
+        id: 2,
+        title: '제목2',
+        createdAt: '2023-07-24 17:24',
+        user: {
+          name: '감귤',
+          profileImg: 'ddd.png',
+        },
+        labels: [
+          {
+            id: 3,
+            name: 'fix',
+            backgroundColor: '#0025E6',
+            textColor: '#0025E6',
+          },
+        ],
+        milestone: {
+          id: 2,
+          name: 'sprint2',
+        },
+      },
+    ],
+  });
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const params = {
+  //       status: 'open',
+  //       labels: '',
+  //       milestone: '',
+  //       writer: '',
+  //       assignees: '',
+  //       comment: '',
+  //     };
+
+  //     const res = await axiosPrivate.get('/api/issues', { params });
+
+  //     try {
+  //       if (res.status === 200) {
+  //         setData(res.data.message);
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+
   return (
     <Layout>
       <Header>
@@ -49,7 +134,7 @@ export default function Issues() {
         </ActionGroup>
       </Toolbar>
       <Main>
-        <IssueTable />
+        {data ? <IssueTable issues={data.issues} /> : <p>서버오류</p>}
       </Main>
       {/* <button onClick={() => control.logoutCheck()}>logout</button> */}
     </Layout>

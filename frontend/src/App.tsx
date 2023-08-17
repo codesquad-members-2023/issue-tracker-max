@@ -48,13 +48,13 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/component" element={<Components />} />
         <Route path="/callback" element={<Callback />} />
-        <Route path="/issues" element={<Issues />} />
+        {/* <Route path="/issues" element={<Issues />} /> */}
         <Route path="/addIssue" element={<AddIssue />} />
         <Route path="/issueDetail" element={<IssueDetail />} />
 
         {/* protected routes */}
         <Route element={<RequireAuth />}>
-          <Route path="/" element={<Main />} />
+          <Route path="/" element={<Issues />} />
         </Route>
       </Routes>
     </ThemeProvider>
