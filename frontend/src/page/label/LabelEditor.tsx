@@ -115,7 +115,7 @@ export function LabelEditor({
   const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.value;
 
-    setLabelName(name.trim());
+    setLabelName(name);
   };
 
   const onChangeDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,8 +128,8 @@ export function LabelEditor({
     const method = type === "add" ? "POST" : "PUT";
     const path = type === "add" ? "" : `/${label.id}`;
     const obj = {
-      name: labelName,
-      description: labelDescription,
+      name: labelName.trim(),
+      description: labelDescription.trim(),
       background: background,
       color: color,
     };

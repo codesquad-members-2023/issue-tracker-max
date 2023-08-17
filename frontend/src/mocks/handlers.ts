@@ -7,7 +7,7 @@ type LabelRequestBody = {
   name: string;
   color: string;
   background: string;
-  description: string | null;
+  description: string;
 };
 
 type MilestoneRequestBody = {
@@ -308,14 +308,14 @@ export const labels = {
         name: "documentation",
         color: "LIGHT",
         background: "#0025E6",
-        description: null,
+        description: "",
       },
       {
         id: 3,
         name: "test",
         color: "Light",
         background: "#000000",
-        description: null,
+        description: "",
       },
       {
         id: 4,
@@ -329,7 +329,7 @@ export const labels = {
         name: "bug",
         color: "LIGHT",
         background: "#FF3B30",
-        description: null,
+        description: "",
       },
     ],
   },
