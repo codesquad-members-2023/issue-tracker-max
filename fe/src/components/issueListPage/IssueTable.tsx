@@ -3,6 +3,8 @@ import { IssueList } from './IssueList';
 import { Box } from '@components/common/box/Box';
 import { useTheme } from '@emotion/react';
 import { useState } from 'react';
+import { editIssueStatus } from 'apis/api';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   openIssueCount: IssuePageData['openIssueCount'];
@@ -21,6 +23,7 @@ export const IssueTable: React.FC<Props> = ({
 }) => {
   const theme = useTheme() as any;
   const [checkedIssues, setCheckedIssues] = useState<number[]>([]);
+  const navigate = useNavigate();
 
   const isCheckedIssue = checkedIssues.length > 0;
 
@@ -49,23 +52,8 @@ export const IssueTable: React.FC<Props> = ({
   };
 
   const requestStatusChange = async (status: Issue['status']) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_APP_BASE_URL}/issues/status`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          issueIds: checkedIssues,
-          status: status,
-        }),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error('이슈 상태 변경 요청 중 에러가 발생했습니다.');
-    }
+    await editIssueStatus(checkedIssues, status);
+    navigate(location.search);
   };
 
   return (
