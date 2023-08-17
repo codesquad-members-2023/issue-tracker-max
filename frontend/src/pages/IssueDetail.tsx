@@ -1,6 +1,6 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AppContext } from '../main';
 import ContextLogo from '../types/ContextLogo';
 import ButtonSmall from '../components/common/button/ButtonSmall';
@@ -13,11 +13,46 @@ import defaultUserImg from '../asset/images/defaultUserImg.png';
 import ElementType from '../constant/ElementType';
 import TextArea from '../components/common/TextArea';
 import InformationTag from '../components/common/InformationTag';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 const { AddButton, Assignee, Label, milestone } = ElementType;
 
+type CommentType = {
+  id: number;
+  createdAt: string;
+  content: string;
+  writer: {
+    name: string;
+    profileImg: string;
+  };
+};
+
 export default function IssueDetail() {
   const { util } = useContext(AppContext);
+  const location = useLocation();
+  const axiosPrivate = useAxiosPrivate();
+  const [comments, setComments] = useState<CommentType[]>([]);
+
+  useEffect(() => {
+    const getIssueDetail = async () => {
+      const endpoint = location.pathname;
+      try {
+        const issueDetails = await axiosPrivate.get('/api' + endpoint);
+        const issueOptions = await axiosPrivate.get(
+          '/api' + endpoint + '/options'
+        );
+        const issueComment = await axiosPrivate.get(
+          '/api' + endpoint + '/comments'
+        );
+        console.log(issueDetails.data);
+        console.log(issueOptions.data);
+        setComments(issueComment.data.message);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getIssueDetail();
+  }, []);
 
   return (
     <Layout>
@@ -60,11 +95,19 @@ export default function IssueDetail() {
               timeStamp="2023-08-15"
               content="하이"
             />
-            <CommentElement
-              userInfo={{ userName: '제페토' }}
-              timeStamp="2023-08-15"
-              content="하이요"
-            />
+            {comments.map((comment) => {
+              return (
+                <CommentElement
+                  key={comment.id}
+                  userInfo={{
+                    userName: comment.writer.name,
+                    userImg: comment.writer.profileImg,
+                  }}
+                  content={comment.content}
+                  timeStamp={comment.createdAt}
+                />
+              );
+            })}
             <TextArea name="newComment" placeholder="코멘트를 입력하세요" />
             <ButtonSmall type="submit" disabled iconName="plus">
               코멘트 작성
