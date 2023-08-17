@@ -30,11 +30,13 @@ public class HistoryAspect {
 		IssuePostResponse issuePostResponse = (IssuePostResponse)joinPoint.proceed();
 		Long issueId = issuePostResponse.getId();
 
-		historyService.save(HistoryRequest.builder()
+		HistoryRequest request1 = HistoryRequest.builder()
 			.issueId(issueId)
 			.editor(memberRepository.findById(writerId).getNickName())
 			.issueIsOpen(true)
-			.build());
+			.build();
+
+		historyService.save(request1);
 		return issuePostResponse;
 	}
 
