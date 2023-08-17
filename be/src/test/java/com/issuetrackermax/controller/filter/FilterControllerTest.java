@@ -22,7 +22,7 @@ class FilterControllerTest extends ControllerTestSupport {
 
 	@DisplayName("필터가 없으면 열린 이슈를 담은 메인 페이지를 반환한다.")
 	@Test
-	void mainpageWithNoFilter() throws Exception {
+	void mainPageWithNoFilter() throws Exception {
 
 		// given
 
@@ -36,6 +36,7 @@ class FilterControllerTest extends ControllerTestSupport {
 			.labelIds("1,2")
 			.writerId(1L)
 			.writer("June")
+			.writerImageUrl("https://issue-tracker-bucket-04.s3.ap-northeast-2.amazonaws.com/profile/green.jpg")
 			.assigneeIds("1,2")
 			.assigneeNames("June,Movie")
 			.milestoneId(1L)
