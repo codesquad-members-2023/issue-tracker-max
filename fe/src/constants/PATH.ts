@@ -5,3 +5,4 @@ export const LABEL_LIST_PAGE = 'label';
 export const MILESTONE_LIST_PAGE = 'milestone';
 export const SIGN_PAGE = '/';
 export const REGISTER_PAGE = 'register';
+export const OAUTH_LOADING_PAGE = 'login/oauth';
