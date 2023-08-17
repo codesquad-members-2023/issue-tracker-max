@@ -207,4 +207,5 @@ export function Main() {
 const Div = styled.div`
   width: 1280px;
   padding: 0px 80px;
+  margin-bottom: 32px;
 `;

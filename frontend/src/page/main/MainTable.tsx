@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Icon } from "../../components/icon/Icon";
 import { getAccessToken } from "../../utils/localStorage";
@@ -20,6 +20,10 @@ export function MainTable({
   filterString,
 }: MainTableProps) {
   const [checkedIssueId, setCheckedIssueId] = useState<number[]>([]);
+
+  useEffect(() => {
+    setCheckedIssueId([]);
+  }, [issueData]);
 
   const onChangeIssuesState = async (state: "OPENED" | "CLOSED") => {
     const body = {
