@@ -13,7 +13,7 @@ import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/textInput/TextInput';
-import { ISSUE_LIST_PAGE } from 'constants/PATH';
+import { PATH } from 'constants/PATH';
 // import { ISSUE_DETAIL_PAGE } from 'constants/PATH';
 
 type SelectionState = {
@@ -187,7 +187,7 @@ export const AddIssuePage: React.FC = ({}) => {
           typeVariant="ghost"
           size="M"
           onClick={() => {
-            navigate(ISSUE_LIST_PAGE);
+            navigate(PATH.ISSUE_LIST_PAGE);
           }}
         >
           <XSquare stroke={theme.neutral.text.default} />

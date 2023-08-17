@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@components/common/Button';
-import { ISSUE_LIST_PAGE } from 'constants/PATH';
+import { PATH } from 'constants/PATH';
 
 export const NotFoundPage: React.FC = () => {
   const theme = useTheme() as any;
@@ -39,7 +39,7 @@ export const NotFoundPage: React.FC = () => {
         typeVariant="outline"
         size="M"
         onClick={() => {
-          navigate(ISSUE_LIST_PAGE);
+          navigate(PATH.ISSUE_LIST_PAGE);
         }}
       >
         메인으로 돌아갈까요

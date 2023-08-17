@@ -1,8 +1,10 @@
-export const ISSUE_LIST_PAGE = 'issues';
-export const ISSUE_DETAIL_PAGE = 'issue';
-export const ADD_ISSUE_PAGE = 'add';
-export const LABEL_LIST_PAGE = 'label';
-export const MILESTONE_LIST_PAGE = 'milestone';
-export const SIGN_PAGE = '/';
-export const REGISTER_PAGE = 'register';
-export const OAUTH_LOADING_PAGE = 'login/oauth';
+export const PATH = {
+  ISSUE_LIST_PAGE: 'issues',
+  ISSUE_DETAIL_PAGE: 'issue',
+  ADD_ISSUE_PAGE: 'add',
+  LABEL_LIST_PAGE: 'label',
+  MILESTONE_LIST_PAGE: 'milestone',
+  SIGN_PAGE: '/',
+  REGISTER_PAGE: 'register',
+  OAUTH_LOADING_PAGE: 'login/oauth',
+} as const;

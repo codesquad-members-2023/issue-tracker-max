@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { validateId, validatePassword } from './validateInput';
 import { loginUser } from 'apis/api';
 import { useNavigate } from 'react-router-dom';
-import { ISSUE_LIST_PAGE } from 'constants/PATH';
+import { PATH } from 'constants/PATH';
 import {
   setLocalStorageAccessToken,
   setLocalStorageImage,
@@ -43,7 +43,7 @@ export const LoginForm: React.FC = () => {
       setLocalStorageAccessToken(accessToken);
       setLocalStorageRefreshToken(refreshToken);
 
-      navigate(`/${ISSUE_LIST_PAGE}`);
+      navigate(`/${PATH.ISSUE_LIST_PAGE}`);
     } catch (error) {
       console.error(error);
     }
