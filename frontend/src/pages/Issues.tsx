@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../main';
+import useAuth from '../hooks/useAuth';
 import Header from '../components/landmark/Header';
 import IssueTable from '../components/issues/IssueTable';
 import Main from '../components/landmark/Main';
@@ -16,7 +18,9 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 export default function Issues() {
   const { util } = useContext(AppContext);
+  const { auth, logout } = useAuth();
   const logo = (util.getLogoByTheme() as ContextLogo).medium;
+  const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
 
   const [data, setData] = useState<Data>({
@@ -99,6 +103,28 @@ export default function Issues() {
   //   };
   //   fetchData();
   // }, []);
+  const handleLogout = async () => {
+    if (!auth) {
+      return;
+    }
+
+    try {
+      const res = await axiosPrivate.post('/api/logout', null, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+
+      if (res.status === 200) {
+        localStorage.clear();
+        logout();
+        navigate('/login');
+      } else {
+        console.error('로그아웃 실패:', res.status);
+      }
+    } catch (err) {
+      console.error('로그아웃 에러:', err);
+    }
+  };
 
   return (
     <Layout>
@@ -106,6 +132,9 @@ export default function Issues() {
         <Link to="/">
           <img src={logo} alt="이슈트래커" />
         </Link>
+        <Button type="button" ghost onClick={handleLogout}>
+          로그아웃
+        </Button>
         <div>
           {/* profile */}
           popopo

@@ -49,6 +49,9 @@ export default function Login() {
       );
 
       if (res.status === 200) {
+        localStorage.setItem('userId', res.data.message.userId);
+        localStorage.setItem('userName', res.data.message.userName);
+        localStorage.setItem('profileImg', res.data.message.profileImgUrl);
         localStorage.setItem('accessToken', res.data.message.accessToken);
         localStorage.setItem('refreshToken', res.data.message.refreshToken);
         login({
@@ -105,7 +108,7 @@ export default function Login() {
         <TextInput
           id="userId"
           name="userId"
-          size="tall"
+          sizeType="tall"
           labelName="아이디"
           value={userId}
           onChange={handleChange}
@@ -116,7 +119,7 @@ export default function Login() {
         <TextInput
           id="password"
           name="password"
-          size="tall"
+          sizeType="tall"
           type="password"
           value={password}
           onChange={handleChange}
