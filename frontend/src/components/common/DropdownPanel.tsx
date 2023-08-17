@@ -63,11 +63,10 @@ export default function DropdownPanel<T extends DropdownType>({
                       name: name!,
                     }}
                   />
-                ) : imageUrl ? (
-                  <img src={imageUrl} alt={text} />
                 ) : (
-                  <Text>{text}</Text>
+                  imageUrl && <img src={imageUrl} alt={text} />
                 )}
+                <Text>{text}</Text>
 
                 <input
                   type="checkbox"
