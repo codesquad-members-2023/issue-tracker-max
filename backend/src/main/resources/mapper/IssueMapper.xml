@@ -30,6 +30,11 @@
         </collection>
     </resultMap>
 
+    <resultMap id="countResultMap" type="issueCountMapper">
+        <result property="totalCounts" column="total_counts"/>
+        <result property="openCounts" column="open_counts"/>
+    </resultMap>
+
     <select id="findAll" resultMap="issueResultMap">
     SELECT * FROM (
         SELECT DISTINCT
@@ -56,6 +61,9 @@
         LEFT JOIN user_account assignee ON assignee.id = issue_assignee.user_account_id AND assignee.is_deleted = false
         LEFT JOIN milestone ON issue.milestone_id = milestone.id AND milestone.is_deleted = false
         JOIN user_account author ON author.id = issue.user_account_id AND author.is_deleted = false
+        <if test="issueSearch.author != null">
+            AND author.login_id = #{issueSearch.author}
+        </if>
         <where>
             <if test="issueSearch.isOpen != null">
                 AND issue.is_open = #{issueSearch.isOpen}
@@ -97,8 +105,11 @@
     WHERE result.row_num BETWEEN #{offset} + 1 AND #{offset} + #{size};
     </select>
 
-    <select id="countAll" resultType="int">
-        SELECT COUNT(DISTINCT issue.id) FROM issue
+    <select id="countAll" resultMap="countResultMap">
+        SELECT DISTINCT
+            COUNT(DISTINCT issue.id) as total_counts,
+            COUNT(DISTINCT CASE WHEN issue.is_open = TRUE THEN issue.id ELSE NULL END) as open_counts
+        FROM issue
 
         LEFT JOIN issue_label ON issue.id = issue_label.issue_id
         LEFT JOIN label ON label.id = issue_label.label_id AND label.is_deleted = false
@@ -106,6 +117,9 @@
         LEFT JOIN user_account assignee ON assignee.id = issue_assignee.user_account_id AND assignee.is_deleted = false
         LEFT JOIN milestone ON issue.milestone_id = milestone.id AND milestone.is_deleted = false
         JOIN user_account author ON author.id = issue.user_account_id AND author.is_deleted = false
+        <if test="issueSearch.author != null">
+            AND author.login_id = #{issueSearch.author}
+        </if>
 
         WHERE issue.is_deleted = FALSE
         <if test="issueSearch.isOpen != null">

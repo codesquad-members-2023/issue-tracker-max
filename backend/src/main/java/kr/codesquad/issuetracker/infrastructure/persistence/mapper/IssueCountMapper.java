@@ -6,8 +6,12 @@ import lombok.Setter;
 
 @Setter(value = AccessLevel.PRIVATE)
 @Getter
-public class AuthorMapper {
-	private Integer id;
-	private String username;
-	private String profileUrl;
+public class IssueCountMapper {
+
+	private int totalCounts;
+	private int openCounts;
+
+	public int getClosedCounts() {
+		return totalCounts - openCounts;
+	}
 }
