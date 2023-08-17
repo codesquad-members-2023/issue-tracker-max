@@ -60,7 +60,9 @@ public class IssueService {
 
     @Transactional
     public Long save(IssueWriteRequestDto request, Long id) {
-        milestoneService.isExistMilestone(request.getMilestoneId());
+        if (request.getMilestoneId() != null) {
+            milestoneService.isExistMilestone(request.getMilestoneId());
+        }
         List<Long> labels = request.getLabels();
         List<Long> assignees = request.getAssignees();
         Issue issue = IssueWriteRequestDto.toEntity(request, id);
