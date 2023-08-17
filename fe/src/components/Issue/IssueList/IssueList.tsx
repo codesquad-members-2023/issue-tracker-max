@@ -7,25 +7,26 @@ import SubNavBar from '../../SubNavbar';
 import IssueFilter from './IssueFilter';
 import { useNavigate } from 'react-router-dom';
 import { customFetch } from '../../../util/customFetch';
+import { Issue, IssueData } from '../../../type/issue.type';
+import { GetIssueRes } from '../../../type/Response.type';
 
 export default function IssueList() {
   const theme = useTheme();
   const navigate = useNavigate();
   const [activeIssue, setActiveIssue] = useState<'open' | 'closed'>('open');
-  const [checkedItemIdList, setCheckedItemIdList] = useState<number[]>([]); // Question: 빈 배열을 넣어서 타입에러를 해결했는데 괜찮을까요?
+  const [checkedItemIdList, setCheckedItemIdList] = useState<number[]>([]);
   const [issueList, setIssueList] = useState<IssueData>();
 
   useEffect(() => {
     (async () => {
-      const subUrl = 'api/';
-
       try {
-        const issueData = await customFetch<IssueResponse>({ subUrl });
+        const issueData = await customFetch<GetIssueRes>({ subUrl: 'api/' });
 
         if (issueData.success && issueData.data) {
           setIssueList(issueData.data);
         }
       } catch (error) {
+        //Memo: 에러 핸들링 필요
         navigate('/sign-in');
       }
     })();

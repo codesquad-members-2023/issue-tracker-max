@@ -33,7 +33,7 @@ export default function InputWithValidation({
         placeholder={placeholder}
         label={label}
       />
-      <CheckValidInfo valid={isValid} text={text} />
+      <CheckValidInfo valid={isValid} message={text} />
     </div>
   );
 }

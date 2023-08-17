@@ -3,8 +3,10 @@ import { ReactComponent as EditIcon } from '../../assets/icon/edit.svg';
 import { ReactComponent as TrashIcon } from '../../assets/icon/trash.svg';
 import { font } from '../../styles/styles';
 import Label from './Label';
+import Button from '../common/Button';
+import { LabelType } from '../../type/label.type';
 
-export default function LabelItem(label: Label) {
+export default function LabelItem(label: LabelType) {
   const theme = useTheme();
 
   return (
@@ -14,14 +16,18 @@ export default function LabelItem(label: Label) {
       </div>
       <div className="label-info">{label.description}</div>
       <div className="button-container">
-        <button className="edit-button">
-          <EditIcon />
-          편집
-        </button>
-        <button className="delete-button">
-          <TrashIcon />
-          삭제
-        </button>
+        <Button
+          icon={<EditIcon />}
+          size="XS"
+          color={theme.neutral.textDefault}
+          value="편집"
+        />
+        <Button
+          icon={<TrashIcon className="delete" />}
+          size="XS"
+          color={theme.danger.textDefault}
+          value="삭제"
+        />
       </div>
     </li>
   );
@@ -46,26 +52,5 @@ const labelItem = (theme: Theme) => css`
     justify-content: space-between;
     width: 106px;
     gap: 24px;
-
-    button {
-      height: 32px;
-      display: flex;
-      gap: 4px;
-      align-items: center;
-      background-color: inherit;
-      font: ${font.availableMedium12};
-    }
-
-    .edit-button {
-      color: ${theme.neutral.textDefault};
-    }
-
-    .delete-button {
-      color: ${theme.danger.textDefault};
-
-      svg path {
-        stroke: ${theme.danger.textDefault};
-      }
-    }
   }
 `;

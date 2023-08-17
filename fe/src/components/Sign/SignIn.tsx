@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { customFetch } from '../../util/customFetch';
 import { Theme, css, useTheme } from '@emotion/react';
@@ -7,49 +7,46 @@ import { REGEX } from '../../constant/regex';
 import SignButton from './common/SignButton';
 import InputWithValidation from './common/InputWithValidation';
 import { ReactComponent as LargeLogo } from '../../assets/logo/largeLogo.svg';
-
-type Response = {
-  success: boolean;
-  data: {
-    accessToken: string;
-    refreshToken: string;
-    // userId: number;
-    // userName: string;
-    // userImg: string;
-  };
-};
+import { UserContext } from '../Context/UserContext';
+import { PostSignInRes } from '../../type/Response.type';
 
 export default function SignIn() {
   const theme = useTheme();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { ...context } = useContext(UserContext);
 
   // Memo: onSignIn과 onGithubSignIn의 중복 로직 통합 필요
   const onSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const signInData = {
-      loginId: email,
-      password: password,
-    };
-
-    const subUrl = 'api/signin';
-    const method = 'POST';
-    const body = JSON.stringify(signInData);
-
-    const response = await customFetch<Response>({
-      subUrl,
-      method,
-      body,
+    const response = await customFetch<PostSignInRes>({
+      subUrl: 'api/signin',
+      method: 'POST',
+      body: JSON.stringify({
+        loginId: email,
+        password: password,
+      }),
     });
 
-    if (response && response.success && response.data) {
+    if (response.success && response.data) {
       localStorage.setItem('accessToken', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
-      // localStorage.setItem('userId', response.data.userId.toString());
-      // localStorage.setItem('userName', response.data.userName);
-      // localStorage.setItem('userImg', response.data.userImg);
+      localStorage.setItem('id', response.data.member.id.toString());
+      localStorage.setItem('name', response.data.member.name);
+      localStorage.setItem('imageUrl', response.data.member.imageUrl);
+
+      context.setUser &&
+        context.setUser({
+          accessToken: response.data.accessToken,
+          refreshToken: response.data.refreshToken,
+          member: {
+            id: response.data.member.id,
+            name: response.data.member.name,
+            imageUrl: response.data.member.imageUrl,
+          },
+        });
 
       navigate('/');
     }
@@ -57,12 +54,9 @@ export default function SignIn() {
 
   const onGithubSignIn = async () => {
     // Notice: 미완성 기능입니다
-    const subUrl = 'api/oauth/github';
-    const method = 'POST';
-
-    const response = await customFetch<Response>({
-      subUrl,
-      method,
+    const response = await customFetch<PostSignInRes>({
+      subUrl: 'api/oauth/github',
+      method: 'POST',
     });
 
     if (response && response.success && response.data) {

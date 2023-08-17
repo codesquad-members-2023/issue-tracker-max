@@ -1,14 +1,9 @@
-type LabelResponse = {
-  success: boolean;
-  data: LabelData;
-};
-
-type LabelData = {
+export type LabelData = {
   milestoneCount: number;
-  labels: Label[];
+  labels: LabelType[];
 };
 
-type Label = {
+export type LabelType = {
   id: number | string;
   title: string;
   description?: string;

@@ -5,10 +5,11 @@ import { ReactComponent as CalendarIcon } from '../../assets/icon/calendar.svg';
 import { ReactComponent as ArchiveIcon } from '../../assets/icon/archive.svg';
 import { ReactComponent as EditIcon } from '../../assets/icon/edit.svg';
 import { ReactComponent as DeleteIcon } from '../../assets/icon/trash.svg';
-import MilestoneButton from './MilestoneButton';
 import { getFormatDate } from '../../util/getFormatDate';
+import Button from '../common/Button';
+import { MilestoneType } from '../../type/milestone.type';
 
-export default function IssueItem(milestone: Milestone) {
+export default function IssueItem(milestone: MilestoneType) {
   const theme = useTheme();
 
   const completionChart = Math.floor(
@@ -38,24 +39,24 @@ export default function IssueItem(milestone: Milestone) {
       </div>
       <div className="sub">
         <div className="buttons">
-          <MilestoneButton
-            color={theme.neutral.textDefault}
+          <Button
             icon={<ArchiveIcon />}
-          >
-            닫기
-          </MilestoneButton>
-          <MilestoneButton
+            size="XS"
             color={theme.neutral.textDefault}
+            value="닫기"
+          />
+          <Button
             icon={<EditIcon />}
-          >
-            편집
-          </MilestoneButton>
-          <MilestoneButton
+            size="XS"
+            color={theme.neutral.textDefault}
+            value="편집"
+          />
+          <Button
+            icon={<DeleteIcon className="delete" />}
+            size="XS"
             color={theme.danger.textDefault}
-            icon={<DeleteIcon />}
-          >
-            삭제
-          </MilestoneButton>
+            value="삭제"
+          />
         </div>
         <div className="progress-indicator">
           <progress
@@ -129,18 +130,9 @@ const issueItem = (theme: Theme, completionChart: number) => css`
     gap: 8px;
 
     .buttons {
-      height: 32px;
       display: flex;
       justify-content: flex-end;
       gap: 24px;
-      font: ${font.availableMedium12};
-
-      > button {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        background-color: inherit;
-      }
     }
 
     .progress-indicator {

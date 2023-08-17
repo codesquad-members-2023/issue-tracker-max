@@ -5,109 +5,145 @@ import Comment from './Comment';
 import Button from '../../common/Button';
 import { ReactComponent as PlusIcon } from '../../../assets/icon/plus.svg';
 import IssueContent from '../IssueContent';
-import { useState } from 'react';
-
-const mockData = {
-  issue: {
-    id: 4,
-    isOpen: true,
-    title: '새로운 이슈',
-    labels: [
-      {
-        id: 1,
-        title: 'Backend',
-        textColor: 'white',
-        backgroundColor: 'black',
-      },
-    ],
-    assignees: [
-      {
-        id: 1,
-        name: 'June',
-      },
-      {
-        id: 2,
-        name: 'Movie',
-      },
-    ],
-    writer: {
-      id: 4,
-      name: 'Jeegu',
-    },
-    milestone: {
-      id: 1,
-      title: '프로젝트1',
-    },
-    history: {
-      editor: 'Jeegu',
-      modifiedAt: '2023-08-04T17:56:03.238519',
-    },
-  },
-  comments: [
-    {
-      id: 1,
-      writer: {
-        id: 4,
-        name: 'Jeegu',
-      },
-      content: '새로운 내용',
-      dateTime: '2023-07-25 11:44',
-    },
-    {
-      id: 2,
-      writer: {
-        id: 2,
-        name: 'Movie',
-      },
-      content: `
-        이번 그룹 프로젝트에서 디자인 특징은 아래와 같습니다.
-        타이포그래피 시스템에 display, selected, available같은 용법을 함께 표기함
-        컬러 시스템에 라이트/다크 모드가 있음
-        Components 페이지에 기획서에 없는 선택 미션 두 가지가 있음
-        Text Input의 지우기 기능
-        Comment Elements의 히스토리 기능
-      `,
-      dateTime: '2023-08-11 12:44',
-    },
-  ],
-};
+import { useEffect, useState } from 'react';
+import { customFetch } from '../../../util/customFetch';
+import { useNavigate, useParams } from 'react-router-dom';
+import { OnlySuccessRes, PostCommentsRes } from '../../../type/Response.type';
+import { IssueDetailResponse, IssueDetailType } from '../../../type/issue.type';
 
 export default function IssueDetail() {
   const theme = useTheme();
+  const { id } = useParams();
   const [content, setContent] = useState('');
+  const [detailIssue, setDetailIssue] = useState<IssueDetailType>();
+  const navigate = useNavigate();
 
-  const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  useEffect(() => {
+    (async () => {
+      try {
+        const issueData = await customFetch<IssueDetailResponse>({
+          subUrl: `api/issues/${id}`,
+        });
+
+        if (issueData.success && issueData.data) {
+          setDetailIssue(issueData.data);
+        }
+      } catch (error) {
+        navigate('/sign-in');
+      }
+    })();
+  }, []);
+
+  const onStatusChange = (status: boolean) => {
+    if (detailIssue) {
+      setDetailIssue({
+        ...detailIssue,
+        isOpen: !status,
+      });
+    }
+  };
+
+  const onTitleChange = (editedTitle: string) => {
+    if (detailIssue) {
+      setDetailIssue({
+        ...detailIssue,
+        title: editedTitle,
+      });
+    }
+  };
+
+  const onChangeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
+  };
+
+  const onDeleteIssue = async () => {
+    const response = await customFetch<OnlySuccessRes>({
+      subUrl: `api/issues/${id}`,
+      method: 'DELETE',
+    });
+
+    if (response.success) {
+      navigate('/');
+    }
+  };
+
+  const onSubmitComment = async () => {
+    try {
+      const response = await customFetch<PostCommentsRes>({
+        method: 'POST',
+        subUrl: `api/issues/${id}/comments`,
+        body: JSON.stringify({ content: content }),
+      });
+
+      if (response.success && response.data) {
+        setDetailIssue({
+          ...detailIssue,
+          comments: [
+            ...detailIssue!.comments,
+            {
+              id: response.data.id,
+              writer: {
+                id: response.data.writer.id,
+                name: response.data.writer.name,
+                imageUrl: response.data.writer.imageUrl,
+              },
+              content: response.data.content,
+              createdAt: response.data.createdAt,
+            },
+          ],
+        } as IssueDetailType);
+        setContent('');
+        return;
+      }
+    } catch (error) {
+      //Memo: 에러 핸들링 필요
+      throw error;
+    }
+  };
+
+  const onAddImg = (imgMarkdown: string) => {
+    setContent((prev) => `${prev}\n${imgMarkdown}\n`);
   };
 
   return (
     <div css={issueDetail(theme)}>
-      <IssueDetailHeader
-        issue={mockData.issue}
-        commentCount={mockData.comments.length}
-      />
-      <div className="divider" />
-      <main className="main">
-        <ul className="comments">
-          {mockData.comments.map((comment) => (
-            <Comment key={comment.id} commentData={comment} />
-          ))}
-          <IssueContent
-            value={content}
-            onChange={onContentChange}
-            height={80}
+      {detailIssue && (
+        <>
+          <IssueDetailHeader
+            issue={detailIssue}
+            onTitleChange={onTitleChange}
+            onStatusChange={onStatusChange}
+            commentCount={detailIssue.comments.length}
           />
-          <Button
-            color={theme.brand.textDefault}
-            backgroundColor={theme.brand.surfaceDefault}
-            value="코멘트 작성"
-          >
-            <PlusIcon />
-          </Button>
-        </ul>
-
-        <SidebarDetail />
-      </main>
+          <div className="divider" />
+          <main className="main">
+            <ul className="comments">
+              {detailIssue.comments.map((comment) => (
+                <Comment
+                  key={comment.id}
+                  issueId={detailIssue.id}
+                  commentData={comment}
+                />
+              ))}
+              <IssueContent
+                value={content}
+                onChange={onChangeContent}
+                height="80px"
+                withInfo
+                onAddImg={onAddImg}
+              />
+              <Button
+                icon={<PlusIcon />}
+                color={theme.brand.textDefault}
+                backgroundColor={theme.brand.surfaceDefault}
+                value="코멘트 작성"
+                onClick={onSubmitComment}
+              />
+            </ul>
+            <SidebarDetail onClick={onDeleteIssue} />
+          </main>
+        </>
+      )}
     </div>
   );
 }
@@ -137,6 +173,10 @@ const issueDetail = (theme: Theme) => css`
 
       > button {
         margin-left: auto;
+
+        & svg path {
+          stroke: ${theme.brand.textDefault};
+        }
       }
     }
   }

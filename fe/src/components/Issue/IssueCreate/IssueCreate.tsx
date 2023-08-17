@@ -1,56 +1,48 @@
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../Context/UserContext';
+import { customFetch } from '../../../util/customFetch';
 import { Theme, css, useTheme } from '@emotion/react';
-import { ReactComponent as UserImageLargeIcon } from '../../../assets/icon/userImageLarge.svg';
-import { ReactComponent as XSquareIcon } from '../../../assets/icon/xSquare.svg';
 import { border, font, radius } from '../../../styles/styles';
+import { ReactComponent as XSquareIcon } from '../../../assets/icon/xSquare.svg';
 import IssueContent from '../IssueContent';
 import SidebarCreate from './SidebarCreate';
-import { useState } from 'react';
-import { customFetch } from '../../../util/customFetch';
-import { useNavigate } from 'react-router-dom';
 import Button from '../../common/Button';
-
-type Response = {
-  success: boolean;
-  data: {
-    id: number;
-  };
-};
+import UserImageIcon from '../../UserImageIcon';
+import { PostNewIssueRes } from '../../../type/Response.type';
 
 export default function IssueCreate() {
   const theme = useTheme();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const navigate = useNavigate();
+  const { ...context } = useContext(UserContext);
 
   const onCancelClick = () => {
     navigate('/');
   };
 
   const onNewIssueSubmit = async () => {
-    const newIssue = {
-      title: title,
-      content: content,
-      // 로그인 API 수정 후 주석 해제
-      // writerId: localStorage.getItem('userId'),
+    try {
+      const response = await customFetch<PostNewIssueRes>({
+        subUrl: 'api/issues',
+        method: 'POST',
+        body: JSON.stringify({
+          title: title,
+          content: content,
+          writerId: context.user?.member.id,
+          assigneeIds: [],
+          labelIds: [],
+          milestoneId: null,
+        }),
+      });
 
-      // 사이드바 기능 추가 후 주석 해제
-      // assigneeIds: assignees,
-      // labelIds: labels,
-      // milestoneId: milestone,
-    };
-
-    const subUrl = 'api/issues';
-    const method = 'POST';
-    const body = JSON.stringify(newIssue);
-
-    const response = await customFetch<Response>({
-      subUrl,
-      method,
-      body,
-    });
-
-    if (response && response.success && response.data) {
-      navigate(`/issue/${response.data.id}`);
+      if (response.success && response.data) {
+        navigate(`/issue/${response.data.id}`);
+      }
+    } catch (error) {
+      //Memo: 에러 핸들링 필요
+      console.log(error);
     }
   };
 
@@ -62,12 +54,16 @@ export default function IssueCreate() {
     setContent(e.target.value);
   };
 
+  const onAddImg = (imgMarkdown: string) => {
+    setContent((prev) => `${prev}\n${imgMarkdown}\n`);
+  };
+
   return (
     <div css={issueCreate(theme)}>
       <div className="header">새로운 이슈 작성</div>
       <div className="divider" />
       <div className="body">
-        <UserImageLargeIcon />
+        <UserImageIcon size="M" url={context.user?.member.imageUrl} />
         <main className="main">
           <div className={`title ${title ? 'filled' : ''}`}>
             <input
@@ -81,7 +77,9 @@ export default function IssueCreate() {
           <IssueContent
             value={content}
             onChange={onContentChange}
-            height={448}
+            onAddImg={onAddImg}
+            height="448px"
+            withInfo
           />
         </main>
         <SidebarCreate />
@@ -89,15 +87,13 @@ export default function IssueCreate() {
       <div className="divider" />
       <div className="buttons">
         <Button
+          icon={<XSquareIcon />}
           color={theme.neutral.textDefault}
-          backgroundColor="inherit"
           size="S"
           fontSize="M"
           value="작성 취소"
           onClick={onCancelClick}
-        >
-          <XSquareIcon />
-        </Button>
+        />
         <button type="button" className="submit" onClick={onNewIssueSubmit}>
           완료
         </button>

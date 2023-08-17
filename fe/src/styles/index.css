@@ -1,5 +1,20 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css');
 
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#root {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
 body {
   font-family: 'Pretendard Variable', Pretendard, Inter, system-ui, Avenir,
     Helvetica, Arial, sans-serif;
@@ -22,6 +37,7 @@ body {
 
     &:disabled {
       opacity: 0.32;
+      cursor: not-allowed;
     }
   }
 }

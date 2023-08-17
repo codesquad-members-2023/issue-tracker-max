@@ -1,5 +1,5 @@
 import { Theme, css, useTheme } from '@emotion/react';
-import CheckBoxIcon from './CheckBox';
+import CheckBox from './CheckBox';
 import { ReactComponent as AlertCircleIcon } from '../../../assets/icon/alertCircle.svg';
 import { ReactComponent as ArchiveIcon } from '../../../assets/icon/archive.svg';
 import { border, font, radius } from '../../../styles/styles';
@@ -34,9 +34,9 @@ export default function IssueFilter({
       {isCheckedListEmpty ? (
         <div className="issue-filter">
           <div className="left">
-            <CheckBoxIcon
+            <CheckBox
               className="check-box"
-              id="selectAll"
+              checkBoxType="selectAll"
               onChange={(e) => onCheckBoxClick(e.currentTarget.checked)}
               checked={isAllItemChecked}
             />
@@ -70,9 +70,9 @@ export default function IssueFilter({
       ) : (
         <div className="issue-filter">
           <div className="check-info">
-            <CheckBoxIcon
+            <CheckBox
               className="check-box"
-              id="selectAll"
+              checkBoxType="selectAll"
               onChange={(e) => onCheckBoxClick(e.currentTarget.checked)}
               checked={isAllItemChecked}
             />

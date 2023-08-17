@@ -87,6 +87,7 @@ export const radius = {
   small: '10px',
   medium: '12px',
   large: '16px',
+  XLarge: '25px',
 };
 
 export const border = {
