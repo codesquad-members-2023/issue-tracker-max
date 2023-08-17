@@ -25,6 +25,8 @@ export const DropDownList: React.FC<Props> = ({
   const theme = useTheme() as any;
   const commonStyles = css`
     flex: 1 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   `;
   const basicImage = 'basic-profile.jpeg';
 
