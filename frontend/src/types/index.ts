@@ -31,4 +31,4 @@ export type Data = {
   labelCount: number;
   milestoneCount: number;
   issues: Issue[];
-};
+} | null;

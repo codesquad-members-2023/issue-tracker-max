@@ -13,10 +13,8 @@ export default function FilterBar({ baseKeyword = 'status:open' }) {
   const filter = util.getFilter() as (keyword: string) => void;
 
   useEffect(() => {
-    return () => {
-      filter(keyword);
-    };
-  }, [filter, keyword]);
+    filter(keyword);
+  }, [keyword]);
 
   function submitHandler(e: React.FormEvent) {
     e.preventDefault();

@@ -12,6 +12,7 @@ import TabButton from '../components/common/TabButton';
 import Layout from '../components/Layout';
 import Button from '../components/common/button/BaseButton';
 import { Data } from '../types';
+import axios from 'axios';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 export default function Issues() {
@@ -19,78 +20,25 @@ export default function Issues() {
   const { auth, logout } = useAuth();
   const logo = (util.getLogoByTheme() as ContextLogo).medium;
   const navigate = useNavigate();
-
   const axiosPrivate = useAxiosPrivate();
 
-  const [data, setData] = useState<Data>({
-    openCount: 1,
-    closedCount: 1,
-    labelCount: 1,
-    milestoneCount: 1,
-    issues: [
-      {
-        id: 1,
-        title: '제목',
-        createdAt: '2023-07-24 17:22',
-        user: {
-          name: '감귤',
-          profileImg: 'ddd.png',
-        },
-        labels: [
-          {
-            id: 1,
-            name: 'documentation',
-            backgroundColor: '#0025E6',
-            textColor: '#0025E6',
-            description: '설명',
-          },
-          {
-            id: 2,
-            name: 'documentation',
-            backgroundColor: '#0025E6',
-            textColor: '#0025E6',
-            description: '설명',
-          },
-        ],
-        milestone: {
-          id: 1,
-          name: 'sprint1',
-        },
-      },
-      {
-        id: 2,
-        title: '제목2',
-        createdAt: '2023-07-24 17:24',
-        user: {
-          name: '감귤',
-          profileImg: 'ddd.png',
-        },
-        labels: [
-          {
-            id: 3,
-            name: 'fix',
-            backgroundColor: '#0025E6',
-            textColor: '#0025E6',
-            description: '설명',
-          },
-        ],
-        milestone: {
-          id: 2,
-          name: 'sprint2',
-        },
-      },
-    ],
-  });
+  const [data, setData] = useState<Data>(null);
 
   util.getFilter = () => (keywords: string) => {
     const fetchData = async () => {
       const params = keywordParser(keywords);
 
-      const res = await axiosPrivate.get('/api/issues', { params });
+      const res = await axios.get('/api/issues', {
+        params,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
 
       try {
         if (res.status === 200) {
           setData(res.data.message);
+          console.log(res.data.message);
         }
       } catch (error) {
         console.error(error);
@@ -164,7 +112,7 @@ export default function Issues() {
         </ActionGroup>
       </Toolbar>
       <Main>
-        {data ? <IssueTable issues={data.issues} /> : <p>서버오류</p>}
+        {data ? <IssueTable issues={data.issueReads} /> : <p>서버오류</p>}
       </Main>
       {/* <button onClick={() => control.logoutCheck()}>logout</button> */}
     </Layout>
