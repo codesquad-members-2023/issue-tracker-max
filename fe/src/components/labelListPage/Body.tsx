@@ -20,34 +20,40 @@ export const Body: React.FC<Props> = ({
   fetchLabelList,
 }) => {
   return (
-    <div css={bodyStyle}>
-      {isAddTableOpen && (
-        <LabelEditTable
-          header={<TableHeader title="새로운 레이블 추가" />}
-          typeVariant="add"
-          onAddTableClose={onAddTableClose}
-          fetchLabelList={fetchLabelList}
-        />
-      )}
-
-      <Box header={<span className="box-header">{labelCount}개의 레이블</span>}>
-        <ul>
-          {labelList.length > 0 ? (
-            <>
-              {labelList.map((label) => (
-                <LabelItem
-                  key={label.id}
-                  label={label}
-                  fetchLabelList={fetchLabelList}
-                />
-              ))}
-            </>
-          ) : (
-            <li className="label-list">레이블이 없습니다.</li>
+    <>
+      {labelList && (
+        <div css={bodyStyle}>
+          {isAddTableOpen && (
+            <LabelEditTable
+              header={<TableHeader title="새로운 레이블 추가" />}
+              typeVariant="add"
+              onAddTableClose={onAddTableClose}
+              fetchLabelList={fetchLabelList}
+            />
           )}
-        </ul>
-      </Box>
-    </div>
+
+          <Box
+            header={<span className="box-header">{labelCount}개의 레이블</span>}
+          >
+            <ul>
+              {labelList.length > 0 ? (
+                <>
+                  {labelList.map((label) => (
+                    <LabelItem
+                      key={label.id}
+                      label={label}
+                      fetchLabelList={fetchLabelList}
+                    />
+                  ))}
+                </>
+              ) : (
+                <li className="label-list">레이블이 없습니다.</li>
+              )}
+            </ul>
+          </Box>
+        </div>
+      )}
+    </>
   );
 };
 

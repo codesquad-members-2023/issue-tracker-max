@@ -5,7 +5,7 @@ import { getLabelList } from 'apis/api';
 
 export const LabelListPage: React.FC = () => {
   const [isAddTableOpen, setIsAddTableOpen] = useState(false);
-  const [labelListData, setLabelListData] = useState<Label[]>([]);
+  const [labelListData, setLabelListData] = useState<LabelList>(initialData);
 
   const fetchLabelList = async () => {
     const pageData = await getLabelList();
@@ -36,17 +36,23 @@ export const LabelListPage: React.FC = () => {
     >
       <SubNav
         onAddTableOpen={onAddTableOpen}
-        labelCount={labelListData.length}
-        milestoneCount={13}
+        labelCount={labelListData.labelCount}
+        milestoneCount={labelListData.milestoneCount}
         isAddTableOpen={isAddTableOpen}
       />
       <Body
         isAddTableOpen={isAddTableOpen}
-        labelList={labelListData}
-        labelCount={labelListData.length}
+        labelList={labelListData.labels}
+        labelCount={labelListData.labelCount}
         onAddTableClose={onAddTableClose}
         fetchLabelList={fetchLabelList}
       />
     </div>
   );
+};
+
+const initialData = {
+  labelCount: 0,
+  milestoneCount: 0,
+  labels: [],
 };
