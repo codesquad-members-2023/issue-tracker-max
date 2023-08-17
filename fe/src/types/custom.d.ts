@@ -93,7 +93,7 @@ type IssueDetailMilestone = {
   progress: number;
 };
 
-type Comment = {
+type CommentType = {
   id: number;
   author: User;
   contents: string;
@@ -110,5 +110,31 @@ type IssueDetailPageData = {
   assignees: User[];
   labels: IssueDetailLabel[];
   milestone: IssueDetailMilestone;
-  comments: Comment[];
+  comments: CommentType[];
+};
+
+// SIDE_BAR_SELECTED_OPTION
+// type SelectionState = {
+//   assignees: number[];
+//   labels: number[];
+//   milestones: number | null;
+// };
+// // ISSUE_DETAIL_SIDE_BAR_SELECTED_OPTION
+// type IssueDetailSideBarData = {
+//   assignees: User[];
+//   labels: IssueDetailLabel[];
+//   milestones: { id: number; name: string; progress: number } | null;
+// };
+
+type SelectionState = {
+  newIssuePage: {
+    assignees: number[];
+    labels: number[];
+    milestones: number | null;
+  };
+  detailPage: {
+    assignees: User[];
+    labels: IssueDetailLabel[];
+    milestones: { id: number; name: string; progress: number } | null;
+  };
 };

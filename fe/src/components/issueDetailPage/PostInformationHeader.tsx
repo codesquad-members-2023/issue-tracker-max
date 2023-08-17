@@ -1,32 +1,41 @@
-import { useState } from 'react';
+import { Theme, css } from '@emotion/react';
+import { useRef, useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { Button } from '@components/common/Button';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/textInput/TextInput';
+import { patchIssueTitle } from 'apis/api';
 
 type Props = {
   title: string;
   id: number;
+  status: string;
+  onToggleIssueStatus: (status: string, id: number) => void;
 };
 
 export const PostInformationHeader: React.FC<Props> = ({
   title,
   id,
+  status,
+  onToggleIssueStatus,
 }: Props) => {
   const theme = useTheme() as any;
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [titleInput, setTitleInput] = useState<string>('');
+  const [titleInput, setTitleInput] = useState<string>(title);
+  const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
-  const isDisabled = title.length === 0;
+  const placeholderValueRef = useRef<string>(title);
 
   const onEditTitleOpen = () => {
+    placeholderValueRef.current = titleInput;
     setIsEditing(true);
   };
 
-  const onEditTitleClose = () => {
+  const onEditTitleCancel = () => {
+    setTitleInput(placeholderValueRef.current);
     setIsEditing(false);
   };
 
@@ -38,78 +47,56 @@ export const PostInformationHeader: React.FC<Props> = ({
     setTitleInput('');
   };
 
-  const onSubmitTitle = () => {
-    console.log('제목 변경');
-  };
-
-  const onCloseIssue = () => {
-    console.log('이슈 닫기');
+  const onSubmitTitle = async () => {
+    try {
+      setIsSubmiting(true);
+      await patchIssueTitle(id, titleInput);
+      setIsEditing(false);
+    } catch (error) {
+      console.log(error);
+      //에러처리
+    } finally {
+      setIsSubmiting(false);
+    }
   };
 
   return (
-    <div
-      css={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        gap: '16px',
-        boxSizing: 'border-box',
-      }}
-    >
+    <div css={postInformationHeaderStyle}>
       {isEditing ? (
         <TextInput
           height={40}
           value={titleInput}
           label="제목"
-          placeholder={title}
           inputType="text"
-          disabled={false}
+          disabled={isSubmiting}
           onChange={onChangeTitle}
           onClearInput={onClearInput}
         />
       ) : (
-        <div
-          css={{
-            display: 'flex',
-            gap: '8px',
-          }}
-        >
-          <h2
-            css={{
-              color: theme.neutral.text.strong,
-              font: theme.fonts.displayBold32,
-            }}
-          >
-            {title}
-          </h2>
-
-          <span
-            css={{
-              color: theme.neutral.text.weak,
-              font: theme.fonts.displayBold32,
-            }}
-          >
-            #{id}
-          </span>
+        <div className="title-container">
+          <h2>{titleInput || title}</h2>
+          <span>#{id}</span>
         </div>
       )}
 
-      <div
-        css={{
-          display: 'flex',
-          gap: '16px',
-          alignItems: 'center',
-        }}
-      >
+      <div className="button-container">
         {isEditing ? (
           <>
-            <Button typeVariant="outline" size="S" onClick={onEditTitleClose}>
+            <Button typeVariant="outline" size="S" onClick={onEditTitleCancel}>
               <XSquare stroke={theme.brand.text.weak} />
               편집 취소
             </Button>
-            <Button typeVariant="contained" size="S" disabled={isDisabled}>
-              <Edit stroke={theme.brand.text.default} onClick={onSubmitTitle} />
+            <Button
+              typeVariant="contained"
+              size="S"
+              disabled={
+                titleInput === placeholderValueRef.current ||
+                title.length === 0 ||
+                titleInput.length > 70
+              }
+              onClick={onSubmitTitle}
+            >
+              <Edit stroke={theme.brand.text.default} />
               편집 완료
             </Button>
           </>
@@ -119,9 +106,13 @@ export const PostInformationHeader: React.FC<Props> = ({
               <Edit stroke={theme.brand.text.weak} />
               제목 편집
             </Button>
-            <Button typeVariant="outline" size="S" onClick={onCloseIssue}>
+            <Button
+              typeVariant="outline"
+              size="S"
+              onClick={() => onToggleIssueStatus(status, id)}
+            >
               <Archive stroke={theme.brand.text.weak} />
-              이슈 닫기
+              {status === 'open' ? '이슈 닫기' : '이슈 열기'}
             </Button>
           </>
         )}
@@ -129,3 +120,33 @@ export const PostInformationHeader: React.FC<Props> = ({
     </div>
   );
 };
+
+const postInformationHeaderStyle = (theme: Theme) => css`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  box-sizing: border-box;
+
+  .title-container {
+    display: flex;
+    gap: 8px;
+  }
+
+  h2 {
+    color: ${theme.neutral.text.strong};
+    font: ${theme.fonts.displayBold32};
+  }
+
+  span {
+    color: ${theme.neutral.text.weak};
+    font: ${theme.fonts.displayBold32};
+  }
+
+  .button-container {
+    display: flex;
+    gap: 16px;
+    alignitems: center;
+  }
+`;

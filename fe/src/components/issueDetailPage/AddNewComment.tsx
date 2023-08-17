@@ -1,38 +1,30 @@
-import { useTheme } from '@emotion/react';
-import { Button } from '@components/common/Button';
+import { css } from '@emotion/react';
 import { Comment } from '@components/common/comment/Comment';
-import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 
 type Props = {
-  disabled?: boolean;
+  issueDetailPageData: IssueDetailPageData;
+  onAddComment: (comment: any) => void;
 };
 
-export const AddNewComment: React.FC<Props> = ({ disabled = true }) => {
-  const theme = useTheme() as any;
+export const AddNewComment: React.FC<Props> = ({
+  issueDetailPageData,
+  onAddComment,
+}) => {
   return (
-    <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        gap: '24px',
-      }}
-    >
+    <div css={addNewCommentStyles}>
       <Comment
+        issueDetailPageData={issueDetailPageData}
+        defaultValue=""
         typeVariant="add"
-        // letterCount={textAreaValue.length}
-        // textAreaValue={contents}
-        // onAddFileUrl={onAddFileUrl}
-        // onChangeTextArea={onChangeTextArea}
-        letterCount={1}
-        // textAreaValue="1"
-        onAddFileUrl={() => console.log('1')}
-        onChangeTextArea={() => console.log('1')}
+        onAddComment={onAddComment}
       />
-      <Button typeVariant="contained" size="S" disabled={disabled}>
-        <Plus stroke={theme.brand.text.default} />
-        코멘트 작성
-      </Button>
     </div>
   );
 };
+
+const addNewCommentStyles = css`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 24px;
+`;

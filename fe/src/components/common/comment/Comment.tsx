@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react';
 import { Box } from '../box/Box';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { TextArea } from '../textArea/TextArea';
 import { TextAreaInput } from '../textArea/TextAreaInput';
 import { CommentHeader } from './CommentHeader';
@@ -9,8 +9,10 @@ import { AddButtons } from '../textArea/AddButtons';
 import { Button } from '../Button';
 import { ReactComponent as PaperClip } from '@assets/icons/paperclip.svg';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
-import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { uploadFile } from 'apis/fileUpload';
+import { ReactComponent as Plus } from '@assets/icons/plus.svg';
+import { editComment, patchIssueContents, postNewComment } from 'apis/api';
+import { getLocalStorageUserId } from 'apis/localStorage';
 
 type DefaultFileStatusType = {
   typeError: boolean;
@@ -18,29 +20,44 @@ type DefaultFileStatusType = {
   isUploading: boolean;
   uploadFailed: boolean;
 };
-
 type Props = {
-  typeVariant: 'default' | 'edit' | 'add';
+  issueDetailPageData: IssueDetailPageData;
+  typeVariant: 'issue' | 'default' | 'edit' | 'add';
+  createdAt?: string;
+  comment?: CommentType;
   isDisabled?: boolean;
-  letterCount?: number;
-  placeholder?: string;
-  onChangeTextArea: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onAddFileUrl: (fileName: string, fileUrl: string) => void;
+  defaultValue: string;
+  onAddComment?: (comment: CommentType) => void;
+  onDeleteComment?: (id?: number) => void;
 };
 
 export const Comment: React.FC<Props> = ({
+  issueDetailPageData,
+  createdAt,
+  comment,
   typeVariant = 'default',
   isDisabled = false,
-  letterCount,
-  placeholder,
-  onChangeTextArea,
-  onAddFileUrl,
+  defaultValue,
+  onAddComment,
+  onDeleteComment,
 }) => {
   const theme = useTheme() as any;
 
-  const [textAreaValue, setTextAreaValue] = useState<string>('');
-  const [isDisplayingCount, setIsDisplayingCount] = useState(false);
+  //코멘트랑 textArea비슷한거 어케줄일지 생각하기..
+  const [textAreaValue, setTextAreaValue] = useState<string>(defaultValue);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDisplayingCount, setIsDisplayingCount] = useState(false);
+  const placeholderValueRef = useRef<string>(defaultValue);
+  const storagedUserId = getLocalStorageUserId();
+
+  useEffect(() => {
+    if (textAreaValue) {
+      setIsDisplayingCount(true);
+      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [textAreaValue]);
+
   const [fileStatus, setFileStatus] =
     useState<DefaultFileStatusType>(initialStatus);
 
@@ -75,8 +92,7 @@ export const Comment: React.FC<Props> = ({
         setFileStatus((prev) => ({ ...prev, isUploading: true }));
 
         const fileUrl = await uploadFile(file);
-
-        onAddFileUrl(fileName, fileUrl.fileUrl);
+        onAppendMarkdownFileUrl(fileName, fileUrl.fileUrl);
       } catch {
         setFileStatus((prev) => ({ ...prev, uploadFailed: true }));
       } finally {
@@ -85,20 +101,54 @@ export const Comment: React.FC<Props> = ({
     }
   };
 
-  useEffect(() => {
-    if (textAreaValue) {
-      setIsDisplayingCount(true);
-      const timer = setTimeout(() => setIsDisplayingCount(false), 2000);
+  const onChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTextAreaValue(e.target.value);
+  };
 
-      return () => clearTimeout(timer);
+  const onAppendMarkdownFileUrl = (fileName: string, fileUrl: string) => {
+    setTextAreaValue((prevValue) => `${prevValue}![${fileName}](${fileUrl})`);
+  };
+
+  const onAddSubmit = async () => {
+    try {
+      const newComment = await postNewComment(
+        issueDetailPageData.id,
+        storagedUserId,
+        textAreaValue,
+      );
+
+      if (onAddComment) {
+        onAddComment(newComment);
+        setTextAreaValue('');
+      }
+    } catch (error) {
+      console.error('이슈 추가 에러:', error);
+      // 에러처리
     }
-  }, [textAreaValue]);
+  };
+
+  const onEditSubmit = async () => {
+    try {
+      typeVariant === 'issue'
+        ? await patchIssueContents(issueDetailPageData.id, textAreaValue)
+        : await editComment(comment?.id, textAreaValue);
+
+      setIsEditing(false);
+    } catch (error) {
+      console.error('이슈 편집 에러:', error);
+      // 에러처리
+    }
+  };
 
   const onClickEdit = () => {
+    placeholderValueRef.current = textAreaValue;
     setIsEditing(true);
   };
 
-  const isTyping = textAreaValue.length > 0;
+  const onEditCancel = () => {
+    setIsEditing(false);
+    setTextAreaValue(placeholderValueRef.current);
+  };
 
   const wrapperStyle = {
     background: theme.neutral.surface.strong,
@@ -107,59 +157,81 @@ export const Comment: React.FC<Props> = ({
     },
   };
 
+  const isAuthor =
+    storagedUserId === comment?.author?.userId ||
+    storagedUserId === issueDetailPageData.author.userId;
+
+  const basicImage = '/basic-profile.jpeg';
   return (
     <>
       {typeVariant === 'add' && (
-        <TextArea
-          size="S"
-          letterCount={textAreaValue.length}
-          textAreaValue={textAreaValue}
-          onAddFileUrl={onAddFileUrl}
-          onChangeTextArea={onChangeTextArea}
-        />
+        <>
+          <TextArea
+            size="S"
+            typeVariant="add"
+            letterCount={textAreaValue.length}
+            textAreaValue={textAreaValue}
+            onAppendMarkdownFileUrl={onAppendMarkdownFileUrl}
+            onChangeTextArea={onChangeTextArea}
+          />
+
+          <Button
+            typeVariant="contained"
+            size="S"
+            disabled={textAreaValue === ''}
+            onClick={onAddSubmit}
+          >
+            <Plus stroke={theme.brand.text.default} />
+            코멘트 작성
+          </Button>
+        </>
       )}
-      {typeVariant === 'default' && (
+      {(typeVariant === 'default' || typeVariant === 'issue') && (
         <>
           <Box
             header={
               <CommentHeader
+                typeVariant={typeVariant}
+                commentId={comment?.id}
                 onClickEdit={onClickEdit}
-                image="D"
-                loginId="D"
-                createdAt="12시간전"
-                isAuthor={true}
-              ></CommentHeader>
+                onClickDelete={onDeleteComment}
+                image={
+                  typeVariant === 'issue'
+                    ? issueDetailPageData.author.image || basicImage
+                    : comment?.author?.image || basicImage
+                }
+                loginId={
+                  typeVariant === 'issue'
+                    ? issueDetailPageData.author.loginId
+                    : comment?.author?.loginId
+                }
+                createdAt={createdAt}
+                isAuthor={isAuthor}
+              />
             }
             customStyle={wrapperStyle}
           >
-            {isEditing ? (
+            <div css={{ paddingTop: '16px' }}>
+              <TextAreaInput
+                typeVariant={isEditing ? 'add' : 'default'}
+                textAreaValue={textAreaValue}
+                placeholder={defaultValue}
+                isDisabled={isDisabled}
+                onChangeTextArea={onChangeTextArea}
+              />
+            </div>
+            {isEditing && (
               <>
                 <div
                   css={{
                     background: theme.neutral.surface.strong,
                     paddingTop: '16px',
+                    borderRadius: `0 0 ${theme.radius.l} ${theme.radius.l}`,
                   }}
                 >
-                  {isTyping && !isDisabled && (
-                    <div
-                      css={{
-                        padding: '0 16px 8px 16px',
-                        font: theme.fonts.displayMedium12,
-                        color: theme.neutral.text.weak,
-                      }}
-                    >
-                      코멘트를 입력하세요
-                    </div>
-                  )}
-                  <TextAreaInput
-                    textAreaValue={textAreaValue}
-                    onChangeTextArea={onChangeTextArea}
-                    isDisabled={isDisabled}
-                    placeholder={placeholder}
-                  ></TextAreaInput>
                   <Caption
                     isDisplayingCount={isDisplayingCount}
-                    letterCount={letterCount}
+                    letterCount={textAreaValue.length}
                   />
                   <AddButtons
                     onFileChange={onFileChange}
@@ -178,63 +250,36 @@ export const Comment: React.FC<Props> = ({
                   </AddButtons>
                 </div>
               </>
-            ) : (
-              <div
-                css={{
-                  '&:focus-within': {
-                    background: theme.neutral.surface.strong,
-                  },
-                  paddingTop: '16px',
-                }}
-              >
-                {isTyping && !isDisabled && (
-                  <div
-                    css={{
-                      padding: '0 16px 8px 16px',
-                      font: theme.fonts.displayMedium12,
-                      color: theme.neutral.text.weak,
-                    }}
-                  >
-                    코멘트를 입력하세요
-                  </div>
-                )}
-                <TextAreaInput
-                  // textAreaValue={textAreaValue}
-                  // onChangeTextArea={onChangeTextArea}
-                  placeholder={textAreaValue}
-                  isDisabled={true}
-                ></TextAreaInput>
-              </div>
             )}
           </Box>
           {isEditing && (
-            <ButtonContainer>
-              <Button
-                typeVariant="ghost"
-                size="M"
-                onClick={() => {
-                  setIsEditing(false);
-                }}
-              >
-                <XSquare stroke={theme.neutral.text.default} />
+            <div
+              css={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: '16px',
+              }}
+            >
+              <Button typeVariant="outline" size="S" onClick={onEditCancel}>
+                <XSquare stroke={theme.brand.border.default} />
                 편집 취소
               </Button>
               <Button
                 typeVariant="contained"
-                size="L"
-                // disabled={titleInput === '' || isSubmiting}
-                // onClick={onSubmit}
+                size="S"
+                disabled={textAreaValue === placeholderValueRef.current}
+                onClick={onEditSubmit}
               >
                 편집 완료
               </Button>
-            </ButtonContainer>
+            </div>
           )}
         </>
       )}
     </>
   );
 };
-
 const initialStatus = {
   typeError: false,
   sizeError: false,

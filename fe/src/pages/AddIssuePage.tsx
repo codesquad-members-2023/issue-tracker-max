@@ -13,20 +13,17 @@ import { ButtonContainer } from '@components/addIssuePage/ButtonContainer';
 import { Button } from '@components/common/Button';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { TextInput } from '@components/common/textInput/TextInput';
-import { PATH } from 'constants/PATH';
-// import { ISSUE_DETAIL_PAGE } from 'constants/PATH';
+
+import { ISSUE_LIST_PAGE } from 'constants/PATH';
+import { postNewIssue } from 'apis/api';
+import { getLocalStorageUserId } from 'apis/localStorage';
+
 
 type SelectionState = {
   assignees: number[];
   labels: number[];
-  milestones: number[];
+  milestones: number | null;
 };
-
-// 추후 구현 보완시 추가
-// type Props = {
-//   authorId: number;
-//   userImage: string;
-// };
 
 export const AddIssuePage: React.FC = ({}) => {
   const theme = useTheme() as any;
@@ -36,7 +33,7 @@ export const AddIssuePage: React.FC = ({}) => {
   const [selections, setSelections] = useState<SelectionState>({
     assignees: [],
     labels: [],
-    milestones: [], //todo 배열말고 단일 선택으로 변경
+    milestones: null, //todo 이름 단수형으로 변경
   });
   const [titleInput, setTitleInput] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
@@ -44,50 +41,22 @@ export const AddIssuePage: React.FC = ({}) => {
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
   const onSubmit = async () => {
-    // const bodyData = {
-    //   title: '타이틀',
-    //   contents: '콘텐츠',
-    //   authorId: 1,
-    //   assigneeIds: selections.assignees,
-    //   labelIds: selections.labels,
-    //   milestoneId: selections.milestones,
-    // };
-
-    const bodyData = {
-      title: '타이틀',
-      contents: '콘텐츠',
-      authorId: 1,
-      assigneeIds: selections.assignees,
-      labelIds: selections.labels,
-      milestoneId: 1,
-    };
-
     try {
       setIsSubmiting(true);
       setIsSubmitError(false);
-      const response = await fetch(
-        `${import.meta.env.VITE_APP_BASE_URL}/issues/new`,
-        // `/issues/new`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(bodyData),
-        },
+
+      const authorId = getLocalStorageUserId();
+
+      const data = await postNewIssue(
+        titleInput,
+        textAreaValue,
+        authorId,
+        selections.assignees,
+        selections.labels,
+        selections.milestones,
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('API Response Error:', errorData);
-        setIsSubmitError(true);
-        return;
-      }
-
-      const data = await response.json();
-
       navigate(`/issue/${data.id}`);
-
       return data;
     } catch (error) {
       console.error('API Call Error:', error);
@@ -118,7 +87,7 @@ export const AddIssuePage: React.FC = ({}) => {
   const onSingleSelectedMilestone = (id: number) => {
     setSelections((prev) => ({
       ...prev,
-      milestones: prev.milestones.includes(id) ? [] : [id],
+      milestones: prev.milestones === id ? null : id,
     }));
   };
 
@@ -130,7 +99,7 @@ export const AddIssuePage: React.FC = ({}) => {
     setTextAreaValue(e.target.value);
   };
 
-  const onAddFileUrl = (fileName: string, fileUrl: string) => {
+  const onAppendMarkdownFileUrl = (fileName: string, fileUrl: string) => {
     setTextAreaValue((prevValue) => `${prevValue}![${fileName}](${fileUrl})`);
   };
 
@@ -159,7 +128,8 @@ export const AddIssuePage: React.FC = ({}) => {
           <TextArea
             letterCount={textAreaValue.length}
             textAreaValue={textAreaValue}
-            onAddFileUrl={onAddFileUrl}
+            typeVariant="add"
+            onAppendMarkdownFileUrl={onAppendMarkdownFileUrl}
             onChangeTextArea={onChangeTextArea}
           />
         </InputContainer>

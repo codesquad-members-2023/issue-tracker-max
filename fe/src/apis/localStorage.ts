@@ -6,7 +6,7 @@ export const getLocalStorageUserId = () => {
     return;
   }
 
-  return id;
+  return JSON.parse(id);
 };
 
 export const getLocalStorageLoginId = () => {
