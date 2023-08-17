@@ -1,6 +1,6 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { ReactComponent as MediumLogo } from '@assets/logos/mediumLogo.svg';
-import { Theme, css, useTheme } from '@emotion/react';
+import { Theme, css } from '@emotion/react';
 import { Button } from '@components/common/Button';
 import { ThemeToggle } from './ThemeToggle';
 import { PATH } from 'constants/PATH';
@@ -73,6 +73,6 @@ const headerStyle = (theme: Theme) => css`
 
   .profile-image {
     width: 32px;
-    border-radius: theme.radius.half;
+    border-radius: ${theme.radius.half};
   }
 `;

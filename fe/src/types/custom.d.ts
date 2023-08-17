@@ -48,6 +48,12 @@ type DefaultFileStatusType = {
   uploadFailed: boolean;
 };
 
+type LabelList = {
+  labelCount: number;
+  milestoneCount: number;
+  labels: Label[];
+};
+
 type Label = {
   id: number;
   name: string;
