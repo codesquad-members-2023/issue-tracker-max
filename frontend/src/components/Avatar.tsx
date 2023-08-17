@@ -24,7 +24,7 @@ export function Avatar({ src, userId, size }: AvatarProps) {
 
   return (
     <Div $size={size}>
-      {src ? (
+      {src !== "" && src ? (
         <img src={src} />
       ) : (
         <BaseAvatar fill={userId ? generateColor(userId) : "#DDD"} />
@@ -47,8 +47,7 @@ function BaseAvatar({ fill }: { fill: string }) {
 const Div = styled.div<{ $size: AvatarSize }>`
   width: ${({ $size }) => ($size === "L" ? "32px" : "20px")};
   height: ${({ $size }) => ($size === "L" ? "32px" : "20px")};
-  background: ${({ theme }) => theme.color.neutralSurfaceDefault};
-  border: 1px solid ${({ theme }) => theme.color.neutralSurfaceDefault};
+  background: #f7f7fc;
   border-radius: 32px;
 
   & img,

@@ -1,4 +1,6 @@
 import { DefaultTheme, styled } from "styled-components";
+import { Color } from "../types/colors";
+import { getColorCode } from "../utils/getColorCode";
 import { Icon, IconType } from "./icon/Icon";
 
 export function InformationTag({
@@ -14,7 +16,7 @@ export function InformationTag({
   size: "M" | "S";
   toolTip?: string;
   icon?: keyof IconType;
-  fill?: string;
+  fill?: Color;
   stroke?: "Default" | "DefaultActive";
   fontColor?: "LIGHT" | "DARK";
 }) {
@@ -74,9 +76,7 @@ const StyledInformationTag = styled.div<{
         : getBorderColor($fill, theme)};
   border-radius: ${({ theme }) => theme.radius.large};
   background-color: ${({ theme, $fill }) =>
-    $fill && /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/g.test($fill)
-      ? $fill
-      : theme.color.neutralSurfaceStrong};
+    $fill ? getColorCode($fill, theme) : theme.color.neutralSurfaceStrong};
   color: ${({ theme, $darkFont }) =>
     $darkFont ? theme.color.neutralTextWeak : theme.color.brandTextDefault};
   font: ${({ theme }) => theme.font.displayMedium12};

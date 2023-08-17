@@ -1,11 +1,23 @@
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import { IssueData } from "../../page/main/Main";
+import { Avatar } from "../../components/Avatar";
+import { InformationTag } from "../../components/InformationTag";
+import { Icon } from "../../components/icon/Icon";
+import { Color, ThemeColorKeys } from "../../types/colors";
 import { getElapsedSince } from "../../utils/getElapsedSince";
-import { Avatar } from "../Avatar";
-import { InformationTag } from "../InformationTag";
-import { Icon, ThemeColorKeys } from "../icon/Icon";
+import { IssueData } from "./Main";
 
-export function Issue({ issue }: { issue: IssueData }) {
+export function MainTableElement({
+  issue,
+  inputChecked,
+  handleCheckedIssue,
+}: {
+  issue: IssueData;
+  inputChecked: boolean;
+  handleCheckedIssue: (value: number) => void;
+}) {
+  const navigate = useNavigate();
+
   const iconColors: {
     [key: string]: ThemeColorKeys;
   } = {
@@ -13,23 +25,33 @@ export function Issue({ issue }: { issue: IssueData }) {
     issueInfo: "neutralTextWeak",
   };
 
+  const navigateToIssueDetail = () => {
+    navigate(`/issues/${issue.id}`);
+  };
+
   return (
     <Div>
       <div>
         <CheckboxLabel>
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            onChange={() => handleCheckedIssue(issue.id)}
+            checked={inputChecked}
+          />
         </CheckboxLabel>
       </div>
       <IssueContent>
         <IssueTitle>
           <Icon name="AlertCircle" color={iconColors.issueTitle} />
-          <TitleAnchor>{issue.title}</TitleAnchor>
+          <TitleAnchor onClick={navigateToIssueDetail}>
+            {issue.title}
+          </TitleAnchor>
           {issue.labels.map((label, index) => (
             <InformationTag
               key={index}
               value={label.name}
               size="S"
-              fill={label.background}
+              fill={label.background as Color}
               fontColor="LIGHT"
             />
           ))}
@@ -41,26 +63,32 @@ export function Issue({ issue }: { issue: IssueData }) {
               issue.author.name
             }님에 의해 작성되었습니다.`}
           </span>
-          {issue.milestone && (
+          {issue.milestones && (
             <span>
               <Icon name="Milestone" color={iconColors.issueInfo} />
-              {issue.milestone.name}
+              {issue.milestones.name}
             </span>
           )}
         </IssueInfo>
       </IssueContent>
       <AssigneesDiv>
-        <Avatar
-          size="S"
-          src="https://avatars.githubusercontent.com/u/41321198?v=4"
-        />
+        {issue.assignees.map((assignee, index) => {
+          return (
+            <Avatar
+              key={index}
+              size="S"
+              src={assignee.avatarUrl}
+              userId={assignee.name}
+            />
+          );
+        })}
       </AssigneesDiv>
       <CommentDiv>
         {issue.commentCount !== 0 && (
-          <>
+          <a onClick={navigateToIssueDetail}>
             <Icon name="Comment" color={iconColors.issueInfo} />
             <span>{issue.commentCount}</span>
-          </>
+          </a>
         )}
       </CommentDiv>
     </Div>
@@ -122,8 +150,19 @@ const IssueInfo = styled.div`
 const AssigneesDiv = styled.div`
   width: 96px;
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+
+  & > div {
+    margin-left: -10px;
+    transition: all 0.3s ease;
+  }
+
+  &:hover > div {
+    margin-left: 0;
+  }
 `;
 
 const CommentDiv = styled.div`
@@ -134,6 +173,11 @@ const CommentDiv = styled.div`
   align-items: center;
   gap: 4px;
   cursor: pointer;
+
+  & a {
+    display: flex;
+    gap: 5px;
+  }
 
   & span {
     color: ${({ theme }) => theme.color.neutralTextStrong};
