@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { styled, useTheme } from "styled-components";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
-import { getAccessToken } from "../../utils/localStorage";
+import { getAccessToken, getUserInfo } from "../../utils/localStorage";
 import { Avatar } from "../Avatar";
 import { Button } from "../Button";
 import { InformationTag } from "../InformationTag";
@@ -46,6 +46,7 @@ export function CommentItem({
 
   const maxContentLength = 10000;
   const writtenAt = modifiedAt ?? createdAt;
+  const loginUserInfo = getUserInfo();
 
   const validateContent = (value: string) => {
     const emptyContent = value.length === 0;
@@ -132,28 +133,32 @@ export function CommentItem({
               stroke="Default"
             />
           )}
-          <Button
-            height={32}
-            size="S"
-            buttonType="Ghost"
-            icon="Trash"
-            color={theme.color.dangerTextDefault}
-            onMouseDown={(e) => {
-              e.preventDefault();
-              deleteComment();
-            }}
-          >
-            삭제
-          </Button>
-          <Button
-            height={32}
-            size="S"
-            buttonType="Ghost"
-            icon="Edit"
-            onClick={onEditButtonClick}
-          >
-            편집
-          </Button>
+          {userId === loginUserInfo?.loginId && (
+            <>
+              <Button
+                height={32}
+                size="S"
+                buttonType="Ghost"
+                icon="Trash"
+                color={theme.color.dangerTextDefault}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  deleteComment();
+                }}
+              >
+                삭제
+              </Button>
+              <Button
+                height={32}
+                size="S"
+                buttonType="Ghost"
+                icon="Edit"
+                onClick={onEditButtonClick}
+              >
+                편집
+              </Button>
+            </>
+          )}
           <Button
             height={32}
             size="S"
