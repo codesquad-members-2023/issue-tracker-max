@@ -96,7 +96,7 @@ export default function IssueTable({ issues }: { issues: Issue[] }) {
 const Container = styled.article`
   background-color: ${({ theme }) => theme.color.neutral.surface.default};
   border: 1px solid ${({ theme }) => theme.color.neutral.border.default};
-  overflow: hidden;
+
   border-radius: ${({ theme }) => theme.objectStyles.radius.large};
   & > h3 {
     &:first-child {
