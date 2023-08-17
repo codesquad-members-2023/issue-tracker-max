@@ -126,7 +126,7 @@ public class IssueQueryService {
 			return "is:opened";
 		}
 
-		return builder.toString();
+		return builder.toString().stripTrailing();
 	}
 
 	private Map<String, Long> countIssuesByStatus() {
