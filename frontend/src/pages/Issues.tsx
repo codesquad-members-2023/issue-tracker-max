@@ -3,7 +3,7 @@ import { AppContext } from '../main';
 import Header from '../components/landmark/Header';
 import IssueTable from '../components/issues/IssueTable';
 import Main from '../components/landmark/Main';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ContextLogo from '../types/ContextLogo';
 import FilterBar from '../components/common/FilterBar';
 import Toolbar from '../components/landmark/Toolbar';
@@ -15,6 +15,8 @@ import Button from '../components/common/button/BaseButton';
 export default function Issues() {
   const { util } = useContext(AppContext);
   const logo = (util.getLogoByTheme() as ContextLogo).medium;
+  const navigate = useNavigate();
+
   return (
     <Layout>
       <Header>
@@ -43,7 +45,12 @@ export default function Issues() {
               },
             ]}
           />
-          <Button type="button" iconName="plus">
+          <Button
+            type="button"
+            iconName="plus"
+            onClick={() => {
+              navigate('/addIssue');
+            }}>
             이슈 작성
           </Button>
         </ActionGroup>

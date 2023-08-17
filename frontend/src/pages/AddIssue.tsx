@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { styled } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from '../api/axios';
-import { postNewIssue } from '../api';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { AxiosError } from 'axios';
 import { AppContext } from '../main';
 import ContextLogo from '../types/ContextLogo';
 import Layout from '../components/Layout';
@@ -36,6 +36,7 @@ export default function AddIssue() {
     milestoneId: null,
   });
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
 
   const isFilled = !!issueInfo.title;
 
@@ -52,6 +53,21 @@ export default function AddIssue() {
   const onSubmit = async () => {
     const data = await postNewIssue(issueInfo);
     console.log(data);
+  };
+
+  const postNewIssue = async (issueInfo: IssueInfo) => {
+    try {
+      const res = await axiosPrivate.post('/api/issues', issueInfo, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      console.log(res.data);
+      navigate('/');
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        alert('에러가 발생했습니다.\n' + '실패 사유: ' + err.message);
+        console.error(err);
+      }
+    }
   };
 
   return (
