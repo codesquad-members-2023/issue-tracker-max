@@ -57,7 +57,7 @@ export default function TableElement({
         </Info>
       </Left>
       <Right>
-        <img src={user.profileImg} alt={user.name} />
+        <UserImage src={user.profileImg} alt={user.name} />
       </Right>
     </Container>
   );
@@ -100,10 +100,17 @@ const Title = styled.h3`
   }
 `;
 
+const UserImage = styled.img`
+  width: 16px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.objectStyles.radius.half};
+`;
+
 const Labels = styled.ul`
   display: flex;
   gap: 8px;
-`
+`;
 
 const Description = styled.p`
   ${({ theme }) => theme.font.available.medium[16]}

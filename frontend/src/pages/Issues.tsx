@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppContext } from '../main';
 import useAuth from '../hooks/useAuth';
@@ -6,7 +6,6 @@ import Header from '../components/landmark/Header';
 import IssueTable from '../components/issues/IssueTable';
 import Main from '../components/landmark/Main';
 import ContextLogo from '../types/ContextLogo';
-import FilterBar from '../components/common/FilterBar';
 import Toolbar from '../components/landmark/Toolbar';
 import { styled } from 'styled-components';
 import TabButton from '../components/common/TabButton';
