@@ -3,15 +3,11 @@ type Props = {
 };
 
 export const ButtonContainer: React.FC<Props> = ({ children }) => {
-  return (
-    <div
-      css={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <div css={bodyContainerStyle}>{children}</div>;
+};
+
+const bodyContainerStyle = {
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
 };

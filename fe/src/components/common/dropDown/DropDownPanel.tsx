@@ -31,7 +31,7 @@ export const DropDownPanel: React.FC<Props> = ({
     return () => {
       window.removeEventListener('click', onClick);
     };
-  }, []);
+  }, [onOutsideClick]);
 
   return (
     <div

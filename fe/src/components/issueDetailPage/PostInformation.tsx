@@ -1,26 +1,24 @@
+import { css } from '@emotion/react';
 import { PostInformationHeader } from './PostInformationHeader';
 import { PostInformationHeaderMeta } from './PostInformationHeaderMeta';
 
 type Props = {
   issueDetailPageData: IssueDetailPageData;
+  onToggleIssueStatus: (status: string, id: number) => void;
 };
 
 export const PostInformation: React.FC<Props> = ({
   issueDetailPageData,
+  onToggleIssueStatus,
 }: Props) => {
   return (
     <>
-      <div
-        css={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-        }}
-      >
+      <div css={postInformationStyle}>
         <PostInformationHeader
           title={issueDetailPageData.title}
           id={issueDetailPageData.id}
+          status={issueDetailPageData.status}
+          onToggleIssueStatus={onToggleIssueStatus}
         />
         <PostInformationHeaderMeta
           status={issueDetailPageData.status}
@@ -32,3 +30,10 @@ export const PostInformation: React.FC<Props> = ({
     </>
   );
 };
+
+const postInformationStyle = css`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;

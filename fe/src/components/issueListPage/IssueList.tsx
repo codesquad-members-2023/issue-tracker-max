@@ -93,7 +93,7 @@ export const IssueList: React.FC<Props> = ({
             <CheckOnCircle stroke="#a371f7" />
           )}
           <Link
-            to={`${id}`}
+            to={`/issue/${id}`}
             css={{
               textDecoration: 'none',
               font: theme.fonts.availableMedium20,

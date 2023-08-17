@@ -25,7 +25,7 @@ export const IssueTable: React.FC<Props> = ({
   const isCheckedIssue = checkedIssues.length > 0;
 
   const toggleCheckAllIssues = () => {
-    if (checkedIssues.length > 0) {
+    if (isCheckedIssue) {
       initCheckedIssues();
 
       return;

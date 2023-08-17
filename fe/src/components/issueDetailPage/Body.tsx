@@ -1,94 +1,120 @@
-import { useTheme } from '@emotion/react';
-import { SideBarRightPanel } from './SideBarRightPanel';
+import { Theme, css } from '@emotion/react';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { CommentContainer } from './CommentContainer';
-type Props = {};
+import { Comment } from '@components/common/comment/Comment';
+import { ListSideBar } from '@components/common/sideBar/ListSideBar';
+import { SideBar } from '@components/common/sideBar/SideBar';
+import { ReactComponent as Trash } from '@assets/icons/trash.svg';
+import { Button } from '@components/common/Button';
+import { deleteIssue } from 'apis/api';
 
-const mockData = {
-  id: 1,
-  title: '이슈 제목',
-  contents: '이슈 내용',
-  status: 'open',
-  createdAt: '2023-07-26T02:05:00',
-  author: {
-    userId: 1,
-    loginId: 'hana1234',
-    image: '이미지url',
-  },
-  assignees: [
-    {
-      userId: 2,
-      loginId: 'bono1234',
-      image: '이미지url',
-    },
-    {
-      userId: 3,
-      loginId: 'jian1234',
-      image: '이미지url',
-    },
-  ],
-  labels: [
-    {
-      id: 1,
-      name: 'feat',
-      textColor: 'light',
-      backgroundColor: '#FF0000',
-    },
-    {
-      id: 3,
-      name: 'fix',
-      textColor: 'dark',
-      backgroundColor: '#800000',
-    },
-  ],
-  milestone: {
-    id: 1,
-    name: '마일스톤1',
-    progress: 34,
-  },
-  comments: [
-    {
-      id: 1,
-      author: {
-        userId: 4,
-        loginId: 'ayaan1234',
-        image: '이미지url',
-      },
-      contents: '코멘트 내용',
-      createdAt: '2023-07-26T02:13:00',
-    },
-    {
-      id: 2,
-      author: {
-        userId: 3,
-        loginId: 'jian1234',
-        image: '이미지url',
-      },
-      contents: '코멘트 내용',
-      createdAt: '2023-07-26T02:13:30',
-    },
-  ],
+type Props = {
+  issueDetailPageData: IssueDetailPageData;
+  selections: SelectionState['newIssuePage'];
+  onAddComment: (comment: CommentType) => void;
+  onDeleteComment?: (id?: number) => void;
+  onChangeSelect?: (key: string) => void;
+  onSingleSelectedMilestone: (id: number) => void;
+  onMultipleSelectedAssignee: (id: number) => void;
+  onMultipleSelectedLabel: (id: number) => void;
 };
 
-export const Body: React.FC = ({}: Props) => {
-  const theme = useTheme() as any;
+export const Body: React.FC<Props> = ({
+  issueDetailPageData,
+  selections,
+  onAddComment,
+  onDeleteComment,
+  onChangeSelect,
+  onSingleSelectedMilestone,
+  onMultipleSelectedAssignee,
+  onMultipleSelectedLabel,
+}) => {
+  const [isDeleteError, setIsDeleteError] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const onDeleteIssue = async () => {
+    try {
+      setIsDeleteError(false);
+      await deleteIssue(issueDetailPageData.id);
+      navigate('/issues');
+    } catch (error) {
+      console.error(error);
+      setIsDeleteError(true);
+    }
+  };
 
   return (
-    <div
-      css={{
-        width: '100%',
-        display: 'flex',
-        gap: '32px',
-        borderTop: `${theme.border.default} ${theme.neutral.border.default}`,
-        paddingTop: '24px',
-      }}
-    >
-      <CommentContainer
-        contents={mockData.contents}
-        createdAt={mockData.createdAt}
-        author={mockData.author}
-        comments={mockData.comments}
-      />
-      <SideBarRightPanel />
+    <div css={bodyStyle}>
+      <div className="container">
+        <Comment
+          typeVariant="issue"
+          key={issueDetailPageData.id}
+          issueDetailPageData={issueDetailPageData}
+          createdAt={issueDetailPageData.createdAt}
+          defaultValue={issueDetailPageData.contents}
+        />
+        <CommentContainer
+          issueDetailPageData={issueDetailPageData}
+          onAddComment={onAddComment}
+          onDeleteComment={onDeleteComment}
+        />
+      </div>
+      <div className="rightPanel">
+        <SideBar>
+          <ListSideBar
+            issueDetailPageData={issueDetailPageData}
+            onSingleSelectedMilestone={onSingleSelectedMilestone}
+            onMultipleSelectedAssignee={onMultipleSelectedAssignee}
+            onMultipleSelectedLabel={onMultipleSelectedLabel}
+            selections={selections}
+            onChangeSelect={onChangeSelect}
+          />
+        </SideBar>
+        <Button typeVariant="ghost" size="S" onClick={onDeleteIssue}>
+          <Trash className="button-delete" />
+          <span className="button-delete">이슈 삭제</span>
+        </Button>
+        {isDeleteError && (
+          <span className="text-error">이슈 삭제에 실패했습니다.</span>
+        )}
+      </div>
     </div>
   );
 };
+
+const bodyStyle = (theme: Theme) => css`
+  width: 100%;
+  display: flex;
+  gap: 32px;
+  bordertop: ${theme.border.default} ${theme.neutral.border.default};
+  paddingtop: 24px;
+
+  .container {
+    width: 960px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .rightPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-end;
+
+    & span {
+      color: ${theme.neutral.text.default};
+      font: ${theme.fonts.availableMedium16};
+    }
+
+    .button-delete {
+      color: ${theme.danger.text.default};
+      stroke: ${theme.danger.text.default};
+    }
+
+    .text-error {
+      color: ${theme.danger.text.default};
+    }
+  }
+`;
