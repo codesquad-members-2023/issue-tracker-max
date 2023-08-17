@@ -32,7 +32,7 @@ class JwtProviderTest extends IntegrationTestSupport {
 		// then
 		SoftAssertions.assertSoftly(softAssertions -> {
 			softAssertions.assertThat(token).isNotNull();
-			softAssertions.assertThat(token).startsWith("eyJhbGciOiJIUzM4NCJ9");
+			softAssertions.assertThat(token).startsWith("eyJhbGciOiJIUzI1NiJ9");
 			softAssertions.assertAll();
 		});
 	}
