@@ -40,6 +40,7 @@ public class UserService {
 		userRepository.save(User.builder()
 			.loginId(userRequest.getLoginId())
 			.password(userRequest.getPassword())
+			.image("")
 			.build());
 	}
 
