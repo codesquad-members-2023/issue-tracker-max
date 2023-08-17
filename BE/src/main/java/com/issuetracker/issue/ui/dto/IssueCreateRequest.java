@@ -43,8 +43,8 @@ public class IssueCreateRequest {
 		return new IssueCreateInputData(
 			title,
 			content,
-			assigneeIds,
-			labelIds,
+			ConvertorUtil.converterToNonNullList(assigneeIds),
+			ConvertorUtil.converterToNonNullList(labelIds),
 			milestoneId,
 			authorId
 		);

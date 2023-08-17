@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import com.issuetracker.issue.domain.assignee.AssigneeMember;
 import com.issuetracker.issue.domain.comment.IssueCommentRead;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.member.domain.Member;
@@ -25,13 +26,13 @@ public class IssueDetailRead {
 	private LocalDateTime createAt;
 	private Member author;
 	private Milestone milestone;
-	private List<Member> assignees;
+	private List<AssigneeMember> assignees;
 	private List<IssueCommentRead> comments;
 	private List<Label> labels;
 
 	@Builder
 	private IssueDetailRead(Long id, String title, String content, boolean isOpen, LocalDateTime createAt, Member author,
-		Milestone milestone, List<Member> assignees, List<Label> labels, List<IssueCommentRead> comments) {
+		Milestone milestone, List<AssigneeMember> assignees, List<Label> labels, List<IssueCommentRead> comments) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
