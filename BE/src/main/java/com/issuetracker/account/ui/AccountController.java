@@ -25,6 +25,7 @@ import com.issuetracker.account.ui.dto.LoginRequest;
 import com.issuetracker.account.ui.dto.OauthAccessTokenRequest;
 import com.issuetracker.account.ui.dto.OauthAccessTokenResponse;
 import com.issuetracker.account.ui.dto.OauthAccountInfoResponse;
+import com.issuetracker.account.ui.dto.OauthEmailResponse;
 import com.issuetracker.account.ui.dto.RefreshTokenRequest;
 import com.issuetracker.account.ui.dto.SignupRequest;
 import com.issuetracker.common.util.MemberIdExtractor;
@@ -36,6 +37,7 @@ public class AccountController {
 
 	private static final String ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token";
 	private static final String MEMBER_INFO_URL = "https://api.github.com/user";
+	private static final String GET_EMAIL_URL = "https://api.github.com/user/emails";
 
 	private static final RestTemplate restTemplate = new RestTemplate();
 
@@ -88,7 +90,7 @@ public class AccountController {
 	public ResponseEntity<JwtTokenResponse> getMemberInfo(@RequestParam String code) {
 		OauthAccessTokenResponse accessTokenResponse = getAccessToken(code);
 		OauthAccountInfoResponse accountInfoResponse = getAccountInfo(accessTokenResponse.getAccessToken());
-
+		
 		return ResponseEntity.ok(
 			JwtTokenResponse.from(
 				accountService.proceedToOauthLogin(
@@ -108,11 +110,28 @@ public class AccountController {
 		headers.setBearerAuth(accessToken);
 		HttpEntity<Void> request = new HttpEntity<>(headers);
 
-		return restTemplate.exchange(
+		OauthAccountInfoResponse oauthAccountInfoResponse
+			= restTemplate.exchange(
 			MEMBER_INFO_URL,
 			HttpMethod.GET,
 			request,
 			OauthAccountInfoResponse.class
 		).getBody();
+
+		assert oauthAccountInfoResponse != null;
+		if (!oauthAccountInfoResponse.verifyEmail()) {
+
+			OauthEmailResponse[] emailResponse = restTemplate.exchange(
+				GET_EMAIL_URL,
+				HttpMethod.GET,
+				request,
+				OauthEmailResponse[].class
+			).getBody();
+
+			assert emailResponse != null;
+			oauthAccountInfoResponse.setEmail(emailResponse[0].getEmail());
+		}
+
+		return oauthAccountInfoResponse;
 	}
 }

@@ -29,4 +29,12 @@ public class OauthAccountInfoResponse {
 			oauthId, email, nickname, profileUrl
 		);
 	}
+
+	public boolean verifyEmail() {
+		return email != null && !email.isBlank();
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

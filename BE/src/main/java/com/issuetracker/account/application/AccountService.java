@@ -45,7 +45,7 @@ public class AccountService {
 		// [1] 이메일이 존재하지 않는 경우
 		if (!account.verify()) {
 			// 회원 가입
-			Long memberId = signUp(SignUpInputData.from(account));
+			Long memberId = signUp(SignUpInputData.from(oauthAccountInputData.toAccount()));
 			mappingGitMember(memberId, oauthAccountInputData.getOauthId());
 
 			// 토큰 발급
