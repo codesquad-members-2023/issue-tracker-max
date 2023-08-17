@@ -3,50 +3,63 @@ import { ReactComponent as PaperclipIcon } from '../../assets/icon/paperclip.svg
 import { ReactComponent as CaptionIcon } from '../../assets/icon/caption.svg';
 import { border, font, radius } from '../../styles/styles';
 import { customFetch } from '../../util/customFetch';
+import { useEffect, useState } from 'react';
+import { PostFileRes } from '../../type/Response.type';
 
 interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  height: number;
+  height?: string;
+  withInfo: boolean;
+  onAddImg: (imgMarkdown: string) => void;
 }
 
-type Response = {
-  success: boolean;
-  data: string;
-};
-
-export default function IssueContent({ value, onChange, height }: Props) {
+export default function IssueContent({
+  value,
+  onChange,
+  height = 'auto',
+  withInfo,
+  onAddImg,
+}: Props) {
   const theme = useTheme();
+  const [showMessage, setShowMessage] = useState(false);
 
-  const onAddImgFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const imgFile = e.target.files;
-
-    const subUrl = 'api/comments/upload';
-
-    if (imgFile) {
-      const response = await customFetch<Response>({
-        subUrl: subUrl,
-        method: 'POST',
-        contentType: 'multipart/form-data',
-        body: {
-          file: imgFile[0],
-        },
-      });
-
-      if (response && response.success && response.data) {
-        const imaUrl = response.data;
-        const updatedValue = value ? `${value}\n\n${imaUrl}\n\n` : imaUrl;
-
-        if (onChange) {
-          onChange({
-            target: { value: updatedValue },
-          } as React.ChangeEvent<HTMLTextAreaElement>);
-        }
+  const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!e.target.files) {
+        return;
       }
+
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append('multipartFile', file!);
+
+      const response = await customFetch<PostFileRes>({
+        method: 'POST',
+        subUrl: 'api/comments/upload',
+        contentType: 'multipart/form-data',
+        body: formData,
+      });
+      onAddImg(response.data);
+      //Memo: 미완성 기능
+    } catch (error) {
+      //Memo: 에러 핸들린 필요
+      console.error(error);
     }
   };
 
+  useEffect(() => {
+    if (value) {
+      setShowMessage(true);
+      const timer = setTimeout(() => {
+        setShowMessage(false);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [value]);
+
   return (
-    <div css={content(theme, height)}>
-      {value && <div className="label">코멘트를 입력하세요</div>}
+    <div css={content(theme, height, withInfo)}>
+      {withInfo && value && <div className="label">코멘트를 입력하세요</div>}
       <textarea
         className="content"
         placeholder="코멘트를 입력하세요"
@@ -55,7 +68,7 @@ export default function IssueContent({ value, onChange, height }: Props) {
       />
       <div className="caption">
         <CaptionIcon />
-        {value ? `띄어쓰기 포함 ${String(value).length}자` : ''}
+        {value && showMessage && `띄어쓰기 포함 ${String(value).length}자`}
       </div>
       <label htmlFor="input-file">
         <div className="input-image">
@@ -67,14 +80,14 @@ export default function IssueContent({ value, onChange, height }: Props) {
         type="file"
         name="file"
         id="input-file"
-        accept="image/gif, image/jpeg, image/png, image/bmp, image/webp"
-        onChange={onAddImgFile}
+        accept="image/svg+xml, image/gif, image/jpeg, image/png, image/bmp, image/webp"
+        onChange={onImageChange}
       />
     </div>
   );
 }
 
-const content = (theme: Theme, height: number) => css`
+const content = (theme: Theme, height: string, withInfo: boolean) => css`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -93,10 +106,10 @@ const content = (theme: Theme, height: number) => css`
   }
 
   .content {
-    height: ${height}px;
+    height: ${height};
     padding: 16px 16px 0;
     border: none;
-    border-radius: ${radius.large} ${radius.large} 0 0;
+    border-radius: ${getContentRadius(withInfo)};
     background-color: inherit;
     resize: none;
     color: ${theme.neutral.textDefault};
@@ -136,10 +149,6 @@ const content = (theme: Theme, height: number) => css`
     border-bottom: ${border.dash} ${theme.neutral.borderDefault};
     color: ${theme.neutral.textWeak};
     font: ${font.availableMedium12};
-
-    svg path {
-      stroke: ${theme.neutral.textWeak};
-    }
   }
 
   .input-image {
@@ -158,3 +167,14 @@ const content = (theme: Theme, height: number) => css`
     display: none;
   }
 `;
+
+const WITH_INFO_RADIUS = `${radius.large} ${radius.large} 0 0`;
+const WITHOUT_INFO_RADIUS = `none`;
+const getContentRadius = (withInfo: boolean) => {
+  switch (withInfo) {
+    case true:
+      return WITH_INFO_RADIUS;
+    case false:
+      return WITHOUT_INFO_RADIUS;
+  }
+};

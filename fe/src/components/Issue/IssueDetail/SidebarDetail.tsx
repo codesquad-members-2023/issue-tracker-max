@@ -4,7 +4,11 @@ import { ReactComponent as DeleteIcon } from '../../../assets/icon/trash.svg';
 import { border, font, radius } from '../../../styles/styles';
 import Button from '../../common/Button';
 
-export default function SidebarDetail() {
+type Props = {
+  onClick: () => void;
+};
+
+export default function SidebarDetail({ onClick }: Props) {
   const theme = useTheme();
 
   return (
@@ -24,13 +28,12 @@ export default function SidebarDetail() {
         </button>
       </div>
       <Button
+        icon={<DeleteIcon />}
         size="S"
         color={theme.danger.textDefault}
-        backgroundColor="inherit"
         value="이슈 삭제"
-      >
-        <DeleteIcon />
-      </Button>
+        onClick={onClick}
+      />
     </div>
   );
 }
