@@ -1,13 +1,17 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as MediumLogo } from '../../assets/logo/mediumLogo.svg';
-import { ReactComponent as UserImageLargeIcon } from '../../assets/icon/userImageLarge.svg';
 import { font } from '../../styles/styles';
 import Button from '../common/Button';
+import UserImageIcon from '../UserImageIcon';
+import ThemeToggle from '../ThemeToggle';
+import { useContext } from 'react';
+import { UserContext } from '../Context/UserContext';
 
 export default function Header() {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { ...context } = useContext(UserContext);
 
   const onLogoClick = () => {
     navigate('/issue');
@@ -15,6 +19,13 @@ export default function Header() {
 
   const onSignOutClick = () => {
     navigate('/sign-in');
+    const isDarkMode = context.darkMode?.toString();
+
+    if (isDarkMode) {
+      localStorage.clear();
+      localStorage.setItem('darkMode', isDarkMode);
+      return;
+    }
 
     localStorage.clear();
   };
@@ -22,17 +33,15 @@ export default function Header() {
   return (
     <header css={header(theme)}>
       <MediumLogo className="logo" onClick={onLogoClick} />
-
       <div className="nav">
+        <ThemeToggle />
         <Button
           color={theme.neutral.textStrong}
-          backgroundColor="inherit"
           value="로그아웃"
           size="S"
-          fontSize="S"
           onClick={onSignOutClick}
         />
-        <UserImageLargeIcon />
+        <UserImageIcon url={context.user?.member.imageUrl} size="M" />
       </div>
     </header>
   );
