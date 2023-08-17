@@ -1,4 +1,5 @@
 import { useTheme } from '@emotion/react';
+import ReactMarkdown from 'react-markdown';
 
 type Props = {
   textAreaValue?: string;
@@ -15,7 +16,6 @@ export const TextAreaInput: React.FC<Props> = ({
   placeholder,
   onChangeTextArea,
   typeVariant,
-  fileUrls,
 }) => {
   const theme = useTheme() as any;
 
@@ -56,6 +56,7 @@ export const TextAreaInput: React.FC<Props> = ({
             background: 'transparent',
             overflowY: 'auto',
             whiteSpace: 'pre-line',
+            boxSizing: 'border-box',
           }}
         >
           <p
@@ -64,12 +65,25 @@ export const TextAreaInput: React.FC<Props> = ({
               font: theme.fonts.displayMedium16,
             }}
           >
-            {textAreaValue}
+            {textAreaValue && <MarkdownRenderer content={textAreaValue} />}
           </p>
-          {fileUrls &&
-            fileUrls.map((fileUrl) => <img src={fileUrl} alt="image" />)}
         </div>
       )}
     </>
   );
 };
+
+const markdownImageStyle = {
+  maxWidth: '100%',
+  maxHeight: '200px',
+};
+
+const MarkdownRenderer: React.FC<{ content?: string }> = ({ content }) => (
+  <ReactMarkdown
+    css={{
+      img: markdownImageStyle,
+    }}
+  >
+    {content || ''}
+  </ReactMarkdown>
+);
