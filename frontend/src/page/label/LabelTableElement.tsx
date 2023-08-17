@@ -29,6 +29,7 @@ export function LabelTableElement({
       method: "DELETE",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });

@@ -41,6 +41,7 @@ export function Milestone() {
     const res = await fetch(`/api/milestones?state=${state}`, {
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });

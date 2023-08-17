@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
+import { getAccessToken } from "../../utils/localStorage";
 import { IssueDetailBody } from "./IssueDetailBody";
 import { IssueDetailHeader } from "./IssueDetailHeader";
-import { getAccessToken } from "../../utils/localStorage";
 
 export type IssueData = {
   id: number;
@@ -95,9 +95,10 @@ export function IssueDetail() {
 
   const fetchIssue = useCallback(async () => {
     const response = await fetch(`/api/issues/${issueId}`, {
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
     });
     const result = await response.json();

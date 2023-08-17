@@ -4,6 +4,7 @@ import { Avatar } from "../../components/Avatar";
 import { TextArea } from "../../components/TextArea";
 import { TextInput } from "../../components/TextInput";
 import { Sidebar, SidebarProps } from "../../components/sidebar/Sidebar";
+import { getUserInfo } from "../../utils/localStorage";
 
 type NewIssueBodyProps = {
   title: string;
@@ -23,6 +24,7 @@ export function NewIssueBody({
 }: NewIssueBodyProps) {
   const [isFocused, setIsFocused] = useState(false);
 
+  const loginUserInfo = getUserInfo();
   const titleCaption =
     isFocused && invalidTitle
       ? "제목은 1글자 이상 50글자 이하로 작성해주세요."
@@ -36,7 +38,8 @@ export function NewIssueBody({
     <Div>
       <Avatar
         size="L"
-        src="https://avatars.githubusercontent.com/u/41321198?v=4"
+        src={loginUserInfo.avatarUrl}
+        userId={loginUserInfo.loginId}
       />
       <NewIssueContent>
         <TextInput
