@@ -175,7 +175,7 @@ public class IssueQueryService {
 				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.AUTHOR.getResponse(),
 				selectedAuthor));
 
-		boolean selectedAssignee = generated.equals(SingleFilter.IS.OPENED.getResponse() + " assignee::@me");
+		boolean selectedAssignee = generated.equals(SingleFilter.IS.OPENED.getResponse() + " assignee:@me");
 		singleFilters.add(
 			new SingleFilter(ASSIGNEE_ID, SingleFilter.ME.ASSIGNEE.getName(),
 				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.ASSIGNEE.getResponse(),
