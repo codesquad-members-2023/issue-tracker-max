@@ -2,6 +2,7 @@ package codesquard.app.issue.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import codesquard.app.issue.dto.response.IssueMilestoneResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueUserResponse;
 import codesquard.app.issue.dto.response.userReactionResponse;
+import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.issue.mapper.IssueMapper;
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
 import codesquard.app.issue.mapper.response.IssueCount;
@@ -114,8 +116,8 @@ public class IssueQueryService {
 	public IssueFilterResponse findFilterIssues(String loginId, IssueFilterRequest request) {
 		IssueCountResponse issueCountResponse = new IssueCountResponse(countIssues(loginId, request));
 
-		return new IssueFilterResponse(generateInput(request), counts.get(IssueStatus.OPENED.name()),
-			counts.get(IssueStatus.CLOSED.name()), labelRepository.countAll(), milestoneRepository.countAll(),
+		return new IssueFilterResponse(generateInput(request), issueCountResponse.getOpenedIssueCount(),
+			issueCountResponse.getClosedIssueCount(), labelRepository.countAll(), milestoneRepository.countAll(),
 			findIssues(loginId, request), generateSingleFilters(loginId, request),
 			checkMultiFilters(multiFiltersCheck, request));
 	}
