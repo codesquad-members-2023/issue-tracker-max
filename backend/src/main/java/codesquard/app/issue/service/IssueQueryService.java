@@ -20,6 +20,8 @@ import codesquard.app.issue.dto.response.userReactionResponse;
 import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.issue.mapper.IssueMapper;
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
+import codesquard.app.issue.mapper.response.IssueCount;
+import codesquard.app.issue.mapper.response.IssueCountResponse;
 import codesquard.app.issue.mapper.response.IssueFilterResponse;
 import codesquard.app.issue.mapper.response.IssuesResponse;
 import codesquard.app.issue.mapper.response.filters.MultiFilters;
@@ -112,10 +114,10 @@ public class IssueQueryService {
 
 	// Issue Filtering
 	public IssueFilterResponse findFilterIssues(String loginId, IssueFilterRequest request) {
-		Map<String, Long> counts = countIssuesByStatus();
+		IssueCountResponse issueCountResponse = new IssueCountResponse(countIssues(loginId, request));
 
-		return new IssueFilterResponse(generateInput(request), counts.get(IssueStatus.OPENED.name()),
-			counts.get(IssueStatus.CLOSED.name()), labelRepository.countAll(), milestoneRepository.countAll(),
+		return new IssueFilterResponse(generateInput(request), issueCountResponse.getOpenedIssueCount(),
+			issueCountResponse.getClosedIssueCount(), labelRepository.countAll(), milestoneRepository.countAll(),
 			findIssues(loginId, request), generateSingleFilters(loginId, request),
 			checkMultiFilters(multiFiltersCheck, request));
 	}
@@ -150,9 +152,8 @@ public class IssueQueryService {
 		return builder.toString().stripTrailing();
 	}
 
-	private Map<String, Long> countIssuesByStatus() {
-		return Map.of(IssueStatus.OPENED.name(), issueRepository.countIssueByStatus(IssueStatus.OPENED),
-			IssueStatus.CLOSED.name(), issueRepository.countIssueByStatus(IssueStatus.CLOSED));
+	private List<IssueCount> countIssues(String loginId, IssueFilterRequest request) {
+		return issueMapper.countIssues(request.convertMe(loginId));
 	}
 
 	private List<IssuesResponse> findIssues(String loginId, IssueFilterRequest request) {
