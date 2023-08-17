@@ -133,7 +133,8 @@ const Item = styled.li`
   background: ${({ theme }) => theme.color.neutral.surface.strong};
   border-bottom: ${({ theme }) => theme.objectStyles.border.default};
   border-color: ${({ theme }) => theme.color.neutral.border.default};
-  & > :last-child {
+  &:last-child {
     border-bottom: 0;
+    border-radius: ${({ theme }) => theme.objectStyles.radius.large};
   }
 `;
