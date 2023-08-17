@@ -1,6 +1,8 @@
 import { useContext, useState } from 'react';
 import { styled } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from '../api/axios';
+import { postNewIssue } from '../api';
 import { AppContext } from '../main';
 import ContextLogo from '../types/ContextLogo';
 import Layout from '../components/Layout';
@@ -16,12 +18,12 @@ import ElementType from '../constant/ElementType';
 
 const { AddButton, Assignee, Label } = ElementType;
 
-type IssueInfo = {
+export type IssueInfo = {
   title: string;
   content: string;
-  assignees?: string[];
-  labels?: string[];
-  milestone?: string;
+  assignees?: number[] | null;
+  labels?: number[] | null;
+  milestoneId?: number | null;
 };
 
 export default function AddIssue() {
@@ -29,6 +31,9 @@ export default function AddIssue() {
   const [issueInfo, setIssueInfo] = useState<IssueInfo>({
     title: '',
     content: '',
+    assignees: [],
+    labels: [],
+    milestoneId: null,
   });
   const navigate = useNavigate();
 
@@ -42,6 +47,11 @@ export default function AddIssue() {
   const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setIssueInfo((prev) => ({ ...prev, content: value }));
+  };
+
+  const onSubmit = async () => {
+    const data = await postNewIssue(issueInfo);
+    console.log(data);
   };
 
   return (
@@ -95,7 +105,10 @@ export default function AddIssue() {
             }}>
             작성 취소
           </Button>
-          <ButtonLarge type="submit" disabled={isFilled ? false : true}>
+          <ButtonLarge
+            type="submit"
+            disabled={isFilled ? false : true}
+            onClick={onSubmit}>
             완료
           </ButtonLarge>
         </ButtonArea>
@@ -121,7 +134,7 @@ const Title = styled.p`
   ${({ theme }) => theme.font.display.bold[32]};
 `;
 
-const Container = styled.form`
+const Container = styled.div`
   padding-bottom: 24px;
   display: flex;
   align-items: flex-start;

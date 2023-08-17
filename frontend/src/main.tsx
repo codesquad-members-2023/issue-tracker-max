@@ -19,11 +19,13 @@ const appContext = {
 export const AppContext = React.createContext(appContext);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
-    <AppContext.Provider value={appContext}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </AppContext.Provider>
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <AppContext.Provider value={appContext}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </AppContext.Provider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
