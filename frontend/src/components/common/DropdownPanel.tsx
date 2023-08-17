@@ -64,7 +64,7 @@ export default function DropdownPanel<T extends DropdownType>({
                     }}
                   />
                 ) : (
-                  imageUrl && <img src={imageUrl} alt={text} />
+                  imageUrl && <UserImage src={imageUrl} alt={text} />
                 )}
                 <Text>{text}</Text>
 
@@ -149,6 +149,13 @@ const Element = styled.label<{ $option: Option }>`
   & > input {
     display: none;
   }
+`;
+
+const UserImage = styled.img`
+  width: 16px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.objectStyles.radius.half};
 `;
 
 const Text = styled.span`
