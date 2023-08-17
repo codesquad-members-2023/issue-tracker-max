@@ -9,6 +9,7 @@ import ContextLogo from '../types/ContextLogo';
 import Toolbar from '../components/landmark/Toolbar';
 import { styled } from 'styled-components';
 import TabButton from '../components/common/TabButton';
+import FilterBar from '../components/common/FilterBar';
 import Layout from '../components/Layout';
 import Button from '../components/common/button/BaseButton';
 import { Data } from '../types';

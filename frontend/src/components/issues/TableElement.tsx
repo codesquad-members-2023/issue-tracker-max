@@ -109,6 +109,7 @@ const UserImage = styled.img`
 
 const Labels = styled.ul`
   display: flex;
+  align-items: center;
   gap: 8px;
 `;
 

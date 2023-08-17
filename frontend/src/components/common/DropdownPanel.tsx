@@ -137,6 +137,7 @@ const DropdownElements = styled.ul`
 const Element = styled.label<{ $option: Option }>`
   width: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 8px;
   ${({ theme, $option }) =>
@@ -148,6 +149,12 @@ const Element = styled.label<{ $option: Option }>`
 
   & > input {
     display: none;
+  }
+
+  & > svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
   }
 `;
 
