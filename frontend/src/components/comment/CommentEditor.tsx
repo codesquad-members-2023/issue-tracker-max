@@ -4,6 +4,7 @@ import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getAccessToken } from "../../utils/localStorage";
 import { Button } from "../Button";
 import { TextArea } from "../TextArea";
+import { useNavigate } from "react-router";
 
 type CommentEditorProps = {
   issueId: number;
@@ -11,6 +12,8 @@ type CommentEditorProps = {
 };
 
 export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
+  const navigate = useNavigate();
+
   const [content, setContent] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -34,10 +37,11 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
 
   const onContentSubmit = async () => {
     if (invalidContent) {
+      alert(`코멘트 ${errorDescription}`);
       return;
     }
 
-    await fetch("/api/comments", {
+    const response = await fetch("/api/comments", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -46,9 +50,23 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
       },
       body: JSON.stringify({ issueId, content }),
     });
+    const {code, message, data} = await response.json();
 
-    setContent("");
-    fetchIssue();
+    if (code === 201) {
+      setContent("");
+      fetchIssue();
+      return;
+    }
+
+    if (code === 404) {
+      navigate("/404", { replace: true });
+      return;
+    }
+
+    const errorMessage = data ? data[0].defaultMessage : message;
+    
+    alert(errorMessage);
+    throw new Error(errorMessage);
   };
 
   return (

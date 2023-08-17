@@ -17,7 +17,7 @@ export function NewIssue() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const invalidTitle = title.length === 0;
+  const invalidTitle = title.length === 0 || title.length > 50;
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -43,6 +43,11 @@ export function NewIssue() {
   );
 
   const onSubmitButtonClick = async () => {
+    if (invalidTitle) {
+      alert("제목은 1글자 이상 50글자 이하로 작성해주세요.");
+      return;
+    }
+
     const issueData = {
       title: title,
       content: content,
@@ -60,7 +65,7 @@ export function NewIssue() {
       },
       body: JSON.stringify(issueData),
     });
-    const { code, data} = await response.json();
+    const { code, data } = await response.json();
 
     if (code === 201) {
       navigate(`/issues/${data.savedIssueId}`);

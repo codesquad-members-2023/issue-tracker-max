@@ -59,7 +59,7 @@ export function CommentItem({
         : "";
 
   const deleteComment = async () => {
-    await fetch(`/api/comments/${id}`, {
+    const response = await fetch(`/api/comments/${id}`, {
       method: "DELETE",
       credentials: "include",
       headers: {
@@ -67,8 +67,15 @@ export function CommentItem({
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
+    const { code, message } = await response.json();
 
-    fetchIssue();
+    if (code === 200) {
+      fetchIssue();
+      return;
+    }
+
+    alert(message);
+    throw new Error(message);
   };
 
   const onEditButtonClick = () => {
@@ -85,7 +92,12 @@ export function CommentItem({
   };
 
   const onEditConfirmClick = async () => {
-    await fetch(`/api/comments/${id}`, {
+    if (invalidContent) {
+      alert(`코멘트의 ${errorDescription}`);
+      return;
+    }
+
+    const response = await fetch(`/api/comments/${id}`, {
       method: "PATCH",
       credentials: "include",
       headers: {
@@ -96,10 +108,19 @@ export function CommentItem({
         content: content,
       }),
     });
+    const { code, message, data } = await response.json();
 
-    setContent(initialContent);
-    setIsEditing(false);
-    fetchIssue();
+    if (code === 200) {
+      setContent(initialContent);
+      setIsEditing(false);
+      fetchIssue();
+      return;
+    }
+
+    const errorMessage = data ? data[0].defaultMessage : message;
+    
+    alert(errorMessage);
+    throw new Error(errorMessage);
   };
 
   return (
