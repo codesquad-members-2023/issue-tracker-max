@@ -65,7 +65,8 @@
 - [🐯백로그 및 역할](https://github.com/room-number7-presents/issue-tracker-max/wiki/%F0%9F%90%AF%EB%B0%B1%EB%A1%9C%EA%B7%B8-%EB%B0%8F-%EC%97%AD%ED%95%A0)
 
 ### 🔥 Trouble Shooting
-- [🚀트러블 슈팅 및 고민 ‐ BE](https://luck-chimpanzee-585.notion.site/15bf467dcc2c4eda824353a242986976?v=2379683393ef42898fe7624ecb281d3b&pvs=4)
+- [🚀트러블 슈팅 ‐ BE](https://luck-chimpanzee-585.notion.site/15bf467dcc2c4eda824353a242986976?v=2379683393ef42898fe7624ecb281d3b&pvs=4)
+- [🤔고민했던 내용 ‐ BE](https://github.com/room-number7-presents/issue-tracker-max/wiki/%F0%9F%A4%94%EA%B3%A0%EB%AF%BC%ED%96%88%EB%8D%98-%EB%82%B4%EC%9A%A9-%E2%80%90-BE)
 
 ### 💾 DB
 - [🍥ERD 설계 & Schema](https://github.com/room-number7-presents/issue-tracker-max/wiki/%F0%9F%8D%A5ERD-%EC%84%A4%EA%B3%84)
