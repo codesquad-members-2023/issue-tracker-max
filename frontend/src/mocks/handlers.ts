@@ -155,7 +155,6 @@ export const handlers = [
         return user.loginId === body.loginId || user.email === body.email;
       }
     });
-    console.log(body.loginId, body.password, user);
     if (!user) {
       const obj = {
         user: { id: users.length, avatarUrl: null, ...body },
@@ -239,8 +238,6 @@ export const handlers = [
       }
       queryParams[key].push(value);
     }
-
-    console.log(queryParams);
 
     const newInput = Object.entries(queryParams)
       .map(([key, values]) => {

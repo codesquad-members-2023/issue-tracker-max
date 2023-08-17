@@ -9,7 +9,6 @@ import { Icon } from "./icon/Icon";
 export function Header({ changeThemeMode }: { changeThemeMode: () => void }) {
   const navigate = useNavigate();
   const userInfo = getUserInfo();
-  console.log(userInfo);
 
   const logOut = () => {
     clearAuthInfo();

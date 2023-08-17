@@ -89,10 +89,8 @@ export function Auth() {
 
   const submit = () => {
     if (isSignUp) {
-      console.log("회원가입", loginId, password, passwordConfirm, email);
       signUp();
     } else {
-      console.log("로그인", loginId, password);
       login();
     }
   };
