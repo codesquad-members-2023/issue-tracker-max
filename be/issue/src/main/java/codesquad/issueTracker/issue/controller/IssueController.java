@@ -22,7 +22,7 @@ public class IssueController {
     private final IssueService issueService;
 
     @GetMapping("/issues")
-    public ApiResponse<IssueFilteredResponseDto> getIssues(@RequestParam String status,
+    public ApiResponse<IssueFilteredResponseDto> getIssues(@RequestParam(defaultValue = "open") String status,
                                                            @RequestParam(required = false) List<Long> labels,
                                                            @RequestParam(required = false) Long milestone,
                                                            @RequestParam(required = false) Long writer,
