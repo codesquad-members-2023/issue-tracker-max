@@ -95,11 +95,11 @@ public class AssignedLabelAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 이슈에_라벨을_삭제한다() {
 		// when
-		var response = 이슈에_라벨_삭제_요청(ISSUE1.getId(), ASSIGNED_LABEL1.getId());
+		var response = 이슈에_라벨_삭제_요청(ISSUE1.getId(), LABEL5.getId());
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
-		이슈에_등록_및_삭제될_라벨_목록에서_삭제된_라벨_검증(ISSUE1.getId(), ASSIGNED_LABEL1.getLabelId());
+		이슈에_등록_및_삭제될_라벨_목록에서_삭제된_라벨_검증(ISSUE1.getId(), LABEL5.getId());
 	}
 
 	private void 이슈에_등록_및_삭제될_라벨_목록에서_삭제된_라벨_검증(Long id, Long labelId) {

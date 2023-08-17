@@ -109,11 +109,11 @@ public class AssigneeAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 이슈에_담당자를_삭제한다() {
 		// when
-		var response = 이슈에_담당자_삭제_요청(ISSUE1.getId(), ASSIGNEE1.getId());
+		var response = 이슈에_담당자_삭제_요청(ISSUE1.getId(), MEMBER1.getId());
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
-		이슈에_등록_및_삭제될_담당자_목록에서_삭제된_담당자_검증(ISSUE1.getId(), ASSIGNEE1.getIssueId());
+		이슈에_등록_및_삭제될_담당자_목록에서_삭제된_담당자_검증(ISSUE1.getId(), MEMBER1.getId());
 	}
 
 	private void 이슈에_등록_및_삭제될_담당자_목록에서_삭제된_담당자_검증(Long id, Long memberId) {

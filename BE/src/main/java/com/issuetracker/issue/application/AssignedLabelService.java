@@ -41,8 +41,8 @@ public class AssignedLabelService {
 	}
 
 	@Transactional
-	public int deleteAssignedLabel(Long assignedLabelId) {
-		return assignedLabelRepository.delete(assignedLabelId);
+	public int deleteAssignedLabel(long issueId, long labelId) {
+		return assignedLabelRepository.delete(issueId, labelId);
 	}
 
 }

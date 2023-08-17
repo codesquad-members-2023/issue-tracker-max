@@ -27,10 +27,10 @@ public class AssignedLabelSteps {
 			.then().log().all().extract();
 	}
 
-	public static ExtractableResponse<Response> 이슈에_라벨_삭제_요청(Long id, Long assignedLabelId) {
+	public static ExtractableResponse<Response> 이슈에_라벨_삭제_요청(Long id, Long labelId) {
 		return RestAssured.given().log().all().auth().oauth2(JwtTokenForTest.accessToken)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
-			.when().delete("/api/issues/{id}/assigned-labels/{assigned-label-id}", id, assignedLabelId)
+			.when().delete("/api/issues/{id}/assigned-labels/{label-id}", id, labelId)
 			.then().log().all().extract();
 	}
 }

@@ -3,6 +3,7 @@ package com.issuetracker.unit.infrastrucure;
 import static com.issuetracker.util.fixture.AssignedLabelFixture.ASSIGNED_LABEL1;
 import static com.issuetracker.util.fixture.IssueFixture.ISSUE1;
 import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
+import static com.issuetracker.util.fixture.LabelFixture.LABEL5;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -72,7 +73,7 @@ class AssignedLabelJdbcRepositoryTest extends JdbcRepositoryTest {
 	@Test
 	void 이슈에_라벨을_삭제한다() {
 		// when
-		int actual = assignedLabelRepository.delete(ASSIGNED_LABEL1.getId());
+		int actual = assignedLabelRepository.delete(ISSUE1.getId(), LABEL5.getId());
 
 		// then
 		assertThat(actual).isEqualTo(1);

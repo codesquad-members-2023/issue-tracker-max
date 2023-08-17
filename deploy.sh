@@ -10,10 +10,10 @@ if [ -z "$CURRENT_PID" ]; then
 else
     echo "> kill -15 $CURRENT_PID"
     kill -15 $CURRENT_PID
-    sleep 5
+    sleep 10
 fi
 
 echo "> 애플리케이션을 실행합니다."
-nohup java -jar $REPOSITORY/build/libs/$JAR_NAME > $REPOSITORY/log.txt 2>&1 &
+nohup java -jar $REPOSITORY/build/libs/$JAR_NAME &
 
 sudo systemctl restart nginx

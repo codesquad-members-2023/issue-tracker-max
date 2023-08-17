@@ -217,9 +217,9 @@ public class IssueController {
 		return ResponseEntity.ok().body(assigneesCreateResponse);
 	}
 
-	@DeleteMapping("/{id}/assignees/{assignee-id}")
-	public ResponseEntity<Void> deleteAssignee(@PathVariable("assignee-id") Long assigneeId) {
-		assigneeService.deleteAssignee(assigneeId);
+	@DeleteMapping("/{id}/assignees/{member-id}")
+	public ResponseEntity<Void> deleteAssignee(@PathVariable Long id, @PathVariable("member-id") Long memberId) {
+		assigneeService.deleteAssignee(id, memberId);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -232,9 +232,9 @@ public class IssueController {
 		return ResponseEntity.ok().body(assignedLabelCreateResponse);
 	}
 
-	@DeleteMapping("/{id}/assigned-labels/{assigned-label-id}")
-	public ResponseEntity<Void> deleteAssignedLabel(@PathVariable("assigned-label-id") Long assignedLabelId) {
-		assignedLabelService.deleteAssignedLabel(assignedLabelId);
+	@DeleteMapping("/{id}/assigned-labels/{label-id}")
+	public ResponseEntity<Void> deleteAssignedLabel(@PathVariable Long id, @PathVariable("label-id") Long labelId) {
+		assignedLabelService.deleteAssignedLabel(id, labelId);
 		return ResponseEntity.noContent().build();
 	}
 }

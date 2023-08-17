@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.issuetracker.issue.application.dto.IssueDetailInformation;
-import com.issuetracker.issue.ui.dto.assignee.AssigneeMemberResponse;
 import com.issuetracker.issue.ui.dto.comment.IssueCommentResponse;
 import com.issuetracker.label.ui.dto.LabelResponse;
 import com.issuetracker.member.ui.dto.MemberResponse;
@@ -24,7 +23,7 @@ public class IssueDetailResponse {
 	private LocalDateTime createAt;
 	private IssueDetailMilestoneResponse milestone;
 	private MemberResponse author;
-	private List<AssigneeMemberResponse> assignees;
+	private List<MemberResponse> assignees;
 	private List<LabelResponse> labels;
 	private List<IssueCommentResponse> comments;
 
@@ -37,7 +36,7 @@ public class IssueDetailResponse {
 			issueDetailInformation.getCreateAt(),
 			IssueDetailMilestoneResponse.from(issueDetailInformation.getMilestone()),
 			MemberResponse.from(issueDetailInformation.getAuthor()),
-			AssigneeMemberResponse.from(issueDetailInformation.getAssignees()),
+			MemberResponse.from(issueDetailInformation.getAssignees()),
 			LabelResponse.from(issueDetailInformation.getLabels()),
 			IssueCommentResponse.from(issueDetailInformation.getComments())
 		);

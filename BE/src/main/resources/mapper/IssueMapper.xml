@@ -68,7 +68,7 @@
             <result property="progress" column="milestone_progress" />
         </association>
 
-        <collection property="assignees" ofType="AssigneeMember">
+        <collection property="assignees" ofType="Member">
             <id property="id" column="assignees_id" />
             <result property="nickname" column="assignees_nickname" />
             <result property="profileImageUrl" column="assignees_profile_image_url" />
@@ -200,7 +200,7 @@
                         label.background_color as label_background_color,
                         label.text_color as label_text_color,
                         label.description as label_description,
-                        assignee.id as assignees_id,
+                        member.id as assignees_id,
                         member.nickname as assignees_nickname,
                         member.profile_image_url as assignees_profile_image_url,
                         issue_comment.id as issue_comment_id,
@@ -223,6 +223,6 @@
             LEFT OUTER JOIN member issue_comment_author ON issue_comment.author_id = issue_comment_author.id AND issue_comment.is_deleted = 0
            WHERE issue.is_deleted = 0
              AND issue.id = #{id}
-           ORDER BY issue.id desc, label.id, issue_comment.id, assignee.id
+           ORDER BY issue.id desc, label.id, issue_comment.id, member.id
     </select>
 </mapper>

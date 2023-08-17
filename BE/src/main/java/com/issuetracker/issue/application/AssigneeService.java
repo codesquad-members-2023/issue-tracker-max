@@ -41,7 +41,7 @@ public class AssigneeService {
 	}
 
 	@Transactional
-	public int deleteAssignee(Long assigneeId) {
-		return assigneeRepository.delete(assigneeId);
+	public int deleteAssignee(long issueId, long memberId) {
+		return assigneeRepository.delete(issueId, memberId);
 	}
 }

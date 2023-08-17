@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -20,7 +21,7 @@ import com.issuetracker.label.domain.Label;
 public class JdbcAssignedLabelRepository implements AssignedLabelRepository {
 
 	private static final String SAVE_SQL = "INSERT INTO assigned_label(issue_id, label_id) VALUES(:issueId, :labelId)";
-	private static final String DELETE_SQL = "DELETE FROM assigned_label WHERE id = :id";
+	private static final String DELETE_SQL = "DELETE FROM assigned_label WHERE issue_id = :issueId AND label_id =:labelId";
 	private static final String FIND_ALL_SEARCH_SQL = "SELECT DISTINCT label.id, label.title, label.background_color, label.text_color, label.description FROM label INNER JOIN assigned_label ON label.id = assigned_label.label_id WHERE label.is_deleted = 0 ORDER BY label.id";
 	private static final String FIND_ALL_ASSIGNED_TO_ISSUE
 		= "SELECT label.id, label.title, label.background_color, label.text_color, label.description "
@@ -78,8 +79,11 @@ public class JdbcAssignedLabelRepository implements AssignedLabelRepository {
 	}
 
 	@Override
-	public int delete(Long id) {
-		return jdbcTemplate.update(DELETE_SQL, Map.of("id", id));
+	public int delete(long issueId, long labelId) {
+		SqlParameterSource param = new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("labelId", labelId);
+		return jdbcTemplate.update(DELETE_SQL, param);
 	}
 
 	private static final RowMapper<Label> LABEL_ROW_MAPPER = (rs, rowNum) ->

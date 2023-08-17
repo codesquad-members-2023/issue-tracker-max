@@ -20,10 +20,10 @@ public class AssigneeSteps {
 			.then().log().all().extract();
 	}
 
-	public static ExtractableResponse<Response> 이슈에_담당자_삭제_요청(Long id, Long assigneeId) {
+	public static ExtractableResponse<Response> 이슈에_담당자_삭제_요청(Long id, Long memberId) {
 		return RestAssured.given().log().all().auth().oauth2(JwtTokenForTest.accessToken)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
-			.when().delete("/api/issues/{id}/assignees/{assignee-id}", id, assigneeId)
+			.when().delete("/api/issues/{id}/assignees/{member-id}", id, memberId)
 			.then().log().all().extract();
 	}
 
