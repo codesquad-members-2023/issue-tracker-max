@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../main';
 import useAuth from '../hooks/useAuth';
@@ -15,12 +15,6 @@ import Layout from '../components/Layout';
 import Button from '../components/common/button/BaseButton';
 import { Data } from '../types';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
-import DropdownPanel from '../components/common/DropdownPanel';
-
-enum Option {
-  Available,
-  Selected,
-}
 
 export default function Issues() {
   const { util } = useContext(AppContext);
@@ -28,7 +22,6 @@ export default function Issues() {
   const logo = (util.getLogoByTheme() as ContextLogo).medium;
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
-  const [filterValue, setFilterValue] = useState<string>('status:open');
 
   const [data, setData] = useState<Data>({
     openCount: 1,
@@ -87,29 +80,23 @@ export default function Issues() {
     ],
   });
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const params = {
-  //       status: 'open',
-  //       labels: '',
-  //       milestone: '',
-  //       writer: '',
-  //       assignees: '',
-  //       comment: '',
-  //     };
+  util.getFilter = () => (keywords: string) => {
+    const fetchData = async () => {
+      const params = keywordParser(keywords);
 
-  //     const res = await axiosPrivate.get('/api/issues', { params });
+      const res = await axiosPrivate.get('/api/issues', { params });
 
-  //     try {
-  //       if (res.status === 200) {
-  //         setData(res.data.message);
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+      try {
+        if (res.status === 200) {
+          setData(res.data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  };
+
   const handleLogout = async () => {
     if (!auth) {
       return;
@@ -148,22 +135,7 @@ export default function Issues() {
         </div>
       </Header>
       <Toolbar>
-        <FilterBar
-          filterValue="hi"
-          openPanel={() => {
-            console.log('open filterbar');
-          }}
-        />
-        <FilterBarPanel
-          elements={[
-            ['열린 이슈', Option.Selected],
-            ['내가 작성한 이슈', Option.Available],
-            ['나에게 할당된 이슈', Option.Available],
-            ['내가 댓글을 남긴 이슈', Option.Available],
-            ['닫힌 이슈', Option.Available],
-          ]}
-          label="이슈 필터"
-        />
+        <FilterBar />
         <ActionGroup>
           <TabButton
             tabs={[
@@ -198,9 +170,11 @@ const ActionGroup = styled.div`
   gap: 16px;
 `;
 
-const FilterBarPanel = styled(DropdownPanel)`
-  position: absolute;
-  z-index: 1;
-  top: 50px;
-  background-color: ${({ theme }) => theme.color.neutral.surface.strong};
-`;
+function keywordParser(keyword: string) {
+  const params: Record<string, string> = {};
+  keyword.split(' ').forEach((token) => {
+    const [key, value] = token.split(':');
+    params[key] = value;
+  });
+  return params;
+}

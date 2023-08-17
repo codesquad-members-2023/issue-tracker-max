@@ -1,35 +1,55 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import DropdownIndicator from './DropdownIndicator';
 import Icons from '../../design/Icons';
+import React from 'react';
+import Option from '../../constant/Option';
+import { AppContext } from '../../main';
 
-type FilterBarProps = {
-  filterValue: string;
-  openPanel: () => void;
-};
+export default function FilterBar({ baseKeyword = 'status:open' }) {
+  const [keyword, setKeyword] = useState(baseKeyword);
+  const { util } = useContext(AppContext);
+  const filter = util.getFilter() as (keyword: string) => void;
 
-export default function FilterBar({ filterValue, openPanel }: FilterBarProps) {
-  // const [filterValue, setFilterValue] = useState<string>(
-  //   'default filter option'
-  // );
-  const SearchIcon = Icons['search'];
+  useEffect(() => {
+    filter(keyword);
+  }, [filter, keyword]);
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setFilterValue(e.target.value);
-  // };
+  function submitHandler(e: React.FormEvent) {
+    e.preventDefault();
+    filter(keyword);
+  }
 
   return (
-    <Bar>
-      <StyledDropdownIndicator text="Button" onClick={openPanel} />
-      <TextFilter>
-        <SearchIcon />
-        <TextInput value={filterValue}></TextInput>
+    <Container>
+      <h3 className='blind'>필터바</h3>
+      <StyledDropdownIndicator
+        text="필터"
+        label="이슈 필터"
+        elements={[
+          { text: '열린 이슈', option: Option.Selected },
+          { text: '내가 작성한 이슈', option: Option.Available },
+          { text: '나에게 할당된 이슈', option: Option.Available },
+          { text: '내가 댓글을 남긴 이슈', option: Option.Available },
+          { text: '닫힌 이슈', option: Option.Available },
+        ]}
+      />
+      <TextFilter onSubmit={submitHandler}>
+        <Icons.search />
+        <TextInput
+          id="filter"
+          name="filter"
+          value={keyword}
+          onChange={(e) => {
+            const input = e.target as HTMLInputElement;
+            setKeyword(input.value);
+          }}></TextInput>
       </TextFilter>
-    </Bar>
+    </Container>
   );
 }
 
-const Bar = styled.div`
+const Container = styled.section`
   width: 560px;
   display: flex;
   align-items: center;
@@ -41,16 +61,24 @@ const Bar = styled.div`
   &:focus-within {
     border-color: ${({ theme }) => theme.color.neutral.border.active};
     background: ${({ theme }) => theme.color.neutral.surface.strong};
+  }
+  
+  &:focus > form > input {
+    color: ${({ theme }) => theme.color.neutral.text.default};
+  }
 `;
 
 const StyledDropdownIndicator = styled(DropdownIndicator)`
   height: 40px;
-  padding: 0 24px;
   background: ${({ theme }) => theme.color.neutral.surface.default};
   border-right: ${({ theme }) => theme.objectStyles.border.default};
   border-color: ${({ theme }) => theme.color.neutral.border.default};
   border-radius: ${({ theme }) => theme.objectStyles.radius.medium} 0 0
     ${({ theme }) => theme.objectStyles.radius.medium};
+
+  & > button {
+    padding: 8px 24px;
+  }
 `;
 
 const TextFilter = styled.form`
@@ -71,7 +99,4 @@ const TextInput = styled.input`
   color: ${({ theme }) => theme.color.neutral.text.weak};
   ${({ theme }) => theme.font.display.medium[16]};
 
-  &:focus {
-    color: ${({ theme }) => theme.color.neutral.text.default};
-  }
 `;

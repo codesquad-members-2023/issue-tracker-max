@@ -8,7 +8,6 @@ import Components from './pages/Components';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Callback from './pages/GitHubCallback';
-import Main from './pages/Main';
 import Issues from './pages/Issues';
 import AddIssue from './pages/AddIssue';
 import IssueDetail from './pages/IssueDetail';
@@ -51,6 +50,7 @@ function App() {
         <Route path="/issues" element={<Issues />} />
         <Route path="/addIssue" element={<AddIssue />} />
         <Route path="/issueDetail" element={<IssueDetail />} />
+        <Route path="/Issues" element={<Issues />} />
 
         {/* protected routes */}
         <Route element={<RequireAuth />}>

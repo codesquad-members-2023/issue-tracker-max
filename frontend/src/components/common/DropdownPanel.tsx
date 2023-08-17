@@ -1,50 +1,79 @@
 import { styled } from 'styled-components';
 import Icons from '../../design/Icons';
-import { v4 as uuidV4 } from 'uuid';
-
-enum Option {
-  Available,
-  Selected,
-}
-
-// const dummy = [
-//   ['label', Option.Selected],
-//   ['label', Option.Available],
-// ] as [string, Option][];
+import Option from '../../constant/Option';
+import DropdownPanelElement from '../../types/DropdownPanelElement';
+import { User } from '../../types';
+import { useState } from 'react';
 
 export default function DropdownPanel({
-  elements,
+  user,
   label,
-  ...rest
+  baseElements,
 }: {
-  elements: [text: string, option: Option][];
+  user?: User;
   label: string;
+  baseElements: DropdownPanelElement[];
 }) {
+  const [elements, setElements] =
+    useState<DropdownPanelElement[]>(baseElements);
+
+  const itemCheckHandler = (e: React.ChangeEvent, index: number) => {
+    const input = e.target as HTMLInputElement;
+    const form = input.closest('form');
+    const formObject = formDataToObject(new FormData(form!));
+    setElements((elements) =>
+      elements.map((element, _index) => {
+        if (_index === index) {
+          element.option = !input.checked ? Option.Available : Option.Selected;
+        }
+        return element;
+      })
+    );
+    console.log(formObject);
+  };
   return (
-    <Container {...rest}>
+    <Container>
       <Header>{label}</Header>
       <DropdownElements>
-        {elements.map(([text, option]) => {
-          const key = uuidV4();
-          const Icon = Icons.userImageSmall;
-          return (
-            <li key={key}>
-              <Element htmlFor={key} $option={option}>
-                <Icon />
-                <Text>{text}</Text>
-                <input
-                  type="checkbox"
-                  id={key}
-                  checked={option ? true : false}
-                />
-                {option ? <Icons.checkOnCircle /> : <Icons.checkOffCircle />}
-              </Element>
-            </li>
-          );
-        })}
+        {elements.map(({ text, option }, index) => (
+          <li key={text}>
+            <Element htmlFor={text} $option={option}>
+              {user && <img src={user.profileImg} alt={user.name + '아바타'} />}
+              <Text>{text}</Text>
+              <input
+                type="checkbox"
+                id={text}
+                name={textToName(text)}
+                onChange={(e) => itemCheckHandler(e, index)}
+              />
+              {option === Option.Selected ? (
+                <Icons.checkOnCircle />
+              ) : (
+                <Icons.checkOffCircle />
+              )}
+            </Element>
+          </li>
+        ))}
       </DropdownElements>
     </Container>
   );
+}
+
+function textToName(text: string) {
+  switch (text) {
+    case '열린 이슈':
+      return 'status[open]';
+    case '내가 작성한 이슈':
+      return 'status[author]';
+    case '나에게 할당된 이슈':
+      return 'status[assignee]';
+    case '내가 댓글을 남긴 이슈':
+      return 'status[commented]';
+    case '닫힌 이슈':
+      return 'status[closed]';
+    default:
+      return '';
+  }
 }
 
 const Container = styled.article`
@@ -64,6 +93,7 @@ const Header = styled.h3`
 
 const DropdownElements = styled.ul`
   & > li {
+    background-color: ${({ theme }) => theme.color.neutral.surface.strong};
     padding: 8px 16px;
     display: flex;
     align-items: center;
@@ -95,3 +125,18 @@ const Element = styled.label<{ $option: Option }>`
 const Text = styled.span`
   width: 100%;
 `;
+
+function formDataToObject(formData: FormData) {
+  const object: Record<string, (string | number)[]> = {};
+
+  for (const [name] of formData.entries()) {
+    const [key, value]: string[] = name.split(/\[|\]/).filter(Boolean);
+
+    if (!object[key]) {
+      object[key] = [];
+    }
+    object[key] = [...object[key], value];
+  }
+
+  return object;
+}

@@ -48,16 +48,32 @@ export default function IssueTable({ issues }: { issues: Issue[] }) {
           </Left>
           <Right>
             <li>
-              <DropdownIndicator text="담당자" />
+              <DropdownIndicator
+                text="담당자"
+                label="담당자 필터"
+                elements={[]}
+              />
             </li>
             <li>
-              <DropdownIndicator text="레이블" />
+              <DropdownIndicator
+                text="레이블"
+                label="레이블 필터"
+                elements={[]}
+              />
             </li>
             <li>
-              <DropdownIndicator text="마일스톤" />
+              <DropdownIndicator
+                text="마일스톤"
+                label="마일스톤 필터"
+                elements={[]}
+              />
             </li>
             <li>
-              <DropdownIndicator text="작성자" />
+              <DropdownIndicator
+                text="작성자"
+                label="작성자 필터"
+                elements={[]}
+              />
             </li>
           </Right>
         </Buttons>
