@@ -7,6 +7,8 @@ import MilestoneFilter from './MilestoneFilter';
 import MilestoneItem from './MilestoneItem';
 import { customFetch } from '../../util/customFetch';
 import { useNavigate } from 'react-router-dom';
+import { MilestoneData } from '../../type/milestone.type';
+import { GetMilestoneRes } from '../../type/Response.type';
 
 export default function MilestoneList() {
   const theme = useTheme();
@@ -18,13 +20,13 @@ export default function MilestoneList() {
 
   useEffect(() => {
     (async () => {
-      const subUrl = 'api/milestones/' + milestoneFilter;
-
       try {
-        const milestoneData = await customFetch<MilestoneResponse>({ subUrl });
+        const response = await customFetch<GetMilestoneRes>({
+          subUrl: 'api/milestones/' + milestoneFilter,
+        });
 
-        if (milestoneData.success && milestoneData.data) {
-          setMilestoneList(milestoneData.data);
+        if (response.success && response.data) {
+          setMilestoneList(response.data);
         }
       } catch (error) {
         navigate('/sign-in');

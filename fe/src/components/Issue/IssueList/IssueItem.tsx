@@ -1,11 +1,14 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import { font } from '../../../styles/styles';
-import CheckBoxIcon from './CheckBox';
+import CheckBox from './CheckBox';
 import Label from '../../Label/Label';
 import { ReactComponent as AlertCircleIcon } from '../../../assets/icon/alertCircle.svg';
 import { ReactComponent as MilestoneIcon } from '../../../assets/icon/milestone.svg';
-import { ReactComponent as UserImageSmallIcon } from '../../../assets/icon/userImageSmall.svg';
 import { getTimeLine } from '../../../util/getTimeLine';
+import { Link } from 'react-router-dom';
+import { Issue } from '../../../type/issue.type';
+import { getKoreanTime } from '../../../util/getKoreanTime';
+import UserImageIcon from '../../UserImageIcon';
 
 type Props = {
   issue: Issue;
@@ -21,14 +24,14 @@ export default function IssueItem({ issue, onSingleCheck, checked }: Props) {
       <div className="detail-wrapper">
         <div className="detail">
           <div className="title-wrapper">
-            <CheckBoxIcon
-              id="selectOne"
+            <CheckBox
+              checkBoxType="selectOne"
               onChange={(e) => onSingleCheck(e.currentTarget.checked, issue.id)}
               checked={checked}
             />
             <div className="title">
               <AlertCircleIcon className="open" />
-              {issue.title}
+              <Link to={`/issue/${issue.id}`}>{issue.title}</Link>
               {issue.labels.map((label) => {
                 return <Label key={label.id} {...label} />;
               })}
@@ -37,7 +40,7 @@ export default function IssueItem({ issue, onSingleCheck, checked }: Props) {
           <div className="info">
             <div>#{issue.id}</div>
             <div>
-              이 이슈가 {getTimeLine(issue.history.modifiedAt)},{' '}
+              이 이슈가 {getTimeLine(getKoreanTime(issue.history.modifiedAt))},{' '}
               {issue.history.editor}님에 의해 수정되었습니다
             </div>
             <div className="milestone-info">
@@ -51,7 +54,7 @@ export default function IssueItem({ issue, onSingleCheck, checked }: Props) {
           </div>
         </div>
       </div>
-      <UserImageSmallIcon />
+      <UserImageIcon size="S" url={issue.writer.imageUrl} />
     </li>
   );
 }
@@ -81,6 +84,19 @@ const issueItem = (theme: Theme) => css`
           gap: 8px;
           font: ${font.availableMedium20};
           color: ${theme.neutral.textStrong};
+
+          a {
+            text-decoration: none;
+            color: inherit;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+
+          div {
+            cursor: default;
+          }
 
           & .open path {
             stroke: ${theme.palette.blue};

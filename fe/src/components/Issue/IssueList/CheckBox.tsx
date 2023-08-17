@@ -1,26 +1,26 @@
 import { css } from '@emotion/react';
 
 interface Props extends React.HTMLAttributes<HTMLInputElement> {
-  id: 'selectAll' | 'selectOne';
+  checkBoxType: 'selectAll' | 'selectOne';
   checked: boolean;
 }
 
-export default function CheckBoxIcon({ id, checked, onChange }: Props) {
+export default function CheckBox({ checkBoxType, checked, onChange }: Props) {
   return (
-    <div css={checkBoxIcon(id)}>
+    <div css={checkBoxIcon(checkBoxType)}>
       <input
-        id={id}
+        id={checkBoxType}
         className="check-box"
         type="checkbox"
         onChange={onChange}
         checked={checked}
       />
-      <label htmlFor={id} className="label" />
+      <label htmlFor={checkBoxType} className="label" />
     </div>
   );
 }
 
-const checkBoxIcon = (id: 'selectAll' | 'selectOne') => css`
+const checkBoxIcon = (checkBoxType: 'selectAll' | 'selectOne') => css`
   position: relative;
 
   .check-box {
@@ -35,7 +35,7 @@ const checkBoxIcon = (id: 'selectAll' | 'selectOne') => css`
     cursor: pointer;
 
     &:checked {
-      background-image: ${CHECK_BOX_STYLE[id].backgroundImage};
+      background-image: ${CHECK_BOX_STYLE[checkBoxType].backgroundImage};
     }
   }
 
@@ -44,7 +44,7 @@ const checkBoxIcon = (id: 'selectAll' | 'selectOne') => css`
     top: -30%;
     left: -30%;
     width: 40px;
-    height: ${CHECK_BOX_STYLE[id].height};
+    height: ${CHECK_BOX_STYLE[checkBoxType].height};
     cursor: pointer;
   }
 `;

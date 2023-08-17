@@ -1,7 +1,8 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import { border, radius, font } from '../../styles/styles';
+import { LabelType } from '../../type/label.type';
 
-export default function Label(label: Label) {
+export default function Label(label: LabelType) {
   const theme = useTheme();
 
   return (
@@ -27,4 +28,5 @@ const labelStyle = (
   color: ${textColor};
   background-color: ${backgroundColor};
   line-height: 24px;
+  cursor: default;
 `;

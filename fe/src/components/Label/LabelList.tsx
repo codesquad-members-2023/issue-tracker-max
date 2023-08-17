@@ -6,6 +6,8 @@ import LabelItem from './LabelItem';
 import { useEffect, useState } from 'react';
 import { customFetch } from '../../util/customFetch';
 import { useNavigate } from 'react-router-dom';
+import { LabelData } from '../../type/label.type';
+import { GetLabelRes } from '../../type/Response.type';
 
 export default function LabelList() {
   const theme = useTheme();
@@ -14,13 +16,13 @@ export default function LabelList() {
 
   useEffect(() => {
     (async () => {
-      const subUrl = 'api/labels';
-
       try {
-        const labelData = await customFetch<LabelResponse>({ subUrl });
+        const response = await customFetch<GetLabelRes>({
+          subUrl: 'api/labels',
+        });
 
-        if (labelData.success && labelData.data) {
-          setLabelList(labelData.data);
+        if (response.success && response.data) {
+          setLabelList(response.data);
         }
       } catch (error) {
         navigate('/sign-in');
