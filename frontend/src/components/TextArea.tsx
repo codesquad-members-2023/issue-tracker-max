@@ -7,7 +7,9 @@ import {
   useState,
 } from "react";
 import { keyframes, styled } from "styled-components";
+import { getAccessToken } from "../utils/localStorage";
 import { Button } from "./Button";
+import { MarkdownViewer } from "./MarkdownViewer";
 import { Icon } from "./icon/Icon";
 
 type TextAreaProps = {
@@ -24,7 +26,7 @@ type TextAreaProps = {
 type TextAreaState = "Active" | "Enabled" | "Disabled";
 
 export function TextArea({
-  value = "",
+  value = ``,
   label,
   width,
   height,
@@ -124,6 +126,7 @@ export function TextArea({
         return `${textBefore}![image](${data})${textAfter}`;
       };
 
+      onFocus();
       setInputValue(dataIntoTextArea);
       setCountHidden(false);
       onChange?.(dataIntoTextArea(inputValue));
@@ -156,16 +159,18 @@ export function TextArea({
     formData.append("image", file as File);
 
     try {
-      const response = await fetch(
-        "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/images",
-        {
-          method: "POST",
-          body: formData,
+      const response = await fetch("/api/images", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${getAccessToken()}`,
         },
-      );
-      const data = await response.text();
+        body: formData,
+      });
+      const data = await response.json();
 
-      return data;
+      return data.data.url;
     } catch (error) {
       setUploadErrorMessage("이미지 업로드에 실패했습니다.");
       throw new Error("이미지 업로드에 실패했습니다.");
@@ -177,16 +182,15 @@ export function TextArea({
       <Div
         $state={state}
         $children={children}
-        onFocus={onFocus}
         onBlur={onBlur}
         ref={componentRef}
       >
         {children && <Header>{children}</Header>}
         {children && state !== "Active" ? (
-          <TextViewer>{value}</TextViewer>
+          <MarkdownViewer markdown={value} />
         ) : (
           <>
-            <InputContainer>
+            <InputContainer onFocus={onFocus}>
               {inputValue && label && <Label>{label}</Label>}
               <ResizableDiv $children={children}>
                 <Input
@@ -268,21 +272,6 @@ const Header = styled.div`
   border-radius: ${({ theme }) =>
     `${theme.radius.large} ${theme.radius.large} 0px 0px`};
   background-color: ${({ theme }) => theme.color.neutralSurfaceDefault};
-`;
-
-const TextViewer = styled.div`
-  max-height: 200px;
-  overflow-y: auto;
-  align-self: stretch;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 16px 24px 24px 24px;
-  border-radius: ${({ theme }) =>
-    `0px 0px ${theme.radius.large} ${theme.radius.large}`};
-  font: ${({ theme }) => theme.font.displayMedium16};
-  color: ${({ theme }) => theme.color.neutralTextDefault};
-  background-color: ${({ theme }) => theme.color.neutralSurfaceStrong};
 `;
 
 const InputContainer = styled.div`

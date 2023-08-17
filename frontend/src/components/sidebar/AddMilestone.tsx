@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { getProgress } from "../../utils/getProgress";
+import { getAccessToken } from "../../utils/localStorage";
 import { DropdownContainer } from "../dropdown/DropdownContainer";
 import { ElementContainer } from "./ElementContainer";
 import { MilestoneElement } from "./MilestoneElement";
@@ -44,27 +45,39 @@ export function AddMilestone({
 }: AddMilestoneProps) {
   const [milestones, setMilestones] = useState<MilestoneData[]>([]);
 
-  const handleMilestoneClick = useCallback((clickedMilestone: {
-    id: number;
-    name: string;
-    issues: {
-      openedIssueCount: number;
-      closedIssueCount: number;
-    };
-  }) => {
-    if (onMilestoneClick.args === "Number") {
-      onMilestoneClick.handler(
-        clickedMilestone.id === issueMilestone?.id ? null : clickedMilestone.id,
-      );
-    } else {
-      onMilestoneClick.handler(
-        clickedMilestone.id === issueMilestone?.id ? null : clickedMilestone,
-      );
-    }
-  }, [issueMilestone, onMilestoneClick]);
+  const handleMilestoneClick = useCallback(
+    (clickedMilestone: {
+      id: number;
+      name: string;
+      issues: {
+        openedIssueCount: number;
+        closedIssueCount: number;
+      };
+    }) => {
+      if (onMilestoneClick.args === "Number") {
+        onMilestoneClick.handler(
+          clickedMilestone.id === issueMilestone?.id
+            ? null
+            : clickedMilestone.id,
+        );
+      } else {
+        onMilestoneClick.handler(
+          clickedMilestone.id === issueMilestone?.id ? null : clickedMilestone,
+        );
+      }
+    },
+    [issueMilestone, onMilestoneClick],
+  );
 
   const fetchMilestones = useCallback(async () => {
-    const response = await fetch("/api/milestones");
+    const response = await fetch("/api/milestones", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    });
     const result = await response.json();
 
     const milestonesData = result.data.milestones.map(
@@ -113,8 +126,8 @@ export function AddMilestone({
     <OptionDiv>
       <DropdownContainer
         key="assignees"
-        name="담당자"
-        optionTitle="담당자 설정"
+        name="마일스톤"
+        optionTitle="마일스톤 설정"
         options={milestones}
         type="Long"
         alignment="Center"

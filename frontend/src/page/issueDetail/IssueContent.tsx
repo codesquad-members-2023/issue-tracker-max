@@ -6,8 +6,8 @@ import { InformationTag } from "../../components/InformationTag";
 import { TextArea } from "../../components/TextArea";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
+import { getAccessToken, getUserInfo } from "../../utils/localStorage";
 import { IssueDetailMainContentProps } from "./IssueDetailMainContent";
-import { getAccessToken } from "../../utils/localStorage";
 
 type IssueContentProps = Omit<IssueDetailMainContentProps, "comments">;
 
@@ -31,6 +31,7 @@ export function IssueContent({
 
   const maxContentLength = 10000;
   const writtenAt = modifiedAt ?? createdAt;
+  const loginUserInfo = getUserInfo();
 
   const validateContent = (value: string) => {
     const sameContent = value === initialContent;
@@ -64,9 +65,10 @@ export function IssueContent({
   const onEditConfirmClick = async () => {
     await fetch(`/api/issues/${id}/content`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
-        credentials: "include",
       },
       body: JSON.stringify({
         content: content,
@@ -100,15 +102,17 @@ export function IssueContent({
             fill="neutralSurfaceBold"
             stroke="Default"
           />
-          <Button
-            height={32}
-            size="S"
-            buttonType="Ghost"
-            icon="Edit"
-            onClick={onEditButtonClick}
-          >
-            편집
-          </Button>
+          {writer.name === loginUserInfo?.loginId && (
+            <Button
+              height={32}
+              size="S"
+              buttonType="Ghost"
+              icon="Edit"
+              onClick={onEditButtonClick}
+            >
+              편집
+            </Button>
+          )}
           <Button
             height={32}
             size="S"

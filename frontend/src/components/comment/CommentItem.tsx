@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { styled, useTheme } from "styled-components";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
+import { getAccessToken, getUserInfo } from "../../utils/localStorage";
 import { Avatar } from "../Avatar";
 import { Button } from "../Button";
 import { InformationTag } from "../InformationTag";
 import { TextArea } from "../TextArea";
-import { getAccessToken } from "../../utils/localStorage";
 
 type CommentItemProps = {
   id: number;
@@ -46,6 +46,7 @@ export function CommentItem({
 
   const maxContentLength = 10000;
   const writtenAt = modifiedAt ?? createdAt;
+  const loginUserInfo = getUserInfo();
 
   const validateContent = (value: string) => {
     const emptyContent = value.length === 0;
@@ -67,9 +68,10 @@ export function CommentItem({
   const deleteComment = async () => {
     await fetch(`/api/comments/${id}`, {
       method: "DELETE",
+      credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
-        credentials: "include",
       },
     });
 
@@ -94,9 +96,10 @@ export function CommentItem({
   const onEditConfirmClick = async () => {
     await fetch(`/api/comments/${id}`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
-        credentials: "include",
       },
       body: JSON.stringify({
         content: content,
@@ -132,28 +135,32 @@ export function CommentItem({
               stroke="Default"
             />
           )}
-          <Button
-            height={32}
-            size="S"
-            buttonType="Ghost"
-            icon="Trash"
-            color={theme.color.dangerTextDefault}
-            onMouseDown={(e) => {
-              e.preventDefault();
-              deleteComment();
-            }}
-          >
-            삭제
-          </Button>
-          <Button
-            height={32}
-            size="S"
-            buttonType="Ghost"
-            icon="Edit"
-            onClick={onEditButtonClick}
-          >
-            편집
-          </Button>
+          {userId === loginUserInfo?.loginId && (
+            <>
+              <Button
+                height={32}
+                size="S"
+                buttonType="Ghost"
+                icon="Trash"
+                color={theme.color.dangerTextDefault}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  deleteComment();
+                }}
+              >
+                삭제
+              </Button>
+              <Button
+                height={32}
+                size="S"
+                buttonType="Ghost"
+                icon="Edit"
+                onClick={onEditButtonClick}
+              >
+                편집
+              </Button>
+            </>
+          )}
           <Button
             height={32}
             size="S"

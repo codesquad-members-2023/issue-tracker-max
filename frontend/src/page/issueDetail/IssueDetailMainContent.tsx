@@ -25,6 +25,7 @@ export function IssueDetailMainContent(props: IssueDetailMainContentProps) {
 
 const Div = styled.div`
   flex: 1 0 0;
+  max-width: 960px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
