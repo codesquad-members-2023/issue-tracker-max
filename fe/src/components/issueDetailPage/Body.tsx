@@ -1,4 +1,3 @@
-import { useTheme } from '@emotion/react';
 import { Theme, css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -12,7 +11,6 @@ import { deleteIssue } from 'apis/api';
 
 type Props = {
   issueDetailPageData: IssueDetailPageData;
-  selectionsOptions: SelectionState['detailPage'];
   selections: SelectionState['newIssuePage'];
   onAddComment: (comment: CommentType) => void;
   onDeleteComment?: (id?: number) => void;
@@ -24,7 +22,6 @@ type Props = {
 
 export const Body: React.FC<Props> = ({
   issueDetailPageData,
-  selectionsOptions,
   selections,
   onAddComment,
   onDeleteComment,
@@ -33,7 +30,6 @@ export const Body: React.FC<Props> = ({
   onMultipleSelectedAssignee,
   onMultipleSelectedLabel,
 }) => {
-  const theme = useTheme() as any;
   const [isDeleteError, setIsDeleteError] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -67,22 +63,20 @@ export const Body: React.FC<Props> = ({
       <div className="rightPanel">
         <SideBar>
           <ListSideBar
+            issueDetailPageData={issueDetailPageData}
             onSingleSelectedMilestone={onSingleSelectedMilestone}
             onMultipleSelectedAssignee={onMultipleSelectedAssignee}
             onMultipleSelectedLabel={onMultipleSelectedLabel}
-            selectionsOptions={selectionsOptions}
             selections={selections}
             onChangeSelect={onChangeSelect}
           />
         </SideBar>
         <Button typeVariant="ghost" size="S" onClick={onDeleteIssue}>
-          <Trash stroke={theme.danger.text.default} />
+          <Trash className="button-delete" />
           <span className="button-delete">이슈 삭제</span>
         </Button>
         {isDeleteError && (
-          <span css={{ color: theme.danger.text.default }}>
-            이슈 삭제에 실패했습니다.
-          </span>
+          <span className="text-error">이슈 삭제에 실패했습니다.</span>
         )}
       </div>
     </div>
@@ -108,11 +102,18 @@ const bodyStyle = (theme: Theme) => css`
     flex-direction: column;
     gap: 16px;
     align-items: flex-end;
+
     & span {
       color: ${theme.neutral.text.default};
       font: ${theme.fonts.availableMedium16};
     }
+
     .button-delete {
+      color: ${theme.danger.text.default};
+      stroke: ${theme.danger.text.default};
+    }
+
+    .text-error {
       color: ${theme.danger.text.default};
     }
   }

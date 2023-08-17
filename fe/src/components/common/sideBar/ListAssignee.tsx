@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 
 type SelectedAssigneesData = {
-  id: number;
+  userId: number;
   loginId: string;
   image: string;
 };
@@ -18,7 +18,7 @@ export const ListAssignee: React.FC<Props> = ({ selectedAssigneesData }) => {
     <>
       {selectedAssigneesData.map((assignee) => (
         <div
-          key={assignee.id}
+          key={assignee.userId}
           css={{
             display: 'flex',
             alignItems: 'center',

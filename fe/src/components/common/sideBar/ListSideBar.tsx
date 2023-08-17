@@ -34,21 +34,21 @@ type MilestoneData = {
 };
 
 type Props = {
+  issueDetailPageData?: IssueDetailPageData;
   selections: SelectionState['newIssuePage'];
   onSingleSelectedMilestone: (id: number) => void;
   onMultipleSelectedAssignee: (id: number) => void;
   onMultipleSelectedLabel: (id: number) => void;
   onChangeSelect?: (key: string) => void;
-  selectionsOptions?: SelectionState['detailPage'];
 };
 
 export const ListSideBar: React.FC<Props> = ({
+  issueDetailPageData,
   selections,
   onSingleSelectedMilestone,
   onMultipleSelectedAssignee,
   onMultipleSelectedLabel,
   onChangeSelect,
-  selectionsOptions,
 }) => {
   const theme = useTheme() as any;
   const [listData, setListData] = useState<{
@@ -73,39 +73,6 @@ export const ListSideBar: React.FC<Props> = ({
     labels: false,
     milestones: false,
   });
-
-  const modifiedUserData = listData.users.map((item) => {
-    const { userId, ...rest } = item;
-    return { id: userId, ...rest };
-  });
-
-  const modifiedAssigneesData = selectionsOptions?.assignees.map((item) => {
-    const { userId, ...rest } = item;
-    return { id: userId, ...rest };
-  });
-
-  const assigneeOptions = modifiedUserData.slice(1);
-  const labelOptions = listData.labels.slice(1);
-  const milestoneOptions = listData.milestones.slice(1);
-
-  const selectedAssigneesData =
-    listData.users.length !== 0
-      ? modifiedUserData.filter((users) =>
-          selections.assignees.includes(users.id),
-        )
-      : modifiedAssigneesData;
-
-  const selectedLabelsData =
-    listData.labels.length !== 0
-      ? labelOptions.filter((label) => selections.labels.includes(label.id))
-      : selectionsOptions?.labels;
-
-  const selectedMilestonesData =
-    listData.milestones.length !== 0
-      ? milestoneOptions.find(
-          (milestone) => selections.milestones === milestone.id,
-        )
-      : selectionsOptions?.milestones;
 
   const openPanel = async (
     fetchDataFunction: () => Promise<
@@ -137,6 +104,32 @@ export const ListSideBar: React.FC<Props> = ({
       onChangeSelect(key);
     }
   };
+
+  const assigneeOptions = listData.users
+    .map((user) => ({ id: user.userId, ...user }))
+    .slice(1);
+  const labelOptions = listData.labels.slice(1);
+  const milestoneOptions = listData.milestones.slice(1);
+
+  // 패널 리스트를 페치하지 않은 상태일 때, 초기 값으로 선택되어있는 항목을 렌더링 데이터로 씀
+  const selectedAssigneesData =
+    listData.users.length !== 0
+      ? listData.users
+          .map((user) => ({ id: user.userId, ...user }))
+          .filter((user) => selections.assignees.includes(user.id))
+      : issueDetailPageData?.assignees;
+
+  const selectedLabelsData =
+    listData.labels.length !== 0
+      ? labelOptions.filter((label) => selections.labels.includes(label.id))
+      : issueDetailPageData?.labels;
+
+  const selectedMilestonesData =
+    listData.milestones.length !== 0
+      ? milestoneOptions.find(
+          (milestone) => selections.milestones === milestone.id,
+        )
+      : issueDetailPageData?.milestone;
 
   const commonStyles = css`
     display: flex;

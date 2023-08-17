@@ -24,14 +24,6 @@ export const IssueDetailPage: React.FC = () => {
     milestones: null,
   });
 
-  const [selectionsOptions, setSelectionsOptions] = useState<
-    SelectionState['detailPage']
-  >({
-    assignees: [],
-    labels: [],
-    milestones: null,
-  }); //todo 없어도 될듯!
-
   useEffect(() => {
     fetchIssueDetailPageData();
   }, []);
@@ -49,12 +41,6 @@ export const IssueDetailPage: React.FC = () => {
       const initialMilestone = pageData.milestone
         ? pageData.milestone.id
         : null;
-
-      setSelectionsOptions({
-        assignees: pageData.assignees,
-        labels: pageData.labels,
-        milestones: pageData.milestone,
-      });
 
       setSelectionsIds({
         assignees: initialAssignees,
@@ -163,11 +149,9 @@ export const IssueDetailPage: React.FC = () => {
       />
       <Body
         issueDetailPageData={issueDetailPageData}
+        selections={selectionsIds}
         onAddComment={onAddComment}
         onDeleteComment={onDeleteComment}
-        //
-        selectionsOptions={selectionsOptions}
-        selections={selectionsIds}
         onChangeSelect={onChangeSelect}
         onSingleSelectedMilestone={onSingleSelectedMilestone}
         onMultipleSelectedAssignee={onMultipleSelectedAssignee}
