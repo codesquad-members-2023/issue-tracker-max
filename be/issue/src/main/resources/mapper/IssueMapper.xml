@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 위 코드가 mapper 설정을 하는 코드 -->
+
+<!-- Mapper를 사용하는 Repository의 전체 경로를 적어줘야함. -->
+<mapper namespace="codesquad.issueTracker.issue.repository.IssueMapperRepository">
+
+    <resultMap id="issueResultMap" type="IssueRead">
+        <id property="id" column="issues_id"/>
+        <result property="title" column="issues_title"/>
+        <result property="isClosed" column="issues_is_closed"/>
+        <result property="createdAt" column="issues_created_at"/>
+
+        <association property="user" javaType="User">
+            <id property="id" column="users_id"/>
+            <result property="name" column="users_name"/>
+            <result property="profileImg" column="users_profile_img"/>
+        </association>
+
+        <association property="milestone" javaType="Milestone">
+            <id property="id" column="milestones_id"/>
+            <result property="name" column="milestones_name"/>
+        </association>
+
+        <collection property="labels" ofType="Label">
+            <id property="id" column="labels_id"/>
+            <result property="name" column="labels_name"/>
+            <result property="textColor" column="labels_text_color"/>
+            <result property="backgroundColor" column="labels_background_color"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="findFilteredIssue" resultMap="issueResultMap" parameterType="IssueSearch">
+        SELECT DISTINCT issues.id as issues_id
+        , issues.title as issues_title
+        , issues.is_closed as issues_is_closed
+        , issues.created_at as issues_created_at
+        , u.id as users_id
+        , u.name as users_name
+        , u.profile_img as users_profile_img
+        , milestones.id as milestones_id
+        , milestones.name as milestones_name
+        , labels.id as labels_id
+        , labels.name as labels_name
+        , labels.text_color as labels_text_color
+        , labels.background_color as labels_background_color
+        FROM issues
+        INNER JOIN users u ON u.id = issues.user_id
+        LEFT OUTER JOIN milestones ON issues.milestone_id = milestones.id AND milestones.is_deleted = 0
+        LEFT OUTER JOIN issues_labels ON issues.id = issues_labels.issue_id
+        LEFT OUTER JOIN labels ON issues_labels.label_id = labels.id AND labels.is_deleted = 0
+        LEFT OUTER JOIN assignees ON issues.id = assignees.issue_id
+        LEFT OUTER JOIN users ON assignees.user_id = users.id
+        LEFT OUTER JOIN comments ON issues.id = comments.issue_id AND comments.is_deleted = 0
+        WHERE issues.is_deleted = 0
+        <if test="isClosed != null">
+            <trim prefix="AND ">
+                issues.is_closed = #{isClosed}
+            </trim>
+        </if>
+        <if test="assigneeIds != null and assigneeIds.size() > 0">
+            <trim prefix="AND ">
+                issues.id IN (
+                SELECT issue_id
+                FROM assignees
+                WHERE user_id IN
+                <foreach collection="assigneeIds" item="assigneeId" separator="," open="(" close=")">
+                    #{assigneeId}
+                </foreach>
+                GROUP BY issue_id
+                HAVING COUNT(DISTINCT user_id) = ${assigneeIds.size}
+                )
+            </trim>
+        </if>
+        <if test="labelIds != null and labelIds.size() > 0">
+            <trim prefix="AND">
+                issues.id IN (
+                SELECT issue_id
+                FROM issues_labels
+                WHERE label_id IN
+                <foreach collection="labelIds" item="labelId" separator="," open="(" close=")">
+                    #{labelId}
+                </foreach>
+                GROUP BY issue_id
+                HAVING COUNT(DISTINCT label_id) = ${labelIds.size}
+                )
+            </trim>
+        </if>
+        <if test="milestoneId != null">
+            <trim prefix="AND">
+                issues.milestone_id = #{milestoneId}
+            </trim>
+        </if>
+        <if test="userId != null">
+            <trim prefix="AND">
+                issues.user_id = #{userId}
+            </trim>
+        </if>
+        <if test="commentAuthorId != null">
+            <trim prefix="AND">
+                comments.user_id = #{commentAuthorId}
+            </trim>
+        </if>
+        ORDER BY issues.id desc;
+    </select>
+
+</mapper>

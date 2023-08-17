@@ -3,6 +3,9 @@ package codesquad.issueTracker.milestone.repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import java.util.Map;
+import java.util.Optional;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -85,6 +88,18 @@ public class MilestoneRepository {
 		return jdbcTemplate.query(sql, parameterSource, milestoneRowMapper);
 	}
 
+	public int getAnotherCount(Boolean status) {
+		String sql = "SELECT COUNT(*) FROM milestones WHERE is_closed = :status AND is_deleted = 0";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("status", status);
+		return jdbcTemplate.queryForObject(sql, parameterSource, Integer.class);
+	}
+
+	public int getLabelCount() {
+		String sql = "SELECT COUNT(*) FROM labels WHERE is_deleted = 0";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
+	}
+
 	private final RowMapper<MilestoneVo> milestoneRowMapper = (rs, rowNum) -> MilestoneVo.builder()
 		.id(rs.getLong("id"))
 		.name(rs.getString("name"))
@@ -94,10 +109,21 @@ public class MilestoneRepository {
 		.issueClosedCount(rs.getInt("issueClosedCount"))
 		.build();
 
-	public int countAnother(Boolean status) {
-		String sql = "SELECT COUNT(*) FROM milestones WHERE is_closed = :status AND is_deleted = 0";
-		SqlParameterSource parameterSource = new MapSqlParameterSource()
-			.addValue("status", status);
-		return jdbcTemplate.queryForObject(sql, parameterSource, Integer.class);
+	public Optional<MilestoneVo> findByIssueId(Long issueId) {
+		String sql = "select m.id, m.name "
+				+ "from milestones m "
+				+ "    join issues i on m.id = i.milestone_id "
+				+ "where i.id = :issueId "
+				+ "and i.is_deleted = false "
+				+ "and m.is_deleted = false";
+
+		return Optional.ofNullable(
+				DataAccessUtils.singleResult(
+						jdbcTemplate.query(sql, Map.of("issueId", issueId), milestoneVoRowMapper)));
 	}
+
+	private final RowMapper<MilestoneVo> milestoneVoRowMapper = ((rs, rowNum) -> MilestoneVo.builder()
+			.id(rs.getLong("id"))
+			.name(rs.getString("name"))
+			.build());
 }

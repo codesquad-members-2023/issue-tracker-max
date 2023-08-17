@@ -25,7 +25,7 @@ import codesquad.issueTracker.user.dto.SignUpRequestDto;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Sql(scripts = {"classpath:schema/schema.sql"})
+@Sql(scripts = {"classpath:schema.sql"})
 class UserControllerTest {
 
 	@Autowired

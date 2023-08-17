@@ -3,6 +3,7 @@ package codesquad.issueTracker.global.exception;
 import java.time.DateTimeException;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -11,10 +12,8 @@ import io.jsonwebtoken.security.SignatureException;
 
 public enum ErrorCode implements StatusCode {
 
-	REQUEST_VALIDATION_FAIL(HttpStatus.BAD_REQUEST),
-
 	// -- [Common] -- ]
-	DB_EXCEPTION(HttpStatus.SERVICE_UNAVAILABLE, "DB 서버 오류"),
+	REQUEST_VALIDATION_FAIL(HttpStatus.BAD_REQUEST),
 
 	// -- [OAuth] -- //
 	NOT_SUPPORTED_PROVIDER(HttpStatus.BAD_REQUEST, "지원하지 않는 로그인 방식입니다."),
@@ -32,16 +31,37 @@ public enum ErrorCode implements StatusCode {
 	ALREADY_EXIST_USER(HttpStatus.BAD_REQUEST, "이미 존재하는 유저입니다."),
 	NOT_FOUND_USER(HttpStatus.BAD_REQUEST, "해당하는 유저가 없습니다."),
 	FAILED_LOGIN_USER(HttpStatus.BAD_REQUEST, "로그인에 실패했습니다. 아이디, 비밀번호를 다시 입력해주세요. "),
+	FAILED_LOGOUT_USER(HttpStatus.SERVICE_UNAVAILABLE, "DB 서버 오류로 인해 사용자 로그아웃에 실패했습니다."),
 
 	// -- [Comment] -- //
 	NOT_EXIST_COMMENT(HttpStatus.BAD_REQUEST, "존재하지 않는 댓글입니다."),
 	ALREADY_DELETED_COMMENT(HttpStatus.BAD_REQUEST, "이미 삭제된 댓글입니다."),
+	FAILED_CREATE_COMMENT(HttpStatus.SERVICE_UNAVAILABLE, "DB 서버 오류로 인해 댓글 생성에 실패했습니다."),
+	FAILED_UPDATE_COMMENT(HttpStatus.SERVICE_UNAVAILABLE, "DB 서버 오류로 인해 댓글 수정에 실패했습니다."),
+	FAILED_DELETE_COMMENT(HttpStatus.SERVICE_UNAVAILABLE, "DB 서버 오류로 인해 댓글 삭제에 실패했습니다."),
 
-	// 마일스톤
+	// -- [Milestone] -- //
 	INVALIDATE_DATE(HttpStatus.BAD_REQUEST, "현재 날짜보다 이전 날짜 입니다."),
 	NOT_FOUND_DATE(HttpStatus.BAD_REQUEST, "유효하지 않은 날짜 입니다."),
 	NOT_FOUND_MILESTONE(HttpStatus.BAD_REQUEST, "마일스톤을 찾을 수 없습니다."),
-	ILLEGAL_STATUS_MILESTONE(HttpStatus.BAD_REQUEST, "올바르지 않은 상태 입력 입니다.");
+	ILLEGAL_STATUS_MILESTONE(HttpStatus.BAD_REQUEST, "올바르지 않은 상태 입력 입니다."),
+
+	// -- [Label] -- //
+	LABEL_INSERT_FAILED(HttpStatus.BAD_REQUEST, "DB에서 라벨 생성에 실패했습니다."),
+	LABEL_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "DB에서 라벨 수정에 실패했습니다."),
+	LABEL_DELETE_FAILED(HttpStatus.BAD_REQUEST, "DB에서 라벨 삭제에 실패했습니다"),
+	LABEL_FIND_FAILED(HttpStatus.BAD_REQUEST, "서버 오류로 라벨을 조회할 수 없습니다"),
+
+	// -- [Issue] -- //
+	DUPLICATE_OBJECT_FOUND(HttpStatus.BAD_REQUEST, "중복된 항목 선택입니다."),
+	NOT_EXIST_ISSUE(HttpStatus.BAD_REQUEST, "존재하지 않는 이슈입니다."),
+	ALREADY_DELETED_ISSUE(HttpStatus.BAD_REQUEST, "이미 삭제된 이슈입니다."),
+	NOT_FOUND_ISSUES(HttpStatus.BAD_REQUEST, "이슈를 찾을 수 없습니다."),
+
+	// -- [File] -- //
+	EMPTY_FILE_EXCEPTION(HttpStatus.BAD_REQUEST, "파일을 선택해 주세요."),
+	FAILED_UPLOAD_FILE(HttpStatus.BAD_REQUEST, "파일 업로드에 실패했습니다."),
+	MAX_FILE_SIZE(HttpStatus.BAD_REQUEST, "업로드 할 수 있는 최대 크기는 20MB 입니다.");
 
 	private HttpStatus status;
 	private String message;
@@ -80,6 +100,9 @@ public enum ErrorCode implements StatusCode {
 		}
 		if (e instanceof DateTimeException) {
 			return ErrorCode.NOT_FOUND_DATE;
+		}
+		if (e instanceof MaxUploadSizeExceededException) {
+			return ErrorCode.MAX_FILE_SIZE;
 		}
 		return ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION;
 	}

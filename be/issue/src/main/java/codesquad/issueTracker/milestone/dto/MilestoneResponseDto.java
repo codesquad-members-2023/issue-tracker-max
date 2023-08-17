@@ -7,10 +7,12 @@ import lombok.Getter;
 
 @Getter
 public class MilestoneResponseDto {
-	int anotherMilestoneCount;
-	List<MilestoneVo> milestones;
+	private int labelCount;
+	private int anotherMilestoneCount;
+	private List<MilestoneVo> milestones;
 
-	public MilestoneResponseDto(int anotherMilestoneCount, List<MilestoneVo> milestones) {
+	public MilestoneResponseDto(int labelCount, int anotherMilestoneCount, List<MilestoneVo> milestones) {
+		this.labelCount = labelCount;
 		this.anotherMilestoneCount = anotherMilestoneCount;
 		this.milestones = milestones;
 	}
