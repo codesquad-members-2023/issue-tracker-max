@@ -4,44 +4,72 @@ import { MilestoneData } from './milestone.type';
 
 export type PostNewIssueRes = {
   success: boolean;
-  data: {
+  data?: {
     id: number;
+  };
+  errorCode?: {
+    status: number;
+    message: string;
   };
 };
 
 export type OnlySuccessRes = {
   success: boolean;
-  data: null;
+  data?: null;
+  errorCode?: {
+    status: number;
+    message: string;
+  };
 };
 
 export type PostCommentsRes = {
   success: boolean;
-  data: CommentType;
+  data?: CommentType;
+  errorCode?: {
+    status: number;
+    message: string;
+  };
 };
 
 export type GetIssueRes = {
   success: boolean;
-  data: IssueData;
+  data?: IssueData;
+  errorCode?: {
+    status: number;
+    message: string;
+  };
 };
 
 export type PostFileRes = {
   success: boolean;
-  data: string;
+  data?: string;
+  errorCode?: {
+    status: number;
+    message: string;
+  };
 };
 
 export type GetLabelRes = {
   success: boolean;
-  data: LabelData;
+  data?: LabelData;
+  errorCode?: {
+    status: number;
+    message: string;
+  };
 };
 
 export type GetMilestoneRes = {
   success: boolean;
-  data: MilestoneData;
+  data?: MilestoneData;
+  errorCode?: {
+    status: number;
+    message: string;
+  };
 };
 
 export type PostSignInRes = {
   success: boolean;
-  data: {
+  data?: {
     accessToken: string;
     refreshToken: string;
     member: {
@@ -49,5 +77,9 @@ export type PostSignInRes = {
       name: string;
       imageUrl: string;
     };
+  };
+  errorCode?: {
+    status: number;
+    message: string;
   };
 };

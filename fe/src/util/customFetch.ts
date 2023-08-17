@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom';
-
 type Props = {
   subUrl: string;
   method?: string;
@@ -15,7 +13,6 @@ export async function customFetch<T>({
   contentType = 'application/json',
   body,
 }: Props): Promise<T> {
-  const navigate = useNavigate();
   const baseUrl = import.meta.env.VITE_APP_BASE_URL;
   const authorization = 'Bearer ' + localStorage.getItem('accessToken');
 
@@ -33,12 +30,6 @@ export async function customFetch<T>({
   try {
     const res = await fetch(url, options);
     const json = await res.json();
-
-    if (!json.success) {
-      if (json.errorCode.status === 401) {
-        navigate('/sign-in');
-      }
-    }
 
     return json;
   } catch (error) {

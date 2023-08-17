@@ -22,7 +22,14 @@ export default function IssueList() {
       try {
         const response = await customFetch<GetIssueRes>({ subUrl: 'api/' });
 
-        if (response.success && response.data) {
+        if (!response.success) {
+          if (response.errorCode?.status === 401) {
+            navigate('/sign-in');
+            return;
+          }
+        }
+
+        if (response.data) {
           setIssueList(response.data);
         }
       } catch (error) {

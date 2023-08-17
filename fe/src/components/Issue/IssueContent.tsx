@@ -38,7 +38,9 @@ export default function IssueContent({
         contentType: 'multipart/form-data',
         body: formData,
       });
-      onAddImg(response.data);
+      if (response.data) {
+        onAddImg(response.data);
+      }
       //Memo: 미완성 기능
     } catch (error) {
       //Memo: 에러 핸들린 필요
