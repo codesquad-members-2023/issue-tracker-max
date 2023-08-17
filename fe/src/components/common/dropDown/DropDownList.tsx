@@ -27,6 +27,7 @@ export const DropDownList: React.FC<Props> = ({
     flex: 1 0 0;
   `;
   const basicImage = 'basic-profile.jpeg';
+
   return (
     <li
       onClick={onClick}
@@ -54,7 +55,7 @@ export const DropDownList: React.FC<Props> = ({
       }}
     >
       {item.backgroundColor && <UserImageSmall fill={item.backgroundColor} />}
-      {item.image && (
+      {(item.image || item.image === '') && (
         <img
           alt="userImage"
           src={item.image || basicImage}
