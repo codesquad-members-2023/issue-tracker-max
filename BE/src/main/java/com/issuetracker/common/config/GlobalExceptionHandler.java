@@ -15,6 +15,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import com.issuetracker.common.config.exception.CustomHttpException;
 import com.issuetracker.common.config.exception.ErrorType;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -53,6 +55,14 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body(new ErrorResponse(
 			HttpStatus.BAD_REQUEST,
 			"JSON 필드 값은 String, Number, Array, Object 객체 또는 'null', 'true', 'false'만 입력 가능합니다.")
+		);
+	}
+
+	@ExceptionHandler(ExpiredJwtException.class)
+	public ResponseEntity<ErrorResponse> expiredJwtException(ExpiredJwtException e) {
+		return new ResponseEntity<ErrorResponse>(
+			new ErrorResponse(HttpStatus.UNAUTHORIZED, "기한이 만료된 토큰입니다."),
+			HttpStatus.UNAUTHORIZED
 		);
 	}
 

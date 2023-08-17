@@ -17,8 +17,10 @@ public enum ErrorType {
 	ISSUE_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이슈 댓글을 찾을 수 없습니다."),
 
 	QUERY_STRING_KEY_NOT_MATCH(HttpStatus.BAD_REQUEST, "올바른 QueryString Key가 아닙니다."),
+
 	ILLEGAL_ID(HttpStatus.BAD_REQUEST, "유효한 id값이 아닙니다."),
 	ILLEGAL_BOOLEAN_VALUE(HttpStatus.BAD_REQUEST, "유효한 boolean값이 아닙니다."),
+
 	FILE_UPLOAD_MAX_SIZE(HttpStatus.BAD_REQUEST, "이미지 파일 용량은 5MB 이하만 가능합니다."),
 	FILE_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "이미지 파일만 업로드 가능합니다."),
 	ISSUE_UPDATE_NULL(HttpStatus.BAD_REQUEST, "수정할 데이터가 존재하지 않습니다."),
@@ -26,7 +28,10 @@ public enum ErrorType {
 	ASSIGNED_LABEL_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 라벨입니다."),
 	QUERY_STRING_VALUE_NOT_MATCH(HttpStatus.BAD_REQUEST, "올바른 QueryString Value가 아닙니다."),
 	MILESTONE_TITLE_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 제목입니다."),
-	LABEL_TITLE_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 제목입니다." );
+	LABEL_TITLE_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 제목입니다."),
+
+	ACCOUNT_EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 사용중인 email 입니다."),
+	NO_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "해당 리프레시 토큰이 존재하지 않습니다.");
 
 	private final HttpStatus status;
 	private final String message;

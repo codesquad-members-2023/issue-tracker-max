@@ -5,6 +5,7 @@ import java.util.Objects;
 import org.springframework.http.MediaType;
 
 import com.issuetracker.member.ui.dto.MemberUpdateRequest;
+import com.issuetracker.util.JwtTokenForTest;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -15,7 +16,7 @@ import io.restassured.specification.RequestSpecification;
 public class MemberSteps {
 
 	public static ExtractableResponse<Response> 회원_정보_조회_요청(long id) {
-		return RestAssured.given().log().all()
+		return RestAssured.given().log().all().auth().oauth2(JwtTokenForTest.accessToken)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.when().get("/api/members/{id}", id)
 			.then().log().all().extract();
@@ -23,7 +24,7 @@ public class MemberSteps {
 
 	public static ExtractableResponse<Response> 회원_정보_수정_요청(long id, String nickname, String password,
 		MultiPartSpecification multiPartSpecification) {
-		RequestSpecification request = RestAssured.given().log().all()
+		RequestSpecification request = RestAssured.given().log().all().auth().oauth2(JwtTokenForTest.accessToken)
 			.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.multiPart("request", new MemberUpdateRequest(nickname, password), MediaType.APPLICATION_JSON_VALUE);
