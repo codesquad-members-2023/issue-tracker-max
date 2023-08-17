@@ -52,11 +52,13 @@ export function MainTableHeader({
 
   const issueStateDropdownOptions = [
     {
+      id: 1,
       name: "선택한 이슈 열기",
       selected: false,
       onClick: () => onChangeIssuesState("OPENED"),
     },
     {
+      id: 2,
       name: "선택한 이슈 닫기",
       selected: false,
       onClick: () => onChangeIssuesState("CLOSED"),

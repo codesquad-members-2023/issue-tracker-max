@@ -36,7 +36,7 @@ export function MilestoneTableElement({
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
-        status: status,
+        status: status === "OPENED" ? "CLOSED" : "OPENED",
       }),
     });
   };

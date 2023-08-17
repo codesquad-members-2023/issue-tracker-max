@@ -26,7 +26,7 @@ export function MainTable({
     };
 
     await fetch("/api/issues/status", {
-      method: "POST",
+      method: "PATCH",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
