@@ -19,13 +19,11 @@ import com.issuetrackermax.domain.milestone.entity.Milestone;
 @Repository
 public class MilestoneRepository {
 	private static final RowMapper<Milestone> MILESTONE_ROW_MAPPER = (rs, rowNum) ->
-		Milestone.builder()
-			.id(rs.getLong("id"))
-			.title(rs.getString("title"))
-			.isOpen(rs.getBoolean("is_open"))
-			.description(rs.getString("description"))
-			.duedate(rs.getTimestamp("duedate").toLocalDateTime())
-			.build();
+		Milestone.fromMilestoneRepository(rs.getLong("id"),
+			rs.getString("title"),
+			rs.getString("description"),
+			rs.getTimestamp("duedate"),
+			rs.getBoolean("is_open"));
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public MilestoneRepository(JdbcTemplate jdbcTemplate) {
