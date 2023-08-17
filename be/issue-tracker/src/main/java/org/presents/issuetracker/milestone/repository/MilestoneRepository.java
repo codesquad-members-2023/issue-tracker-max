@@ -182,7 +182,7 @@ public class MilestoneRepository {
 
     private int countMilestonesByStatus(String status) {
         return jdbcTemplate.queryForObject(
-                "SELECT COALESCE(COUNT(*), 0) FROM milestone WHERE status = :status AND status = :OPEN_FLAG",
+                "SELECT COALESCE(COUNT(*), 0) FROM milestone WHERE status = :status",
                 Map.of("status", status, "OPEN_FLAG", OPEN_FLAG),
                 Integer.class
         );
