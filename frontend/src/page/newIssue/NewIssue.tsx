@@ -44,7 +44,6 @@ export function NewIssue() {
 
   const onSubmitButtonClick = async () => {
     if (invalidTitle) {
-      alert("제목은 1글자 이상 50글자 이하로 작성해주세요.");
       return;
     }
 
@@ -72,7 +71,6 @@ export function NewIssue() {
       return;
     }
 
-    alert(data[0].defaultMessage);
     throw new Error(data[0].defaultMessage);
   };
 

@@ -165,7 +165,7 @@ export function TextArea({
       return data.url;
     }
 
-    alert(message);
+    alert(`[이미지 저장 실패!]\n${message}`);
     throw new Error(message);
   };
 

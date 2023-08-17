@@ -59,7 +59,6 @@ export function IssueDetailTitleInfo({
       return;
     }
 
-    alert(message);
     throw new Error(message);
   };
 
@@ -84,11 +83,9 @@ export function IssueDetailTitleInfo({
     }
 
     if (code === 400) {
-      alert(data[0].defaultMessage)
       throw new Error(data[0].defaultMessage);
     }
 
-    alert(message);
     throw new Error(message);
   };
 

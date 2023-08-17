@@ -37,7 +37,6 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
 
   const onContentSubmit = async () => {
     if (invalidContent) {
-      alert(`코멘트 ${errorDescription}`);
       return;
     }
 
@@ -65,7 +64,6 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
 
     const errorMessage = data ? data[0].defaultMessage : message;
     
-    alert(errorMessage);
     throw new Error(errorMessage);
   };
 

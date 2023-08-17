@@ -74,7 +74,6 @@ export function CommentItem({
       return;
     }
 
-    alert(message);
     throw new Error(message);
   };
 
@@ -93,7 +92,6 @@ export function CommentItem({
 
   const onEditConfirmClick = async () => {
     if (invalidContent) {
-      alert(`코멘트의 ${errorDescription}`);
       return;
     }
 
@@ -119,7 +117,6 @@ export function CommentItem({
 
     const errorMessage = data ? data[0].defaultMessage : message;
     
-    alert(errorMessage);
     throw new Error(errorMessage);
   };
 

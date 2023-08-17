@@ -112,7 +112,6 @@ export function IssueDetail() {
       return;
     }
 
-    alert(result.message);
     throw new Error(result.message);
   }, [issueId, navigatte]);
 

@@ -41,7 +41,6 @@ export function IssueDetailSidePanel({
       return;
     }
 
-    alert("작성자 이외에는 수정할 수 없습니다!");
     throw new Error(message);
   };
 
@@ -64,7 +63,6 @@ export function IssueDetailSidePanel({
       return;
     }
 
-    alert("작성자 이외에는 수정할 수 없습니다!");
     throw new Error(message);
   };
 
@@ -87,7 +85,6 @@ export function IssueDetailSidePanel({
       return;
     }
 
-    alert("작성자 이외에는 수정할 수 없습니다!");
     throw new Error(message);
   };
 
@@ -107,7 +104,6 @@ export function IssueDetailSidePanel({
       return;
     }
 
-    alert(message);
     throw new Error(message);
   };
 
