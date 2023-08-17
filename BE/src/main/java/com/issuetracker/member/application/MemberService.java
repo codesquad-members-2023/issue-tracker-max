@@ -46,7 +46,7 @@ public class MemberService {
 	}
 
 	private String getProfileUrl(String originProfileUrl, MultipartFile multipartFile) {
-		if (Objects.isNull(multipartFile)) {
+		if (Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
 			return originProfileUrl;
 		}
 

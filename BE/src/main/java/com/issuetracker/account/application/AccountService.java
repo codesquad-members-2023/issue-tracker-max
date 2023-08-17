@@ -30,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class AccountService {
 
+	private String DEFAULT_PROFILE_IMAGE_URL = "https://issue-mandu.s3.ap-northeast-2.amazonaws.com/images/user.png";
+
 	private final AccountRepository accountRepository;
 	private final MemoryJwtRepository memoryJwtRepository;
 	private final JwtTokenGenerator jwtTokenGenerator;
@@ -135,6 +137,8 @@ public class AccountService {
 		if (multipartFile != null && multipartFile.getSize() != 0) {
 			String profileUrl = fileService.upload(multipartFile).getUrl();
 			signUpInputData.setProfileImageUrl(profileUrl);
+		} else {
+			signUpInputData.setProfileImageUrl(DEFAULT_PROFILE_IMAGE_URL);
 		}
 		return accountRepository.save(signUpInputData.toAccount());
 	}
