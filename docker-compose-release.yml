@@ -7,6 +7,8 @@ services:
       - 8081:8081
     volumes:
       - issue_tracker_app_release:/app
+    environment:
+      - TZ=Asia/Seoul
     depends_on:
       - redis
   redis:
