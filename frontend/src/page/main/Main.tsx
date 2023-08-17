@@ -96,6 +96,7 @@ export function Main() {
       const res = await fetch(`/api/issues${queryString}`, {
         credentials: "include",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${getAccessToken()}`,
         },
       });

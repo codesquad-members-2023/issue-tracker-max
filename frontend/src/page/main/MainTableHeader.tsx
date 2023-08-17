@@ -117,20 +117,30 @@ export function MainTableHeader({
             ))}
           </TabButton>
           <MultiFiltersDiv>
-            {Object.entries(multiFilters).map(([key, value], index) => (
-              <DropdownContainer
-                key={index}
-                name={key}
-                optionTitle={`${key} 필터`}
-                options={addOnClickToOptions(
-                  key,
-                  value.options,
-                  value.multipleSelect,
-                )}
-                alignment="Right"
-                autoClose
-              />
-            ))}
+            {Object.entries(multiFilters).map(([key, value], index) => {
+              const iconType =
+                "avatarUrl" in value.options[0]
+                  ? "Profile"
+                  : "background" in value.options[0]
+                  ? "Palette"
+                  : "None";
+
+              return (
+                <DropdownContainer
+                  key={index}
+                  name={key}
+                  iconType={iconType}
+                  optionTitle={`${key} 필터`}
+                  options={addOnClickToOptions(
+                    key,
+                    value.options,
+                    value.multipleSelect,
+                  )}
+                  alignment="Right"
+                  autoClose
+                />
+              );
+            })}
           </MultiFiltersDiv>
         </>
       ) : (

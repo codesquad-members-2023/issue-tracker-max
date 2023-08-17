@@ -4,9 +4,9 @@ import { styled } from "styled-components";
 import { IssueAssignee } from "../../components/sidebar/AddAssignee";
 import { IssueLabel } from "../../components/sidebar/AddLabel";
 import { IssueMilestone } from "../../components/sidebar/AddMilestone";
+import { getAccessToken } from "../../utils/localStorage";
 import { NewIssueBody } from "./NewIssueBody";
 import { NewIssueFooter } from "./NewIssueFooter";
-import { getAccessToken } from "../../utils/localStorage";
 
 export function NewIssue() {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ export function NewIssue() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const invalidTitle = title.length === 0;
+  const invalidTitle = title.length === 0 || title.length > 50;
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -43,6 +43,10 @@ export function NewIssue() {
   );
 
   const onSubmitButtonClick = async () => {
+    if (invalidTitle) {
+      return;
+    }
+
     const issueData = {
       title: title,
       content: content,
@@ -53,17 +57,21 @@ export function NewIssue() {
 
     const response = await fetch("/api/issues", {
       method: "POST",
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify(issueData),
-    })
-    const result = await response.json();
+    });
+    const { code, data } = await response.json();
 
-    if (result.code === 201) {
-      navigate(`/issues/${result.data.savedIssueId}`);
+    if (code === 201) {
+      navigate(`/issues/${data.savedIssueId}`);
+      return;
     }
+
+    throw new Error(data[0].defaultMessage);
   };
 
   const onCancelButtonClick = () => {

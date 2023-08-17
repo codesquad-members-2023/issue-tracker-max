@@ -1,6 +1,7 @@
 import { rest } from "msw";
 import { assigneeHandlers } from "./assigneeHandlers";
 import { commentHandlers } from "./commentHandlers";
+import { imageHandlers } from "./imageHandlers";
 import { issueHandlers } from "./issueHandlers";
 
 type LabelRequestBody = {
@@ -286,6 +287,7 @@ export const handlers = [
   ...issueHandlers,
   ...commentHandlers,
   ...assigneeHandlers,
+  ...imageHandlers,
 ];
 
 export const labels = {

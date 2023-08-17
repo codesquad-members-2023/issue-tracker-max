@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { Icon } from "../icon/Icon";
+import { Avatar } from "../Avatar";
 
 type AssigneeElementProps = {
   name: string;
@@ -9,11 +9,7 @@ type AssigneeElementProps = {
 export function AssigneeElement({ name, profile }: AssigneeElementProps) {
   return (
     <Div>
-      {profile ? (
-        <img src={profile} alt="" />
-      ) : (
-        <Icon name="UserImageSmall" color="neutralSurfaceBold" />
-      )}
+      <Avatar size="S" src={profile} userId={name} />
       <Text>{name}</Text>
     </Div>
   );

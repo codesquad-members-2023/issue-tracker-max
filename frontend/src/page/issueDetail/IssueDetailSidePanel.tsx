@@ -1,80 +1,111 @@
+import { useNavigate } from "react-router-dom";
 import { styled, useTheme } from "styled-components";
 import { Button } from "../../components/Button";
 import { Sidebar } from "../../components/sidebar/Sidebar";
-import { useNavigate } from "react-router-dom";
+import { getAccessToken, getUserInfo } from "../../utils/localStorage";
 import { IssueData } from "./IssueDetail";
-import { getAccessToken } from "../../utils/localStorage";
 
 type IssueDetailSidePanelProps = {
   fetchIssue: () => void;
-} & Pick<IssueData, "id" | "assignees" | "labels" | "milestone">;
+} & Pick<IssueData, "id" | "assignees" | "labels" | "milestone" | "writer">;
 
 export function IssueDetailSidePanel({
   id: issueId,
   assignees,
   labels,
   milestone,
+  writer,
   fetchIssue,
 }: IssueDetailSidePanelProps) {
   const theme = useTheme();
   const navigate = useNavigate();
 
+  const loginUserInfo = getUserInfo();
+
   const patchIssueAssignees = async (ids: number[]) => {
-    await fetch(`/api/issues/${issueId}/assignees`, {
+    const response = await fetch(`/api/issues/${issueId}/assignees`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
         assignees: ids,
       }),
     });
+    const { code, message } = await response.json();
 
-    fetchIssue();
+    if (code === 200) {
+      fetchIssue();
+      return;
+    }
+
+    throw new Error(message);
   };
 
   const patchIssueLabels = async (ids: number[]) => {
-    await fetch(`/api/issues/${issueId}/labels`, {
+    const response = await fetch(`/api/issues/${issueId}/labels`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
         labels: ids,
       }),
     });
+    const { code, message } = await response.json();
 
-    fetchIssue();
+    if (code === 200) {
+      fetchIssue();
+      return;
+    }
+
+    throw new Error(message);
   };
 
   const patchIssueMilestone = async (id: number | null) => {
-    await fetch(`/api/issues/${issueId}/milestones`, {
+    const response = await fetch(`/api/issues/${issueId}/milestones`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
         milestone: id,
       }),
     });
+    const { code, message } = await response.json();
 
-    fetchIssue();
+    if (code === 200) {
+      fetchIssue();
+      return;
+    }
+
+    throw new Error(message);
   };
 
   const deleteIssue = async () => {
-    await fetch(`/api/issues/${issueId}`, {
+    const response = await fetch(`/api/issues/${issueId}`, {
       method: "DELETE",
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
     });
+    const { code, message } = await response.json();
 
-    navigate("/");
-  }
+    if (code === 200) {
+      navigate("/");
+      return;
+    }
+
+    throw new Error(message);
+  };
 
   return (
     <Div>
@@ -86,17 +117,19 @@ export function IssueDetailSidePanel({
         onLabelClick={{ args: "NumberArray", handler: patchIssueLabels }}
         onMilestoneClick={{ args: "Number", handler: patchIssueMilestone }}
       />
-      <Delete>
-        <Button
-          buttonType="Ghost"
-          size="S"
-          icon="Trash"
-          color={theme.color.dangerTextDefault}
-          onClick={deleteIssue}
-        >
-          이슈 삭제
-        </Button>
-      </Delete>
+      {writer.name === loginUserInfo?.name && (
+        <Delete>
+          <Button
+            buttonType="Ghost"
+            size="S"
+            icon="Trash"
+            color={theme.color.dangerTextDefault}
+            onClick={deleteIssue}
+          >
+            이슈 삭제
+          </Button>
+        </Delete>
+      )}
     </Div>
   );
 }

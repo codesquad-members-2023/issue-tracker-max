@@ -22,7 +22,7 @@ export function IssueDetailHeader({
 }: IssueDetailHeaderProps) {
   return (
     <Div>
-      <IssueDetailTitleInfo {...{ id, title, status, fetchIssue }} />
+      <IssueDetailTitleInfo {...{ id, title, status, writer, fetchIssue }} />
       <StatusInfo>
         <InformationTag
           value={`${status === "OPENED" ? "열린" : "닫힌"} 이슈`}

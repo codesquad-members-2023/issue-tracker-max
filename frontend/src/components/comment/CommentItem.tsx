@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { styled, useTheme } from "styled-components";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
+import { getAccessToken, getUserInfo } from "../../utils/localStorage";
 import { Avatar } from "../Avatar";
 import { Button } from "../Button";
 import { InformationTag } from "../InformationTag";
 import { TextArea } from "../TextArea";
-import { getAccessToken } from "../../utils/localStorage";
 
 type CommentItemProps = {
   id: number;
@@ -37,8 +37,6 @@ export function CommentItem({
 
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(initialContent);
-  const [invalidContent, setInvalidContent] = useState(false);
-  const [errorDescription, setErrorDescription] = useState("");
 
   useEffect(() => {
     setContent(initialContent);
@@ -46,39 +44,41 @@ export function CommentItem({
 
   const maxContentLength = 10000;
   const writtenAt = modifiedAt ?? createdAt;
-
-  const validateContent = (value: string) => {
-    const emptyContent = value.length === 0;
-    const sameContent = value === initialContent;
-    const overflowContent = value.length > maxContentLength;
-
-    setInvalidContent(emptyContent || sameContent || overflowContent);
-    setErrorDescription(
-      emptyContent
+  const loginUserInfo = getUserInfo();
+  
+  const emptyContent = content.length === 0;
+  const sameContent = content === initialContent;
+  const overflowContent = content.length > maxContentLength;
+  const invalidContent = emptyContent || sameContent || overflowContent;
+  const errorDescription = emptyContent
         ? "내용을 입력해주세요"
         : sameContent
         ? "기존 내용과 동일합니다"
         : overflowContent
         ? `내용은 ${addCommasToNumber(maxContentLength)}자 이내로 입력해주세요`
-        : "",
-    );
-  };
+        : "";
 
   const deleteComment = async () => {
-    await fetch(`/api/comments/${id}`, {
+    const response = await fetch(`/api/comments/${id}`, {
       method: "DELETE",
+      credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
-        credentials: "include",
       },
     });
+    const { code, message } = await response.json();
 
-    fetchIssue();
+    if (code === 200) {
+      fetchIssue();
+      return;
+    }
+
+    throw new Error(message);
   };
 
   const onEditButtonClick = () => {
     setIsEditing(true);
-    validateContent(content);
   };
 
   const onEditCancelButtonClick = () => {
@@ -88,26 +88,36 @@ export function CommentItem({
 
   const onContentChange = (value: string) => {
     setContent(value);
-    validateContent(value);
   };
 
   const onEditConfirmClick = async () => {
-    await fetch(`/api/comments/${id}`, {
+    if (invalidContent) {
+      return;
+    }
+
+    const response = await fetch(`/api/comments/${id}`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
-        credentials: "include",
       },
       body: JSON.stringify({
         content: content,
       }),
     });
+    const { code, message, data } = await response.json();
 
-    setContent(initialContent);
-    setIsEditing(false);
-    setInvalidContent(false);
-    setErrorDescription("");
-    fetchIssue();
+    if (code === 200) {
+      setContent(initialContent);
+      setIsEditing(false);
+      fetchIssue();
+      return;
+    }
+
+    const errorMessage = data ? data[0].defaultMessage : message;
+    
+    throw new Error(errorMessage);
   };
 
   return (
@@ -116,6 +126,7 @@ export function CommentItem({
         value={content}
         width="100%"
         isEditing={isEditing}
+        errorDescription={errorDescription}
         onChange={onContentChange}
       >
         <WriterInfo>
@@ -132,28 +143,32 @@ export function CommentItem({
               stroke="Default"
             />
           )}
-          <Button
-            height={32}
-            size="S"
-            buttonType="Ghost"
-            icon="Trash"
-            color={theme.color.dangerTextDefault}
-            onMouseDown={(e) => {
-              e.preventDefault();
-              deleteComment();
-            }}
-          >
-            삭제
-          </Button>
-          <Button
-            height={32}
-            size="S"
-            buttonType="Ghost"
-            icon="Edit"
-            onClick={onEditButtonClick}
-          >
-            편집
-          </Button>
+          {userId === loginUserInfo?.loginId && (
+            <>
+              <Button
+                height={32}
+                size="S"
+                buttonType="Ghost"
+                icon="Trash"
+                color={theme.color.dangerTextDefault}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  deleteComment();
+                }}
+              >
+                삭제
+              </Button>
+              <Button
+                height={32}
+                size="S"
+                buttonType="Ghost"
+                icon="Edit"
+                onClick={onEditButtonClick}
+              >
+                편집
+              </Button>
+            </>
+          )}
           <Button
             height={32}
             size="S"
@@ -167,9 +182,6 @@ export function CommentItem({
           </Button>
         </ControlButtons>
       </TextArea>
-      {isEditing && errorDescription && (
-        <ErrorDescription>{errorDescription}</ErrorDescription>
-      )}
       {isEditing && (
         <EditorButtons>
           <Button
@@ -216,16 +228,6 @@ const ControlButtons = styled.div`
     padding: 0;
     padding-left: 4px;
   }
-`;
-
-const ErrorDescription = styled.span`
-  display: flex;
-  padding-left: 0px;
-  align-items: flex-start;
-  align-self: stretch;
-  padding-left: 16px;
-  color: ${({ theme }) => theme.color.dangerTextDefault};
-  font: ${({ theme }) => theme.font.displayMedium12};
 `;
 
 const EditorButtons = styled.div`
