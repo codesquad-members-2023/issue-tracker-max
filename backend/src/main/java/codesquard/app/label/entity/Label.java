@@ -3,9 +3,6 @@ package codesquard.app.label.entity;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
 public class Label {
 	private Long id; // 등록번호
 	private Long userId; // 유저 번호
@@ -37,7 +34,8 @@ public class Label {
 		this.description = description;
 	}
 
-	public Label(final String name, final String color, final String background, final String description, final Long userId) {
+	public Label(final String name, final String color, final String background, final String description,
+		final Long userId) {
 		this.name = name;
 		this.color = LabelColor.chooseColor(color);
 		this.background = background;

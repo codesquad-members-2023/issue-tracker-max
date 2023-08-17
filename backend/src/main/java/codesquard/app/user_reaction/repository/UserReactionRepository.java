@@ -16,4 +16,6 @@ public interface UserReactionRepository {
 	boolean isExistReaction(Long reactionId);
 
 	boolean isExistUserReaction(Long id);
+
+	boolean isSameUserReactionAuthor(Long id, Long userId);
 }

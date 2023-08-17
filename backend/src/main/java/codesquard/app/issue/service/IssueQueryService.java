@@ -7,7 +7,9 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquard.app.api.errors.errorcode.IssueErrorCode;
 import codesquard.app.api.errors.exception.NoSuchIssueException;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.issue.dto.response.IssueCommentsResponse;
 import codesquard.app.issue.dto.response.IssueLabelResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
@@ -53,7 +55,6 @@ public class IssueQueryService {
 	private boolean multiFiltersCheck = false;
 
 	public IssueReadResponse get(Long issueId, Long userId) {
-		validateExistIssue(issueId);
 		IssueReadResponse issueReadResponse = issueRepository.findBy(issueId);
 		List<userReactionResponse> users = userReactionRepository.findIssueReactionBy(issueId, userId);
 		List<IssueUserResponse> assignees = IssueUserResponse.from(issueRepository.findAssigneesBy(issueId));
@@ -74,6 +75,26 @@ public class IssueQueryService {
 	public void validateExistIssue(Long issueId) {
 		if (!issueRepository.isExist(issueId)) {
 			throw new NoSuchIssueException();
+		}
+	}
+
+	public void validateExistIssues(List<Long> issues) {
+		if (issueMapper.isNotExist(issues)) {
+			throw new NoSuchIssueException();
+		}
+	}
+
+	public void validateIssueAuthor(Long issueId, Long userId) {
+		validateExistIssue(issueId);
+		if (!issueRepository.isSameIssueAuthor(issueId, userId)) {
+			throw new RestApiException(IssueErrorCode.FORBIDDEN_ISSUE);
+		}
+	}
+
+	public void validateIssuesAuthor(List<Long> issues, Long userId) {
+		validateExistIssues(issues);
+		if (issues.size() > issueMapper.countIssueSameAuthor(issues, userId)) {
+			throw new RestApiException(IssueErrorCode.FORBIDDEN_ISSUE);
 		}
 	}
 
@@ -126,7 +147,7 @@ public class IssueQueryService {
 			return "is:opened";
 		}
 
-		return builder.toString();
+		return builder.toString().stripTrailing();
 	}
 
 	private Map<String, Long> countIssuesByStatus() {
@@ -179,11 +200,11 @@ public class IssueQueryService {
 			new MultiFilterLabels(issueMapper.getMultiFiltersLabels(check, request)),
 			new MultiFilterMilestones(issueMapper.getMultiFiltersMilestones(check, request)),
 			new MultiFilterAuthors(issueMapper.getMultiFiltersAuthors(check, request)));
-		multiFilters.getAssignees()
+		multiFilters.getAssignee()
 			.addNoneOptionToAssignee(request.getAssignee() != null && request.getAssignee().equals("none"));
-		multiFilters.getLabels()
+		multiFilters.getLabel()
 			.addNoneOptionToLabels(request.getLabel() != null && request.getLabel().get(0).equals("none"));
-		multiFilters.getMilestones()
+		multiFilters.getMilestone()
 			.addNoneOptionToMilestones(request.getMilestone() != null && request.getMilestone().equals("none"));
 		return multiFilters;
 	}

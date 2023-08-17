@@ -18,11 +18,13 @@ import codesquard.app.api.errors.exception.IllegalIssueStatusException;
 import codesquard.app.api.errors.exception.NoSuchIssueException;
 import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
+import codesquard.app.api.errors.exception.RestApiException;
+import codesquard.app.api.errors.handler.IssueExceptionHandler;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
 import codesquard.app.issue.dto.request.IssueModifyMilestoneRequest;
-import codesquard.app.issue.dto.request.IssueModifyStatusRequest;
+import codesquard.app.issue.dto.request.IssueModifyStatusesRequest;
 import codesquard.app.issue.dto.request.IssueModifyTitleRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.fixture.FixtureFactory;
@@ -59,13 +61,12 @@ class IssueControllerTest extends ControllerTestSupport {
 		mockingAuthenticateUser();
 
 		// given
-		int id = 1;
-		Long userId = 1L;
 		willThrow(new NoSuchIssueException())
-			.given(issueQueryService).get((long)id, userId);
+			.given(issueQueryService).get(anyLong(), anyLong());
 
 		// when & then
-		mockMvc.perform(get("/api/issues/" + id))
+		mockMvc.
+			perform(get("/api/issues/" + anyLong()))
 			.andExpect(status().isNotFound())
 			.andDo(print());
 	}
@@ -150,34 +151,43 @@ class IssueControllerTest extends ControllerTestSupport {
 			.andDo(print());
 	}
 
-	@DisplayName("이슈 상태를 수정한다.")
+	@DisplayName("이슈들의 상태를 수정한다.")
 	@Test
-	void modifyStatus() throws Exception {
+	void modifyStatuses() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
-		int issueId = 1;
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest("CLOSED");
+		List<Long> issueId = List.of(1L, 2L);
+		String status = "CLOSED";
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId, status);
 
 		// when & then
-		mockMvc.perform(patch("/api/issues/" + issueId + "/status")
-				.content(objectMapper.writeValueAsString(issueModifyStatusRequest))
+		mockMvc.perform(patch("/api/issues/status")
+				.content(objectMapper.writeValueAsString(issueModifyStatusesRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.data.modifiedIssueId").value(issueId))
+			.andExpect(jsonPath("$.data.modifiedIssueId[0]").value(issueId.get(0)))
+			.andExpect(jsonPath("$.data.modifiedIssueId[1]").value(issueId.get(1)))
 			.andDo(print());
 	}
 
-	@DisplayName("이슈 상태 수정시 유효하지 않은 status 값이 오면 400 에러를 반환한다.")
+	@DisplayName("이슈들 상태 수정시 유효하지 않은 status 값이 오면 400 에러를 반환한다.")
 	@Test
 	void modifyInvalidStatus_Response400() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
-		int issueId = 1;
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(INVALID_ISSUE_STATUS_NAME);
+		List<Long> issueId = List.of(1L, 2L);
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId,
+			INVALID_ISSUE_STATUS_NAME);
 		willThrow(new IllegalIssueStatusException(IssueErrorCode.INVALID_ISSUE_STATUS))
-			.given(issueService).modifyStatus(any(IssueModifyStatusRequest.class), anyLong());
+			.given(issueService).modifyStatuses(any(IssueModifyStatusesRequest.class), anyLong());
 
 		// when & then
-		mockMvc.perform(patch("/api/issues/" + issueId + "/status")
-				.content(objectMapper.writeValueAsString(issueModifyStatusRequest))
+		mockMvc.perform(patch("/api/issues/status")
+				.content(objectMapper.writeValueAsString(issueModifyStatusesRequest))
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isBadRequest())
 			.andDo(print());
@@ -186,6 +196,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 제목을 수정한다.")
 	@Test
 	void modifyTitle() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		IssueModifyTitleRequest issueModifyTitleRequest = new IssueModifyTitleRequest("수정된 제목");
@@ -250,6 +263,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 내용을 수정한다.")
 	@Test
 	void modifyContent() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		IssueModifyContentRequest issueModifyContentRequest = new IssueModifyContentRequest("수정된 내용");
@@ -282,6 +298,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 마일스톤을 수정한다.")
 	@Test
 	void modifyMilestone() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		Long milestoneId = 2L;
@@ -299,6 +318,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 책임자를 수정한다.")
 	@Test
 	void modifyAssignees() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		List<Long> assigneesId = List.of(1L, 2L);
@@ -316,6 +338,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 라벨을 수정한다.")
 	@Test
 	void modifyLabels() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 		List<Long> labelsId = List.of(1L, 2L);
@@ -333,6 +358,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈를 삭제한다.")
 	@Test
 	void deleteIssue() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int issueId = 1;
 
@@ -340,6 +368,23 @@ class IssueControllerTest extends ControllerTestSupport {
 		mockMvc.perform(delete("/api/issues/" + issueId))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.data.deletedIssueId").value(issueId))
+			.andDo(print());
+	}
+
+	@DisplayName("이슈를 삭제할 때 이슈 작성자와 유저가 다를 시 403에러를 반환한다.")
+	@Test
+	void delete_IfNotSameAuthor_Response403() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
+		// given
+		int issueId = 1;
+		willThrow(new RestApiException(IssueErrorCode.FORBIDDEN_ISSUE))
+			.given(issueService).delete(anyLong(), anyLong());
+
+		// when & then
+		mockMvc.perform(delete("/api/issues/" + issueId))
+			.andExpect(status().isForbidden())
 			.andDo(print());
 	}
 
@@ -353,15 +398,14 @@ class IssueControllerTest extends ControllerTestSupport {
 
 	private void mockingAuthenticateUser() {
 		mockMvc = MockMvcBuilders.standaloneSetup(new IssueController(issueService, issueQueryService))
-			.setControllerAdvice(new GlobalExceptionHandler())
+			.setControllerAdvice(new IssueExceptionHandler(), new GlobalExceptionHandler())
 			.setCustomArgumentResolvers(loginUserArgumentResolver)
 			.build();
 
-		AuthenticateUser authenticateUser = new AuthenticateUser(1L, "user", "user@email.com", null);
+		AuthenticateUser authenticateUser = new AuthenticateUser(1L, "wis123", "wis123@naver.com", null);
 		when(loginUserArgumentResolver.supportsParameter(any()))
 			.thenReturn(true);
 		when(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
 			.thenReturn(authenticateUser);
 	}
-
 }

@@ -41,7 +41,7 @@ export function TextInput({
   onChange,
   onFocus,
   onBlur,
-  ...props
+  ...rest
 }: TextInputProps) {
   const [state, setState] = useState<TextInputState>(
     disabled ? "Disabled" : "Enabled",
@@ -101,7 +101,7 @@ export function TextInput({
           onBlur={handleInputBlur}
           disabled={state === "Disabled"}
           $state={state}
-          {...props}
+          {...rest}
         />
       </InputContainer>
       {caption && <Caption $state={state}>{caption}</Caption>}

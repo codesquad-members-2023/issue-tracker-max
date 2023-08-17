@@ -1,6 +1,5 @@
 package codesquard.app;
 
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -78,9 +77,6 @@ public abstract class ControllerTestSupport {
 	@MockBean
 	protected RedisTemplate<String, Object> redisTemplate;
 
-	@Mock
-	protected LoginUserArgumentResolver loginUserArgumentResolver;
-
 	@MockBean
-	protected RedisTemplate<String, Object> redisTemplate;
+	protected LoginUserArgumentResolver loginUserArgumentResolver;
 }

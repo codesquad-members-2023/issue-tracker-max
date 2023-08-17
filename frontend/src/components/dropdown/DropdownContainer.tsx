@@ -1,8 +1,26 @@
 import { useState } from "react";
 import { styled } from "styled-components";
-import { IconColor } from "../icon/Icon";
+import { Color } from "../../types/colors";
 import { DropdownIndicator } from "./DropdownIndicator";
 import { DropdownPanel } from "./DropdownPanel";
+
+type DropdownContainerProps = {
+  name: string;
+  optionTitle: string;
+  options: {
+    name: string;
+    profile?: string;
+    background?: Color;
+    selected: boolean;
+    onClick: () => void;
+  }[];
+  showProfile?: boolean;
+  type?: "Default" | "Long";
+  alignment: "Left" | "Right" | "Center";
+  disabled?: boolean;
+  autoClose?: boolean;
+  onDimClick?: () => void;
+};
 
 export function DropdownContainer({
   name,
@@ -12,23 +30,9 @@ export function DropdownContainer({
   type = "Default",
   alignment,
   disabled = false,
-  autoClose = false
-}: {
-  name: string;
-  optionTitle: string;
-  options: {
-    name: string;
-    profile?: string;
-    background?: IconColor;
-    selected: boolean;
-    onClick: () => void;
-  }[];
-  showProfile?: boolean;
-  type?: "Default" | "Long";
-  alignment: "Left" | "Right" | "Center";
-  disabled?: boolean;
-  autoClose?: boolean;
-}) {
+  autoClose = false,
+  onDimClick,
+}: DropdownContainerProps) {
   const [isPanelOpened, setIsPanelOpened] = useState(false);
 
   const openPanel = () => {
@@ -36,6 +40,7 @@ export function DropdownContainer({
   };
 
   const closePanel = () => {
+    onDimClick?.();
     setIsPanelOpened(false);
   };
 

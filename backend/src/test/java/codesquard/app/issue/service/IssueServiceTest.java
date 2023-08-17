@@ -13,11 +13,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.api.errors.exception.IllegalIssueStatusException;
 import codesquard.app.api.errors.exception.NoSuchIssueException;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
 import codesquard.app.issue.dto.request.IssueModifyMilestoneRequest;
-import codesquard.app.issue.dto.request.IssueModifyStatusRequest;
+import codesquard.app.issue.dto.request.IssueModifyStatusesRequest;
 import codesquard.app.issue.dto.request.IssueModifyTitleRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.dto.response.IssueLabelResponse;
@@ -92,50 +93,82 @@ class IssueServiceTest extends IntegrationTestSupport {
 		assertThat(id).isNotNull();
 	}
 
-	@DisplayName("이슈 상태를 수정한다.")
+	@DisplayName("이슈들의 상태를 수정한다.")
 	@Test
-	void modifyStatus() {
+	void modifyStatuses() {
 		// given
 		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long id = createIssue(userId);
+		Long id1 = createIssue(userId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", null,
+			userId);
+		Long id2 = issueService.save(issueSaveRequest, userId);
+		List<Long> issueId = List.of(id1, id2);
 
 		String issueStatus = "CLOSED";
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(issueStatus);
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId, issueStatus);
 
 		// when
-		issueService.modifyStatus(issueModifyStatusRequest, id);
+		issueService.modifyStatuses(issueModifyStatusesRequest, userId);
 
 		// then
-		assertThat(issueQueryService.findById(id).getStatus().name()).isEqualTo(issueStatus);
+		assertThat(issueQueryService.findById(id1).getStatus().name()).isEqualTo(issueStatus);
+		assertThat(issueQueryService.findById(id2).getStatus().name()).isEqualTo(issueStatus);
 	}
 
-	@DisplayName("이슈 상태를 수정시 이슈가 없다면 400 에러를 반환한다.")
+	@DisplayName("이슈들의 상태를 수정시 이슈가 없다면 400 에러를 반환한다.")
 	@Test
-	void modifyStatus_IfNoIssue_Response400() {
+	void modifyStatuses_IfNoIssue_Response400() {
 		// given
-		Long id = 10000L;
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		List<Long> issueId = List.of(0L);
 
 		String issueStatus = "CLOSED";
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(issueStatus);
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId, issueStatus);
 
 		// when & then
-		assertThatThrownBy(() -> issueService.modifyStatus(issueModifyStatusRequest, id)).isInstanceOf(
+		assertThatThrownBy(
+			() -> issueService.modifyStatuses(issueModifyStatusesRequest, userId)).isInstanceOf(
 			NoSuchIssueException.class);
 	}
 
-	@DisplayName("이슈 상태 수정시 유효하지 않은 status 값이 오면 400 에러를 반환한다.")
+	@DisplayName("이슈들의 상태 수정시 유효하지 않은 status 값이 오면 400 에러를 반환한다.")
 	@Test
-	void modifyInvalidStatus_Response400() {
+	void modifyInvalidStatuses_Response400() {
 		// given
 		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long id = createIssue(userId);
+		Long id1 = createIssue(userId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", null,
+			userId);
+		Long id2 = issueService.save(issueSaveRequest, userId);
+		List<Long> issueId = List.of(id1, id2);
 
 		String invalidIssueStatus = "OPEN";
-		IssueModifyStatusRequest issueModifyStatusRequest = new IssueModifyStatusRequest(invalidIssueStatus);
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId,
+			invalidIssueStatus);
 
 		// when & then
-		assertThatThrownBy(() -> issueService.modifyStatus(issueModifyStatusRequest, id)).isInstanceOf(
+		assertThatThrownBy(
+			() -> issueService.modifyStatuses(issueModifyStatusesRequest, userId)).isInstanceOf(
 			IllegalIssueStatusException.class);
+	}
+
+	@DisplayName("이슈들의 상태를 수정할 때 하나의 이슈 작성자와 유저가 다를 시 403에러를 반환한다.")
+	@Test
+	void modifyStatuses_IfNotSameAuthor_Response403() {
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long id1 = createIssue(userId);
+		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", null,
+			userId);
+		Long id2 = issueService.save(issueSaveRequest, userId);
+		List<Long> issueId = List.of(id1, id2);
+
+		String issueStatus = "CLOSED";
+		IssueModifyStatusesRequest issueModifyStatusesRequest = new IssueModifyStatusesRequest(issueId, issueStatus);
+
+		// when & then
+		assertThatThrownBy(
+			() -> issueService.modifyStatuses(issueModifyStatusesRequest, 0L)).isInstanceOf(
+			RestApiException.class);
 	}
 
 	@DisplayName("이슈 제목을 수정한다.")
@@ -149,7 +182,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 		IssueModifyTitleRequest issueModifyTitleRequest = new IssueModifyTitleRequest(title);
 
 		// when
-		issueService.modifyTitle(issueModifyTitleRequest, id);
+		issueService.modifyTitle(issueModifyTitleRequest, id, userId);
 
 		// then
 		assertThat(issueQueryService.findById(id).getTitle()).isEqualTo(title);
@@ -166,7 +199,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 		IssueModifyContentRequest issueModifyContentRequest = new IssueModifyContentRequest(content);
 
 		// when
-		issueService.modifyContent(issueModifyContentRequest, id);
+		issueService.modifyContent(issueModifyContentRequest, id, userId);
 
 		// then
 		assertThat(issueQueryService.findById(id).getContent()).isEqualTo(content);
@@ -176,17 +209,17 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyMilestone() {
 		// given
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId1 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"), loginId);
-		Long milestoneId2 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("수정된 마일스톤"), loginId);
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long milestoneId1 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"), userId);
+		Long milestoneId2 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("수정된 마일스톤"), userId);
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId1,
-			loginId);
-		Long id = issueService.save(issueSaveRequest, loginId);
+			userId);
+		Long id = issueService.save(issueSaveRequest, userId);
 
 		IssueModifyMilestoneRequest issueModifyMilestoneRequest = new IssueModifyMilestoneRequest(milestoneId2);
 
 		// when
-		issueService.modifyMilestone(issueModifyMilestoneRequest, id);
+		issueService.modifyMilestone(issueModifyMilestoneRequest, id, userId);
 
 		// then
 		assertThat(issueQueryService.findById(id).getMilestoneId()).isEqualTo(milestoneId2);
@@ -202,7 +235,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 		IssueModifyAssigneesRequest issueModifyAssigneesRequest = new IssueModifyAssigneesRequest(List.of());
 
 		// when
-		issueService.modifyAssignees(issueModifyAssigneesRequest, id);
+		issueService.modifyAssignees(issueModifyAssigneesRequest, id, userId);
 
 		// then
 		assertThat(issueQueryService.findAssigneesById(id)).isEmpty();
@@ -212,20 +245,20 @@ class IssueServiceTest extends IntegrationTestSupport {
 	@Test
 	void modifyLabels() {
 		// given
-		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"), loginId);
+		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"), userId);
 		String name = "feat";
 		String color = "light";
 		String background = "#111111";
 		Long labelId = labelService.saveLabel(new LabelSaveRequest(name, color, background, "기능 구현"), 1L);
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId,
-			loginId);
-		Long id = issueService.save(issueSaveRequest, loginId);
+			userId);
+		Long id = issueService.save(issueSaveRequest, userId);
 
 		IssueModifyLabelsRequest issueModifyLabelsRequest = new IssueModifyLabelsRequest(List.of(labelId));
 
 		// when
-		issueService.modifyLabels(issueModifyLabelsRequest, id);
+		issueService.modifyLabels(issueModifyLabelsRequest, id, userId);
 
 		// then
 		List<IssueLabelResponse> label = issueQueryService.findLabelsById(id);
@@ -244,7 +277,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 		IssueModifyLabelsRequest issueModifyLabelsRequest = new IssueModifyLabelsRequest(List.of());
 
 		// when
-		issueService.modifyLabels(issueModifyLabelsRequest, id);
+		issueService.modifyLabels(issueModifyLabelsRequest, id, userId);
 
 		// then
 		List<IssueLabelResponse> label = issueQueryService.findLabelsById(id);
@@ -259,10 +292,22 @@ class IssueServiceTest extends IntegrationTestSupport {
 		Long id = createIssue(userId);
 
 		// when
-		issueService.delete(id);
+		issueService.delete(id, userId);
 
 		// then
-		assertThatThrownBy(() -> issueService.delete(id)).isInstanceOf(NoSuchIssueException.class);
+		assertThatThrownBy(() -> issueService.delete(id, userId)).isInstanceOf(NoSuchIssueException.class);
+	}
+
+	@DisplayName("이슈를 삭제할 때 이슈 작성자와 유저가 다를 시 403에러를 반환한다.")
+	@Test
+	void delete_IfNotSameAuthor_Response403() {
+		// given
+		Long authorId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
+		Long userId = 0L;
+		Long id = createIssue(authorId);
+
+		// when & then
+		assertThatThrownBy(() -> issueService.delete(id, userId)).isInstanceOf(RestApiException.class);
 	}
 
 	private Long createIssue(Long userId) {
