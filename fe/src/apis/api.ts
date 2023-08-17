@@ -87,7 +87,7 @@ export const patchIssueContents = (id: number, contents: string) => {
   });
 };
 
-export const editIssueLabel = (id: string, labelIds: number[]) => {
+export const editIssueLabel = (id: number | string, labelIds: number[]) => {
   const accessToken = getAccessToken();
 
   return fetchData(`/issues/${id}/labels`, {
@@ -102,7 +102,10 @@ export const editIssueLabel = (id: string, labelIds: number[]) => {
   });
 };
 
-export const editIssueMilestone = (id: string, milestoneId: number | null) => {
+export const editIssueMilestone = (
+  id: string | number,
+  milestoneId: number | null,
+) => {
   const accessToken = getAccessToken();
   return fetchData(`/issues/${id}/milestone`, {
     method: 'PUT',
@@ -116,7 +119,10 @@ export const editIssueMilestone = (id: string, milestoneId: number | null) => {
   });
 };
 
-export const editIssueAssignees = (id: string, assigneeIds: number[]) => {
+export const editIssueAssignees = (
+  id: string | number ,
+  assigneeIds: number[],
+) => {
   const accessToken = getAccessToken();
 
   return fetchData(`/issues/${id}/assignees`, {

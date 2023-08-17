@@ -10,13 +10,9 @@ import {
   getIssueDetail,
 } from 'apis/api';
 import { useParams } from 'react-router-dom';
-import { DetailPageDataProvider } from 'context/DetailContext';
 
-type Props = {};
-
-export const IssueDetailPage: React.FC = ({}) => {
-  const { id } = useParams<{ id: string }>();
-
+export const IssueDetailPage: React.FC = () => {
+  const { id } = useParams();
   const [issueDetailPageData, setIssueDetailPageData] =
     useState<IssueDetailPageData>(initialPageData);
 
@@ -34,7 +30,7 @@ export const IssueDetailPage: React.FC = ({}) => {
     assignees: [],
     labels: [],
     milestones: null,
-  });
+  }); //todo 없어도 될듯!
 
   useEffect(() => {
     fetchIssueDetailPageData();
@@ -68,80 +64,64 @@ export const IssueDetailPage: React.FC = ({}) => {
     }
   };
 
-  // 패널을 두번 닫아줘야 변경이 됨
-  const onChangeSelect = async (key: string) => {
-    if (!id) {
+  const onChangeSelect = (key: string) => {
+    if (!issueDetailPageData.id) {
       return;
     }
-    try {
-      switch (key) {
-        case 'assignees':
-          console.log('어사이니 변경', selectionsIds.assignees);
-          const updatedAssignees = await editIssueAssignees(
-            id,
-            selectionsIds.assignees,
-          );
-          setIssueDetailPageData((prev) => ({
-            ...prev,
-            assignees: updatedAssignees,
-          }));
-          break;
+    console.log('selections보는중', selectionsIds);
 
-        case 'labels':
-          console.log('라벨 변경', selectionsIds.labels);
-          const updatedLabels = await editIssueLabel(id, selectionsIds.labels);
-          setIssueDetailPageData((prev) => ({
-            ...prev,
-            labels: updatedLabels,
-          }));
-          break;
+    switch (key) {
+      case 'assignees':
+        editIssueAssignees(issueDetailPageData.id, selectionsIds.assignees);
+        break;
 
-        case 'milestones':
-          console.log('마일스톤 변경', selectionsIds.milestones);
-          const updatedMilestone = await editIssueMilestone(
-            id,
-            selectionsIds.milestones,
-          );
-          setIssueDetailPageData((prev) => ({
-            ...prev,
-            milestone: updatedMilestone,
-          }));
-          break;
+      case 'labels':
+        editIssueLabel(issueDetailPageData.id, selectionsIds.labels);
+        break;
 
-        default:
-          break;
-      }
-    } catch (err) {
-      console.error('에러인뎁쇼', err);
-    } finally {
-      console.log('음');
+      case 'milestones':
+        editIssueMilestone(issueDetailPageData.id, selectionsIds.milestones);
+        break;
+
+      default:
+        break;
     }
   };
 
   const onMultipleSelectedAssignee = (id: number) => {
-    setSelectionsIds((prev) => ({
-      ...prev,
-      assignees: prev.assignees.includes(id)
-        ? prev.assignees.filter((itemId) => itemId !== id)
-        : [...prev.assignees, id],
-    }));
+    setSelectionsIds((prev) => {
+      return {
+        ...prev,
+        assignees: prev.assignees.includes(id)
+          ? prev.assignees.filter((itemId) => itemId !== id)
+          : [...prev.assignees, id],
+      };
+    });
   };
 
   const onMultipleSelectedLabel = (id: number) => {
-    setSelectionsIds((prev) => ({
-      ...prev,
-      labels: prev.labels.includes(id)
-        ? prev.labels.filter((itemId) => itemId !== id)
-        : [...prev.labels, id],
-    }));
+    setSelectionsIds((prev) => {
+      return {
+        ...prev,
+        labels: prev.labels.includes(id)
+          ? prev.labels.filter((itemId) => itemId !== id)
+          : [...prev.labels, id],
+      };
+    });
   };
 
   const onSingleSelectedMilestone = (id: number) => {
-    setSelectionsIds((prev) => ({
-      ...prev,
-      milestones: prev.milestones === id ? null : id,
-    }));
+    setSelectionsIds((prev) => {
+      return {
+        ...prev,
+        milestones: prev.milestones === id ? null : id,
+      };
+    });
   };
+
+  useEffect(() => {
+    console.log('selectionsIds 확인중..', selectionsIds);
+  }, [selectionsIds]);
 
   const onAddComment = (comment: any) => {
     setIssueDetailPageData({

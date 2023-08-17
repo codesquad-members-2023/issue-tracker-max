@@ -44,7 +44,6 @@ type Props = {
   onSingleSelectedMilestone: (id: number) => void;
   onMultipleSelectedAssignee: (id: number) => void;
   onMultipleSelectedLabel: (id: number) => void;
-  //
   onChangeSelect?: (key: string) => void;
   selectionsOptions?: SelectionState['detailPage'];
 };
@@ -54,12 +53,10 @@ export const ListSideBar: React.FC<Props> = ({
   onSingleSelectedMilestone,
   onMultipleSelectedAssignee,
   onMultipleSelectedLabel,
-  //
   onChangeSelect,
   selectionsOptions,
 }) => {
   const theme = useTheme() as any;
-
   const [listData, setListData] = useState<{
     users: UserData[];
     labels: LabelData[];
@@ -69,8 +66,7 @@ export const ListSideBar: React.FC<Props> = ({
     labels: [],
     milestones: [],
   });
-
-  console.log(selections.milestones);
+  console.log(selections);
 
   const [isPanelOpen, setIsPanelOpen] = useState<
     null | 'users' | 'labels' | 'milestones'
@@ -144,7 +140,7 @@ export const ListSideBar: React.FC<Props> = ({
     setIsPanelOpen(null);
 
     if (onChangeSelect) {
-      onChangeSelect!(key);
+      onChangeSelect(key);
     }
   };
 
