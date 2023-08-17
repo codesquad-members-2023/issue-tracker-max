@@ -2,6 +2,7 @@ import { useState } from "react";
 import { styled, useTheme } from "styled-components";
 import { Button } from "../../components/Button";
 import { Icon } from "../../components/icon/Icon";
+import { getAccessToken } from "../../utils/localStorage";
 import { MilestoneData } from "./Milestone";
 import { MilestoneEditor } from "./MilestoneEditor";
 
@@ -24,19 +25,28 @@ export function MilestoneTableElement({
     setIsEditing(false);
   };
 
-  const changeStatus = () => {
+  const changeStatus = async () => {
     const id = milestone.id;
 
-    if (status === "OPENED") {
-      console.log(`close id: ${id}`);
-    } else {
-      console.log(`open id: ${id}`);
-    }
+    await fetch(`/api/milestones/${id}/status`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+      body: JSON.stringify({
+        status: status,
+      }),
+    });
   };
 
   const deleteMilestone = async () => {
     await fetch(`/api/milestones/${milestone.id}`, {
       method: "DELETE",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
     });
 
     fetchData();
