@@ -29,4 +29,7 @@ public interface IssueMapper {
 	List<MultiFilterMilestone> getMultiFiltersMilestones(@Param("check") boolean check,
 		@Param("request") IssueFilterRequest request);
 
+	int countIssueSameAuthor(@Param("id") List<Long> issueId, @Param("user_id") Long userId);
+
+	boolean isNotExist(List<Long> issueId);
 }

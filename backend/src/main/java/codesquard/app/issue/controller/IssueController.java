@@ -21,11 +21,12 @@ import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
 import codesquard.app.issue.dto.request.IssueModifyMilestoneRequest;
-import codesquard.app.issue.dto.request.IssueModifyStatusRequest;
+import codesquard.app.issue.dto.request.IssueModifyStatusesRequest;
 import codesquard.app.issue.dto.request.IssueModifyTitleRequest;
 import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.dto.response.IssueDeleteResponse;
 import codesquard.app.issue.dto.response.IssueModifyResponse;
+import codesquard.app.issue.dto.response.IssueModifyStatusesResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueSaveResponse;
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
@@ -65,51 +66,56 @@ public class IssueController {
 			IssueSaveResponse.success(issueId));
 	}
 
-	@PatchMapping("/{issueId}/status")
-	public ApiResponse<IssueModifyResponse> modifyStatus(
-		@RequestBody IssueModifyStatusRequest issueModifyStatusRequest, @PathVariable Long issueId) {
-		issueService.modifyStatus(issueModifyStatusRequest, issueId);
-		return ApiResponse.ok(IssueModifyResponse.success(issueId));
+	@PatchMapping("/status")
+	public ApiResponse<IssueModifyStatusesResponse> modifyStatuses(
+		@RequestBody IssueModifyStatusesRequest issueModifyStatusesRequest, @Login AuthenticateUser user) {
+		issueService.modifyStatuses(issueModifyStatusesRequest, user.toEntity().getId());
+		return ApiResponse.ok(IssueModifyStatusesResponse.success(issueModifyStatusesRequest.getIssues()));
 	}
 
 	@PatchMapping("/{issueId}/title")
 	public ApiResponse<IssueModifyResponse> modifyTitle(
-		@Valid @RequestBody IssueModifyTitleRequest issueModifyTitleRequest, @PathVariable Long issueId) {
-		issueService.modifyTitle(issueModifyTitleRequest, issueId);
+		@Valid @RequestBody IssueModifyTitleRequest issueModifyTitleRequest, @PathVariable Long issueId,
+		@Login AuthenticateUser user) {
+		issueService.modifyTitle(issueModifyTitleRequest, issueId, user.toEntity().getId());
 		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
 	@PatchMapping("/{issueId}/content")
 	public ApiResponse<IssueModifyResponse> modifyContent(
-		@Valid @RequestBody IssueModifyContentRequest issueModifyContentRequest, @PathVariable Long issueId) {
-		issueService.modifyContent(issueModifyContentRequest, issueId);
+		@Valid @RequestBody IssueModifyContentRequest issueModifyContentRequest, @PathVariable Long issueId,
+		@Login AuthenticateUser user) {
+		issueService.modifyContent(issueModifyContentRequest, issueId, user.toEntity().getId());
 		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
 	@PatchMapping("/{issueId}/milestones")
 	public ApiResponse<IssueModifyResponse> modifyMilestone(
-		@RequestBody IssueModifyMilestoneRequest issueModifyMilestoneRequest, @PathVariable Long issueId) {
-		issueService.modifyMilestone(issueModifyMilestoneRequest, issueId);
+		@RequestBody IssueModifyMilestoneRequest issueModifyMilestoneRequest, @PathVariable Long issueId,
+		@Login AuthenticateUser user) {
+		issueService.modifyMilestone(issueModifyMilestoneRequest, issueId, user.toEntity().getId());
 		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
 	@PatchMapping("/{issueId}/assignees")
 	public ApiResponse<IssueModifyResponse> modifyAssignees(
-		@RequestBody IssueModifyAssigneesRequest issueModifyAssigneesRequest, @PathVariable Long issueId) {
-		issueService.modifyAssignees(issueModifyAssigneesRequest, issueId);
+		@RequestBody IssueModifyAssigneesRequest issueModifyAssigneesRequest, @PathVariable Long issueId,
+		@Login AuthenticateUser user) {
+		issueService.modifyAssignees(issueModifyAssigneesRequest, issueId, user.toEntity().getId());
 		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
 	@PatchMapping("/{issueId}/labels")
 	public ApiResponse<IssueModifyResponse> modifyLabels(
-		@RequestBody IssueModifyLabelsRequest issueModifyLabelsRequest, @PathVariable Long issueId) {
-		issueService.modifyLabels(issueModifyLabelsRequest, issueId);
+		@RequestBody IssueModifyLabelsRequest issueModifyLabelsRequest, @PathVariable Long issueId,
+		@Login AuthenticateUser user) {
+		issueService.modifyLabels(issueModifyLabelsRequest, issueId, user.toEntity().getId());
 		return ApiResponse.ok(IssueModifyResponse.success(issueId));
 	}
 
 	@DeleteMapping("/{issueId}")
-	public ApiResponse<IssueDeleteResponse> delete(@PathVariable Long issueId) {
-		issueService.delete(issueId);
+	public ApiResponse<IssueDeleteResponse> delete(@PathVariable Long issueId, @Login AuthenticateUser user) {
+		issueService.delete(issueId, user.toEntity().getId());
 		return ApiResponse.ok(IssueDeleteResponse.success(issueId));
 	}
 
