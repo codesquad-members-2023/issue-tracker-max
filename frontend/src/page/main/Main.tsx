@@ -151,7 +151,13 @@ export function Main() {
     const [keyToAdd, valueToAdd] = filterCondition.split(":");
     const filteredParts = input
       .split(/\s(?=[^:]*:)/)
-      .filter((part) => !part.startsWith(`${keyToAdd}:`) || multipleSelect);
+      .filter(
+        (part) =>
+          !(
+            part.startsWith(`${keyToAdd}:`) &&
+            (part.endsWith(":none") || !multipleSelect)
+          ),
+      );
 
     const newInput = [...filteredParts, `${keyToAdd}:${valueToAdd}`].join(" ");
     const newQueryString = convertToQueryString(newInput.trim());
