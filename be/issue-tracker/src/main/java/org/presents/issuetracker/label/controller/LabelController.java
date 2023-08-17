@@ -5,8 +5,8 @@ import java.util.List;
 import org.presents.issuetracker.global.dto.response.IdResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
-import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
 import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
+import org.presents.issuetracker.label.entity.vo.LabelInfo;
 import org.presents.issuetracker.label.service.LabelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +35,8 @@ public class LabelController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<LabelDetailResponse>> getLabelDetails() {
-		List<LabelDetailResponse> labelDetails = labelService.getLabelDetails();
+	public ResponseEntity<LabelInfo> getLabelDetails() {
+		LabelInfo labelDetails = labelService.getLabelDetails();
 		return ResponseEntity.ok().body(labelDetails);
 	}
 
