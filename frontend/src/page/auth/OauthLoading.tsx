@@ -12,7 +12,7 @@ export function OauthLoading() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const login = async () => {
-    const res = await fetch(`/login/oauth/github?code=${code}`, {
+    const res = await fetch(`/api/login/oauth/github?code=${code}`, {
       method: "POST",
     });
 
@@ -23,7 +23,6 @@ export function OauthLoading() {
 
       navigate("/");
     } else {
-      console.log(message);
       setErrorMessage(message);
     }
   };

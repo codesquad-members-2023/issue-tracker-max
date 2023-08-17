@@ -26,17 +26,17 @@ public class LabelService {
 		this.milestoneRepository = milestoneRepository;
 	}
 
-	public Long saveLabel(final LabelSaveRequest labelSaveRequest) {
-		Label label = LabelSaveRequest.toEntity(labelSaveRequest);
+	public Long saveLabel(final LabelSaveRequest labelSaveRequest, Long userId) {
+		Label label = LabelSaveRequest.toEntity(labelSaveRequest, userId);
 		return labelRepository.save(label).orElseThrow(NoSuchLabelException::new);
 	}
 
-	public void updateLabel(final Long labelId, final LabelUpdateRequest labelUpdateRequest) {
-		labelRepository.updateBy(labelId, LabelUpdateRequest.toEntity(labelUpdateRequest));
+	public Long updateLabel(final Long labelId, final Long userId, final LabelUpdateRequest labelUpdateRequest) {
+		return labelRepository.updateBy(labelId, LabelUpdateRequest.toEntity(labelUpdateRequest, userId));
 	}
 
-	public void deleteLabel(final Long labelId) {
-		labelRepository.deleteBy(labelId);
+	public Long deleteLabel(final Long labelId, final Long userId) {
+		return labelRepository.deleteBy(labelId);
 	}
 
 	public LabelReadResponse makeLabelReadResponse() {

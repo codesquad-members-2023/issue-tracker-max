@@ -92,7 +92,7 @@ class CommentServiceTest extends IntegrationTestSupport {
 		LocalDateTime modifiedAt = LocalDateTime.of(2023, 8, 1, 17, 0);
 
 		CommentModifyServiceRequest modifyRequest = new CommentModifyServiceRequest(savedComment.getSavedCommentId(),
-			"modified service content");
+			1L, "modified service content");
 
 		// when
 		CommentModifyResponse modifiedComment = commentService.modify(modifyRequest, modifiedAt);
@@ -113,7 +113,7 @@ class CommentServiceTest extends IntegrationTestSupport {
 
 		String invalidContent = generateExceedingMaxLengthContent(10000);
 		CommentModifyServiceRequest modifyRequest = new CommentModifyServiceRequest(savedComment.getSavedCommentId(),
-			invalidContent);
+			1L, invalidContent);
 
 		// when // then
 		assertThatThrownBy(() -> commentService.modify(modifyRequest, modifiedAt))
@@ -129,7 +129,7 @@ class CommentServiceTest extends IntegrationTestSupport {
 		CommentSaveResponse savedComment = createCommentFixture();
 
 		// when
-		CommentDeleteResponse deletedComment = commentService.delete(savedComment.getSavedCommentId());
+		CommentDeleteResponse deletedComment = commentService.delete(1L, savedComment.getSavedCommentId());
 
 		// then
 		assertThat(deletedComment.getDeletedCommentId()).isEqualTo(savedComment.getSavedCommentId());

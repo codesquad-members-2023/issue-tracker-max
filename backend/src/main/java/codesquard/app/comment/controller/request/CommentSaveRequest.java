@@ -18,15 +18,11 @@ public class CommentSaveRequest {
 	@NotNull(message = "이슈 아이디는 필수입니다.")
 	private Long issueId;
 
-	@JsonProperty("userId")
-	@NotNull(message = "사용자 아이디는 필수입니다.")
-	private Long userId;
-
 	@JsonProperty("content")
 	@NotBlank(message = "내용은 필수입니다.")
 	private String content;
 
-	public CommentSaveServiceRequest toServiceRequest() {
+	public CommentSaveServiceRequest toServiceRequest(Long userId) {
 		return new CommentSaveServiceRequest(issueId, userId, content);
 	}
 

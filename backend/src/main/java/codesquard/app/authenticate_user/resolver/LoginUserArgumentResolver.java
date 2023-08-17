@@ -20,7 +20,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
-		logger.info("supportParameter 실행");
+		logger.debug("supportParameter 실행");
 		boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
 		boolean hasUserType = AuthenticateUser.class.isAssignableFrom(parameter.getParameterType());
 
@@ -32,7 +32,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 		HttpServletRequest request = (HttpServletRequest)webRequest.getNativeRequest();
 		AuthenticateUser authenticateUser = (AuthenticateUser)request.getAttribute(AUTHENTICATE_USER);
-		logger.info("resolveArgument, authenticateUser : {}", authenticateUser);
+		logger.debug("resolveArgument, authenticateUser : {}", authenticateUser);
 		return authenticateUser;
 	}
 }

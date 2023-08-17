@@ -10,11 +10,14 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
 import codesquard.app.api.errors.errorcode.IssueErrorCode;
 import codesquard.app.api.errors.exception.IllegalIssueStatusException;
 import codesquard.app.api.errors.exception.NoSuchIssueException;
+import codesquard.app.api.errors.handler.GlobalExceptionHandler;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.issue.dto.request.IssueModifyAssigneesRequest;
 import codesquard.app.issue.dto.request.IssueModifyContentRequest;
 import codesquard.app.issue.dto.request.IssueModifyLabelsRequest;
@@ -33,6 +36,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈의 상세 내용을 조회한다.")
 	@Test
 	void getIssueDetail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int id = 1;
 		Long userId = 1L;
@@ -49,6 +55,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈의 상세 내용 조회에 실패한다.")
 	@Test
 	void getIssueDetail_Fail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int id = 1;
 		Long userId = 1L;
@@ -64,6 +73,9 @@ class IssueControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈를 등록한다.")
 	@Test
 	void create() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Controller", "내용", 1L, 1L);
 
@@ -338,4 +350,18 @@ class IssueControllerTest extends ControllerTestSupport {
 		}
 		return builder.toString();
 	}
+
+	private void mockingAuthenticateUser() {
+		mockMvc = MockMvcBuilders.standaloneSetup(new IssueController(issueService, issueQueryService))
+			.setControllerAdvice(new GlobalExceptionHandler())
+			.setCustomArgumentResolvers(loginUserArgumentResolver)
+			.build();
+
+		AuthenticateUser authenticateUser = new AuthenticateUser(1L, "user", "user@email.com", null);
+		when(loginUserArgumentResolver.supportsParameter(any()))
+			.thenReturn(true);
+		when(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+			.thenReturn(authenticateUser);
+	}
+
 }

@@ -38,7 +38,7 @@ class OauthRestControllerTest extends ControllerTestSupport {
 		String provider = "github";
 		String authorizationCode = "c9a29e225ba316e155c2";
 		AuthenticateUser user = new AuthenticateUser(1L, "hong1234", "hong1234@gmail.com", null);
-		Jwt jwt = new Jwt("accessToken", "refreshToken");
+		Jwt jwt = new Jwt("accessToken", "refreshToken", null, null);
 		OauthLoginServiceResponse loginServiceResponse = new OauthLoginServiceResponse(user, jwt, "Bearer");
 		// mocking
 		Mockito.when(oauthService.login(Mockito.any(String.class), Mockito.any(String.class)))

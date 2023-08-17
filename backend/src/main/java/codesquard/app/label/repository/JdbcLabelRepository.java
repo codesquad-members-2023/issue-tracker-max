@@ -64,7 +64,7 @@ public class JdbcLabelRepository implements LabelRepository {
 	}
 
 	@Override
-	public void updateBy(final Long labelId, final Label label) {
+	public Long updateBy(final Long labelId, final Label label) {
 		validateExistLabel(labelId);
 
 		String sql = "UPDATE `label` " +
@@ -74,19 +74,21 @@ public class JdbcLabelRepository implements LabelRepository {
 
 		try {
 			template.update(sql, param);
+			return labelId;
 		} catch (DataIntegrityViolationException e) {
 			throw new DuplicateLabelException();
 		}
 	}
 
 	@Override
-	public void deleteBy(final Long labelId) {
+	public Long deleteBy(final Long labelId) {
 		validateExistLabel(labelId);
 
 		String sql = "DELETE FROM `label` " +
 			"WHERE `id` = :id";
 
 		template.update(sql, Map.of("id", labelId));
+		return labelId;
 	}
 
 	@Override

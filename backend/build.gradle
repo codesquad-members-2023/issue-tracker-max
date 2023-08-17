@@ -58,6 +58,9 @@ dependencies {
 
     // Oauth 서버와 통신하기 위해서 추가
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {

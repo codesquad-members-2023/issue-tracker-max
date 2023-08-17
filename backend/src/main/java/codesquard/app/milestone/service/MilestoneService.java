@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codesquard.app.api.errors.exception.NoSuchMilestoneException;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
-import codesquard.app.milestone.dto.request.MilestoneStatusRequest;
+import codesquard.app.milestone.dto.request.MilestoneStatusUpdateRequest;
 import codesquard.app.milestone.dto.request.MilestoneUpdateRequest;
 import codesquard.app.milestone.dto.response.MilestoneReadResponse;
 import codesquard.app.milestone.dto.response.MilestonesResponse;
@@ -27,22 +27,24 @@ public class MilestoneService {
 		this.milestoneRepository = milestoneRepository;
 	}
 
-	public Long saveMilestone(final MilestoneSaveRequest milestoneSaveRequest) {
-		Milestone milestone = MilestoneSaveRequest.toEntity(milestoneSaveRequest);
+	public Long saveMilestone(final MilestoneSaveRequest milestoneSaveRequest, final Long userId) {
+		Milestone milestone = MilestoneSaveRequest.toEntity(milestoneSaveRequest, userId);
 		return milestoneRepository.save(milestone)
 			.orElseThrow(NoSuchMilestoneException::new);
 	}
 
-	public void updateMilestone(final Long milestoneId, final MilestoneUpdateRequest milestoneUpdateRequest) {
-		milestoneRepository.updateBy(milestoneId, MilestoneUpdateRequest.toEntity(milestoneUpdateRequest));
+	public Long updateMilestone(final Long milestoneId, final MilestoneUpdateRequest milestoneUpdateRequest,
+		final Long userId) {
+		return milestoneRepository.updateBy(milestoneId, MilestoneUpdateRequest.toEntity(milestoneUpdateRequest, userId));
 	}
 
-	public void updateMilestoneStatus(final Long milestoneId, final MilestoneStatusRequest milestoneStatusRequest) {
-		milestoneRepository.updateBy(milestoneId, MilestoneStatusRequest.toStatus(milestoneStatusRequest));
+	public Long updateMilestoneStatus(final Long milestoneId, final MilestoneStatusUpdateRequest milestoneStatusUpdateRequest) {
+		return milestoneRepository.updateBy(milestoneId, MilestoneStatusUpdateRequest.toStatus(
+			milestoneStatusUpdateRequest));
 	}
 
-	public void deleteMilestone(final Long milestoneId) {
-		milestoneRepository.deleteBy(milestoneId);
+	public Long deleteMilestone(final Long milestoneId) {
+		return milestoneRepository.deleteBy(milestoneId);
 	}
 
 	public MilestoneReadResponse makeMilestoneResponse(final MilestoneStatus status) {
@@ -58,7 +60,8 @@ public class MilestoneService {
 		Long openedMilestoneCount = milestoneRepository.countMilestonesBy(MilestoneStatus.OPENED);
 		Long closedMilestoneCount = milestoneRepository.countMilestonesBy(MilestoneStatus.CLOSED);
 
-		return new MilestoneReadResponse(openedMilestoneCount, closedMilestoneCount, labelCount, status.getName(), milestones);
+		return new MilestoneReadResponse(openedMilestoneCount, closedMilestoneCount, labelCount, status.getName(),
+			milestones);
 	}
 
 	private Map<String, Long> makeIssues() {
