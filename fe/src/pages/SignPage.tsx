@@ -1,4 +1,4 @@
-import { Theme, css, useTheme } from '@emotion/react';
+import { Theme, css } from '@emotion/react';
 import { OAuthButton } from '@components/signPage/OAuthButton';
 import { LoginForm } from '@components/signPage/LoginForm';
 import { ReactComponent as LargeLogo } from '@assets/logos/largeLogo.svg';

@@ -68,7 +68,6 @@ export const IssueDetailPage: React.FC = () => {
     if (!issueDetailPageData.id) {
       return;
     }
-    console.log('selections보는중', selectionsIds);
 
     switch (key) {
       case 'assignees':

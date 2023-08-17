@@ -104,7 +104,7 @@ export const AddIssuePage: React.FC = ({}) => {
     setTextAreaValue(e.target.value);
   };
 
-  const onAddFileUrl = (fileName: string, fileUrl: string) => {
+  const onAppendMarkdownFileUrl = (fileName: string, fileUrl: string) => {
     setTextAreaValue((prevValue) => `${prevValue}![${fileName}](${fileUrl})`);
   };
 
@@ -134,7 +134,7 @@ export const AddIssuePage: React.FC = ({}) => {
             letterCount={textAreaValue.length}
             textAreaValue={textAreaValue}
             typeVariant="add"
-            onAddFileUrl={onAddFileUrl}
+            onAppendMarkdownFileUrl={onAppendMarkdownFileUrl}
             onChangeTextArea={onChangeTextArea}
           />
         </InputContainer>

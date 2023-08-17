@@ -20,12 +20,6 @@ type UserData = {
   image: string;
 };
 
-type ModifiedUserData = {
-  id: number;
-  loginId: string;
-  image: string;
-};
-
 type LabelData = {
   id: number;
   name: string;
@@ -85,7 +79,7 @@ export const ListSideBar: React.FC<Props> = ({
     return { id: userId, ...rest };
   });
 
-  const modifiedUserDataaa = selectionsOptions?.assignees.map((item) => {
+  const modifiedAssigneesData = selectionsOptions?.assignees.map((item) => {
     const { userId, ...rest } = item;
     return { id: userId, ...rest };
   });
@@ -99,7 +93,7 @@ export const ListSideBar: React.FC<Props> = ({
       ? modifiedUserData.filter((users) =>
           selections.assignees.includes(users.id),
         )
-      : modifiedUserDataaa;
+      : modifiedAssigneesData;
 
   const selectedLabelsData =
     listData.labels.length !== 0
