@@ -1,5 +1,7 @@
 package codesquard.app.user.repository;
 
+import static codesquard.app.user.fixture.FixedUserFactory.*;
+
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +35,7 @@ class UserRepositoryTest extends IntegrationTestSupport {
 	@Test
 	void save() {
 		// given
-		User user = new User(null, "user1", "user1@gmail.com", "user1user1@", null);
+		User user = fixedUser();
 		// when
 		Long savedId = userRepository.save(user);
 		// then

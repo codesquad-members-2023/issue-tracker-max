@@ -1,5 +1,6 @@
 package codesquard.app.authenticate_user.controller;
 
+import static codesquard.app.oauth.fixture.FixedAuthenticateUserFactory.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -16,13 +17,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.MethodParameter;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.support.WebDataBinderFactory;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.ModelAndViewContainer;
 
 import codesquard.app.ControllerTestSupport;
 import codesquard.app.api.errors.errorcode.JwtTokenErrorCode;
@@ -30,7 +27,6 @@ import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.authenticate_user.resolver.LoginUserArgumentResolver;
-import codesquard.app.authenticate_user.service.request.RefreshTokenServiceRequest;
 import codesquard.app.jwt.Jwt;
 import codesquard.app.jwt.filter.JwtAuthorizationFilter;
 import codesquard.app.jwt.filter.VerifyUserFilter;
@@ -61,13 +57,13 @@ class AuthenticateUserRestControllerTest extends ControllerTestSupport {
 	@DisplayName("refreshToken이 주어지고 refreshToken 갱신을 요청할때 갱신되고 jwt 객체를 응답한다")
 	public void refreshToken_givenRefreshToken_whenRefreshToken_thenResponseJwt() throws Exception {
 		// given
-		Jwt jwt = new Jwt("accessToken", "refreshToken", null, null);
+		Jwt jwt = jwt();
+		Cookie refreshTokenCookie = refreshTokenCookie();
 		//mokcing
-		when(authenticateUserService.refreshToken(any(RefreshTokenServiceRequest.class)))
-			.thenReturn(jwt);
+		when(authenticateUserService.refreshToken(any())).thenReturn(jwt);
 		// when & then
 		mockMvc.perform(post("/api/auth/refresh/token")
-				.cookie(new Cookie("refreshToken", "refreshToken")))
+				.cookie(refreshTokenCookie))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("code").value(Matchers.equalTo(200)))
@@ -83,7 +79,7 @@ class AuthenticateUserRestControllerTest extends ControllerTestSupport {
 		// given
 		String refreshToken = "";
 		// mocking
-		when(authenticateUserService.refreshToken(any(RefreshTokenServiceRequest.class)))
+		when(authenticateUserService.refreshToken(any()))
 			.thenThrow(new RestApiException(JwtTokenErrorCode.NOT_MATCH_REFRESHTOKEN));
 		// when & then
 		mockMvc.perform(post("/api/auth/refresh/token")
@@ -100,21 +96,16 @@ class AuthenticateUserRestControllerTest extends ControllerTestSupport {
 	@DisplayName("인증 객체가 주어지고 로그아웃을 요청할때 로그아웃 된다")
 	public void givenAuthenticateUser_whenRequestLogout_thenResponseOk() throws Exception {
 		// given
-		AuthenticateUser user = new AuthenticateUser(1L, "hong1234", "hong1234@gmail.com", null);
+		AuthenticateUser user = authenticateUser();
 		Map<String, Object> claims = new HashMap<>();
 		claims.put(VerifyUserFilter.AUTHENTICATE_USER, objectMapper.writeValueAsString(user));
 		Jwt jwt = jwtProvider.createJwt(claims);
 		// mocking
 		when(redisTemplate.opsForValue()).thenReturn(valueOperations);
 		when(valueOperations.get(anyString())).thenReturn("");
-		when(loginUserArgumentResolver.supportsParameter((MethodParameter)any()))
+		when(loginUserArgumentResolver.supportsParameter(any()))
 			.thenReturn(true);
-		when(loginUserArgumentResolver.resolveArgument(
-			(MethodParameter)any()
-			, (ModelAndViewContainer)any()
-			, (NativeWebRequest)any()
-			, (WebDataBinderFactory)any()
-		)).thenReturn(user);
+		when(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any())).thenReturn(user);
 		// when && then
 		mockMvc.perform(post("/api/auth/logout")
 				.header("Authorization", jwt.createAccessTokenHeaderValue())
