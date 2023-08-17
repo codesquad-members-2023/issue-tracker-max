@@ -1,5 +1,5 @@
 import { css, useTheme } from '@emotion/react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { DropDownContainer } from '../dropDown/DropDownContainer';
 import { DropDownPanel } from '../dropDown/DropDownPanel';
 import { ListAssignee } from './ListAssignee';
@@ -66,13 +66,42 @@ export const ListSideBar: React.FC<Props> = ({
     null | 'users' | 'labels' | 'milestones'
   >(null);
 
-  // todo
-  const [isFetched, setIsFetched] = useState({
-    //ref 리렌더가 필요x
+  // // todo
+  // const [isFetched, setIsFetched] = useState({
+  //   //ref 리렌더가 필요x
+  //   users: false,
+  //   labels: false,
+  //   milestones: false,
+  // });
+
+  const isFetched = useRef({
     users: false,
     labels: false,
     milestones: false,
   });
+
+  // const openPanel = async (
+  //   fetchDataFunction: () => Promise<
+  //     UserData[] | LabelData[] | MilestoneData[]
+  //   >,
+  //   panelName: FetchPath,
+  // ) => {
+  //   if (!isFetched[panelName]) {
+  //     const data = await fetchDataFunction();
+
+  //     setListData((prev) => ({
+  //       ...prev,
+  //       [panelName]: data,
+  //     }));
+
+  //     setIsFetched((prev) => ({
+  //       ...prev,
+  //       [panelName]: true,
+  //     }));
+  //   }
+
+  //   setIsPanelOpen(panelName);
+  // };
 
   const openPanel = async (
     fetchDataFunction: () => Promise<
@@ -80,7 +109,7 @@ export const ListSideBar: React.FC<Props> = ({
     >,
     panelName: FetchPath,
   ) => {
-    if (!isFetched[panelName]) {
+    if (!isFetched.current[panelName]) {
       const data = await fetchDataFunction();
 
       setListData((prev) => ({
@@ -88,10 +117,7 @@ export const ListSideBar: React.FC<Props> = ({
         [panelName]: data,
       }));
 
-      setIsFetched((prev) => ({
-        ...prev,
-        [panelName]: true,
-      }));
+      isFetched.current[panelName] = true;
     }
 
     setIsPanelOpen(panelName);
