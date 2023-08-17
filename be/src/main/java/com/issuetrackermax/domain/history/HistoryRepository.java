@@ -27,8 +27,10 @@ public class HistoryRepository {
 		.editor(rs.getString("editor"))
 		.issueId(rs.getLong("issue_id"))
 		.issueIsOpen(rs.getBoolean("issue_is_open"))
-		.modifiedAt(rs.getTimestamp("modified_at").toLocalDateTime())
+		.modifiedAt(LocalDateTime.ofInstant(
+			Instant.ofEpochMilli(rs.getTimestamp("modified_at").getTime()), TimeZone.getDefault().toZoneId()))
 		.build());
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public HistoryRepository(JdbcTemplate jdbcTemplate) {
