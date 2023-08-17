@@ -7,6 +7,7 @@ import React from 'react';
 
 type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   labelName?: string;
+  onAddFileMarkdown?: (url: string) => void;
 };
 
 export default function TextArea(props: TextAreaProps) {
@@ -14,7 +15,14 @@ export default function TextArea(props: TextAreaProps) {
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const axiosPrivate = useAxiosPrivate();
   const fileInput = useRef<HTMLInputElement>(null);
-  const { value, labelName, placeholder, disabled, ...rest } = props;
+  const {
+    value,
+    labelName,
+    placeholder,
+    disabled,
+    onAddFileMarkdown,
+    ...rest
+  } = props;
 
   useEffect(() => {
     if (isFocused && !isTyping) {
@@ -55,6 +63,7 @@ export default function TextArea(props: TextAreaProps) {
       });
       if (res.data) {
         console.log(res.data);
+        onAddFileMarkdown?.(res.data.message.imgUrl);
       }
     } catch (err) {
       console.error(err);

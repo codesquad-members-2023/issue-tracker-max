@@ -70,6 +70,13 @@ export default function AddIssue() {
     }
   };
 
+  const onAddFileMarkdown = (url: string) => {
+    setIssueInfo((prev) => ({
+      ...prev,
+      content: prev.content + `\n![image](${url})`,
+    }));
+  };
+
   return (
     <Layout>
       <Header>
@@ -100,6 +107,7 @@ export default function AddIssue() {
               value={issueInfo.content}
               placeholder="코멘트를 입력하세요"
               onChange={onContentChange}
+              onAddFileMarkdown={onAddFileMarkdown}
             />
           </InputArea>
           <SideBar
