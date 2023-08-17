@@ -15,7 +15,7 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
   const navigate = useNavigate();
 
   const [content, setContent] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const maxContentLength = 10000;
   const emptyContent = content.length === 0;
@@ -28,7 +28,7 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
     : "";
 
   const onEditorFocus = () => {
-    setIsFocused(true);
+    setIsEditing(true);
   };
 
   const onContentChange = (value: string) => {
@@ -51,8 +51,10 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
     });
     const {code, message, data} = await response.json();
 
+    setContent("");
+    setIsEditing(false);
+
     if (code === 201) {
-      setContent("");
       fetchIssue();
       return;
     }
@@ -75,7 +77,7 @@ export function CommentEditor({ issueId, fetchIssue }: CommentEditorProps) {
         height={200}
         placeholder="코멘트를 입력하세요"
         label="코멘트를 입력하세요"
-        isEditing={isFocused}
+        isEditing={isEditing}
         errorDescription={errorDescription}
         onChange={onContentChange}
         onTextAreaFocus={onEditorFocus}
