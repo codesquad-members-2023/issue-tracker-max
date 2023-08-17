@@ -59,7 +59,6 @@ public class AuthenticationController {
     private JwtLoginResponse getJwtLoginResponse(HttpServletResponse response, JwtLoginInformation information) {
         Cookie cookie =  new Cookie("refreshToken", information.getJwt().getRefreshToken());
         cookie.setMaxAge(60 * 60 * 24 * 60); // 60일
-        cookie.setSecure(true);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
 
