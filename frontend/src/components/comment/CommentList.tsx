@@ -24,5 +24,5 @@ const Div = styled.div`
   align-self: stretch;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 `;
