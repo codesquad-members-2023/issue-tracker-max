@@ -34,8 +34,8 @@ public class LabelSaveRequest {
 		this.description = description;
 	}
 
-	public static Label toEntity(final LabelSaveRequest labelSaveRequest) {
+	public static Label toEntity(final LabelSaveRequest labelSaveRequest, final Long userId) {
 		return new Label(labelSaveRequest.name, labelSaveRequest.color, labelSaveRequest.background,
-			labelSaveRequest.description);
+			labelSaveRequest.description, userId);
 	}
 }

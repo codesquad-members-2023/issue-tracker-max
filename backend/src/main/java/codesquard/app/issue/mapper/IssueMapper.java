@@ -7,26 +7,26 @@ import org.apache.ibatis.annotations.Param;
 
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
 import codesquard.app.issue.mapper.response.IssuesResponse;
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersAssignees;
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersAuthors;
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersLabels;
-import codesquard.app.issue.mapper.response.filters.response.MultiFiltersMilestones;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterAssignee;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterAuthor;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterLabel;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterMilestone;
 
 @Mapper
 public interface IssueMapper {
 
 	List<IssuesResponse> getIssues(IssueFilterRequest request);
 
-	List<MultiFiltersAssignees> getMultiFiltersAssignees(@Param("check") boolean check,
+	List<MultiFilterAssignee> getMultiFiltersAssignees(@Param("check") boolean check,
 		@Param("request") IssueFilterRequest request);
 
-	List<MultiFiltersAuthors> getMultiFiltersAuthors(@Param("check") boolean check,
+	List<MultiFilterAuthor> getMultiFiltersAuthors(@Param("check") boolean check,
 		@Param("request") IssueFilterRequest request);
 
-	List<MultiFiltersLabels> getMultiFiltersLabels(@Param("check") boolean check,
+	List<MultiFilterLabel> getMultiFiltersLabels(@Param("check") boolean check,
 		@Param("request") IssueFilterRequest request);
 
-	List<MultiFiltersMilestones> getMultiFiltersMilestones(@Param("check") boolean check,
+	List<MultiFilterMilestone> getMultiFiltersMilestones(@Param("check") boolean check,
 		@Param("request") IssueFilterRequest request);
 
 	int countIssueSameAuthor(@Param("id") List<Long> issueId, @Param("user_id") Long userId);

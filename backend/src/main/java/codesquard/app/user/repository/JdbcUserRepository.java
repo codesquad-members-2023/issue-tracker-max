@@ -105,9 +105,9 @@ public class JdbcUserRepository implements UserRepository {
 	}
 
 	@Override
-	public User findByEmail(User user) {
+	public User findByEmail(String email) {
 		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE email = :email";
-		return template.query(sql, user.createSaveParamSource(), createUserRowMapper())
+		return template.query(sql, new MapSqlParameterSource("email", email), createUserRowMapper())
 			.stream()
 			.findAny()
 			.orElse(null);

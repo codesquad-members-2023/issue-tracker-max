@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquard.app.authenticate_user.controller.AuthenticateUserRestController;
 import codesquard.app.authenticate_user.resolver.LoginUserArgumentResolver;
 import codesquard.app.authenticate_user.service.AuthenticateUserService;
 import codesquard.app.comment.controller.CommentController;
@@ -30,7 +32,8 @@ import codesquard.app.user_reaction.service.UserReactionService;
 	UserRestController.class,
 	IssueController.class,
 	LabelController.class,
-	UserReactionController.class
+	UserReactionController.class,
+	AuthenticateUserRestController.class
 })
 @Import(value = {JwtProvider.class})
 public abstract class ControllerTestSupport {
@@ -73,4 +76,7 @@ public abstract class ControllerTestSupport {
 
 	@MockBean
 	protected LoginUserArgumentResolver loginUserArgumentResolver;
+
+	@MockBean
+	protected RedisTemplate<String, Object> redisTemplate;
 }

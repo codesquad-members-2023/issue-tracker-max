@@ -52,13 +52,15 @@ public class JwtProvider {
 
 	public Jwt createJwt(Map<String, Object> claims) {
 		// 1. accessToken 생성
-		String accessToken = createToken(claims, getExpireDateAccessToken());
+		Date expireDateAccessToken = getExpireDateAccessToken();
+		String accessToken = createToken(claims, expireDateAccessToken);
 
 		// 2. refreshToken 생성
-		String refreshToken = createToken(new HashMap<>(), getExpireDateRefreshToken());
+		Date expireDateRefreshToken = getExpireDateRefreshToken();
+		String refreshToken = createToken(new HashMap<>(), expireDateRefreshToken);
 
 		// 3. JWT 생성
-		return new Jwt(accessToken, refreshToken);
+		return new Jwt(accessToken, refreshToken, expireDateAccessToken, expireDateRefreshToken);
 	}
 
 	public Date getExpireDateAccessToken() {

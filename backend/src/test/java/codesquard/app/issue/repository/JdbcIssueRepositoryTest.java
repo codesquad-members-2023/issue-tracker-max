@@ -80,7 +80,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 		// given
 		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		MilestoneSaveRequest milestoneSaveRequest = FixtureFactory.createMilestoneCreateRequest("레포지토리");
-		Long milestoneId = milestoneRepository.save(MilestoneSaveRequest.toEntity(milestoneSaveRequest)).orElseThrow();
+		Long milestoneId = milestoneRepository.save(MilestoneSaveRequest.toEntity(milestoneSaveRequest, 1L)).orElseThrow();
 
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Repository", "내용", milestoneId,
 			loginId);
@@ -183,7 +183,7 @@ class JdbcIssueRepositoryTest extends IntegrationTestSupport {
 
 	private Long createIssue(Long userId) {
 		MilestoneSaveRequest milestoneSaveRequest = FixtureFactory.createMilestoneCreateRequest("레포지토리");
-		Long milestoneId = milestoneRepository.save(MilestoneSaveRequest.toEntity(milestoneSaveRequest)).orElseThrow();
+		Long milestoneId = milestoneRepository.save(MilestoneSaveRequest.toEntity(milestoneSaveRequest, 1L)).orElseThrow();
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Repository", "내용", milestoneId,
 			userId);
 		Issue issue = issueSaveRequest.toEntity(userId);

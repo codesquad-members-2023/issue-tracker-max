@@ -1,5 +1,7 @@
 package codesquard.app.user.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,8 @@ import codesquard.app.user.service.response.UserSaveServiceResponse;
 @Service
 public class UserQueryService {
 
+	private static final Logger logger = LoggerFactory.getLogger(UserQueryService.class);
+
 	private final UserRepository userRepository;
 
 	public UserQueryService(UserRepository userRepository) {
@@ -21,7 +25,9 @@ public class UserQueryService {
 	}
 
 	public AuthenticateUser verifyUser(UserLoginServiceRequest userLoginServiceRequest) {
-		User findUser = userRepository.findByLoginIdAndPassword(userLoginServiceRequest.toEntity());
+		UserLoginServiceRequest encryptServiceRequest = userLoginServiceRequest.encryptPassword();
+		logger.debug("encryptServiceRequest : {}", encryptServiceRequest);
+		User findUser = userRepository.findByLoginIdAndPassword(encryptServiceRequest.toEntity());
 		return findUser.toAuthenticateUser();
 	}
 

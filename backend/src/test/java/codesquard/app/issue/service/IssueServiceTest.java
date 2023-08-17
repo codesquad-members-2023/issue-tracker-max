@@ -82,7 +82,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	void create() {
 		// given
 		Long loginId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
+		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"), loginId);
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId,
 			loginId);
 
@@ -210,8 +210,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 	void modifyMilestone() {
 		// given
 		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId1 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
-		Long milestoneId2 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("수정된 마일스톤"));
+		Long milestoneId1 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"), userId);
+		Long milestoneId2 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("수정된 마일스톤"), userId);
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId1,
 			userId);
 		Long id = issueService.save(issueSaveRequest, userId);
@@ -246,11 +246,11 @@ class IssueServiceTest extends IntegrationTestSupport {
 	void modifyLabels() {
 		// given
 		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
-		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
+		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"), userId);
 		String name = "feat";
 		String color = "light";
 		String background = "#111111";
-		Long labelId = labelService.saveLabel(new LabelSaveRequest(name, color, background, "기능 구현"));
+		Long labelId = labelService.saveLabel(new LabelSaveRequest(name, color, background, "기능 구현"), 1L);
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId,
 			userId);
 		Long id = issueService.save(issueSaveRequest, userId);
@@ -311,7 +311,7 @@ class IssueServiceTest extends IntegrationTestSupport {
 	}
 
 	private Long createIssue(Long userId) {
-		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"));
+		Long milestoneId = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"), userId);
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId,
 			userId);
 		return issueService.save(issueSaveRequest, userId);
