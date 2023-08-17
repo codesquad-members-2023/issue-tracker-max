@@ -42,6 +42,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     // 파일 업로드
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    // myBatis
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.1'
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.1'
 
 }
 

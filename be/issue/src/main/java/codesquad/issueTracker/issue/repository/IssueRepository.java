@@ -16,6 +16,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import codesquad.issueTracker.issue.domain.Issue;
+import codesquad.issueTracker.issue.dto.IssueCountResponseDto;
 import codesquad.issueTracker.issue.vo.AssigneeVo;
 import codesquad.issueTracker.issue.vo.IssueMilestoneVo;
 
@@ -26,6 +27,34 @@ public class IssueRepository {
 	public IssueRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
+
+	public IssueCountResponseDto findIssueCounts() {
+		String sql = "SELECT "
+			+ "	(SELECT COUNT(i.id) "
+			+ "        FROM issues i "
+			+ "        WHERE is_closed = false "
+			+ "        AND is_deleted = false) AS openCount, "
+			+ " (SELECT COUNT(i2.id) "
+			+ "     FROM issues i2 "
+			+ "     WHERE is_closed = true "
+			+ "     AND is_deleted = false) AS closedCount, "
+			+ " (SELECT COUNT(l.id) "
+			+ "     FROM labels l "
+			+ "     WHERE is_deleted = false) AS labelCount, "
+			+ " (SELECT COUNT(m.id) "
+			+ "     FROM milestones m "
+			+ "     WHERE is_deleted = false "
+			+ "     AND is_closed = false) AS milestoneCount";
+
+		return jdbcTemplate.queryForObject(sql, Map.of(), issueCountRowMapper);
+	}
+
+	private RowMapper<IssueCountResponseDto> issueCountRowMapper = ((rs, rowNum) -> IssueCountResponseDto.builder()
+		.openCount(rs.getInt("openCount"))
+		.closedCount(rs.getInt("closedCount"))
+		.labelCount(rs.getInt("labelCount"))
+		.milestoneCount(rs.getInt("milestoneCount"))
+		.build());
 
 	public Long insert(Issue issue) {
 		String sql = "INSERT INTO issues(title, content, milestone_id, user_id) VALUES (:title,:content,:milestoneId, :userId)";
@@ -163,5 +192,4 @@ public class IssueRepository {
 		.name(rs.getString("name"))
 		.imgUrl(rs.getString("profile_img"))
 		.build());
-
 }
