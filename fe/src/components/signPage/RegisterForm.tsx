@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { signUpUser } from 'apis/api';
 import { validateId, validatePassword } from './validateInput';
 import { useNavigate } from 'react-router-dom';
-import { SIGN_PAGE } from 'constants/PATH';
+import { PATH } from 'constants/PATH';
 
 export const RegisterForm: React.FC = () => {
   const [loginId, setLoginId] = useState('');
@@ -31,7 +31,7 @@ export const RegisterForm: React.FC = () => {
     try {
       await signUpUser(loginId, password);
 
-      navigate(SIGN_PAGE);
+      navigate(PATH.SIGN_PAGE);
     } catch (error) {
       console.error(error);
     }

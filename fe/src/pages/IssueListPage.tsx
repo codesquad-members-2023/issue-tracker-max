@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { useTheme } from '@emotion/react';
-import { ISSUE_LIST_PAGE } from 'constants/PATH';
+import { PATH } from 'constants/PATH';
 
 export const IssueListPage: React.FC = () => {
   const theme = useTheme() as any;
@@ -67,7 +67,7 @@ export const IssueListPage: React.FC = () => {
         <Button
           {...{ typeVariant: 'ghost', size: 'S' }}
           onClick={() => {
-            navigate(`/${ISSUE_LIST_PAGE}`);
+            navigate(`/${PATH.ISSUE_LIST_PAGE}`);
           }}
           css={{
             display: 'flex',

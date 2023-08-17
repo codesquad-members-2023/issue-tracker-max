@@ -4,7 +4,7 @@ import { LoginForm } from '@components/signPage/LoginForm';
 import { ReactComponent as LargeLogo } from '@assets/logos/largeLogo.svg';
 import { Button } from '@components/common/Button';
 import { useNavigate } from 'react-router-dom';
-import { REGISTER_PAGE } from 'constants/PATH';
+import { PATH } from 'constants/PATH';
 
 export const SignPage: React.FC = () => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export const SignPage: React.FC = () => {
         typeVariant="ghost"
         size="L"
         onClick={() => {
-          navigate(`/${REGISTER_PAGE}`);
+          navigate(`/${PATH.REGISTER_PAGE}`);
         }}
       >
         회원가입

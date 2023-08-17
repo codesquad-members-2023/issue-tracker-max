@@ -6,15 +6,9 @@ import { IssueListPage } from '@pages/IssueListPage';
 import { IssueDetailPage } from '@pages/IssueDetailPage';
 import { AddIssuePage } from '@pages/AddIssuePage';
 import { LabelListPage } from '@pages/LabelListPage';
-
 import { NotFoundPage } from '@pages/NotFoundPage';
-import {
-  ADD_ISSUE_PAGE,
-  ISSUE_DETAIL_PAGE,
-  ISSUE_LIST_PAGE,
-  LABEL_LIST_PAGE,
-  REGISTER_PAGE,
-} from 'constants/PATH';
+import { OAuthLoadingPage } from '@pages/OAuthLoadingPage';
+import { PATH } from 'constants/PATH';
 
 type Props = {
   currentTheme: ThemeType;
@@ -25,16 +19,20 @@ export const AppRoutes: React.FC<Props> = ({ currentTheme, toggleTheme }) => {
   return (
     <Routes>
       <Route index element={<SignPage />} />
-      <Route path={REGISTER_PAGE} element={<RegisterPage />} />
+      <Route path={PATH.REGISTER_PAGE} element={<RegisterPage />} />
       <Route element={<Header {...{ currentTheme, toggleTheme }} />}>
-        <Route path={ISSUE_LIST_PAGE} element={<IssueListPage />} />
-        <Route path={ADD_ISSUE_PAGE} element={<AddIssuePage />} />
+        <Route path={PATH.ISSUE_LIST_PAGE} element={<IssueListPage />} />
+        <Route path={PATH.ADD_ISSUE_PAGE} element={<AddIssuePage />} />
         <Route
-          path={`${ISSUE_DETAIL_PAGE}/:id`}
+          path={`${PATH.ISSUE_DETAIL_PAGE}/:id`}
           element={<IssueDetailPage />}
         />
-        <Route path={LABEL_LIST_PAGE} element={<LabelListPage />} />
+        <Route path={PATH.LABEL_LIST_PAGE} element={<LabelListPage />} />
         {/* <Route path={MILESTONE_LIST_PAGE} element={<MileStoneListPage />} /> */}
+        <Route
+          path={`/${PATH.OAUTH_LOADING_PAGE}/*`}
+          element={<OAuthLoadingPage />}
+        />
         <Route path="/*" element={<NotFoundPage />} />
       </Route>
     </Routes>
