@@ -22,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class MilestoneRepository {
     private static final String OPEN_FLAG = "open";
     private static final String CLOSED_FLAG = "closed";
-    private static final int NOT_DELETED_FLAG = 0;
-    private static final int DELETED_FLAG = 1;
+    private static final String DELETED_FLAG = "deleted";
+    private static final int LABEL_OPEN_FLAG = 0;
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -118,10 +118,10 @@ public class MilestoneRepository {
     }
 
     public void deleteById(Long id) {
-        final String sql = "UPDATE milestone SET is_deleted = :deleted_flag WHERE milestone_id = :id";
+        final String sql = "UPDATE milestone SET status = :deletedFlag WHERE milestone_id = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("deleted_flag", DELETED_FLAG)
+                .addValue("deletedFlag", DELETED_FLAG)
                 .addValue("id", id);
 
         jdbcTemplate.update(sql, params);
@@ -148,12 +148,12 @@ public class MilestoneRepository {
         final String sql = "SELECT milestone_id, name, deadline, description, status " +
                 "FROM milestone " +
                 "WHERE status = :status " +
-                "AND is_deleted = :not_deleted_flag " +
+                "AND status = :OPEN_FLAG " +
                 "ORDER BY milestone_id";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("status", status)
-                .addValue("not_deleted_flag", NOT_DELETED_FLAG);
+                .addValue("OPEN_FLAG", OPEN_FLAG);
 
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
             Long id = rs.getLong("milestone_id");
@@ -166,24 +166,24 @@ public class MilestoneRepository {
     }
 
     private int calculateMilestoneProgress(Long milestoneId) {
-        int openIssueCount = countIssuesByStatusAndMilestoneId("open", milestoneId);
-        int closedIssueCount = countIssuesByStatusAndMilestoneId("closed", milestoneId);
+        int openIssueCount = countIssuesByStatusAndMilestoneId(OPEN_FLAG, milestoneId);
+        int closedIssueCount = countIssuesByStatusAndMilestoneId(CLOSED_FLAG, milestoneId);
         int totalIssueCount = openIssueCount + closedIssueCount;
         return totalIssueCount > 0 ? (int) ((double) closedIssueCount / totalIssueCount * 100) : 0;
     }
 
     private int countLabels() {
         return jdbcTemplate.queryForObject(
-                "SELECT COALESCE(COUNT(*), 0) FROM label WHERE is_deleted = :not_deleted_flag",
-                Map.of("not_deleted_flag", NOT_DELETED_FLAG),
+                "SELECT COALESCE(COUNT(*), 0) FROM label WHERE is_deleted = :openFlag",
+                Map.of("openFlag", LABEL_OPEN_FLAG),
                 Integer.class
         );
     }
 
     private int countMilestonesByStatus(String status) {
         return jdbcTemplate.queryForObject(
-                "SELECT COALESCE(COUNT(*), 0) FROM milestone WHERE status = :status AND is_deleted = :not_deleted_flag",
-                Map.of("status", status, "not_deleted_flag", NOT_DELETED_FLAG),
+                "SELECT COALESCE(COUNT(*), 0) FROM milestone WHERE status = :status AND status = :OPEN_FLAG",
+                Map.of("status", status, "OPEN_FLAG", OPEN_FLAG),
                 Integer.class
         );
     }
