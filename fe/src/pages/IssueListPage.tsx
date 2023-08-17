@@ -19,9 +19,10 @@ export const IssueListPage: React.FC = () => {
   const hasFilter = location.search !== '';
 
   const goToFilteredPage = (filterValue: string) => {
-    const value = hasFilter
-      ? processFilterString(decodeURIComponent(filterValue))
-      : processFilterString('status:open ' + decodeURIComponent(filterValue));
+    const value =
+      hasFilter || filterValue === ''
+        ? processFilterString(decodeURIComponent(filterValue))
+        : processFilterString('status:open ' + decodeURIComponent(filterValue));
 
     navigate(`?query=${value}`);
   };
