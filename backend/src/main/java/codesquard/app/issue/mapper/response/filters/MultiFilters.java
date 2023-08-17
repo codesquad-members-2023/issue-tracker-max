@@ -11,28 +11,28 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MultiFilters {
 
-	private MultiFilterAssignees assignees;
+	private MultiFilterAssignees assignee;
 
-	private MultiFilterLabels labels;
+	private MultiFilterLabels label;
 
-	private MultiFilterMilestones milestones;
+	private MultiFilterMilestones milestone;
 
-	private MultiFilterAuthors authors;
+	private MultiFilterAuthors author;
 
-	public MultiFilterAssignees getAssignees() {
-		return assignees;
+	public MultiFilterAssignees getAssignee() {
+		return assignee;
 	}
 
-	public MultiFilterLabels getLabels() {
-		return labels;
+	public MultiFilterLabels getLabel() {
+		return label;
 	}
 
-	public MultiFilterMilestones getMilestones() {
-		return milestones;
+	public MultiFilterMilestones getMilestone() {
+		return milestone;
 	}
 
-	public MultiFilterAuthors getAuthors() {
-		return authors;
+	public MultiFilterAuthors getAuthor() {
+		return author;
 	}
 
 }

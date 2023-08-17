@@ -74,17 +74,7 @@ const LIGHT = {
     paletteNavy: color.accentNavy,
     paletteRed: color.accentRed,
   },
-  dropShadow: "0 0 8px 0 rgba(20, 20, 43, 0.04)",
-  iconFilter: {
-    neutralTextDefault:
-      "brightness(0) saturate(100%) invert(31%) sepia(8%) saturate(1775%) hue-rotate(197deg) brightness(93%) contrast(91%)",
-    neutralTextStrong:
-      "brightness(0) saturate(100%) invert(8%) sepia(6%) saturate(6138%) hue-rotate(203deg) brightness(94%) contrast(98%)",
-    brandTextWeak:
-      "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
-    brandTextDefault:
-      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
-  },
+  dropShadow: "0 0 8px 0 rgba(20, 20, 43, 0.04)"
 };
 
 const DARK = {
@@ -112,17 +102,7 @@ const DARK = {
     paletteNavy: color.accentNavy,
     paletteRed: color.accentRed,
   },
-  dropShadow: "0 0 16px 0 rgba(20, 20, 43, 0.8)",
-  iconFilter: {
-    neutralTextDefault:
-      "brightness(0) saturate(100%) invert(85%) sepia(17%) saturate(218%) hue-rotate(195deg) brightness(91%) contrast(85%)",
-    neutralTextStrong:
-      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
-    brandTextWeak:
-      "brightness(0) saturate(100%) invert(30%) sepia(47%) saturate(3393%) hue-rotate(200deg) brightness(103%) contrast(112%)",
-    brandTextDefault:
-      "brightness(0) saturate(100%) invert(94%) sepia(32%) saturate(0%) hue-rotate(6deg) brightness(105%) contrast(99%)",
-  },
+  dropShadow: "0 0 16px 0 rgba(20, 20, 43, 0.8)"
 };
 
 export const designSystem = {

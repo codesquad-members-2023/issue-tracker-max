@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TextInput } from "../../components/TextInput";
+import { getAccessToken } from "../../utils/localStorage";
 import { MilestoneData } from "./Milestone";
 
 type MilestoneEditorProps = {
@@ -106,8 +107,10 @@ export function MilestoneEditor({
 
     await fetch(`/api/milestones${path}`, {
       method: method,
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify(obj),
     });

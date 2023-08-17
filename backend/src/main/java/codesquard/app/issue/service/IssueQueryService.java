@@ -147,7 +147,7 @@ public class IssueQueryService {
 			return "is:opened";
 		}
 
-		return builder.toString();
+		return builder.toString().stripTrailing();
 	}
 
 	private Map<String, Long> countIssuesByStatus() {
@@ -200,11 +200,11 @@ public class IssueQueryService {
 			new MultiFilterLabels(issueMapper.getMultiFiltersLabels(check, request)),
 			new MultiFilterMilestones(issueMapper.getMultiFiltersMilestones(check, request)),
 			new MultiFilterAuthors(issueMapper.getMultiFiltersAuthors(check, request)));
-		multiFilters.getAssignees()
+		multiFilters.getAssignee()
 			.addNoneOptionToAssignee(request.getAssignee() != null && request.getAssignee().equals("none"));
-		multiFilters.getLabels()
+		multiFilters.getLabel()
 			.addNoneOptionToLabels(request.getLabel() != null && request.getLabel().get(0).equals("none"));
-		multiFilters.getMilestones()
+		multiFilters.getMilestone()
 			.addNoneOptionToMilestones(request.getMilestone() != null && request.getMilestone().equals("none"));
 		return multiFilters;
 	}
