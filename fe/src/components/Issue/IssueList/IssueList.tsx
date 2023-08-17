@@ -20,10 +20,10 @@ export default function IssueList() {
   useEffect(() => {
     (async () => {
       try {
-        const issueData = await customFetch<GetIssueRes>({ subUrl: 'api/' });
+        const response = await customFetch<GetIssueRes>({ subUrl: 'api/' });
 
-        if (issueData.success && issueData.data) {
-          setIssueList(issueData.data);
+        if (response.success && response.data) {
+          setIssueList(response.data);
         }
       } catch (error) {
         //Memo: 에러 핸들링 필요
