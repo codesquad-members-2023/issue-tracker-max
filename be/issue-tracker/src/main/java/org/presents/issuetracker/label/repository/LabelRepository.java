@@ -132,21 +132,12 @@ public class LabelRepository {
         });
     }
 
-    private int getLabelCount() {
-        String sql = "SELECT COALESCE(COUNT(*), 0) FROM label WHERE is_deleted = :not_deleted_flag";
-
-        MapSqlParameterSource params = new MapSqlParameterSource("not_deleted_flag", NOT_DELETED_FLAG);
-
-        return jdbcTemplate.queryForObject(sql, params, Integer.class);
-    }
-
     private int getTotalMilestoneCount() {
-        String sql = "SELECT COALESCE(COUNT(*), 0) FROM milestone WHERE status IN (:open_flag, :closed_flag) AND is_deleted = :not_deleted_flag";
+        String sql = "SELECT COALESCE(COUNT(*), 0) FROM milestone WHERE status IN (:open_flag, :closed_flag)";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("open_flag", OPEN_FLAG)
-                .addValue("closed_flag", CLOSED_FLAG)
-                .addValue("not_deleted_flag", NOT_DELETED_FLAG);
+                .addValue("closed_flag", CLOSED_FLAG);
 
         return jdbcTemplate.queryForObject(sql, params, Integer.class);
     }
