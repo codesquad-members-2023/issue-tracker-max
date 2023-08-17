@@ -16,7 +16,7 @@ public class MultiFilterMilestones {
 	}
 
 	public void addNoneOptionToMilestones(boolean selected) {
-		options.add(new MultiFilterMilestone(0L, "마일스톤이 없는 이슈", selected));
+		options.add(0, new MultiFilterMilestone(0L, "마일스톤이 없는 이슈", selected));
 	}
 
 	public boolean isMultipleSelect() {

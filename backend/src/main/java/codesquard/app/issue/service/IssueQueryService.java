@@ -112,7 +112,6 @@ public class IssueQueryService {
 
 	// Issue Filtering
 	public IssueFilterResponse findFilterIssues(String loginId, IssueFilterRequest request) {
-		// 재배포를 위한 주석
 		Map<String, Long> counts = countIssuesByStatus();
 
 		return new IssueFilterResponse(generateInput(request), counts.get(IssueStatus.OPENED.name()),
