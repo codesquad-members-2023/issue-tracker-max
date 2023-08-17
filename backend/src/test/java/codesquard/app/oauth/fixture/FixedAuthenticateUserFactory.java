@@ -18,8 +18,6 @@ public class FixedAuthenticateUserFactory {
 	private static final String SCOPE = "login";
 	private static final String TOKEN_TYPE = "Bearer";
 
-
-
 	public static AuthenticateUser authenticateUser() {
 		return new AuthenticateUser(ID, LOGIN_ID, EMAIL, null);
 	}
@@ -28,21 +26,21 @@ public class FixedAuthenticateUserFactory {
 		return new Jwt(ACCESS_TOKEN, REFRESH_TOKEN, null, null);
 	}
 
-	public static Cookie refreshTokenCookie(){
+	public static Cookie refreshTokenCookie() {
 		return new Cookie(REFRESH_TOKEN, REFRESH_TOKEN);
 	}
 
 	public static OauthLoginServiceResponse oauthLoginServiceResponse() {
 		AuthenticateUser user = authenticateUser();
 		Jwt jwt = jwt();
-		return new OauthLoginServiceResponse(user, jwt,TOKEN_TYPE);
+		return new OauthLoginServiceResponse(user, jwt, TOKEN_TYPE);
 	}
 
-	public static OauthAccessTokenResponse oauthAccessTokenResponse(){
+	public static OauthAccessTokenResponse oauthAccessTokenResponse() {
 		return new OauthAccessTokenResponse(ACCESS_TOKEN, SCOPE, TOKEN_TYPE);
 	}
 
-	public static UserProfile userProfile(){
+	public static UserProfile userProfile() {
 		return new UserProfile(LOGIN_ID, EMAIL, null);
 	}
 

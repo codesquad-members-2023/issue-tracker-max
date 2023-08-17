@@ -24,6 +24,7 @@ import codesquard.app.issue.dto.request.IssueSaveRequest;
 import codesquard.app.issue.dto.response.IssueLabelResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.fixture.FixtureFactory;
+import codesquard.app.issue.mapper.response.filters.response.SingleFilter;
 import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.label.dto.request.LabelSaveRequest;
 import codesquard.app.label.service.LabelService;
@@ -211,7 +212,8 @@ class IssueServiceTest extends IntegrationTestSupport {
 		// given
 		Long userId = userRepository.save(FixtureFactory.createUserSaveServiceRequest().toEntity());
 		Long milestoneId1 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("서비스"), userId);
-		Long milestoneId2 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("수정된 마일스톤"), userId);
+		Long milestoneId2 = milestoneService.saveMilestone(FixtureFactory.createMilestoneCreateRequest("수정된 마일스톤"),
+			userId);
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId1,
 			userId);
 		Long id = issueService.save(issueSaveRequest, userId);
@@ -315,5 +317,39 @@ class IssueServiceTest extends IntegrationTestSupport {
 		IssueSaveRequest issueSaveRequest = FixtureFactory.createIssueRegisterRequest("Service", "내용", milestoneId,
 			userId);
 		return issueService.save(issueSaveRequest, userId);
+	}
+
+	@DisplayName("이슈의 싱글 필터를 판단할 수 있다.")
+	@Test
+	void checkSingleFilters() {
+		String generated = "is:opened ";
+
+		boolean selectedOpened = generated.strip().equals(SingleFilter.IS.OPENED.getResponse());
+		boolean selectedAuthor = generated.strip().equals(SingleFilter.ME.AUTHOR.getResponse());
+		boolean selectedAssignee = generated.strip().equals(SingleFilter.ME.ASSIGNEE.getResponse());
+		boolean selectedMentions = generated.strip().equals(SingleFilter.ME.MENTIONS.getResponse());
+		boolean selectedClosed = generated.strip().equals(SingleFilter.IS.CLOSED.getResponse());
+
+		boolean multiFiltersCheck =
+			!selectedOpened && !selectedClosed && !selectedAuthor && !selectedAssignee && !selectedMentions;
+
+		assertThat(multiFiltersCheck).isFalse();
+	}
+
+	@DisplayName("이슈의 멀티 필터를 판단할 수 있다.")
+	@Test
+	void checkMultiFilters() {
+		String generated = "is:opened author:@me ";
+
+		boolean selectedOpened = generated.strip().equals(SingleFilter.IS.OPENED.getResponse());
+		boolean selectedAuthor = generated.strip().equals(SingleFilter.ME.AUTHOR.getResponse());
+		boolean selectedAssignee = generated.strip().equals(SingleFilter.ME.ASSIGNEE.getResponse());
+		boolean selectedMentions = generated.strip().equals(SingleFilter.ME.MENTIONS.getResponse());
+		boolean selectedClosed = generated.strip().equals(SingleFilter.IS.CLOSED.getResponse());
+
+		boolean multiFiltersCheck =
+			!selectedOpened && !selectedClosed && !selectedAuthor && !selectedAssignee && !selectedMentions;
+
+		assertThat(multiFiltersCheck).isTrue();
 	}
 }

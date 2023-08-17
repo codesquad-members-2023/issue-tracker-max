@@ -13,8 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import codesquard.app.IntegrationTestSupport;
 import codesquard.app.milestone.dto.request.MilestoneSaveRequest;
-import codesquard.app.milestone.dto.request.MilestoneStatusUpdateRequest;
-import codesquard.app.milestone.dto.request.MilestoneUpdateRequest;
 import codesquard.app.milestone.entity.Milestone;
 import codesquard.app.milestone.entity.MilestoneStatus;
 import codesquard.app.user.entity.User;
