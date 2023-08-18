@@ -1,4 +1,4 @@
-![](https://img.shields.io/badge/Last_Upadate-2023--07--28-blue)
+![](https://img.shields.io/badge/Last_Upadate-2023--08--18-blue)
 # 📋 Issue-tracker-max
 - 코드스쿼드 2023 마스터즈 맥스 프로젝트 `이슈 트래커 구현`
 - 기간 `2023-07-24 ~ 2023-08-18`
@@ -9,6 +9,47 @@
  | <img src="https://avatars.githubusercontent.com/u/101464713?v=4" width="100px" /> | <img src="https://avatars.githubusercontent.com/u/75569293?v=4" width="100px" /> | <img src="https://avatars.githubusercontent.com/u/107015624?v=4" width="100px" /> | <img src="https://avatars.githubusercontent.com/u/98851575?v=4" width="100px" /> |
 | :---: | :---: | :---: | :---: |
 | [TOKO(FE)](https://github.com/aaaz425) | [June(BE)](https://github.com/JJONSOO) | [Jeegu(BE)](https://github.com/Ojeegu) | [무비(BE)](https://github.com/yhpark95) |
+
+<br>
+
+## 🎡 동작 구현
+__회원가입__
+
+![회원가입](https://github.com/codesquad-team4-issue-tracker/issue-tracker-max/assets/107015624/bfaebef7-f019-4ea4-bbe2-bc9584815d4f)
+
+__로그인__
+
+![로그인](https://github.com/codesquad-team4-issue-tracker/issue-tracker-max/assets/107015624/10ad9827-77e1-4862-8335-5c510a2b07dc)
+
+
+__이슈__
+
+![이슈작성삭제](https://github.com/codesquad-team4-issue-tracker/issue-tracker-max/assets/107015624/6f8a2c4d-c813-4dd5-b2c6-789aa28d10c9)
+
+
+![이슈수정](https://github.com/codesquad-team4-issue-tracker/issue-tracker-max/assets/107015624/93505216-a162-4142-9639-15fd7804b9f7)
+
+
+__코멘트__
+
+![코멘트CRUD](https://github.com/codesquad-team4-issue-tracker/issue-tracker-max/assets/107015624/59ad3d1a-219f-4ede-a08c-ffa9c99a8b7a)
+
+![코멘트수정](https://github.com/codesquad-team4-issue-tracker/issue-tracker-max/assets/107015624/2707aa58-90ac-4cf0-be17-39586beffc0f)
+
+
+__레이블__
+
+![레이블CRUD](https://github.com/codesquad-team4-issue-tracker/issue-tracker-max/assets/107015624/3f5ca2bf-5efe-4705-84df-f7de850ef4d0)
+
+
+__마일스톤__
+
+![마일스톤CRUD](https://github.com/codesquad-team4-issue-tracker/issue-tracker-max/assets/107015624/0f1f6b34-3421-47bd-8d6e-e12e0ec0bc2e)
+
+
+__다크모드__
+
+![다크모드](https://github.com/codesquad-team4-issue-tracker/issue-tracker-max/assets/107015624/8534729e-f9a8-41b1-8a0b-ddb3e5bb098b)
 
 <br>
 
@@ -54,14 +95,14 @@ ex) 이부분이 도무지 이해가 안가고 해결이 안되고 있는데 도
 
 ## ᛋ 브랜치 전략
 - `main`
-- `develop`
+- `dev`
 - `be`
 - `fe`
 - `feat/#이슈번호-기능`
 
 💡 PR은 브랜치를 넘어갈 때 마다 합니다.
 ```
-feat/#3-login → be,fe → develop → main
+feat/#3-login → be,fe → dev → main
 ```
 
 <br>
