@@ -1,4 +1,4 @@
-ISSUE_ID=$(jps | grep be | awk '{ print $1 }')
+ISSUE_ID=$(jps | grep issue | awk '{ print $1 }')
 
 if [ -z $ISSUE_ID ]; then
   echo "동작중인 서버가 없습니다."

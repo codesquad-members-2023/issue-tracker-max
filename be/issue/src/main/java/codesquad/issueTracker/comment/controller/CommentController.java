@@ -36,12 +36,16 @@ public class CommentController {
 	}
 
 	@PostMapping("/issues/{issueId}/comments")
-	public ApiResponse<String> save(@PathVariable Long issueId,
-		@RequestBody CommentRequestDto commentRequestDto,
-		HttpServletRequest request) {
-		commentService.save(request, issueId, commentRequestDto);
+	public ApiResponse<String> save(@PathVariable Long issueId, @RequestBody CommentRequestDto commentRequestDto,
+								HttpServletRequest request) {
+		Long userId = findUserIdByHttpRequest(request);
+		commentService.save(userId, issueId, commentRequestDto);
 
 		return ApiResponse.success(SUCCESS.getStatus(), SUCCESS.getMessage());
+	}
+
+	private Long findUserIdByHttpRequest(HttpServletRequest request) {
+		return Long.parseLong(String.valueOf(request.getAttribute("userId")));
 	}
 
 	@PatchMapping("/issues/comments/{commentId}")

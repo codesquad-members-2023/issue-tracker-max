@@ -1,6 +1,7 @@
 package codesquad.issueTracker.label.vo;
 
 import codesquad.issueTracker.label.domain.Label;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -11,6 +12,7 @@ public class LabelVo {
 	private final String backgroundColor;
 	private final String description;
 
+	@Builder
 	public LabelVo(Long id, String name, String textColor, String backgroundColor, String description) {
 		this.id = id;
 		this.name = name;
