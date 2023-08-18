@@ -101,7 +101,7 @@ public class JwtAuthorizationFilter implements Filter {
 		response.getWriter().write(objectMapper.writeValueAsString(
 			CommonApiResponse.fail(statusCode.getHttpStatus(), statusCode.getMessage()))
 		);
-		log.info("[Error Response] : {} {} {}", response.getContentType(),
-			response.getStatus(), response.getOutputStream().toString());
+		log.info("[Error Response] : {} {}", response.getContentType(),
+			response.getStatus());
 	}
 }
