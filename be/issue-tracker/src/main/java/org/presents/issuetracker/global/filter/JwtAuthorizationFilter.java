@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -45,10 +46,10 @@ public class JwtAuthorizationFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpServletResponse res = (HttpServletResponse)response;
 
-		log.info("[request] : {}", ((HttpServletRequest)request).getRequestURI());
+		log.info("[request] : {} {}", req.getMethod(),
+			req.getRequestURI());
 
 		if (HttpMethod.OPTIONS.matches(req.getMethod())) {
-			log.info("OPTION임...");
 			chain.doFilter(request, response);
 			return;
 		}
@@ -59,15 +60,8 @@ public class JwtAuthorizationFilter implements Filter {
 		}
 
 		String token = getToken(req);
-		log.info("token : {}", token);
 		if (token == null) {
 			sendErrorResponse(res, JwtErrorCode.INVALID_JWT_TOKEN);
-			return;
-		}
-
-		if (!jwtProvider.verify(token)) {
-			log.info("만료됨...");
-			sendErrorResponse(res, JwtErrorCode.EXPIRED_JWT_TOKEN);
 			return;
 		}
 
@@ -76,6 +70,8 @@ public class JwtAuthorizationFilter implements Filter {
 			Long userId = ((Number)claims.get("userId")).longValue();
 			request.setAttribute("userId", userId);
 			chain.doFilter(request, response);
+		} catch (ExpiredJwtException e) {
+			sendErrorResponse(res, JwtErrorCode.EXPIRED_JWT_TOKEN);
 		} catch (Exception e) {
 			sendErrorResponse(res, JwtErrorCode.MALFORMED_JWT_TOKEN);
 		}
@@ -101,7 +97,5 @@ public class JwtAuthorizationFilter implements Filter {
 		response.getWriter().write(objectMapper.writeValueAsString(
 			CommonApiResponse.fail(statusCode.getHttpStatus(), statusCode.getMessage()))
 		);
-		log.info("[Error Response] : {} {}", response.getContentType(),
-			response.getStatus());
 	}
 }
