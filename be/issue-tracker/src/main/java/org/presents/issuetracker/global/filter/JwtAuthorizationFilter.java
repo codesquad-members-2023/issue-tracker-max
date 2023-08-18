@@ -72,9 +72,10 @@ public class JwtAuthorizationFilter implements Filter {
 			request.setAttribute("userId", userId);
 			chain.doFilter(request, response);
 		} catch (ExpiredJwtException e) {
-			// throw new CustomException(JwtErrorCode.EXPIRED_JWT_TOKEN);
+			log.info("만료됨..");
 			sendErrorResponse(res, JwtErrorCode.EXPIRED_JWT_TOKEN);
 		} catch (Exception e) {
+			log.info("에러..");
 			sendErrorResponse(res, JwtErrorCode.MALFORMED_JWT_TOKEN);
 		}
 	}
@@ -98,5 +99,6 @@ public class JwtAuthorizationFilter implements Filter {
 		response.getWriter().write(objectMapper.writeValueAsString(
 			CommonApiResponse.fail(statusCode.getHttpStatus(), statusCode.getMessage()))
 		);
+		log.info("[Error Response] : {}", response.getStatus());
 	}
 }
