@@ -33,7 +33,7 @@ export default function LoginPage() {
 
   const goGitHubLogin = () => {
     window.location.assign(
-      "https://github.com/login/oauth/authorize?client_id=Iv1.7ee4a0c3b7d0f238&redirect_uri=http://localhost:5173/redirect/oauth",
+      "https://github.com/login/oauth/authorize?client_id=Iv1.7ee4a0c3b7d0f238&redirect_uri=http://3.34.141.196/redirect/oauth",
     );
   };
 
