@@ -187,7 +187,7 @@ export const LabelEditTable: React.FC<Props> = ({
           css={{
             color: theme.brand.text.default,
           }}
-          disabled={isDataMissing || isDataUnchanged}
+          disabled={isDataMissing || isDataUnchanged || isColorCodeError}
           onClick={onSubmit}
         >
           {typeVariant === 'edit' ? (
