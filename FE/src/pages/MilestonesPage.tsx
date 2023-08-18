@@ -6,10 +6,18 @@ import { FetchedMilestone } from "../type";
 import MilestoneList from "../components/MilestoneList/MilestoneList";
 import EditMilestone from "../components/MilestoneList/EditMilestone";
 import parseFilter from "../utils/parseFilter";
+import Header from "../components/Header/Header";
+import { useAuth } from "../context/AuthContext";
+import LoadingIndicator from "../components/LoadingIndicator/LoadingIndicator";
 
-export default function MilestonesPage() {
+type Props = {
+  toggleTheme(): void;
+};
+
+export default function MilestonesPage({ toggleTheme }: Props) {
   const navigate = useNavigate();
   const { state } = useParams();
+  const { profile } = useAuth();
   const [data, setData] = useState<FetchedMilestone>();
   const [isAdd, setIsAdd] = useState<boolean>(false);
   const [addTitle, setAddTitle] = useState<string>("");
@@ -57,14 +65,15 @@ export default function MilestonesPage() {
   const createMilestone = async () => {
     const URL = "http://3.34.141.196/api/milestones";
 
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
+
     const data = {
       title: addTitle,
       description: addDescription,
       deadline: addDeadline,
-    };
-
-    const headers = {
-      "Content-Type": "application/json",
     };
 
     try {
@@ -89,8 +98,12 @@ export default function MilestonesPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const headers = new Headers();
+        const accessToken = localStorage.getItem("accessToken");
+        headers.append("Authorization", `Bearer ${accessToken}`);
         const response = await fetch(
           `http://3.34.141.196/api/milestones${parseFilter(state)}`,
+          { headers },
         );
         if (!response.ok) {
           throw new Error("데이터를 가져오는 데 실패했습니다.");
@@ -106,93 +119,104 @@ export default function MilestonesPage() {
   }, []);
 
   return (
-    <Main>
-      <Tap>
-        <TapButtonWrapper>
-          <Button
-            icon={"label"}
-            label={`레이블(${data?.metadata.totalLabelCount})`}
-            type={"ghost"}
-            size={"medium"}
-            width={"50%"}
-            onClick={goLabelsPage}
-          />
-          <Button
-            icon={"milestone"}
-            label={`마일스톤(${data?.metadata.totalMilestoneCount})`}
-            type={"ghost"}
-            size={"medium"}
-            width={"50%"}
-            onClick={goMilestonesPage}
-          />
-        </TapButtonWrapper>
-        <Button
-          icon={"plus"}
-          label={"마일스톤 추가"}
-          onClick={openAdd}
-          disabled={isAdd}
-        />
-      </Tap>
-      {isAdd && (
-        <EditMilestone
-          type={"add"}
-          title={addTitle}
-          description={addDescription}
-          deadline={addDeadline}
-          onChangeTitle={handleTitleInputChange}
-          onChangeDescription={handleDescriptionInputChange}
-          onChangeDeadline={handleDeadlineInputChange}
-          cancelEdit={cancelAdd}
-          confirmEdit={createMilestone}
-        />
-      )}
-      <LabelsTable>
-        <TableHeader>
-          <SelectButtonTap>
-            <Button
-              icon={"alertCircle"}
-              label={`열린 마일스톤(${data?.metadata.openMilestoneCount})`}
-              type={"ghost"}
-              size={"medium"}
-              onClick={goMilestonesPage}
-            />
-            <Button
-              icon={"archive"}
-              label={`닫힌 마일스톤(${data?.metadata.closeMilestoneCount})`}
-              type={"ghost"}
-              size={"medium"}
-              onClick={goCloseMilestonesPage}
-            />
-          </SelectButtonTap>
-        </TableHeader>
-        {data?.milestones?.map((milestone) => (
-          <MilestoneList
-            key={milestone.id}
-            id={milestone.id}
-            title={milestone.title}
-            progress={milestone.progress}
-            deadline={milestone.deadline}
-            description={milestone.description}
-            isOpen={milestone.isOpen}
-            openIssueCount={milestone.openIssueCount}
-            closeIssueCount={milestone.closeIssueCount}
-          />
-        ))}
-        {data?.milestones?.length === 0 && (
-          <EmptyList>
-            <EmptyContent>생성된 마일스톤이 없습니다.</EmptyContent>
-          </EmptyList>
+    <>
+      <Header
+        toggleTheme={toggleTheme}
+        profileImg={profile ? profile.profileImageUri : "/icons/user.png"}
+      />
+      <Main>
+        {!data && (
+          <LoadingPage>
+            <LoadingIndicator />
+          </LoadingPage>
         )}
-      </LabelsTable>
-    </Main>
+        {data && (
+          <Container>
+            <Tap>
+              <TapButtonWrapper>
+                <Button
+                  icon={"label"}
+                  label={`레이블(${data?.metadata.totalLabelCount})`}
+                  type={"ghost"}
+                  size={"medium"}
+                  width={"50%"}
+                  onClick={goLabelsPage}
+                />
+                <Button
+                  icon={"milestone"}
+                  label={`마일스톤(${data?.metadata.totalMilestoneCount})`}
+                  type={"ghost"}
+                  size={"medium"}
+                  width={"50%"}
+                  onClick={goMilestonesPage}
+                />
+              </TapButtonWrapper>
+              <Button
+                icon={"plus"}
+                label={"마일스톤 추가"}
+                onClick={openAdd}
+                disabled={isAdd}
+              />
+            </Tap>
+            {isAdd && (
+              <EditMilestone
+                type={"add"}
+                title={addTitle}
+                description={addDescription}
+                deadline={addDeadline}
+                onChangeTitle={handleTitleInputChange}
+                onChangeDescription={handleDescriptionInputChange}
+                onChangeDeadline={handleDeadlineInputChange}
+                cancelEdit={cancelAdd}
+                confirmEdit={createMilestone}
+              />
+            )}
+            <LabelsTable>
+              <TableHeader>
+                <SelectButtonTap>
+                  <Button
+                    icon={"alertCircle"}
+                    label={`열린 마일스톤(${data?.metadata.openMilestoneCount})`}
+                    type={"ghost"}
+                    size={"medium"}
+                    onClick={goMilestonesPage}
+                  />
+                  <Button
+                    icon={"archive"}
+                    label={`닫힌 마일스톤(${data?.metadata.closeMilestoneCount})`}
+                    type={"ghost"}
+                    size={"medium"}
+                    onClick={goCloseMilestonesPage}
+                  />
+                </SelectButtonTap>
+              </TableHeader>
+              {data?.milestones?.map((milestone) => (
+                <MilestoneList
+                  key={milestone.id}
+                  id={milestone.id}
+                  title={milestone.title}
+                  progress={milestone.progress}
+                  deadline={milestone.deadline}
+                  description={milestone.description}
+                  isOpen={milestone.isOpen}
+                  openIssueCount={milestone.openIssueCount}
+                  closeIssueCount={milestone.closeIssueCount}
+                />
+              ))}
+              {data?.milestones?.length === 0 && (
+                <EmptyList>
+                  <EmptyContent>생성된 마일스톤이 없습니다.</EmptyContent>
+                </EmptyList>
+              )}
+            </LabelsTable>
+          </Container>
+        )}
+      </Main>
+    </>
   );
 }
 
 const Main = styled.div`
-  padding: 32px 0px;
-  display: flex;
-  gap: 24px;
-  flex-direction: column;
   width: 1280px;
 `;
 
@@ -284,4 +308,19 @@ const EmptyList = styled.li`
 const EmptyContent = styled.span`
   font: ${({ theme }) => theme.font.displayMedium16};
   color: ${({ theme }) => theme.colorSystem.neutral.text.weak};
+`;
+
+const Container = styled.div`
+  padding: 32px 0px;
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
+`;
+
+const LoadingPage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 700px;
 `;

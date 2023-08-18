@@ -1,6 +1,5 @@
 import { styled } from "styled-components";
 import { AssigneesList } from "../../type";
-import UserProfileButton from "../UserProfileButton/UserProfileButton";
 import { calculateTime } from "../../utils/calculateTime";
 import Button from "../common/Button/Button";
 import { useEffect, useState } from "react";
@@ -122,7 +121,7 @@ export default function Comment({
       <CommentWrapper $isEdit={isEdit}>
         <Header>
           <Info>
-            <UserProfileButton src={author.profileImageUrl} />
+            <UserProfileImg src={author.profileImageUrl} />
             <UserName>{author.nickname}</UserName>
             <Time>{calculateTime(createAt)}</Time>
           </Info>
@@ -205,6 +204,12 @@ const Header = styled.div`
   height: 64px;
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
+`;
+
+const UserProfileImg = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: ${({ theme }) => theme.radius.half};
 `;
 
 const Info = styled.div`

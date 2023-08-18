@@ -2,31 +2,39 @@ import { styled } from "styled-components";
 
 type Props = {
   label: string;
-  color: string;
+  backgroundColor: string;
+  textColor?: string;
 };
 
-export default function LabelItem({ label, color }: Props) {
+export default function LabelItem({
+  label,
+  backgroundColor,
+  textColor = "#ffffff",
+}: Props) {
   return (
-    <Wrapper $color={color}>
-      <LabelTitle>{label === "" ? "Label" : label}</LabelTitle>
+    <Wrapper $backgroundColor={backgroundColor}>
+      <LabelTitle $textColor={textColor}>
+        {label === "" ? "Label" : label}
+      </LabelTitle>
     </Wrapper>
   );
 }
 
-const Wrapper = styled.div<{ $color: string }>`
+const Wrapper = styled.div<{ $backgroundColor: string }>`
   display: flex;
-  justify-content: center;
   align-items: centers;
   height: 24px;
   min-width: 40px;
-  background-color: ${({ $color }) => $color};
-  border: ${({ theme }) =>
-    `${theme.border.default} ${theme.colorSystem.neutral.text.strong}`};
+  background-color: ${({ $backgroundColor }) => $backgroundColor};
+  border: ${({ $backgroundColor, theme }) =>
+    $backgroundColor === "#FFFFFF"
+      ? `${theme.border.default} ${theme.colorSystem.neutral.text.strong}`
+      : "none"};
   border-radius: ${({ theme }) => theme.radius.medium};
 `;
 
-const LabelTitle = styled.span`
+const LabelTitle = styled.span<{ $textColor: string }>`
   padding: 4px 12px;
   font: ${({ theme }) => theme.font.displayMedium12};
-  color: ${({ theme }) => theme.colorSystem.neutral.text.strong};
+  color: ${({ $textColor }) => $textColor};
 `;

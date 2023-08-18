@@ -1,5 +1,4 @@
 import { styled } from "styled-components";
-import UserProfileButton from "../UserProfileButton/UserProfileButton";
 
 type Props = {
   imgUrl: string;
@@ -9,7 +8,7 @@ type Props = {
 export default function AssigneeItem({ imgUrl, userId }: Props) {
   return (
     <Container>
-      <UserProfileButton src={imgUrl} size={"small"} onClick={() => {}} />
+      <UserProfileImg src={imgUrl} />
       <UserId>{userId}</UserId>
     </Container>
   );
@@ -21,6 +20,12 @@ const Container = styled.div`
   gap: 8px;
   width: 224px;
   height: 20px;
+`;
+
+const UserProfileImg = styled.img`
+  width: 20px;
+  height: 20px;
+  border-radius: ${({ theme }) => theme.radius.half};
 `;
 
 const UserId = styled.span`

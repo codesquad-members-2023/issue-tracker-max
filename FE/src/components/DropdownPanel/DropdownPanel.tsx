@@ -1,96 +1,66 @@
 import { styled } from "styled-components";
-import { useEffect, useRef, useState } from "react";
-import DropdownItem from "./DropdownItem";
-import { AssigneesList, DropdownMilestone, Label } from "../../type";
-import { useNavigate } from "react-router-dom";
+import { ReactNode, useEffect, useRef } from "react";
 
 type Props = {
-  type?: "filter" | "assignees" | "labels" | "milestones" | "authors";
+  title: string;
   top: string;
   left: string;
+  children: ReactNode;
   closeDropdown(): void;
 };
 
-type AssigneesData = {
-  assignees: AssigneesList[];
-};
+// type AssigneesData = {
+//   assignees: AssigneesList[];
+// };
 
-type LabelsData = {
-  labels: Label[];
-};
+// type LabelsData = {
+//   labels: Label[];
+// };
 
-type MilestonesData = {
-  milestones: DropdownMilestone[];
-};
+// type MilestonesData = {
+//   milestones: DropdownMilestone[];
+// };
 
-type AuthorsData = {
-  authors: AssigneesList[];
-};
+// type AuthorsData = {
+//   authors: AssigneesList[];
+// };
 
 export default function DropdownPanel({
-  type = "filter",
+  title,
   top,
   left,
   closeDropdown,
+  children,
 }: Props) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [assigneesData, setAssigneesData] = useState<AssigneesData>();
-  const [labelsData, setLabelsData] = useState<LabelsData>();
-  const [milestonesData, setMilestonesData] = useState<MilestonesData>();
-  const [authorsData, setAuthorsData] = useState<AuthorsData>();
 
-  const showOpenIssue = () => {
-    closeDropdown();
-    navigate("/issues/isOpen=true");
-  };
+  // useEffect(() => {
+  //   if (type === "filter") {
+  //     return;
+  //   }
+  //   const URL = `http://3.34.141.196/api/issues/${type}`;
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(URL);
+  //       if (!response.ok) {
+  //         throw new Error("데이터를 가져오는 데 실패했습니다.");
+  //       }
+  //       const jsonData = await response.json();
+  //       type === "assignees"
+  //         ? setAssigneesData(jsonData)
+  //         : type === "labels"
+  //         ? setLabelsData(jsonData)
+  //         : type === "milestones"
+  //         ? setMilestonesData(jsonData)
+  //         : setAuthorsData(jsonData);
+  //     } catch (error) {
+  //       console.log("error");
+  //     }
+  //   };
 
-  const showCloseIssue = () => {
-    closeDropdown();
-    navigate("/issues/isOpen=false");
-  };
-
-  const showAuthoredByMe = () => {
-    closeDropdown();
-    navigate("/issues/authorId=1");
-  };
-
-  const showAssignedIssue = () => {
-    closeDropdown();
-    navigate("/issues/assigneeId=1");
-  };
-
-  const showCommentedIssue = () => {
-    closeDropdown();
-    navigate("/issues/isCommentedByMe=true");
-  };
-
-  useEffect(() => {
-    if (type === "filter") {
-      return;
-    }
-    const URL = `http://3.34.141.196/api/issues/${type}`;
-    const fetchData = async () => {
-      try {
-        const response = await fetch(URL);
-        if (!response.ok) {
-          throw new Error("데이터를 가져오는 데 실패했습니다.");
-        }
-        const jsonData = await response.json();
-        type === "assignees"
-          ? setAssigneesData(jsonData)
-          : type === "labels"
-          ? setLabelsData(jsonData)
-          : type === "milestones"
-          ? setMilestonesData(jsonData)
-          : setAuthorsData(jsonData);
-      } catch (error) {
-        console.log("error");
-      }
-    };
-
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
@@ -112,86 +82,9 @@ export default function DropdownPanel({
   return (
     <Container ref={dropdownRef} $top={top} $left={left}>
       <Header>
-        <Title>
-          {type === "filter"
-            ? "이슈 필터"
-            : type === "assignees"
-            ? "담당자 필터"
-            : type === "labels"
-            ? "레이블 필터"
-            : type === "milestones"
-            ? "마일스톤 필터"
-            : "작성자 필터"}
-        </Title>
+        <Title>{title}</Title>
       </Header>
-      {type === "filter" && (
-        <div>
-          <DropdownItem itemName={"열린 이슈"} onClick={showOpenIssue} />
-          <DropdownItem
-            itemName={"내가 작성한 이슈"}
-            onClick={showAuthoredByMe}
-          />
-          <DropdownItem
-            itemName={"나에게 할당된 이슈"}
-            onClick={showAssignedIssue}
-          />
-          <DropdownItem
-            itemName={"내가 댓글을 남긴 이슈"}
-            onClick={showCommentedIssue}
-          />
-          <DropdownItem itemName={"닫힌 이슈"} onClick={showCloseIssue} />
-        </div>
-      )}
-      {type === "assignees" &&
-        assigneesData &&
-        assigneesData.assignees!.map((assignee) => (
-          <DropdownItem
-            key={assignee.id}
-            userImg={assignee.profileImageUrl}
-            itemName={assignee.nickname}
-            onClick={() => {
-              closeDropdown();
-              navigate(`/issues/assigneeIds=${assignee.id}`);
-            }}
-          />
-        ))}
-      {type === "labels" &&
-        labelsData &&
-        labelsData.labels!.map((label) => (
-          <DropdownItem
-            key={label.id}
-            itemName={label.title}
-            onClick={() => {
-              closeDropdown();
-              navigate(`/issues/labelIds=${label.id}`);
-            }}
-          />
-        ))}
-      {type === "milestones" &&
-        milestonesData &&
-        milestonesData.milestones!.map((milestone) => (
-          <DropdownItem
-            key={milestone.id}
-            itemName={milestone.title}
-            onClick={() => {
-              closeDropdown();
-              navigate(`/issues/milestoneId=${milestone.id}`);
-            }}
-          />
-        ))}
-      {type === "authors" &&
-        authorsData &&
-        authorsData.authors!.map((author) => (
-          <DropdownItem
-            key={author.id}
-            itemName={author.nickname}
-            userImg={author.profileImageUrl}
-            onClick={() => {
-              closeDropdown();
-              navigate(`/issues/authorId=${author.id}`);
-            }}
-          />
-        ))}
+      {children}
     </Container>
   );
 }

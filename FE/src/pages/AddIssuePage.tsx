@@ -1,25 +1,72 @@
 import { styled } from "styled-components";
-import UserProfileButton from "../components/UserProfileButton/UserProfileButton";
 import { useNavigate } from "react-router-dom";
 import TextArea from "../components/common/TextArea/TextArea";
 import { useState } from "react";
 import LabelInput from "../components/common/TextInput/LabelInput";
-import SideBar from "../components/SideBar/SideBar";
+// import SideBar from "../components/SideBar/SideBar";
 import Button from "../components/common/Button/Button";
+import SideBar from "../components/SideBar/SideBar";
+import { AssigneesList, Label, Milestone } from "../type";
+import Header from "../components/Header/Header";
+import { useAuth } from "../context/AuthContext";
 
-export default function AddIssuePage() {
+type Props = {
+  toggleTheme(): void;
+};
+
+export default function AddIssuePage({ toggleTheme }: Props) {
+  const { profile } = useAuth();
   const [issueTitle, setIssueTitle] = useState<string>("");
   const [issueContent, setIssueContent] = useState<string>("");
-  const [assignees, setAssignees] = useState([1]);
-  const [labels, setLabels] = useState([4]);
-  const [milestone, setMilestone] = useState(null);
+  const [selectedAssignees, setSelectedAssignees] = useState<AssigneesList[]>(
+    [],
+  );
+  const [selectedLabels, setSelectedLabels] = useState<Label[]>([]);
+  const [selectedMilestone, setSelectedMilestone] = useState<Milestone>();
   const navigate = useNavigate();
+
+  const handleAssignee = (assignee: AssigneesList, assigneeListId: number) => {
+    if (
+      selectedAssignees.length === 0 ||
+      selectedAssignees.some((assignee) => assignee.id !== assigneeListId)
+    ) {
+      setSelectedAssignees((prevList) => [...prevList, assignee]);
+    }
+    if (selectedAssignees.some((assignee) => assignee.id === assigneeListId)) {
+      setSelectedAssignees(
+        selectedAssignees.filter((assignee) => assignee.id !== assigneeListId),
+      );
+    }
+  };
+
+  const handleLabel = (label: Label, labelListId: number) => {
+    if (
+      selectedLabels.length === 0 ||
+      selectedLabels.some((label) => label.id !== labelListId)
+    ) {
+      setSelectedLabels((prevList) => [...prevList, label]);
+    }
+    if (selectedLabels.some((assignee) => assignee.id === labelListId)) {
+      setSelectedLabels(
+        selectedLabels.filter((label) => label.id !== labelListId),
+      );
+    }
+  };
+
+  const handleMilestone = (milestone: Milestone, milestoneListId: number) => {
+    if (
+      selectedMilestone === undefined ||
+      selectedMilestone!.id !== milestoneListId
+    )
+      setSelectedMilestone(milestone);
+    if (selectedMilestone!.id === milestoneListId)
+      setSelectedMilestone(undefined);
+  };
+
   const goMainPage = () => {
     navigate("/issues/isOpen=true");
   };
-  setAssignees;
-  setLabels;
-  setMilestone;
+
   const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIssueTitle(e.target.value);
   };
@@ -33,16 +80,23 @@ export default function AddIssuePage() {
   const createIssue = async () => {
     const url = "http://3.34.141.196/api/issues";
 
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
+
     const data = {
       title: issueTitle,
       content: issueContent,
-      assigneeIds: assignees,
-      labelIds: labels,
-      milestoneId: milestone,
-    };
-
-    const headers = {
-      "Content-Type": "application/json",
+      assigneeIds:
+        selectedAssignees.length === 0
+          ? null
+          : selectedAssignees.map((assignee) => assignee.id),
+      labelIds:
+        selectedLabels.length === 0
+          ? null
+          : selectedLabels.map((label) => label.id),
+      milestoneId: selectedMilestone ? selectedMilestone.id : null,
     };
 
     try {
@@ -64,44 +118,57 @@ export default function AddIssuePage() {
   };
 
   return (
-    <Page>
-      <Main>
-        <Title>새로운 이슈 작성</Title>
-        <ContentsContainer>
-          <UserProfileButton src={"/logo/profile.jpg"} onClick={() => {}} />
-          <AddIssueForm>
-            <LabelInput
-              id={"newTitle"}
-              label={"제목"}
-              placeholder={"제목을 입력해주세요"}
-              value={issueTitle}
-              onChange={handleTitleInputChange}
+    <>
+      <Header
+        toggleTheme={toggleTheme}
+        profileImg={profile ? profile.profileImageUri : "/icons/user.png"}
+      />
+      <Page>
+        <Main>
+          <Title>새로운 이슈 작성</Title>
+          <ContentsContainer>
+            <UserProfileImg src={"/logo/profile.jpg"} />
+            <AddIssueForm>
+              <LabelInput
+                id={"newTitle"}
+                label={"제목"}
+                placeholder={"제목을 입력해주세요"}
+                value={issueTitle}
+                onChange={handleTitleInputChange}
+              />
+              <TextArea
+                inputValue={issueContent}
+                onChange={handleContentInputChange}
+              />
+            </AddIssueForm>
+            <SideBar
+              assignees={selectedAssignees}
+              labels={selectedLabels}
+              milestone={selectedMilestone}
+              handleAssignee={handleAssignee}
+              handleLabel={handleLabel}
+              handleMilestone={handleMilestone}
             />
-            <TextArea
-              inputValue={issueContent}
-              onChange={handleContentInputChange}
+          </ContentsContainer>
+          <ButtonTap>
+            <Button
+              icon={"xSquare"}
+              label={"작성 취소"}
+              type={"ghost"}
+              size={"medium"}
+              onClick={goMainPage}
             />
-          </AddIssueForm>
-          <SideBar></SideBar>
-        </ContentsContainer>
-        <ButtonTap>
-          <Button
-            icon={"xSquare"}
-            label={"작성 취소"}
-            type={"ghost"}
-            size={"medium"}
-            onClick={goMainPage}
-          />
-          <Button
-            label={"완료"}
-            type={"container"}
-            size={"large"}
-            onClick={createIssue}
-            disabled={!issueTitle}
-          />
-        </ButtonTap>
-      </Main>
-    </Page>
+            <Button
+              label={"완료"}
+              type={"container"}
+              size={"large"}
+              onClick={createIssue}
+              disabled={!issueTitle}
+            />
+          </ButtonTap>
+        </Main>
+      </Page>
+    </>
   );
 }
 
@@ -167,4 +234,10 @@ const ButtonTap = styled.div`
   display: flex;
   gap: 32px;
   justify-content: end;
+`;
+
+const UserProfileImg = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: ${({ theme }) => theme.radius.half};
 `;

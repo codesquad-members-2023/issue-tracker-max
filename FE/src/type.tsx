@@ -18,7 +18,8 @@ export type NewIssue = {
 export type Label = {
   id: number;
   title: string;
-  color: string;
+  backgroundColor: string;
+  textColor: string;
   description: string;
 };
 
@@ -26,11 +27,6 @@ export type Milestone = {
   id: number;
   title: string;
   progress: number;
-};
-
-export type DropdownMilestone = {
-  id: number;
-  title: string;
 };
 
 export type IssueListProps = {
@@ -113,3 +109,42 @@ export interface MilestoneData extends Milestone {
   openIssueCount: number;
   closeIssueCount: number;
 }
+
+export type AssigneesData = {
+  assignees: AssigneesList[];
+};
+
+export type LabelsData = {
+  labels: Label[];
+};
+
+export type MilestonesData = {
+  milestones: Milestone[];
+};
+
+export type AuthorsData = {
+  authors: AssigneesList[];
+};
+
+export type AssigneesSideBar = {
+  assignees: AssigneesList[];
+  members: AssigneesList[];
+};
+
+export type LabelsSideBar = {
+  assignedLabels: Label[];
+  labels: Label[];
+};
+
+export type MilestonesSideBar = {
+  assignedMilestones: Milestone[];
+  milestones: Milestone[];
+};
+
+export type UserProfile = {
+  memberId: number;
+  exp: number;
+  email: string;
+  nickname: string;
+  profileImageUri: string;
+};

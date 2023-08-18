@@ -10,11 +10,20 @@ interface Props extends Label {
   openDelete(): void;
 }
 
-export default function LabelList({ id, title, color, description }: Props) {
+export default function LabelList({
+  id,
+  title,
+  backgroundColor,
+  textColor,
+  description,
+  openDelete,
+}: Props) {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [labelName, setLabelName] = useState<string>(title);
   const [labelDescription, setLabelDescription] = useState<string>(description);
-  const [labelColor, setLabelColor] = useState<string>(color);
+  const [labelBackgroundColor, setLabelBackgroundColor] =
+    useState<string>(backgroundColor);
+  const [labelTextColor, setLabelTextColor] = useState<string>(textColor);
 
   const confirmEdit = () => {
     setIsEdit(false);
@@ -24,10 +33,14 @@ export default function LabelList({ id, title, color, description }: Props) {
     setIsEdit(true);
   };
 
+  const changeTextColor = (textColor: string) => {
+    setLabelTextColor(textColor);
+  };
+
   const cancelEdit = () => {
     setLabelName(title);
     setLabelDescription(description);
-    setLabelColor(color);
+    setLabelBackgroundColor(backgroundColor);
     setIsEdit(false);
   };
 
@@ -40,19 +53,20 @@ export default function LabelList({ id, title, color, description }: Props) {
   };
 
   const handleColorInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLabelColor(e.target.value);
+    setLabelBackgroundColor(e.target.value);
   };
 
   const randomColor = () => {
-    setLabelColor(generateRandomHex());
+    setLabelBackgroundColor(generateRandomHex());
   };
 
   const deleteLabel = async () => {
     const URL = `http://3.34.141.196/api/labels/${id}`; // DELETE 요청을 보낼 리소스 URL로 변경
 
-    const headers = {
-      "Content-Type": "application/json",
-    };
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
 
     try {
       const response = await fetch(URL, {
@@ -78,7 +92,11 @@ export default function LabelList({ id, title, color, description }: Props) {
       {!isEdit && (
         <Default>
           <LabelWrapper>
-            <LabelItem label={labelName} color={labelColor} />
+            <LabelItem
+              label={labelName}
+              backgroundColor={labelBackgroundColor}
+              textColor={textColor}
+            />
           </LabelWrapper>
           <Description>{labelDescription}</Description>
           <ButtonTap>
@@ -103,13 +121,15 @@ export default function LabelList({ id, title, color, description }: Props) {
           title={"레이블 편집"}
           name={labelName}
           description={labelDescription}
-          color={labelColor}
+          backgroundColor={labelBackgroundColor}
+          textColor={labelTextColor}
           onChangeName={handleNameInputChange}
           onChangeDescrip={handleDescripInputChange}
           onChangeColor={handleColorInputChange}
           randomColor={randomColor}
           cancelEdit={cancelEdit}
           confirmEdit={confirmEdit}
+          changeTextColor={changeTextColor}
         />
       )}
     </Container>
