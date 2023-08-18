@@ -1,8 +1,6 @@
-# 이슈트래커(Issue-tracker)
-> 2023 마스터즈 맥스 세번째 팀 프로젝트
+# Issue Tracker
 
-개발 이슈를 관리하는 기능을 구현하는 프로젝트 입니다
-## 구성원
+## Members
 
 <table>
   <tr>
@@ -44,15 +42,93 @@
     </td>
   </tr>
 </table>
+<br>                     
 
-## 사용하는 기술
-### 프로젝트 관리
-[![image](https://img.shields.io/badge/Notion-000000.svg?style=for-the-badge&logo=Notion&logoColor=white)](https://www.notion.so/1b49f8005abd408da3ff585427499d70)
-### FE
-<img src="https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white" /> <img src="https://img.shields.io/badge/React-61DAFB.svg?style=for-the-badge&logo=React&logoColor=black" /> <img src="https://img.shields.io/badge/React%20Router-CA4245.svg?style=for-the-badge&logo=React-Router&logoColor=white" /> <img src="https://img.shields.io/badge/Vite-646CFF.svg?style=for-the-badge&logo=Vite&logoColor=white" />
-### BE
-<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F.svg?style=for-the-badge&logo=Spring-Boot&logoColor=white" /> <img src="https://img.shields.io/badge/MySQL-4479A1.svg?style=for-the-badge&logo=MySQL&logoColor=white" />
+---
+
+## 🧾 기술 스택
+
+### 공통
+
+![Git](https://img.shields.io/badge/-Git-F05032?style=flat&logo=Git&logoColor=white)
+![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat&logo=GitHub&logoColor=white)
+
+### Back-End
+
+<img src="https://img.shields.io/badge/Java-007396?style=flat&logo=OpenJDK&logoColor=white"/>
+<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white"/> 
+<img src="https://img.shields.io/badge/EC2-FA7343?style=flat&logo=EC2&logoColor=white"/> 
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"/> 
+<img src="https://img.shields.io/badge/IntelliJ%20IDEA-FF3850?style=flat&logo=IntelliJ%20IDEA&logoColor=white"/> 
+<img src="https://img.shields.io/badge/MyBatis-B22222?style=flat&logo=MyBatis&logoColor=white" />
+
+### Front-End
+
+<img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=React&logoColor=white"/>
+<img src="https://img.shields.io/badge/Typescript-3178C6?style=flat&logo=TypeScript&logoColor=white"/> 
+<img src="https://img.shields.io/badge/Vite-8DD6F9?style=flat&logo=Vite&logoColor=white"/>
+<img src="https://img.shields.io/badge/VisualStudioCode-007ACC?style=flat&logo=VisualStudioCode&logoColor=white"/>
+
+### Infrastructure
+<img src="https://img.shields.io/badge/Github_Actions-808080?style=flat&logo=Github_Actions&logoColor=white"/>
+<img src="https://img.shields.io/badge/Code_Deploy-008000?style=flat&logo=Code_Deploy&logoColor=white"/>
+<img src="https://img.shields.io/badge/S3-dc143c?style=flat&logo=S3&logoColor=white"/>
+
+## CI/CD 
+![issue-tracker-infra drawio-2 (1)](https://github.com/codesquad-issue-team-05/issue-tracker-max/assets/57451700/f5a510eb-db7d-4079-a08e-e54622f282e0)
 
 ## ERD
-![image](https://github.com/codesquad-issue-team-05/issue-tracker-max/assets/103398897/0ffd58d6-e2b2-4786-a916-927623f670f8)
+![ERD](https://user-images.githubusercontent.com/103398897/259911338-0ffd58d6-e2b2-4786-a916-927623f670f8.png)
 
+## Ground Rules
+
+우리끼리 지켜야하는 약속 + 공감대
+
+### Scrum
+
+`시간`: 10:00 - 10:30
+
+> **내용**  
+> 어제 했던 일  
+> 오늘 할 일  
+> 컨디션(10점 만점)  
+> 스크럼 마스터
+
+
+## 🤝🏼 Collaboration
+
+### Branch Convention
+
+Postfix feature branch with issue #.
+
+작업 repository = 선택 사항
+
+작업 repo (PR)-> BE or FE (PR)-> dev (PUSH)-> release
+
+dev-be/feature/#이슈번호
+fe/feature/#이슈번호
+
+### Commit Convention
+
+Prefix with Issue #        
+Ex: #1 feat: add new feature
+
+> `feat` 기능 구현
+
+> `fix` 버그 수정
+
+> `perf` 성능 개선
+
+> `refactor` 단순 리팩터링
+
+> `test` 테스트 관련
+
+> `build` 빌드 관련
+
+> `ci` ci 관련
+
+> `chore` 그 외 단순 수정
+
+> `docs` 문서 관련
+
+ex) #이슈번호 feat: issue 로그인 구현
