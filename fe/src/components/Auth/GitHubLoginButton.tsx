@@ -2,7 +2,7 @@ import Button from "@components/common/Button";
 
 export default function GitHubLoginButton() {
   const gitHubCredentialsLink = `https://github.com/login/oauth/authorize?client_id=${
-    import.meta.env.GITHUB_CLIENT_ID
+    import.meta.env.VITE_GITHUB_CLIENT_ID
   }&allow_signup=false&scope=read:user,user:email`;
 
   return (
