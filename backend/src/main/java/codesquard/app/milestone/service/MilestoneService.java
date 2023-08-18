@@ -1,5 +1,6 @@
 package codesquard.app.milestone.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,20 @@ public class MilestoneService {
 		// 1. milestones 배열 (이 List가 여러개 있는 2차원 배열이라고 생각하면 됨)
 		// makeIssues(): issues를 `countIssuesBy()`로 milestoneStatus별로 각각 1번씩 가져오기
 		// id ~ deadline까지 `findAllBy()`로 가져와서 issues랑 합치기
-		List<MilestonesResponse> milestones = sumMilestonesResponseAndIssues(status, makeIssues());
+		// List<MilestonesResponse> milestones = sumMilestonesResponseAndIssues(status, makeIssues());
+		List<MilestonesResponse> milestones = new ArrayList<>();
+		List<Milestone> getMilestones = milestoneRepository.findAllBy(status);
+		for (Milestone getMilestone : getMilestones) {
+			Long openedIssueCount = milestoneRepository.countIssuesBy(getMilestone.getId(), MilestoneStatus.OPENED);
+			Long closedIssueCount = milestoneRepository.countIssuesBy(getMilestone.getId(), MilestoneStatus.CLOSED);
+			MilestonesResponse milestonesResponse = MilestonesResponse.fromEntity(getMilestone,
+				Map.of("openedIssueCount", openedIssueCount, "closedIssueCount", closedIssueCount));
+
+			milestones.add(milestonesResponse);
+		}
+		// Map<String, Long> issues = new HashMap<>();
+		// issues.put("openedIssueCount", milestoneRepository.countIssuesBy(MilestoneStatus.OPENED));
+		// issues.put("closedIssueCount", milestoneRepository.countIssuesBy(MilestoneStatus.CLOSED));
 
 		// 2. labelCount 가져오기
 		Long labelCount = milestoneRepository.countLabels();
@@ -66,20 +80,20 @@ public class MilestoneService {
 			milestones);
 	}
 
-	private Map<String, Long> makeIssues() {
-		Map<String, Long> issues = new HashMap<>();
-		issues.put("openedIssueCount", milestoneRepository.countIssuesBy(MilestoneStatus.OPENED));
-		issues.put("closedIssueCount", milestoneRepository.countIssuesBy(MilestoneStatus.CLOSED));
+	// private Map<String, Long> makeIssues() {
+	// 	Map<String, Long> issues = new HashMap<>();
+	// 	issues.put("openedIssueCount", milestoneRepository.countIssuesBy(MilestoneStatus.OPENED));
+	// 	issues.put("closedIssueCount", milestoneRepository.countIssuesBy(MilestoneStatus.CLOSED));
+	//
+	// 	return issues;
+	// }
 
-		return issues;
-	}
-
-	private List<MilestonesResponse> sumMilestonesResponseAndIssues(final MilestoneStatus status,
-		final Map<String, Long> issues) {
-		return milestoneRepository.findAllBy(status)
-			.stream()
-			// 미리 생성해둔 issues 배열을 각 milestone 객체마다 넣어줌
-			.map(milestone -> MilestonesResponse.fromEntity(milestone, issues))
-			.collect(Collectors.toUnmodifiableList());
-	}
+	// private List<MilestonesResponse> sumMilestonesResponseAndIssues(final MilestoneStatus status,
+	// 	final Map<String, Long> issues) {
+	// 	return milestoneRepository.findAllBy(status)
+	// 		.stream()
+	// 		// 미리 생성해둔 issues 배열을 각 milestone 객체마다 넣어줌
+	// 		.map(milestone -> MilestonesResponse.fromEntity(milestone, issues))
+	// 		.collect(Collectors.toUnmodifiableList());
+	// }
 }

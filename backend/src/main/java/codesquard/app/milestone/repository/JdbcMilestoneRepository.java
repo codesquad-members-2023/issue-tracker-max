@@ -52,8 +52,8 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public Long countIssuesBy(final MilestoneStatus status) {
-		String sql = "SELECT COUNT(*) FROM `issue` " +
+	public Long countIssuesBy(final Long milestoneId, final MilestoneStatus status) {
+		String sql = "SELECT COUNT(`milestone_id`) FROM `issue` " +
 			"WHERE `status` = :status";
 
 		Map<String, Object> paramMap = new HashMap<>();
