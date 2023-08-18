@@ -7,12 +7,34 @@ import { Sidebar } from "components/Common/Sidebar/Sidebar";
 import { Button } from "components/Common/Button/Button";
 import { Icon } from "components/Common/Icon/Icon";
 
+import { useFetch } from "../hook/useApiRequest";
+
 import UserTestProfile from "assets/img/profile_test.svg";
 
 export const NewIssuePage = () => {
   const navigate = useNavigate();
   const [issueTitleInput, setIssueTitleInput] = useState("");
-  console.log(issueTitleInput);
+  const [issueComment, setIssueComment] = useState("");
+
+  const { makeRequest } = useFetch();
+
+  const onClickSubmit = async () => {
+    try {
+      await makeRequest("http://43.200.169.143:8080/api/issues", "POST", {
+        title: issueTitleInput,
+        comment: issueComment,
+        authorId: null,
+        file: "",
+        assignees: [],
+        labels: [],
+        milestone: "",
+      });
+      // authorId 없어서 post 안됨
+      // navigate("/");
+    } catch (err) {
+      // Handle error
+    }
+  };
 
   return (
     <Layout>
@@ -27,7 +49,10 @@ export const NewIssuePage = () => {
             onValueChange={setIssueTitleInput}
           />
           <div style={{ height: "448px" }}>
-            <NewIssueTextArea labelText="코멘트를 입력하세요" />
+            <NewIssueTextArea
+              labelText="코멘트를 입력하세요"
+              onValueChange={(value) => setIssueComment(value)}
+            />
           </div>
         </FormBox>
         <Sidebar></Sidebar>
@@ -42,7 +67,7 @@ export const NewIssuePage = () => {
           size="L"
           variant="contained"
           disabled={!issueTitleInput}
-          onClick={() => navigate("/")}
+          onClick={onClickSubmit}
         >
           완료
         </Button>
