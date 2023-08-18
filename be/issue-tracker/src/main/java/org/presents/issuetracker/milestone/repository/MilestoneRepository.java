@@ -161,14 +161,14 @@ public class MilestoneRepository {
 			Optional<Timestamp> timestamp = Optional.ofNullable(rs.getTimestamp("deadline"));
 			LocalDateTime deadline = timestamp.map(Timestamp::toLocalDateTime).orElse(null);
 			String description = rs.getString("description");
-			int progress = calculateMilestoneProgress(id);
-			return MilestoneResponse.of(id, name, deadline, description, status, progress);
+			int openIssueCount = countIssuesByStatusAndMilestoneId(OPEN_FLAG, id);
+			int closedIssueCount = countIssuesByStatusAndMilestoneId(CLOSED_FLAG, id);
+			int progress = calculateMilestoneProgress(openIssueCount, closedIssueCount);
+			return MilestoneResponse.of(id, name, deadline, description, status, progress, openIssueCount, closedIssueCount);
 		});
 	}
 
-	private int calculateMilestoneProgress(Long milestoneId) {
-		int openIssueCount = countIssuesByStatusAndMilestoneId(OPEN_FLAG, milestoneId);
-		int closedIssueCount = countIssuesByStatusAndMilestoneId(CLOSED_FLAG, milestoneId);
+	private int calculateMilestoneProgress(int openIssueCount, int closedIssueCount) {
 		int totalIssueCount = openIssueCount + closedIssueCount;
 		return totalIssueCount > 0 ? (int)((double)closedIssueCount / totalIssueCount * 100) : 0;
 	}
