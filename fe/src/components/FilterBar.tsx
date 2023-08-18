@@ -2,19 +2,22 @@ import { Theme, css, useTheme } from '@emotion/react';
 import { ReactComponent as ChevronDownIcon } from '../assets/icon/chevronDown.svg';
 import { ReactComponent as SearchIcon } from '../assets/icon/search.svg';
 import { border, font, radius } from '../styles/styles';
+import { useContext } from 'react';
+import { IssueContext } from './Context/IssueContext';
 
 export default function FilterBar() {
   const theme = useTheme();
+  const { ...context } = useContext(IssueContext);
 
   return (
     <div css={filterBar(theme)}>
-      <button className="filter-button">
+      <button className="filter-button" disabled>
         필터
         <ChevronDownIcon />
       </button>
       <div className="filter-input">
         <SearchIcon />
-        is:issue is:open
+        {context.filter ? context.filter : 'is:issue is:open'}
       </div>
     </div>
   );

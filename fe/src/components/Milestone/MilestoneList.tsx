@@ -105,7 +105,6 @@ export default function MilestoneList() {
       {milestoneList && (
         <>
           <SubNavBar
-            isIssue={false}
             labelCount={milestoneList.labelCount}
             milestoneCount={
               milestoneList.milestones.length + milestoneList.oppositeCount

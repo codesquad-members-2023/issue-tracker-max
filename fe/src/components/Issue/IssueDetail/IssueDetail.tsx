@@ -96,8 +96,7 @@ export default function IssueDetail() {
         return;
       }
     } catch (error) {
-      //Memo: 에러 핸들링 필요
-      throw error;
+      console.error(error);
     }
   };
 

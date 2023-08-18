@@ -12,7 +12,7 @@ import { OnlySuccessRes } from '../../type/Response.type';
 export default function SignUp() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [isOverlap, setIsOverlap] = useState<boolean>(true); // Memo: API 나오면 false로 바꿔야함
+  const [isOverlap, setIsOverlap] = useState<boolean>(false);
   const [email, setEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -36,7 +36,6 @@ export default function SignUp() {
         navigate('/sign-in');
       }
     } catch (error) {
-      //Memo: 에러 핸들링 필요
       console.error(error);
     }
   };
@@ -51,8 +50,7 @@ export default function SignUp() {
         setIsOverlap(true);
       }
     } catch (error) {
-      // 에러 핸들링 필요
-      throw error;
+      console.error(error);
     }
   };
 

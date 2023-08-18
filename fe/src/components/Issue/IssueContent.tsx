@@ -43,7 +43,6 @@ export default function IssueContent({
       }
       //Memo: 미완성 기능
     } catch (error) {
-      //Memo: 에러 핸들린 필요
       console.error(error);
     }
   };

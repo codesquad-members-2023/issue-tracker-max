@@ -5,39 +5,55 @@ import { ReactComponent as ArchiveIcon } from '../../../assets/icon/archive.svg'
 import { border, font, radius } from '../../../styles/styles';
 import DropdownIndicator from './DropdownIndicator';
 import { filterType } from '../../../constant/constant';
+import { useContext } from 'react';
+import { IssueContext } from '../../Context/IssueContext';
 
 type Props = {
   activeIssue: 'open' | 'closed';
-  onCheckBoxClick: (checked: boolean) => void;
-  isAllItemChecked: boolean;
   onIssueFilterClick: (filter: 'open' | 'closed') => void;
-  openIssueCount: number;
-  closedIssueCount: number;
-  checkedItemLength: number;
 };
 
 export default function IssueFilter({
   activeIssue,
-  onCheckBoxClick,
-  isAllItemChecked,
   onIssueFilterClick,
-  openIssueCount,
-  closedIssueCount,
-  checkedItemLength,
 }: Props) {
   const theme = useTheme();
+  const { ...context } = useContext(IssueContext);
 
-  const isCheckedListEmpty = checkedItemLength === 0;
+  const onAllCheck = (checked: boolean) => {
+    if (checked) {
+      context.setCheckedItemIdList(
+        context.issueList.issues.map((issue) => issue.id)
+      );
+    } else {
+      context.setCheckedItemIdList([]);
+    }
+  };
+
+  const onOpenIssueFilterClick = () => {
+    context.setIssueIsOpen(true);
+    onIssueFilterClick('open');
+  };
+
+  const onClosedIssueFilterClick = () => {
+    context.setIssueIsOpen(false);
+    onIssueFilterClick('closed');
+  };
+
+  const checkedItemLength = context.checkedItemIdList.length;
+  const allItemCount = context.issueList.issues.length;
+  const isAllItemChecked =
+    allItemCount !== 0 && allItemCount === checkedItemLength;
 
   return (
     <div css={issueFilter(theme)}>
-      {isCheckedListEmpty ? (
+      {checkedItemLength === 0 ? (
         <div className="issue-filter">
           <div className="left">
             <CheckBox
               className="check-box"
               checkBoxType="selectAll"
-              onChange={(e) => onCheckBoxClick(e.currentTarget.checked)}
+              onChange={(e) => onAllCheck(e.currentTarget.checked)}
               checked={isAllItemChecked}
             />
             <div className="issue">
@@ -45,19 +61,19 @@ export default function IssueFilter({
                 className={`open-issue ${
                   activeIssue === 'open' ? 'active' : ''
                 }`}
-                onClick={() => onIssueFilterClick('open')}
+                onClick={onOpenIssueFilterClick}
               >
                 <AlertCircleIcon color="default" />
-                {`열린 이슈(${openIssueCount})`}
+                {`열린 이슈(${context.issueList.openIssueCount})`}
               </div>
               <div
                 className={`close-issue ${
                   activeIssue === 'closed' ? 'active' : ''
                 }`}
-                onClick={() => onIssueFilterClick('closed')}
+                onClick={onClosedIssueFilterClick}
               >
                 <ArchiveIcon />
-                {`닫힌 이슈(${closedIssueCount})`}
+                {`닫힌 이슈(${context.issueList.closedIssueCount})`}
               </div>
             </div>
           </div>
@@ -73,7 +89,7 @@ export default function IssueFilter({
             <CheckBox
               className="check-box"
               checkBoxType="selectAll"
-              onChange={(e) => onCheckBoxClick(e.currentTarget.checked)}
+              onChange={(e) => onAllCheck(e.currentTarget.checked)}
               checked={isAllItemChecked}
             />
             <div className="selected-item-info">{`${checkedItemLength}개 이슈 선택`}</div>

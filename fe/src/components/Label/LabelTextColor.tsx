@@ -107,6 +107,10 @@ const labelTextColor = (theme: Theme) => css`
           height: 40px;
           border-bottom: ${border.default} ${theme.neutral.borderDefault};
 
+          &:hover {
+            opacity: 0.8;
+          }
+
           &:last-child {
             border-bottom: none;
           }

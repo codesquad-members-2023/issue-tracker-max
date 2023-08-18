@@ -9,6 +9,7 @@ import {
 } from '../type/Response.type';
 
 export default function ApiTest() {
+  // 미완성 기능 테스트
   const getAssignees = async () => {
     const response = await customFetch<GetAssigneesRes>({
       subUrl: 'api/members/show-content',
@@ -103,9 +104,6 @@ export default function ApiTest() {
       <button type="button" onClick={patchMilestones}>
         PATCH 이슈 마일스톤을 수정한다
       </button>
-      {/* <button type="button" onClick={deleteComments}>
-        DELETE 이슈 상세페이지의 코멘트를 삭제한다
-      </button> */}
     </div>
   );
 }

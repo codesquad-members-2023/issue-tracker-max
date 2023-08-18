@@ -9,15 +9,25 @@ import { Link } from 'react-router-dom';
 import { Issue } from '../../../type/issue.type';
 import { getKoreanTime } from '../../../util/getKoreanTime';
 import UserImageIcon from '../../UserImageIcon';
+import { useContext } from 'react';
+import { IssueContext } from '../../Context/IssueContext';
 
 type Props = {
   issue: Issue;
-  onSingleCheck: (checked: boolean, id: number) => void;
   checked: boolean;
 };
 
-export default function IssueItem({ issue, onSingleCheck, checked }: Props) {
+export default function IssueItem({ issue, checked }: Props) {
   const theme = useTheme();
+  const { ...context } = useContext(IssueContext);
+
+  const onSingleCheck = (checked: boolean, id: number) => {
+    const updatedItemIdList = checked
+      ? [...context.checkedItemIdList, id]
+      : context.checkedItemIdList.filter((itemId) => itemId !== id);
+
+    context.setCheckedItemIdList(updatedItemIdList);
+  };
 
   return (
     <li css={issueItem(theme)}>

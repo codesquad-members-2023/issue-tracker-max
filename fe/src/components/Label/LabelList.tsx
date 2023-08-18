@@ -84,7 +84,6 @@ export default function LabelList() {
       {labelList && (
         <>
           <SubNavBar
-            isIssue={false}
             labelCount={labelList.labels.length}
             milestoneCount={labelList.milestoneCount}
             buttonValue="레이블 추가"

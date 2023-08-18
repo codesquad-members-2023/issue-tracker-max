@@ -41,7 +41,6 @@ export default function IssueCreate() {
         navigate(`/issue/${response.data.id}`);
       }
     } catch (error) {
-      //Memo: 에러 핸들링 필요
       console.error(error);
     }
   };

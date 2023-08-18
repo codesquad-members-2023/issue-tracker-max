@@ -99,6 +99,7 @@ export default function SignIn() {
           value="GitHub 계정으로 로그인"
           onClick={onGithubSignIn}
           buttonType="github"
+          disabled
         />
         <span className="or">or</span>
         <div>
