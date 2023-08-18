@@ -20,6 +20,7 @@
         <association property="milestone" javaType="Milestone">
             <id property="id" column="milestone_id" />
             <result property="title" column="milestone_title" />
+            <result property="progress" column="milestone_progress" />
         </association>
 
         <collection property="labels" ofType="Label">
@@ -97,6 +98,7 @@
                 author.profile_image_url as author_profile_image_url,
                 milestone.id as milestone_id,
                 milestone.title as milestone_title,
+                milestone.progress as milestone_progress,
                 label.id as label_id,
                 label.title as label_title,
                 label.background_color as label_background_color,
@@ -107,7 +109,10 @@
                 member.profile_image_url as assignees_profile_image_url
         FROM issue
         INNER JOIN member author ON author.id = issue.author_id
-        LEFT OUTER JOIN milestone ON issue.milestone_id = milestone.id AND milestone.is_deleted = 0
+        LEFT OUTER JOIN ( SELECT milestone.id, milestone.title, milestone.is_deleted, IFNULL((SUM(issue.is_open = 0) / COUNT(issue.id) * 100), 0) AS progress
+                            FROM milestone
+                            LEFT OUTER JOIN issue ON issue.milestone_id = milestone.id
+                            GROUP BY milestone.id, milestone.title) as milestone ON issue.milestone_id = milestone.id AND milestone.is_deleted = 0
         LEFT OUTER JOIN assigned_label ON issue.id = assigned_label.issue_id
         LEFT OUTER JOIN label ON assigned_label.label_id = label.id AND label.is_deleted = 0
         LEFT OUTER JOIN assignee ON issue.id = assignee.issue_id
@@ -211,7 +216,7 @@
                         issue_comment_author.profile_image_url as issue_comment_author_profile_image_url
             FROM issue
            INNER JOIN member author ON author.id = issue.author_id
-            LEFT OUTER JOIN ( SELECT milestone.id, milestone.title, milestone.is_deleted, (SUM(issue.is_open = 0) / COUNT(issue.id) * 100) AS progress
+            LEFT OUTER JOIN ( SELECT milestone.id, milestone.title, milestone.is_deleted, IFNULL((SUM(issue.is_open = 0) / COUNT(issue.id) * 100), 0) AS progress
                                 FROM milestone
                                INNER JOIN issue ON issue.milestone_id = milestone.id
                                GROUP BY milestone.id, milestone.title) as milestone ON issue.milestone_id = milestone.id AND milestone.is_deleted = 0
