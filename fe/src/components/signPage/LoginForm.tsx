@@ -45,7 +45,9 @@ export const LoginForm: React.FC = () => {
 
       navigate(`/${PATH.ISSUE_LIST_PAGE}`);
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        alert(JSON.parse(error.message).message);
+      }
     }
   };
 

@@ -6,7 +6,9 @@ export const fetchData = async (path: string, options?: RequestInit) => {
   const response = await fetch(BASE_URL + path, options);
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    const errorMessage = await response.text();
+
+    throw new Error(errorMessage);
   }
 
   if (response.headers.get('content-type') === 'application/json') {
