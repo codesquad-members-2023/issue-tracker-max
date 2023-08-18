@@ -119,6 +119,6 @@ export type IssuesFilterActionMap = {
 export type IssuesFilterAction = {
   [Key in keyof IssuesFilterActionMap]: {
     type: Key;
-    payload?: IssuesFilterActionMap[Key];
+    payload: IssuesFilterActionMap[Key];
   };
 }[keyof IssuesFilterActionMap];
