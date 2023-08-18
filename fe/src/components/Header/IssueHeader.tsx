@@ -18,11 +18,13 @@ const FILTERBAR_DATA = [
 interface IssueListHeaderProps {
   labelCount: number;
   milestoneCount: number;
+  filterText: string;
 }
 
 export const IssueHeader: React.FC<IssueListHeaderProps> = ({
   labelCount,
   milestoneCount,
+  filterText,
 }) => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -33,7 +35,11 @@ export const IssueHeader: React.FC<IssueListHeaderProps> = ({
 
   return (
     <HeaderLayout>
-      <FilterBar filterTitle="필터" onFilterClick={handleFilterDropdownClick} />
+      <FilterBar
+        filterTitle="필터"
+        onFilterClick={handleFilterDropdownClick}
+        filterText={filterText}
+      />
       {isDropdownOpen && (
         <DropdownPanel
           title="필터"
@@ -49,13 +55,13 @@ export const IssueHeader: React.FC<IssueListHeaderProps> = ({
           <TabButton
             icon="Label"
             text="레이블"
-            count={labelCount}
+            count={labelCount | 0}
             onClick={() => navigate("/labels")}
           />
           <TabButton
             icon="Milestone"
             text="마일스톤"
-            count={milestoneCount}
+            count={milestoneCount | 0}
             onClick={() => navigate("/milestones/open")}
           />
         </Tab>

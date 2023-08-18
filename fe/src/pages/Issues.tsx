@@ -20,6 +20,7 @@ interface IssuesPageData {
   milestoneCount: number;
   openIssueCount: number;
   closedIssueCount: number;
+  filter: string;
   issues: IssueItem[] | null;
 }
 
@@ -56,6 +57,7 @@ export const IssuesPage = () => {
           <IssueHeader
             labelCount={labelCount}
             milestoneCount={milestoneCount}
+            filterText={filter}
           />
           <IssueTable tableData={issueTableData} />
         </>
