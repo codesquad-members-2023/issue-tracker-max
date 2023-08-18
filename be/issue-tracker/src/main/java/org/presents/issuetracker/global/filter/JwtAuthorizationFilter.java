@@ -19,7 +19,6 @@ import org.presents.issuetracker.jwt.JwtProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
@@ -94,7 +93,7 @@ public class JwtAuthorizationFilter implements Filter {
 
 	private void sendErrorResponse(HttpServletResponse response, StatusCode statusCode) throws IOException {
 		response.setCharacterEncoding("UTF-8");
-		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+		response.setStatus(statusCode.getHttpStatus().value());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		response.getWriter().write(objectMapper.writeValueAsString(
 			CommonApiResponse.fail(statusCode.getHttpStatus(), statusCode.getMessage()))
