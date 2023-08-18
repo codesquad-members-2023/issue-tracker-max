@@ -9,15 +9,16 @@ import LabelList from './components/Label/LabelList';
 import MilestoneList from './components/Milestone/MilestoneList';
 import UserProvider from './components/Context/UserContext';
 import ApiTest from './components/ApiTest';
+import Footer from './components/Footer/Footer';
 
 export default function App() {
   const location = useLocation();
   const hiddenHeaderRoutes = ['/sign-in', '/sign-up'];
-  const shouldShowHeader = !hiddenHeaderRoutes.includes(location.pathname);
+  const withHeaderAndFooter = !hiddenHeaderRoutes.includes(location.pathname);
 
   return (
     <UserProvider>
-      {shouldShowHeader && <Header />}
+      {withHeaderAndFooter && <Header />}
       <Routes>
         <Route path="/" element={<IssueList />} />
         <Route path="/sign-in" element={<SignIn />} />
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/milestone" element={<MilestoneList />} />
         <Route path="/test" element={<ApiTest />} />
       </Routes>
+      {withHeaderAndFooter && <Footer />}
     </UserProvider>
   );
 }

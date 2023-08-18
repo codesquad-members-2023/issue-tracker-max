@@ -12,7 +12,7 @@ import { OnlySuccessRes } from '../../type/Response.type';
 export default function SignUp() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [isOverlap, setIsOverlap] = useState<boolean>(false); // Memo: API 나오면 false로 바꿔야함
+  const [isOverlap, setIsOverlap] = useState<boolean>(true); // Memo: API 나오면 false로 바꿔야함
   const [email, setEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +23,7 @@ export default function SignUp() {
 
     try {
       const response = await customFetch<OnlySuccessRes>({
-        subUrl: 'api/signup',
+        subUrl: 'api/members/signup',
         method: 'POST',
         body: JSON.stringify({
           loginId: email,
@@ -44,7 +44,7 @@ export default function SignUp() {
   const onCheckEmail = async () => {
     try {
       const response = await customFetch<OnlySuccessRes>({
-        subUrl: `api/signup/check-member-email?loginId=${email}`,
+        subUrl: `api/members/signup/check-member-email?loginId=${email}`,
       });
 
       if (response.success) {

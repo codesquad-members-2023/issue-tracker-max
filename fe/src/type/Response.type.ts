@@ -1,5 +1,5 @@
-import { CommentType, IssueData } from './issue.type';
-import { LabelData } from './label.type';
+import { Assignee, CommentType, IssueData } from './issue.type';
+import { LabelData, LabelType } from './label.type';
 import { MilestoneData } from './milestone.type';
 
 export type PostNewIssueRes = {
@@ -77,6 +77,74 @@ export type PostSignInRes = {
       name: string;
       imageUrl: string;
     };
+  };
+  errorCode?: {
+    status: number;
+    message: string;
+  };
+};
+
+export type GetAssigneesRes = {
+  success: boolean;
+  data?: Assignee[] | [];
+  errorCode?: {
+    status: number;
+    message: string;
+  };
+};
+
+export type GetLabelsRes = {
+  success: boolean;
+  data?: LabelType[] | [];
+  errorCode?: {
+    status: number;
+    message: string;
+  };
+};
+
+export type GetMilestonesRes = {
+  success: boolean;
+  data?:
+    | {
+        id: number;
+        name: string;
+      }[]
+    | [];
+  errorCode?: {
+    status: number;
+    message: string;
+  };
+};
+
+export type GetWritersRes = {
+  success: boolean;
+  data?:
+    | {
+        id: number;
+        name: string;
+      }[]
+    | [];
+  errorCode?: {
+    status: number;
+    message: string;
+  };
+};
+
+export type PostNewLabelRes = {
+  success: boolean;
+  data?: {
+    id: number;
+  };
+  errorCode?: {
+    status: number;
+    message: string;
+  };
+};
+
+export type PostNewMilestoneRes = {
+  success: boolean;
+  data?: {
+    id: number;
   };
   errorCode?: {
     status: number;

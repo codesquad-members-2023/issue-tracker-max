@@ -6,13 +6,16 @@ import LabelItem from './LabelItem';
 import { useEffect, useState } from 'react';
 import { customFetch } from '../../util/customFetch';
 import { useNavigate } from 'react-router-dom';
-import { LabelData } from '../../type/label.type';
+import { LabelData, LabelType } from '../../type/label.type';
 import { GetLabelRes } from '../../type/Response.type';
+import LabelCreate from './LabelCreate/LabelCreate';
+import { LabelProvider } from '../Context/LabelContext';
 
 export default function LabelList() {
   const theme = useTheme();
-  const [labelList, setLabelList] = useState<LabelData>();
   const navigate = useNavigate();
+  const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [labelList, setLabelList] = useState<LabelData>();
 
   useEffect(() => {
     (async () => {
@@ -37,10 +40,47 @@ export default function LabelList() {
     })();
   }, []);
 
-  const onClickToCreate = () => {};
+  const addNewLabel = (newLabel: LabelType) => {
+    setLabelList((prev) => {
+      if (prev) {
+        return { ...prev, labels: [...prev.labels, { ...newLabel }] };
+      }
+    });
+  };
+
+  const editLabel = (labelId: number, editedLabel: LabelType) => {
+    setLabelList((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          labels: prev.labels.map((label) => {
+            if (label.id === labelId) {
+              return { ...editedLabel };
+            }
+            return label;
+          }),
+        };
+      }
+    });
+  };
+
+  const deleteLabel = (labelId: number) => {
+    setLabelList((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          labels: prev.labels.filter((label) => label.id !== labelId),
+        };
+      }
+    });
+  };
+
+  const onChangeStatus = () => {
+    setIsCreating((prev) => !prev);
+  };
 
   return (
-    <>
+    <LabelProvider>
       {labelList && (
         <>
           <SubNavBar
@@ -48,21 +88,32 @@ export default function LabelList() {
             labelCount={labelList.labels.length}
             milestoneCount={labelList.milestoneCount}
             buttonValue="레이블 추가"
-            onClick={onClickToCreate}
+            onClick={onChangeStatus}
           />
+          {isCreating && (
+            <LabelCreate
+              onChangeStatus={onChangeStatus}
+              onAddNewLabel={addNewLabel}
+            />
+          )}
           <TableContainer>
             <div css={labelTable(theme)}>
               <div className="header">{labelList.labels.length}개의 레이블</div>
               <ul className="item-container">
                 {labelList.labels.map((label) => (
-                  <LabelItem key={label.id} {...label} />
+                  <LabelItem
+                    key={label.id}
+                    label={label}
+                    onDelete={deleteLabel}
+                    onEdit={editLabel}
+                  />
                 ))}
               </ul>
             </div>
           </TableContainer>
         </>
       )}
-    </>
+    </LabelProvider>
   );
 }
 
@@ -92,6 +143,7 @@ const labelTable = (theme: Theme) => css`
     border-top: none;
     border-radius: 0 0 ${radius.medium} ${radius.medium};
     background-color: ${theme.neutral.surfaceStrong};
+    overflow: hidden;
 
     li {
       height: 96px;

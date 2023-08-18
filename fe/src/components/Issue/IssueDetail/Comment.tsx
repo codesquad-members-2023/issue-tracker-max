@@ -1,4 +1,4 @@
-import { useContext, useId, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Theme, css, useTheme } from '@emotion/react';
 import { border, font, radius } from '../../../styles/styles';
 import { ReactComponent as EditIcon } from '../../../assets/icon/edit.svg';
@@ -19,11 +19,11 @@ import { OnlySuccessRes } from '../../../type/Response.type';
 type Props = {
   commentData: CommentType;
   issueId: number;
+  onDelete: (commentId: number) => void;
 };
 
-export default function Comment({ commentData, issueId }: Props) {
+export default function Comment({ commentData, issueId, onDelete }: Props) {
   const theme = useTheme();
-  const id = useId();
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(commentData.content);
   const { ...context } = useContext(UserContext);
@@ -54,6 +54,21 @@ export default function Comment({ commentData, issueId }: Props) {
     }
   };
 
+  const onDeleteComment = async () => {
+    try {
+      const response = await customFetch<OnlySuccessRes>({
+        method: 'DELETE',
+        subUrl: `api/issues/${issueId}/comments/${commentData.id}`,
+      });
+
+      if (response.success) {
+        onDelete(commentData.id);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const onAddImg = (imgMarkdown: string) => {
     setEditedComment((prev) => `${prev}\n${imgMarkdown}\n`);
   };
@@ -61,6 +76,11 @@ export default function Comment({ commentData, issueId }: Props) {
   const userIdString = context.user?.member.id;
   const isWriter = commentData.writer.id === Number(userIdString)!;
   const isEdited = commentData.content !== editedComment;
+  const timeLine = getTimeLine(
+    new Date(
+      getKoreanTime(commentData.createdAt).getTime() + 9 * 60 * 60 * 1000
+    )
+  );
 
   return (
     <div css={comment(theme)}>
@@ -69,18 +89,22 @@ export default function Comment({ commentData, issueId }: Props) {
           <div className="writer-info">
             <UserImageIcon size="M" url={commentData.writer.imageUrl} />
             <div className="writer">{commentData.writer.name}</div>
-            <div className="time-line">
-              {getTimeLine(getKoreanTime(commentData.createdAt))}
-            </div>
+            <div className="time-line">{timeLine}</div>
           </div>
           <div className="buttons">
             {isWriter && (
               <>
                 <Label
-                  id={id}
                   textColor={theme.neutral.textWeak}
                   backgroundColor="inherit"
                   title="작성자"
+                />
+                <Button
+                  icon={<EditIcon />}
+                  size="XS"
+                  color={theme.danger.textDefault}
+                  value="삭제"
+                  onClick={onDeleteComment}
                 />
                 <Button
                   icon={<EditIcon />}
