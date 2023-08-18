@@ -127,7 +127,9 @@ export default function AddIssuePage({ toggleTheme }: Props) {
         <Main>
           <Title>새로운 이슈 작성</Title>
           <ContentsContainer>
-            <UserProfileImg src={"/logo/profile.jpg"} />
+            <UserProfileImg
+              src={profile ? profile.profileImageUri : "/icons/user.png"}
+            />
             <AddIssueForm>
               <LabelInput
                 id={"newTitle"}

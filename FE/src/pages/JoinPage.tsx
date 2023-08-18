@@ -9,6 +9,7 @@ import Alert from "../components/Alert/Alert";
 
 export default function JoinPage() {
   const navigate = useNavigate();
+  const [openComplete, setOpenComplete] = useState<boolean>(false);
   const [joinError, setJoinError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [profileImgFile, setProfileImgFile] = useState<File>();
@@ -40,6 +41,10 @@ export default function JoinPage() {
 
   const goLoginPage = () => {
     navigate("/");
+  };
+
+  const goJoinPage = () => {
+    navigate("/join");
   };
 
   const continueJoin = () => {
@@ -91,12 +96,10 @@ export default function JoinPage() {
       });
 
       if (response.status === 204) {
-        const responseData = await response.json();
-        localStorage.setItem("accessToken", responseData.accessToken);
-        localStorage.setItem("refreshToken", responseData.refreshToken);
+        setOpenComplete(true);
       } else {
-        const responseData = await response.json();
-        setErrorMessage(responseData.message);
+        const data = await response.json();
+        setErrorMessage(data.message);
         setJoinError(true);
       }
     } catch (error) {
@@ -188,7 +191,9 @@ export default function JoinPage() {
           />
           <Button
             label={"가입하기"}
-            onClick={confirmJoin}
+            onClick={() => {
+              confirmJoin();
+            }}
             disabled={
               !emailValue ||
               !passwordValue ||
@@ -208,6 +213,15 @@ export default function JoinPage() {
           rightButtonLabel={"이어서 가입하기"}
           onClickLeftButton={goLoginPage}
           onClickRightButton={continueJoin}
+        />
+      )}
+      {openComplete && (
+        <Alert
+          content={"회원가입이 완료되었습니다"}
+          leftButtonLabel={"다른 계정 만들기"}
+          rightButtonLabel={"로그인하기"}
+          onClickLeftButton={goJoinPage}
+          onClickRightButton={goLoginPage}
         />
       )}
     </Main>

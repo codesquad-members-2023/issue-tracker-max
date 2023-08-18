@@ -30,14 +30,15 @@ export default function EditMilestone({
   const confirmEditMilestone = async () => {
     const URL = `http://3.34.141.196/api/milestones/${id}`;
 
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
+
     const putData = {
       title: title,
       description: description,
       deadline: deadline,
-    };
-
-    const headers = {
-      "Content-Type": "application/json",
     };
 
     try {
