@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 interface ProfileImgProps {
   size: number;
-  $url: string;
+  $url?: string;
 }
 
 export const ProfileImg: React.FC<ProfileImgProps> = ({ size, $url }) => {
