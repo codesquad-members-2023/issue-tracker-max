@@ -33,6 +33,19 @@ export const getAccessToken = () => {
   return token;
 };
 
+export const getRefreshToken = () => {
+  const token = getLocalStorage('refreshToken');
+
+  if (!token) {
+    // throw new Error('사용자의 로컬스토리지에 token이 없습니다.');
+    console.log('refreshToken 로컬스토리지에 없습니다.');
+
+    return '';
+  }
+
+  return token;
+};
+
 export const setLocalStorageUserId = (value: string) => {
   return setLocalStorage('userId', value);
 };
