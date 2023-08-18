@@ -287,7 +287,7 @@ export const TableHeader: React.FC<Props> = ({
                               id,
                               name:
                                 name !== 'none' ? name : '담당자가 없는 이슈',
-                              image,
+                              image: name !== 'none' ? image : undefined,
                             },
                             isSelected,
                             onClick: () => {

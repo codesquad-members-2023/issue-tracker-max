@@ -1,4 +1,4 @@
-import { useTheme } from '@emotion/react';
+import { Theme, css } from '@emotion/react';
 import { DropDownHeader } from './DropDownHeader';
 import { useEffect } from 'react';
 
@@ -15,8 +15,6 @@ export const DropDownPanel: React.FC<Props> = ({
   children,
   onOutsideClick,
 }) => {
-  const theme = useTheme() as any;
-
   useEffect(() => {
     const onClick = ({ target }: MouseEvent) => {
       if (target instanceof Element && target?.closest('.dropdown-panel')) {
@@ -34,31 +32,33 @@ export const DropDownPanel: React.FC<Props> = ({
   }, [onOutsideClick]);
 
   return (
-    <div
-      css={{
-        position: 'absolute',
-        top: '100%',
-        zIndex: 50,
-        width: '240px',
-        borderRadius: theme.radius.l,
-        border: `${theme.border.default} ${theme.neutral.border.default}`,
-        background: theme.neutral.surface.default,
-        ...POSITION[position],
-      }}
-    >
+    <div css={(theme) => panelStyle(theme, position)}>
       <DropDownHeader panelHeader={panelHeader} />
-      <ul
-        css={{
-          boxSizing: 'border-box',
-          maxHeight: '288px',
-          overflowY: 'auto',
-        }}
-      >
-        {children}
-      </ul>
+      <ul className="list-container">{children}</ul>
     </div>
   );
 };
+
+const panelStyle = (theme: Theme, position: keyof typeof POSITION) => css`
+  position: absolute;
+  top: 100%;
+  z-index: 50;
+  width: 240px;
+  border-radius: ${theme.radius.l};
+  border: ${`${theme.border.default} ${theme.neutral.border.default}`};
+  background: ${theme.neutral.surface.default};
+  overflow: hidden;
+  ${POSITION[position]};
+
+  .list-container {
+    max-height: 288px;
+    overflow-y: auto;
+
+    li {
+      border-bottom: ${`${theme.border.default} ${theme.neutral.border.default}`};
+    }
+  }
+`;
 
 const POSITION = {
   left: {

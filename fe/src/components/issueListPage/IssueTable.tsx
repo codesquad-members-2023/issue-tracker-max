@@ -90,6 +90,7 @@ export const IssueTable: React.FC<Props> = ({
           <li
             css={{
               backgroundColor: theme.neutral.surface.strong,
+              borderRadius: `0 0 ${theme.radius.l} ${theme.radius.l}`,
             }}
           >
             <span
