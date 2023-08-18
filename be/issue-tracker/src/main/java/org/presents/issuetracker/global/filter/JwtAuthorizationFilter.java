@@ -48,6 +48,7 @@ public class JwtAuthorizationFilter implements Filter {
 		log.info("[request] : {}", ((HttpServletRequest)request).getRequestURI());
 
 		if (HttpMethod.OPTIONS.matches(req.getMethod())) {
+			log.info("OPTION임...");
 			chain.doFilter(request, response);
 			return;
 		}
@@ -58,12 +59,14 @@ public class JwtAuthorizationFilter implements Filter {
 		}
 
 		String token = getToken(req);
+		log.info("token : {}", token);
 		if (token == null) {
 			sendErrorResponse(res, JwtErrorCode.INVALID_JWT_TOKEN);
 			return;
 		}
 
 		if (!jwtProvider.verify(token)) {
+			log.info("만료됨...");
 			sendErrorResponse(res, JwtErrorCode.EXPIRED_JWT_TOKEN);
 			return;
 		}
@@ -98,5 +101,7 @@ public class JwtAuthorizationFilter implements Filter {
 		response.getWriter().write(objectMapper.writeValueAsString(
 			CommonApiResponse.fail(statusCode.getHttpStatus(), statusCode.getMessage()))
 		);
+		log.info("[Error Response] : {} {} {}", response.getContentType(),
+			response.getStatus(), response.getOutputStream().toString());
 	}
 }
