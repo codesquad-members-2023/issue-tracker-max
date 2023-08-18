@@ -35,7 +35,7 @@ export const postOAuthUsername = async (body: {
   username: string;
   email: string;
 }) => {
-  return await fetcher.post("/auth/signup/oauth", body);
+  return await fetcher.post("/auth/login/oauth/signup", body);
 };
 
 export const getIssues = async (filterQuery?: string, pageIndex?: number) => {
