@@ -9,22 +9,6 @@ type Props = {
   closeDropdown(): void;
 };
 
-// type AssigneesData = {
-//   assignees: AssigneesList[];
-// };
-
-// type LabelsData = {
-//   labels: Label[];
-// };
-
-// type MilestonesData = {
-//   milestones: DropdownMilestone[];
-// };
-
-// type AuthorsData = {
-//   authors: AssigneesList[];
-// };
-
 export default function DropdownPanel({
   title,
   top,
@@ -32,35 +16,7 @@ export default function DropdownPanel({
   closeDropdown,
   children,
 }: Props) {
-  // const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   if (type === "filter") {
-  //     return;
-  //   }
-  //   const URL = `http://3.34.141.196/api/issues/${type}`;
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(URL);
-  //       if (!response.ok) {
-  //         throw new Error("데이터를 가져오는 데 실패했습니다.");
-  //       }
-  //       const jsonData = await response.json();
-  //       type === "assignees"
-  //         ? setAssigneesData(jsonData)
-  //         : type === "labels"
-  //         ? setLabelsData(jsonData)
-  //         : type === "milestones"
-  //         ? setMilestonesData(jsonData)
-  //         : setAuthorsData(jsonData);
-  //     } catch (error) {
-  //       console.log("error");
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
