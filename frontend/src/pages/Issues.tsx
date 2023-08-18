@@ -85,34 +85,34 @@ export default function Issues() {
           </Button>
         </UserInfo>
       </Header>
-      <Toolbar>
-        <FilterBar />
-        <ActionGroup>
-          <TabButton
-            tabs={[
-              {
-                iconName: 'label',
-                text: '레이블',
-                event: () => {},
-              },
-              {
-                iconName: 'milestone',
-                text: '마일스톤',
-                event: () => {},
-              },
-            ]}
-          />
-          <Button
-            type="button"
-            iconName="plus"
-            onClick={() => {
-              navigate('/addIssue');
-            }}>
-            이슈 작성
-          </Button>
-        </ActionGroup>
-      </Toolbar>
       <Main>
+        <Toolbar>
+          <FilterBar />
+          <ActionGroup>
+            <TabButton
+              tabs={[
+                {
+                  iconName: 'label',
+                  text: '레이블',
+                  event: () => {},
+                },
+                {
+                  iconName: 'milestone',
+                  text: '마일스톤',
+                  event: () => {},
+                },
+              ]}
+            />
+            <Button
+              type="button"
+              iconName="plus"
+              onClick={() => {
+                navigate('/addIssue');
+              }}>
+              이슈 작성
+            </Button>
+          </ActionGroup>
+        </Toolbar>
         {data ? <IssueTable issues={data.issueReads} /> : <p>서버오류</p>}
       </Main>
       {/* <button onClick={() => control.logoutCheck()}>logout</button> */}
