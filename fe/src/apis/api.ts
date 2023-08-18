@@ -1,27 +1,9 @@
-import {
-  getAccessToken,
-  getRefreshToken,
-  setLocalStorageAccessToken,
-  setLocalStorageRefreshToken,
-} from './localStorage';
+import { getAccessToken } from './localStorage';
 
 const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
 export const fetchData = async (path: string, options?: RequestInit) => {
   const response = await fetch(BASE_URL + path, options);
-
-  if (response.status === 401) {
-    await handleRefreshAccessToken();
-    await fetchData(path, {
-      ...options,
-      headers: {
-        ...options?.headers,
-        Authorization: 'Bearer ' + getAccessToken(),
-      },
-    });
-
-    return;
-  }
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -32,21 +14,6 @@ export const fetchData = async (path: string, options?: RequestInit) => {
 
     return data;
   }
-};
-
-const handleRefreshAccessToken = async () => {
-  const data = await fetchData('/reissue-access-token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      refreshToken: getRefreshToken(),
-    }),
-  });
-
-  setLocalStorageAccessToken(data.accessToken);
-  setLocalStorageRefreshToken(data.refreshToken);
 };
 
 export const getIssuesWithQuery = (query: string) => {
