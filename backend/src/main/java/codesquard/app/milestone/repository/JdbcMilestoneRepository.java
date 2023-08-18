@@ -54,7 +54,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	@Override
 	public Long countIssuesBy(final Long milestoneId, final MilestoneStatus status) {
 		String sql = "SELECT COUNT(`milestone_id`) FROM `issue` " +
-			"WHERE `status` = :status AND `milestone_id` = :milestoneId";
+			"WHERE `status` = :status AND `milestone_id` = :milestoneId AND `is_deleted` = FALSE";
 
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("status", status.getName());
