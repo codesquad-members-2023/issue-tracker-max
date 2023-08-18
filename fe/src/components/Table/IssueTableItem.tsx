@@ -1,3 +1,4 @@
+// import { useState } from "react";
 import styled from "styled-components";
 import { Icon } from "components/Common/Icon/Icon";
 import { Tag } from "components/Common/Tag/Tag";
@@ -14,11 +15,17 @@ interface IssueItem {
 
 interface IssueTableItemProps {
   issueItem: IssueItem;
+  onCheckChange: (id: number, checked: boolean) => void;
+  selectedIssueIds: number[];
 }
 
 export const IssueTableItem: React.FC<IssueTableItemProps> = ({
   issueItem,
+  onCheckChange,
+  selectedIssueIds,
 }) => {
+  const isChecked = selectedIssueIds.includes(issueItem.id);
+
   const getRelativeTime = (timestamp: string) => {
     const now = new Date();
     const time = new Date(timestamp);
@@ -43,11 +50,20 @@ export const IssueTableItem: React.FC<IssueTableItemProps> = ({
 
   const relativeTime = getRelativeTime(issueItem.createdAt);
 
+  const handleCheck = () => {
+    // setIsChecked((prevState) => !prevState);
+    onCheckChange(issueItem.id, !isChecked);
+  };
+
   return (
     <TableItem>
       <div>
-        <CheckboxBox>
-          <Icon icon="CheckBoxInitial" stroke="paletteBlue" />
+        <CheckboxBox onClick={handleCheck}>
+          {isChecked ? (
+            <Icon icon="CheckBoxActive" stroke="paletteBlue" />
+          ) : (
+            <Icon icon="CheckBoxInitial" stroke="paletteBlue" />
+          )}
         </CheckboxBox>
         <InfoBox>
           <TitleBox>

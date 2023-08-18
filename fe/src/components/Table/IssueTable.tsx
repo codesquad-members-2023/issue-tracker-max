@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -6,7 +6,8 @@ import { Icon } from "components/Common/Icon/Icon";
 import { Button } from "components/Common/Button/Button";
 import { DropdownTap } from "components/Dropdown/DropdownTap";
 import { IssueTableItem } from "./IssueTableItem";
-import { DropdownPanel } from "components/Dropdown/DropdownPanel";
+import { DropdownPanel2 } from "components/Dropdown/DropdownPanel2";
+import { useFetch } from "../../hook/useApiRequest";
 
 const INITIAL_SUBFILLTER_DATA = [
   { id: 1, title: "담당자", filter: "assignee" },
@@ -40,15 +41,24 @@ interface IssueTableProps {
   tableData: IssueTableData | null;
 }
 
+interface FilterData {
+  [key: string]: string[]; // Assuming the filters contain arrays of strings
+}
+
 export const IssueTable: React.FC<IssueTableProps> = ({ tableData }) => {
   const location = useLocation();
-  const [isChecked, setIsChecked] = useState(false);
+  const { makeRequest } = useFetch();
+  const [issueListData, setIssueListData] = useState<IssueItem[] | null>(null);
+  const [selectedIssueIds, setSelectedIssueIds] = useState<number[]>([]);
   const [subFilterData, setSubFilterData] = useState(INITIAL_SUBFILLTER_DATA);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const hasSubFilterFetched = useRef(false);
 
-  /* filtered 결과 완료 되면 수정할 부분 */
-  const fetchFilterData = useCallback(async () => {
+  const queryParams = new URLSearchParams(location.search);
+  const qValue = queryParams.get("q");
+
+  const isOpenSelected = qValue === "is:open" || location.pathname === "/";
+  const isClosedSelected = qValue === "is:closed";
+
   const fetchFilterData = async () => {
     try {
       const data = (await makeRequest(
@@ -68,13 +78,33 @@ export const IssueTable: React.FC<IssueTableProps> = ({ tableData }) => {
   };
 
   useEffect(() => {
-    if (!hasSubFilterFetched.current) {
     fetchFilterData();
   }, []);
-    }
-  }, [fetchFilterData]);
 
-  const handleClickCheckBox = () => setIsChecked(!isChecked);
+  useEffect(() => {
+    if (tableData) {
+      setIssueListData(tableData.issues);
+    }
+  }, [tableData]);
+
+  const handleAllCheck = () => {
+    if (selectedIssueIds.length === 0) {
+      const ids = tableData?.issues?.map((issue) => issue.id) || [];
+      setSelectedIssueIds(ids);
+    } else {
+      setSelectedIssueIds([]);
+    }
+  };
+
+  const handleSingleCheck = (id: number, checked: boolean) => {
+    if (checked) {
+      setSelectedIssueIds((prevIds) => [...prevIds, id]);
+    } else {
+      setSelectedIssueIds((prevIds) =>
+        prevIds.filter((prevId) => prevId !== id),
+      );
+    }
+  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -82,77 +112,99 @@ export const IssueTable: React.FC<IssueTableProps> = ({ tableData }) => {
 
   if (!tableData) return null;
 
-  const issueTableList = () => (
-    <TableList>
-      {tableData.issues && tableData.issues.length > 0 ? (
-        tableData.issues.map((issueItem) => (
-          <IssueTableItem key={issueItem.id} issueItem={issueItem} />
-        ))
-      ) : (
-        <EmptyResult>등록된 이슈가 없습니다.</EmptyResult>
-      )}
-    </TableList>
-  );
+  const handleSelectState = async (item: { filter?: string }) => {
+    toggleDropdown();
+    if (item.filter && selectedIssueIds.length > 0) {
+      const body = {
+        isOpen: item.filter === "open" ? true : false,
+        issues: selectedIssueIds,
+      };
 
-  if (isChecked) {
+      try {
+        await makeRequest(
+          "http://43.200.169.143:8080/api/issues",
+          "PATCH",
+          body,
+        );
+
+        const updatedIssues = issueListData?.filter(
+          (issue) => !selectedIssueIds.includes(issue.id),
+        );
+        setSelectedIssueIds([]);
+        setIssueListData(updatedIssues || null);
+      } catch (error) {
+        console.error("Error updating issues:", error);
+      }
+    }
+  };
+
+  if (selectedIssueIds.length > 0) {
     return (
       <>
         <ChangeIssueStateHeader style={{ position: "relative" }}>
-          <CheckBox onClick={handleClickCheckBox}>
+          <CheckBox onClick={handleAllCheck}>
             <Icon icon="CheckBoxDisable" stroke="paletteBlue" />
-            <p className="select">1개 이슈 선택</p>
+            <p className="select">{selectedIssueIds.length}개 이슈 선택</p>
           </CheckBox>
           <Button variant="ghost" size="M" onClick={toggleDropdown}>
             상태 수정
             <Icon icon="ChevronDown"></Icon>
           </Button>
           {isDropdownOpen && (
-            <DropdownPanel
+            <DropdownPanel2
               items={ISSUE_STATE_DATA}
               title="상태 변경"
               $position="right"
               onClose={() => setIsDropdownOpen(false)}
               type="issuesState"
+              onItemSelect={handleSelectState}
             />
           )}
         </ChangeIssueStateHeader>
-        {issueTableList()}
+        <TableListBox>
+          {issueListData && issueListData.length > 0 ? (
+            issueListData.map((issueItem) => (
+              <IssueTableItem
+                key={issueItem.id}
+                issueItem={issueItem}
+                onCheckChange={handleSingleCheck}
+                selectedIssueIds={selectedIssueIds}
+              />
+            ))
+          ) : (
+            <EmptyResult>등록된 이슈가 없습니다.</EmptyResult>
+          )}
+        </TableListBox>
       </>
     );
   }
-  /* 열린 이슈, 닫힌 이슈 selected ON/OFF는 나중에 필터 api 나오면 다시 처리하기 */
+
   return (
     <>
       <DefaultHeader>
         <div>
-          <CheckBox onClick={handleClickCheckBox}>
+          <CheckBox onClick={handleAllCheck}>
             <Icon icon="CheckBoxInitial" stroke="paletteBlue" />
           </CheckBox>
           <TapBox>
-            <Link to="/issues/open">
+            <Link to="/issues/filtered?q=is:open">
               <Button
                 size="M"
                 variant="ghost"
-                states={
-                  location.pathname === "/issues/open" ? "selected" : undefined
-                }
+                states={isOpenSelected ? "selected" : undefined}
               >
                 <Icon icon="AlertCircle" stroke="paletteBlue" />
-                <p>열린 이슈({tableData.openIssueCount})</p>
+                <p>열린 이슈({tableData.openIssueCount | 0})</p>
               </Button>
             </Link>
-            <Link to="/issues/closed">
+            <Link to="/issues/filtered?q=is:closed">
               <Button
                 size="M"
                 variant="ghost"
-                states={
-                  location.pathname === "/issues/closed"
-                    ? "selected"
-                    : undefined
-                }
+                states={isClosedSelected ? "selected" : undefined}
               >
                 <Icon icon="Archive" stroke="paletteBlue" />
-                <p>닫힌 이슈({tableData.closedIssueCount})</p>
+                <p>닫힌 이슈({tableData.closedIssueCount | 0})</p>
               </Button>
             </Link>
           </TapBox>
@@ -164,12 +216,26 @@ export const IssueTable: React.FC<IssueTableProps> = ({ tableData }) => {
           // onTabClick={handleClick}
         />
       </DefaultHeader>
-      {issueTableList()}
+      <TableListBox>
+        {issueListData && issueListData.length > 0 ? (
+          issueListData.map((issueItem) => (
+            <IssueTableItem
+              key={issueItem.id}
+              issueItem={issueItem}
+              onCheckChange={handleSingleCheck}
+              selectedIssueIds={selectedIssueIds}
+            />
+          ))
+        ) : (
+          <EmptyResult>등록된 이슈가 없습니다.</EmptyResult>
+        )}
+      </TableListBox>
     </>
   );
 };
 
 const CommonStyle = styled.div`
+  margin-top: 24px;
   display: flex;
   height: 64px;
   align-items: center;
@@ -210,7 +276,7 @@ const TapBox = styled.div`
   display: flex;
 `;
 
-const TableList = styled.ul`
+const TableListBox = styled.ul`
   padding-left: 0;
 
   > :last-child {
