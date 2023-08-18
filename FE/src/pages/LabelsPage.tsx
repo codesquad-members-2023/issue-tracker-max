@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FetchedLabels } from "../type";
 import LabelList from "../components/LabelList/LabelList";
-import Alert from "../components/Alert/Alert";
 import EditLabel from "../components/LabelList/EditLabel";
 import { generateRandomHex } from "../utils/generateRandomHex";
 import LoadingIndicator from "../components/LoadingIndicator/LoadingIndicator";
@@ -19,7 +18,6 @@ export default function LabelsPage({ toggleTheme }: Props) {
   const navigate = useNavigate();
   const { profile } = useAuth();
   const [data, setData] = useState<FetchedLabels>();
-  const [openDeleteAlert, setOpenDeleteAlert] = useState<boolean>(false);
   const [openAdd, setOpenAdd] = useState<boolean>(false);
   const [addLabelName, setAddLabelName] = useState<string>("");
   const [addLabelDescription, setAddLabelDescription] = useState<string>("");
@@ -32,14 +30,6 @@ export default function LabelsPage({ toggleTheme }: Props) {
 
   const goMilestonesPage = () => {
     navigate("/milestones/isOpen=true");
-  };
-
-  const showDeleteAlert = () => {
-    setOpenDeleteAlert(true);
-  };
-
-  const cancelDeleteLabel = () => {
-    setOpenDeleteAlert(false);
   };
 
   const openAddLabel = () => {
@@ -194,7 +184,6 @@ export default function LabelsPage({ toggleTheme }: Props) {
                   backgroundColor={label.backgroundColor}
                   textColor={label.textColor}
                   description={label.description}
-                  openDelete={showDeleteAlert}
                 />
               ))}
               {data?.labels?.length === 0 && (
@@ -203,15 +192,6 @@ export default function LabelsPage({ toggleTheme }: Props) {
                 </EmptyList>
               )}
             </LabelsTable>
-            {openDeleteAlert && (
-              <Alert
-                content={"레이블을 삭제하시겠습니까?"}
-                leftButtonLabel={"취소"}
-                rightButtonLabel={"삭제"}
-                onClickLeftButton={cancelDeleteLabel}
-                onClickRightButton={() => {}}
-              />
-            )}
           </Container>
         )}
       </Main>

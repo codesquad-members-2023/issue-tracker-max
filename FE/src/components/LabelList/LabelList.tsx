@@ -6,9 +6,7 @@ import { useState } from "react";
 import { generateRandomHex } from "../../utils/generateRandomHex";
 import EditLabel from "./EditLabel";
 
-interface Props extends Label {
-  openDelete(): void;
-}
+interface Props extends Label {}
 
 export default function LabelList({
   id,
@@ -16,7 +14,6 @@ export default function LabelList({
   backgroundColor,
   textColor,
   description,
-  openDelete,
 }: Props) {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [labelName, setLabelName] = useState<string>(title);
