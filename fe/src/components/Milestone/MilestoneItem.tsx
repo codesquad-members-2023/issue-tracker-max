@@ -8,74 +8,122 @@ import { ReactComponent as DeleteIcon } from '../../assets/icon/trash.svg';
 import { getFormatDate } from '../../util/getFormatDate';
 import Button from '../common/Button';
 import { MilestoneType } from '../../type/milestone.type';
+import { OnlySuccessRes } from '../../type/Response.type';
+import { customFetch } from '../../util/customFetch';
+import { useState } from 'react';
+import MilestoneEdit from './MilestoneEdit/MilestoneEdit';
 
-export default function IssueItem(milestone: MilestoneType) {
+type Props = {
+  milestone: MilestoneType;
+  onDelete: (id: number) => void;
+  onEdit: (milestoneId: number, editedMilestone: MilestoneType) => void;
+};
+
+export default function IssueItem({ milestone, onDelete, onEdit }: Props) {
   const theme = useTheme();
+  const [isEditing, setIsEditing] = useState(false);
 
-  const completionChart = Math.floor(
-    (milestone.openIssueCount /
-      (milestone.openIssueCount + milestone.closedIssueCount)) *
-      100
-  );
+  const onDeleteMilestone = async () => {
+    try {
+      const response = await customFetch<OnlySuccessRes>({
+        method: 'DELETE',
+        subUrl: `api/milestones/${milestone.id}`,
+      });
+
+      if (response.success) {
+        onDelete(milestone.id!);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onChangeMilestoneStatus = () => {
+    setIsEditing((prev) => !prev);
+  };
+
+  const completionChart =
+    milestone.openIssueCount + milestone.closedIssueCount !== 0
+      ? Math.floor(
+          (milestone.openIssueCount /
+            (milestone.openIssueCount + milestone.closedIssueCount)) *
+            100
+        )
+      : 0;
 
   return (
-    <li css={issueItem(theme, completionChart)}>
-      <div className="detail">
-        <div className="title">
-          <div className="milestone-name">
-            <MilestoneIcon className="open" />
-            {milestone.title}
+    <>
+      {isEditing ? (
+        <MilestoneEdit
+          milestone={milestone}
+          onEditMilestone={onEdit}
+          onChangeStatus={onChangeMilestoneStatus}
+        />
+      ) : (
+        <li css={issueItem(theme, completionChart)}>
+          <div className="detail">
+            <div className="title">
+              <div className="milestone-name">
+                <MilestoneIcon className="open" />
+                {milestone.title}
+              </div>
+              <div className="due-date">
+                {!!milestone.dueDate && (
+                  <>
+                    <CalendarIcon />
+                    {getFormatDate(milestone.dueDate)}
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="description">{milestone.description}</div>
           </div>
-          <div className="due-date">
-            {!!milestone.dueDate && (
-              <>
-                <CalendarIcon />
-                {getFormatDate(milestone.dueDate)}
-              </>
-            )}
-          </div>
-        </div>
-        <div className="description">{milestone.description}</div>
-      </div>
-      <div className="sub">
-        <div className="buttons">
-          <Button
-            icon={<ArchiveIcon />}
-            size="XS"
-            color={theme.neutral.textDefault}
-            value="닫기"
-          />
-          <Button
-            icon={<EditIcon />}
-            size="XS"
-            color={theme.neutral.textDefault}
-            value="편집"
-          />
-          <Button
-            icon={<DeleteIcon className="delete" />}
-            size="XS"
-            color={theme.danger.textDefault}
-            value="삭제"
-          />
-        </div>
-        <div className="progress-indicator">
-          <progress
-            className="progress-bar"
-            value={completionChart}
-            max={100}
-          />
-          <div className="progress-info">
-            <div className="percent">{completionChart}%</div>
-            <div className="counters">
-              <div className="open">열린 이슈 {milestone.openIssueCount}</div>
-              <div className="close">
-                닫힌 이슈 {milestone.closedIssueCount}
+          <div className="sub">
+            <div className="buttons">
+              <Button
+                icon={<ArchiveIcon />}
+                size="XS"
+                color={theme.neutral.textDefault}
+                value="닫기"
+                disabled
+              />
+              <Button
+                icon={<EditIcon />}
+                size="XS"
+                color={theme.neutral.textDefault}
+                value="편집"
+                onClick={onChangeMilestoneStatus}
+              />
+              <Button
+                icon={<DeleteIcon className="delete" />}
+                size="XS"
+                color={theme.danger.textDefault}
+                value="삭제"
+                onClick={onDeleteMilestone}
+              />
+            </div>
+            <div className="progress-indicator">
+              <progress
+                className="progress-bar"
+                value={completionChart}
+                max={100}
+              />
+              <div className="progress-info">
+                <div className="percent">{completionChart}%</div>
+                <div className="counters">
+                  <div className="open">
+                    열린 이슈 {milestone.openIssueCount}
+                  </div>
+                  <div className="close">
+                    닫힌 이슈 {milestone.closedIssueCount}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </li>
+        </li>
+      )}
+    </>
   );
 }
 

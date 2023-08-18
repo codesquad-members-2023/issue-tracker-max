@@ -4,3 +4,8 @@ export const filterType = [
   { id: 3, name: '마일스톤' },
   { id: 4, name: '작성자' },
 ];
+
+export const textColorType = [
+  { id: 1, color: 'white', name: '밝은 색' },
+  { id: 2, color: 'black', name: '어두운 색' },
+];

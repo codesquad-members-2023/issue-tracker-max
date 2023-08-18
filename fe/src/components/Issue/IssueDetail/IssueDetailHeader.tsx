@@ -62,6 +62,11 @@ export default function IssueDetailHeader({
   };
 
   const isEdited = editedTitle !== issue.title;
+  const timeLine = getTimeLine(
+    new Date(
+      getKoreanTime(issue.history.modifiedAt).getTime() + 9 * 60 * 60 * 1000
+    )
+  );
 
   return (
     <div css={issueDetailHeader(theme)}>
@@ -127,8 +132,9 @@ export default function IssueDetailHeader({
           {issue.isOpen ? '열린 이슈' : '닫힌 이슈'}
         </div>
         <div className="issue-detail">
-          이 이슈가 {getTimeLine(getKoreanTime(issue.history.modifiedAt))}에{' '}
-          {issue.history.editor}님에 의해 {issue.isOpen ? '열렸' : '닫혔'}습니다
+          이 이슈가 {timeLine}에 {issue.history.editor}님에 의해{' '}
+          {issue.isOpen ? '열렸' : '닫혔'}
+          습니다
         </div>
         <div className="break-point">∙</div>
         <div className="comment-count">코멘트 {commentCount}개</div>

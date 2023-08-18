@@ -42,7 +42,7 @@ export default function IssueCreate() {
       }
     } catch (error) {
       //Memo: 에러 핸들링 필요
-      console.log(error);
+      console.error(error);
     }
   };
 

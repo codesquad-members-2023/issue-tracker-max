@@ -4,7 +4,7 @@ export type LabelData = {
 };
 
 export type LabelType = {
-  id: number | string;
+  id?: number;
   title: string;
   description?: string;
   textColor: string;

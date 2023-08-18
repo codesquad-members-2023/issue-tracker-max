@@ -101,6 +101,17 @@ export default function IssueDetail() {
     }
   };
 
+  const onDeleteComment = (commentId: number) => {
+    setDetailIssue((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          comments: prev.comments.filter((comment) => comment.id !== commentId),
+        };
+      }
+    });
+  };
+
   const onAddImg = (imgMarkdown: string) => {
     setContent((prev) => `${prev}\n${imgMarkdown}\n`);
   };
@@ -123,6 +134,7 @@ export default function IssueDetail() {
                   key={comment.id}
                   issueId={detailIssue.id}
                   commentData={comment}
+                  onDelete={onDeleteComment}
                 />
               ))}
               <IssueContent
