@@ -1,10 +1,13 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.ControllerTest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.comment.service.information.CommentInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.SearchInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueDetailInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.SearchInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.information.LabelInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.service.information.MilestoneInformation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +74,86 @@ class IssueControllerTest {
                         jsonPath("$.issues.[0].author").value("작성자 1"),
                         jsonPath("$.issues.[1].assigneeProfiles.[0]").value("담당자 3")
                 );
+    }
+
+    @DisplayName("IssueDetailInformation을 IssueDetailResponse로 변환한다.")
+    @Test
+    void transformIssueDetailInformationToIssueDetailResponse() throws Exception {
+        //given
+        Long issueId = 5L;
+        given(issueService.getIssueDetailByIssueId(5L)).willReturn(createDummyIssueDetailInformation());
+
+        //when
+        ResultActions resultActions = mockMvc.perform(get("/api/issues/5"));
+
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        jsonPath("$.author").value("작성자"),
+                        jsonPath("$.assigneeProfiles.size()").value(2),
+                        jsonPath("$.isOpen").value(true),
+                        jsonPath("$.labels.size()").value(5),
+                        jsonPath("$.labels.[3].backgroundColor").value("배경색 4"),
+                        jsonPath("$.milestone.closedIssueCount").value(2),
+                        jsonPath("$.comments.[1].contents").value("내용2")
+                );
+    }
+
+    private IssueDetailInformation createDummyIssueDetailInformation() {
+        return IssueDetailInformation.builder()
+                .id(5L)
+                .author("작성자")
+                .title("제목")
+                .isOpen(true)
+                .createdAt(LocalDateTime.now())
+                .assigneeProfiles(List.of("프로필1", "프로필2"))
+                .commentCount(1)
+                .labelInformations(createDummyLabelInformations())
+                .milestoneInformation(createDummyMilestoneInformation())
+                .commentInformations(createDummyCommentInformations())
+                .build();
+    }
+
+    private MilestoneInformation createDummyMilestoneInformation() {
+        return MilestoneInformation.builder()
+                .name("마일스톤")
+                .openIssueCount(1)
+                .closedIssueCount(2)
+                .build();
+    }
+
+    private List<CommentInformation> createDummyCommentInformations() {
+        CommentInformation commentInformation1 = CommentInformation.builder()
+                .id(1L)
+                .authorId(2L)
+                .authorName("작성자1")
+                .contents("내용1")
+                .createdAt(LocalDateTime.now())
+                .build();
+        CommentInformation commentInformation2 = CommentInformation.builder()
+                .id(3L)
+                .authorId(4L)
+                .authorName("작성자2")
+                .contents("내용2")
+                .createdAt(LocalDateTime.now())
+                .build();
+        CommentInformation commentInformation3 = CommentInformation.builder()
+                .id(5L)
+                .authorId(6L)
+                .authorName("작성자3")
+                .contents("내용3")
+                .createdAt(LocalDateTime.now())
+                .build();
+        CommentInformation commentInformation4 = CommentInformation.builder()
+                .id(7L)
+                .authorId(8L)
+                .authorName("작성자4")
+                .contents("내용4")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        return List.of(commentInformation1, commentInformation2, commentInformation3, commentInformation4);
     }
 
     private SearchInformation createDummyFilterInformation() {

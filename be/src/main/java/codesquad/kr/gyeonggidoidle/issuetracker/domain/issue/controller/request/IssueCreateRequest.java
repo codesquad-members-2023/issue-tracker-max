@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @Getter
 public class IssueCreateRequest {
@@ -18,18 +20,16 @@ public class IssueCreateRequest {
     private List<Long> assignees;
     private List<Long> labels;
     private Long milestone;
-    private String file;
 
     @Builder
     private IssueCreateRequest(Long authorId, String title, String comment, List<Long> assignees, List<Long> labels,
-                               Long milestone, String file) {
+                               Long milestone) {
         this.authorId = authorId;
         this.title = title;
         this.comment = comment;
         this.assignees = assignees;
         this.labels = labels;
         this.milestone = milestone;
-        this.file = file;
     }
 
     public static IssueCreateCondition to(IssueCreateRequest request, Long memberId) {
@@ -40,7 +40,6 @@ public class IssueCreateRequest {
                 .assignees(request.getAssignees())
                 .labels(request.getLabels())
                 .milestone(request.getMilestone())
-                .file(request.getFile())
                 .build();
     }
 }

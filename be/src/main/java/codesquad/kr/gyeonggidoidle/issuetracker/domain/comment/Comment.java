@@ -1,4 +1,4 @@
-package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue;
+package codesquad.kr.gyeonggidoidle.issuetracker.domain.comment;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,24 +6,20 @@ import lombok.Getter;
 @Getter
 public class Comment {
 
+    private final Long id;
     private final Long authorId;
     private final Long issueId;
-    private String contents;
-    private String file;
+    private final String contents;
 
     @Builder
-    public Comment(Long authorId, Long issueId, String contents, String file) {
+    private Comment(Long id, Long authorId, Long issueId, String contents) {
+        this.id = id;
         this.authorId = authorId;
         this.issueId = issueId;
         this.contents = contents;
-        this.file = file;
     }
 
     public boolean isContentsExist() {
         return this.contents != null;
-    }
-
-    public boolean isFileExist() {
-        return this.file != null;
     }
 }

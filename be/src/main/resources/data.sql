@@ -7,23 +7,23 @@ values ('nag@codesquad.kr', 'nag', '1q2w3e4r!',
         'https://source.boringavatars.com/beam/20/ati');
 
 INSERT INTO milestone (name, due_date, is_open)
-values ('마일스톤 1', current_date, 1),
-       ('마일스톤 2', current_date, 0),
-       ('마일스톤 3', current_date, 1),
-       ('마일스톤 0', current_date, 1);
+values ('마일스톤1', current_date, 1),
+       ('마일스톤2', current_date, 0),
+       ('마일스톤3', current_date, 1),
+       ('마일스톤0', current_date, 1);
 
 INSERT INTO label (name, background_color, text_color)
-values ('라벨 1', '#F08080', '#000000'),
-       ('라벨 2', '#98FB98', '#000000'),
-       ('라벨 3', '#6495ED', '#000000'),
-       ('라벨 0', '#98FB98', '#000000');
+values ('라벨1', '#F08080', '#000000'),
+       ('라벨2', '#98FB98', '#000000'),
+       ('라벨3', '#6495ED', '#000000'),
+       ('라벨0', '#98FB98', '#000000');
 
 INSERT INTO issue (author_id, milestone_id, title, is_open)
-values (1, 1, '제목 1', 1),
-       (2, 2, '제목 2', 0),
-       (3, 3, '제목 3', 1),
-       (3, 1, '제목 4', 0),
-       (1, 1, '제목 5', 0);
+values (1, 1, '제목1', 1),
+       (2, 2, '제목2', 0),
+       (3, 3, '제목3', 1),
+       (3, 1, '제목4', 0),
+       (1, 1, '제목5', 0);
 
 INSERT INTO issue_label (issue_id, label_id)
 values (1, 1),

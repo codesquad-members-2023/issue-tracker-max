@@ -3,17 +3,16 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.MilestoneStatVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.StatVO;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -47,6 +46,16 @@ public class StatRepository {
                 "(SELECT COUNT(*) FROM label WHERE is_deleted = FALSE) AS label_count;";
 
         return template.queryForObject(sql, new MapSqlParameterSource(), milestoneStatVORowMapper());
+    }
+
+    public int countCommentStatsByIssueId(Long issueId) {
+        String sql = "SELECT COUNT(*) FROM comment WHERE issue_id = :issueId AND is_deleted = FALSE";
+        Integer result = template.queryForObject(sql, new MapSqlParameterSource("issueId", issueId), Integer.class);
+
+        if (result == null) {
+            return 0;
+        }
+        return result;
     }
 
     public StatVO countLabelStats() {

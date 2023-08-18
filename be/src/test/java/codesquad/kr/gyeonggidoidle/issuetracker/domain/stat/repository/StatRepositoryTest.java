@@ -1,13 +1,9 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.RepositoryTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.MilestoneStatVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.StatVO;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @RepositoryTest
@@ -86,5 +83,31 @@ class StatRepositoryTest {
             assertions.assertThat(actual.get(3L).getOpenIssueCount()).isEqualTo(1);
             assertions.assertThat(actual.get(3L).getClosedIssueCount()).isEqualTo(0);
         });
+    }
+
+    @DisplayName("이슈 아이디로 해당 이슈의 코멘트 갯수를 센다.")
+    @Test
+    void countCommentCountByIssueId() {
+        //given
+        Long issueId = 5L;
+
+        //when
+        int actual = repository.countCommentStatsByIssueId(issueId);
+
+        //then
+        assertThat(actual).isEqualTo(4);
+    }
+
+    @DisplayName("이슈 아이디가 없으면 코멘트의 갯수로 0을 반환한다.")
+    @Test
+    void countZeroCommentCountByIssueId() {
+        //given
+        Long issueId = 100L;
+
+        //when
+        int actual = repository.countCommentStatsByIssueId(issueId);
+
+        //then
+        assertThat(actual).isZero();
     }
 }

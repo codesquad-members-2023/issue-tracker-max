@@ -1,9 +1,9 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Issue;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result.IssueDetailResult;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result.IssueStatusResult;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result.IssueUpdateResult;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result.IssueSearchResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,6 +19,15 @@ import java.util.Map;
 public class IssueRepository {
 
     private final NamedParameterJdbcTemplate template;
+
+    public IssueDetailResult findByIssueId(Long issueId) {
+        String sql = "SELECT issue.id AS id, member.name AS author_name, title, is_open, created_at " +
+                "FROM issue " +
+                "LEFT JOIN member ON issue.author_id = member.id " +
+                "WHERE issue.id = :issueId";
+
+        return template.queryForObject(sql, Map.of("issueId", issueId), issueSearchResultRowMapper);
+    }
 
     public Long saveIssue(Issue issue) {
         String sql = "INSERT INTO issue (author_id, milestone_id, title) VALUES (:author_id, :milestone_id, :title)";
@@ -57,11 +66,11 @@ public class IssueRepository {
         template.update(sql, Map.of("issueId", issueId));
     }
 
-    private final RowMapper<IssueSearchResult> issueSearchResultRowMapper = (rs, rowNum) -> IssueSearchResult.builder()
+    private RowMapper<IssueDetailResult> issueSearchResultRowMapper = (rs, rowNum) -> IssueDetailResult.builder()
             .id(rs.getLong("id"))
             .author(rs.getString("author_name"))
-            .milestone(rs.getString("milestone_name"))
             .title(rs.getString("title"))
+            .isOpen(rs.getBoolean("is_open"))
             .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
             .build();
 }

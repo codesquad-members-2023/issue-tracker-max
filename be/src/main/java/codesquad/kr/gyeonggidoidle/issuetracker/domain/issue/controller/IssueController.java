@@ -4,9 +4,11 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.IssueStatusPatchRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request.IssueUpdateRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.ApiResponse;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.IssueDetailResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.response.SearchResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
 import javax.validation.Valid;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueDetailInformation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +45,13 @@ public class IssueController {
     public ApiResponse updateIssuesStatus(@RequestBody @Valid IssueStatusPatchRequest request) {
         issueService.updateIssuesStatus(IssueStatusPatchRequest.to(request));
         return ApiResponse.success(HttpStatus.OK);
+    }
+
+    @GetMapping("/{issueId}")
+    public IssueDetailResponse getIssueDetail(@PathVariable Long issueId) {
+        IssueDetailInformation issueDetailInformation = issueService.getIssueDetailByIssueId(issueId);
+
+        return IssueDetailResponse.from(issueDetailInformation);
     }
 
     @PutMapping("/{issueId}")

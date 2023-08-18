@@ -33,7 +33,7 @@ public class IssueResponse {
         this.createdAt = createdAt;
     }
 
-    public static List<IssueResponse> from(List<codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueInformation> issueInformations) {
+    public static List<IssueResponse> from(List<IssueInformation> issueInformations) {
         return issueInformations.stream()
                 .map(IssueResponse::from)
                 .collect(Collectors.toUnmodifiableList());

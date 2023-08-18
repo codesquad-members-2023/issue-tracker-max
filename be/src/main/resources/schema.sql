@@ -56,13 +56,6 @@ CREATE TABLE issue_assignee
     PRIMARY KEY (id)
 );
 
-CREATE TABLE file
-(
-    id  bigint AUTO_INCREMENT,
-    url varchar(255) NOT NULL,
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE issue
 (
     id           bigint AUTO_INCREMENT,
@@ -80,7 +73,6 @@ CREATE TABLE comment
     id         bigint AUTO_INCREMENT,
     issue_id   bigint       NOT NULL,
     author_id  bigint       NOT NULL,
-    file_id    bigint,
     contents   varchar(255) NOT NULL,
     is_deleted boolean      NOT NULL default FALSE,
     created_at timestamp             default CURRENT_TIMESTAMP,
@@ -106,9 +98,6 @@ ALTER TABLE comment
 
 ALTER TABLE comment
     ADD CONSTRAINT fk_comment_author_id FOREIGN KEY (author_id) REFERENCES member (id);
-
-ALTER TABLE comment
-    ADD CONSTRAINT fk_comment_file_id FOREIGN KEY (file_id) REFERENCES file (id);
 
 ALTER TABLE issue_label
     ADD CONSTRAINT fk_issue_label_issue_id FOREIGN KEY (issue_id) REFERENCES issue (id);

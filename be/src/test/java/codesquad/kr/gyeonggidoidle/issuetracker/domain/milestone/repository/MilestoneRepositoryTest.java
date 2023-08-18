@@ -1,17 +1,19 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.RepositoryTest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.Milestone;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
-import java.time.LocalDate;
-import java.util.List;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneVO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @RepositoryTest
 class MilestoneRepositoryTest {
@@ -101,5 +103,22 @@ class MilestoneRepositoryTest {
         boolean actual = repository.updateStatus(1L, false);
         // then
         assertThat(actual).isTrue();
+    }
+
+    @DisplayName("issueId로 issueId의 MileStone을 가져올 수 있다.")
+    @Test
+    void getMilestoneByIssueId() {
+        //given
+        Long issueId = 1L;
+
+        //when
+        MilestoneVO actual = repository.getMilestoneByIssueId(issueId);
+
+        //then
+        assertSoftly(assertions -> {
+            assertions.assertThat(actual.getName()).isEqualTo("마일스톤 1");
+            assertions.assertThat(actual.getOpenIssueCount()).isEqualTo(1);
+            assertions.assertThat(actual.getClosedIssueCount()).isEqualTo(2);
+        });
     }
 }

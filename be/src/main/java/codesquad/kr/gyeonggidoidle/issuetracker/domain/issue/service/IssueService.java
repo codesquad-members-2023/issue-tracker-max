@@ -1,19 +1,24 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service;
 
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.comment.Comment;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.comment.repository.CommentRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Comment;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.SearchFilter;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.comment.repository.result.CommentResult;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.Issue;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.IssueSearchRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.SearchFilter;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.IssueRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.IssueSearchRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result.IssueDetailResult;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result.IssueSearchResult;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueCreateCondition;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueStatusPatchCondition;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueUpdateCondition;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueDetailInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.SearchInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.LabelRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.MemberRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.MilestoneRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.StatRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.StatVO;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +38,7 @@ public class IssueService {
     private final LabelRepository labelRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
+    private final MilestoneRepository milestoneRepository;
 
     public SearchInformation findIssuesBySearchFilter(String searchFilterCondition) {
         StatVO statVO = statRepository.countOverallStats();
@@ -45,16 +51,27 @@ public class IssueService {
         return SearchInformation.from(statVO, issueSearchResults, labelVOs, assigneeProfiles, searchFilterCondition);
     }
 
+    public IssueDetailInformation getIssueDetailByIssueId(Long issueId) {
+        IssueDetailResult issueDetailResult = issueRepository.findByIssueId(issueId);
+        List<String> assigneeProfiles = memberRepository.findAllProfilesByIssueId(issueId);
+        int commentCount = statRepository.countCommentStatsByIssueId(issueId);
+        List<LabelVO> labelVOs = labelRepository.findAllByIssueId(issueId);
+        MilestoneVO milestoneVO = milestoneRepository.getMilestoneByIssueId(issueId);
+        List<CommentResult> commentResults = commentRepository.findByIssueId(issueId);
+
+        return IssueDetailInformation.from(issueDetailResult, assigneeProfiles, commentCount, labelVOs, milestoneVO,
+                commentResults);
+    }
+
     public void createIssue(IssueCreateCondition condition) {
         Issue issue = IssueCreateCondition.toIssue(condition);
         Long createdId = issueRepository.saveIssue(issue);
-        Comment comment = null;
+        Comment comment;
 
         if (condition.hasComment()) {
             comment = IssueCreateCondition.toComment(createdId, condition);
-            Long fileUrl = comment.isFileExist()? commentRepository.updateFile(comment.getFile()) : null;
             if (comment.isContentsExist()) {
-                commentRepository.createComment(fileUrl, comment);
+                commentRepository.save(comment);
             }
         }
         if (condition.hasAssignees()) {
