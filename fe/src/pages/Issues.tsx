@@ -33,7 +33,7 @@ export const IssuesPage = () => {
       const q = queryParams.get("q") || "is:open";
 
       const response = await fetch(
-        `http://43.200.169.143:8080/api/issues/filtered?q=${q}`,
+        `http://43.200.169.143:8080/api/issues?q=${q}`,
       );
       const data = await response.json();
 

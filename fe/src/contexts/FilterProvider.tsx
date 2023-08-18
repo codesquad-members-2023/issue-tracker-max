@@ -6,10 +6,10 @@ import { useNavigate } from "react-router-dom";
 
 interface DropdownFilter {
   [key: string]: string[];
-  assignees: string[];
-  authors: string[];
-  labels: string[];
-  milestones: string[];
+  assignee: string[];
+  author: string[];
+  label: string[];
+  milestone: string[];
 }
 
 interface FilterState {
@@ -19,10 +19,10 @@ interface FilterState {
 
 const initialState: FilterState = {
   dropdownFilter: {
-    assignees: [],
-    authors: [],
-    labels: [],
-    milestones: [],
+    assignee: [],
+    author: [],
+    label: [],
+    milestone: [],
   },
   filterBar: [],
 };
@@ -35,6 +35,7 @@ interface FilterContextType {
   state: FilterState;
   setDropdownFilter: (filter: string, name: string[]) => void;
   setFilterBar: (filter: string[]) => void;
+  resetFilters: () => void;
 }
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
@@ -71,17 +72,23 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
   };
 
   const setDropdownFilter = (filter: string, name: string[]) => {
-    const deleteSpace = name.map((item) => item.split(" ").join(""));
+    const deleteSpaceForQuery = name.map((item) => item.split(" ").join(""));
 
     setState((prev) => {
       const newState = {
         ...prev,
         dropdownFilter: {
           ...prev.dropdownFilter,
-          [filter]: deleteSpace,
+          [filter]: name,
         },
       };
-      updateQuery(newState);
+      updateQuery({
+        ...newState,
+        dropdownFilter: {
+          ...newState.dropdownFilter,
+          [filter]: deleteSpaceForQuery,
+        },
+      });
       return newState;
     });
   };
@@ -97,8 +104,14 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     });
   };
 
+  const resetFilters = () => {
+    setState(initialState);
+  };
+
   return (
-    <FilterContext.Provider value={{ state, setDropdownFilter, setFilterBar }}>
+    <FilterContext.Provider
+      value={{ state, setDropdownFilter, setFilterBar, resetFilters }}
+    >
       {children}
     </FilterContext.Provider>
   );

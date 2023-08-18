@@ -9,10 +9,10 @@ import { IssueTableItem } from "./IssueTableItem";
 import { DropdownPanel } from "components/Dropdown/DropdownPanel";
 
 const INITIAL_SUBFILLTER_DATA = [
-  { id: 1, title: "담당자", filter: "assignees" },
-  { id: 2, title: "레이블", filter: "labels" },
-  { id: 3, title: "마일스톤", filter: "milestones" },
-  { id: 4, title: "작성자", filter: "authors" },
+  { id: 1, title: "담당자", filter: "assignee" },
+  { id: 2, title: "레이블", filter: "label" },
+  { id: 3, title: "마일스톤", filter: "milestone" },
+  { id: 4, title: "작성자", filter: "author" },
 ];
 
 const ISSUE_STATE_DATA = [
@@ -49,10 +49,12 @@ export const IssueTable: React.FC<IssueTableProps> = ({ tableData }) => {
 
   /* filtered 결과 완료 되면 수정할 부분 */
   const fetchFilterData = useCallback(async () => {
+  const fetchFilterData = async () => {
     try {
-      const response = await fetch("http://43.200.169.143:8080/api/filters");
-      const data = await response.json();
-      console.log(data, "필터데이터");
+      const data = (await makeRequest(
+        "http://43.200.169.143:8080/api/filters/main",
+        "GET",
+      )) as FilterData;
 
       setSubFilterData((prevData) =>
         prevData.map((item) => ({
@@ -63,12 +65,12 @@ export const IssueTable: React.FC<IssueTableProps> = ({ tableData }) => {
     } catch (error) {
       console.error("Error fetching filter data:", error);
     }
-  }, []);
+  };
 
   useEffect(() => {
     if (!hasSubFilterFetched.current) {
-      fetchFilterData();
-      hasSubFilterFetched.current = true;
+    fetchFilterData();
+  }, []);
     }
   }, [fetchFilterData]);
 
