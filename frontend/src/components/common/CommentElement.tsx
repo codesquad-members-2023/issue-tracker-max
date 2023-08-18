@@ -85,7 +85,7 @@ export default function Comment({
             onChange={handleChange}></TextArea>
         ) : (
           <TextBox>
-            <ReactMarkdown children={textValueq} />
+            <ReactMarkdown children={textValue} />
           </TextBox>
         )}
       </Body>

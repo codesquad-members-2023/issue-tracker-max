@@ -26,7 +26,7 @@ type IssueDetail = {
   user: {
     id: number;
     name: string;
-    imgUrl: string;
+    imageUrl: string;
   };
   close: boolean;
 };
@@ -166,10 +166,10 @@ export default function IssueDetail() {
             <InformationTag size="medium" iconName="alertCircle">
               {issueDetail.close ? '닫힌 이슈' : '열린 이슈'}
             </InformationTag>
-            {/* <span>
-              이 이슈가 {issueDetail?.createdAt}에 {issueDetail?.user.name}님에
+            <span>
+              이 이슈가 {issueDetail.createdAt}에 {issueDetail.user?.name}님에
               의해 열렸습니다.
-            </span> */}
+            </span>
           </StateInfo>
         </PostInfo>
         <Container>
@@ -177,11 +177,9 @@ export default function IssueDetail() {
             <CommentElement
               key={issueDetail.id}
               userInfo={{
-                userId: 1,
-                userName: 'fuse123',
-                // userId: issueDetail?.user.id,
-                // userName: issueDetail?.user.name,
-                // userImg: issueDetail?.user.imgUrl,
+                userId: issueDetail.user?.id,
+                userName: issueDetail.user?.name,
+                userImg: issueDetail.user?.imageUrl,
               }}
               timeStamp={issueDetail.createdAt}
               content={issueDetail.content}
@@ -194,8 +192,8 @@ export default function IssueDetail() {
                     userName: comment.writer.name,
                     userImg: comment.writer.profileImg,
                   }}
-                  content={comment.content}
                   timeStamp={comment.createdAt}
+                  content={comment.content}
                 />
               );
             })}
