@@ -24,7 +24,7 @@ class MemberControllerTest extends ControllerTestSupport {
 			.build();
 		// when&then
 		mockMvc.perform(
-				post("/api/signup")
+				post("/api/members/signup")
 					.content(objectMapper.writeValueAsString(signUpRequest))
 					.contentType(MediaType.APPLICATION_JSON)
 			)
