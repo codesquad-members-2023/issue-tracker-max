@@ -11,10 +11,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.presents.issuetracker.global.error.handler.GlobalExceptionHandler;
 import org.presents.issuetracker.global.error.response.CommonApiResponse;
 import org.presents.issuetracker.global.error.statuscode.JwtErrorCode;
 import org.presents.issuetracker.global.error.statuscode.StatusCode;
 import org.presents.issuetracker.jwt.JwtProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter implements Filter {
-
+	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private static final String AUTHORIZATION_PREFIX = "Bearer ";
 	private static final String[] excludeUris = new String[] {
@@ -41,6 +44,8 @@ public class JwtAuthorizationFilter implements Filter {
 		throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpServletResponse res = (HttpServletResponse)response;
+
+		log.info("[request] : {}", ((HttpServletRequest)request).getRequestURI());
 
 		if (HttpMethod.OPTIONS.matches(req.getMethod())) {
 			chain.doFilter(request, response);

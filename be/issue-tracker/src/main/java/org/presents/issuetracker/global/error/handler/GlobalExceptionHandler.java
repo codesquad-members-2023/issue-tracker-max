@@ -54,6 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<CommonApiResponse> handleException(Exception ex) {
 		ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
 		log.warn("Exception handling: {}", ex.toString());
+		ex.printStackTrace();
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(CommonApiResponse.fail(errorCode.getHttpStatus(), errorCode.getMessage()));
 	}
