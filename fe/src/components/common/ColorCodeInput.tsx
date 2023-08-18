@@ -6,7 +6,7 @@ import { ReactComponent as RefreshCcw } from '@assets/icons/refreshCcw.svg';
 type Props = {
   value: string;
   isError?: boolean;
-  captionString?: string;
+  caption?: string;
   onChange: (value: string) => void;
   onRandomButtonClick: () => void;
 };
@@ -14,7 +14,7 @@ type Props = {
 export const ColorCodeInput: React.FC<Props> = ({
   isError,
   value,
-  captionString,
+  caption,
   onChange,
   onRandomButtonClick,
 }) => {
@@ -69,7 +69,7 @@ export const ColorCodeInput: React.FC<Props> = ({
               color: theme.danger.text.default,
             }}
           >
-            {captionString}
+            {caption}
           </span>
         )}
       </div>

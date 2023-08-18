@@ -48,6 +48,12 @@ type DefaultFileStatusType = {
   uploadFailed: boolean;
 };
 
+type LabelList = {
+  labelCount: number;
+  milestoneCount: number;
+  labels: Label[];
+};
+
 type Label = {
   id: number;
   name: string;
@@ -57,8 +63,10 @@ type Label = {
 };
 
 type MilestonePageData = {
-  openMilestonesCount: number;
+  openMilestoneCount: number;
   closedMilestoneCount: number;
+  labelCount: number;
+  milestoneCount: number;
   milestones: Milestone[];
 };
 
@@ -67,7 +75,7 @@ type Milestone = {
   name: string;
   description: string;
   progress: number;
-  status: StatusType;
+  status: string;
   openIssueCount: number;
   closedIssueCount: number;
   deadline: string;
@@ -93,7 +101,7 @@ type IssueDetailMilestone = {
   progress: number;
 };
 
-type Comment = {
+type CommentType = {
   id: number;
   author: User;
   contents: string;
@@ -110,5 +118,18 @@ type IssueDetailPageData = {
   assignees: User[];
   labels: IssueDetailLabel[];
   milestone: IssueDetailMilestone;
-  comments: Comment[];
+  comments: CommentType[];
+};
+
+type SelectionState = {
+  newIssuePage: {
+    assignees: number[];
+    labels: number[];
+    milestones: number | null;
+  };
+  detailPage: {
+    assignees: User[];
+    labels: IssueDetailLabel[];
+    milestones: { id: number; name: string; progress: number } | null;
+  };
 };

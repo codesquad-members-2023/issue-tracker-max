@@ -9,15 +9,15 @@ type Props = {
 
 export const ProgressLabel: React.FC<Props> = ({
   name,
-  progress,
-  openIssueCount,
-  closeIssueCount,
+  progress = 0,
+  openIssueCount = 0,
+  closeIssueCount = 0,
 }) => {
   const theme = useTheme() as any;
 
   return (
     <>
-      {name && (
+      {name ? (
         <p
           css={{
             marginTop: '8px',
@@ -27,9 +27,7 @@ export const ProgressLabel: React.FC<Props> = ({
         >
           {name}
         </p>
-      )}
-
-      {progress && (
+      ) : (
         <div
           css={{
             marginTop: '8px',

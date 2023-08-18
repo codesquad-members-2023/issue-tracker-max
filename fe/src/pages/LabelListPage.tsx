@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 import { SubNav } from '@components/labelListPage/SubNav';
 import { Body } from '@components/labelListPage/Body';
-import { getLabelListPageData } from '@utils/api';
-type Props = {};
+import { getLabelList } from 'apis/api';
 
-export const LabelListPage: React.FC<Props> = ({}) => {
+export const LabelListPage: React.FC = () => {
   const [isAddTableOpen, setIsAddTableOpen] = useState(false);
-  const [labelListData, setLabelListData] = useState<Label[]>([]);
+  const [labelListData, setLabelListData] = useState<LabelList>(initialData);
 
   const fetchLabelList = async () => {
-    const pageData = await getLabelListPageData();
+    const pageData = await getLabelList();
     setLabelListData(pageData);
   };
 
@@ -36,18 +35,24 @@ export const LabelListPage: React.FC<Props> = ({}) => {
       }}
     >
       <SubNav
-        onAddTableOpen={onAddTableOpen}
-        labelCount={labelListData.length}
-        milestoneCount={13}
         isAddTableOpen={isAddTableOpen}
+        labelCount={labelListData.labelCount}
+        milestoneCount={labelListData.milestoneCount}
+        onAddTableOpen={onAddTableOpen}
       />
       <Body
         isAddTableOpen={isAddTableOpen}
-        labelList={labelListData}
-        labelCount={labelListData.length}
+        labelList={labelListData.labels}
+        labelCount={labelListData.labelCount}
         onAddTableClose={onAddTableClose}
         fetchLabelList={fetchLabelList}
       />
     </div>
   );
+};
+
+const initialData = {
+  labelCount: 0,
+  milestoneCount: 0,
+  labels: [],
 };
