@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTheme } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import { Button } from '@components/common/Button';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { ReactComponent as Trash } from '@assets/icons/trash.svg';
@@ -12,6 +12,8 @@ import { ProgressLabel } from '@components/common/ProgressLabel';
 import { MilestoneEditTable } from './MilestoneEditTable';
 import { TableHeader } from '@components/common/Table/TableHeader';
 import { deleteMilestone, editMilestoneStatus } from 'apis/api';
+import { Alert } from '@components/common/Alert';
+import { Theme } from '@emotion/react/macro';
 
 type Props = {
   milestone: Milestone;
@@ -63,25 +65,26 @@ export const MilestoneItem: React.FC<Props> = ({
     }
   };
 
+  const formatDeadline = (deadline: string) => {
+    if (deadline) {
+      return deadline
+        .split('-')
+        .join('.')
+        .slice(0, deadline.indexOf('T'))
+        .replace(/-/g, '.');
+    }
+  };
+
   const isOpen = milestone.status === 'open';
 
   return (
-    <li
-      css={{
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '32px',
-
-        boxSizing: 'border-box',
-      }}
-    >
+    <li css={milestoneItemStyle}>
       {isEditing ? (
         <>
           <MilestoneEditTable
             header={<TableHeader title="마일스톤 편집" />}
             typeVariant="edit"
+            milestone={milestone}
             onAddTableClose={onEditMilestoneClose}
             fetchPageData={fetchPageData}
           />
@@ -95,36 +98,14 @@ export const MilestoneItem: React.FC<Props> = ({
               gap: '8px',
             }}
           >
-            <div
-              css={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-              }}
-            >
-              <div
-                css={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  color: theme.neutral.text.strong,
-                  font: theme.fonts.availableMedium16,
-                }}
-              >
-                <Milestone fill={theme.palette.blue} />
+            <div className="milestone-info">
+              <div className="milestone-info__title">
+                <Milestone className="icon-milestone" />
                 <span>{milestone.name}</span>
               </div>
-              <div
-                css={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  color: theme.neutral.text.weak,
-                  font: theme.fonts.availableMedium12,
-                }}
-              >
-                <Calendar stroke={theme.neutral.text.weak} />
-                <span>{milestone.deadline}</span>
+              <div className="milestone-info__date">
+                <Calendar className="icon-calendar" />
+                <span>{formatDeadline(milestone.deadline ?? '')}</span>
               </div>
             </div>
             <span
@@ -195,7 +176,7 @@ export const MilestoneItem: React.FC<Props> = ({
                   padding: '0',
                   color: theme.danger.text.default,
                 }}
-                onClick={onDeleteMilestone}
+                onClick={onAlertOpen}
               >
                 <Trash stroke={theme.danger.text.default} />
                 삭제
@@ -210,6 +191,60 @@ export const MilestoneItem: React.FC<Props> = ({
           </div>
         </>
       )}
+      {isOpenAlert && (
+        <Alert
+          {...{
+            action: 'danger',
+            leftButtonText: '취소',
+            rightButtonText: '삭제',
+            onClose: onAlertClose,
+            onConfirm: onDeleteMilestone,
+          }}
+        >
+          <span>해당 마일스톤을 삭제하시겠습니꽈?</span>
+        </Alert>
+      )}
     </li>
   );
 };
+
+const milestoneItemStyle = (theme: Theme) => css`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px;
+  box-sizing: border-box;
+
+  .milestone-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    &__title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      color: ${theme.neutral.text.strong};
+      font: ${theme.fonts.availableMedium16};
+
+      .icon-milestone {
+        fill: ${theme.palette.blue};
+      }
+    }
+
+    &__date {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      color: ${theme.neutral.text.weak};
+      font: ${theme.fonts.availableMedium12};
+
+      .icon-calendar {
+        stroke: ${theme.neutral.text.weak};
+      }
+    }
+  }
+`;

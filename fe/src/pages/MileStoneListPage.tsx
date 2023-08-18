@@ -6,7 +6,6 @@ import { useLocation } from 'react-router-dom';
 
 export const MileStoneListPage: React.FC = () => {
   const [isAddTableOpen, setIsAddTableOpen] = useState(false);
-  const [filterValue, setFilterValue] = useState('');
   const [milestoneListData, setMilestoneListData] =
     useState<MilestonePageData>(initialData);
   const location = useLocation();
@@ -19,20 +18,12 @@ export const MileStoneListPage: React.FC = () => {
   };
 
   const fetchPageData = async () => {
-    const pageData: MilestonePageData = await getMilestonesWithQuery(
-      location.search,
-    );
+    const query = location.search || '?status=open';
+    const pageData: MilestonePageData = await getMilestonesWithQuery(query);
     setMilestoneListData(pageData);
   };
 
   const initPageWithFilter = () => {
-    if (location.search === '') {
-      setFilterValue('isOpen');
-    } else {
-      const value = decodeURIComponent(location.search.replace('?', ''));
-      setFilterValue(value);
-    }
-
     fetchPageData();
   };
 
@@ -51,22 +42,24 @@ export const MileStoneListPage: React.FC = () => {
       }}
     >
       <SubNav
-        onAddTableOpen={onAddTableOpen}
+        isAddTableOpen={isAddTableOpen}
         labelCount={milestoneListData.labelCount}
         milestoneCount={milestoneListData.milestoneCount}
+        onAddTableOpen={onAddTableOpen}
       />
       <Body
         isAddTableOpen={isAddTableOpen}
         milestoneList={milestoneListData.milestones}
-        openMilestonesCount={milestoneListData.openMilestonesCount}
+        openMilestoneCount={milestoneListData.openMilestoneCount}
         closedMilestoneCount={milestoneListData.closedMilestoneCount}
         onAddTableClose={onAddTableClose}
+        fetchPageData={fetchPageData}
       />
     </div>
   );
 };
 const initialData = {
-  openMilestonesCount: 0,
+  openMilestoneCount: 0,
   closedMilestoneCount: 0,
   labelCount: 0,
   milestoneCount: 0,
@@ -76,7 +69,7 @@ const initialData = {
       name: '',
       description: '',
       progress: 0,
-      status: 'open', // 'open' 또는 'closed'로 명시적으로 설정합니다.
+      status: 'open',
       openIssueCount: 0,
       closedIssueCount: 0,
       deadline: '2023-08-01T00:00:00',

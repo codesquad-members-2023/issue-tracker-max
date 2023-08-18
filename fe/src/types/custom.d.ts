@@ -63,7 +63,7 @@ type Label = {
 };
 
 type MilestonePageData = {
-  openMilestonesCount: number;
+  openMilestoneCount: number;
   closedMilestoneCount: number;
   labelCount: number;
   milestoneCount: number;
