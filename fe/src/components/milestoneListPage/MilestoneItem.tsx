@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import { useTheme } from '@emotion/react';
 import { Button } from '@components/common/Button';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
@@ -7,38 +6,64 @@ import { ReactComponent as Trash } from '@assets/icons/trash.svg';
 import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { ReactComponent as Calendar } from '@assets/icons/calendar.svg';
 import { ReactComponent as Milestone } from '@assets/icons/milestone.svg';
-// import { TableContainer } from '@components/common/Table/TableContainer';
-// import { TableHeader } from '@components/common/Table/TableHeader';
+import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
 import { ProgressBar } from '@components/common/ProgressBar';
 import { ProgressLabel } from '@components/common/ProgressLabel';
+import { MilestoneEditTable } from './MilestoneEditTable';
+import { TableHeader } from '@components/common/Table/TableHeader';
+import { deleteMilestone, editMilestoneStatus } from 'apis/api';
 
 type Props = {
-  name: string;
-  description: string;
-  progress: number;
-  openIssueCount: number;
-  closedIssueCount: number;
-  deadline: string;
+  milestone: Milestone;
+  fetchPageData: () => Promise<void>;
 };
 
 export const MilestoneItem: React.FC<Props> = ({
-  name,
-  description,
-  progress,
-  openIssueCount,
-  closedIssueCount,
-  deadline,
+  milestone,
+  fetchPageData,
 }) => {
   const theme = useTheme() as any;
   const [isEditing, setIsEditing] = useState(false);
+  const [isOpenAlert, setIsOpenAlert] = useState(false);
 
   const onEditMilestoneOpen = () => {
     setIsEditing(true);
   };
 
-  // const onEditMilestoneClose = () => {
-  //   setIsEditing(false);
-  // };
+  const onEditMilestoneClose = () => {
+    setIsEditing(false);
+  };
+
+  const onAlertOpen = () => {
+    setIsOpenAlert(true);
+  };
+
+  const onAlertClose = () => {
+    setIsOpenAlert(false);
+  };
+
+  const onEditMilestoneStatus = async () => {
+    const status = milestone.status === 'open' ? 'closed' : 'open';
+    try {
+      await editMilestoneStatus(milestone.id, status);
+      fetchPageData();
+      onAlertClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onDeleteMilestone = async () => {
+    try {
+      await deleteMilestone(milestone.id);
+      fetchPageData();
+      onAlertClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const isOpen = milestone.status === 'open';
 
   return (
     <li
@@ -53,14 +78,15 @@ export const MilestoneItem: React.FC<Props> = ({
       }}
     >
       {isEditing ? (
-        <></>
+        <>
+          <MilestoneEditTable
+            header={<TableHeader title="마일스톤 편집" />}
+            typeVariant="edit"
+            onAddTableClose={onEditMilestoneClose}
+            fetchPageData={fetchPageData}
+          />
+        </>
       ) : (
-        // <TableContainer
-        //   header={<TableHeader title="마일스톤 편집" />}
-        //   tableVariant="milestone"
-        //   typeVariant="edit"
-        //   onAddTableClose={onEditMilestoneClose}
-        // ></TableContainer>
         <>
           <div
             css={{
@@ -85,8 +111,8 @@ export const MilestoneItem: React.FC<Props> = ({
                   font: theme.fonts.availableMedium16,
                 }}
               >
-                <Milestone stroke={theme.palette.blue} />
-                <span>{name}</span>
+                <Milestone fill={theme.palette.blue} />
+                <span>{milestone.name}</span>
               </div>
               <div
                 css={{
@@ -98,7 +124,7 @@ export const MilestoneItem: React.FC<Props> = ({
                 }}
               >
                 <Calendar stroke={theme.neutral.text.weak} />
-                <span>{deadline}</span>
+                <span>{milestone.deadline}</span>
               </div>
             </div>
             <span
@@ -109,7 +135,7 @@ export const MilestoneItem: React.FC<Props> = ({
                 font: theme.fonts.displayMedium16,
               }}
             >
-              {description}
+              {milestone.description}
             </span>
           </div>
 
@@ -135,10 +161,19 @@ export const MilestoneItem: React.FC<Props> = ({
                   width: 'fit-content',
                   padding: '0',
                 }}
-                onClick={() => console.log('닫기')}
+                onClick={onEditMilestoneStatus}
               >
-                <Archive stroke={theme.neutral.text.default} />
-                닫기
+                {isOpen ? (
+                  <>
+                    <Archive stroke={theme.neutral.text.default} />
+                    닫기
+                  </>
+                ) : (
+                  <>
+                    <AlertCircle stroke={theme.neutral.text.default} />
+                    열기
+                  </>
+                )}
               </Button>
               <Button
                 typeVariant="ghost"
@@ -160,16 +195,17 @@ export const MilestoneItem: React.FC<Props> = ({
                   padding: '0',
                   color: theme.danger.text.default,
                 }}
+                onClick={onDeleteMilestone}
               >
                 <Trash stroke={theme.danger.text.default} />
                 삭제
               </Button>
             </div>
-            <ProgressBar progress={progress} />
+            <ProgressBar progress={milestone.progress} />
             <ProgressLabel
-              progress={progress}
-              openIssueCount={openIssueCount}
-              closeIssueCount={closedIssueCount}
+              progress={milestone.progress}
+              openIssueCount={milestone.openIssueCount}
+              closeIssueCount={milestone.closedIssueCount}
             />
           </div>
         </>
