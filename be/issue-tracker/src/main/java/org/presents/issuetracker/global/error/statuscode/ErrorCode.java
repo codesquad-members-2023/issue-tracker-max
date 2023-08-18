@@ -11,7 +11,7 @@ public enum ErrorCode implements StatusCode {
 	VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "유효하지 않은 형식입니다."),
 	// 404 Not Found
 	PAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "페이지를 찾을 수 없습니다."),
-	//500 Internal Server Error
+	// 500 Internal Server Error
 	INTERNAL_SERVER_ERROR_DB(HttpStatus.INTERNAL_SERVER_ERROR, "데이터베이스 에러입니다."),
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다.");
 	private final HttpStatus httpStatus;

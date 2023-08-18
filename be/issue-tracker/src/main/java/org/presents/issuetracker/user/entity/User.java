@@ -20,5 +20,27 @@ public class User {
 		this.password = password;
 		this.image = image;
 	}
-}
 
+	public boolean matchesPassword(String password) {
+		return this.password.equals(password);
+	}
+
+	private User(Long userId, String loginId, String image) {
+		this.userId = userId;
+		this.loginId = loginId;
+		this.image = image;
+	}
+
+	public static User of(Long userId, String loginId, String image) {
+		return new User(userId, loginId, image);
+	}
+
+	public static User of(User user, Long userId) {
+		return User.builder()
+			.userId(userId)
+			.loginId(user.getLoginId())
+			.password(user.getPassword())
+			.image(user.getImage())
+			.build();
+	}
+}
