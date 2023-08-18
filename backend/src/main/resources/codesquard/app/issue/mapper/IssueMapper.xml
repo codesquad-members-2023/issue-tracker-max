@@ -216,4 +216,88 @@
         </foreach>
     </select>
 
+    <select id="countIssues" parameterType="codesquard.app.issue.mapper.request.IssueFilterRequest"
+            resultType="codesquard.app.issue.mapper.response.IssueCount">
+        SELECT issue.`status` AS status, IFNULL(COUNT(issue.`id`), 0) AS count
+        FROM issue AS issue
+        LEFT OUTER JOIN (SELECT `issue_id`, COUNT(`id`) AS comment_count FROM comment GROUP BY `issue_id`) AS comment
+        ON comment.`issue_id` = issue.id
+        LEFT OUTER JOIN `user` AS u
+        ON u.`id` = issue.`user_id`
+        LEFT OUTER JOIN `milestone` AS milestone
+        ON milestone.`id` = issue.`milestone_id`
+        <where>
+            issue.`is_deleted` = 0
+            <choose>
+                <otherwise>
+                    <if test="milestone != null">
+                        <choose>
+                            <when test="milestone == 'none'">
+                                AND issue.`milestone_id` IS NULL
+                            </when>
+                            <otherwise>
+                                AND milestone.`name` = #{milestone}
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="author != null">
+                        AND u.`login_id` = #{author}
+                    </if>
+                    <if test="assignee != null">
+                        <choose>
+                            <when test="assignee == 'none'">
+                                AND issue.`id` NOT IN (
+                                SELECT DISTINCT(assignee.`issue_id`)
+                                FROM issue_assignee AS assignee
+                                LEFT OUTER JOIN user AS u
+                                ON assignee.`user_id` = u.`id`)
+                            </when>
+                            <otherwise>
+                                AND issue.`id` IN (
+                                SELECT DISTINCT(assignee.`issue_id`)
+                                FROM issue_assignee AS assignee
+                                LEFT OUTER JOIN user AS u
+                                ON assignee.`user_id` = u.`id`
+                                WHERE u.`login_id` = #{assignee})
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="label != null">
+                        <choose>
+                            <when test="label.get(0) == 'none'">
+                                AND issue.`id` NOT IN (
+                                SELECT DISTINCT(issue_label.`issue_id`)
+                                FROM issue_label AS issue_label
+                                LEFT OUTER JOIN label AS label
+                                ON issue_label.`label_id` = label.`id`)
+                            </when>
+                            <otherwise>
+                                AND issue.`id` IN (
+                                SELECT issue_label.`issue_id`
+                                FROM issue_label AS issue_label
+                                LEFT OUTER JOIN label AS label
+                                ON issue_label.`label_id` = label.`id`
+                                WHERE label.`name` IN
+                                <foreach item="name" index="index" collection="label" open="(" separator="," close=")">
+                                    #{name}
+                                </foreach>
+                                GROUP BY issue_label.`issue_id`
+                                HAVING COUNT(issue_label.`issue_id`) >= ${label.size})
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="mentions != null">
+                        AND issue.`id` IN (
+                        SELECT DISTINCT(comment.`issue_id`)
+                        FROM comment AS comment
+                        LEFT OUTER JOIN user AS u
+                        ON u.`id` = comment.`user_id`
+                        WHERE u.`login_id` = #{mentions})
+                    </if>
+                </otherwise>
+            </choose>
+        </where>
+        GROUP BY issue.`status`
+    </select>
+
 </mapper>

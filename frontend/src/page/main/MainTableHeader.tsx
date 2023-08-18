@@ -52,11 +52,13 @@ export function MainTableHeader({
 
   const issueStateDropdownOptions = [
     {
+      id: 1,
       name: "선택한 이슈 열기",
       selected: false,
       onClick: () => onChangeIssuesState("OPENED"),
     },
     {
+      id: 2,
       name: "선택한 이슈 닫기",
       selected: false,
       onClick: () => onChangeIssuesState("CLOSED"),
@@ -77,7 +79,7 @@ export function MainTableHeader({
       onClick: () => {
         setMultiFilterString(
           `${key}:${option.id === 0 ? "none" : option.name}`,
-          multipleSelect,
+          option.id === 0 ? false : multipleSelect,
         );
       },
     }));
@@ -117,20 +119,30 @@ export function MainTableHeader({
             ))}
           </TabButton>
           <MultiFiltersDiv>
-            {Object.entries(multiFilters).map(([key, value], index) => (
-              <DropdownContainer
-                key={index}
-                name={key}
-                optionTitle={`${key} 필터`}
-                options={addOnClickToOptions(
-                  key,
-                  value.options,
-                  value.multipleSelect,
-                )}
-                alignment="Right"
-                autoClose
-              />
-            ))}
+            {Object.entries(multiFilters).map(([key, value], index) => {
+              const iconType =
+                "avatarUrl" in value.options[0]
+                  ? "Profile"
+                  : "background" in value.options[0]
+                  ? "Palette"
+                  : "None";
+
+              return (
+                <DropdownContainer
+                  key={index}
+                  name={key}
+                  iconType={iconType}
+                  optionTitle={`${key} 필터`}
+                  options={addOnClickToOptions(
+                    key,
+                    value.options,
+                    value.multipleSelect,
+                  )}
+                  alignment="Right"
+                  autoClose
+                />
+              );
+            })}
           </MultiFiltersDiv>
         </>
       ) : (

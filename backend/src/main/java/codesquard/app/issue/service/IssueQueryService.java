@@ -2,7 +2,6 @@ package codesquard.app.issue.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +16,10 @@ import codesquard.app.issue.dto.response.IssueMilestoneResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueUserResponse;
 import codesquard.app.issue.dto.response.userReactionResponse;
-import codesquard.app.issue.entity.IssueStatus;
 import codesquard.app.issue.mapper.IssueMapper;
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
+import codesquard.app.issue.mapper.response.IssueCount;
+import codesquard.app.issue.mapper.response.IssueCountResponse;
 import codesquard.app.issue.mapper.response.IssueFilterResponse;
 import codesquard.app.issue.mapper.response.IssuesResponse;
 import codesquard.app.issue.mapper.response.filters.MultiFilters;
@@ -112,11 +112,13 @@ public class IssueQueryService {
 
 	// Issue Filtering
 	public IssueFilterResponse findFilterIssues(String loginId, IssueFilterRequest request) {
-		Map<String, Long> counts = countIssuesByStatus();
+		final String input = generateInput(request);
+		final List<SingleFilter> singleFilters = generateSingleFilters(loginId, request);
+		IssueCountResponse issueCountResponse = new IssueCountResponse(countIssues(loginId, request));
 
-		return new IssueFilterResponse(generateInput(request), counts.get(IssueStatus.OPENED.name()),
-			counts.get(IssueStatus.CLOSED.name()), labelRepository.countAll(), milestoneRepository.countAll(),
-			findIssues(loginId, request), generateSingleFilters(request),
+		return new IssueFilterResponse(input, issueCountResponse.getOpenedIssueCount(),
+			issueCountResponse.getClosedIssueCount(), labelRepository.countAll(), milestoneRepository.countAll(),
+			findIssues(loginId, request), singleFilters,
 			checkMultiFilters(multiFiltersCheck, request));
 	}
 
@@ -150,40 +152,42 @@ public class IssueQueryService {
 		return builder.toString().stripTrailing();
 	}
 
-	private Map<String, Long> countIssuesByStatus() {
-		return Map.of(IssueStatus.OPENED.name(), issueRepository.countIssueByStatus(IssueStatus.OPENED),
-			IssueStatus.CLOSED.name(), issueRepository.countIssueByStatus(IssueStatus.CLOSED));
+	private List<IssueCount> countIssues(String loginId, IssueFilterRequest request) {
+		return issueMapper.countIssues(request.convertMe(loginId));
 	}
 
 	private List<IssuesResponse> findIssues(String loginId, IssueFilterRequest request) {
 		return issueMapper.getIssues(request.convertMe(loginId));
 	}
 
-	public List<SingleFilter> generateSingleFilters(IssueFilterRequest request) {
+	public List<SingleFilter> generateSingleFilters(String loginId, IssueFilterRequest request) {
 		List<SingleFilter> singleFilters = new ArrayList<>();
-		String generated = generateInput(request);
+		String generated = generateInput(request).stripTrailing();
 
-		boolean selectedOpened = generated.strip().equals(SingleFilter.IS.OPENED.getResponse());
+		boolean selectedOpened = generated.equals(SingleFilter.IS.OPENED.getResponse());
 		singleFilters.add(
 			new SingleFilter(OPENED_ID, SingleFilter.IS.OPENED.getName(), SingleFilter.IS.OPENED.getResponse(),
 				selectedOpened));
 
-		boolean selectedAuthor = generated.strip().equals(SingleFilter.ME.AUTHOR.getResponse());
+		boolean selectedAuthor = generated.equals(SingleFilter.IS.OPENED.getResponse() + " author:@me");
 		singleFilters.add(
-			new SingleFilter(AUTHOR_ID, SingleFilter.ME.AUTHOR.getName(), SingleFilter.ME.AUTHOR.getResponse(),
+			new SingleFilter(AUTHOR_ID, SingleFilter.ME.AUTHOR.getName(),
+				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.AUTHOR.getResponse(),
 				selectedAuthor));
 
-		boolean selectedAssignee = generated.strip().equals(SingleFilter.ME.ASSIGNEE.getResponse());
+		boolean selectedAssignee = generated.equals(SingleFilter.IS.OPENED.getResponse() + " assignee:@me");
 		singleFilters.add(
-			new SingleFilter(ASSIGNEE_ID, SingleFilter.ME.ASSIGNEE.getName(), SingleFilter.ME.ASSIGNEE.getResponse(),
+			new SingleFilter(ASSIGNEE_ID, SingleFilter.ME.ASSIGNEE.getName(),
+				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.ASSIGNEE.getResponse(),
 				selectedAssignee));
 
-		boolean selectedMentions = generated.strip().equals(SingleFilter.ME.MENTIONS.getResponse());
+		boolean selectedMentions = generated.equals(SingleFilter.IS.OPENED.getResponse() + " mentions:@me");
 		singleFilters.add(
-			new SingleFilter(MENTIONS_ID, SingleFilter.ME.MENTIONS.getName(), SingleFilter.ME.MENTIONS.getResponse(),
+			new SingleFilter(MENTIONS_ID, SingleFilter.ME.MENTIONS.getName(),
+				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.MENTIONS.getResponse(),
 				selectedMentions));
 
-		boolean selectedClosed = generated.strip().equals(SingleFilter.IS.CLOSED.getResponse());
+		boolean selectedClosed = generated.equals(SingleFilter.IS.CLOSED.getResponse());
 		singleFilters.add(
 			new SingleFilter(CLOSED_ID, SingleFilter.IS.CLOSED.getName(), SingleFilter.IS.CLOSED.getResponse(),
 				selectedClosed));

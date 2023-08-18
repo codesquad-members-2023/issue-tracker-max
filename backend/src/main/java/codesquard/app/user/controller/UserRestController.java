@@ -35,6 +35,7 @@ public class UserRestController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/users")
 	public ApiResponse<UserSaveResponse> createUser(@Valid @RequestBody UserSaveRequest userSaveRequest) {
+		logger.info("일반 회원가입 매핑: {}", userSaveRequest);
 		UserSaveServiceResponse userSaveServiceResponse =
 			userService.signUp(userSaveRequest.toUserSaveServiceRequest());
 		return ApiResponse.of(CREATED, USER_SIGNUP_SUCCESS, userSaveServiceResponse.toUserSaveResponse());

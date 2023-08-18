@@ -11,7 +11,7 @@ public interface MilestoneRepository {
 
 	List<Milestone> findAllBy(final MilestoneStatus status);
 
-	Long countIssuesBy(final MilestoneStatus status);
+	Long countIssuesBy(final Long milestoneId, final MilestoneStatus status);
 
 	Long countMilestonesBy(final MilestoneStatus status);
 

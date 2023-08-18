@@ -2,18 +2,19 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TextInput } from "../../components/TextInput";
+import { getAccessToken, getUserInfo } from "../../utils/localStorage";
 import { IssueDetailHeaderProps } from "./IssueDetailHeader";
-import { getAccessToken } from "../../utils/localStorage";
 
 type IssueDetailTitleProps = Omit<
   IssueDetailHeaderProps,
-  "statusModifiedAt" | "writer" | "comments"
+  "statusModifiedAt" | "comments"
 >;
 
 export function IssueDetailTitleInfo({
   id,
   title: initialTitle,
   status,
+  writer,
   fetchIssue,
 }: IssueDetailTitleProps) {
   const [isTitleEditing, setIsTitleEditing] = useState(false);
@@ -23,6 +24,7 @@ export function IssueDetailTitleInfo({
     setTitle(initialTitle);
   }, [initialTitle]);
 
+  const loginUserInfo = getUserInfo();
   const sameTitle = title === initialTitle;
   const overflowTitle = title.length > 50;
   const emptyTitle = title.length < 1;
@@ -40,32 +42,51 @@ export function IssueDetailTitleInfo({
   };
 
   const onEditClick = async () => {
-    await fetch(`/api/issues/${id}/title`, {
+    const response = await fetch(`/api/issues/${id}/title`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({ title }),
     });
+    const { code, message } = await response.json();
 
-    setIsTitleEditing(false);
-    fetchIssue();
+    if (code === 200) {
+      setIsTitleEditing(false);
+      fetchIssue();
+      return;
+    }
+
+    throw new Error(message);
   };
 
   const onStatusChangeClick = async () => {
-    await fetch(`/api/issues/${id}/status`, {
+    const response = await fetch(`/api/issues/status`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
-        "Authorization": `Bearer ${getAccessToken()}`,
-        "credentials": "include",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
+        issues: [id],
         status: status === "OPENED" ? "CLOSED" : "OPENED",
       }),
     });
+    const { code, message, data } = await response.json();
 
-    fetchIssue();
+    if (code === 200) {
+      fetchIssue();
+      return;      
+    }
+
+    if (code === 400) {
+      throw new Error(data[0].defaultMessage);
+    }
+
+    throw new Error(message);
   };
 
   return (
@@ -106,22 +127,26 @@ export function IssueDetailTitleInfo({
             {initialTitle}
             <span>#{id}</span>
           </Title>
-          <Button
-            size="S"
-            buttonType="Outline"
-            icon="Edit"
-            onClick={() => setIsTitleEditing(true)}
-          >
-            제목 편집
-          </Button>
-          <Button
-            size="S"
-            buttonType="Outline"
-            icon="Archive"
-            onClick={onStatusChangeClick}
-          >
-            {status === "OPENED" ? "이슈 닫기" : "다시 열기"}
-          </Button>
+          {writer.name === loginUserInfo?.loginId && (
+            <>
+              <Button
+                size="S"
+                buttonType="Outline"
+                icon="Edit"
+                onClick={() => setIsTitleEditing(true)}
+              >
+                제목 편집
+              </Button>
+              <Button
+                size="S"
+                buttonType="Outline"
+                icon="Archive"
+                onClick={onStatusChangeClick}
+              >
+                {status === "OPENED" ? "이슈 닫기" : "다시 열기"}
+              </Button>
+            </>
+          )}
         </>
       )}
     </TitleInfo>

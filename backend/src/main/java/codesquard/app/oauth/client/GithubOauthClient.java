@@ -23,7 +23,7 @@ import codesquard.app.oauth.profile.UserProfile;
 import codesquard.app.oauth.service.response.OauthAccessTokenResponse;
 
 @Component
-public class GithubOauthClient {
+public class GithubOauthClient implements OauthClient {
 
 	private static final Logger logger = LoggerFactory.getLogger(GithubOauthClient.class);
 
@@ -43,7 +43,8 @@ public class GithubOauthClient {
 		this.userInfoUri = userInfoUri;
 	}
 
-	public OauthAccessTokenResponse getAccessToken(OauthProvider provider, String code) {
+	@Override
+	public OauthAccessTokenResponse requestAccessTokenToOauthServer(OauthProvider provider, String code) {
 		return WebClient.create()
 			.post()
 			.uri(provider.getTokenUri())
@@ -67,7 +68,8 @@ public class GithubOauthClient {
 		return formData;
 	}
 
-	public UserProfile getUserProfile(String provider, OauthAccessTokenResponse oauthAccessTokenResponse,
+	@Override
+	public UserProfile requestUserProfile(String provider, OauthAccessTokenResponse oauthAccessTokenResponse,
 		OauthProvider oauthProvider) {
 		Map<String, Object> userAttributes = getUserAttributes(oauthProvider, oauthAccessTokenResponse);
 		// 유저 정보(map)를 통해 UserProfile 만들기

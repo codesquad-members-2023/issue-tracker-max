@@ -8,13 +8,14 @@ type DropdownContainerProps = {
   name: string;
   optionTitle: string;
   options: {
+    id: number;
     name: string;
     profile?: string;
     background?: Color;
     selected: boolean;
     onClick: () => void;
   }[];
-  showProfile?: boolean;
+  iconType?: "None" | "Profile" | "Palette";
   type?: "Default" | "Long";
   alignment: "Left" | "Right" | "Center";
   disabled?: boolean;
@@ -26,8 +27,8 @@ export function DropdownContainer({
   name,
   optionTitle,
   options,
-  showProfile = true,
   type = "Default",
+  iconType = "None",
   alignment,
   disabled = false,
   autoClose = false,
@@ -57,7 +58,7 @@ export function DropdownContainer({
           <div className="dropdown__dim" onClick={closePanel}></div>
           <DropdownPanel
             optionTitle={optionTitle}
-            showProfile={showProfile}
+            iconType={iconType}
             alignment={alignment}
             options={options}
             onOptionClick={autoClose ? closePanel : undefined}

@@ -51,8 +51,9 @@ export function MainHeader({
   ];
 
   const setDropdownOptions = (singleFilters: SingleFilterData[]) => {
-    const options = singleFilters.map((filter) => {
+    const options = singleFilters.map((filter, index) => {
       return {
+        id: index + 1,
         name: filter.name,
         profile: "",
         selected: filter.selected,

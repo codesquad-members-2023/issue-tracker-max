@@ -10,7 +10,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
+import lombok.ToString;
+
 @JsonRootName("jwt")
+@ToString
 public class Jwt {
 	private static final int REFRESH_TOKEN_MAXAGE = 60 * 60 * 24 * 30; // 1달
 

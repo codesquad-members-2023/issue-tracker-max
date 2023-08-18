@@ -29,15 +29,18 @@ export function MilestoneTableElement({
     const id = milestone.id;
 
     await fetch(`/api/milestones/${id}/status`, {
-      method: "POST",
+      method: "PATCH",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify({
-        status: status,
+        status: status === "OPENED" ? "CLOSED" : "OPENED",
       }),
     });
+
+    fetchData();
   };
 
   const deleteMilestone = async () => {
@@ -45,6 +48,7 @@ export function MilestoneTableElement({
       method: "DELETE",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });

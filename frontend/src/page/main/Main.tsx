@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { getAccessToken } from "../../utils/localStorage";
@@ -91,24 +91,26 @@ export function Main() {
 
   const queryString = window.location.search;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch(`/api/issues${queryString}`, {
-        credentials: "include",
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      });
-      const { code, data } = await res.json();
+  const fetchData = useCallback(async () => {
+    const res = await fetch(`/api/issues${queryString}`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    });
 
-      if (code === 200) {
-        setIssueData(data);
-        setFilterString(data.input);
-      }
-    };
+    const { code, data } = await res.json();
 
-    fetchData();
+    if (code === 200) {
+      setIssueData(data);
+      setFilterString(data.input);
+    }
   }, [queryString]);
+
+  useEffect(() => {
+    fetchData();
+  }, [queryString, navigate, fetchData]);
 
   const convertToQueryString = (filterCondition: string) => {
     return filterCondition
@@ -151,7 +153,13 @@ export function Main() {
     const [keyToAdd, valueToAdd] = filterCondition.split(":");
     const filteredParts = input
       .split(/\s(?=[^:]*:)/)
-      .filter((part) => !part.startsWith(`${keyToAdd}:`) || multipleSelect);
+      .filter(
+        (part) =>
+          !(
+            part.startsWith(`${keyToAdd}:`) &&
+            (part.endsWith(":none") || !multipleSelect)
+          ),
+      );
 
     const newInput = [...filteredParts, `${keyToAdd}:${valueToAdd}`].join(" ");
     const newQueryString = convertToQueryString(newInput.trim());
@@ -187,6 +195,7 @@ export function Main() {
           <MainTable
             issueData={issueData}
             setMultiFilterString={setMultiFilterString}
+            fetchData={fetchData}
             filterString={filterString!}
           />
         </>
@@ -198,4 +207,5 @@ export function Main() {
 const Div = styled.div`
   width: 1280px;
   padding: 0px 80px;
+  margin-bottom: 32px;
 `;

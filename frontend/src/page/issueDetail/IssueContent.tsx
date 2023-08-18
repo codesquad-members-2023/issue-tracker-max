@@ -6,8 +6,8 @@ import { InformationTag } from "../../components/InformationTag";
 import { TextArea } from "../../components/TextArea";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { getElapsedSince } from "../../utils/getElapsedSince";
+import { getAccessToken, getUserInfo } from "../../utils/localStorage";
 import { IssueDetailMainContentProps } from "./IssueDetailMainContent";
-import { getAccessToken } from "../../utils/localStorage";
 
 type IssueContentProps = Omit<IssueDetailMainContentProps, "comments">;
 
@@ -16,14 +16,11 @@ export function IssueContent({
   content: initialContent,
   createdAt,
   modifiedAt,
-  reactions,
   writer,
   fetchIssue,
 }: IssueContentProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(initialContent);
-  const [invalidContent, setInvalidContent] = useState(false);
-  const [errorDescription, setErrorDescription] = useState("");
 
   useEffect(() => {
     setContent(initialContent);
@@ -31,24 +28,19 @@ export function IssueContent({
 
   const maxContentLength = 10000;
   const writtenAt = modifiedAt ?? createdAt;
+  const loginUserInfo = getUserInfo();
 
-  const validateContent = (value: string) => {
-    const sameContent = value === initialContent;
-    const overflowContent = value.length > maxContentLength;
-
-    setInvalidContent(sameContent || overflowContent);
-    setErrorDescription(
-      sameContent
-        ? "기존 내용과 동일합니다"
-        : overflowContent
-        ? `내용은 ${addCommasToNumber(maxContentLength)}자 이내로 입력해주세요`
-        : "",
-    );
-  };
+  const sameContent = content === initialContent;
+  const overflowContent = content.length > maxContentLength;
+  const invalidContent = sameContent || overflowContent;
+  const errorDescription = sameContent
+    ? "기존 내용과 동일합니다"
+    : overflowContent
+    ? `내용은 ${addCommasToNumber(maxContentLength)}자 이내로 입력해주세요`
+    : "";
 
   const onEditButtonClick = () => {
     setIsEditing(true);
-    validateContent(content);
   };
 
   const onEditCancelButtonClick = () => {
@@ -58,15 +50,15 @@ export function IssueContent({
 
   const onContentChange = (value: string) => {
     setContent(value);
-    validateContent(value);
   };
 
   const onEditConfirmClick = async () => {
     await fetch(`/api/issues/${id}/content`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
-        credentials: "include",
       },
       body: JSON.stringify({
         content: content,
@@ -75,8 +67,6 @@ export function IssueContent({
 
     setContent(initialContent);
     setIsEditing(false);
-    setInvalidContent(false);
-    setErrorDescription("");
     fetchIssue();
   };
 
@@ -86,6 +76,7 @@ export function IssueContent({
         value={content}
         width="100%"
         isEditing={isEditing}
+        errorDescription={errorDescription}
         onChange={onContentChange}
       >
         <WriterInfo>
@@ -100,15 +91,17 @@ export function IssueContent({
             fill="neutralSurfaceBold"
             stroke="Default"
           />
-          <Button
-            height={32}
-            size="S"
-            buttonType="Ghost"
-            icon="Edit"
-            onClick={onEditButtonClick}
-          >
-            편집
-          </Button>
+          {writer.name === loginUserInfo?.loginId && (
+            <Button
+              height={32}
+              size="S"
+              buttonType="Ghost"
+              icon="Edit"
+              onClick={onEditButtonClick}
+            >
+              편집
+            </Button>
+          )}
           <Button
             height={32}
             size="S"
@@ -122,9 +115,6 @@ export function IssueContent({
           </Button>
         </ControlButtons>
       </TextArea>
-      {isEditing && errorDescription && (
-        <ErrorDescription>{errorDescription}</ErrorDescription>
-      )}
       {isEditing && (
         <EditorButtons>
           <Button
@@ -171,16 +161,6 @@ const ControlButtons = styled.div`
     padding: 0;
     padding-left: 4px;
   }
-`;
-
-const ErrorDescription = styled.span`
-  display: flex;
-  padding-left: 0px;
-  align-items: flex-start;
-  align-self: stretch;
-  padding-left: 16px;
-  color: ${({ theme }) => theme.color.dangerTextDefault};
-  font: ${({ theme }) => theme.font.displayMedium12};
 `;
 
 const EditorButtons = styled.div`

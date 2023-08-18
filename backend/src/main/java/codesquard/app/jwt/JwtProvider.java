@@ -65,7 +65,7 @@ public class JwtProvider {
 	}
 
 	public Date getExpireDateAccessToken() {
-		final long DEFAULT_ACCESSTOKEN_EXPIRE_MILLISECOND = 1000 * 60 * 5; // 5분
+		final long DEFAULT_ACCESSTOKEN_EXPIRE_MILLISECOND = 1000 * 60 * 60; // 1시간
 		return new Date(System.currentTimeMillis() + DEFAULT_ACCESSTOKEN_EXPIRE_MILLISECOND);
 	}
 

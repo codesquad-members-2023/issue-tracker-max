@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Icon } from "../../components/icon/Icon";
 import { getAccessToken } from "../../utils/localStorage";
@@ -9,15 +9,21 @@ import { MainTableHeader } from "./MainTableHeader";
 type MainTableProps = {
   issueData: IssueDataState;
   filterString: string;
+  fetchData: () => void;
   setMultiFilterString: (value: string, multipleSelect: boolean) => void;
 };
 
 export function MainTable({
   issueData,
+  fetchData,
   setMultiFilterString,
   filterString,
 }: MainTableProps) {
   const [checkedIssueId, setCheckedIssueId] = useState<number[]>([]);
+
+  useEffect(() => {
+    setCheckedIssueId([]);
+  }, [issueData]);
 
   const onChangeIssuesState = async (state: "OPENED" | "CLOSED") => {
     const body = {
@@ -26,13 +32,16 @@ export function MainTable({
     };
 
     await fetch("/api/issues/status", {
-      method: "POST",
+      method: "PATCH",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify(body),
     });
+
+    fetchData();
   };
 
   const handleHeaderCheckbox = (checked: boolean) => {

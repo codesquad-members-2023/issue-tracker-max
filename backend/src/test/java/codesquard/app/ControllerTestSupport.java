@@ -75,8 +75,8 @@ public abstract class ControllerTestSupport {
 	protected OauthService oauthService;
 
 	@MockBean
-	protected LoginUserArgumentResolver loginUserArgumentResolver;
+	protected RedisTemplate<String, Object> redisTemplate;
 
 	@MockBean
-	protected RedisTemplate<String, Object> redisTemplate;
+	protected LoginUserArgumentResolver loginUserArgumentResolver;
 }
