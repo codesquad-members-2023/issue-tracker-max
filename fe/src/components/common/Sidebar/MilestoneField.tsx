@@ -13,18 +13,18 @@ export default function MilestoneField({
   onEditMilestone,
 }: {
   milestone: number;
-  onMilestoneChange: (milestoneId: number) => void;
+  onMilestoneChange: (milestone: number) => void;
   onEditMilestone?: () => void;
 }) {
   const { data: milestonesList } = useFetch(getMilestones);
 
-  const milestoneDropdownList: DropdownItemType[] | undefined =
+  const milestoneDropdownList: DropdownItemType[] =
     milestonesList?.map((milestone) => ({
       id: milestone.milestoneId,
       variant: "plain",
       name: "milestone",
       content: milestone.milestoneName,
-    }));
+    })) || [];
 
   const generateMilestone = (milestonesList: Milestone[]) => {
     const milestone = milestonesList.find(

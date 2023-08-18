@@ -31,23 +31,26 @@ export default function IssueCommentContainer({
     useCallback(() => getComments(issueNumber, cursor), [issueNumber, cursor])
   );
 
+  const handleScroll = useCallback(() => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = window.scrollY;
+    const clientHeight = window.innerHeight;
+    const margin = 200;
+
+    const isNearlyBottom = scrollHeight - (scrollTop + clientHeight) <= margin;
+    isNearlyBottom &&
+      issueComments?.hasMore &&
+      setCursor(issueComments.nextCursor);
+  }, [issueComments]);
+
   useEffect(() => {
     issueComments && setAllComments((prev) => [...prev, ...issueComments.data]);
   }, [issueComments]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY;
-      const clientHeight = window.innerHeight;
-
-      const isBottom = scrollHeight - scrollTop === clientHeight;
-      isBottom && issueComments?.hasMore && setCursor(issueComments.nextCursor);
-    };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [issueComments]);
+  }, [handleScroll]);
 
   const isFilled = !!newComment;
 

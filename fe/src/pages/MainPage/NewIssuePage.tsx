@@ -83,7 +83,7 @@ export default function NewIssuePage() {
         />
         <div className="form">
           <TextInput
-            name="title"
+            name="제목"
             variant="tall"
             placeholder="제목"
             value={newIssueInfo.title}
