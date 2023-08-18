@@ -13,4 +13,8 @@ public class AccountInputData {
 	private String profileImageUrl;
 	private Long oauthId;
 
+	public boolean verifyRequiredValue() {
+		return id != null && email != null && nickname != null;
+	}
+
 }

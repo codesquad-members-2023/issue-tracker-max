@@ -84,6 +84,10 @@ public class AccountService {
 	@Transactional
 	public JwtTokenInformation issueJwtToken(AccountInputData accountInputData) {
 
+		if (!accountInputData.verifyRequiredValue()) {
+			throw new CustomHttpException(ErrorType.LOGIN_FAIL);
+		}
+
 		Map<String, Object> claims = Map.of(
 			"memberId", accountInputData.getId(),
 			"email", accountInputData.getEmail(),
