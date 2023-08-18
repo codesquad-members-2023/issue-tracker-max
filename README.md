@@ -55,24 +55,15 @@
 
 ### Back-End
 
-<img src="https://img.shields.io/badge/Java-007396?style=flat&logo=OpenJDK&logoColor=white"/>
-<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white"/> 
-<img src="https://img.shields.io/badge/EC2-FA7343?style=flat&logo=EC2&logoColor=white"/> 
-<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"/> 
-<img src="https://img.shields.io/badge/IntelliJ%20IDEA-FF3850?style=flat&logo=IntelliJ%20IDEA&logoColor=white"/> 
-<img src="https://img.shields.io/badge/MyBatis-B22222?style=flat&logo=MyBatis&logoColor=white" />
+<img src="https://img.shields.io/badge/Java-007396?style=flat&logo=OpenJDK&logoColor=white"/> <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white"/> <img src="https://img.shields.io/badge/EC2-FA7343?style=flat&logo=EC2&logoColor=white"/> 
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/IntelliJ%20IDEA-FF3850?style=flat&logo=IntelliJ%20IDEA&logoColor=white"/> <img src="https://img.shields.io/badge/MyBatis-B22222?style=flat&logo=MyBatis&logoColor=white" />
 
 ### Front-End
 
-<img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=React&logoColor=white"/>
-<img src="https://img.shields.io/badge/Typescript-3178C6?style=flat&logo=TypeScript&logoColor=white"/> 
-<img src="https://img.shields.io/badge/Vite-8DD6F9?style=flat&logo=Vite&logoColor=white"/>
-<img src="https://img.shields.io/badge/VisualStudioCode-007ACC?style=flat&logo=VisualStudioCode&logoColor=white"/>
+<img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=React&logoColor=white"/> <img src="https://img.shields.io/badge/Typescript-3178C6?style=flat&logo=TypeScript&logoColor=white"/> <img src="https://img.shields.io/badge/Vite-8DD6F9?style=flat&logo=Vite&logoColor=white"/> <img src="https://img.shields.io/badge/VisualStudioCode-007ACC?style=flat&logo=VisualStudioCode&logoColor=white"/>
 
 ### Infrastructure
-<img src="https://img.shields.io/badge/Github_Actions-808080?style=flat&logo=Github_Actions&logoColor=white"/>
-<img src="https://img.shields.io/badge/Code_Deploy-008000?style=flat&logo=Code_Deploy&logoColor=white"/>
-<img src="https://img.shields.io/badge/S3-dc143c?style=flat&logo=S3&logoColor=white"/>
+<img src="https://img.shields.io/badge/Github_Actions-808080?style=flat&logo=Github_Actions&logoColor=white"/> <img src="https://img.shields.io/badge/Code_Deploy-008000?style=flat&logo=Code_Deploy&logoColor=white"/> <img src="https://img.shields.io/badge/S3-dc143c?style=flat&logo=S3&logoColor=white"/>
 
 ## CI/CD 
 ![issue-tracker-infra drawio-2 (1)](https://github.com/codesquad-issue-team-05/issue-tracker-max/assets/57451700/f5a510eb-db7d-4079-a08e-e54622f282e0)
