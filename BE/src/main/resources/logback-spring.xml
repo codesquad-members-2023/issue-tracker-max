@@ -19,7 +19,7 @@
         <logger name="jdbc.sqltiming" level="DEBUG"/>
         <!-- ResultSet외 모든 JDBC 호출 정보 로깅할지 여부 -->
         <logger name="jdbc.audit" level="OFF"/>
-        <!-- ResultSet 포함 모든 JDBC 호출 정보를 로깅 -->
+        <!-- ResultSet 정포함 모든 JDBC 호출 정보를 로깅 -->
         <logger name="jdbc.resultset" level="OFF"/>
         <logger name="jdbc.resultsettable" level="DEBUG"/>
         <!-- connection open close 로깅 여부 -->
@@ -32,7 +32,7 @@
 
     <springProfile name="prod">
         <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./log/info/info-${BY_DATE}.log</file>
+            <file>log/info/info-${BY_DATE}.log</file>
             <filter class = "ch.qos.logback.classic.filter.LevelFilter">
                 <level>INFO</level>
                 <onMatch>ACCEPT</onMatch>
@@ -50,7 +50,7 @@
         </appender>
 
         <appender name="FILE-WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./log/warn/warn-${BY_DATE}.log</file>
+            <file>log/warn/warn-${BY_DATE}.log</file>
             <filter class = "ch.qos.logback.classic.filter.LevelFilter">
                 <level>WARN</level>
                 <onMatch>ACCEPT</onMatch>
@@ -60,7 +60,7 @@
                 <pattern>${LOG_PATTERN}</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern> ./backup/warn/warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern> backup/warn/warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>100MB</maxFileSize>
                 <maxHistory>10</maxHistory>
                 <totalSizeCap>1GB</totalSizeCap>
@@ -68,7 +68,7 @@
         </appender>
 
         <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./log/error/error-${BY_DATE}.log</file>
+            <file>log/error/error-${BY_DATE}.log</file>
             <filter class = "ch.qos.logback.classic.filter.LevelFilter">
                 <level>ERROR</level>
                 <onMatch>ACCEPT</onMatch>
@@ -78,7 +78,7 @@
                 <pattern>${LOG_PATTERN}</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern> ./backup/error/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>backup/error/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>100MB</maxFileSize>
                 <maxHistory>10</maxHistory>
                 <totalSizeCap>1GB</totalSizeCap>
