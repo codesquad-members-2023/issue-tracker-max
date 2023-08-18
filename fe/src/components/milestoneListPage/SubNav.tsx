@@ -4,12 +4,14 @@ import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 import { Button } from '@components/common/Button';
 
 type Props = {
+  isAddTableOpen?: boolean;
   labelCount: IssuePageData['labelCount'];
   milestoneCount: IssuePageData['milestoneCount'];
   onAddTableOpen?: () => void;
 };
 
 export const SubNav: React.FC<Props> = ({
+  isAddTableOpen,
   labelCount,
   milestoneCount,
   onAddTableOpen,
@@ -25,7 +27,12 @@ export const SubNav: React.FC<Props> = ({
       }}
     >
       <TabButton {...{ labelCount, milestoneCount }} />
-      <Button typeVariant="contained" size="S" onClick={onAddTableOpen}>
+      <Button
+        typeVariant="contained"
+        size="S"
+        disabled={isAddTableOpen}
+        onClick={onAddTableOpen}
+      >
         <Plus stroke={theme.brand.text.default} />
         마일스톤 추가
       </Button>

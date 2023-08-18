@@ -35,10 +35,10 @@ export const LabelListPage: React.FC = () => {
       }}
     >
       <SubNav
-        onAddTableOpen={onAddTableOpen}
+        isAddTableOpen={isAddTableOpen}
         labelCount={labelListData.labelCount}
         milestoneCount={labelListData.milestoneCount}
-        isAddTableOpen={isAddTableOpen}
+        onAddTableOpen={onAddTableOpen}
       />
       <Body
         isAddTableOpen={isAddTableOpen}
