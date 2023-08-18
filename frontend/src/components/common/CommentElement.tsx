@@ -17,10 +17,14 @@ type userInfoType = {
   userName: string;
 };
 
-export default function Comment(props: CommentProps) {
+export default function Comment({
+  userInfo,
+  timeStamp,
+  content,
+}: CommentProps) {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [textValue, setTextValue] = useState<string>(props.content);
+  const [textValue, setTextValue] = useState<string>(content);
 
   useEffect(() => {
     if (isEdit && !isTyping) {
@@ -30,8 +34,6 @@ export default function Comment(props: CommentProps) {
       }, 2000);
     }
   }, [textValue]);
-
-  const { userInfo, timeStamp } = props;
 
   const handleEdit = () => {
     isEdit ? setIsEdit(false) : setIsEdit(true);
@@ -83,7 +85,7 @@ export default function Comment(props: CommentProps) {
             onChange={handleChange}></TextArea>
         ) : (
           <TextBox>
-            <ReactMarkdown children={textValue} />
+            <ReactMarkdown children={textValueq} />
           </TextBox>
         )}
       </Body>

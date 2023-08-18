@@ -31,7 +31,11 @@ type IssueDetail = {
   close: boolean;
 };
 
-type IssueOptions = [Assignees[], Labels[], Milestone];
+type IssueOptions = {
+  assignees: Assignees[];
+  labels: Labels[];
+  milestone: Milestone;
+};
 
 type Assignees = {
   id: number;
@@ -47,8 +51,10 @@ type Labels = {
 };
 
 type Milestone = {
-  id: number;
-  name: string;
+  issueMileStoneDetailVo: {
+    id: number;
+    name: string;
+  };
   completedRatio: number;
 };
 
@@ -68,7 +74,7 @@ export default function IssueDetail() {
   const location = useLocation();
   const axiosPrivate = useAxiosPrivate();
   const [issueDetail, setIssueDetail] = useState<IssueDetail>({});
-  const [issueOptions, setIssueOptions] = useState<IssueOptions>([]);
+  const [issueOptions, setIssueOptions] = useState<IssueOptions>({});
   const [comments, setComments] = useState<CommentType[]>([]);
   const [newComment, setNewComment] = useState<string>('');
 
@@ -169,6 +175,7 @@ export default function IssueDetail() {
         <Container>
           <CommentArea>
             <CommentElement
+              key={issueDetail.id}
               userInfo={{
                 userId: 1,
                 userName: 'fuse123',
