@@ -13,7 +13,7 @@ import {
 import { useState } from "react";
 import { styled } from "styled-components";
 import { TableHeader } from "../Table.style";
-import IssuesFiltersDropdowns from "./IssuesDropdownWrapper";
+import IssuesFiltersDropdowns from "./IssuesFiltersDropdowns";
 
 export default function IssuesTableHeader({
   numOpen,
@@ -39,7 +39,7 @@ export default function IssuesTableHeader({
   const { issuesFilter } = useIssuesFilter();
   const issuesFilterDispatch = useIssuesFilterDispatch();
 
-  const issuesStatus = issuesFilter.state.status!;
+  const issuesStatus = issuesFilter.state.status;
 
   const tabBarLeftInfo = {
     name: "열린 이슈",
@@ -58,6 +58,8 @@ export default function IssuesTableHeader({
       issuesFilterDispatch({ type: "SET_FILTER_BAR", payload: "closed" });
     },
   };
+
+  const currentTabName = issuesStatus ? tabNames[issuesStatus] : "";
 
   const onIssueStateSelect = (state: "open" | "closed") => {
     setIssueStateDropdown(state);
@@ -80,11 +82,6 @@ export default function IssuesTableHeader({
     }
   };
 
-  const currentTabName = {
-    open: "열린 이슈",
-    closed: "닫힌 이슈",
-  };
-
   const numSelectedIssues = selectedIssueIds.size;
 
   return (
@@ -101,7 +98,7 @@ export default function IssuesTableHeader({
             </div>
           ) : (
             <TabBar
-              currentTabName={currentTabName[issuesStatus]}
+              currentTabName={currentTabName}
               left={tabBarLeftInfo}
               right={tabBarRightInfo}
               borderStyle="none"
@@ -133,6 +130,11 @@ export default function IssuesTableHeader({
     </TableHeader>
   );
 }
+
+const tabNames = {
+  open: "열린 이슈",
+  closed: "닫힌 이슈",
+};
 
 const issueStateDropdownList: DropdownItemType[] = [
   {
