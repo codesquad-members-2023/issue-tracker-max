@@ -27,36 +27,37 @@
 ## 🔧️ 개발 환경
 ### Front-End
 ![Static Badge](https://img.shields.io/badge/React-18.2.0-Blue)
-![Static Badge](https://img.shields.io/badge/Styled_Component-6.0.5-Green)
-![Static Badge](https://img.shields.io/badge/TypeScript-5.0.2-Green)
-![Static Badge](https://img.shields.io/badge/Vite-4.4.5-Green)
 
-- React: `ver. 18.2.0`
-- styled-component: `ver. 6.0.5`
-- TypeScript: `ver. 5.0.2`
-- Vite: `ver. 4.4.5`
+![Static Badge](https://img.shields.io/badge/Styled_Component-6.0.5-Green)
+
+![Static Badge](https://img.shields.io/badge/TypeScript-5.0.2-Green)
+
+![Static Badge](https://img.shields.io/badge/Vite-4.4.5-Green)
 
 ### Back-End
 ![Static Badge](https://img.shields.io/badge/Java-11-Green)
+
 ![Static Badge](https://img.shields.io/badge/SpringBoot-2.7.14-Green)
-![Static Badge](https://img.shields.io/badge/MySQL-8.0.33-Green)
-![Static Badge](https://img.shields.io/badge/Redis-7.2-Green)
-![Static Badge](https://img.shields.io/badge/EC2-t2_micro-Green)
-![Static Badge](https://img.shields.io/badge/S3-Green)
-![Static Badge](https://img.shields.io/badge/RDS-t3_micro-Green)
-![Static Badge](https://img.shields.io/badge/GithubAction-Green)
-![Static Badge](https://img.shields.io/badge/DockerHub-Green)
-![Static Badge](https://img.shields.io/badge/Docker-Green)
+
 ![Static Badge](https://img.shields.io/badge/Nginx-1.25-Green)
 
+![Static Badge](https://img.shields.io/badge/MySQL-8.0.33-Green)
 
-- Java: `JDK 11`
-- SpringBoot: `ver. 2.7.14`
-- MySQL: `ver. 8.0.33`
-- Redis: `var. 7.2`
-- Amazon AWS: `EC2`, `S3`, `RDS`
-- CI/CD : `GithubAction`, `Docker Hub`, `Docker`
-- Nginx : `var. 1.25`
+![Static Badge](https://img.shields.io/badge/Redis-7.2-Green)
+
+![Static Badge](https://img.shields.io/badge/EC2-t2_micro-Green)
+
+![Static Badge](https://img.shields.io/badge/S3-Green)
+
+![Static Badge](https://img.shields.io/badge/RDS-t3_micro-Green)
+
+![Static Badge](https://img.shields.io/badge/GithubAction-Green)
+
+![Static Badge](https://img.shields.io/badge/DockerHub-Green)
+
+![Static Badge](https://img.shields.io/badge/Docker-Green)
+
+
 
 <br/>
 
