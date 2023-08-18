@@ -56,7 +56,7 @@ export default function LoginPage() {
     if (code) {
       gitHubLogin(code);
     }
-  });
+  }, [navigate, onLogin]);
 
   const onOAuthUsernameSubmit = async (e: FormEvent) => {
     e.preventDefault();
