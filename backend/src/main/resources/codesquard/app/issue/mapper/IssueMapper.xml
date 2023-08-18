@@ -129,8 +129,8 @@
     <select id="getAssignees" parameterType="java.lang.Long" resultMap="issueAssigneeResponse">
         SELECT assignee.`user_id` AS id, u.`login_id` AS name, u.`avatar_url`
         FROM issue_assignee AS assignee
-                 LEFT OUTER JOIN user AS u
-                                 ON assignee.`user_id` = u.`id`
+        LEFT OUTER JOIN user AS u
+        ON assignee.`user_id` = u.`id`
         WHERE assignee.`issue_id` = #{id}
     </select>
 
@@ -145,8 +145,8 @@
             resultMap="issueLabelsResponse">
         SELECT label.`id` AS id, label.`name` AS name, label.`color`, label.`background`
         FROM issue_label AS issue_label
-                 LEFT OUTER JOIN label AS label
-                                 ON issue_label.`label_id` = label.`id`
+        LEFT OUTER JOIN label AS label
+        ON issue_label.`label_id` = label.`id`
         WHERE issue_label.`issue_id` = #{id}
     </select>
 
@@ -230,9 +230,6 @@
             issue.`is_deleted` = 0
             <choose>
                 <otherwise>
-                    <if test="is != null">
-                        AND issue.`status` = #{is}
-                    </if>
                     <if test="milestone != null">
                         <choose>
                             <when test="milestone == 'none'">
