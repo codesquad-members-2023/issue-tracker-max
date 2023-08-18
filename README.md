@@ -31,10 +31,10 @@
 ![Static Badge](https://img.shields.io/badge/TypeScript-5.0.2-Green)
 ![Static Badge](https://img.shields.io/badge/Vite-4.4.5-Green)
 
-- React: ver. 18.2.0
-- styled-component: ver. 6.0.5
-- TypeScript: ver. 5.0.2
-- Vite: ver. 4.4.5
+- React: `ver. 18.2.0`
+- styled-component: `ver. 6.0.5`
+- TypeScript: `ver. 5.0.2`
+- Vite: `ver. 4.4.5`
 
 ### Back-End
 ![Static Badge](https://img.shields.io/badge/Java-11-Green)
