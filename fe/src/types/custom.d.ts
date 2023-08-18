@@ -63,8 +63,10 @@ type Label = {
 };
 
 type MilestonePageData = {
-  openMilestonesCount: number;
+  openMilestoneCount: number;
   closedMilestoneCount: number;
+  labelCount: number;
+  milestoneCount: number;
   milestones: Milestone[];
 };
 
@@ -73,7 +75,7 @@ type Milestone = {
   name: string;
   description: string;
   progress: number;
-  status: StatusType;
+  status: string;
   openIssueCount: number;
   closedIssueCount: number;
   deadline: string;
@@ -118,19 +120,6 @@ type IssueDetailPageData = {
   milestone: IssueDetailMilestone;
   comments: CommentType[];
 };
-
-// SIDE_BAR_SELECTED_OPTION
-// type SelectionState = {
-//   assignees: number[];
-//   labels: number[];
-//   milestones: number | null;
-// };
-// // ISSUE_DETAIL_SIDE_BAR_SELECTED_OPTION
-// type IssueDetailSideBarData = {
-//   assignees: User[];
-//   labels: IssueDetailLabel[];
-//   milestones: { id: number; name: string; progress: number } | null;
-// };
 
 type SelectionState = {
   newIssuePage: {

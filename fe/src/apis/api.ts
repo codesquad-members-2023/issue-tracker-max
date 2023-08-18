@@ -403,7 +403,7 @@ export const deleteMilestone = (id: string | number) => {
 export const editMilestoneStatus = (id: number, status: 'open' | 'closed') => {
   const accessToken = getAccessToken();
 
-  return fetchData(`/milestones/${status}`, {
+  return fetchData(`/milestones`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

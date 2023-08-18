@@ -31,3 +31,10 @@ export const formatISODateString = (date: string) => {
 
   return `${year}년 ${month}월 ${day}일`;
 };
+
+export const isDateBeforeToday = (date: string): boolean => {
+  const inputDate = new Date(date);
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  return inputDate < currentDate;
+};
