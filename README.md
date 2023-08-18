@@ -16,9 +16,18 @@
 ## 🎈배포 주소
 - [Issue Tracker](http://3.36.120.124/)
 
-## 🖥️ 동작 화면
+## 🖥️ 데모 영상
 
-- 추가예정
+**로그인**
+![6](https://github.com/codesquad-members-2023/issue-tracker-max/assets/105152276/ca745680-a7ef-4e0c-b115-ff4c1a4d1a81)
+**새로운 이슈 작성**
+![8](https://github.com/codesquad-members-2023/issue-tracker-max/assets/105152276/34d961ca-97ca-4225-a026-bbeb4c9b192b)
+**이슈 수정 및 댓글**
+![3](https://github.com/codesquad-members-2023/issue-tracker-max/assets/105152276/18fbff1d-85fd-418b-b63e-6d885a9916d2)
+**이슈 필터링**
+![1](https://github.com/codesquad-members-2023/issue-tracker-max/assets/105152276/2cbccf5c-6280-4000-943a-4ef40d9d6f7f)
+**라벨 및 마일스톤**
+![2](https://github.com/codesquad-members-2023/issue-tracker-max/assets/105152276/c5f1130d-c699-4866-9a34-2f3e32606382)
 
 <br/>
 
