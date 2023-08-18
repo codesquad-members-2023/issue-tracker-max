@@ -8,9 +8,6 @@ import { useThemeMode } from "contexts/ThemeModeContext";
 import { useFetch } from "../hook/useApiRequest";
 import logoLight from "assets/img/logo_large.svg";
 import logoDark from "assets/img/logo_large-dark.svg";
-import { useAuth } from "../contexts/AuthContext";
-/* 회원가입 버튼 누른 후 처리 추가하기 */
-/* 비밀번호 처리 관련 */
 
 interface ApiResponse {
   jwtResponse: {
@@ -26,15 +23,16 @@ interface ErrorResponse {
   };
 }
 
-export const LoginPage = () => {
+export const SignUpPage = () => {
   const navigate = useNavigate();
   const { mode } = useThemeMode();
-  const { login } = useAuth();
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [userIdError, setUserIdError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [loginErrorMessage, setLoginErrorMessage] = useState("");
+  const [signUpErrorMessage, setSignUpErrorMessage] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  // const { login } = useAuth();
 
   const emailRegex =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
@@ -62,36 +60,37 @@ export const LoginPage = () => {
     }
   };
 
+  const handleConfirmPasswordChange = (value: string): void => {
+    setConfirmPassword(value);
+  };
+
+  const isPasswordConfirmed = () => password === confirmPassword;
+
   const { makeRequest, error } = useFetch<ApiResponse>();
 
-  const handleLogin = async () => {
-    const LOGIN_API_URL = "http://43.200.169.143:8080/api/login";
+  const handleSignUp = async () => {
+    const SIGNUP_API_URL = "http://43.200.169.143:8080/api/signup";
     const requestBody = {
       email: userId,
       password,
+      profile: `https://source.boringavatars.com/beam/20/${userId}`,
     };
 
     try {
-      const data = await makeRequest(LOGIN_API_URL, "POST", requestBody);
-      if (data) {
-        const accessToken = data.jwtResponse.accessToken;
-        const user = { profile: data.profile };
-        login(accessToken, user);
-        navigate("/");
-      }
+      await makeRequest(SIGNUP_API_URL, "POST", requestBody);
+      navigate("/login");
+      setSignUpErrorMessage("");
     } catch (error) {
       const errorData = error as ErrorResponse;
 
-      if (errorData && errorData.data && errorData.data.statusCode === 401) {
-        setLoginErrorMessage(errorData.data.data || "로그인에 실패하셨습니다");
+      if (errorData && errorData.data) {
+        setSignUpErrorMessage(
+          errorData.data.data || "회원가입에 실패하셨습니다",
+        );
       } else {
-        setLoginErrorMessage("로그인에 실패하셨습니다");
+        setSignUpErrorMessage("회원가입에 실패하셨습니다");
       }
     }
-  };
-
-  const handleGithubLogin = async () => {
-    // const GITHUB_LOGIN_API_URL = "http://43.200.169.143:8080/api/login";
   };
 
   return (
@@ -102,17 +101,7 @@ export const LoginPage = () => {
           alt="Issue Tracker 로고"
         />
       </LogoBox>
-
       <FormBox>
-        <LButton size="L" variant="outline" onClick={handleGithubLogin}>
-          <a href="https://github.com/login/oauth/authorize?client_id=Iv1.9ca67429ee7aec3b&scope=id,name,email,avatar_url">
-            GitHub 계정으로 로그인
-          </a>
-          {/* <a href="https://github.com/login/oauth/authorize?client_id=Iv1.9ca67429ee7aec3b&scope=id,name,email,avatar_url">
-              GitHub 계정으로 로그인
-            </a> */}
-        </LButton>
-        <span>or</span>
         <TextInput
           $labelText="아이디"
           value={userId}
@@ -128,21 +117,28 @@ export const LoginPage = () => {
           $state={passwordError ? "error" : "enabled"}
           type="password"
         />
+        <TextInput
+          $labelText="비밀번호 확인"
+          value={confirmPassword}
+          onValueChange={handleConfirmPasswordChange}
+          type="password"
+        />
         <LButton
           size="L"
           variant="contained"
-          disabled={Boolean(
-            userIdError || passwordError || !userId || !password,
-          )}
-          onClick={handleLogin}
+          disabled={
+            Boolean(userIdError || passwordError || !userId || !password) ||
+            !isPasswordConfirmed()
+          }
+          onClick={handleSignUp}
         >
-          아이디로 로그인
+          회원가입
         </LButton>
         <LoginErrorBox style={{ color: "red" }}>
-          {error && loginErrorMessage}
+          {error && signUpErrorMessage}
         </LoginErrorBox>
-        <Button size="M" variant="ghost" onClick={() => navigate("/signup")}>
-          회원가입
+        <Button size="M" variant="ghost" onClick={() => navigate("/login")}>
+          로그인
         </Button>
       </FormBox>
     </Layout>

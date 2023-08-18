@@ -7,7 +7,9 @@ export const Layout = () => {
   return (
     <BodyLayout>
       <PageLayout>
-        {location.pathname !== "/login" && <MainHeader />}
+        {location.pathname !== "/login" && location.pathname !== "/signup" && (
+          <MainHeader />
+        )}
         <Outlet />
       </PageLayout>
     </BodyLayout>

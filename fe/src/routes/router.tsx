@@ -2,12 +2,14 @@ import { createBrowserRouter } from "react-router-dom";
 
 import { Layout } from "pages/Layout";
 import { LoginPage } from "pages/Login";
+import { SignUpPage } from "pages/SignUp";
 import { IssuesPage } from "pages/Issues";
 import { IssueDetailPage } from "pages/IssueDetail";
 import { NewIssuePage } from "pages/NewIssue";
 import { LabelsPage } from "pages/Labels";
 import { MilestonesPage } from "pages/Milestones";
 import { PageNotFound } from "pages/Error";
+import { ProtectedLayout } from "pages/ProtectedLayout";
 
 const router = createBrowserRouter([
   {
@@ -29,8 +31,18 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "new",
-        element: <NewIssuePage />,
+        path: "signup",
+        element: <SignUpPage />,
+      },
+      {
+        path: "",
+        element: <ProtectedLayout />,
+        children: [
+          {
+            path: "new",
+            element: <NewIssuePage />,
+          },
+        ],
       },
       {
         path: "labels",
