@@ -39,6 +39,7 @@ public class JwtAuthorizationFilter implements Filter {
 	};
 
 	private final JwtProvider jwtProvider;
+	private final ObjectMapper objectMapper;
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -71,6 +72,7 @@ public class JwtAuthorizationFilter implements Filter {
 			request.setAttribute("userId", userId);
 			chain.doFilter(request, response);
 		} catch (ExpiredJwtException e) {
+			// throw new CustomException(JwtErrorCode.EXPIRED_JWT_TOKEN);
 			sendErrorResponse(res, JwtErrorCode.EXPIRED_JWT_TOKEN);
 		} catch (Exception e) {
 			sendErrorResponse(res, JwtErrorCode.MALFORMED_JWT_TOKEN);
@@ -90,7 +92,6 @@ public class JwtAuthorizationFilter implements Filter {
 	}
 
 	private void sendErrorResponse(HttpServletResponse response, StatusCode statusCode) throws IOException {
-		ObjectMapper objectMapper = new ObjectMapper();
 		response.setCharacterEncoding("UTF-8");
 		response.setStatus(HttpStatus.UNAUTHORIZED.value());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
