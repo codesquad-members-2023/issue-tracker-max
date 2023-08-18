@@ -165,7 +165,10 @@ export const handlers = [
   }),
 
   rest.post("/api/issues", async (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ issueId: issueList.length + 1 }));
+    return res(
+      ctx.status(200),
+      ctx.json({ issueId: issueList.data.length + 1 })
+    );
   }),
 
   rest.post("/api/images/upload", async (_, res, ctx) => {
@@ -258,5 +261,13 @@ export const handlers = [
 
   rest.delete("/api/milestones/:milestoneId", async (_, res, ctx) => {
     return res(ctx.status(204));
+  }),
+
+  rest.get("/api/labels/count", async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ count: 6 }));
+  }),
+
+  rest.get("/api/milestones/count", async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ count: 13 }));
   }),
 ];

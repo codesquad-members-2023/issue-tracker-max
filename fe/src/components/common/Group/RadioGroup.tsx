@@ -2,14 +2,14 @@ import { RadioContext } from "context/radioContext";
 import { ReactNode } from "react";
 import { Fieldset } from "./Fieldset";
 
-export default function RadioGroup({
+export default function RadioGroup<T>({
   children,
   value,
   onChange,
 }: {
   children: ReactNode;
-  value: number;
-  onChange: (value: number) => void;
+  value: T;
+  onChange: (value: T) => void;
 }) {
   return (
     <Fieldset>

@@ -1,5 +1,5 @@
-import IssueDetailBody from "@components/Issues/IssueDetail/IssueDetailBody";
-import IssueDetailHeader from "@components/Issues/IssueDetail/IssueDetailHeader";
+import IssueDetailBody from "@components/IssueDetail/IssueDetailBody";
+import IssueDetailHeader from "@components/IssueDetail/IssueDetailHeader";
 import { IssueDetails } from "@customTypes/index";
 import useFetch from "@hooks/useFetch";
 import { getIssueDetails } from "api";

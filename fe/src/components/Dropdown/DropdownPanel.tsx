@@ -8,6 +8,7 @@ export default function DropdownPanel({
   dropdownName,
   dropdownOption,
   dropdownList,
+  valueType,
   onOutsideClick,
   position,
 }: DropdownPanelType) {
@@ -24,6 +25,7 @@ export default function DropdownPanel({
     const suffixKOR =
       dropdownName === "assignee" || dropdownName === "issue" ? "가" : "이";
 
+    // TODO: 중복 제거하기 DropdownItem 수정사항 발생 시 3번 수정해야함
     switch (variant) {
       case "filter":
         return (
@@ -35,10 +37,11 @@ export default function DropdownPanel({
               {canBeNegatory && (
                 <DropdownItem
                   option={dropdownOption}
+                  valueType="name"
                   item={{
                     id: 0,
                     variant: "plain",
-                    name: dropdownName,
+                    name: "no",
                     content: `${DropdownNameKOR[dropdownName]}${suffixKOR} 없는 이슈`,
                   }}
                 />
@@ -46,7 +49,12 @@ export default function DropdownPanel({
               {dropdownList.map((item) => {
                 return (
                   <DropdownItem
-                    {...{ key: item.id, option: dropdownOption, item }}
+                    {...{
+                      key: item.id,
+                      option: dropdownOption,
+                      item,
+                      valueType,
+                    }}
                   />
                 );
               })}
@@ -63,7 +71,12 @@ export default function DropdownPanel({
               {dropdownList.map((item) => {
                 return (
                   <DropdownItem
-                    {...{ key: item.id, option: dropdownOption, item }}
+                    {...{
+                      key: item.id,
+                      option: dropdownOption,
+                      item,
+                      valueType,
+                    }}
                   />
                 );
               })}
@@ -80,7 +93,12 @@ export default function DropdownPanel({
               {dropdownList.map((item) => {
                 return (
                   <DropdownItem
-                    {...{ key: item.id, option: dropdownOption, item }}
+                    {...{
+                      key: item.id,
+                      option: dropdownOption,
+                      item,
+                      valueType,
+                    }}
                   />
                 );
               })}

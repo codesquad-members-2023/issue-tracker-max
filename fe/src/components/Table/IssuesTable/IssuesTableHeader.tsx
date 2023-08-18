@@ -6,24 +6,14 @@ import RadioGroup from "@components/common/Group/RadioGroup";
 import InputCheckbox from "@components/common/Input/InputCheckbox";
 import TabBar from "@components/common/TabBar";
 import { putIssuesIsOpen } from "api";
+import {
+  useIssuesFilter,
+  useIssuesFilterDispatch,
+} from "context/IssuesFilterContext";
 import { useState } from "react";
 import { styled } from "styled-components";
 import { TableHeader } from "../Table.style";
-
-const issueStateDropdownList: DropdownItemType[] = [
-  {
-    id: 0,
-    variant: "plain",
-    name: "issueState",
-    content: "선택한 이슈 열기",
-  },
-  {
-    id: 1,
-    variant: "plain",
-    name: "issueState",
-    content: "선택한 이슈 닫기",
-  },
-];
+import IssuesFiltersDropdowns from "./IssuesDropdownWrapper";
 
 export default function IssuesTableHeader({
   numOpen,
@@ -32,6 +22,7 @@ export default function IssuesTableHeader({
   selectedIssueIds,
   toggleSelectAll,
   refetchIssuesList,
+  deselectAllIssues,
 }: {
   numOpen: number;
   numClosed: number;
@@ -39,23 +30,49 @@ export default function IssuesTableHeader({
   selectedIssueIds: Set<number>;
   toggleSelectAll: () => void;
   refetchIssuesList: () => void;
+  deselectAllIssues: () => void;
 }) {
-  const [issueStateDropdownIdx, setIssueStateDropdownIdx] = useState(0);
+  const [issueStateDropdown, setIssueStateDropdown] = useState<
+    "open" | "closed"
+  >("open");
 
-  const onIssueStateSelect = (index: number) => {
-    setIssueStateDropdownIdx(index);
+  const { issuesFilter } = useIssuesFilter();
+  const issuesFilterDispatch = useIssuesFilterDispatch();
+
+  const issuesStatus = issuesFilter.state.status!;
+
+  const tabBarLeftInfo = {
+    name: "열린 이슈",
+    count: numOpen,
+    iconSrc: alertIcon,
+    callback: () => {
+      issuesFilterDispatch({ type: "SET_FILTER_BAR", payload: "open" });
+    },
+  };
+
+  const tabBarRightInfo = {
+    name: "닫힌 이슈",
+    count: numClosed,
+    iconSrc: archiveIcon,
+    callback: () => {
+      issuesFilterDispatch({ type: "SET_FILTER_BAR", payload: "closed" });
+    },
+  };
+
+  const onIssueStateSelect = (state: "open" | "closed") => {
+    setIssueStateDropdown(state);
   };
 
   const onUpdateSelectedIssuesState = async () => {
     try {
       const res = await putIssuesIsOpen({
         issueIds: selectedIssueIds ? [...selectedIssueIds] : [],
-        state: issueStateDropdownIdx === 0 ? "open" : "closed",
+        state: issueStateDropdown,
       });
 
       if (res.status === 200) {
         refetchIssuesList();
-        setIssueStateDropdownIdx(0);
+        deselectAllIssues();
       }
     } catch (error) {
       // TODO
@@ -63,17 +80,9 @@ export default function IssuesTableHeader({
     }
   };
 
-  const tabBarLeftInfo = {
-    name: "열린 이슈",
-    count: numOpen,
-    iconSrc: alertIcon,
-    callback: () => console.log("열린 이슈"),
-  };
-  const tabBarRightInfo = {
-    name: "닫힌 이슈",
-    count: numClosed,
-    iconSrc: archiveIcon,
-    callback: () => console.log("닫힌 이슈"),
+  const currentTabName = {
+    open: "열린 이슈",
+    closed: "닫힌 이슈",
   };
 
   const numSelectedIssues = selectedIssueIds.size;
@@ -92,7 +101,7 @@ export default function IssuesTableHeader({
             </div>
           ) : (
             <TabBar
-              currentTabName="열린 이슈"
+              currentTabName={currentTabName[issuesStatus]}
               left={tabBarLeftInfo}
               right={tabBarRightInfo}
               borderStyle="none"
@@ -103,7 +112,7 @@ export default function IssuesTableHeader({
         <div className="right-wrapper">
           {numSelectedIssues > 0 ? (
             <RadioGroup
-              value={issueStateDropdownIdx}
+              value={issueStateDropdown}
               onChange={onIssueStateSelect}>
               <DropdownIndicator
                 displayName="상태수정"
@@ -111,55 +120,34 @@ export default function IssuesTableHeader({
                 dropdownName="issueState"
                 dropdownList={issueStateDropdownList}
                 dropdownPanelPosition="right"
+                dropdownOption="single"
+                valueType="name"
                 outsideClickHandler={onUpdateSelectedIssuesState}
               />
             </RadioGroup>
           ) : (
-            <>
-              <DropdownIndicator
-                displayName="담당자"
-                dropdownPanelVariant="filter"
-                dropdownName="assignee"
-                dropdownList={[
-                  {
-                    id: 1,
-                    variant: "withImg",
-                    name: "assignee",
-                    content: "Kakamotobi",
-                    imgSrc:
-                      "https://avatars.githubusercontent.com/u/79886384?v=4",
-                  },
-                ]}
-                dropdownPanelPosition="right"
-              />
-              <DropdownIndicator
-                displayName="레이블"
-                dropdownPanelVariant="filter"
-                dropdownName="label"
-                dropdownList={[]}
-                dropdownPanelPosition="right"
-              />
-              <DropdownIndicator
-                displayName="마일스톤"
-                dropdownPanelVariant="filter"
-                dropdownName="milestone"
-                dropdownList={[]}
-                dropdownPanelPosition="right"
-              />
-              <DropdownIndicator
-                displayName="작성자"
-                dropdownPanelVariant="filter"
-                dropdownName="author"
-                dropdownList={[]}
-                dropdownPanelPosition="right"
-              />
-            </>
+            <IssuesFiltersDropdowns />
           )}
         </div>
       </TableHeaderContents>
     </TableHeader>
   );
 }
+
+const issueStateDropdownList: DropdownItemType[] = [
+  {
+    id: 0,
+    variant: "plain",
+    name: "open",
+    content: "선택한 이슈 열기",
+  },
+  {
+    id: 1,
+    variant: "plain",
+    name: "closed",
+    content: "선택한 이슈 닫기",
+  },
+];
 
 const TableHeaderContents = styled.div`
   width: 100%;

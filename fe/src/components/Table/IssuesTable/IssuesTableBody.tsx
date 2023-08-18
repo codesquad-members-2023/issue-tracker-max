@@ -1,4 +1,5 @@
 import { IssueItem as IssueItemType } from "@customTypes/index";
+import { useIssuesFilter } from "context/IssuesFilterContext";
 import { EmptyTableBodyItem, TableBody } from "../Table.style";
 import IssuesTableItem from "./IssuesTableItem";
 
@@ -7,13 +8,24 @@ export default function IssuesTableBody({
   selectedIssueIds,
   toggleSelectIssue,
 }: {
-  issuesList: IssueItemType[] | null;
+  issuesList: IssueItemType[];
   selectedIssueIds: Set<number>;
   toggleSelectIssue: (id: number) => void;
 }) {
+  const { issuesFilter } = useIssuesFilter();
+
+  const issuesStatus = issuesFilter.state.status;
+  const openIssuesList = issuesList.filter((issue) => issue.isOpen);
+  const closedIssuesList = issuesList.filter((issue) => !issue.isOpen);
+  const currentIssuesList = issuesStatus
+    ? issuesStatus === "open"
+      ? openIssuesList
+      : closedIssuesList
+    : issuesList;
+
   return (
     <TableBody>
-      {issuesList ? (
+      {currentIssuesList.length ? (
         <ul>
           {issuesList.map((issue) => (
             <IssuesTableItem
@@ -27,7 +39,9 @@ export default function IssuesTableBody({
           ))}
         </ul>
       ) : (
-        <EmptyTableBodyItem>등록된 이슈가 없습니다.</EmptyTableBodyItem>
+        <EmptyTableBodyItem>
+          검색과 일치하는 결과가 없습니다.
+        </EmptyTableBodyItem>
       )}
     </TableBody>
   );

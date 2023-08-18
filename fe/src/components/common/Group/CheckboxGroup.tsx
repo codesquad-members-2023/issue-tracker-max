@@ -1,17 +1,17 @@
-import { CheckboxContext, checkFn, toggleFn } from "context/checkboxContext";
+import { CheckboxContext } from "context/checkboxContext";
 import { Fieldset } from "./Fieldset";
 
-export default function CheckboxGroup({
+export default function CheckboxGroup<T>({
   children,
   values,
   onChange,
 }: {
   children: React.ReactNode;
-  values: Set<number>;
-  onChange: (values: Set<number>) => void;
+  values: Set<T>;
+  onChange: (values: Set<T>) => void;
 }) {
-  const isChecked: checkFn = (value) => values.has(value);
-  const toggleCheck: toggleFn = ({ checked, value }) => {
+  const isChecked = (value: T) => values.has(value);
+  const toggleCheck = ({ checked, value }: { checked: boolean; value: T }) => {
     if (checked) {
       onChange(values.add(value));
     } else {

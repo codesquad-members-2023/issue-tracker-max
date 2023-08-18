@@ -77,3 +77,48 @@ export type IssueComment = {
   content: string;
   createdAt: string;
 };
+
+export enum IssueState {
+  open = "open",
+  closed = "closed",
+}
+
+export enum IssueFilter {
+  open = "open",
+  closed = "closed",
+  writtenByMe = "writtenByMe",
+  assignedToMe = "assignedToMe",
+  commentedByMe = "commentedByMe",
+}
+
+export type IssuesFilterState = {
+  status: keyof typeof IssueState | null;
+  filterBar: keyof typeof IssueFilter | null;
+  author: string | null;
+  assignees: Set<string>;
+  labels: Set<string>;
+  milestone: string | null;
+};
+
+export type IssuesFilter = {
+  state: IssuesFilterState;
+  text: string;
+};
+
+export type IssuesFilterActionMap = {
+  SET_STATUS: keyof typeof IssueState | null;
+  SET_AUTHOR: string | null;
+  SET_ASSIGNEES: Set<string>;
+  SET_LABELS: Set<string>;
+  SET_MILESTONE: string | null;
+  SET_FILTER_BAR: keyof typeof IssueFilter | null;
+  RESET_FILTER: null;
+  SET_FILTER_TEXT: string;
+};
+
+export type IssuesFilterAction = {
+  [Key in keyof IssuesFilterActionMap]: {
+    type: Key;
+    payload?: IssuesFilterActionMap[Key];
+  };
+}[keyof IssuesFilterActionMap];

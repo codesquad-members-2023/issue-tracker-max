@@ -26,6 +26,11 @@ export default function TabBar({
   const isLeftSelected = selectedTab === left.name;
   const hasOutline = borderStyle === "outline";
 
+  // TODO: 이슈 목록 화면에서 열린 이슈 / 닫힌 이슈 변경 시 반영 안돼서 임시로 추가
+  if (currentTabName !== selectedTab) {
+    setSelectedTab(currentTabName);
+  }
+
   const onLeftClick = () => {
     setSelectedTab(left.name);
     left.callback?.();
