@@ -38,16 +38,11 @@
 
 ### Back-End
 ![Static Badge](https://img.shields.io/badge/Java-11-Green)
-![Static Badge](https://img.shields.io/badge/SpringBoot-2.7.12-Green)
-![Static Badge](https://img.shields.io/badge/MySQL-8.0.32-Green)
+![Static Badge](https://img.shields.io/badge/SpringBoot-2.7.14-Green)
+![Static Badge](https://img.shields.io/badge/MySQL-8.0.33-Green)
+![Static Badge](https://img.shields.io/badge/Redis-7.2-Green)
 ![Static Badge](https://img.shields.io/badge/EC2-t2_micro-Green)
 ![Static Badge](https://img.shields.io/badge/S3-Green)
-
-![](https://img.shields.io/badge/Java-007396?style=flat&logo=Java&logoColor=white)
-![](https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white)
-![](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white)
-![](https://img.shields.io/badge/Amazon_AWS-232F3E?style=flat&logo=amazonaws)
-![](https://img.shields.io/badge/GitActions-2088FF?style=flat&logo=githubactions&logoColor=white)
 ![Static Badge](https://img.shields.io/badge/RDS-t3_micro-Green)
 ![Static Badge](https://img.shields.io/badge/GithubAction-Green)
 ![Static Badge](https://img.shields.io/badge/DockerHub-Green)
