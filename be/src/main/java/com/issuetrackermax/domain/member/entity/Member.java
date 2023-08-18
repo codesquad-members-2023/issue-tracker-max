@@ -38,7 +38,7 @@ public class Member {
 	}
 
 	private String setImageUrl() {
-		int randomNum = new Random().nextInt(5) + 1;
+		int randomNum = new Random().nextInt(11) + 1;
 		return ProfileImage.valueOf("DEFAULT_" + randomNum).getImageUrl();
 	}
 }
