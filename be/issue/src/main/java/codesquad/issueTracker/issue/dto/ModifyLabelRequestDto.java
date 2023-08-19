@@ -1,11 +1,13 @@
 package codesquad.issueTracker.issue.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
-import lombok.Getter;
-
 @Getter
+@NoArgsConstructor
 public class ModifyLabelRequestDto {
-	private List<Long> labels;
+    private List<Long> labels;
 
 }
