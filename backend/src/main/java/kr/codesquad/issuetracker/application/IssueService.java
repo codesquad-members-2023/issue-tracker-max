@@ -11,19 +11,21 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.codesquad.issuetracker.domain.Issue;
 import kr.codesquad.issuetracker.domain.IssueAssignee;
 import kr.codesquad.issuetracker.domain.IssueLabel;
-import kr.codesquad.issuetracker.domain.IssueSearch;
 import kr.codesquad.issuetracker.exception.ApplicationException;
 import kr.codesquad.issuetracker.exception.ErrorCode;
 import kr.codesquad.issuetracker.infrastructure.persistence.IssueAssigneeRepository;
 import kr.codesquad.issuetracker.infrastructure.persistence.IssueLabelRepository;
 import kr.codesquad.issuetracker.infrastructure.persistence.IssueRepository;
+import kr.codesquad.issuetracker.infrastructure.persistence.mapper.IssueCountMapper;
 import kr.codesquad.issuetracker.infrastructure.persistence.mapper.IssueDAO;
 import kr.codesquad.issuetracker.infrastructure.persistence.mapper.IssueSimpleMapper;
+import kr.codesquad.issuetracker.presentation.converter.OpenState;
 import kr.codesquad.issuetracker.presentation.request.AssigneeRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueLabelRequest;
 import kr.codesquad.issuetracker.presentation.request.IssueRegisterRequest;
 import kr.codesquad.issuetracker.presentation.response.IssueDetailResponse;
 import kr.codesquad.issuetracker.presentation.response.IssueDetailSidebarResponse;
+import kr.codesquad.issuetracker.presentation.response.Page;
 import kr.codesquad.issuetracker.utils.IssueSearchParser;
 import lombok.RequiredArgsConstructor;
 
@@ -74,13 +76,12 @@ public class IssueService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<IssueSimpleMapper> findAll() {
-		return issueMapper.findAll(new IssueSearch());
-	}
+	public Page<IssueSimpleMapper> findAll(String loginId, String searchBar, int page, int size) {
+		final int offset = (page - 1) * size;
+		final List<IssueSimpleMapper> issues = issueMapper.findAll(IssueSearchParser.parse(loginId, searchBar), offset, size);
+		final IssueCountMapper issueCountMapper = issueMapper.countAll(IssueSearchParser.parse(loginId, searchBar));
 
-	@Transactional(readOnly = true)
-	public List<IssueSimpleMapper> findAll(String loginId, String searchBar) {
-		return issueMapper.findAll(IssueSearchParser.parse(loginId, searchBar));
+		return Page.createIssuePage(issues, issueCountMapper, page, size);
 	}
 
 	@Transactional
@@ -102,13 +103,7 @@ public class IssueService {
 		BiConsumer<Issue, String> modifyFunction) {
 		Issue issue = issueRepository.findById(issueId)
 			.orElseThrow(() -> new ApplicationException(ErrorCode.ISSUE_NOT_FOUND));
-
-		if (!issue.isAuthor(userId)) {
-			throw new ApplicationException(ErrorCode.NO_AUTHORIZATION);
-		}
-
 		modifyFunction.accept(issue, modifiedData);
-
 		issueRepository.updateIssue(issue);
 	}
 
@@ -143,5 +138,17 @@ public class IssueService {
 		}
 
 		issueRepository.updateIssueMilestone(issueId, milestoneId);
+	}
+
+	@Transactional
+	public void modifyMultipleIssueState(OpenState openState, List<Integer> issueIds) {
+		issueRepository.updateAllIssue(openState, issueIds);
+	}
+
+	public void remove(Integer issueId) {
+		if (!issueRepository.existsById(issueId)) {
+			throw new ApplicationException(ErrorCode.ISSUE_NOT_FOUND);
+		}
+		issueRepository.delete(issueId);
 	}
 }
