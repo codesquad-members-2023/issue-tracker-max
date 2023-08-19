@@ -7,11 +7,13 @@ import { Button } from "components/Common/Button/Button";
 interface FilterBarProps {
   filterTitle: string;
   onFilterClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+  filterText: string;
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({
   filterTitle,
   onFilterClick,
+  filterText,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -35,7 +37,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
         <InputArea $isFocused={isFocused}>
           <Icon icon="Search" stroke="nuetralTextDefault"></Icon>
-          <InputBox onFocus={handleFocus} onBlur={handleBlur} />
+          <InputBox
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            placeholder={filterText}
+          />
         </InputArea>
       </FilterBarLayout>
     </>
@@ -54,6 +60,7 @@ const FilterBarLayout = styled.div<{ $isFocused: boolean }>`
         : color.nuetralBorderDefault};
   border-radius: ${({ theme: { radius } }) => radius.medium};
   transition: all 0.3s;
+  overflow: hidden;
   > div {
     display: flex;
     align-items: center;

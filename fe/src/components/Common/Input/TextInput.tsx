@@ -12,6 +12,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
   helperText?: string;
   value?: string;
+  type?: "text" | "password";
   onValueChange?: (value: string) => void;
 }
 
@@ -23,6 +24,7 @@ export const TextInput: React.FC<InputProps> = ({
   $labelText,
   value = "",
   onValueChange,
+  type = "text",
 }) => {
   const [inputValue, setInputValue] = useState(value);
   const [currentState, setCurrentState] = useState($state);
@@ -32,6 +34,7 @@ export const TextInput: React.FC<InputProps> = ({
 
   const handleClear = () => {
     setInputValue("");
+    onValueChange?.("");
     setTypingState("placeholder");
     setCurrentState("enabled");
   };
@@ -52,9 +55,10 @@ export const TextInput: React.FC<InputProps> = ({
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-    if (inputValue) {
-      onValueChange?.(event.target.value);
+    const newValue = event.target.value;
+    setInputValue(newValue);
+    if (newValue) {
+      onValueChange?.(newValue);
       setCurrentState("active");
       setTypingState("onTyping");
     } else {
@@ -76,6 +80,7 @@ export const TextInput: React.FC<InputProps> = ({
             </LabelText>
           )}
           <Input
+            type={type}
             onFocus={handleFocus}
             onBlur={handleBlur}
             onChange={handleChange}

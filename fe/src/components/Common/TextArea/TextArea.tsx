@@ -5,11 +5,15 @@ import { Button } from "../Button/Button";
 
 interface TextAreaProps extends InputHTMLAttributes<HTMLTextAreaElement> {
   labelText?: string;
+  onValueChange?: (value: string) => void;
 }
 
 type TextAreaStates = "enabled" | "active" | "disabled" | "typing" | "typed";
 
-export const TextArea: React.FC<TextAreaProps> = ({ labelText }) => {
+export const TextArea: React.FC<TextAreaProps> = ({
+  labelText,
+  onValueChange,
+}) => {
   const [inputValue, setInputValue] = useState("");
   const [currentState, setCurrentState] = useState<TextAreaStates>("enabled");
 
@@ -26,7 +30,12 @@ export const TextArea: React.FC<TextAreaProps> = ({ labelText }) => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(event.target.value);
+    const newValue = event.target.value;
+    setInputValue(newValue);
+
+    if (onValueChange) {
+      onValueChange(newValue);
+    }
 
     if (inputValue) {
       setCurrentState("typing");

@@ -23,7 +23,6 @@ interface LabelsPageData {
 export const LabelsPage = () => {
   const navigate = useNavigate();
   const data = useLoaderData() as LabelsPageData;
-  console.log(data);
 
   return (
     <Layout>
@@ -99,7 +98,6 @@ const Layout = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
-
   > :first-child {
     display: flex;
     justify-content: space-between;

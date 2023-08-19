@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate, useLocation } from "react-router-dom";
 
 import { TabButton, Tab } from "components/Common/Button/TabButton";
 import { Button } from "components/Common/Button/Button";
@@ -26,6 +26,11 @@ export const MilestonesPage = () => {
   const navigate = useNavigate();
   const data = useLoaderData() as MilestonesPageData;
 
+  const location = useLocation();
+  const isOpenMilestone = location.pathname === "/milestones/open";
+
+  const milestoneCount = data.openMilestoneCount + data.closeMilestoneCount;
+
   return (
     <Layout>
       <div>
@@ -39,7 +44,7 @@ export const MilestonesPage = () => {
           <TabButton
             icon="Milestone"
             text="마일스톤"
-            count={data.milestones.length}
+            count={milestoneCount}
             onClick={() => navigate("/milestones/open")}
           />
         </Tab>
@@ -51,11 +56,21 @@ export const MilestonesPage = () => {
 
       <TableBox>
         <div>
-          <Button size="M" variant="ghost">
+          <Button
+            size="M"
+            variant="ghost"
+            states={isOpenMilestone ? "selected" : undefined}
+            onClick={() => navigate("/milestones/open")}
+          >
             <Icon icon="AlertCircle" size="M" />
             열린 마일스톤({data.openMilestoneCount})
           </Button>
-          <Button size="M" variant="ghost">
+          <Button
+            size="M"
+            variant="ghost"
+            states={isOpenMilestone ? undefined : "selected"}
+            onClick={() => navigate("/milestones/closed")}
+          >
             <Icon icon="Archive" size="M" />
             닫힌 마일스톤({data.closeMilestoneCount})
           </Button>
@@ -155,6 +170,7 @@ const TableBox = styled.div`
   border: ${({ theme: { border } }) => border.default};
   border-color: ${({ theme: { color } }) => color.nuetralBorderDefault};
   border-radius: ${({ theme: { radius } }) => radius.large};
+  overflow: hidden;
 
   > div {
     display: flex;

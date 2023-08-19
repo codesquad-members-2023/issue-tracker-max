@@ -1,64 +1,48 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import styled from "styled-components";
-import { useFilter } from "contexts/FilterProvider";
 import { useOutsideClick } from "../../hook/useOutsideClick";
 type PositionType = "center" | "left" | "right";
 import { Icon } from "components/Common/Icon/Icon";
 import { ProfileImg } from "components/Common/Profile/Profile";
-interface SubFilterItem {
-  id: number;
-  name: string;
-  filter: string;
+
+interface Item {
+  id?: number;
   profile?: string;
   backgroundColor?: string;
+  name?: string;
+  filter?: string;
 }
 
-interface DropdownProps {
-  items?: SubFilterItem[];
+interface DropdownProps<T extends Item> {
+  items?: T[];
   title: string;
   filter?: string;
   type: string;
   $position: PositionType;
   onClose: () => void;
+  onItemSelect?: (item: T) => void;
 }
 
-export const DropdownPanel: React.FC<DropdownProps> = ({
+export const DropdownPanel2 = <T extends Item>({
   items = [],
   title,
   $position,
-  filter,
   onClose,
-  type,
-}) => {
-  const [selectedItem, setSelectedItem] = useState<SubFilterItem | null>(null);
+  onItemSelect,
+}: DropdownProps<T>) => {
+  const [selectedItem, setSelectedItem] = useState<T | null>(null);
   const dropdownRef = useRef(null);
-  const { state, setDropdownFilter, setFilterBar } = useFilter();
 
-  useEffect(() => {
-    if (selectedItem !== null) {
-      if (type === "dropdownFilter" && filter) {
-        setDropdownFilter(filter, [selectedItem.name]);
-      }
-      if (type === "filterBar") {
-        setFilterBar([selectedItem.filter]);
-      }
-      onClose();
-    }
-  }, [selectedItem, onClose, filter, items]);
-
-  const isItemSelected = (item: SubFilterItem) => {
-    if (type === "dropdownFilter" && filter) {
-      // console.log(state.dropdownFilter[filter]?.includes(item.name));
-      return state.dropdownFilter[filter]?.includes(item.name);
-    } else if (type === "filterBar") {
-      return state.filterBar.includes(item.filter);
-    }
-    return false;
-  };
-
-  const handleOptionClick = (item: SubFilterItem) => {
+  const handleOptionClick = (item: T) => {
     setSelectedItem(item);
     console.log(selectedItem);
+    if (onItemSelect) {
+      onItemSelect(item);
+    }
+  };
+
+  const isItemSelected = (item: T): boolean => {
+    return selectedItem?.id === item.id;
   };
 
   useOutsideClick(dropdownRef, onClose);
@@ -92,7 +76,7 @@ export const DropdownPanel: React.FC<DropdownProps> = ({
   );
 };
 
-const Layout = styled.div<Pick<DropdownProps, "$position">>`
+const Layout = styled.div<Pick<DropdownProps<Item>, "$position">>`
   position: absolute;
   z-index: 10;
   display: flex;
