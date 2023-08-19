@@ -23,13 +23,14 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
     private final UserValidator userValidator;
     private final JwtProvider jwtProvider;
     private final String DEFAULT_PROFILE_IMG = "https://upload.wikimedia.org/wikipedia/commons/1/17/Enhydra_lutris_face.jpg";
 
+    @Transactional
     public Long save(SignUpRequestDto userSignUpRequestDto) {
         userValidator.validateDuplicatedEmail(userSignUpRequestDto);
         String encodedPassword = BCrypt.hashpw(userSignUpRequestDto.getPassword(), BCrypt.gensalt());
@@ -45,6 +46,7 @@ public class UserService {
      * 5. 재로그인하는 유저라면 refresh token db update
      * 5. user 정보와 access token, refresh token 응답
      */
+    @Transactional
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         User user = userRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
@@ -63,6 +65,7 @@ public class UserService {
                 .build();
     }
 
+    @Transactional
     public void insertOrUpdateToken(Long userId, Jwt jwt) {
         if (userRepository.findTokenByUserId(userId).isEmpty()) {
             userRepository.insertRefreshToken(userId, jwt.getRefreshToken());
@@ -71,12 +74,14 @@ public class UserService {
         }
     }
 
-    private User insertOauthUser(User user) {
+    @Transactional
+    public User insertOauthUser(User user) {
         userRepository.insert(user);
         return userRepository.findByEmail(user.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
     }
 
+    @Transactional
     public User findExistedOrInsertedUser(User user) {
         return userRepository.findByEmail(user.getEmail())
                 .orElseGet(() -> insertOauthUser(user));
@@ -86,7 +91,7 @@ public class UserService {
      * 1. 만료된 리프레시 토큰이면 예외처리
      * 2. DB에 없는 리프레시 토큰이면 예외처리
      */
-    @Transactional(readOnly = true)
+
     public ResponseAccessToken reissueAccessToken(RequestRefreshTokenDto refreshTokenDto) {
         jwtProvider.getClaims(refreshTokenDto.getRefreshToken());
 
@@ -96,6 +101,7 @@ public class UserService {
 
     }
 
+    @Transactional
     public void logout(HttpServletRequest request) {
         Long userId = Long.parseLong(String.valueOf(request.getAttribute("userId")));
         userRepository.deleteTokenByUserId(userId)
@@ -106,7 +112,6 @@ public class UserService {
         return userRepository.findById(assigneeId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
     }
 
-    @Transactional(readOnly = true)
     public List<User> getUsers() {
         return userRepository.findAll();
     }
