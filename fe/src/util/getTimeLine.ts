@@ -1,4 +1,4 @@
-export function getTimeLine(timestamp: string) {
+export function getTimeLine(timestamp: Date) {
   const now = new Date();
   const pastDate = new Date(timestamp);
   const timeDifference = now.getTime() - pastDate.getTime();

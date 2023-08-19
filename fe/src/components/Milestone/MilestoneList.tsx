@@ -7,6 +7,9 @@ import MilestoneFilter from './MilestoneFilter';
 import MilestoneItem from './MilestoneItem';
 import { customFetch } from '../../util/customFetch';
 import { useNavigate } from 'react-router-dom';
+import { MilestoneData, MilestoneType } from '../../type/milestone.type';
+import { GetMilestoneRes } from '../../type/Response.type';
+import MilestoneCreate from './MilestoneCreate/MilestoneCreate';
 
 export default function MilestoneList() {
   const theme = useTheme();
@@ -14,17 +17,25 @@ export default function MilestoneList() {
     'open'
   );
   const [milestoneList, setMilestoneList] = useState<MilestoneData>();
+  const [isCreating, setIsCreating] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
-      const subUrl = 'api/milestones/' + milestoneFilter;
-
       try {
-        const milestoneData = await customFetch<MilestoneResponse>({ subUrl });
+        const response = await customFetch<GetMilestoneRes>({
+          subUrl: 'api/milestones/' + milestoneFilter,
+        });
 
-        if (milestoneData.success && milestoneData.data) {
-          setMilestoneList(milestoneData.data);
+        if (!response.success) {
+          if (response.errorCode?.status === 401) {
+            navigate('/sign-in');
+            return;
+          }
+        }
+
+        if (response.data) {
+          setMilestoneList(response.data);
         }
       } catch (error) {
         navigate('/sign-in');
@@ -43,7 +54,49 @@ export default function MilestoneList() {
     }
   };
 
-  const onClickToCreate = () => {};
+  const addNewMilestone = (newMilestone: MilestoneType) => {
+    setMilestoneList((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          milestones: [...prev.milestones, { ...newMilestone }],
+        };
+      }
+    });
+  };
+
+  const editLabel = (milestoneId: number, editedMilestone: MilestoneType) => {
+    setMilestoneList((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          milestones: prev.milestones.map((milestone) => {
+            if (milestone.id === milestoneId) {
+              return { ...editedMilestone };
+            }
+            return milestone;
+          }),
+        };
+      }
+    });
+  };
+
+  const deleteMilestone = (milestoneId: number) => {
+    setMilestoneList((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          milestones: prev.milestones.filter(
+            (milestone) => milestone.id !== milestoneId
+          ),
+        };
+      }
+    });
+  };
+
+  const onClickToCreate = () => {
+    setIsCreating((prev) => !prev);
+  };
 
   const isOpen = milestoneFilter === 'open';
 
@@ -52,7 +105,6 @@ export default function MilestoneList() {
       {milestoneList && (
         <>
           <SubNavBar
-            isIssue={false}
             labelCount={milestoneList.labelCount}
             milestoneCount={
               milestoneList.milestones.length + milestoneList.oppositeCount
@@ -60,6 +112,12 @@ export default function MilestoneList() {
             buttonValue="마일스톤 추가"
             onClick={onClickToCreate}
           />
+          {isCreating && (
+            <MilestoneCreate
+              onChangeStatus={onClickToCreate}
+              onAddNewMilestone={addNewMilestone}
+            />
+          )}
           <TableContainer>
             <div css={milestoneTable(theme)}>
               <div className="header">
@@ -80,7 +138,12 @@ export default function MilestoneList() {
               </div>
               <ul className="item-container">
                 {milestoneList.milestones.map((milestone) => (
-                  <MilestoneItem key={milestone.id} {...milestone} />
+                  <MilestoneItem
+                    key={milestone.id}
+                    milestone={milestone}
+                    onDelete={deleteMilestone}
+                    onEdit={editLabel}
+                  />
                 ))}
               </ul>
             </div>
@@ -104,6 +167,7 @@ const milestoneTable = (theme: Theme) => css`
     border: ${border.default} ${theme.neutral.borderDefault};
     border-top: none;
     background-color: ${theme.neutral.surfaceStrong};
+    overflow: hidden;
 
     li {
       box-sizing: border-box;

@@ -7,16 +7,12 @@ import InputWithValidation from './common/InputWithValidation';
 import { REGEX } from '../../constant/regex';
 import { ReactComponent as LargeLogo } from '../../assets/logo/largeLogo.svg';
 import { customFetch } from '../../util/customFetch';
-
-type Response = {
-  success: boolean;
-  data: null;
-};
+import { OnlySuccessRes } from '../../type/Response.type';
 
 export default function SignUp() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [isOverlap, setIsOverlap] = useState<boolean>(true); // Memo: API 나오면 false로 바꿔야함
+  const [isOverlap, setIsOverlap] = useState<boolean>(false);
   const [email, setEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -25,38 +21,36 @@ export default function SignUp() {
   const onSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const signUpData = {
-      loginId: email,
-      password: password,
-      nickName: userName,
-    };
+    try {
+      const response = await customFetch<OnlySuccessRes>({
+        subUrl: 'api/members/signup',
+        method: 'POST',
+        body: JSON.stringify({
+          loginId: email,
+          password: password,
+          nickName: userName,
+        }),
+      });
 
-    const subUrl = 'api/signup';
-    const method = 'POST';
-    const body = JSON.stringify(signUpData);
-
-    const response = await customFetch<Response>({
-      subUrl,
-      method,
-      body,
-    });
-
-    if (response && response.success) {
-      navigate('/sign-in');
+      if (response.success) {
+        navigate('/sign-in');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
   const onCheckEmail = async () => {
-    const subUrl = 'api/signup/check-member-email';
-    const header = { email: email };
+    try {
+      const response = await customFetch<OnlySuccessRes>({
+        subUrl: `api/members/signup/check-member-email?loginId=${email}`,
+      });
 
-    const response = await customFetch<Response>({
-      subUrl,
-      header,
-    });
-
-    if (response && response.success) {
-      setIsOverlap(true);
+      if (response.success) {
+        setIsOverlap(true);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 

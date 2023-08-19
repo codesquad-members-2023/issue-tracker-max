@@ -1,15 +1,10 @@
-type MilestoneResponse = {
-  success: boolean;
-  data: MilestoneData;
-};
-
-type MilestoneData = {
+export type MilestoneData = {
   labelCount: number;
   oppositeCount: number;
-  milestones: Milestone[];
+  milestones: MilestoneType[];
 };
 
-type Milestone = {
+export type MilestoneType = {
   id: number;
   title: string;
   description: string;

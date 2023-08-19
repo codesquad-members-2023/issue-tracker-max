@@ -1,27 +1,28 @@
 import { css, useTheme } from '@emotion/react';
-import Taps from './common/Taps';
-import Button from './common/Button';
-import { ReactComponent as PlusIcon } from '../assets/icon/plus.svg';
+import { ReactComponent as PlusIcon } from '../../../assets/icon/plus.svg';
+import { useContext } from 'react';
+import { IssueContext } from '../../Context/IssueContext';
+import FilterBar from '../../FilterBar';
+import Taps from '../../common/Taps';
+import Button from '../../common/Button';
 
 type Props = {
-  labelCount: number;
-  milestoneCount: number;
   buttonValue: string;
   onClick: () => void;
 };
 
-export default function SubNavBar({
-  labelCount,
-  milestoneCount,
-  buttonValue,
-  onClick,
-}: Props) {
+export default function IssueNavBar({ buttonValue, onClick }: Props) {
   const theme = useTheme();
+  const { ...context } = useContext(IssueContext);
 
   return (
     <div css={navBar}>
+      <FilterBar />
       <div className="nav-container">
-        <Taps labelCount={labelCount} milestoneCount={milestoneCount} />
+        <Taps
+          labelCount={context.issueList.labelCount}
+          milestoneCount={context.issueList.milestoneCount}
+        />
         <Button
           icon={<PlusIcon />}
           value={buttonValue}
@@ -34,7 +35,7 @@ export default function SubNavBar({
   );
 }
 
-const navBar = css`
+const navBar = () => css`
   display: flex;
   justify-content: space-between;
   width: 1280px;
@@ -42,7 +43,7 @@ const navBar = css`
   padding: 0 40px;
 
   .nav-container {
-    width: 1280px;
+    width: auto;
     display: flex;
     justify-content: space-between;
     gap: 15px;

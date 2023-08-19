@@ -1,22 +1,24 @@
 import { Theme, css, useTheme } from '@emotion/react';
 import { ReactComponent as ChevronDownIcon } from '../assets/icon/chevronDown.svg';
+import { ReactComponent as SearchIcon } from '../assets/icon/search.svg';
 import { border, font, radius } from '../styles/styles';
+import { useContext } from 'react';
+import { IssueContext } from './Context/IssueContext';
 
 export default function FilterBar() {
   const theme = useTheme();
+  const { ...context } = useContext(IssueContext);
 
   return (
     <div css={filterBar(theme)}>
-      <button className="filter-button">
+      <button className="filter-button" disabled>
         필터
         <ChevronDownIcon />
       </button>
-      <input
-        className="filter-input"
-        type="text"
-        value="is:issue is:open"
-        onChange={() => {}}
-      />
+      <div className="filter-input">
+        <SearchIcon />
+        {context.filter ? context.filter : 'is:issue is:open'}
+      </div>
     </div>
   );
 }
@@ -42,18 +44,18 @@ const filterBar = (theme: Theme) => css`
   }
 
   .filter-input {
-    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     width: 440px;
     height: 40px;
-    padding-left: 40px;
+    padding: 0 24px;
     border: none;
     border-left: ${border.default} ${theme.neutral.borderDefault};
     border-radius: 0 ${radius.medium} ${radius.medium} 0;
     color: ${theme.neutral.textWeak};
     background-color: ${theme.neutral.surfaceBold};
     font: ${font.displayMedium16};
-    background-image: url('../../src/assets/icon/search.svg');
-    background-repeat: no-repeat;
-    background-position: 15px center;
+    cursor: not-allowed;
   }
 `;

@@ -2,33 +2,38 @@ import { css } from '@emotion/react';
 import { font, radius } from '../../styles/styles';
 import { ButtonHTMLAttributes } from 'react';
 
+type ButtonSize = 'M' | 'S' | 'XS';
+type fontSize = 'M' | 'S';
+
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: React.ReactNode;
-  size?: 'M' | 'S' | 'XS';
-  fontSize?: 'M' | 'S';
+  icon?: React.ReactNode;
+  size?: ButtonSize;
+  fontSize?: fontSize;
   color: string;
-  backgroundColor: string;
+  backgroundColor?: string;
   border?: string;
 }
 
 export default function Button({
   type = 'button',
   value,
+  icon,
   onClick,
-  children,
   size = 'M',
   fontSize = 'S',
   color,
-  backgroundColor,
+  backgroundColor = 'inherit',
   border = 'none',
+  disabled,
 }: Props) {
   return (
     <button
       type={type}
       css={button(color, backgroundColor, border, size, fontSize)}
       onClick={onClick}
+      disabled={disabled}
     >
-      {children}
+      {icon}
       {value}
     </button>
   );
@@ -54,7 +59,7 @@ const button = (
   border: ${border};
 
   & svg path {
-    stroke: ${color};
+    stroke: ${color} !important;
   }
 `;
 
