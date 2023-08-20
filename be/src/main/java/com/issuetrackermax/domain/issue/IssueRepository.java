@@ -2,7 +2,6 @@ package com.issuetrackermax.domain.issue;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -27,7 +26,7 @@ public class IssueRepository {
 	public IssueResultVO findIssueDetailsById(Long id) {
 		String sql = "SELECT i.id, i.is_open, i.title, "
 			+ "GROUP_CONCAT(DISTINCT l.id ORDER BY l.id SEPARATOR ',') AS label_ids, "
-			+ "m.id AS writer_id, m.nick_name AS writer, "
+			+ "m.id AS writer_id, m.nick_name AS writer, m.image_url AS image_url, "
 			+ "GROUP_CONCAT(DISTINCT m2.id ORDER BY a.id SEPARATOR ',') AS assignee_ids, "
 			+ "GROUP_CONCAT(DISTINCT m2.nick_name ORDER BY a.id SEPARATOR ',') "
 			+ "AS assignee_names, ms.id AS milestone_id, ms.title AS milestone_title "
@@ -58,9 +57,9 @@ public class IssueRepository {
 			.addValue("title", issue.getTitle())
 			.addValue("isOpen", issue.getIsOpen())
 			.addValue("writerId", issue.getWriterId())
-			.addValue("milestoneId", issue.getMilestoneId()), keyHolder);
-		Map<String, Object> keys = keyHolder.getKeys();
-		return (long)Objects.requireNonNull(keys).get("id");
+			.addValue("milestoneId", issue.getMilestoneId()), keyHolder, new String[] {"id"});
+		return keyHolder.getKey().longValue();
+
 	}
 
 	public int openByIds(List<Long> ids) {
@@ -133,6 +132,7 @@ public class IssueRepository {
 			.labelIds(rs.getString("label_ids"))
 			.writerId(rs.getLong("writer_id"))
 			.writer(rs.getString("writer"))
+			.writerImageUrl(rs.getString("image_url"))
 			.assigneeIds(rs.getString("assignee_ids"))
 			.assigneeNames(rs.getString("assignee_names"))
 			.milestoneId(rs.getLong("milestone_id"))

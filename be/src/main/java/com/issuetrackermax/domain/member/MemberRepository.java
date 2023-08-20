@@ -4,7 +4,6 @@ import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,6 +27,7 @@ public class MemberRepository {
 			.loginId(rs.getString("login_id"))
 			.password(rs.getString("password"))
 			.nickName(rs.getString("nick_name"))
+			.imageUrl(rs.getString("image_url"))
 			.loginType(LoginType.valueOf(rs.getString("login_type")))
 			.build();
 	private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -36,26 +36,33 @@ public class MemberRepository {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
-	public Optional<Member> findByMemberLoginId(String loginId) {
-		String sql = "SELECT id, password, nick_name, login_id, login_type FROM member WHERE login_id = :loginId ";
-		return Optional.ofNullable(
-			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("loginId", loginId), MEMBER_ROW_MAPPER)));
+	public List<Member> findAll() {
+		String sql = "SELECT id, password, nick_name, login_id, image_url, login_type "
+			+ "FROM member";
+		return jdbcTemplate.query(sql, MEMBER_ROW_MAPPER);
 	}
 
-	public Optional<Member> findById(Long id) {
-		String sql = "SELECT id, password, nick_name, login_id, login_type FROM member WHERE id = :id ";
-		return Optional.ofNullable(
-			DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), MEMBER_ROW_MAPPER)));
+	public Member findByMemberLoginId(String loginId) {
+		String sql = "SELECT id, password, nick_name, login_id, image_url ,login_type "
+			+ "FROM member WHERE login_id = :loginId ";
+		return DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("loginId", loginId), MEMBER_ROW_MAPPER));
+	}
+
+	public Member findById(Long id) {
+		String sql = "SELECT id, password, nick_name, login_id, image_url, login_type FROM member WHERE id = :id ";
+		return DataAccessUtils.singleResult(jdbcTemplate.query(sql, Map.of("id", id), MEMBER_ROW_MAPPER));
 	}
 
 	public Long save(Member member) {
-		String sql = "INSERT INTO member(nick_name, password, login_id, login_type) VALUES (:nickName,:password, :loginId, :loginType)";
+		String sql = "INSERT INTO member(nick_name, password, login_id, login_type, image_url) "
+			+ "VALUES (:nickName,:password, :loginId, :loginType, :imageUrl)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		SqlParameterSource parameters = new MapSqlParameterSource()
 			.addValue("nickName", member.getNickName(), Types.VARCHAR)
 			.addValue("password", member.getPassword(), Types.VARCHAR)
 			.addValue("loginId", member.getLoginId(), Types.VARCHAR)
-			.addValue("loginType", member.getLoginType().getName(), Types.VARCHAR);
+			.addValue("loginType", member.getLoginType().getName(), Types.VARCHAR)
+			.addValue("imageUrl", member.getImageUrl(), Types.VARCHAR);
 
 		jdbcTemplate.update(sql, parameters, keyHolder);
 		return Objects.requireNonNull(keyHolder.getKey()).longValue();

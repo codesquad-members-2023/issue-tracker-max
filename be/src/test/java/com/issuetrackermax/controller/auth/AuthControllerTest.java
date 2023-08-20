@@ -12,7 +12,10 @@ import org.springframework.http.MediaType;
 import com.issuetrackermax.controller.ControllerTestSupport;
 import com.issuetrackermax.controller.auth.dto.request.JwtRefreshTokenRequest;
 import com.issuetrackermax.controller.auth.dto.request.LoginRequest;
+import com.issuetrackermax.controller.auth.dto.response.LoginResponse;
 import com.issuetrackermax.domain.jwt.entity.Jwt;
+import com.issuetrackermax.domain.member.entity.LoginType;
+import com.issuetrackermax.domain.member.entity.Member;
 
 class AuthControllerTest extends ControllerTestSupport {
 
@@ -24,14 +27,28 @@ class AuthControllerTest extends ControllerTestSupport {
 		String password = "12345678";
 		String accessToken = "accessToken";
 		String refreshToken = "refreshToken";
+		String nickName = "June";
 		Jwt jwt = new Jwt(accessToken, refreshToken);
+		Member member = Member.builder()
+			.id(1L)
+			.loginId(email)
+			.nickName(nickName)
+			.password(password)
+			.imageUrl(null)
+			.loginType(LoginType.LOCAL)
+			.build();
 		LoginRequest loginRequest = LoginRequest.builder()
 			.loginId(email)
 			.password(password)
 			.build();
+		LoginResponse loginResponse = LoginResponse.builder()
+			.accessToken(accessToken)
+			.refreshToken(refreshToken)
+			.member(member)
+			.build();
 
 		// when
-		when(jwtService.login(email, password)).thenReturn(jwt);
+		when(jwtService.login(email, password)).thenReturn(loginResponse);
 
 		// then
 		mockMvc.perform(
@@ -43,7 +60,9 @@ class AuthControllerTest extends ControllerTestSupport {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value("true"))
 			.andExpect(jsonPath("$.data.accessToken").value(accessToken))
-			.andExpect(jsonPath("$.data.refreshToken").value(refreshToken));
+			.andExpect(jsonPath("$.data.refreshToken").value(refreshToken))
+			.andExpect(jsonPath("$.data.member.id").value(1L))
+			.andExpect(jsonPath("$.data.member.name").value(nickName));
 
 	}
 

@@ -1,9 +1,11 @@
 package com.issuetrackermax.domain.history;
 
 import java.sql.Types;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.TimeZone;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -25,8 +27,10 @@ public class HistoryRepository {
 		.editor(rs.getString("editor"))
 		.issueId(rs.getLong("issue_id"))
 		.issueIsOpen(rs.getBoolean("issue_is_open"))
-		.modifiedAt(rs.getTimestamp("modified_at").toLocalDateTime())
+		.modifiedAt(LocalDateTime.ofInstant(
+			Instant.ofEpochMilli(rs.getTimestamp("modified_at").getTime()), TimeZone.getDefault().toZoneId()))
 		.build());
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public HistoryRepository(JdbcTemplate jdbcTemplate) {
@@ -44,6 +48,7 @@ public class HistoryRepository {
 			+ "SELECT MAX(id) "
 			+ "FROM history "
 			+ "WHERE issue_id = :issueId)";
+
 		return jdbcTemplate.query(sql, Map.of("issueId", issueId), HISTORY_ROW_MAPPER).stream()
 			.findAny()
 			.orElseThrow(() -> new ApiException(HistoryException.NOT_FOUND_HISTORY));
@@ -56,8 +61,7 @@ public class HistoryRepository {
 			.addValue("editor", history.getEditor(), Types.VARCHAR)
 			.addValue("issueId", history.getIssueId(), Types.BIGINT)
 			.addValue("issueIsOpen", history.getIssueIsOpen(), Types.TINYINT);
-		jdbcTemplate.update(sql, parameters, keyHolder);
-		Map<String, Object> keys = keyHolder.getKeys();
-		return (Long)Objects.requireNonNull(keys).get("ID");
+		jdbcTemplate.update(sql, parameters, keyHolder, new String[] {"id"});
+		return keyHolder.getKey().longValue();
 	}
 }

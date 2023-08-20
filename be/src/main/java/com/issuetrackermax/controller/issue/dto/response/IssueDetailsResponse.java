@@ -7,7 +7,7 @@ import com.issuetrackermax.controller.filter.dto.response.HistoryResponse;
 import com.issuetrackermax.controller.filter.dto.response.LabelResponse;
 import com.issuetrackermax.controller.filter.dto.response.MilestoneResponse;
 import com.issuetrackermax.controller.filter.dto.response.WriterResponse;
-import com.issuetrackermax.domain.comment.entity.Comment;
+import com.issuetrackermax.domain.comment.entity.CommentMemberVO;
 import com.issuetrackermax.domain.history.entity.History;
 import com.issuetrackermax.domain.issue.entity.IssueResultVO;
 
@@ -26,10 +26,10 @@ public class IssueDetailsResponse {
 	private WriterResponse writer;
 	private MilestoneResponse milestone;
 	private HistoryResponse history;
-	private List<Comment> comments;
+	private List<CommentMemberVO> comments;
 
 	@Builder
-	public IssueDetailsResponse(IssueResultVO resultVO, History history, List<Comment> comments,
+	public IssueDetailsResponse(IssueResultVO resultVO, History history, List<CommentMemberVO> comments,
 		List<LabelResponse> labels) {
 		this.id = resultVO.getId();
 		this.isOpen = resultVO.getIsOpen();
@@ -40,15 +40,24 @@ public class IssueDetailsResponse {
 		this.writer = WriterResponse.builder()
 			.id(resultVO.getWriterId())
 			.name(resultVO.getWriter())
+			.imageUrl(resultVO.getWriterImageUrl())
 			.build();
-		this.milestone = MilestoneResponse.builder()
-			.id(resultVO.getMilestoneId())
-			.title(resultVO.getMilestoneTitle())
-			.build();
+		setMilestone(resultVO.getMilestoneId(), resultVO.getMilestoneTitle());
 		this.history = HistoryResponse.builder()
 			.editor(history.getEditor())
 			.modifiedAt(history.getModifiedAt())
 			.build();
 		this.comments = comments;
+	}
+
+	private void setMilestone(Long id, String title) {
+		if (title == null) {
+			this.milestone = null;
+		} else {
+			this.milestone = MilestoneResponse.builder()
+				.id(id)
+				.title(title)
+				.build();
+		}
 	}
 }

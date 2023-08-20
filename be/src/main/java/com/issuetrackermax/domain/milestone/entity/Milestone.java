@@ -1,6 +1,9 @@
 package com.issuetrackermax.domain.milestone.entity;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.TimeZone;
 
 import com.issuetrackermax.controller.milestone.dto.request.MilestoneModifyRequest;
 import com.issuetrackermax.controller.milestone.dto.request.MilestonePostRequest;
@@ -25,6 +28,17 @@ public class Milestone {
 		this.isOpen = isOpen;
 	}
 
+	public static Milestone fromMilestoneRepository(Long id, String title, String description, Timestamp duedate,
+		Boolean isOpen) {
+		return Milestone.builder()
+			.id(id)
+			.title(title)
+			.description(description)
+			.duedate(setDueDate(duedate))
+			.isOpen(isOpen)
+			.build();
+	}
+
 	public static Milestone from(MilestonePostRequest milestonePostRequest) {
 		return Milestone
 			.builder()
@@ -38,10 +52,19 @@ public class Milestone {
 	public static Milestone from(MilestoneModifyRequest milestoneModifyRequest) {
 		return Milestone
 			.builder()
-			.title(milestoneModifyRequest.getName())
+			.title(milestoneModifyRequest.getTitle())
 			.description(milestoneModifyRequest.getDescription())
 			.duedate(milestoneModifyRequest.getDueDate())
 			.build();
 
+	}
+
+	private static LocalDateTime setDueDate(Timestamp timestamp) {
+		if (timestamp == null) {
+			return null;
+		} else {
+			return LocalDateTime.ofInstant(
+				Instant.ofEpochMilli(timestamp.getTime()), TimeZone.getDefault().toZoneId());
+		}
 	}
 }

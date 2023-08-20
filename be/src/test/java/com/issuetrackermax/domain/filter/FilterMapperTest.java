@@ -15,7 +15,6 @@ import com.issuetrackermax.domain.assignee.AssigneeRepository;
 import com.issuetrackermax.domain.assignee.entity.Assignee;
 import com.issuetrackermax.domain.comment.CommentRepository;
 import com.issuetrackermax.domain.history.HistoryRepository;
-import com.issuetrackermax.domain.issue.IssueCommentRepository;
 import com.issuetrackermax.domain.issue.IssueLabelRepository;
 import com.issuetrackermax.domain.issue.IssueRepository;
 import com.issuetrackermax.domain.issue.entity.Issue;
@@ -50,8 +49,6 @@ class FilterMapperTest extends IntegrationTestSupport {
 	AssigneeRepository assigneeRepository;
 	@Autowired
 	CommentRepository commentRepository;
-	@Autowired
-	IssueCommentRepository issueCommentRepository;
 
 	@DisplayName("열린 이슈가 필터링된 결과를 FilterResultVO로 반환한다.")
 	@Test
@@ -143,6 +140,7 @@ class FilterMapperTest extends IntegrationTestSupport {
 		Long labelId1 = labelRepository.save(label1);
 		Label label2 = makeLabel(labelTitle2, "label_description3", "0#9999", "0#8888");
 		Long labelId2 = labelRepository.save(label2);
+		String labels = labelId1 + "," + labelId2;
 
 		Issue issue = makeIssue(issueIsOpen, issueTitle, 1L, 1L);
 		Long issueId = issueRepository.save(issue);
@@ -161,7 +159,7 @@ class FilterMapperTest extends IntegrationTestSupport {
 		assertThat(filteredList).hasSize(1)
 			.extracting("title", "isOpen", "labelIds")
 			.containsExactlyInAnyOrder(
-				tuple(issueTitle, issueIsOpen, "1,2")
+				tuple(issueTitle, issueIsOpen, labels)
 			);
 
 	}
@@ -261,12 +259,9 @@ class FilterMapperTest extends IntegrationTestSupport {
 		Long issueId1 = issueRepository.save(makeIssue(true, "issuetitle1", 1L, 1L));
 		Long issueId2 = issueRepository.save(makeIssue(true, "issuetitle2", 1L, 1L));
 		Long issueId3 = issueRepository.save(makeIssue(true, "issuetitle3", 1L, 1L));
-		Long commentId1 = commentRepository.save(makeComment("c1", "img1", 1L));
-		Long commentId2 = commentRepository.save(makeComment("c2", "img2", 1L));
-		Long commentId3 = commentRepository.save(makeComment("c3", "img3", 2L));
-		issueCommentRepository.save(makeIssueWithComment(issueId1, commentId1));
-		issueCommentRepository.save(makeIssueWithComment(issueId2, commentId2));
-		issueCommentRepository.save(makeIssueWithComment(issueId3, commentId3));
+		Long commentId1 = commentRepository.save(makeComment("c1", issueId1, 1L));
+		Long commentId2 = commentRepository.save(makeComment("c2", issueId2, 1L));
+		Long commentId3 = commentRepository.save(makeComment("c3", issueId3, 2L));
 
 		FilterInformation information = FilterInformation.builder().commentWriter(1L).build();
 

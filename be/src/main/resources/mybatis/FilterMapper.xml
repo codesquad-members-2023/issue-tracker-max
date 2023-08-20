@@ -6,7 +6,7 @@
         i.id, i.is_open, i.title,
         m3.nick_name AS editor, latest_editor.modified_at,
         GROUP_CONCAT(DISTINCT l.id ORDER BY l.id SEPARATOR ',') AS label_ids,
-        m.id AS writerId, m.nick_name AS writer,
+        m.id AS writerId, m.nick_name AS writer, m.image_url AS writer_image_url,
         GROUP_CONCAT(DISTINCT m2.id ORDER BY a.id SEPARATOR ',') AS assignee_ids,
         GROUP_CONCAT(DISTINCT m2.nick_name ORDER BY a.id SEPARATOR ',') AS assignee_names,
         ms.id AS milestone_id, ms.title AS milestone_title
@@ -34,15 +34,13 @@
         LEFT JOIN
         member m2 ON a.member_id = m2.id
         LEFT JOIN
-        member m3 ON latest_editor.editor = m3.id
+        member m3 ON latest_editor.editor = m3.nick_name
         LEFT JOIN
         milestone ms ON i.milestone_id = ms.id
         <choose>
             <when test="commentWriter != null">
                 LEFT JOIN
-                issue_comment icmts ON icmts.issue_id = i.id
-                LEFT JOIN
-                comments cmts ON icmts.comment_id = cmts.id
+                comments cmts ON i.id = cmts.issue_id
             </when>
         </choose>
         WHERE

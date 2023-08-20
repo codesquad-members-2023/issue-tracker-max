@@ -34,7 +34,6 @@ public class IssueControllerTest extends ControllerTestSupport {
 		IssuePostRequest request = IssuePostRequest.builder()
 			.title("title")
 			.content("content")
-			.imageUrl("imageUrl")
 			.build();
 
 		IssuePostResponse issuePostResponse = new IssuePostResponse(1L);
@@ -60,7 +59,6 @@ public class IssueControllerTest extends ControllerTestSupport {
 		IssuePostRequest request = IssuePostRequest.builder()
 			.title("")
 			.content("content")
-			.imageUrl("imageUrl")
 			.build();
 
 		//when & then
@@ -88,6 +86,7 @@ public class IssueControllerTest extends ControllerTestSupport {
 			.labelIds("1,2")
 			.writerId(1L)
 			.writer("june")
+			.writerImageUrl("https://issue-tracker-bucket-04.s3.ap-northeast-2.amazonaws.com/profile/red.jpg")
 			.assigneeIds("2,3")
 			.assigneeNames("movie, toko")
 			.milestoneId(1L)

@@ -16,11 +16,6 @@ public class MemberProfileResponse {
 	}
 
 	public Member toMember() {
-		return Member.builder()
-			.password(null)
-			.nickName(loginId)
-			.loginId(loginId)
-			.loginType(LoginType.GITHUB)
-			.build();
+		return new Member(loginId, null, loginId, LoginType.GITHUB);
 	}
 }

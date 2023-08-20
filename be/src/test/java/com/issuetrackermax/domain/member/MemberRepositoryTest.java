@@ -1,8 +1,7 @@
 package com.issuetrackermax.domain.member;
 
+import static com.issuetrackermax.fixture.EntityFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
-
-import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,30 +25,20 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
 	@DisplayName("로그인 아이디를 통해 멤버를 찾을 수 있다.")
 	@Test
-	void findByMemberEmail() {
+	void findByLoginId() {
 		// given
-		Member member = Member.builder()
-			.loginId("June")
-			.password("1234")
-			.nickName("JOONSOO")
-			.loginType(LoginType.LOCAL)
-			.build();
+		Member member = makeMember("June", "1234", "JOONSOO", LoginType.LOCAL);
 		memberRepository.save(member);
 		// when
-		Optional<Member> june = memberRepository.findByMemberLoginId("June");
+		Member june = memberRepository.findByMemberLoginId("June");
 		// then
-		assertThat(june.get().getLoginId()).isEqualTo("June");
+		assertThat(june.getLoginId()).isEqualTo("June");
 	}
 
 	@Test
 	void save() {
 		// given
-		Member member = Member.builder()
-			.loginId("June")
-			.password("1234")
-			.nickName("JOONSOO")
-			.loginType(LoginType.LOCAL)
-			.build();
+		Member member = makeMember("June", "1234", "JOONSOO", LoginType.LOCAL);
 
 		// when
 		Long saveId = memberRepository.save(member);

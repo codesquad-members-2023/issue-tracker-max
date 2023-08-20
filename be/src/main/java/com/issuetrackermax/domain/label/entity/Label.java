@@ -25,7 +25,7 @@ public class Label {
 
 	public static Label from(LabelModifyRequest labelModifyRequest) {
 		return Label.builder()
-			.title(labelModifyRequest.getName())
+			.title(labelModifyRequest.getTitle())
 			.description(labelModifyRequest.getDescription())
 			.textColor(labelModifyRequest.getTextColor())
 			.backgroundColor(labelModifyRequest.getBackgroundColor())

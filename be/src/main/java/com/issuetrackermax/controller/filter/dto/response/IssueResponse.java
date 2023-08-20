@@ -34,13 +34,22 @@ public class IssueResponse {
 		this.writer = WriterResponse.builder()
 			.id(resultVO.getWriterId())
 			.name(resultVO.getWriter())
+			.imageUrl(resultVO.getWriterImageUrl())
 			.build();
 		this.assignees = AssigneeResponse.convertToAssigneeResponseList(resultVO.getAssigneeIds(),
 			resultVO.getAssigneeNames());
-		this.milestone = MilestoneResponse.builder()
-			.id(resultVO.getMilestoneId())
-			.title(resultVO.getMilestoneTitle())
-			.build();
+		setMilestone(resultVO.getMilestoneId(), resultVO.getMilestoneTitle());
+	}
+
+	private void setMilestone(Long id, String title) {
+		if (title == null) {
+			this.milestone = null;
+		} else {
+			this.milestone = MilestoneResponse.builder()
+				.id(id)
+				.title(title)
+				.build();
+		}
 	}
 
 }

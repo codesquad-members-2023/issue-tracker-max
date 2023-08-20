@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.issuetrackermax.common.exception.ApiException;
 import com.issuetrackermax.common.exception.domain.LoginException;
+import com.issuetrackermax.controller.auth.dto.response.LoginResponse;
 import com.issuetrackermax.controller.member.dto.request.SignUpRequest;
 import com.issuetrackermax.domain.IntegrationTestSupport;
 import com.issuetrackermax.domain.jwt.JwtRepository;
@@ -50,9 +51,9 @@ class JwtServiceTest extends IntegrationTestSupport {
 		memberService.registerMember(signUpRequest);
 
 		// when
-		Jwt jwt = jwtService.login("June@codesquad.co.kr", "12345678");
-		String accessToken = jwt.getAccessToken();
-		String refreshToken = jwt.getRefreshToken();
+		LoginResponse loginResponse = jwtService.login("June@codesquad.co.kr", "12345678");
+		String accessToken = loginResponse.getAccessToken();
+		String refreshToken = loginResponse.getRefreshToken();
 
 		// then
 		assertThat(jwtProvider.getClaims(accessToken).get("memberId")).isEqualTo(1);
@@ -116,9 +117,9 @@ class JwtServiceTest extends IntegrationTestSupport {
 			.password("12345678")
 			.build();
 		memberService.registerMember(signUpRequest);
-		Jwt jwt = jwtService.login("June@codesquad.co.kr", "12345678");
+		LoginResponse loginResponse = jwtService.login("June@codesquad.co.kr", "12345678");
 		// when
-		Jwt newJwt = jwtService.reissueAccessToken(jwt.getRefreshToken());
+		Jwt newJwt = jwtService.reissueAccessToken(loginResponse.getRefreshToken());
 		String accessToken = newJwt.getAccessToken();
 		String refreshToken = newJwt.getRefreshToken();
 
@@ -138,8 +139,8 @@ class JwtServiceTest extends IntegrationTestSupport {
 			.password("12345678")
 			.build();
 		memberService.registerMember(signUpRequest);
-		Jwt jwt = jwtService.login("June@codesquad.co.kr", "12345678");
-		String refreshToken = jwt.getRefreshToken();
+		LoginResponse loginResponse = jwtService.login("June@codesquad.co.kr", "12345678");
+		String refreshToken = loginResponse.getRefreshToken();
 		// when
 		jwtService.logout(refreshToken);
 
