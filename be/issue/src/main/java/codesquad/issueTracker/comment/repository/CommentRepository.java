@@ -108,6 +108,6 @@ public class CommentRepository {
 		.userId(rs.getLong("user_id"))
 		.issueId(rs.getLong("issue_id"))
 		.content(rs.getString("content"))
-		.createdAt(rs.getTimestamp("created_At").toLocalDateTime())
+		.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
 		.build());
 }

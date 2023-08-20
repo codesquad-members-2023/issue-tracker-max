@@ -3,6 +3,9 @@ package codesquad.issueTracker.milestone.repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import java.util.Map;
+import java.util.Optional;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -106,4 +109,21 @@ public class MilestoneRepository {
 		.issueClosedCount(rs.getInt("issueClosedCount"))
 		.build();
 
+	public Optional<MilestoneVo> findByIssueId(Long issueId) {
+		String sql = "select m.id, m.name "
+				+ "from milestones m "
+				+ "    join issues i on m.id = i.milestone_id "
+				+ "where i.id = :issueId "
+				+ "and i.is_deleted = false "
+				+ "and m.is_deleted = false";
+
+		return Optional.ofNullable(
+				DataAccessUtils.singleResult(
+						jdbcTemplate.query(sql, Map.of("issueId", issueId), milestoneVoRowMapper)));
+	}
+
+	private final RowMapper<MilestoneVo> milestoneVoRowMapper = ((rs, rowNum) -> MilestoneVo.builder()
+			.id(rs.getLong("id"))
+			.name(rs.getString("name"))
+			.build());
 }

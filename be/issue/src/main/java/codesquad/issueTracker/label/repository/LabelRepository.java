@@ -1,12 +1,15 @@
 package codesquad.issueTracker.label.repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -80,6 +83,13 @@ public class LabelRepository {
 		return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, Integer.class));
 	}
 
+	public Optional<Label> findById(Long id) {
+		String sql = "SELECT id, name, description, background_color, text_color, is_deleted FROM labels WHERE id = :id";
+		return Optional.ofNullable(
+			DataAccessUtils.singleResult(
+				jdbcTemplate.query(sql, Map.of("id", id), labelRowMapper)));
+	}
+
 	private final RowMapper<Label> labelRowMapper = (rs, rowNum) -> Label.builder()
 		.id(rs.getLong("id"))
 		.name(rs.getString("name"))
@@ -87,4 +97,35 @@ public class LabelRepository {
 		.backgroundColor(rs.getString("background_color"))
 		.description(rs.getString("description"))
 		.build();
+
+
+	public List<Label> findLabelsById(Long issueId) {
+		String sql = "select l.id, l.name, l.background_color, l.text_color, l.description "
+				+ "from issues_labels il "
+				+ "    join issues i on i.id = il.issue_id "
+				+ "    join labels l on il.label_id = l.id "
+				+ "where i.id = :issueId "
+				+ "AND l.is_deleted = false "
+				+ "AND i.is_deleted = false ";
+		return jdbcTemplate.query(sql, Map.of("issueId", issueId), labelRowMapper);
+  }
+  
+	public Long resetIssuesLabels(Long issueId) {
+		String sql = "DELETE FROM issues_labels WHERE issue_id = :issueId";
+		SqlParameterSource parameterSource = new MapSqlParameterSource()
+			.addValue("issueId", issueId);
+		jdbcTemplate.update(sql, parameterSource);
+		return issueId;
+	}
+
+	public Long insertIssuesLabels(Long issueId, Long labelId) {
+		String sql = "INSERT INTO issues_labels(issue_id, label_id) VALUES(:issueId, :labelId)";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		SqlParameterSource parameters = new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("labelId", labelId);
+		jdbcTemplate.update(sql, parameters, keyHolder);
+		return keyHolder.getKey().longValue();
+	}
+
 }
