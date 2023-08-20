@@ -1,21 +1,56 @@
 import { styled } from "styled-components";
 import FilterBar from "../components/FilterBar/FilterBar";
 import Button from "../components/common/Button/Button";
-import DropdownIndicator from "../components/DropdownIndicator/DropdownIndicator";
 import IssueList from "../components/IssueList/IssueList";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ListDataProps } from "../type";
+import {
+  AssigneesData,
+  AuthorsData,
+  LabelsData,
+  ListDataProps,
+  MilestonesData,
+} from "../type";
 import parseFilter from "../utils/parseFilter";
 import parseParam from "../utils/parseParam";
+import LoadingIndicator from "../components/LoadingIndicator/LoadingIndicator";
+import DropdownIndicator from "../components/DropdownIndicator/DropdownIndicator";
+import DropdownItem from "../components/DropdownPanel/DropdownItem";
+import DropdownPanel from "../components/DropdownPanel/DropdownPanel";
+import Header from "../components/Header/Header";
+import { useAuth } from "../context/AuthContext";
 
-export default function MainPage() {
+type Props = {
+  toggleTheme(): void;
+};
+
+export default function MainPage({ toggleTheme }: Props) {
   const navigate = useNavigate();
   const { filter } = useParams();
+  const { profile } = useAuth();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [openFilterDropdown, setOpenFilterDropdown] = useState<
+    "assignees" | "labels" | "milestones" | "authors" | "state" | "close"
+  >("close");
+  const [assigneesData, setAssigneesData] = useState<AssigneesData>();
+  const [labelsData, setLabelsData] = useState<LabelsData>();
+  const [milestonesData, setMilestonesData] = useState<MilestonesData>();
+  const [authorsData, setAuthorsData] = useState<AuthorsData>();
   const [data, setData] = useState<ListDataProps>();
+  const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [selectList, setSelectList] = useState<number[]>([]);
   const [filterValue, setFilterValue] = useState<string>(
     filter ? filter : "isOpen=true",
   );
+  const isSelected = selectList.length !== 0;
+
+  const addSelectList = (id: number) => {
+    setSelectList((prevList) => [...prevList, id]);
+  };
+
+  const removeSelectList = (id: number) => {
+    setSelectList((prevList) => prevList.filter((item) => item !== id));
+  };
 
   const goAddNewIssuePage = () => {
     navigate("/new");
@@ -45,22 +80,134 @@ export default function MainPage() {
     setFilterValue(e.target.value);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          filter
-            ? `http://3.34.141.196/api/issues${parseFilter(filter)}`
-            : "http://3.34.141.196/api/issues",
-        );
-        if (!response.ok) {
-          throw new Error("데이터를 가져오는 데 실패했습니다.");
-        }
-        const jsonData = await response.json();
-        setData(jsonData);
-      } catch (error) {
-        console.log("error");
+  const closeDropdown = () => {
+    setOpenFilterDropdown("close");
+  };
+
+  const showAssigneesDropdown = () => {
+    setOpenFilterDropdown("assignees");
+  };
+
+  const showLabelsDropdown = () => {
+    setOpenFilterDropdown("labels");
+  };
+
+  const showMilestonesDropdown = () => {
+    setOpenFilterDropdown("milestones");
+  };
+
+  const showAuthorsDropdown = () => {
+    setOpenFilterDropdown("authors");
+  };
+
+  const showStateDropdown = () => {
+    setOpenFilterDropdown("state");
+  };
+
+  const toggleSelectAll = () => {
+    if (!selectAll) {
+      setSelectAll(true);
+      setSelectList(data!.issues && data!.issues.map((issue) => issue.id));
+      console.log(profile);
+      return;
+    }
+    setSelectAll(false);
+    setSelectList([]);
+  };
+
+  const openSelectedIssues = async () => {
+    const URL = "http://3.34.141.196/api/issues/open-all";
+
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
+
+    const patchData = {
+      ids: selectList,
+      isOpen: true,
+    };
+
+    try {
+      const response = await fetch(URL, {
+        method: "PATCH",
+        headers: headers,
+        body: JSON.stringify(patchData),
+      });
+
+      if (response.status === 204) {
+        window.location.reload();
+      } else {
+        console.log("PATCH 요청에 실패하였습니다. 상태 코드:", response.status);
       }
+    } catch (error) {
+      console.error("API 호출 오류:", error);
+    }
+  };
+
+  const closeSelectedIssues = async () => {
+    const URL = "http://3.34.141.196/api/issues/open-all";
+
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
+
+    const patchData = {
+      ids: selectList,
+      isOpen: false,
+    };
+
+    try {
+      const response = await fetch(URL, {
+        method: "PATCH",
+        headers: headers,
+        body: JSON.stringify(patchData),
+      });
+
+      if (response.status === 204) {
+        window.location.reload();
+      } else {
+        console.log("PATCH 요청에 실패하였습니다. 상태 코드:", response.status);
+      }
+    } catch (error) {
+      console.error("API 호출 오류:", error);
+    }
+  };
+
+  useEffect(() => {
+    const maxRetryAttempts = 3;
+    let retryAttempts = 0;
+
+    const fetchData = async () => {
+      while (retryAttempts < maxRetryAttempts) {
+        try {
+          const headers = new Headers();
+          const accessToken = localStorage.getItem("accessToken");
+          headers.append("Authorization", `Bearer ${accessToken}`);
+          const response = await fetch(
+            filter
+              ? `http://3.34.141.196/api/issues${parseFilter(filter)}`
+              : "http://3.34.141.196/api/issues",
+            { headers },
+          );
+
+          if (!response.ok) {
+            throw new Error("데이터를 가져오는 데 실패했습니다.");
+          }
+
+          const jsonData = await response.json();
+          setData(jsonData);
+          console.log(jsonData);
+          setLoading(false);
+          return;
+        } catch (error) {
+          retryAttempts++;
+          console.log("에러 발생:", error);
+        }
+      }
+
+      setLoading(false);
     };
 
     fetchData();
@@ -70,102 +217,353 @@ export default function MainPage() {
     setFilterValue(parseParam(filter!));
   }, [filter]);
 
+  useEffect(() => {
+    if (selectAll && selectList.length === 0) setSelectAll(false);
+    if (!selectAll && selectList.length === data?.issues.length)
+      setSelectAll(true);
+  }, [selectList]);
+
+  useEffect(() => {
+    if (openFilterDropdown === "close" || openFilterDropdown === "state") {
+      return;
+    }
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+
+    const URL = `http://3.34.141.196/api/issues/${openFilterDropdown}`;
+    const fetchData = async () => {
+      try {
+        const response = await fetch(URL, { headers });
+        if (!response.ok) {
+          throw new Error("데이터를 가져오는 데 실패했습니다.");
+        }
+        const jsonData = await response.json();
+        openFilterDropdown === "assignees"
+          ? setAssigneesData(jsonData)
+          : openFilterDropdown === "labels"
+          ? setLabelsData(jsonData)
+          : openFilterDropdown === "milestones"
+          ? setMilestonesData(jsonData)
+          : setAuthorsData(jsonData);
+      } catch (error) {
+        console.log("error");
+      }
+    };
+
+    fetchData();
+  }, [openFilterDropdown]);
+
   return (
-    <Main>
-      <FilterSection>
-        <FilterBar
-          filterValue={filterValue}
-          onChange={handleInputChange}
-          handleEnterFilter={handleEnterFilter}
-        />
-        <Taps>
-          <TapButtonWrapper>
-            <Button
-              icon={"label"}
-              label={`레이블(${data && data.metadata.labelCount})`}
-              type={"ghost"}
-              size={"medium"}
-              width={"50%"}
-              onClick={goLabelsPage}
-            />
-            <Button
-              icon={"milestone"}
-              label={`마일스톤(${data && data.metadata.milestoneCount})`}
-              type={"ghost"}
-              size={"medium"}
-              width={"50%"}
-              onClick={goMilestonesPage}
-            />
-          </TapButtonWrapper>
-          <Button
-            icon={"plus"}
-            label={"이슈 작성"}
-            onClick={goAddNewIssuePage}
-          />
-        </Taps>
-      </FilterSection>
-      {filter !== "isOpen=true" && (
-        <RemoveFilterWrapper>
-          <Button
-            icon={"xSquare"}
-            label={"현재의 검색 필터 및 정렬 지우기"}
-            type={"ghost"}
-            height={"32px"}
-            onClick={showOpenIssue}
-          />
-        </RemoveFilterWrapper>
-      )}
-      <IssueTable>
-        <TableHeader>
-          <CheckboxWrapper>
-            <CheckboxLabel htmlFor={"tableCheckbox"}></CheckboxLabel>
-            <Checkbox id={"tableCheckbox"} type="checkbox" />
-          </CheckboxWrapper>
-          <TapWrapper>
-            <IssueTap>
-              <Button
-                icon={"alertCircle"}
-                label={`열린 이슈(${data && data.metadata.issueOpenCount})`}
-                type={"ghost"}
-                size={"medium"}
-                onClick={showOpenIssue}
+    <>
+      <Header
+        toggleTheme={toggleTheme}
+        profileImg={profile ? profile.profileImageUri : "/icons/user.png"}
+      />
+      <Page>
+        {loading && (
+          <LoadingWrapper>
+            <LoadingIndicator />
+          </LoadingWrapper>
+        )}
+        {!loading && data && (
+          <Main>
+            <FilterSection>
+              <FilterBar
+                filterValue={filterValue}
+                onChange={handleInputChange}
+                handleEnterFilter={handleEnterFilter}
               />
-              <Button
-                icon={"archive"}
-                label={`닫힌 이슈(${data && data.metadata.issueCloseCount})`}
-                type={"ghost"}
-                size={"medium"}
-                onClick={showCloseIssue}
-              />
-            </IssueTap>
-            <FilterTap>
-              <DropdownIndicator
-                type={"assignees"}
-                label={"담당자"}
-                dropdownTop={"40px"}
-              />
-              <DropdownIndicator type={"labels"} label={"레이블"} />
-              <DropdownIndicator type={"milestones"} label={"마일스톤"} />
-              <DropdownIndicator type={"authors"} label={"작성자"} />
-            </FilterTap>
-          </TapWrapper>
-        </TableHeader>
-        <IssueContents>
-          {data &&
-            (data.issues.length !== 0 ? (
-              data.issues.map((issue) => (
-                <IssueList key={issue.id} issue={issue} />
-              ))
-            ) : (
-              <EmptyList>
-                <EmptyContent>등록된 이슈가 없습니다</EmptyContent>
-              </EmptyList>
-            ))}
-        </IssueContents>
-      </IssueTable>
-    </Main>
+              <Taps>
+                <TapButtonWrapper>
+                  <Button
+                    icon={"label"}
+                    label={`레이블(${data.metadata.labelCount})`}
+                    type={"ghost"}
+                    size={"medium"}
+                    width={"50%"}
+                    onClick={goLabelsPage}
+                  />
+                  <Button
+                    icon={"milestone"}
+                    label={`마일스톤(${data.metadata.milestoneCount})`}
+                    type={"ghost"}
+                    size={"medium"}
+                    width={"50%"}
+                    onClick={goMilestonesPage}
+                  />
+                </TapButtonWrapper>
+                <Button
+                  icon={"plus"}
+                  label={"이슈 작성"}
+                  onClick={goAddNewIssuePage}
+                />
+              </Taps>
+            </FilterSection>
+            {filter !== "isOpen=true" && (
+              <RemoveFilterWrapper>
+                <Button
+                  icon={"xSquare"}
+                  label={"현재의 검색 필터 및 정렬 지우기"}
+                  type={"ghost"}
+                  height={"32px"}
+                  onClick={showOpenIssue}
+                />
+              </RemoveFilterWrapper>
+            )}
+            <IssueTable>
+              {!isSelected && (
+                <TableHeader>
+                  <CheckboxWrapper>
+                    <Checkbox
+                      type="checkbox"
+                      checked={selectAll}
+                      onChange={toggleSelectAll}
+                    />
+                  </CheckboxWrapper>
+                  <TapWrapper>
+                    <IssueTap>
+                      <Button
+                        icon={"alertCircle"}
+                        label={`열린 이슈(${data.metadata.issueOpenCount})`}
+                        type={"ghost"}
+                        size={"medium"}
+                        onClick={showOpenIssue}
+                      />
+                      <Button
+                        icon={"archive"}
+                        label={`닫힌 이슈(${data.metadata.issueCloseCount})`}
+                        type={"ghost"}
+                        size={"medium"}
+                        onClick={showCloseIssue}
+                      />
+                    </IssueTap>
+                    <FilterTap>
+                      <AssigneesDropdown>
+                        <DropdownIndicator
+                          label={"담당자"}
+                          onClick={showAssigneesDropdown}
+                        />
+                        {openFilterDropdown === "assignees" &&
+                          assigneesData && (
+                            <DropdownPanel
+                              title={"담당자 필터"}
+                              top={"40px"}
+                              left={"-150px"}
+                              closeDropdown={closeDropdown}
+                            >
+                              <DropdownItem
+                                itemName={"담당자가 없는 이슈"}
+                                value={"no=assignee"}
+                                onClick={() => {
+                                  closeDropdown();
+                                  navigate("/issues/no=assignee");
+                                }}
+                              />
+                              {assigneesData.assignees.map((assignee) => (
+                                <DropdownItem
+                                  key={assignee.id}
+                                  imgSource={assignee.profileImageUrl}
+                                  itemName={assignee.nickname}
+                                  value={`assigneeNames=${assignee.nickname}`}
+                                  onClick={() => {
+                                    closeDropdown();
+                                    navigate(
+                                      `/issues/assigneeNames=${assignee.nickname}`,
+                                    );
+                                  }}
+                                />
+                              ))}
+                            </DropdownPanel>
+                          )}
+                      </AssigneesDropdown>
+                      <LabelsDropdown>
+                        <DropdownIndicator
+                          label={"레이블"}
+                          onClick={showLabelsDropdown}
+                        />
+                        {openFilterDropdown === "labels" && labelsData && (
+                          <DropdownPanel
+                            title={"레이블 필터"}
+                            top={"40px"}
+                            left={"-150px"}
+                            closeDropdown={closeDropdown}
+                          >
+                            <DropdownItem
+                              itemName={"레이블이 없는 이슈"}
+                              value={"no=label"}
+                              onClick={() => {
+                                closeDropdown();
+                                navigate("/issues/no=label");
+                              }}
+                            />
+                            {labelsData.labels.map((label) => (
+                              <DropdownItem
+                                key={label.id}
+                                color={label.backgroundColor}
+                                itemName={label.title}
+                                value={`labelTitles=${label.title}`}
+                                onClick={() => {
+                                  closeDropdown();
+                                  navigate(
+                                    `/issues/labelTitles=${label.title}`,
+                                  );
+                                }}
+                              />
+                            ))}
+                          </DropdownPanel>
+                        )}
+                      </LabelsDropdown>
+                      <MilestonesDropdown>
+                        <DropdownIndicator
+                          label={"마일스톤"}
+                          onClick={showMilestonesDropdown}
+                        />
+                        {openFilterDropdown === "milestones" &&
+                          milestonesData && (
+                            <DropdownPanel
+                              title={"마일스톤 필터"}
+                              top={"40px"}
+                              left={"-150px"}
+                              closeDropdown={closeDropdown}
+                            >
+                              <DropdownItem
+                                itemName={"마일스톤이 없는 이슈"}
+                                value={"no=milestone"}
+                                onClick={() => {
+                                  closeDropdown();
+                                  navigate("/issues/no=milestone");
+                                }}
+                              />
+                              {milestonesData.milestones.map((milestone) => (
+                                <DropdownItem
+                                  key={milestone.id}
+                                  itemName={milestone.title}
+                                  value={`milestoneTitle=${milestone.title}`}
+                                  onClick={() => {
+                                    closeDropdown();
+                                    navigate(
+                                      `/issues/milestoneTitle=${milestone.title}`,
+                                    );
+                                  }}
+                                />
+                              ))}
+                            </DropdownPanel>
+                          )}
+                      </MilestonesDropdown>
+                      <AuthorsDropdown>
+                        <DropdownIndicator
+                          label={"작성자"}
+                          onClick={showAuthorsDropdown}
+                        />
+                        {openFilterDropdown === "authors" && authorsData && (
+                          <DropdownPanel
+                            title={"작성자 필터"}
+                            top={"40px"}
+                            left={"-150px"}
+                            closeDropdown={closeDropdown}
+                          >
+                            {authorsData.authors.map((author) => (
+                              <DropdownItem
+                                key={author.id}
+                                imgSource={author.profileImageUrl}
+                                itemName={author.nickname}
+                                value={`authorName=${author.nickname}`}
+                                onClick={() => {
+                                  closeDropdown();
+                                  navigate(
+                                    `/issues/authorName=${author.nickname}`,
+                                  );
+                                }}
+                              />
+                            ))}
+                          </DropdownPanel>
+                        )}
+                      </AuthorsDropdown>
+                    </FilterTap>
+                  </TapWrapper>
+                </TableHeader>
+              )}
+              {isSelected && (
+                <TableHeader>
+                  <CheckboxWrapper>
+                    <Checkbox
+                      type="checkbox"
+                      checked={selectAll}
+                      onChange={toggleSelectAll}
+                    />
+                  </CheckboxWrapper>
+                  <TapWrapper>
+                    <SelectedListCounter>
+                      {selectList.length}개가 선택됨
+                    </SelectedListCounter>
+                    <IssuesStateDropdown>
+                      <DropdownIndicator
+                        label={"상태 수정"}
+                        onClick={showStateDropdown}
+                      />
+                      {openFilterDropdown === "state" && (
+                        <DropdownPanel
+                          title={"상태 변경"}
+                          top={"40px"}
+                          left={"-150px"}
+                          closeDropdown={closeDropdown}
+                        >
+                          <DropdownItem
+                            itemName={"선택한 이슈 열기"}
+                            checkbox={false}
+                            onClick={openSelectedIssues}
+                          />
+                          <DropdownItem
+                            itemName={"선택한 이슈 닫기"}
+                            checkbox={false}
+                            onClick={closeSelectedIssues}
+                          />
+                        </DropdownPanel>
+                      )}
+                    </IssuesStateDropdown>
+                  </TapWrapper>
+                </TableHeader>
+              )}
+              <IssueContents>
+                {data.issues.length !== 0 ? (
+                  data.issues.map((issue) => (
+                    <IssueList
+                      key={issue.id}
+                      issue={issue}
+                      selectAll={selectAll}
+                      addSelectList={addSelectList}
+                      removeSelectList={removeSelectList}
+                    />
+                  ))
+                ) : (
+                  <EmptyList>
+                    <EmptyContent>등록된 이슈가 없습니다</EmptyContent>
+                  </EmptyList>
+                )}
+              </IssueContents>
+            </IssueTable>
+          </Main>
+        )}
+      </Page>
+    </>
   );
 }
+
+const Page = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+`;
+
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 700px;
+`;
 
 const Main = styled.div`
   padding: 32px 0px;
@@ -246,25 +644,30 @@ const CheckboxWrapper = styled.div`
 `;
 
 const Checkbox = styled.input`
-  display: none;
-`;
-
-const CheckboxLabel = styled.label`
+  appearance: none;
   width: 16px;
   height: 16px;
-  cursor: pointer;
-  padding-left: 23px;
-  background-repeat: no-repeat;
-  background-image: url("/icons/checkBoxInitial.svg"); // 체크된 상태 이미지
+  background-image: url("/icons/checkBoxInitial.svg");
   &:checked {
-    background-image: url("/icons/checkBoxActive.svg"); // 체크된 상태 이미지
+    border-color: transparent;
+    background-image: url("/icons/checkBoxActive.svg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+  &:indeterminate {
+    border-color: transparent;
+    background-image: url("/icons/checkBoxDisable.svg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
   }
 `;
 
 const TapWrapper = styled.div`
+  position: relative;
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const IssueTap = styled.form`
@@ -320,4 +723,29 @@ const RemoveFilterWrapper = styled.div`
   display: flex;
   justify-content: left;
   align-items: center;
+`;
+
+const SelectedListCounter = styled.span`
+  font: ${({ theme }) => theme.font.displayBold16};
+  color: ${({ theme }) => theme.colorSystem.neutral.text.default};
+`;
+
+const AssigneesDropdown = styled.div`
+  position: relative;
+`;
+
+const LabelsDropdown = styled.div`
+  position: relative;
+`;
+
+const MilestonesDropdown = styled.div`
+  position: relative;
+`;
+
+const AuthorsDropdown = styled.div`
+  position: relative;
+`;
+
+const IssuesStateDropdown = styled.div`
+  position: relative;
 `;

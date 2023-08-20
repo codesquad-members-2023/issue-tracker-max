@@ -2,6 +2,10 @@ import { styled } from "styled-components";
 import LabelItem from "../SideBar/LabelItem";
 import LabelInput from "../common/TextInput/LabelInput";
 import Button from "../common/Button/Button";
+import DropdownIndicator from "../DropdownIndicator/DropdownIndicator";
+import DropdownPanel from "../DropdownPanel/DropdownPanel";
+import DropdownItem from "../DropdownPanel/DropdownItem";
+import { useState } from "react";
 
 type Props = {
   type?: "edit" | "add";
@@ -9,13 +13,15 @@ type Props = {
   title: string;
   name: string;
   description: string;
-  color: string;
+  backgroundColor: string;
+  textColor: string;
   onChangeName(e: React.ChangeEvent<HTMLInputElement>): void;
   onChangeDescrip(e: React.ChangeEvent<HTMLInputElement>): void;
   onChangeColor(e: React.ChangeEvent<HTMLInputElement>): void;
   randomColor(): void;
   cancelEdit(): void;
   confirmEdit(): void;
+  changeTextColor(color: string): void;
 };
 
 export default function EditLabel({
@@ -24,25 +30,40 @@ export default function EditLabel({
   title,
   name,
   description,
-  color,
+  backgroundColor,
+  textColor,
   onChangeName,
   onChangeDescrip,
   onChangeColor,
   randomColor,
   cancelEdit,
   confirmEdit,
+  changeTextColor,
 }: Props) {
+  const [openTextColorDropdown, setOpenTextColorDropdown] =
+    useState<boolean>(false);
+
+  const showTextColorDropdown = () => {
+    setOpenTextColorDropdown(true);
+  };
+
+  const hideTextColorDropdown = () => {
+    setOpenTextColorDropdown(false);
+  };
+
   const confirmEditLabel = async () => {
     const URL = `http://3.34.141.196/api/labels/${id}`;
+
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
 
     const putData = {
       title: name,
       description: description,
-      color: color,
-    };
-
-    const headers = {
-      "Content-Type": "application/json",
+      backgroundColor: backgroundColor,
+      textColor: textColor,
     };
 
     try {
@@ -67,7 +88,11 @@ export default function EditLabel({
       <EditHeader>{title}</EditHeader>
       <EditContents>
         <Preview>
-          <LabelItem label={name} color={color} />
+          <LabelItem
+            label={name}
+            backgroundColor={backgroundColor}
+            textColor={textColor}
+          />
         </Preview>
         <EditInputs>
           <LabelInput
@@ -84,16 +109,64 @@ export default function EditLabel({
             value={description}
             onChange={onChangeDescrip}
           />
-          <LabelInput
-            id={"color"}
-            icon={"refreshCcw"}
-            label={"배경 색상"}
-            placeholder={"레이블의 이름을 입력하세요"}
-            value={color}
-            maxLength={7}
-            onChange={onChangeColor}
-            onClick={randomColor}
-          />
+          <ColorInputWrapper>
+            <LabelInput
+              id={"color"}
+              icon={"refreshCcw"}
+              label={"배경 색상"}
+              placeholder={"레이블의 이름을 입력하세요"}
+              value={backgroundColor}
+              maxLength={7}
+              onChange={onChangeColor}
+              onClick={randomColor}
+            />
+            <LabelTextDropdown>
+              <DropdownIndicator
+                width={"94px"}
+                label={"텍스트 색상"}
+                onClick={showTextColorDropdown}
+              />
+              {openTextColorDropdown && (
+                <DropdownPanel
+                  title={"텍스트 색상 변경"}
+                  top={"30px"}
+                  left={"-10px"}
+                  closeDropdown={hideTextColorDropdown}
+                >
+                  <DropdownItem
+                    color={"#14142B"}
+                    itemName={"Black"}
+                    criteria={textColor}
+                    value={"#14142B"}
+                    onClick={() => {
+                      hideTextColorDropdown();
+                      changeTextColor("#14142B");
+                    }}
+                  />
+                  <DropdownItem
+                    color={"#A0A3BD"}
+                    itemName={"Gray"}
+                    criteria={textColor}
+                    value={"#A0A3BD"}
+                    onClick={() => {
+                      hideTextColorDropdown();
+                      changeTextColor("#A0A3BD");
+                    }}
+                  />
+                  <DropdownItem
+                    color={"#FEFEFE"}
+                    itemName={"White"}
+                    criteria={textColor}
+                    value={"#FEFEFE"}
+                    onClick={() => {
+                      hideTextColorDropdown();
+                      changeTextColor("#FEFEFE");
+                    }}
+                  />
+                </DropdownPanel>
+              )}
+            </LabelTextDropdown>
+          </ColorInputWrapper>
         </EditInputs>
       </EditContents>
       <ButtonTap>
@@ -172,9 +245,21 @@ const EditInputs = styled.div`
   width: 900px;
 `;
 
+const ColorInputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 320px;
+  gap: 24px;
+`;
+
 const ButtonTap = styled.div`
   display: flex;
   justify-content: end;
   gap: 16px;
   width: 100%;
+`;
+
+const LabelTextDropdown = styled.div`
+  position: relative;
 `;

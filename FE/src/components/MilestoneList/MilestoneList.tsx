@@ -4,6 +4,7 @@ import Button from "../common/Button/Button";
 import { MilestoneData } from "../../type";
 import { useState } from "react";
 import EditMilestone from "./EditMilestone";
+import { isDatePassed } from "../../utils/isDatePassed";
 
 export default function MilestoneList({
   id,
@@ -55,12 +56,13 @@ export default function MilestoneList({
   const closeMilestone = async () => {
     const URL = `http://3.34.141.196/api/milestones/${id}/open`;
 
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
+
     const patchData = {
       isOpen: false,
-    };
-
-    const headers = {
-      "Content-Type": "application/json",
     };
 
     try {
@@ -83,12 +85,13 @@ export default function MilestoneList({
   const openMilestone = async () => {
     const URL = `http://3.34.141.196/api/milestones/${id}/open`;
 
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
+
     const patchData = {
       isOpen: true,
-    };
-
-    const headers = {
-      "Content-Type": "application/json",
     };
 
     try {
@@ -111,9 +114,10 @@ export default function MilestoneList({
   const deleteMilestone = async () => {
     const URL = `http://3.34.141.196/api/milestones/${id}`; // DELETE 요청을 보낼 리소스 URL로 변경
 
-    const headers = {
-      "Content-Type": "application/json",
-    };
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
 
     try {
       const response = await fetch(URL, {
@@ -146,7 +150,11 @@ export default function MilestoneList({
               </Title>
               <DeadlineWrapper>
                 <DeadlineIcon src={"/icons/calendar.svg"} />
-                <DeadlineDate>{milestoneDeadline}</DeadlineDate>
+                <DeadlineDate>
+                  {isDatePassed(milestoneDeadline)
+                    ? "완료된 일정"
+                    : milestoneDeadline}
+                </DeadlineDate>
               </DeadlineWrapper>
             </TitleWrapper>
             <DescriptionWrapper>

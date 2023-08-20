@@ -1,6 +1,5 @@
 import { styled } from "styled-components";
 import { AssigneesList } from "../../type";
-import UserProfileButton from "../UserProfileButton/UserProfileButton";
 import { calculateTime } from "../../utils/calculateTime";
 import Button from "../common/Button/Button";
 import { useEffect, useState } from "react";
@@ -47,12 +46,13 @@ export default function Comment({
   const updateContent = async () => {
     const URL = `http://3.34.141.196/api/issues/${id}/content`; // PATCH 요청을 보낼 리소스 URL로 변경
 
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
+
     const patchData = {
       content: commentContent,
-    };
-
-    const headers = {
-      "Content-Type": "application/json",
     };
 
     try {
@@ -75,12 +75,13 @@ export default function Comment({
   const updateComment = async () => {
     const URL = `http://3.34.141.196/api/issues/${id}/comments/${commentId}`; // PATCH 요청을 보낼 리소스 URL로 변경
 
+    const headers = new Headers();
+    const accessToken = localStorage.getItem("accessToken");
+    headers.append("Authorization", `Bearer ${accessToken}`);
+    headers.append("Content-Type", "application/json");
+
     const patchData = {
       content: commentContent,
-    };
-
-    const headers = {
-      "Content-Type": "application/json",
     };
 
     try {
@@ -122,7 +123,7 @@ export default function Comment({
       <CommentWrapper $isEdit={isEdit}>
         <Header>
           <Info>
-            <UserProfileButton src={author.profileImageUrl} />
+            <UserProfileImg src={author.profileImageUrl} />
             <UserName>{author.nickname}</UserName>
             <Time>{calculateTime(createAt)}</Time>
           </Info>
@@ -205,6 +206,12 @@ const Header = styled.div`
   height: 64px;
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
+`;
+
+const UserProfileImg = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: ${({ theme }) => theme.radius.half};
 `;
 
 const Info = styled.div`

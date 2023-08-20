@@ -1,18 +1,46 @@
 import { styled } from "styled-components";
-import Button from "../common/Button/Button";
 import { IssueListProps } from "../../type";
 import LabelItem from "../SideBar/LabelItem";
 import { calculateTime } from "../../utils/calculateTime";
+import { useEffect, useState } from "react";
 
 type Props = {
   issue: IssueListProps;
+  selectAll: boolean;
+  addSelectList(id: number): void;
+  removeSelectList(id: number): void;
 };
 
-export default function IssueList({ issue }: Props) {
+export default function IssueList({
+  issue,
+  selectAll,
+  addSelectList,
+  removeSelectList,
+}: Props) {
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+
+  const toggleCheckbox = () => {
+    if (!isChecked) {
+      addSelectList(issue.id);
+      setIsChecked(true);
+      return;
+    }
+    removeSelectList(issue.id);
+    setIsChecked(false);
+  };
+
+  useEffect(() => {
+    selectAll ? setIsChecked(true) : setIsChecked(false);
+  }, [selectAll]);
+
   return (
     <Wrapper>
       <CheckboxWrapper>
-        <Checkbox type={"checkbox"} />
+        <Checkbox
+          type="checkbox"
+          checked={isChecked}
+          onChange={toggleCheckbox}
+        />
       </CheckboxWrapper>
       <Contents>
         <IssueInfo>
@@ -23,11 +51,12 @@ export default function IssueList({ issue }: Props) {
                 {issue.title}
               </IssueTitle>
               {issue.labels &&
-                issue.labels.map((label, key) => (
+                issue.labels.map((label) => (
                   <LabelItem
-                    key={key}
+                    key={label.id}
                     label={label.title}
-                    color={label.color}
+                    backgroundColor={label.backgroundColor}
+                    textColor={label.textColor}
                   />
                 ))}
             </Title>
@@ -37,19 +66,18 @@ export default function IssueList({ issue }: Props) {
                 이 이슈가 {calculateTime(issue.createAt)}, {issue.author}
                 님에 의해 작성되었습니다
               </span>
-              {issue.milestone !== null && (
-                <Button
-                  icon={"milestone"}
-                  label={issue.milestone.title}
-                  type={"ghost"}
-                  size={"medium"}
-                  onClick={() => {}}
-                />
+              {issue.milestone && (
+                <MilestoneInfo>
+                  <MilestoneIcon src="/icons/milestone.svg" />
+                  <span>{issue.milestone.title}</span>
+                </MilestoneInfo>
               )}
             </Caption>
           </InfoContents>
         </IssueInfo>
-        <AuthorProfileImg src={"/logo/profile.jpg"} />
+        <ImgWrapper>
+          <AssigneesProfileImg src={issue.authorProfileUrl} />
+        </ImgWrapper>
       </Contents>
     </Wrapper>
   );
@@ -82,9 +110,22 @@ const CheckboxWrapper = styled.div`
 `;
 
 const Checkbox = styled.input`
-  margin: 0px;
+  appearance: none;
   width: 16px;
   height: 16px;
+  background-image: url("/icons/checkBoxInitial.svg");
+  &:checked {
+    border-color: transparent;
+    background-image: url("/icons/checkBoxActive.svg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+  &:indeterminate {
+    border-color: transparent;
+    background-image: url("/icons/checkBoxDisable.svg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
 `;
 
 const Contents = styled.div`
@@ -103,7 +144,7 @@ const InfoContents = styled.div`
   gap: 8px;
 `;
 
-const AuthorProfileImg = styled.img`
+const AssigneesProfileImg = styled.img`
   width: 20px;
   height: 20px;
   border-radius: ${({ theme }) => theme.radius.half};
@@ -133,4 +174,21 @@ const IssueIcon = styled.img`
 const IssueTitle = styled.a`
   font: ${({ theme }) => theme.font.availableMedium20};
   color: ${({ theme }) => theme.colorSystem.neutral.text.strong};
+`;
+
+const ImgWrapper = styled.div`
+  display: flex;
+  gap: -20px;
+`;
+
+const MilestoneInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const MilestoneIcon = styled.img`
+  width: 16px;
+  height: 16px;
+  filter: ${({ theme }) => theme.filter.neutral.text.default};
 `;

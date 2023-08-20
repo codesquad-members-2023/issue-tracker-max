@@ -66,6 +66,12 @@ export const lightMode = {
         weak: "brightness(0) saturate(100%) invert(29%) sepia(66%) saturate(2882%) hue-rotate(201deg) brightness(103%) contrast(105%);",
       },
     },
+    danger: {
+      text: {
+        default:
+          "brightness(0) saturate(100%) invert(44%) sepia(47%) saturate(7165%) hue-rotate(341deg) brightness(98%) contrast(106%);",
+      },
+    },
   },
   ...typoSystem,
   ...objectStyles,
@@ -133,6 +139,12 @@ export const darkMode = {
         default:
           "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(45deg) brightness(103%) contrast(103%);",
         weak: "brightness(0) saturate(100%) invert(39%) sepia(89%) saturate(4222%) hue-rotate(199deg) brightness(100%) contrast(112%);",
+      },
+    },
+    danger: {
+      text: {
+        default:
+          "brightness(0) saturate(100%) invert(44%) sepia(47%) saturate(7165%) hue-rotate(341deg) brightness(98%) contrast(106%);",
       },
     },
   },

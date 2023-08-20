@@ -3,9 +3,10 @@ import UserProfileButton from "../UserProfileButton/UserProfileButton";
 
 type Props = {
   toggleTheme(): void;
+  profileImg: string;
 };
 
-export default function Header({ toggleTheme }: Props) {
+export default function Header({ toggleTheme, profileImg }: Props) {
   return (
     <Wrapper>
       <Container>
@@ -13,7 +14,7 @@ export default function Header({ toggleTheme }: Props) {
           <LogoImg src={"/logo/mediumLogo.svg"} alt={"Issue Tracker"} />
         </Logo>
         <UserProfileButton
-          src={"/logo/profile.jpg"}
+          src={profileImg}
           size={"large"}
           onClick={toggleTheme}
         />

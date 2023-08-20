@@ -1,6 +1,10 @@
 import { styled } from "styled-components";
 import DropdownIndicator from "../DropdownIndicator/DropdownIndicator";
 import Input from "../common/Input/Input";
+import DropdownPanel from "../DropdownPanel/DropdownPanel";
+import DropdownItem from "../DropdownPanel/DropdownItem";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   filterValue: string;
@@ -13,10 +17,67 @@ export default function FilterBar({
   onChange,
   handleEnterFilter,
 }: Props) {
+  const navigate = useNavigate();
+  const [openFilterDropdown, setOpenFilterDropdown] = useState<boolean>(false);
+
+  const showFilterDropdown = () => {
+    setOpenFilterDropdown(true);
+  };
+
+  const hideFilterDropdown = () => {
+    setOpenFilterDropdown(false);
+  };
+
+  const goOpenIssuesPage = () => {
+    setOpenFilterDropdown(false);
+    navigate("/issues/isOpen=true");
+  };
+
+  const goClosedIssuesPage = () => {
+    setOpenFilterDropdown(false);
+    navigate("/issues/isOpen=false");
+  };
+
   return (
     <Wrapper>
       <FilterButtonField>
-        <DropdownIndicator label={"필터"} dropdownTop={"48px"} />
+        <FilterDropdown>
+          <DropdownIndicator label={"이슈 필터"} onClick={showFilterDropdown} />
+          {openFilterDropdown && (
+            <DropdownPanel
+              title={"이슈 필터"}
+              top={"48px"}
+              left={"0px"}
+              closeDropdown={hideFilterDropdown}
+            >
+              <DropdownItem
+                itemName={"열린 이슈"}
+                value={"isOpen=true"}
+                onClick={goOpenIssuesPage}
+              />
+              <DropdownItem
+                itemName={"내가 작성한 이슈"}
+                value={"authorId=1"}
+                onClick={() => {}}
+              />
+              <DropdownItem
+                itemName={"나에게 할당된 이슈"}
+                value={"assigneesIds=1"}
+                onClick={() => {}}
+              />
+              <DropdownItem
+                itemName={"내가 댓글을 남긴 이슈"}
+                value={"labelIds=1"}
+                onClick={() => {}}
+              />
+              <DropdownItem
+                itemName={"닫힌 이슈"}
+                value={"isOpen=false"}
+                onClick={goClosedIssuesPage}
+              />
+            </DropdownPanel>
+          )}
+        </FilterDropdown>
       </FilterButtonField>
       <FilterInputField>
         <FilterInputLabel htmlFor="filterInput">
@@ -85,3 +146,5 @@ const FilterInputLabel = styled.label`
 const FilterInputImg = styled.img`
   filter: ${({ theme }) => theme.filter.neutral.text.default};
 `;
+
+const FilterDropdown = styled.div``;

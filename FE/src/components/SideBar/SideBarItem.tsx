@@ -1,38 +1,28 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { styled } from "styled-components";
 
 type Props = {
   imgSource?: string;
   color?: string;
   itemName: string;
-  criteria?: string;
-  value?: string;
-  checkbox?: boolean;
+  isChecked: boolean;
   onClick(): void;
 };
 
-export default function DropdownItem({
+export default function SideBarItem({
   imgSource = "",
   color = "",
   itemName,
-  criteria,
-  value,
-  checkbox = true,
+  isChecked,
   onClick,
 }: Props) {
-  const { filter } = useParams();
-  const [isSelect] = useState<boolean>(
-    criteria ? criteria === value : filter === value,
-  );
   return (
     <Container onClick={onClick}>
       <Info>
         {color && <ColorIcon $color={color}></ColorIcon>}
         {imgSource && <ImgIcon src={imgSource} />}
-        <Label $isSelect={isSelect}>{itemName}</Label>
+        <Label $isSelect={isChecked}>{itemName}</Label>
       </Info>
-      {checkbox && <Checkbox type={"checkbox"} checked={isSelect}></Checkbox>}
+      <Checkbox type={"checkbox"} checked={isChecked}></Checkbox>
     </Container>
   );
 }
@@ -40,7 +30,6 @@ export default function DropdownItem({
 const Container = styled.button`
   padding: 10px 16px;
   width: 100%;
-  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -59,10 +48,6 @@ const ColorIcon = styled.div<{ $color: string }>`
   height: 20px;
   border-radius: ${({ theme }) => theme.radius.half};
   background-color: ${({ $color }) => $color};
-  border: ${({ $color, theme }) =>
-    `${theme.border.default} ${
-      $color === "#FEFEFE" ? theme.colorSystem.neutral.text.weak : "none"
-    }`};
 `;
 
 const ImgIcon = styled.img`

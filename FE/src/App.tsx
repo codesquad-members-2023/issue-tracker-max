@@ -5,10 +5,13 @@ import { lightMode, darkMode } from "./styles/DesignSystem.ts";
 import { ThemeProvider, styled } from "styled-components";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage.tsx";
-import Header from "./components/Header/Header.tsx";
 import LabelsPage from "./pages/LabelsPage.tsx";
 import MilestonesPage from "./pages/MilestonesPage.tsx";
 import IssueDetail from "./pages/IssueDetail.tsx";
+import JoinPage from "./pages/JoinPage.tsx";
+import { OauthPage } from "./pages/OauthPage.tsx";
+import { AuthProvider } from "./context/AuthContext.tsx";
+import EditProfile from "./pages/EditProfilePage.tsx";
 
 function App() {
   const [theme, toggleTheme] = useDarkMode();
@@ -16,23 +19,48 @@ function App() {
 
   return (
     <ThemeProvider theme={themeMode}>
-      <BrowserRouter>
-        <Page>
-          <Header toggleTheme={toggleTheme} />
-          <Routes>
-            <Route path="/issues" element={<MainPage />}></Route>
-            <Route path="" element={<LoginPage />}></Route>
-            <Route path="/new" element={<AddIssuePage />}></Route>
-            <Route path="/labels" element={<LabelsPage />}></Route>
-            <Route
-              path="/milestones/:state"
-              element={<MilestonesPage />}
-            ></Route>
-            <Route path="/issues/:filter" element={<MainPage />}></Route>
-            <Route path="/detail/:id" element={<IssueDetail />}></Route>
-          </Routes>
-        </Page>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Page>
+            <Routes>
+              <Route
+                path="/issues"
+                element={<MainPage toggleTheme={toggleTheme} />}
+              ></Route>
+              <Route
+                path="/new"
+                element={<AddIssuePage toggleTheme={toggleTheme} />}
+              ></Route>
+              <Route
+                path="/labels"
+                element={<LabelsPage toggleTheme={toggleTheme} />}
+              ></Route>
+              <Route
+                path="/redirect/oauth"
+                element={<OauthPage toggleTheme={toggleTheme} />}
+              ></Route>
+              <Route
+                path="/milestones/:state"
+                element={<MilestonesPage toggleTheme={toggleTheme} />}
+              ></Route>
+              <Route
+                path="/issues/:filter"
+                element={<MainPage toggleTheme={toggleTheme} />}
+              ></Route>
+              <Route
+                path="/detail/:id"
+                element={<IssueDetail toggleTheme={toggleTheme} />}
+              ></Route>
+              <Route
+                path="/profile"
+                element={<EditProfile toggleTheme={toggleTheme} />}
+              ></Route>
+              <Route path="" element={<LoginPage />}></Route>
+              <Route path="/join" element={<JoinPage />}></Route>
+            </Routes>
+          </Page>
+        </BrowserRouter>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

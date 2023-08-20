@@ -1,89 +1,32 @@
-import { useState } from "react";
 import { styled } from "styled-components";
-import DropdownPanel from "../DropdownPanel/DropdownPanel";
 
 type Props = {
-  type?: "filter" | "assignees" | "labels" | "milestones" | "authors" | "none";
   icon?: string;
   label: string;
   padding?: string;
   width?: string;
   height?: string;
-  dropdownTop?: string;
-  dropdownLeft?: string;
+  onClick(): void;
 };
 
 export default function DropdownIndicator({
-  type = "filter",
   icon = "chevronDown",
   label,
   padding = "4px 0px",
   width = "80px",
   height = "32px",
-  dropdownTop = "0px",
-  dropdownLeft = "0px",
+  onClick,
 }: Props) {
-  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
-
-  const openDropdownPanel = () => {
-    setOpenDropdown(true);
-  };
-
-  const closeDropdownPanel = () => {
-    setOpenDropdown(false);
-  };
-
   return (
-    <Container>
-      <IndicatorButton
-        $padding={padding}
-        $width={width}
-        $height={height}
-        onClick={openDropdownPanel}
-      >
-        <IndicatorLabel>{label}</IndicatorLabel>
-        <IndicatorIcon src={`/icons/${icon}.svg`} />
-      </IndicatorButton>
-      {openDropdown && type === "filter" && (
-        <DropdownPanel
-          top={dropdownTop}
-          left={dropdownLeft}
-          closeDropdown={closeDropdownPanel}
-        />
-      )}
-      {openDropdown && type === "assignees" && (
-        <DropdownPanel
-          type={"assignees"}
-          top={"40px"}
-          left={"0px"}
-          closeDropdown={closeDropdownPanel}
-        />
-      )}
-      {openDropdown && type === "labels" && (
-        <DropdownPanel
-          type={"labels"}
-          top={"40px"}
-          left={"112px"}
-          closeDropdown={closeDropdownPanel}
-        />
-      )}
-      {openDropdown && type === "milestones" && (
-        <DropdownPanel
-          type={"milestones"}
-          top={"40px"}
-          left={"180px"}
-          closeDropdown={closeDropdownPanel}
-        />
-      )}
-      {openDropdown && type === "authors" && (
-        <DropdownPanel
-          type={"authors"}
-          top={"40px"}
-          left={"200px"}
-          closeDropdown={closeDropdownPanel}
-        />
-      )}
-    </Container>
+    <IndicatorButton
+      $padding={padding}
+      $width={width}
+      $height={height}
+      onClick={onClick}
+    >
+      <IndicatorLabel>{label}</IndicatorLabel>
+      <IndicatorIcon src={`/icons/${icon}.svg`} />
+    </IndicatorButton>
   );
 }
 
@@ -108,8 +51,6 @@ const IndicatorButton = styled.button<{
     opacity: ${({ theme }) => theme.opacity.disabled};
   }
 `;
-
-const Container = styled.div``;
 
 const IndicatorLabel = styled.span`
   font: ${({ theme }) => theme.font.availableMedium16};
