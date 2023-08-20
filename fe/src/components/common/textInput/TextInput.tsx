@@ -10,7 +10,7 @@ type Props = {
   inputType?: React.HTMLInputTypeAttribute;
   placeholder?: string;
   isError?: boolean;
-  captionString?: string;
+  caption?: string;
   disabled?: boolean;
   onChange: (value: string) => void;
   onClearInput?: () => void;
@@ -23,7 +23,7 @@ export const TextInput: React.FC<Props> = ({
   inputType,
   placeholder,
   isError,
-  captionString,
+  caption,
   disabled,
   onChange,
   onClearInput,
@@ -93,7 +93,7 @@ export const TextInput: React.FC<Props> = ({
           height: '16px',
         }}
       >
-        {isError && captionString && <div>{captionString}</div>}
+        {isError && caption && <div>{caption}</div>}
       </div>
     </div>
   );

@@ -1,12 +1,13 @@
 import { Button } from '@components/common/Button';
 import { IssueTable } from '@components/issueListPage/IssueTable';
 import { SubNav } from '@components/issueListPage/SubNav';
-import { getIssueListPageData } from '@utils/api';
+import { getIssuesWithQuery } from 'apis/api';
 import { processFilterString } from '@utils/processFilterString';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ReactComponent as XSquare } from '@assets/icons/xSquare.svg';
 import { useTheme } from '@emotion/react';
+import { PATH } from 'constants/PATH';
 
 export const IssueListPage: React.FC = () => {
   const theme = useTheme() as any;
@@ -18,9 +19,10 @@ export const IssueListPage: React.FC = () => {
   const hasFilter = location.search !== '';
 
   const goToFilteredPage = (filterValue: string) => {
-    const value = hasFilter
-      ? processFilterString(decodeURIComponent(filterValue))
-      : processFilterString('status:open ' + decodeURIComponent(filterValue));
+    const value =
+      hasFilter || filterValue === ''
+        ? processFilterString(decodeURIComponent(filterValue))
+        : processFilterString('status:open ' + decodeURIComponent(filterValue));
 
     navigate(`?query=${value}`);
   };
@@ -30,7 +32,7 @@ export const IssueListPage: React.FC = () => {
   };
 
   const fetchPageData = async () => {
-    const pageData = await getIssueListPageData(location.search);
+    const pageData = await getIssuesWithQuery(location.search);
 
     setPageData(pageData);
   };
@@ -66,7 +68,7 @@ export const IssueListPage: React.FC = () => {
         <Button
           {...{ typeVariant: 'ghost', size: 'S' }}
           onClick={() => {
-            navigate('/');
+            navigate(`/${PATH.ISSUE_LIST_PAGE}`);
           }}
           css={{
             display: 'flex',

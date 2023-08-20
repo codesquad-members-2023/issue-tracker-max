@@ -1,55 +1,44 @@
-// import { Comment } from '@components/common/comment/Commentt';
+import { css } from '@emotion/react';
+import { Comment } from '@components/common/comment/Comment';
 import { AddNewComment } from './AddNewComment';
 
-type AuthorType = {
-  userId: number;
-  loginId: string;
-  image: string;
-};
-
 type Props = {
-  contents: string;
-  createdAt: string;
-  author: AuthorType;
-  comments: any[]; // todo 타입
+  issueDetailPageData: IssueDetailPageData;
+  onAddComment: (comment: CommentType) => void;
+  onDeleteComment?: (id?: number) => void;
 };
 
 export const CommentContainer: React.FC<Props> = ({
-  contents,
-} // createdAt,
-// author,
-// comments,
-: Props) => {
-  console.log('contents', contents);
-
-  // const isCommentsExist = comments.length > 0;
-
+  issueDetailPageData,
+  onAddComment,
+  onDeleteComment,
+}) => {
   return (
-    <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '24px',
-        width: '960px',
-      }}
-    >
-      {/* <Comment
-        typeVariant="default"
-        // letterCount={textAreaValue.length}
-        placeholder={contents}
-        // onAddFileUrl={onAddFileUrl}
-        // onChangeTextArea={onChangeTextArea}
-      />
-      {isCommentsExist &&
-        comments.map((comment) => (
+    <div css={commentContainerStyle}>
+      {issueDetailPageData.comments &&
+        issueDetailPageData.comments.map((item) => (
           <Comment
-            key={comment.id}
             typeVariant="default"
-            placeholder={contents}
+            key={item.id}
+            issueDetailPageData={issueDetailPageData}
+            comment={item}
+            createdAt={item.createdAt}
+            defaultValue={item.contents}
+            onDeleteComment={onDeleteComment}
           />
-        ))} */}
+        ))}
 
-      <AddNewComment />
+      <AddNewComment
+        issueDetailPageData={issueDetailPageData}
+        onAddComment={onAddComment}
+      />
     </div>
   );
 };
+
+const commentContainerStyle = css`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 960px;
+`;

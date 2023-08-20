@@ -1,37 +1,36 @@
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { Box } from '@components/common/box/Box';
 import { MilestoneItem } from './MilestoneItem';
-// import { TableContainer } from '@components/common/Table/TableContainer';
-// import { TableHeader } from '@components/common/Table/TableHeader';
 import { ReactComponent as Archive } from '@assets/icons/archive.svg';
 import { ReactComponent as AlertCircle } from '@assets/icons/alertCircle.svg';
 import { Button } from '@components/common/Button';
-// import { generateEncodedQuery } from '@utils/generateEncodedQuery';
+import { TableHeader } from '@components/common/Table/TableHeader';
+import { MilestoneEditTable } from './MilestoneEditTable';
 
 type Props = {
   isAddTableOpen?: boolean;
-  openMilestonesCount: number;
+  openMilestoneCount: number;
   closedMilestoneCount: number;
   milestoneList: Milestone[];
-  onAddTableClose?: () => void;
+  onAddTableClose: () => void;
+  fetchPageData: () => Promise<void>;
 };
 
 export const Body: React.FC<Props> = ({
-  // isAddTableOpen,
-  openMilestonesCount,
+  isAddTableOpen,
+  openMilestoneCount,
   closedMilestoneCount,
   milestoneList,
-  // onAddTableClose,
+  onAddTableClose,
+  fetchPageData,
 }) => {
   const theme = useTheme() as any;
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // const onMilestoneFilterClick = (queryValue: 'open' | 'closed') => {
-  //   const query = generateEncodedQuery('status', queryValue);
-
-  //   navigate(query);
-  // };
+  const onMilestoneFilterClick = (queryValue: 'open' | 'closed') => {
+    navigate(`?status=${queryValue}`);
+  };
 
   return (
     <div
@@ -42,15 +41,14 @@ export const Body: React.FC<Props> = ({
         gap: '24px',
       }}
     >
-      {/* {isAddTableOpen && (
-        <TableContainer
-          tableVariant="milestone"
+      {isAddTableOpen && (
+        <MilestoneEditTable
+          header={<TableHeader title="새로운 마일스톤 추가" />}
           typeVariant="add"
           onAddTableClose={onAddTableClose}
-          header={<TableHeader title="새로운 마일스톤 추가" />}
+          fetchPageData={fetchPageData}
         />
-      )} */}
-
+      )}
       <Box
         header={
           <>
@@ -62,13 +60,19 @@ export const Body: React.FC<Props> = ({
                 paddingLeft: '32px',
               }}
             >
-              <Button typeVariant="ghost" onClick={() => console.log('click')}>
+              <Button
+                typeVariant="ghost"
+                onClick={() => onMilestoneFilterClick('open')}
+              >
                 <AlertCircle stroke={theme.neutral.text.strong} />
                 <span css={{ font: theme.fonts.availableMedium16 }}>
-                  열린 마일스톤({openMilestonesCount})
+                  열린 마일스톤({openMilestoneCount})
                 </span>
               </Button>
-              <Button typeVariant="ghost" onClick={() => console.log('click')}>
+              <Button
+                typeVariant="ghost"
+                onClick={() => onMilestoneFilterClick('closed')}
+              >
                 <Archive stroke={theme.neutral.text.strong} />
                 <span css={{ font: theme.fonts.availableMedium16 }}>
                   닫힌 마일스톤({closedMilestoneCount})
@@ -78,17 +82,15 @@ export const Body: React.FC<Props> = ({
           </>
         }
       >
-        {milestoneList.map((milestone) => (
-          <MilestoneItem
-            key={milestone.id}
-            name={milestone.name}
-            description={milestone.description}
-            progress={milestone.progress}
-            openIssueCount={milestone.openIssueCount}
-            closedIssueCount={milestone.closedIssueCount}
-            deadline={milestone.deadline}
-          />
-        ))}
+        <ul>
+          {milestoneList.map((milestone) => (
+            <MilestoneItem
+              key={milestone.id}
+              milestone={milestone}
+              fetchPageData={fetchPageData}
+            />
+          ))}
+        </ul>
       </Box>
     </div>
   );

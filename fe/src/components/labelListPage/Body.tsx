@@ -1,4 +1,4 @@
-import { useTheme } from '@emotion/react';
+import { Theme, css } from '@emotion/react';
 import { Box } from '@components/common/box/Box';
 import { LabelItem } from './LabelItem';
 import { TableHeader } from '@components/common/Table/TableHeader';
@@ -19,66 +19,62 @@ export const Body: React.FC<Props> = ({
   onAddTableClose,
   fetchLabelList,
 }) => {
-  const theme = useTheme() as any;
-
   return (
-    <div
-      css={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '24px',
-      }}
-    >
-      {isAddTableOpen && (
-        <LabelEditTable
-          header={<TableHeader title="새로운 레이블 추가" />}
-          typeVariant="add"
-          onAddTableClose={onAddTableClose}
-          fetchLabelList={fetchLabelList}
-        />
-      )}
+    <>
+      {labelList && (
+        <div css={bodyStyle}>
+          {isAddTableOpen && (
+            <LabelEditTable
+              header={<TableHeader title="새로운 레이블 추가" />}
+              typeVariant="add"
+              onAddTableClose={onAddTableClose}
+              fetchLabelList={fetchLabelList}
+            />
+          )}
 
-      <Box
-        header={
-          <span
-            css={{
-              marginLeft: '32px',
-              color: theme.neutral.text.default,
-              font: theme.fonts.displayBold16,
-            }}
+          <Box
+            header={<span className="box-header">{labelCount}개의 레이블</span>}
           >
-            {labelCount}개의 레이블
-          </span>
-        }
-      >
-        {labelList.length > 0 ? (
-          <>
-            {labelList.map((label) => (
-              <LabelItem
-                key={label.id}
-                label={label}
-                fetchLabelList={fetchLabelList}
-              />
-            ))}
-          </>
-        ) : (
-          <li
-            css={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '32px',
-              boxSizing: 'border-box',
-              color: theme.neutral.text.weak,
-              font: theme.fonts.displayMedium16,
-            }}
-          >
-            레이블이 없습니다.
-          </li>
-        )}
-      </Box>
-    </div>
+            <ul>
+              {labelList.length > 0 ? (
+                <>
+                  {labelList.map((label) => (
+                    <LabelItem
+                      key={label.id}
+                      label={label}
+                      fetchLabelList={fetchLabelList}
+                    />
+                  ))}
+                </>
+              ) : (
+                <li className="label-list">레이블이 없습니다.</li>
+              )}
+            </ul>
+          </Box>
+        </div>
+      )}
+    </>
   );
 };
+
+const bodyStyle = (theme: Theme) => css`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .box-header {
+    margin-left: 32px;
+    color: ${theme.neutral.text.default};
+    font: ${theme.fonts.displayBold16};
+  }
+
+  .label-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    color: ${theme.neutral.text.weak};
+    font: ${theme.fonts.displayMedium16};
+  }
+`;

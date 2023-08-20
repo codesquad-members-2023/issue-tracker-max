@@ -7,7 +7,11 @@ import { useTheme } from '@emotion/react';
 import { DropDownPanel } from '@components/common/dropDown/DropDownPanel';
 import React, { useState } from 'react';
 import { DropDownContainer } from '@components/common/dropDown/DropDownContainer';
-import { getLabels, getMilestones, getUsers } from '@utils/api';
+import {
+  getLabelPreviews,
+  getMilestonePreviews,
+  getUserPreviews,
+} from 'apis/api';
 import { DropDownList } from '@components/common/dropDown/DropDownList';
 
 type Props = {
@@ -252,7 +256,7 @@ export const TableHeader: React.FC<Props> = ({
                 }
 
                 (async () => {
-                  const users = await getUsers();
+                  const users = await getUserPreviews();
 
                   setPanelList((prev) => {
                     return {
@@ -269,39 +273,46 @@ export const TableHeader: React.FC<Props> = ({
                 onOutsideClick={onPanelClose}
               >
                 {panelList.users.length > 0 ? (
-                  panelList.users.map(({ userId: id, loginId: name }) => {
-                    const isSelected = location.search.includes(
-                      `assignee:${name}`,
-                    );
+                  panelList.users.map(
+                    ({ userId: id, loginId: name, image }) => {
+                      const isSelected = location.search.includes(
+                        `assignee:${name}`,
+                      );
 
-                    return (
-                      <DropDownList
-                        key={id}
-                        {...{
-                          item: {
-                            id,
-                            name: name !== 'none' ? name : '담당자가 없는 이슈',
-                          },
-                          isSelected,
-                          onClick: () => {
-                            onPanelClose();
+                      return (
+                        <DropDownList
+                          key={id}
+                          {...{
+                            item: {
+                              id,
+                              name:
+                                name !== 'none' ? name : '담당자가 없는 이슈',
+                              image: name !== 'none' ? image : undefined,
+                            },
+                            isSelected,
+                            onClick: () => {
+                              onPanelClose();
 
-                            if (isSelected) {
+                              if (isSelected) {
+                                goToFilteredPage(
+                                  location.search.replace(
+                                    `assignee:${name}`,
+                                    '',
+                                  ),
+                                );
+
+                                return;
+                              }
+
                               goToFilteredPage(
-                                location.search.replace(`assignee:${name}`, ''),
+                                `${location.search} assignee:${name}`,
                               );
-
-                              return;
-                            }
-
-                            goToFilteredPage(
-                              `${location.search} assignee:${name}`,
-                            );
-                          },
-                        }}
-                      />
-                    );
-                  })
+                            },
+                          }}
+                        />
+                      );
+                    },
+                  )
                 ) : (
                   <DropDownList
                     {...{
@@ -331,7 +342,7 @@ export const TableHeader: React.FC<Props> = ({
                 }
 
                 (async () => {
-                  const labels = await getLabels();
+                  const labels = await getLabelPreviews();
 
                   setPanelList((prev) => {
                     return {
@@ -411,7 +422,7 @@ export const TableHeader: React.FC<Props> = ({
                 }
 
                 (async () => {
-                  const milestones = await getMilestones();
+                  const milestones = await getMilestonePreviews();
 
                   setPanelList((prev) => {
                     return {
@@ -496,7 +507,7 @@ export const TableHeader: React.FC<Props> = ({
                 }
 
                 (async () => {
-                  const users = await getUsers();
+                  const users = await getUserPreviews();
 
                   setPanelList((prev) => {
                     return {
@@ -513,40 +524,42 @@ export const TableHeader: React.FC<Props> = ({
                 onOutsideClick={onPanelClose}
               >
                 {panelList.users.length > 0 ? (
-                  panelList.users.map(({ userId: id, loginId: name }) => {
-                    const isSelected = location.search.includes(
-                      `author:${name}`,
-                    );
+                  panelList.users.map(
+                    ({ userId: id, loginId: name, image }) => {
+                      const isSelected = location.search.includes(
+                        `author:${name}`,
+                      );
 
-                    if (name === 'none') {
-                      return <React.Fragment key={id}></React.Fragment>;
-                    }
+                      if (name === 'none') {
+                        return <React.Fragment key={id}></React.Fragment>;
+                      }
 
-                    return (
-                      <DropDownList
-                        key={id}
-                        {...{
-                          item: { id, name },
-                          isSelected,
-                          onClick: () => {
-                            onPanelClose();
+                      return (
+                        <DropDownList
+                          key={id}
+                          {...{
+                            item: { id, name, image },
+                            isSelected,
+                            onClick: () => {
+                              onPanelClose();
 
-                            if (isSelected) {
+                              if (isSelected) {
+                                goToFilteredPage(
+                                  location.search.replace(`author:${name}`, ''),
+                                );
+
+                                return;
+                              }
+
                               goToFilteredPage(
-                                location.search.replace(`author:${name}`, ''),
+                                `${location.search} author:${name}`,
                               );
-
-                              return;
-                            }
-
-                            goToFilteredPage(
-                              `${location.search} author:${name}`,
-                            );
-                          },
-                        }}
-                      />
-                    );
-                  })
+                            },
+                          }}
+                        />
+                      );
+                    },
+                  )
                 ) : (
                   <li
                     css={{

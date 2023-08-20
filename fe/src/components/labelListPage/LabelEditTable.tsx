@@ -6,14 +6,8 @@ import { ReactComponent as Plus } from '@assets/icons/plus.svg';
 import { ReactComponent as Edit } from '@assets/icons/edit.svg';
 import { randomColorGenerator } from '@utils/generateRandomColorCode';
 import { LabelEditBody } from './LabelEditBody';
+import { editLabel, postNewLabel } from 'apis/api';
 
-type BodyType = {
-  name: string;
-  textColor: string;
-  backgroundColor: string;
-  description: string;
-  id?: number;
-};
 type Props = {
   label?: Label;
   typeVariant: 'add' | 'edit';
@@ -41,6 +35,7 @@ export const LabelEditTable: React.FC<Props> = ({
     label ? (label.textColor === 'light' ? 'light' : 'dark') : null,
   );
   const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false);
+  const trimedName = nameInput.trim();
 
   const onNameChange = (value: string) => {
     if (value.length > 21) return;
@@ -75,38 +70,25 @@ export const LabelEditTable: React.FC<Props> = ({
   };
 
   const onSubmit = async () => {
-    const method = typeVariant === 'edit' ? 'PATCH' : 'POST';
-    const path = 'labels';
-
-    const body: BodyType = {
-      name: nameInput,
-      textColor: textColor,
-      backgroundColor: colorCodeInput,
-      description: descriptionInput || '',
-    };
-
-    if (typeVariant === 'edit' && label?.id) {
-      body['id'] = label.id;
-    }
-
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_APP_BASE_URL}/${path}`,
-        {
-          method: method,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      if (typeVariant === 'edit' && label?.id) {
+        await editLabel(
+          label.id,
+          trimedName,
+          textColor,
+          colorCodeInput,
+          descriptionInput || '',
+        );
+      } else {
+        await postNewLabel(
+          trimedName,
+          textColor,
+          colorCodeInput,
+          descriptionInput || '',
+        );
       }
-
       onAddTableClose();
-      fetchLabelList();
+      await fetchLabelList();
     } catch (error) {
       console.error('There was a problem with the fetch operation:');
       // todo 에러처리
@@ -162,7 +144,7 @@ export const LabelEditTable: React.FC<Props> = ({
     >
       {header}
       <LabelEditBody
-        nameInput={nameInput}
+        nameInput={trimedName}
         descriptionInput={descriptionInput}
         colorCodeInput={colorCodeInput}
         selectedTextColor={selectedTextColor}
@@ -205,7 +187,7 @@ export const LabelEditTable: React.FC<Props> = ({
           css={{
             color: theme.brand.text.default,
           }}
-          disabled={isDataMissing || isDataUnchanged}
+          disabled={isDataMissing || isDataUnchanged || isColorCodeError}
           onClick={onSubmit}
         >
           {typeVariant === 'edit' ? (
