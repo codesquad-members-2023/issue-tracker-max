@@ -2,11 +2,11 @@ package org.presents.issuetracker.label.controller;
 
 import java.util.List;
 
-import org.presents.issuetracker.global.dto.response.LabelIdResponse;
+import org.presents.issuetracker.global.dto.response.IdResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
-import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
 import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
+import org.presents.issuetracker.label.entity.vo.LabelInfo;
 import org.presents.issuetracker.label.service.LabelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +35,8 @@ public class LabelController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<LabelDetailResponse>> getLabelDetails() {
-		List<LabelDetailResponse> labelDetails = labelService.getLabelDetails();
+	public ResponseEntity<LabelInfo> getLabelDetails() {
+		LabelInfo labelDetails = labelService.getLabelDetails();
 		return ResponseEntity.ok().body(labelDetails);
 	}
 
@@ -52,15 +52,15 @@ public class LabelController {
 	}
 
 	@PostMapping
-	public ResponseEntity<LabelIdResponse> create(@Valid @RequestBody LabelCreateRequest labelCreateRequest) {
-		LabelIdResponse labelIdResponse = labelService.create(labelCreateRequest);
-		return ResponseEntity.ok().body(labelIdResponse);
+	public ResponseEntity<IdResponse> create(@Valid @RequestBody LabelCreateRequest labelCreateRequest) {
+		IdResponse idResponse = labelService.create(labelCreateRequest);
+		return ResponseEntity.ok().body(idResponse);
 	}
 
 	@PatchMapping
-	public ResponseEntity<LabelIdResponse> update(@Valid @RequestBody LabelUpdateRequest dto) {
-		LabelIdResponse labelIdResponse = labelService.update(dto);
-		return ResponseEntity.ok().body(labelIdResponse);
+	public ResponseEntity<IdResponse> update(@Valid @RequestBody LabelUpdateRequest dto) {
+		IdResponse idResponse = labelService.update(dto);
+		return ResponseEntity.ok().body(idResponse);
 	}
 
 	@DeleteMapping("/{id}")

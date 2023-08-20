@@ -23,4 +23,25 @@ public class Comment {
 		this.authorId = authorId;
 		this.contents = contents;
 	}
+
+	private Comment(Long id, String contents) {
+		this.id = id;
+		this.contents = contents;
+	}
+
+	private Comment(Long id, Long issueId, Long authorId, String contents, LocalDateTime createdAt) {
+		this.id = id;
+		this.issueId = issueId;
+		this.authorId = authorId;
+		this.contents = contents;
+		this.createdAt = createdAt;
+	}
+
+	public static Comment of(Long id, String contents) {
+		return new Comment(id, contents);
+	}
+
+	public static Comment of(Long id, Long issueId, Long authorId, String contents, LocalDateTime createdAt) {
+		return new Comment(id, issueId, authorId, contents, createdAt);
+	}
 }

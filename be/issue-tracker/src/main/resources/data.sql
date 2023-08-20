@@ -1,9 +1,9 @@
-INSERT INTO user (login_id, password, image) VALUES ('ayaan', '1234', '이안이미지');
-INSERT INTO user (login_id, password, image) VALUES ('jian', '1234', '지안이미지');
-INSERT INTO user (login_id, password, image) VALUES ('bono', '1234', '보노이미지');
-INSERT INTO user (login_id, password, image) VALUES ('hana', '1234', '하나이미지');
-INSERT INTO user (login_id, password, image) VALUES ('khundi', '1234', '쿤디이미지');
-INSERT INTO user (login_id, password, image) VALUES ('puban', '1234', '푸반이미지');
+INSERT INTO user (login_id, password, image) VALUES ('ayaan1234', '123456', 'https://avatars.githubusercontent.com/u/57559288?s=80&u=22fcaa63715a65dfa747506fffe592b0acbb2846&v=4');
+INSERT INTO user (login_id, password, image) VALUES ('jian1234', '123456', 'https://avatars.githubusercontent.com/u/97204689?s=80&u=34888415e252f727b1d3a849e7f1387a20ce3696&v=4');
+INSERT INTO user (login_id, password, image) VALUES ('bono1234', '123456', 'https://avatars.githubusercontent.com/u/70848762?s=80&v=4');
+INSERT INTO user (login_id, password, image) VALUES ('hana1234', '123456', 'https://avatars.githubusercontent.com/u/117690393?s=80&u=ba9f18d1ab53f87cbe07a308e103d26d6bcbf221&v=4');
+INSERT INTO user (login_id, password, image) VALUES ('khundi1234', '123456', 'https://avatars.githubusercontent.com/u/57666791?v=4');
+INSERT INTO user (login_id, password, image) VALUES ('puban1234', '123456', 'https://avatars.githubusercontent.com/u/86706366?s=80&v=4');
 
 INSERT INTO milestone (name, deadline, description) VALUES ('be-milestone1', '2023-08-04T00:00:00', '백엔드');
 INSERT INTO milestone (name, deadline, description) VALUES ('be-milestone2', '2023-08-11T00:00:00', '백엔드');

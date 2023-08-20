@@ -1,19 +1,25 @@
 package org.presents.issuetracker.milestone.entity.vo;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.presents.issuetracker.milestone.dto.response.MilestoneResponse;
 
 @Getter
-@Builder
 public class MilestoneInfo {
-	private Long id;
-	private String name;
-	private LocalDateTime deadline;
-	private String description;
-	private String status;
-	private int openIssueCount;
-	private int closedIssueCount;
-	private int progress;
+    private int labelCount;
+    private int milestoneCount;
+    private int openMilestoneCount;
+    private int closedMilestoneCount;
+    private List<MilestoneResponse> milestones;
+
+    @Builder
+    public MilestoneInfo(int labelCount, int milestoneCount, int openMilestoneCount, int closedMilestoneCount, List<MilestoneResponse> milestones) {
+        this.labelCount = labelCount;
+        this.milestoneCount = milestoneCount;
+        this.openMilestoneCount = openMilestoneCount;
+        this.closedMilestoneCount = closedMilestoneCount;
+        this.milestones = milestones;
+    }
 }

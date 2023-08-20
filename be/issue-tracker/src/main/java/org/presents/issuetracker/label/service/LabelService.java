@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.presents.issuetracker.global.dto.response.LabelIdResponse;
+import org.presents.issuetracker.global.dto.response.IdResponse;
 import org.presents.issuetracker.label.dto.request.LabelCreateRequest;
 import org.presents.issuetracker.label.dto.request.LabelUpdateRequest;
 import org.presents.issuetracker.label.dto.response.LabelDetailResponse;
 import org.presents.issuetracker.label.dto.response.LabelPreviewResponse;
 import org.presents.issuetracker.label.entity.Label;
+import org.presents.issuetracker.label.entity.vo.LabelInfo;
 import org.presents.issuetracker.label.repository.LabelRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,10 @@ public class LabelService {
 		this.labelRepository = labelRepository;
 	}
 
-	public List<LabelDetailResponse> getLabelDetails() {
+	public LabelInfo getLabelDetails() {
 		List<Label> labels = labelRepository.findAll();
 
-		return labels.stream().map(label -> LabelDetailResponse.builder()
+		List<LabelDetailResponse> labelDetailResponses = labels.stream().map(label -> LabelDetailResponse.builder()
 				.id(label.getId())
 				.name(label.getName())
 				.description(label.getDescription())
@@ -34,6 +35,8 @@ public class LabelService {
 				.textColor(label.getTextColor())
 				.build())
 			.collect(Collectors.toList());
+
+		return labelRepository.findAllWithCounts(labels, labelDetailResponses);
 	}
 
 	public List<LabelPreviewResponse> getLabelPreviews() {
@@ -48,7 +51,7 @@ public class LabelService {
 				.collect(Collectors.toCollection(LinkedList::new));
 	}
 
-	public LabelIdResponse create(LabelCreateRequest labelCreateRequest) {
+	public IdResponse create(LabelCreateRequest labelCreateRequest) {
 		Long createdId = labelRepository.save(
 			Label.of(
 				labelCreateRequest.getName(),
@@ -56,10 +59,10 @@ public class LabelService {
 				labelCreateRequest.getBackgroundColor(),
 				labelCreateRequest.getTextColor()));
 
-		return LabelIdResponse.from(createdId);
+		return IdResponse.from(createdId);
 	}
 
-	public LabelIdResponse update(LabelUpdateRequest labelUpdateRequest) {
+	public IdResponse update(LabelUpdateRequest labelUpdateRequest) {
 		Long id = labelUpdateRequest.getId();
 		Label label = labelRepository.findById(id);
 
@@ -82,7 +85,7 @@ public class LabelService {
 		Label updatedLabel = Label.of(label.getId(), name, description, backgroundColor, textColor);
 		labelRepository.update(updatedLabel);
 
-		return LabelIdResponse.from(updatedLabel.getId());
+		return IdResponse.from(updatedLabel.getId());
 	}
 
 	public void delete(Long id) {
