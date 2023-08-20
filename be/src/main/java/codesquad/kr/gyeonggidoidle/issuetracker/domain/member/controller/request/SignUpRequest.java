@@ -1,8 +1,9 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.member.controller.request;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.service.condition.SignUpCondition;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.auth.service.condition.SignUpCondition;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Getter
 public class SignUpRequest {
 
-    @Email
+    @Email(message = "유효한 이메일 주소를 입력하세요.")
     private String email;
-    @NotBlank
+    @Size(min = 6, max = 16, message = "비밀번호는 6자리 이상 16자리 이하여야 합니다.")
     private String password;
     @NotBlank
     private String profile;

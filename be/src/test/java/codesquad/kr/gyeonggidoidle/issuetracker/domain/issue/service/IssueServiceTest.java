@@ -1,19 +1,20 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.ServiceTest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.comment.repository.CommentRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.comment.repository.result.CommentResult;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.IssueRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.vo.IssueVO;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterInformation;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.FilterListInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.IssueSearchRepository;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result.IssueDetailResult;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.repository.result.IssueSearchResult;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueDetailInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.SearchInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.LabelRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.repository.VO.LabelVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.MemberRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.MilestoneRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneDetailsVO;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.repository.vo.MilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.StatRepository;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.IssueByMilestoneVO;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.stat.repository.vo.StatVO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,32 +37,37 @@ class IssueServiceTest {
     private IssueService issueService;
 
     @Mock
-    private StatRepository statRepository;
-    @Mock
     private IssueRepository issueRepository;
+    @Mock
+    private IssueSearchRepository issueSearchRepository;
+    @Mock
+    private StatRepository statRepository;
     @Mock
     private LabelRepository labelRepository;
     @Mock
     private MemberRepository memberRepository;
     @Mock
     private MilestoneRepository milestoneRepository;
+    @Mock
+    private CommentRepository commentRepository;
 
     @DisplayName("레포지토리에서 열린 이슈 관련 정보들을 받고 FilterInformation으로 변환할 수 있다.")
     @Test
     void transformOpenIssuesVO() {
         //given
         given(statRepository.countOverallStats()).willReturn(createDummyStatVO());
-        given(issueRepository.findOpenIssues()).willReturn((createDummyOpenIssueVOs()));
+        given(issueSearchRepository.findBySearchFilter(any())).willReturn(createDummyOpenIssueVOs());
         given(labelRepository.findAllByIssueIds(any())).willReturn(createDummyLabelVOs());
         given(memberRepository.findAllProfilesByIssueIds(any())).willReturn(createDummyAssigneeProfiles());
 
         //when
-        FilterInformation actual = issueService.readOpenIssues();
+        SearchInformation actual = issueService.findIssuesBySearchFilter("is:open");
 
         //then
         assertSoftly(assertions -> {
             assertions.assertThat(actual.getOpenIssueCount()).isEqualTo(3);
             assertions.assertThat(actual.getLabelCount()).isEqualTo(4);
+            assertions.assertThat((actual.getFilter())).isEqualTo("is:open");
             assertions.assertThat(actual.getIssueInformations()).hasSize(5);
             assertions.assertThat(actual.getIssueInformations().get(3).getAuthor())
                     .isEqualTo("작성자 1");
@@ -79,17 +85,18 @@ class IssueServiceTest {
     void transformClosedIssuesVO() {
         //given
         given(statRepository.countOverallStats()).willReturn(createDummyStatVO());
-        given(issueRepository.findClosedIssues()).willReturn((createDummyClosedIssueVOs()));
+        given(issueSearchRepository.findBySearchFilter(any())).willReturn((createDummyClosedIssueVOs()));
         given(labelRepository.findAllByIssueIds(any())).willReturn(createDummyLabelVOs());
         given(memberRepository.findAllProfilesByIssueIds(any())).willReturn(createDummyAssigneeProfiles());
 
         //when
-        FilterInformation actual = issueService.readClosedIssues();
+        SearchInformation actual = issueService.findIssuesBySearchFilter("is:closed");
 
         //then
         assertSoftly(assertions -> {
             assertions.assertThat(actual.getClosedIssueCount()).isEqualTo(3);
             assertions.assertThat(actual.getMilestoneCount()).isEqualTo(2);
+            assertions.assertThat((actual.getFilter())).isEqualTo("is:closed");
             assertions.assertThat(actual.getIssueInformations()).hasSize(5);
             assertions.assertThat(actual.getIssueInformations().get(0).getMilestone())
                     .isEqualTo("마일스톤 1");
@@ -100,120 +107,104 @@ class IssueServiceTest {
         });
     }
 
-    @DisplayName("레포지토리에서 메인 페이지의 필터 정보를 받아 FilterListInformation으로 변환할 수 있다.")
+    @DisplayName("레포지토리들에서 받은 이슈 상세에 대한 정보를 IssueDetailInformation으로 변환한다.")
     @Test
-    void transformFilterVO() {
-        //given
-        given(memberRepository.findAllFilters()).willReturn(createDummyMemberDetailsVOs());
-        given(labelRepository.findAllFilters()).willReturn(createDummyLabelDetailsVOs());
-        given(milestoneRepository.findAllFilters()).willReturn(createDummyMilestoneDetailVOs());
+    void transformToIssueDetailInformation() {
+        given(issueRepository.findByIssueId(5L)).willReturn(createDummyIssueDetailResult());
+        given(memberRepository.findAllProfilesByIssueId(5L)).willReturn(createDummyAssigneeProfileList());
+        given(statRepository.countCommentStatsByIssueId(5L)).willReturn(4);
+        given(labelRepository.findAllByIssueId(5L)).willReturn(createDummyLabelVOList());
+        given(milestoneRepository.getMilestoneByIssueId(5L)).willReturn(createDummyMilestoneVO());
+        given(commentRepository.findByIssueId(5L)).willReturn(createDummyCommentResults());
+        Long issueId = 5L;
 
         //when
-        FilterListInformation actual = issueService.readFilters();
+        IssueDetailInformation actual = issueService.getIssueDetailByIssueId(issueId);
 
         //then
         assertSoftly(assertions -> {
-            assertions.assertThat(actual.getAssigneeFilterInformations()).hasSize(4);
-            assertions.assertThat(actual.getAuthorFilterInformations()).hasSize(3);
-            assertions.assertThat(actual.getAuthorFilterInformations().get(0).getName())
-                    .isEqualTo("ati");
-            assertions.assertThat(actual.getLabelFilterInformations()).hasSize(3);
-            assertions.assertThat(actual.getLabelFilterInformations().get(0).getId())
-                    .isEqualTo(3L);
-            assertions.assertThat(actual.getMilestoneFilterInformations()).hasSize(2);
+            assertions.assertThat(actual.getCommentCount()).isEqualTo(4);
+            assertions.assertThat(actual.getAuthor()).isEqualTo("작성자");
+            assertions.assertThat(actual.getAssigneeProfiles()).hasSize(2);
+            assertions.assertThat(actual.getLabelInformations().get(1).getTextColor()).isEqualTo("textColor2");
+            assertions.assertThat(actual.getMilestoneInformation().getOpenIssueCount()).isEqualTo(1);
+            assertions.assertThat(actual.getCommentInformations().get(3).getAuthorId()).isEqualTo(8);
         });
     }
 
-    @DisplayName("레포지토리에서 이슈 페이지의 필터 정보를 받아 FilterListInformation으로 변환할 수 있다.")
-    @Test
-    void transformFiltersFromIssue() {
-        //given
-        given(memberRepository.findAllFilters()).willReturn(createDummyMemberDetailsVOs());
-        given(labelRepository.findAllFilters()).willReturn(createDummyLabelDetailsVOs());
-        given(milestoneRepository.findAllFilters()).willReturn(createDummyMilestoneDetailVOs());
-        given(statRepository.findIssuesCountByMilestoneIds(any())).willReturn(createDummyIssueByMilestoneVOs());
-
-        //when
-        FilterListInformation actual = issueService.readFiltersFromIssue();
-
-        //then
-        assertSoftly(assertions -> {
-            assertions.assertThat(actual.getAssigneeFilterInformations()).hasSize(3);
-            assertions.assertThat(actual.getAuthorFilterInformations()).isEmpty();
-            assertions.assertThat(actual.getLabelFilterInformations()).hasSize(3);
-            assertions.assertThat(actual.getMilestoneFilterInformations()).hasSize(2);
-            assertions.assertThat(actual.getMilestoneFilterInformations().get(0).getId())
-                    .isEqualTo(0L);
-            assertions.assertThat(actual.getMilestoneFilterInformations().get(0).getOpenIssueCount())
-                    .isEqualTo(1);
-            assertions.assertThat(actual.getMilestoneFilterInformations().get(1).getId())
-                    .isEqualTo(1L);
-        });
+    private IssueDetailResult createDummyIssueDetailResult() {
+        return IssueDetailResult.builder()
+                .id(5L)
+                .author("작성자")
+                .title("제목")
+                .isOpen(true)
+                .createdAt(LocalDateTime.of(2000, 1, 1, 1, 1))
+                .build();
     }
 
-    private Map<Long, IssueByMilestoneVO> createDummyIssueByMilestoneVOs() {
-        IssueByMilestoneVO tmp1 = IssueByMilestoneVO.builder()
+    private List<String> createDummyAssigneeProfileList() {
+        return List.of("profile 1", "profile 2");
+    }
+
+    private List<LabelVO> createDummyLabelVOList() {
+        LabelVO labelVO1 = LabelVO.builder()
+                .name("라벨1")
+                .textColor("textColor1")
+                .backgroundColor("backgroundColor1")
+                .build();
+        LabelVO labelVO2 = LabelVO.builder()
+                .name("라벨2")
+                .textColor("textColor2")
+                .backgroundColor("backgroundColor2")
+                .build();
+        LabelVO labelVO3 = LabelVO.builder()
+                .name("라벨3")
+                .textColor("textColor3")
+                .backgroundColor("backgroundColor3")
+                .build();
+
+        return List.of(labelVO1, labelVO2, labelVO3);
+    }
+
+    private MilestoneVO createDummyMilestoneVO() {
+        return MilestoneVO.builder()
+                .name("마일스톤")
                 .openIssueCount(1)
                 .closedIssueCount(2)
                 .build();
-        IssueByMilestoneVO tmp2 = IssueByMilestoneVO.builder()
-                .openIssueCount(3)
-                .closedIssueCount(4)
-                .build();
-        return Map.of(0L, tmp1, 1L, tmp2);
     }
 
-    private List<MemberDetailsVO> createDummyMemberDetailsVOs() {
-        MemberDetailsVO tmp1 = MemberDetailsVO.builder()
+    private List<CommentResult> createDummyCommentResults() {
+        CommentResult commentResult1 = CommentResult.builder()
+                .id(1L)
+                .authorId(2L)
+                .authorName("작성자1")
+                .contents("내용1")
+                .createdAt(LocalDateTime.now())
+                .build();
+        CommentResult commentResult2 = CommentResult.builder()
                 .id(3L)
-                .name("ati")
-                .profile("1234")
+                .authorId(4L)
+                .authorName("작성자2")
+                .contents("내용2")
+                .createdAt(LocalDateTime.now())
                 .build();
-        MemberDetailsVO tmp2 = MemberDetailsVO.builder()
-                .id(2L)
-                .name("joy")
-                .profile("1234")
+        CommentResult commentResult3 = CommentResult.builder()
+                .id(5L)
+                .authorId(6L)
+                .authorName("작성자3")
+                .contents("내용3")
+                .createdAt(LocalDateTime.now())
                 .build();
-        MemberDetailsVO tmp3 = MemberDetailsVO.builder()
-                .id(1L)
-                .name("nag")
-                .profile("1234")
+        CommentResult commentResult4 = CommentResult.builder()
+                .id(7L)
+                .authorId(8L)
+                .authorName("작성자4")
+                .contents("내용4")
+                .createdAt(LocalDateTime.now())
                 .build();
-        return List.of(tmp1, tmp2, tmp3);
-    }
 
-    private List<LabelDetailsVO> createDummyLabelDetailsVOs() {
-        LabelDetailsVO tmp1 = LabelDetailsVO.builder()
-                .id(3L)
-                .name("tmp1")
-                .backgroundColor("#")
-                .textColor("##")
-                .build();
-        LabelDetailsVO tmp2 = LabelDetailsVO.builder()
-                .id(2L)
-                .name("tmp2")
-                .backgroundColor("#")
-                .textColor("##")
-                .build();
-        LabelDetailsVO tmp3 = LabelDetailsVO.builder()
-                .id(1L)
-                .name("tmp3")
-                .backgroundColor("#")
-                .textColor("##")
-                .build();
-        return List.of(tmp1, tmp2, tmp3);
-    }
-
-    private List<MilestoneDetailsVO> createDummyMilestoneDetailVOs() {
-        MilestoneDetailsVO tmp1 = MilestoneDetailsVO.builder()
-                .id(0L)
-                .name("tmp1")
-                .build();
-        MilestoneDetailsVO tmp2 = MilestoneDetailsVO.builder()
-                .id(1L)
-                .name("tmp2")
-                .build();
-        return List.of(tmp1, tmp2);
+        return List.of(commentResult1, commentResult2, commentResult3, commentResult4);
     }
 
     private StatVO createDummyStatVO() {
@@ -225,36 +216,36 @@ class IssueServiceTest {
                 .build();
     }
 
-    private List<IssueVO> createDummyOpenIssueVOs() {
-        IssueVO issueVO1 = IssueVO.builder()
+    private List<IssueSearchResult> createDummyOpenIssueVOs() {
+        IssueSearchResult issueSearchResult1 = IssueSearchResult.builder()
                 .id(1L)
                 .author("작성자 1")
                 .milestone("마일스톤 1")
                 .title("제목 1")
                 .createdAt(LocalDateTime.now())
                 .build();
-        IssueVO issueVO2 = IssueVO.builder()
+        IssueSearchResult issueSearchResult2 = IssueSearchResult.builder()
                 .id(2L)
                 .author("작성자 2")
                 .milestone("마일스톤 2")
                 .title("제목 2")
                 .createdAt(LocalDateTime.now())
                 .build();
-        IssueVO issueVO3 = IssueVO.builder()
+        IssueSearchResult issueSearchResult3 = IssueSearchResult.builder()
                 .id(3L)
                 .author("작성자 1")
                 .milestone("마일스톤 2")
                 .title("제목 3")
                 .createdAt(LocalDateTime.now())
                 .build();
-        IssueVO issueVO4 = IssueVO.builder()
+        IssueSearchResult issueSearchResult4 = IssueSearchResult.builder()
                 .id(4L)
                 .author("작성자 1")
                 .milestone("마일스톤 2")
                 .title("제목 4")
                 .createdAt(LocalDateTime.now())
                 .build();
-        IssueVO issueVO5 = IssueVO.builder()
+        IssueSearchResult issueSearchResult5 = IssueSearchResult.builder()
                 .id(5L)
                 .author("작성자 2")
                 .milestone("마일스톤 1")
@@ -262,39 +253,39 @@ class IssueServiceTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return List.of(issueVO1, issueVO2, issueVO3, issueVO4, issueVO5);
+        return List.of(issueSearchResult1, issueSearchResult2, issueSearchResult3, issueSearchResult4, issueSearchResult5);
     }
 
-    private List<IssueVO> createDummyClosedIssueVOs() {
-        IssueVO issueVO1 = IssueVO.builder()
+    private List<IssueSearchResult> createDummyClosedIssueVOs() {
+        IssueSearchResult issueSearchResult1 = IssueSearchResult.builder()
                 .id(1L)
                 .author("작성자 1")
                 .milestone("마일스톤 1")
                 .title("제목 1")
                 .createdAt(LocalDateTime.now())
                 .build();
-        IssueVO issueVO2 = IssueVO.builder()
+        IssueSearchResult issueSearchResult2 = IssueSearchResult.builder()
                 .id(2L)
                 .author("작성자 2")
                 .milestone("마일스톤 2")
                 .title("제목 2")
                 .createdAt(LocalDateTime.now())
                 .build();
-        IssueVO issueVO3 = IssueVO.builder()
+        IssueSearchResult issueSearchResult3 = IssueSearchResult.builder()
                 .id(3L)
                 .author("작성자 1")
                 .milestone("마일스톤 2")
                 .title("제목 3")
                 .createdAt(LocalDateTime.now())
                 .build();
-        IssueVO issueVO4 = IssueVO.builder()
+        IssueSearchResult issueSearchResult4 = IssueSearchResult.builder()
                 .id(4L)
                 .author("작성자 1")
                 .milestone("마일스톤 2")
                 .title("제목 4")
                 .createdAt(LocalDateTime.now())
                 .build();
-        IssueVO issueVO5 = IssueVO.builder()
+        IssueSearchResult issueSearchResult5 = IssueSearchResult.builder()
                 .id(5L)
                 .author("작성자 2")
                 .milestone("마일스톤 1")
@@ -302,7 +293,7 @@ class IssueServiceTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return List.of(issueVO1, issueVO2, issueVO3, issueVO4, issueVO5);
+        return List.of(issueSearchResult1, issueSearchResult2, issueSearchResult3, issueSearchResult4, issueSearchResult5);
     }
 
     private Map<Long, List<LabelVO>> createDummyLabelVOs() {

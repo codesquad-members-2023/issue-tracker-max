@@ -1,6 +1,7 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller.request;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.condition.IssueUpdateCondition;
+import javax.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class IssueUpdateRequest {
 
+    @NotEmpty
     private String title;
     private List<Long> assignees;
     private List<Long> labels;

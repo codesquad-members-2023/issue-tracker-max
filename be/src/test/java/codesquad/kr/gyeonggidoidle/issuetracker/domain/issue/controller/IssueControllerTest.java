@@ -1,9 +1,13 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.controller;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.ControllerTest;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.comment.service.information.CommentInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.IssueService;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.*;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueDetailInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.IssueInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.issue.service.information.SearchInformation;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.label.service.information.LabelInformation;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.service.information.MilestoneInformation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -33,10 +38,10 @@ class IssueControllerTest {
     @Test
     void readOpenIssues() throws Exception {
         //given
-        given(issueService.readOpenIssues()).willReturn(createDummyFilterInformation());
+        given(issueService.findIssuesBySearchFilter(anyString())).willReturn(createDummyFilterInformation());
 
         //when
-        ResultActions resultActions = mockMvc.perform(get("/api/issues/open"));
+        ResultActions resultActions = mockMvc.perform(get("/api/issues?q=is%3Aopen"));
 
         //then
         resultActions
@@ -54,10 +59,10 @@ class IssueControllerTest {
     @Test
     void readClosedIssues() throws Exception {
         //given
-        given(issueService.readClosedIssues()).willReturn(createDummyFilterInformation());
+        given(issueService.findIssuesBySearchFilter(anyString())).willReturn(createDummyFilterInformation());
 
         //when
-        ResultActions resultActions = mockMvc.perform(get("/api/issues/closed"));
+        ResultActions resultActions = mockMvc.perform(get("/api/issues?q=is%3Aclosed"));
 
         //then
         resultActions
@@ -71,114 +76,88 @@ class IssueControllerTest {
                 );
     }
 
-    @DisplayName("메인 화면의 필터 내용을 담은 FilterListInformation을 FilterListResponse으로 변환한다.")
+    @DisplayName("IssueDetailInformation을 IssueDetailResponse로 변환한다.")
     @Test
-    void readFilters() throws Exception {
+    void transformIssueDetailInformationToIssueDetailResponse() throws Exception {
         //given
-        given(issueService.readFilters()).willReturn(createDummyFilterListInformation());
+        Long issueId = 5L;
+        given(issueService.getIssueDetailByIssueId(5L)).willReturn(createDummyIssueDetailInformation());
 
         //when
-        ResultActions resultActions = mockMvc.perform(get("/api/filters"));
+        ResultActions resultActions = mockMvc.perform(get("/api/issues/5"));
 
         //then
         resultActions
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.assignees.length()").value(3),
-                        jsonPath("$.authors.length()").value(2),
-                        jsonPath("$.authors.[0].name").value("a"),
-                        jsonPath("$.labels.length()").value(1),
-                        jsonPath("$.milestones.length()").value(0)
+                        jsonPath("$.author").value("작성자"),
+                        jsonPath("$.assigneeProfiles.size()").value(2),
+                        jsonPath("$.isOpen").value(true),
+                        jsonPath("$.labels.size()").value(5),
+                        jsonPath("$.labels.[3].backgroundColor").value("배경색 4"),
+                        jsonPath("$.milestone.closedIssueCount").value(2),
+                        jsonPath("$.comments.[1].contents").value("내용2")
                 );
     }
 
-    @DisplayName("이슈 화면의 필터 내용을 담은 FilterListInformation을 FilterListResponse으로 변환한다.")
-    @Test
-    void readFiltersFromIssue() throws Exception {
-        //given
-        given(issueService.readFiltersFromIssue()).willReturn(createDummyFilterListInformationByIssue());
-
-        //when
-        ResultActions resultActions = mockMvc.perform(get("/api/issues"));
-
-        //then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpectAll(
-                        jsonPath("$.assignees.length()").value(3),
-                        jsonPath("$.authors.length()").value(0),
-                        jsonPath("$.labels.length()").value(1),
-                        jsonPath("$.milestones.length()").value(0)
-                );
-    }
-
-    private FilterListInformation createDummyFilterListInformation() {
-        return FilterListInformation.builder()
-                .assigneeFilterInformations(createDummyAssigneeFilterInformations())
-                .authorFilterInformations(createDummyAuthorFilterInformations())
-                .labelFilterInformations(createDummyLabelFilterInformations())
-                .milestoneFilterInformations(createDummyMilestoneFilterInformations())
+    private IssueDetailInformation createDummyIssueDetailInformation() {
+        return IssueDetailInformation.builder()
+                .id(5L)
+                .author("작성자")
+                .title("제목")
+                .isOpen(true)
+                .createdAt(LocalDateTime.now())
+                .assigneeProfiles(List.of("프로필1", "프로필2"))
+                .commentCount(1)
+                .labelInformations(createDummyLabelInformations())
+                .milestoneInformation(createDummyMilestoneInformation())
+                .commentInformations(createDummyCommentInformations())
                 .build();
     }
 
-    private FilterListInformation createDummyFilterListInformationByIssue() {
-        return FilterListInformation.builder()
-                .assigneeFilterInformations(createDummyAssigneeFilterInformations())
-                .authorFilterInformations(Collections.emptyList())
-                .labelFilterInformations(createDummyLabelFilterInformations())
-                .milestoneFilterInformations(createDummyMilestoneFilterInformations())
+    private MilestoneInformation createDummyMilestoneInformation() {
+        return MilestoneInformation.builder()
+                .name("마일스톤")
+                .openIssueCount(1)
+                .closedIssueCount(2)
                 .build();
     }
 
-    private List<AssigneeFilterInformation> createDummyAssigneeFilterInformations() {
-        AssigneeFilterInformation tmp1 = AssigneeFilterInformation.builder()
-                .id(0L)
-                .name("담당자가 없는 이슈")
-                .profile("")
-                .build();
-        AssigneeFilterInformation tmp2 = AssigneeFilterInformation.builder()
+    private List<CommentInformation> createDummyCommentInformations() {
+        CommentInformation commentInformation1 = CommentInformation.builder()
                 .id(1L)
-                .name("a")
-                .profile("aa")
+                .authorId(2L)
+                .authorName("작성자1")
+                .contents("내용1")
+                .createdAt(LocalDateTime.now())
                 .build();
-        AssigneeFilterInformation tmp3 = AssigneeFilterInformation.builder()
-                .id(2L)
-                .name("b")
-                .profile("bb")
+        CommentInformation commentInformation2 = CommentInformation.builder()
+                .id(3L)
+                .authorId(4L)
+                .authorName("작성자2")
+                .contents("내용2")
+                .createdAt(LocalDateTime.now())
                 .build();
-        return List.of(tmp1, tmp2, tmp3);
+        CommentInformation commentInformation3 = CommentInformation.builder()
+                .id(5L)
+                .authorId(6L)
+                .authorName("작성자3")
+                .contents("내용3")
+                .createdAt(LocalDateTime.now())
+                .build();
+        CommentInformation commentInformation4 = CommentInformation.builder()
+                .id(7L)
+                .authorId(8L)
+                .authorName("작성자4")
+                .contents("내용4")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        return List.of(commentInformation1, commentInformation2, commentInformation3, commentInformation4);
     }
 
-    private List<AuthorFilterInformation> createDummyAuthorFilterInformations() {
-        AuthorFilterInformation tmp1 = AuthorFilterInformation.builder()
-                .id(1L)
-                .name("a")
-                .profile("aa")
-                .build();
-        AuthorFilterInformation tmp2 = AuthorFilterInformation.builder()
-                .id(2L)
-                .name("b")
-                .profile("bb")
-                .build();
-        return List.of(tmp1, tmp2);
-    }
-
-    private List<LabelFilterInformation> createDummyLabelFilterInformations() {
-        LabelFilterInformation tmp1 = LabelFilterInformation.builder()
-                .id(1L)
-                .name("label")
-                .backgroundColor("#FF")
-                .textColor("color")
-                .build();
-        return List.of(tmp1);
-    }
-
-    private List<MilestoneFilterInformation> createDummyMilestoneFilterInformations() {
-        return List.of();
-    }
-
-    private FilterInformation createDummyFilterInformation() {
-        return FilterInformation.builder()
+    private SearchInformation createDummyFilterInformation() {
+        return SearchInformation.builder()
                 .openIssueCount(3)
                 .closedIssueCount(3)
                 .milestoneCount(2)

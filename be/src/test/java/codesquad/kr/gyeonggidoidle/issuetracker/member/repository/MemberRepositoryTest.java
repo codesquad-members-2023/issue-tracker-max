@@ -43,7 +43,7 @@ class MemberRepositoryTest {
     @Test
     void findAllFilters() {
         //when
-        List<MemberDetailsVO> actual = repository.findAllFilters();
+        List<MemberDetailsVO> actual = repository.getMemberFilter();
 
         //then
         assertSoftly(assertions -> {

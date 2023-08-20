@@ -2,28 +2,25 @@ package codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.Member;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.vo.MemberDetailsVO;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
-
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
 public class MemberRepository {
 
     private final NamedParameterJdbcTemplate template;
-
 
     public Map<Long, List<String>> findAllProfilesByIssueIds(List<Long> issueIds) {
         return issueIds.stream()
@@ -54,6 +51,15 @@ public class MemberRepository {
         addIssueAssignees(issueId, assigneeIds);
     }
 
+    public String findProfileById(Long memberId) {
+        String sql = "SELECT profile FROM member WHERE id = :memberId";
+        try {
+            return template.queryForObject(sql, Map.of("memberId", memberId), String.class);
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
     private SqlParameterSource[] generateParameters(Long issueId, List<Long> assigneeIds) {
         return assigneeIds.stream()
                 .map(assigneeId -> generateParameter(issueId, assigneeId))
@@ -66,7 +72,7 @@ public class MemberRepository {
                 .addValue("assignee_id", assigneeId);
     }
 
-    public List<MemberDetailsVO> findAllFilters() {
+    public List<MemberDetailsVO> getMemberFilter() {
         String sql = "SELECT id, name, profile " +
                 "FROM member " +
                 "ORDER BY name";
@@ -82,14 +88,16 @@ public class MemberRepository {
         }
     }
 
-    public void saveMember(Member member) {
+    public Long saveMember(Member member) {
         String sql = "INSERT INTO member(name, email, password, profile) VALUES(:name, :email, :password, :profile) ";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", member.getName())
                 .addValue("email", member.getEmail())
                 .addValue("password", member.getPassword())
                 .addValue("profile", member.getProfile());
-        template.update(sql, params);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        template.update(sql, params, keyHolder, new String[]{"id"});
+        return keyHolder.getKey().longValue();
     }
 
     private final RowMapper<MemberDetailsVO> memberDetailsVORowMapper() {

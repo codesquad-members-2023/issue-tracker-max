@@ -37,7 +37,7 @@ class MilestoneServiceTest {
         //given
         given(statRepository.countMilestoneStats()).willReturn(createDummyMilestoneStatVO());
         given(milestoneRepository.findOpenMilestones()).willReturn(createDummyMilestoneDetailsVOs());
-        given(statRepository.findIssuesCountByMilestoneIds(any())).willReturn(createDummyIssueByMilestoneVOs());
+        given(statRepository.countIssuesByMilestoneIds(any())).willReturn(createDummyIssueByMilestoneVOs());
 
         //when
         MilestonePageInformation actual = milestoneService.readOpenMilestonePage();

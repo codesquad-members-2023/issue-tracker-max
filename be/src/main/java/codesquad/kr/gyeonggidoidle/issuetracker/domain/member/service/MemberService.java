@@ -1,6 +1,6 @@
 package codesquad.kr.gyeonggidoidle.issuetracker.domain.member.service;
 
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.service.condition.SignUpCondition;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.auth.service.condition.SignUpCondition;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.Member;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.member.repository.MemberRepository;
 import codesquad.kr.gyeonggidoidle.issuetracker.exception.MemberDuplicationException;

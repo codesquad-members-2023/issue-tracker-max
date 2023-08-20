@@ -8,8 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import codesquad.kr.gyeonggidoidle.issuetracker.annotation.IntegrationTest;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.Jwt;
-import codesquad.kr.gyeonggidoidle.issuetracker.domain.jwt.entity.JwtProvider;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.auth.entity.Jwt;
+import codesquad.kr.gyeonggidoidle.issuetracker.domain.auth.entity.JwtProvider;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller.request.MilestoneRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller.request.MilestoneStatusRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;

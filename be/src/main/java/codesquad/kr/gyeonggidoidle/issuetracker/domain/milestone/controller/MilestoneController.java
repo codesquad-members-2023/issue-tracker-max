@@ -5,6 +5,7 @@ import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller.requ
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller.request.MilestoneStatusRequest;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.controller.response.MilestonePageResponse;
 import codesquad.kr.gyeonggidoidle.issuetracker.domain.milestone.service.MilestoneService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +39,7 @@ public class MilestoneController {
         return ApiResponse.success(HttpStatus.OK);
     }
     @PutMapping("/api/milestones/{milestoneId}")
-    public ApiResponse update(@PathVariable Long milestoneId, @RequestBody MilestoneRequest request) {
+    public ApiResponse update(@PathVariable Long milestoneId, @RequestBody @Valid MilestoneRequest request) {
         milestoneService.update(MilestoneRequest.to(milestoneId, request));
         return ApiResponse.success(HttpStatus.OK);
     }
@@ -50,7 +51,7 @@ public class MilestoneController {
     }
 
     @PatchMapping("/api/milestones/{milestoneId}")
-    public ApiResponse updateStatus(@PathVariable Long milestoneId, @RequestBody MilestoneStatusRequest request) {
+    public ApiResponse updateStatus(@PathVariable Long milestoneId, @RequestBody @Valid MilestoneStatusRequest request) {
         milestoneService.updateStatus(milestoneId, request.isOpen());
         return ApiResponse.success(HttpStatus.OK);
     }
