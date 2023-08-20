@@ -26,6 +26,10 @@ export default function TabBar({
   const isLeftSelected = selectedTab === left.name;
   const hasOutline = borderStyle === "outline";
 
+  if (currentTabName !== selectedTab) {
+    setSelectedTab(currentTabName);
+  }
+
   const onLeftClick = () => {
     setSelectedTab(left.name);
     left.callback?.();
