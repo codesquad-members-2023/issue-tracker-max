@@ -3,8 +3,10 @@ package codesquard.app.api.errors.errorcode;
 import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public enum LoginErrorCode implements ErrorCode {
 
 	NOT_MATCH_LOGIN(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 일치하지 않습니다."),

@@ -6,6 +6,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +24,7 @@ import codesquard.app.api.errors.handler.GlobalExceptionHandler;
 import codesquard.app.authenticate_user.entity.AuthenticateUser;
 import codesquard.app.authenticate_user.service.response.AuthenticateUserLoginServiceResponse;
 import codesquard.app.jwt.Jwt;
+import codesquard.app.jwt.filter.JwtBasicUserFilter;
 import codesquard.app.jwt.filter.VerifyUserFilter;
 import codesquard.app.user.controller.request.UserLoginRequest;
 import codesquard.app.user.service.request.UserLoginServiceRequest;
@@ -34,6 +38,7 @@ class UserLoginRestControllerTest extends ControllerTestSupport {
 		mockMvc = MockMvcBuilders.standaloneSetup()
 			.setControllerAdvice(new GlobalExceptionHandler())
 			.addFilter(new VerifyUserFilter(objectMapper, userQueryService))
+			.addFilter(new JwtBasicUserFilter(authenticateUserService, objectMapper))
 			.build();
 	}
 
@@ -43,13 +48,16 @@ class UserLoginRestControllerTest extends ControllerTestSupport {
 		// given
 		UserLoginRequest userLoginRequest = new UserLoginRequest("hong1234", "hong1234");
 		AuthenticateUser mockAuthenticateUser = new AuthenticateUser(1L, "hong1234", "hong1234@gmail.com", null);
-		Jwt jwt = new Jwt("accessToken", "refreshToken");
+		AuthenticateUser authenticateUser = new AuthenticateUser(1L, "hong1234", "hong1234@gmail.com", null);
+		Map<String, Object> claims = new HashMap<>();
+		claims.put(VerifyUserFilter.AUTHENTICATE_USER, objectMapper.writeValueAsString(authenticateUser));
+		Jwt jwt = jwtProvider.createJwt(claims);
 		AuthenticateUserLoginServiceResponse mockAuthenticateUserLoginServiceResponse = new AuthenticateUserLoginServiceResponse(
 			mockAuthenticateUser, jwt);
 		// mocking
 		when(userQueryService.verifyUser(Mockito.any(UserLoginServiceRequest.class))).thenReturn(mockAuthenticateUser);
-		when(authenticateUserService.login(Mockito.any(AuthenticateUser.class))).thenReturn(
-			mockAuthenticateUserLoginServiceResponse);
+		when(authenticateUserService.login(Mockito.any(AuthenticateUser.class)))
+			.thenReturn(mockAuthenticateUserLoginServiceResponse);
 		// when & then
 		mockMvc.perform(post("/api/login")
 				.content(objectMapper.writeValueAsString(userLoginRequest))

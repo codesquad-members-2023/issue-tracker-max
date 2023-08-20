@@ -89,10 +89,8 @@ export function Auth() {
 
   const submit = () => {
     if (isSignUp) {
-      console.log("회원가입", loginId, password, passwordConfirm, email);
       signUp();
     } else {
-      console.log("로그인", loginId, password);
       login();
     }
   };
@@ -146,6 +144,13 @@ export function Auth() {
     }
   };
 
+  const oauthLogin = () => {
+    const loginURL =
+      "https://github.com/login/oauth/authorize?client_id=3fe3bba8b880698babf0&scope=login";
+
+    window.location.assign(loginURL);
+  };
+
   return (
     <Div>
       <AuthWrapper>
@@ -153,10 +158,13 @@ export function Auth() {
           <Icon name="LogoLarge" color="neutralTextStrong" />
         </Anchor>
         <AuthPanel>
-          <Button size="L" buttonType="Outline" flexible="Flexible">
-            <ButtonText>
-              GitHub 계정으로 {isSignUp ? "회원가입" : "로그인"}
-            </ButtonText>
+          <Button
+            size="L"
+            buttonType="Outline"
+            flexible="Flexible"
+            onClick={oauthLogin}
+          >
+            <ButtonText>GitHub 계정으로 로그인</ButtonText>
           </Button>
           <div>or</div>
           <TextInput

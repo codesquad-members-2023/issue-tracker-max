@@ -11,4 +11,5 @@ public abstract class ResponseMessage {
 	public static final String USER_SIGNUP_SUCCESS = "회원가입에 성공하였습니다.";
 	public static final String USER_LOGIN_SUCCESS = "로그인에 성공하였습니다.";
 	public static final String REFRESHTOKEN_UPDATE_SUCCESS = "Refreshtoken이 성공적으로 갱신되었습니다.";
+	public static final String LOGOUT_SUCCESS = "로그아웃이 완료되었습니다.";
 }

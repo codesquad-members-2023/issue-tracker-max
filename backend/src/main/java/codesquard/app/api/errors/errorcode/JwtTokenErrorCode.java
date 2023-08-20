@@ -3,8 +3,10 @@ package codesquard.app.api.errors.errorcode;
 import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public enum JwtTokenErrorCode implements ErrorCode {
 
 	NOT_MATCH_REFRESHTOKEN(HttpStatus.BAD_REQUEST, "Refreshtoken이 일치하지 않습니다."),

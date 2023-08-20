@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Button } from "../../components/Button";
 import { TextInput } from "../../components/TextInput";
+import { getAccessToken } from "../../utils/localStorage";
 import { MilestoneData } from "./Milestone";
 
 type MilestoneEditorProps = {
@@ -34,7 +35,7 @@ export function MilestoneEditor({
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   useEffect(() => {
-    if (deadline === "") {
+    if (!deadline) {
       setIsValidDeadline(true);
     } else {
       const regex = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
@@ -71,7 +72,7 @@ export function MilestoneEditor({
   ) => {
     const value = event.target.value;
 
-    setMilestoneName(value.trim());
+    setMilestoneName(value);
   };
 
   const onChangeDeadline = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,22 +93,24 @@ export function MilestoneEditor({
   const onChangeDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
 
-    setDescription(value.trim());
+    setDescription(value);
   };
 
   const submit = async () => {
     const method = type === "add" ? "POST" : "PUT";
     const path = type === "add" ? "" : `/${milestone.id}`;
     const obj = {
-      name: milestoneName,
-      description: description,
+      name: milestoneName.trim(),
+      description: description.trim(),
       deadline: deadline,
     };
 
     await fetch(`/api/milestones${path}`, {
       method: method,
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify(obj),
     });
@@ -126,7 +129,7 @@ export function MilestoneEditor({
               width={"100%"}
               size="S"
               label="이름"
-              value={milestoneName}
+              value={milestoneName || ""}
               fixLabel
               placeholder="마일스톤의 이름을 입력하세요."
               onChange={onChangeMilestoneName}
@@ -137,7 +140,7 @@ export function MilestoneEditor({
               width={"100%"}
               size="S"
               label="완료일(선택)"
-              value={deadline}
+              value={deadline || ""}
               fixLabel
               placeholder="YYYY-MM-DD"
               onChange={onChangeDeadline}
@@ -149,7 +152,7 @@ export function MilestoneEditor({
           width={"100%"}
           size="S"
           label="설명(선택)"
-          value={description}
+          value={description || ""}
           fixLabel
           placeholder="마일스톤에 대한 설명을 입력하세요"
           onChange={onChangeDescription}

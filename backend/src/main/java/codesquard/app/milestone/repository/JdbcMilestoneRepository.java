@@ -52,12 +52,13 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public Long countIssuesBy(final MilestoneStatus status) {
-		String sql = "SELECT COUNT(*) FROM `issue` " +
-			"WHERE `status` = :status";
+	public Long countIssuesBy(final Long milestoneId, final MilestoneStatus status) {
+		String sql = "SELECT COUNT(`milestone_id`) FROM `issue` " +
+			"WHERE `status` = :status AND `milestone_id` = :milestoneId AND `is_deleted` = FALSE";
 
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("status", status.getName());
+		paramMap.put("milestoneId", milestoneId);
 
 		return Optional.ofNullable(template.queryForObject(sql, paramMap, Long.class)).orElse(0L);
 	}
@@ -110,7 +111,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
-	public void updateBy(final Long milestoneId, final Milestone milestone) {
+	public Long updateBy(final Long milestoneId, final Milestone milestone) {
 		validateExistMilestone(milestoneId);
 
 		String sql = "UPDATE `milestone` " +
@@ -125,13 +126,14 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 
 		try {
 			template.update(sql, param);
+			return milestoneId;
 		} catch (DataIntegrityViolationException e) {
 			throw new DuplicateMilestoneException();
 		}
 	}
 
 	@Override
-	public void updateBy(final Long milestoneId, final MilestoneStatus status) {
+	public Long updateBy(final Long milestoneId, final MilestoneStatus status) {
 		validateExistMilestone(milestoneId);
 
 		String sql = "UPDATE `milestone` " +
@@ -143,16 +145,18 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 			.addValue("id", milestoneId);
 
 		template.update(sql, param);
+		return milestoneId;
 	}
 
 	@Override
-	public void deleteBy(final Long milestoneId) {
+	public Long deleteBy(final Long milestoneId) {
 		validateExistMilestone(milestoneId);
 
 		String sql = "DELETE FROM `milestone` "
 			+ "WHERE `id` = :id";
 
 		template.update(sql, Map.of("id", milestoneId));
+		return milestoneId;
 	}
 
 	@Override

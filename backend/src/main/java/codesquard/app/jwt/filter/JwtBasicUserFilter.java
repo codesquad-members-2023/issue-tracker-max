@@ -57,9 +57,8 @@ public class JwtBasicUserFilter implements Filter {
 			httpServletResponse.addHeader("Authorization", loginServiceResponse.createAccessTokenHeaderValue());
 			// 쿠키에 key=refreshToken, value=갱신토큰 값 저장
 			httpServletResponse.addCookie(loginServiceResponse.createRefreshTokenCookie());
-			ApiResponse<AuthenticateUserLoginResponse> apiResponse = new ApiResponse<>(OK,
-				ResponseMessage.USER_LOGIN_SUCCESS,
-				loginServiceResponse.toAuthenticateUserLoginResponse());
+			ApiResponse<AuthenticateUserLoginResponse> apiResponse = ApiResponse.of(OK,
+				ResponseMessage.USER_LOGIN_SUCCESS, loginServiceResponse.toAuthenticateUserLoginResponse());
 			String responseBody = objectMapper.writeValueAsString(apiResponse);
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");

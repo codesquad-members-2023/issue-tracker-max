@@ -27,8 +27,6 @@ public interface IssueRepository {
 
 	void saveIssueAssignee(Long issueId, List<Long> assignees);
 
-	void modifyStatus(String status, Long issueId, LocalDateTime now);
-
 	void modifyTitle(String toEntity, Long issueId, LocalDateTime now);
 
 	void modifyContent(String content, Long issueId, LocalDateTime now);
@@ -50,4 +48,8 @@ public interface IssueRepository {
 	Long countIssueByStatus(IssueStatus status);
 
 	List<IssueCommentsResponse> findCommentsBy(Long issueId, Long userId);
+
+	boolean isSameIssueAuthor(Long issueId, Long userId);
+
+	void modifyStatuses(String name, List<Long> issues, LocalDateTime now);
 }

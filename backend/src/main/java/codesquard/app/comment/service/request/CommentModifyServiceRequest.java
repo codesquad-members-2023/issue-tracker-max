@@ -15,6 +15,7 @@ public class CommentModifyServiceRequest {
 	private static final int MAX_LENGTH = 10000;
 
 	private Long id;
+	private Long userId;
 	private String content;
 
 	private void validateContentLength(String content) {
@@ -23,17 +24,21 @@ public class CommentModifyServiceRequest {
 		}
 	}
 
+	public Comment toEntity(LocalDateTime modifiedAt) {
+		validateContentLength(this.content);
+		return new Comment(id, content, modifiedAt);
+	}
+
 	public Long getId() {
 		return id;
 	}
 
-	public String getContent() {
-		return content;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public Comment toEntity(LocalDateTime modifiedAt) {
-		validateContentLength(this.content);
-		return new Comment(id, content, modifiedAt);
+	public String getContent() {
+		return content;
 	}
 
 }

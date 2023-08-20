@@ -16,7 +16,7 @@ public class MilestoneSaveRequest {
 	private String name;
 	@JsonProperty("deadline")
 	private LocalDate deadline;
-	@Size(min = 1, max = 10000, message = "내용은 1글자 이상, 10000글자 이하여야 합니다.")
+	@Size(max = 10000, message = "내용은 0글자 이상, 10000글자 이하여야 합니다.")
 	@JsonProperty("description")
 	private String description;
 
@@ -29,8 +29,8 @@ public class MilestoneSaveRequest {
 		this.description = description;
 	}
 
-	public static Milestone toEntity(final MilestoneSaveRequest milestoneSaveRequest) {
+	public static Milestone toEntity(final MilestoneSaveRequest milestoneSaveRequest, final Long userId) {
 		return new Milestone(milestoneSaveRequest.name, milestoneSaveRequest.description,
-			milestoneSaveRequest.deadline);
+			milestoneSaveRequest.deadline, userId);
 	}
 }

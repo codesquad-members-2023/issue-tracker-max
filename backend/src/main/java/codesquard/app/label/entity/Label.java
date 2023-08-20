@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 public class Label {
 	private Long id; // 등록번호
+	private Long userId; // 유저 번호
 	private String name; // 이름
 	private LabelColor color; // 글자색
 	private String background; // 배경색
@@ -31,6 +32,15 @@ public class Label {
 		this.color = LabelColor.chooseColor(color);
 		this.background = background;
 		this.description = description;
+	}
+
+	public Label(final String name, final String color, final String background, final String description,
+		final Long userId) {
+		this.name = name;
+		this.color = LabelColor.chooseColor(color);
+		this.background = background;
+		this.description = description;
+		this.userId = userId;
 	}
 
 	public static SqlParameterSource makeParam(final Label label) {
@@ -68,5 +78,9 @@ public class Label {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public Long getUserId() {
+		return userId;
 	}
 }

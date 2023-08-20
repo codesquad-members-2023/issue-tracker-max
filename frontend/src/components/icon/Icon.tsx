@@ -1,21 +1,10 @@
-import { DefaultTheme, styled, useTheme } from "styled-components";
-import { designSystem } from "../../constants/designSystem";
+import { styled, useTheme } from "styled-components";
+import { getColorCode } from "../../utils/getColorCode";
 import { fillTypeComponents, iconComponents } from "./SvgIcons";
+import { Color } from "../../types/colors";
 
 const DefaultIconColor = "neutralTextDefault";
 
-const getColor = (color: ThemeColorKeys | string, theme: DefaultTheme) => {
-  if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
-    return color;
-  }
-  return theme.color[color as ThemeColorKeys];
-};
-
-type DarkThemeColorKeys = keyof typeof designSystem.DARK.color;
-type LightThemeColorKeys = keyof typeof designSystem.LIGHT.color;
-type HexColorCode = `#${string}`;
-export type ThemeColorKeys = DarkThemeColorKeys | LightThemeColorKeys;
-export type IconColor = ThemeColorKeys | HexColorCode;
 export type IconType = {
   [K in keyof typeof iconComponents]: React.FC<React.SVGProps<SVGSVGElement>>;
 };
@@ -23,9 +12,13 @@ export type IconType = {
 export function Icon({
   name,
   color = DefaultIconColor,
+  pointer = true,
+  onClick,
 }: {
   name: keyof IconType;
-  color?: IconColor;
+  color?: Color;
+  pointer?: boolean;
+  onClick?: () => void;
 }) {
   const theme = useTheme();
 
@@ -36,10 +29,10 @@ export function Icon({
   }
 
   const isFillType = fillTypeComponents.includes(IconComponent);
-  const iconColor = getColor(color, theme);
+  const iconColor = getColorCode(color, theme);
 
   return (
-    <IconWrapper>
+    <IconWrapper $pointer={pointer} onClick={onClick}>
       <IconComponent
         fill={isFillType ? iconColor : "none"}
         stroke={isFillType ? "none" : iconColor}
@@ -48,7 +41,12 @@ export function Icon({
   );
 }
 
-const IconWrapper = styled.div`
+const IconWrapper = styled.div<{ $pointer: boolean }>`
   display: flex;
   align-items: center;
+
+  &:hover {
+    cursor: ${({ $pointer }) => ($pointer ? "pointer" : "default")};
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
 `;

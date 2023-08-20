@@ -66,6 +66,12 @@ public class JdbcUserReactionRepository implements UserReactionRepository {
 		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", id), Boolean.class));
 	}
 
+	@Override
+	public boolean isSameUserReactionAuthor(Long id, Long userId) {
+		String sql = "SELECT EXISTS (SELECT 1 FROM user_reaction WHERE id = :id AND user_id = :userId)";
+		return Boolean.TRUE.equals(template.queryForObject(sql, Map.of("id", id, "userId", userId), Boolean.class));
+	}
+
 	private MapSqlParameterSource saveIssueParamSource(Long reactionId, Long userId, Long issueId) {
 		return new MapSqlParameterSource()
 			.addValue("reactionId", reactionId)

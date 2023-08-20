@@ -1,37 +1,69 @@
 import {
   ChangeEvent,
+  ReactNode,
   TextareaHTMLAttributes,
   useEffect,
   useRef,
   useState,
 } from "react";
 import { keyframes, styled } from "styled-components";
+import { getAccessToken } from "../utils/localStorage";
 import { Button } from "./Button";
+import { MarkdownViewer } from "./MarkdownViewer";
 import { Icon } from "./icon/Icon";
 
 type TextAreaProps = {
   value?: string;
   label?: string;
-} & TextareaHTMLAttributes<HTMLTextAreaElement>;
+  width?: string | number;
+  height?: string | number;
+  children?: ReactNode;
+  isEditing?: boolean;
+  errorDescription?: string;
+  onChange?: (value: string) => void;
+  onTextAreaFocus?: () => void;
+} & Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange">;
 
 type TextAreaState = "Active" | "Enabled" | "Disabled";
 
 export function TextArea({
-  value = "",
+  value = ``,
   label,
+  width,
+  height,
+  children,
+  isEditing = false,
   disabled,
   placeholder,
   maxLength,
+  errorDescription,
   onChange,
+  onTextAreaFocus,
 }: TextAreaProps) {
   const [state, setState] = useState<TextAreaState>(
-    disabled ? "Disabled" : "Enabled",
+    disabled ? "Disabled" : isEditing ? "Active" : "Enabled",
   );
   const [inputValue, setInputValue] = useState(value);
   const [countHidden, setCountHidden] = useState(true);
-  const [uploadErrorMessage, setUploadErrorMessage] = useState("");
-  const textArea = useRef<HTMLTextAreaElement>(null);
-  const fileInput = useRef<HTMLInputElement>(null);
+  const componentRef = useRef<HTMLDivElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
+  useEffect(() => {
+    setState(disabled ? "Disabled" : isEditing ? "Active" : "Enabled");
+  }, [disabled, isEditing]);
+
+  useEffect(() => {
+    if (state === "Active" && textAreaRef.current) {
+      textAreaRef.current.selectionStart = textAreaRef.current.value.length;
+      textAreaRef.current.selectionStart = textAreaRef.current.value.length;
+      textAreaRef.current.focus();
+    }
+  }, [state]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -45,34 +77,26 @@ export function TextArea({
     return () => clearTimeout(timer);
   }, [countHidden]);
 
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-
-    if (uploadErrorMessage) {
-      timer = setTimeout(() => {
-        setUploadErrorMessage("");
-      }, 3000);
-    }
-
-    return () => clearTimeout(timer);
-  }, [uploadErrorMessage]);
-
   const onFocus = () => {
     setState("Active");
+    onTextAreaFocus?.();
   };
 
   const onBlur = () => {
+    if (isEditing) {
+      return;
+    }
     setState("Enabled");
   };
 
   const onTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
     setCountHidden(false);
-    onChange && onChange(e);
+    onChange?.(e.target.value);
   };
 
   const onFileInputClick = () => {
-    fileInput.current?.click();
+    fileInputRef.current?.click();
   };
 
   const onFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -81,9 +105,9 @@ export function TextArea({
     if (file && isImageTypeFile(file)) {
       const data = await fetchImageText(file);
 
-      setInputValue((i) => {
-        const start = textArea.current?.selectionStart;
-        const end = textArea.current?.selectionEnd;
+      const dataIntoTextArea = (i: string) => {
+        const start = textAreaRef.current?.selectionStart;
+        const end = textAreaRef.current?.selectionEnd;
 
         if (start === undefined || end === undefined) {
           return i;
@@ -93,9 +117,14 @@ export function TextArea({
         const textAfter = i.slice(end);
 
         return `${textBefore}![image](${data})${textAfter}`;
-      });
+      };
+
+      onFocus();
+      setInputValue(dataIntoTextArea);
+      setCountHidden(false);
+      onChange?.(dataIntoTextArea(inputValue));
     } else {
-      setUploadErrorMessage("이미지 파일만 업로드 가능합니다.");
+      alert("이미지 파일만 업로드 가능합니다.");
     }
 
     e.target.value = "";
@@ -122,80 +151,100 @@ export function TextArea({
     const formData = new FormData();
     formData.append("image", file as File);
 
-    try {
-      const response = await fetch(
-        "https://8e24d81e-0591-4cf2-8200-546f93981656.mock.pstmn.io/api/images",
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-      const data = await response.text();
+    const response = await fetch("/api/images", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+      body: formData,
+    });
+    const { code, message, data } = await response.json();
 
-      return data;
-    } catch (error) {
-      setUploadErrorMessage("이미지 업로드에 실패했습니다.");
-      throw new Error("이미지 업로드에 실패했습니다.");
+    if (code === 201) {
+      return data.url;
     }
+
+    alert(`[이미지 저장 실패!]\n${message}`);
+    throw new Error(message);
   };
 
   return (
-    <Wrapper>
-      <Div $state={state} onFocus={onFocus} onBlur={onBlur}>
-        <InputContainer>
-          {inputValue && label && <Label>{label}</Label>}
-          <ResizableDiv>
-            <Input
-              placeholder={placeholder}
-              value={inputValue}
-              maxLength={maxLength}
-              onChange={onTextChange}
-              disabled={disabled}
-              ref={textArea}
-            />
-            <TextCount $hidden={countHidden}>
-              띄어쓰기 포함 {inputValue.length}글자
-            </TextCount>
-            <Icon name="Grip" color="neutralTextWeak" />
-          </ResizableDiv>
-        </InputContainer>
-        <Footer>
-          <Button
-            size="S"
-            buttonType="Ghost"
-            icon="PaperClip"
-            onClick={onFileInputClick}
-          >
-            파일 첨부하기
-          </Button>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={onFileInputChange}
-            ref={fileInput}
-            hidden
-          />
-        </Footer>
+    <Wrapper $width={width}>
+      <Div
+        $state={state}
+        $children={children}
+        onBlur={onBlur}
+        ref={componentRef}
+      >
+        {children && <Header>{children}</Header>}
+        {children && state !== "Active" ? (
+          <MarkdownViewer markdown={value} />
+        ) : (
+          <>
+            <InputContainer onFocus={onFocus}>
+              {inputValue && label && <Label>{label}</Label>}
+              <ResizableDiv $children={children}>
+                <Input
+                  $children={children}
+                  $height={height}
+                  placeholder={placeholder}
+                  value={inputValue}
+                  maxLength={maxLength}
+                  onChange={onTextChange}
+                  disabled={disabled}
+                  ref={textAreaRef}
+                />
+                <TextCount $hidden={countHidden}>
+                  띄어쓰기 포함 {inputValue.length}글자
+                </TextCount>
+                <Icon name="Grip" color="neutralTextWeak" pointer={false} />
+              </ResizableDiv>
+            </InputContainer>
+            <Footer>
+              <Button
+                size="S"
+                buttonType="Ghost"
+                icon="PaperClip"
+                onClick={onFileInputClick}
+              >
+                파일 첨부하기
+              </Button>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onFileInputChange}
+                ref={fileInputRef}
+                hidden
+              />
+            </Footer>
+          </>
+        )}
       </Div>
-      {uploadErrorMessage && <ErrorMessage>{uploadErrorMessage}</ErrorMessage>}
+      {isEditing && errorDescription && (
+        <ErrorDescription>{errorDescription}</ErrorDescription>
+      )}
     </Wrapper>
   );
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $width?: string | number }>`
   display: flex;
   flex-direction: column;
+  width: ${({ $width }) =>
+    typeof $width === "number" ? `${$width}px` : $width};
 `;
 
-const Div = styled.div<{ $state: TextAreaState }>`
+const Div = styled.div<{ $state: TextAreaState; $children: ReactNode }>`
   display: flex;
   min-width: 340px;
-  min-height: 184px;
   flex-direction: column;
-  border: ${({ theme, $state }) =>
+  border: ${({ theme, $state, $children }) =>
     `${theme.border.default} ${
       $state === "Active"
         ? theme.color.neutralBorderDefaultActive
+        : $children
+        ? theme.color.neutralBorderDefault
         : "transparent"
     }`};
   border-radius: ${({ theme }) => theme.radius.large};
@@ -208,9 +257,19 @@ const Div = styled.div<{ $state: TextAreaState }>`
   pointer-events: ${({ $state }) => $state === "Disabled" && "none"};
 `;
 
+const Header = styled.div`
+  align-self: stretch;
+  display: flex;
+  padding: 16px 24px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: ${({ theme }) =>
+    `${theme.radius.large} ${theme.radius.large} 0px 0px`};
+  background-color: ${({ theme }) => theme.color.neutralSurfaceDefault};
+`;
+
 const InputContainer = styled.div`
   align-self: stretch;
-  min-height: 200px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -227,8 +286,9 @@ const Label = styled.span`
   font: ${({ theme }) => theme.font.displayMedium12};
 `;
 
-const ResizableDiv = styled.div`
+const ResizableDiv = styled.div<{ $children: ReactNode }>`
   position: relative;
+  min-height: ${({ $children }) => ($children ? "120px" : "200px")};
   display: flex;
   flex-direction: column;
   resize: vertical;
@@ -245,10 +305,18 @@ const ResizableDiv = styled.div`
   }
 `;
 
-const Input = styled.textarea`
+const Input = styled.textarea<{
+  $children: ReactNode;
+  $height?: string | number;
+}>`
   box-sizing: border-box;
   width: 100%;
-  height: 461px;
+  height: ${({ $children, $height }) =>
+    typeof $height === "number"
+      ? `${Math.min($height, 461)}px`
+      : $children
+      ? "200px"
+      : "461px"};
   resize: none;
   border: none;
   background: none;
@@ -302,12 +370,13 @@ const Footer = styled.div`
   align-self: stretch;
 `;
 
-const ErrorMessage = styled.span`
+const ErrorDescription = styled.span`
   display: flex;
   padding-left: 0px;
   align-items: flex-start;
   align-self: stretch;
   padding-left: 16px;
+  margin: 8px;
   color: ${({ theme }) => theme.color.dangerTextDefault};
   font: ${({ theme }) => theme.font.displayMedium12};
 `;

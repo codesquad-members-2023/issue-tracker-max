@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 @Component
@@ -27,7 +28,7 @@ public class JwtProvider {
 		return Jwts.builder()
 			.setClaims(claims)
 			.setExpiration(expireDate)
-			.signWith(key)
+			.signWith(key, SignatureAlgorithm.HS256)
 			.compact();
 	}
 
@@ -52,17 +53,19 @@ public class JwtProvider {
 
 	public Jwt createJwt(Map<String, Object> claims) {
 		// 1. accessToken 생성
-		String accessToken = createToken(claims, getExpireDateAccessToken());
+		Date expireDateAccessToken = getExpireDateAccessToken();
+		String accessToken = createToken(claims, expireDateAccessToken);
 
 		// 2. refreshToken 생성
-		String refreshToken = createToken(new HashMap<>(), getExpireDateRefreshToken());
+		Date expireDateRefreshToken = getExpireDateRefreshToken();
+		String refreshToken = createToken(new HashMap<>(), expireDateRefreshToken);
 
 		// 3. JWT 생성
-		return new Jwt(accessToken, refreshToken);
+		return new Jwt(accessToken, refreshToken, expireDateAccessToken, expireDateRefreshToken);
 	}
 
 	public Date getExpireDateAccessToken() {
-		final long DEFAULT_ACCESSTOKEN_EXPIRE_MILLISECOND = 1000 * 60 * 5; // 5분
+		final long DEFAULT_ACCESSTOKEN_EXPIRE_MILLISECOND = 1000 * 60 * 60; // 1시간
 		return new Date(System.currentTimeMillis() + DEFAULT_ACCESSTOKEN_EXPIRE_MILLISECOND);
 	}
 

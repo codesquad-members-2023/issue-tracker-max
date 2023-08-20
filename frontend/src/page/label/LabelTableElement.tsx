@@ -2,6 +2,8 @@ import { useState } from "react";
 import { styled, useTheme } from "styled-components";
 import { Button } from "../../components/Button";
 import { InformationTag } from "../../components/InformationTag";
+import { Color } from "../../types/colors";
+import { getAccessToken } from "../../utils/localStorage";
 import { LabelData } from "./Label";
 import { LabelEditor } from "./LabelEditor";
 
@@ -25,6 +27,11 @@ export function LabelTableElement({
   const onClickDelete = async () => {
     await fetch(`/api/labels/${label.id}`, {
       method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
     });
 
     fetchData();
@@ -47,7 +54,7 @@ export function LabelTableElement({
             <InformationTag
               size="S"
               value={label.name}
-              fill={label.background}
+              fill={label.background as Color}
               fontColor={label.color}
             />
           </LabelTag>

@@ -1,34 +1,49 @@
 import { styled } from "styled-components";
-import { Icon, IconColor } from "../icon/Icon";
+import { Color } from "../../types/colors";
+import { Avatar } from "../Avatar";
+import { Icon } from "../icon/Icon";
+
+type DropdownOptionProps = {
+  id: number;
+  iconType: "None" | "Profile" | "Palette";
+  profile?: string;
+  background?: Color;
+  selected: boolean;
+  children: string;
+  onClick: () => void;
+};
 
 export function DropdownOption({
-  showProfile = true,
+  id,
+  iconType,
   profile,
   background,
   selected,
   children,
   onClick,
-}: {
-  showProfile?: boolean;
-  profile?: string;
-  background?: IconColor;
-  selected: boolean;
-  children: string;
-  onClick: () => void;
-}) {
+}: DropdownOptionProps) {
+  const infoIcon = () => {
+    switch (iconType) {
+      case "Profile":
+        return <Avatar size="S" src={profile} userId={children} />;
+      case "Palette":
+        return (
+          <Icon
+            name="UserImageSmall"
+            color={background ?? "neutralSurfaceBold"}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <StyledDropdownOptionList
       className={selected ? "selected" : ""}
       onClick={onClick}
     >
-      {showProfile && profile ? (
-        <img style={{ width: "20px" }} src={profile} alt="프로필 이미지" />
-      ) : (
-        <Icon
-          name="UserImageSmall"
-          color={background ?? "neutralSurfaceBold"}
-        />
-      )}
+      {id !== 0 && infoIcon()}
       <span title={children}>{children}</span>
       <Icon name={selected ? "CheckOnCircle" : "CheckOffCircle"} />
     </StyledDropdownOptionList>

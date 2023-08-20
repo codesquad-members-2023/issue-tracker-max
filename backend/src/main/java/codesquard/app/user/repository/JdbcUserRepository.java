@@ -31,7 +31,8 @@ public class JdbcUserRepository implements UserRepository {
 	public Long save(User user) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		String sql = "INSERT INTO user(login_id, email, password, avatar_url) VALUES(:loginId, :email, :password, :avatarUrl)";
-		template.update(sql, user.createSaveParamSource(), keyHolder);
+		int update = template.update(sql, user.createSaveParamSource(), keyHolder);
+		logger.info("사용자 저장 결과 : {}", update);
 		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
 
@@ -61,13 +62,17 @@ public class JdbcUserRepository implements UserRepository {
 	@Override
 	public Long modify(User user) {
 		String sql = "UPDATE user SET email = :email, avatar_url = :avatarUrl WHERE id = :id";
-		template.update(sql, user.createSaveParamSource());
+		int update = template.update(sql, user.createSaveParamSource());
+		logger.info("사용자 수정 결과 : {}", update);
 		return user.getId();
 	}
 
 	@Override
 	public Long deleteById(Long id) {
-		return null;
+		String sql = "DELETE FROM user WHERE id = :id";
+		int update = template.update(sql, new MapSqlParameterSource("id", id));
+		logger.info("사용자 삭제 결과 : {}", update);
+		return id;
 	}
 
 	@Override
@@ -105,9 +110,9 @@ public class JdbcUserRepository implements UserRepository {
 	}
 
 	@Override
-	public User findByEmail(User user) {
+	public User findByEmail(String email) {
 		String sql = "SELECT id, login_id, email, avatar_url FROM user WHERE email = :email";
-		return template.query(sql, user.createSaveParamSource(), createUserRowMapper())
+		return template.query(sql, new MapSqlParameterSource("email", email), createUserRowMapper())
 			.stream()
 			.findAny()
 			.orElse(null);

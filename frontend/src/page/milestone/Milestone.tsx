@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
+import { getAccessToken } from "../../utils/localStorage";
 import { MilestoneEditor } from "./MilestoneEditor";
 import { MilestoneHeader } from "./MilestoneHeader";
 import { MilestoneTable } from "./MilestoneTable";
@@ -37,7 +38,13 @@ export function Milestone() {
   const [isAdding, setIsAdding] = useState(false);
 
   const fetchData = useCallback(async () => {
-    const res = await fetch(`/api/milestones?state=${state}`);
+    const res = await fetch(`/api/milestones?state=${state}`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    });
     const milestonesData = await res.json();
 
     if (milestonesData.code === 200) {

@@ -3,11 +3,18 @@ package codesquard.app.user.controller.request;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquard.app.user.service.request.UserSaveServiceRequest;
+import lombok.ToString;
 
+@ToString
 public class UserSaveRequest {
+
+	private static final Logger logger = LoggerFactory.getLogger(UserSaveRequest.class);
 
 	@JsonProperty("loginId")
 	@NotNull(message = "아이디는 필수 정보입니다.")

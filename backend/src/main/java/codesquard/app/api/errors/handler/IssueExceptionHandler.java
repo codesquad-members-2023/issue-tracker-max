@@ -19,7 +19,7 @@ public class IssueExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(IllegalIssueStatusException.class)
 	public ApiResponse<Object> handleIllegalIssueStatusException(IllegalIssueStatusException e) {
-		logger.info("IllegalIssueStatusException handling : {}", e.toString());
+		logger.warn("IllegalIssueStatusException handling : {}", e.toString());
 		return ApiResponse.of(
 			HttpStatus.BAD_REQUEST,
 			e.getMessage(),
@@ -30,7 +30,7 @@ public class IssueExceptionHandler {
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(NoSuchIssueException.class)
 	public ApiResponse<Object> handleNoSuchIssueException(NoSuchIssueException e) {
-		logger.info("NoSuchIssueException handling : {}", e.toString());
+		logger.warn("NoSuchIssueException handling : {}", e.toString());
 		return ApiResponse.of(
 			HttpStatus.NOT_FOUND,
 			e.getMessage(),

@@ -1,7 +1,10 @@
 package codesquard.app.authenticate_user.service.request;
 
+import lombok.ToString;
+
+@ToString
 public class RefreshTokenServiceRequest {
-	private String refreshToken;
+	private final String refreshToken;
 
 	public RefreshTokenServiceRequest(String refreshToken) {
 		this.refreshToken = refreshToken;

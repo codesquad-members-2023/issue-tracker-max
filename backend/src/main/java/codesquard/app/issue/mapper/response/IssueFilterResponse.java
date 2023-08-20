@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquard.app.issue.mapper.response.filters.MultiFilters;
-import codesquard.app.issue.mapper.response.filters.SingleFilters;
+import codesquard.app.issue.mapper.response.filters.response.SingleFilter;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
@@ -17,10 +17,10 @@ public class IssueFilterResponse {
 	private String input;
 
 	@JsonProperty("openedIssueCount")
-	private Long openedIssueCount;
+	private int openedIssueCount;
 
 	@JsonProperty("closedIssueCount")
-	private Long closedIssueCount;
+	private int closedIssueCount;
 
 	@JsonProperty("labelCount")
 	private Long labelCount;
@@ -32,7 +32,7 @@ public class IssueFilterResponse {
 	private List<IssuesResponse> issues;
 
 	@JsonProperty("singleFilters")
-	private SingleFilters singleFilters;
+	private List<SingleFilter> singleFilters;
 
 	@JsonProperty("multiFilters")
 	private MultiFilters multiFilters;

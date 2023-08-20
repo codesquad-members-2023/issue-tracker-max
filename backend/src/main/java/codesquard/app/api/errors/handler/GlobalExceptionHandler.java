@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BindException.class)
 	public ApiResponse<Object> handleBindException(BindException e) {
-		logger.info("BindException handling : {}", e.toString());
+		logger.debug("BindException handling : {}", e.toString());
 		return ApiResponse.of(
 			HttpStatus.BAD_REQUEST,
 			HttpStatus.BAD_REQUEST.getReasonPhrase(),
@@ -39,6 +39,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(RestApiException.class)
 	public ResponseEntity<ApiResponse<Object>> handleUserRestApiException(RestApiException e) {
+		logger.error("RestApiException 발생 : {}", e.toString());
 		ApiResponse<Object> body = ApiResponse.of(
 			e.getErrorCode().getHttpStatus(),
 			e.getErrorCode().getMessage(),

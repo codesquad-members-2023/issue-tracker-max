@@ -1,31 +1,36 @@
 package codesquard.app.issue.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquard.app.api.errors.errorcode.IssueErrorCode;
 import codesquard.app.api.errors.exception.NoSuchIssueException;
+import codesquard.app.api.errors.exception.RestApiException;
 import codesquard.app.issue.dto.response.IssueCommentsResponse;
 import codesquard.app.issue.dto.response.IssueLabelResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneCountResponse;
 import codesquard.app.issue.dto.response.IssueMilestoneResponse;
 import codesquard.app.issue.dto.response.IssueReadResponse;
 import codesquard.app.issue.dto.response.IssueUserResponse;
-import codesquard.app.issue.entity.IssueStatus;
+import codesquard.app.issue.dto.response.userReactionResponse;
 import codesquard.app.issue.mapper.IssueMapper;
 import codesquard.app.issue.mapper.request.IssueFilterRequest;
+import codesquard.app.issue.mapper.response.IssueCount;
+import codesquard.app.issue.mapper.response.IssueCountResponse;
 import codesquard.app.issue.mapper.response.IssueFilterResponse;
 import codesquard.app.issue.mapper.response.IssuesResponse;
 import codesquard.app.issue.mapper.response.filters.MultiFilters;
-import codesquard.app.issue.mapper.response.filters.SingleFilters;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterAssignees;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterAuthors;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterLabels;
+import codesquard.app.issue.mapper.response.filters.response.MultiFilterMilestones;
 import codesquard.app.issue.mapper.response.filters.response.SingleFilter;
 import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.label.repository.LabelRepository;
 import codesquard.app.milestone.repository.MilestoneRepository;
-import codesquard.app.issue.dto.response.userReactionResponse;
-import codesquard.app.issue.repository.IssueRepository;
 import codesquard.app.user_reaction.repository.UserReactionRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -37,13 +42,19 @@ public class IssueQueryService {
 	private final IssueRepository issueRepository;
 	private final LabelRepository labelRepository;
 	private final MilestoneRepository milestoneRepository;
+	private final UserReactionRepository userReactionRepository;
 	private final IssueMapper issueMapper;
-  private final UserReactionRepository userReactionRepository;
-  
+
 	private static final String SPACE = " ";
+	private static final Long OPENED_ID = 1L;
+	private static final Long AUTHOR_ID = 2L;
+	private static final Long ASSIGNEE_ID = 3L;
+	private static final Long MENTIONS_ID = 4L;
+	private static final Long CLOSED_ID = 5L;
+
+	private boolean multiFiltersCheck = false;
 
 	public IssueReadResponse get(Long issueId, Long userId) {
-		validateExistIssue(issueId);
 		IssueReadResponse issueReadResponse = issueRepository.findBy(issueId);
 		List<userReactionResponse> users = userReactionRepository.findIssueReactionBy(issueId, userId);
 		List<IssueUserResponse> assignees = IssueUserResponse.from(issueRepository.findAssigneesBy(issueId));
@@ -67,6 +78,26 @@ public class IssueQueryService {
 		}
 	}
 
+	public void validateExistIssues(List<Long> issues) {
+		if (issueMapper.isNotExist(issues)) {
+			throw new NoSuchIssueException();
+		}
+	}
+
+	public void validateIssueAuthor(Long issueId, Long userId) {
+		validateExistIssue(issueId);
+		if (!issueRepository.isSameIssueAuthor(issueId, userId)) {
+			throw new RestApiException(IssueErrorCode.FORBIDDEN_ISSUE);
+		}
+	}
+
+	public void validateIssuesAuthor(List<Long> issues, Long userId) {
+		validateExistIssues(issues);
+		if (issues.size() > issueMapper.countIssueSameAuthor(issues, userId)) {
+			throw new RestApiException(IssueErrorCode.FORBIDDEN_ISSUE);
+		}
+	}
+
 	public IssueReadResponse findById(Long issueId) {
 		return issueRepository.findBy(issueId);
 	}
@@ -81,13 +112,14 @@ public class IssueQueryService {
 
 	// Issue Filtering
 	public IssueFilterResponse findFilterIssues(String loginId, IssueFilterRequest request) {
-		Map<String, Long> counts = countIssuesByStatus();
-		SingleFilters singleFilters = checkSingleFilters(request);
-		boolean multiFiltersCheck = singleFilters == null;
+		final String input = generateInput(request);
+		final List<SingleFilter> singleFilters = generateSingleFilters(loginId, request);
+		IssueCountResponse issueCountResponse = new IssueCountResponse(countIssues(loginId, request));
 
-		return new IssueFilterResponse(generateInput(request), counts.get(IssueStatus.OPENED.name()),
-			counts.get(IssueStatus.CLOSED.name()), labelRepository.countAll(), milestoneRepository.countAll(),
-			findIssues(loginId, request), singleFilters, checkMultiFilters(multiFiltersCheck, request));
+		return new IssueFilterResponse(input, issueCountResponse.getOpenedIssueCount(),
+			issueCountResponse.getClosedIssueCount(), labelRepository.countAll(), milestoneRepository.countAll(),
+			findIssues(loginId, request), singleFilters,
+			checkMultiFilters(multiFiltersCheck, request));
 	}
 
 	private String generateInput(IssueFilterRequest request) {
@@ -105,68 +137,80 @@ public class IssueQueryService {
 			builder.append("mentions:").append(request.getMentions()).append(SPACE);
 		}
 		if (request.getMilestone() != null) {
-			builder.append("milestone:").append(request.getMentions()).append(SPACE);
+			builder.append("milestone:").append(request.getMilestone()).append(SPACE);
 		}
-		if (request.getLabel().size() > 0) {
+		if (request.getLabel() != null && !request.getLabel().isEmpty()) {
 			for (String label : request.getLabel()) {
 				builder.append("label:").append(label).append(SPACE);
 			}
 		}
-		return builder.toString();
+
+		if (builder.length() == 0) {
+			return "is:opened";
+		}
+
+		return builder.toString().stripTrailing();
 	}
 
-	private Map<String, Long> countIssuesByStatus() {
-		return Map.of(IssueStatus.OPENED.name(), issueRepository.countIssueByStatus(IssueStatus.OPENED),
-			IssueStatus.CLOSED.name(), issueRepository.countIssueByStatus(IssueStatus.CLOSED));
+	private List<IssueCount> countIssues(String loginId, IssueFilterRequest request) {
+		return issueMapper.countIssues(request.convertMe(loginId));
 	}
 
 	private List<IssuesResponse> findIssues(String loginId, IssueFilterRequest request) {
 		return issueMapper.getIssues(request.convertMe(loginId));
 	}
 
-	public SingleFilters checkSingleFilters(IssueFilterRequest request) {
-		// TODO: 지금 여러개가 들어왔을 때 싱글필터로 인식되는 문제가 있음 -> 이거 해결하기
+	public List<SingleFilter> generateSingleFilters(String loginId, IssueFilterRequest request) {
+		List<SingleFilter> singleFilters = new ArrayList<>();
+		String generated = generateInput(request).stripTrailing();
 
-		if (request.getIs() != null && request.getIs().equalsIgnoreCase(SingleFilter.IS.OPENED.getType())) {
-			SingleFilters singleFilters = new SingleFilters();
-			singleFilters.changeBy(true, SingleFilters.OPENED_ID - 1L);
-			return singleFilters;
-		}
+		boolean selectedOpened = generated.equals(SingleFilter.IS.OPENED.getResponse());
+		singleFilters.add(
+			new SingleFilter(OPENED_ID, SingleFilter.IS.OPENED.getName(), SingleFilter.IS.OPENED.getResponse(),
+				selectedOpened));
 
-		if (request.getIs() != null && request.getIs().equalsIgnoreCase(SingleFilter.IS.CLOSED.getType())) {
-			SingleFilters singleFilters = new SingleFilters();
-			singleFilters.changeBy(true, SingleFilters.CLOSED_ID - 1L);
-			return singleFilters;
-		}
+		boolean selectedAuthor = generated.equals(SingleFilter.IS.OPENED.getResponse() + " author:@me");
+		singleFilters.add(
+			new SingleFilter(AUTHOR_ID, SingleFilter.ME.AUTHOR.getName(),
+				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.AUTHOR.getResponse(),
+				selectedAuthor));
 
-		if (request.getAuthor() != null && request.getAuthor().equalsIgnoreCase(SingleFilter.ME.AUTHOR.getType())) {
-			SingleFilters singleFilters = new SingleFilters();
-			singleFilters.changeBy(true, SingleFilters.AUTHOR_ID - 1L);
-			return singleFilters;
-		}
+		boolean selectedAssignee = generated.equals(SingleFilter.IS.OPENED.getResponse() + " assignee:@me");
+		singleFilters.add(
+			new SingleFilter(ASSIGNEE_ID, SingleFilter.ME.ASSIGNEE.getName(),
+				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.ASSIGNEE.getResponse(),
+				selectedAssignee));
 
-		if (request.getAssignee() != null && request.getAssignee().equalsIgnoreCase(SingleFilter.ME.ASSIGNEE.getType())) {
-			SingleFilters singleFilters = new SingleFilters();
-			singleFilters.changeBy(true, SingleFilters.ASSIGNEE_ID - 1L);
-			return singleFilters;
-		}
+		boolean selectedMentions = generated.equals(SingleFilter.IS.OPENED.getResponse() + " mentions:@me");
+		singleFilters.add(
+			new SingleFilter(MENTIONS_ID, SingleFilter.ME.MENTIONS.getName(),
+				SingleFilter.IS.OPENED.getResponse() + SPACE + SingleFilter.ME.MENTIONS.getResponse(),
+				selectedMentions));
 
-		if (request.getMentions() != null && request.getMentions().equalsIgnoreCase(SingleFilter.ME.MENTIONS.getType())) {
-			SingleFilters singleFilters = new SingleFilters();
-			singleFilters.changeBy(true, SingleFilters.MENTIONS_ID - 1L);
-			return singleFilters;
-		}
+		boolean selectedClosed = generated.equals(SingleFilter.IS.CLOSED.getResponse());
+		singleFilters.add(
+			new SingleFilter(CLOSED_ID, SingleFilter.IS.CLOSED.getName(), SingleFilter.IS.CLOSED.getResponse(),
+				selectedClosed));
 
-		return null;
+		multiFiltersCheck =
+			!selectedOpened && !selectedClosed && !selectedAuthor && !selectedAssignee && !selectedMentions;
+
+		return singleFilters;
 	}
 
 	private MultiFilters checkMultiFilters(boolean check, IssueFilterRequest request) {
-		return new MultiFilters(
-			issueMapper.getMultiFiltersAssignees(check, request),
-			issueMapper.getMultiFiltersLabels(check, request),
-			issueMapper.getMultiFiltersMilestones(check, request),
-			issueMapper.getMultiFiltersAuthors(check, request)
-		);
+		MultiFilters multiFilters = new MultiFilters(
+			new MultiFilterAssignees(issueMapper.getMultiFiltersAssignees(check, request)),
+			new MultiFilterLabels(issueMapper.getMultiFiltersLabels(check, request)),
+			new MultiFilterMilestones(issueMapper.getMultiFiltersMilestones(check, request)),
+			new MultiFilterAuthors(issueMapper.getMultiFiltersAuthors(check, request)));
+		multiFilters.getAssignee()
+			.addNoneOptionToAssignee(request.getAssignee() != null && request.getAssignee().equals("none"));
+		multiFilters.getLabel()
+			.addNoneOptionToLabels(request.getLabel() != null && request.getLabel().get(0).equals("none"));
+		multiFilters.getMilestone()
+			.addNoneOptionToMilestones(request.getMilestone() != null && request.getMilestone().equals("none"));
+		return multiFilters;
 	}
 
 }

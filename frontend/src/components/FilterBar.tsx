@@ -7,6 +7,7 @@ type FilterBarProps = {
   name: string;
   optionTitle: string;
   options: {
+    id: number;
     name: string;
     profile?: string;
     selected: boolean;
@@ -18,7 +19,7 @@ export function FilterBar({
   name,
   optionTitle,
   options,
-  ...props
+  ...rest
 }: FilterBarProps) {
   const [state, setState] = useState<"Enabled" | "Active">("Enabled");
 
@@ -43,7 +44,7 @@ export function FilterBar({
         alignment="Left"
         autoClose
       />
-      <TextInput icon="Search" {...props} />
+      <TextInput icon="Search" {...rest} />
     </Div>
   );
 }

@@ -20,15 +20,22 @@ public class LabelUpdateRequest {
 	@Pattern(regexp = "^#[0-9A-Fa-f]{6}$", message = "올바른 배경색 형식이어야 합니다. (예: #RRGGBB)")
 	@JsonProperty("background")
 	private String background;
-	@Size(min = 1, max = 10000, message = "내용은 1글자 이상, 10000글자 이하여야 합니다.")
+	@Size(max = 10000, message = "내용은 0글자 이상, 10000글자 이하여야 합니다.")
 	@JsonProperty("description")
 	private String description;
 
 	private LabelUpdateRequest() {
 	}
 
-	public static Label toEntity(final LabelUpdateRequest labelUpdateRequest) {
+	public LabelUpdateRequest(String name, String color, String background, String description) {
+		this.name = name;
+		this.color = color;
+		this.background = background;
+		this.description = description;
+	}
+
+	public static Label toEntity(final LabelUpdateRequest labelUpdateRequest, final Long userId) {
 		return new Label(labelUpdateRequest.name, labelUpdateRequest.color, labelUpdateRequest.background,
-			labelUpdateRequest.description);
+			labelUpdateRequest.description, userId);
 	}
 }

@@ -16,21 +16,21 @@ public class MilestoneUpdateRequest {
 	private String name;
 	@JsonProperty("deadline")
 	private LocalDate deadline;
-	@Size(min = 1, max = 10000, message = "내용은 1글자 이상, 10000글자 이하여야 합니다.")
+	@Size(max = 10000, message = "내용은 0글자 이상, 10000글자 이하여야 합니다.")
 	@JsonProperty("description")
 	private String description;
 
 	private MilestoneUpdateRequest() {
 	}
 
-	private MilestoneUpdateRequest(final String name, final LocalDate deadline, final String description) {
+	public MilestoneUpdateRequest(final String name, final LocalDate deadline, final String description) {
 		this.name = name;
 		this.deadline = deadline;
 		this.description = description;
 	}
 
-	public static Milestone toEntity(final MilestoneUpdateRequest milestoneUpdateRequest) {
+	public static Milestone toEntity(final MilestoneUpdateRequest milestoneUpdateRequest, final Long userId) {
 		return new Milestone(milestoneUpdateRequest.name, milestoneUpdateRequest.description,
-			milestoneUpdateRequest.deadline);
+			milestoneUpdateRequest.deadline, userId);
 	}
 }

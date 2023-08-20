@@ -8,16 +8,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import codesquard.app.ControllerTestSupport;
+import codesquard.app.api.errors.errorcode.IssueErrorCode;
 import codesquard.app.api.errors.exception.NoSuchReactionException;
 import codesquard.app.api.errors.exception.NoSuchUserReactionException;
+import codesquard.app.api.errors.exception.RestApiException;
+import codesquard.app.api.errors.handler.GlobalExceptionHandler;
+import codesquard.app.api.errors.handler.UserReactionExceptionHandler;
+import codesquard.app.authenticate_user.entity.AuthenticateUser;
 
 class UserReactionControllerTest extends ControllerTestSupport {
 
 	@DisplayName("이슈 사용자 반응을 등록한다.")
 	@Test
 	void createIssue() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int issueId = 1;
@@ -32,6 +41,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("이슈 사용자 반응 등록에 실패한다.")
 	@Test
 	void createIssue_Fail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int issueId = 1;
@@ -47,6 +59,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("댓글 사용자 반응을 등록한다.")
 	@Test
 	void createComment() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int commentId = 1;
@@ -61,6 +76,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("댓글 사용자 반응 등록에 실패한다.")
 	@Test
 	void createComment_Fail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int reactionId = 1;
 		int commentId = 1;
@@ -76,6 +94,9 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("사용자 반응을 삭제한다.")
 	@Test
 	void deleteUserReaction() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		int userReactionId = 1;
 
@@ -89,14 +110,49 @@ class UserReactionControllerTest extends ControllerTestSupport {
 	@DisplayName("사용자 반응이 존재하지 않을 때 사용자 반응 삭제에 실패한다.")
 	@Test
 	void deleteUserReaction_Fail() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
 		// given
 		Long userReactionId = 1L;
+		Long userId = 1L;
 		willThrow(new NoSuchUserReactionException())
-			.given(userReactionService).deleteIssueReaction(userReactionId);
+			.given(userReactionService).deleteReaction(userReactionId, userId);
 
 		// when & then
 		mockMvc.perform(delete("/api/reactions/" + userReactionId))
 			.andExpect(status().isNotFound())
 			.andDo(print());
+	}
+
+	@DisplayName("사용자 반응을 삭제할 때 작성자와 유저가 다를 시 403에러를 반환한다.")
+	@Test
+	void delete_IfNotSameAuthor_Response403() throws Exception {
+		// mocking
+		mockingAuthenticateUser();
+
+		// given
+		Long userReactionId = 1L;
+		Long userId = 1L;
+		willThrow(new RestApiException(IssueErrorCode.FORBIDDEN_USER_REACTION))
+			.given(userReactionService).deleteReaction(userReactionId, userId);
+
+		// when & then
+		mockMvc.perform(delete("/api/reactions/" + userReactionId))
+			.andExpect(status().isForbidden())
+			.andDo(print());
+	}
+
+	private void mockingAuthenticateUser() {
+		mockMvc = MockMvcBuilders.standaloneSetup(new UserReactionController(userReactionService))
+			.setControllerAdvice(new UserReactionExceptionHandler(), new GlobalExceptionHandler())
+			.setCustomArgumentResolvers(loginUserArgumentResolver)
+			.build();
+
+		AuthenticateUser authenticateUser = new AuthenticateUser(1L, "wis123", "wis123@naver.com", null);
+		when(loginUserArgumentResolver.supportsParameter(any()))
+			.thenReturn(true);
+		when(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+			.thenReturn(authenticateUser);
 	}
 }

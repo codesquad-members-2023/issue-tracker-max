@@ -42,37 +42,82 @@
         ON milestone.`id` = issue.`milestone_id`
         <where>
             issue.`is_deleted` = 0
-            <if test="is != null">
-                AND issue.`status` = #{is}
-            </if>
-            <if test="milestone != null">
-                AND milestone.`name` = #{milestone}
-            </if>
-            <if test="author != null">
-                AND u.`login_id` = #{author}
-            </if>
-            <if test="assignee != null">
-                AND issue.`id` IN (
-                SELECT DISTINCT(assignee.`issue_id`)
-                FROM issue_assignee AS assignee
-                LEFT OUTER JOIN user AS u
-                ON assignee.`user_id` = u.`id`
-                WHERE u.`login_id` = #{assignee}
-                )
-            </if>
-            <if test="label != null">
-                AND issue.`id` IN (
-                SELECT DISTINCT(issue_label.`issue_id`)
-                FROM issue_label AS issue_label
-                LEFT OUTER JOIN label AS label
-                ON issue_label.`label_id` = label.`id`
-                WHERE label.`name` IN
-                <foreach item="name" index="index" collection="label" open="(" separator="," close=")">
-                    #{name}
-                </foreach>
-                )
-            </if>
+            <choose>
+                <when test="is == null and milestone == null and author == null and assignee == null and label == null and mentions == null">
+                    AND issue.`status` = "OPENED"
+                </when>
+                <otherwise>
+                    <if test="is != null">
+                        AND issue.`status` = #{is}
+                    </if>
+                    <if test="milestone != null">
+                        <choose>
+                            <when test="milestone == 'none'">
+                                AND issue.`milestone_id` IS NULL
+                            </when>
+                            <otherwise>
+                                AND milestone.`name` = #{milestone}
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="author != null">
+                        AND u.`login_id` = #{author}
+                    </if>
+                    <if test="assignee != null">
+                        <choose>
+                            <when test="assignee == 'none'">
+                                AND issue.`id` NOT IN (
+                                SELECT DISTINCT(assignee.`issue_id`)
+                                FROM issue_assignee AS assignee
+                                LEFT OUTER JOIN user AS u
+                                ON assignee.`user_id` = u.`id`)
+                            </when>
+                            <otherwise>
+                                AND issue.`id` IN (
+                                SELECT DISTINCT(assignee.`issue_id`)
+                                FROM issue_assignee AS assignee
+                                LEFT OUTER JOIN user AS u
+                                ON assignee.`user_id` = u.`id`
+                                WHERE u.`login_id` = #{assignee})
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="label != null">
+                        <choose>
+                            <when test="label.get(0) == 'none'">
+                                AND issue.`id` NOT IN (
+                                SELECT DISTINCT(issue_label.`issue_id`)
+                                FROM issue_label AS issue_label
+                                LEFT OUTER JOIN label AS label
+                                ON issue_label.`label_id` = label.`id`)
+                            </when>
+                            <otherwise>
+                                AND issue.`id` IN (
+                                SELECT issue_label.`issue_id`
+                                FROM issue_label AS issue_label
+                                LEFT OUTER JOIN label AS label
+                                ON issue_label.`label_id` = label.`id`
+                                WHERE label.`name` IN
+                                <foreach item="name" index="index" collection="label" open="(" separator="," close=")">
+                                    #{name}
+                                </foreach>
+                                GROUP BY issue_label.`issue_id`
+                                HAVING COUNT(issue_label.`issue_id`) >= ${label.size})
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="mentions != null">
+                        AND issue.`id` IN (
+                        SELECT DISTINCT(comment.`issue_id`)
+                        FROM comment AS comment
+                        LEFT OUTER JOIN user AS u
+                        ON u.`id` = comment.`user_id`
+                        WHERE u.`login_id` = #{mentions})
+                    </if>
+                </otherwise>
+            </choose>
         </where>
+        ORDER BY issue.`created_at` DESC
     </select>
 
     <resultMap id="issueAssigneeResponse" type="codesquard.app.issue.mapper.response.IssueAssigneeResponse">
@@ -106,19 +151,19 @@
     </select>
 
     <select id="getMultiFiltersAssignees" parameterType="java.util.Map"
-            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersAssignees">
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFilterAssignee">
         SELECT id, login_id AS name, avatar_url AS avatarUrl
-        <if test="check = true and request.assignee != null">
+        <if test="check = true and request.assignee != null and request.assignee != 'none'">
             , (SELECT IF(login_id = #{request.assignee}, true, false)) AS `selected`
         </if>
-        <if test="check = false">
+        <if test="check = false or request.assignee == 'none'">
             , (SELECT false) AS `selected`
         </if>
         FROM `user`
     </select>
 
     <select id="getMultiFiltersAuthors" parameterType="java.util.Map"
-            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersAuthors">
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFilterAuthor">
         SELECT id, login_id AS name, avatar_url AS avatarUrl
         <if test="check = true and request.author != null">
             , (SELECT IF(login_id = #{request.author}, true, false)) AS `selected`
@@ -130,31 +175,129 @@
     </select>
 
     <select id="getMultiFiltersLabels" parameterType="java.util.Map"
-            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersLabels">
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFilterLabel">
         SELECT id, name, color, background
-        <if test="check = true and request.label != null">
+        <if test="check = true and request.label != null and request.label.get(0) != 'none'">
             , (SELECT IF(name IN
             <foreach item="name" index="index" collection="request.label" open="(" separator="," close=")">
                 #{name}
             </foreach>
             , true, false)) AS `selected`
         </if>
-        <if test="check = false">
+        <if test="check = false and request.label.get(0) == 'none'">
             , (SELECT false) AS `selected`
         </if>
         FROM label
     </select>
 
     <select id="getMultiFiltersMilestones" parameterType="java.util.Map"
-            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFiltersMilestones">
+            resultType="codesquard.app.issue.mapper.response.filters.response.MultiFilterMilestone">
         SELECT id, name
-        <if test="check = true and request.milestone != null">
+        <if test="check = true and request.milestone != null and request.milestone != 'none'">
             , (SELECT IF(name = #{request.milestone}, true, false)) AS `selected`
         </if>
-        <if test="check = false">
+        <if test="check = false and request.milestone == 'none'">
             , (SELECT false) AS `selected`
         </if>
         FROM milestone
+    </select>
+
+    <select id="countIssueSameAuthor" parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(id) FROM issue WHERE user_id = #{user_id} AND is_deleted = false AND id IN
+        <foreach item="item" collection="id" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="isNotExist" parameterType="java.util.List" resultType="boolean">
+        SELECT false IN
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            (SELECT EXISTS (SELECT 1 FROM issue WHERE id = #{item} AND is_deleted = false))
+        </foreach>
+    </select>
+
+    <select id="countIssues" parameterType="codesquard.app.issue.mapper.request.IssueFilterRequest"
+            resultType="codesquard.app.issue.mapper.response.IssueCount">
+        SELECT issue.`status` AS status, IFNULL(COUNT(issue.`id`), 0) AS count
+        FROM issue AS issue
+        LEFT OUTER JOIN (SELECT `issue_id`, COUNT(`id`) AS comment_count FROM comment GROUP BY `issue_id`) AS comment
+        ON comment.`issue_id` = issue.id
+        LEFT OUTER JOIN `user` AS u
+        ON u.`id` = issue.`user_id`
+        LEFT OUTER JOIN `milestone` AS milestone
+        ON milestone.`id` = issue.`milestone_id`
+        <where>
+            issue.`is_deleted` = 0
+            <choose>
+                <otherwise>
+                    <if test="milestone != null">
+                        <choose>
+                            <when test="milestone == 'none'">
+                                AND issue.`milestone_id` IS NULL
+                            </when>
+                            <otherwise>
+                                AND milestone.`name` = #{milestone}
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="author != null">
+                        AND u.`login_id` = #{author}
+                    </if>
+                    <if test="assignee != null">
+                        <choose>
+                            <when test="assignee == 'none'">
+                                AND issue.`id` NOT IN (
+                                SELECT DISTINCT(assignee.`issue_id`)
+                                FROM issue_assignee AS assignee
+                                LEFT OUTER JOIN user AS u
+                                ON assignee.`user_id` = u.`id`)
+                            </when>
+                            <otherwise>
+                                AND issue.`id` IN (
+                                SELECT DISTINCT(assignee.`issue_id`)
+                                FROM issue_assignee AS assignee
+                                LEFT OUTER JOIN user AS u
+                                ON assignee.`user_id` = u.`id`
+                                WHERE u.`login_id` = #{assignee})
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="label != null">
+                        <choose>
+                            <when test="label.get(0) == 'none'">
+                                AND issue.`id` NOT IN (
+                                SELECT DISTINCT(issue_label.`issue_id`)
+                                FROM issue_label AS issue_label
+                                LEFT OUTER JOIN label AS label
+                                ON issue_label.`label_id` = label.`id`)
+                            </when>
+                            <otherwise>
+                                AND issue.`id` IN (
+                                SELECT issue_label.`issue_id`
+                                FROM issue_label AS issue_label
+                                LEFT OUTER JOIN label AS label
+                                ON issue_label.`label_id` = label.`id`
+                                WHERE label.`name` IN
+                                <foreach item="name" index="index" collection="label" open="(" separator="," close=")">
+                                    #{name}
+                                </foreach>
+                                GROUP BY issue_label.`issue_id`
+                                HAVING COUNT(issue_label.`issue_id`) >= ${label.size})
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="mentions != null">
+                        AND issue.`id` IN (
+                        SELECT DISTINCT(comment.`issue_id`)
+                        FROM comment AS comment
+                        LEFT OUTER JOIN user AS u
+                        ON u.`id` = comment.`user_id`
+                        WHERE u.`login_id` = #{mentions})
+                    </if>
+                </otherwise>
+            </choose>
+        </where>
+        GROUP BY issue.`status`
     </select>
 
 </mapper>

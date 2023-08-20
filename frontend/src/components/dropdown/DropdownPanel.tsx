@@ -1,26 +1,30 @@
 import { css, styled } from "styled-components";
-import { Icon, IconColor } from "../icon/Icon";
+import { Color } from "../../types/colors";
+import { Icon } from "../icon/Icon";
 import { DropdownOption } from "./DropdownOption";
 
-export function DropdownPanel({
-  showProfile = true,
-  alignment,
-  optionTitle,
-  options,
-  onOptionClick,
-}: {
-  showProfile?: boolean;
+type DropdownPanelProps = {
   alignment: "Left" | "Right" | "Center";
+  iconType: "None" | "Profile" | "Palette";
   optionTitle: string;
   options: {
+    id: number;
     name: string;
     profile?: string;
-    background?: IconColor;
+    background?: Color;
     selected: boolean;
     onClick: () => void;
   }[];
   onOptionClick?: () => void;
-}) {
+}
+
+export function DropdownPanel({
+  alignment,
+  iconType,
+  optionTitle,
+  options,
+  onOptionClick,
+}: DropdownPanelProps) {
   const renderOptions = () => {
     if (options.length === 0) {
       return (
@@ -31,10 +35,11 @@ export function DropdownPanel({
       );
     }
     return options.map(
-      ({ name, profile, background, selected, onClick }, index) => (
+      ({ id, name, profile, background, selected, onClick }, index) => (
         <DropdownOption
           key={`dropdown-option-${index}`}
-          showProfile={showProfile}
+          id={id}
+          iconType={iconType}
           profile={profile}
           background={background}
           selected={selected}
@@ -118,6 +123,6 @@ const EmptyOption = styled.div`
     `0px 0px ${theme.radius.large} ${theme.radius.large}`};
   font: ${({ theme }) => theme.font.availableMedium16};
   font-style: italic;
-  background-color:  ${({ theme }) => theme.color.neutralSurfaceStrong};
+  background-color: ${({ theme }) => theme.color.neutralSurfaceStrong};
   color: ${({ theme }) => theme.color.neutralTextDefault};
 `;

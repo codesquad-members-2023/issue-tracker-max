@@ -11,17 +11,17 @@ public interface MilestoneRepository {
 
 	List<Milestone> findAllBy(final MilestoneStatus status);
 
-	Long countIssuesBy(final MilestoneStatus status);
+	Long countIssuesBy(final Long milestoneId, final MilestoneStatus status);
 
 	Long countMilestonesBy(final MilestoneStatus status);
 
 	Long countLabels();
 
-	void updateBy(final Long milestoneId, final Milestone milestone);
+	Long updateBy(final Long milestoneId, final Milestone milestone);
 
-	void updateBy(final Long milestoneId, final MilestoneStatus status);
+	Long updateBy(final Long milestoneId, final MilestoneStatus status);
 
-	void deleteBy(final Long milestoneId);
+	Long deleteBy(final Long milestoneId);
 
 	Long countAll();
 
