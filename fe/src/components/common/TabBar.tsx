@@ -26,6 +26,7 @@ export default function TabBar({
   const isLeftSelected = selectedTab === left.name;
   const hasOutline = borderStyle === "outline";
 
+  // TODO: 개선 필요 (IssuesTable에서 TabBar를 사용할 때, currentTabName 상태 변경 시, TabBar의 selectedTab 상태를 변경해야 함)
   if (currentTabName !== selectedTab) {
     setSelectedTab(currentTabName);
   }
