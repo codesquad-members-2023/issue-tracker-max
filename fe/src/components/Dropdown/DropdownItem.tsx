@@ -5,37 +5,46 @@ import { CheckboxContext } from "context/checkboxContext";
 import { RadioContext } from "context/radioContext";
 import { useContext } from "react";
 import { styled } from "styled-components";
-import { DropdownItemType, DropdownOption } from "./types";
+import { DropdownItemType } from "./types";
 
 export default function DropdownItem({
   option,
   item,
+  valueType = "id",
 }: {
-  option: DropdownOption;
+  option: "multiple" | "single";
   item: DropdownItemType;
+  valueType?: "id" | "content" | "name";
 }) {
   const checkContext = useContext(CheckboxContext);
   const radioContext = useContext(RadioContext);
 
-  const renderInput = () => {
+  const renderInput = (valueType: "id" | "content" | "name") => {
+    const itemValue = item[valueType];
+
     const inputMap = {
       multiple: checkContext && (
         <CircleCheckbox
           name={item.name}
           id={item.content}
           onChange={({ target: { checked } }) =>
-            checkContext.toggleCheck({ checked, value: item.id })
+            checkContext.toggleCheck({ checked, value: itemValue })
           }
-          checked={checkContext.isChecked(item.id)}
+          checked={checkContext.isChecked(itemValue)}
         />
       ),
       single: radioContext && (
         <InputRadio
           name={item.name}
           id={item.content}
-          value={item.id}
-          checked={radioContext.value === item.id}
-          onChange={() => radioContext.onChange(item.id)}
+          value={itemValue}
+          checked={radioContext.value === itemValue}
+          readOnly
+          onClick={() => {
+            radioContext.value === itemValue
+              ? radioContext.onChange(null)
+              : radioContext.onChange(itemValue);
+          }}
         />
       ),
       default: <InputRadio name={item.name} id={item.content} />,
@@ -55,7 +64,7 @@ export default function DropdownItem({
               $size="S"
             />
             <Content>{item.content}</Content>
-            {renderInput()}
+            {renderInput(valueType)}
           </Label>
         );
       case "withColor":
@@ -63,14 +72,14 @@ export default function DropdownItem({
           <Label htmlFor={item.content}>
             <ColorSwatch $colorFill={item.colorFill} />
             <Content>{item.content}</Content>
-            {renderInput()}
+            {renderInput(valueType)}
           </Label>
         );
       case "plain":
         return (
           <Label htmlFor={item.content}>
             <Content>{item.content}</Content>
-            {renderInput()}
+            {renderInput(valueType)}
           </Label>
         );
       default:

@@ -12,121 +12,128 @@ export const users = Array.from({ length: 50 }, (_, i) => {
   };
 });
 
-export const issueList = [
-  {
-    issueNumber: 1,
-    isOpen: true,
-    title: "메인화면 UI 설계",
-    labels: [
-      {
-        name: "bug",
-        fontColor: "#FFF",
-        backgroundColor: "#D73A4A",
-      },
-      {
-        name: "docs",
-        fontColor: "#FFF",
-        backgroundColor: "#2675CA",
-      },
-    ],
-    milestone: "Sprint #1",
-    author: {
-      id: 1,
-      username: "bruni",
-      profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
-    },
-    assignees: [
-      {
+export const issueList = {
+  pagination: {
+    currentPage: 1,
+    totalCounts: 20,
+    totalPages: 2,
+  },
+  data: [
+    {
+      issueNumber: 1,
+      isOpen: true,
+      title: "메인화면 UI 설계",
+      labels: [
+        {
+          name: "bug",
+          fontColor: "#FFF",
+          backgroundColor: "#D73A4A",
+        },
+        {
+          name: "docs",
+          fontColor: "#FFF",
+          backgroundColor: "#2675CA",
+        },
+      ],
+      milestone: "Sprint #1",
+      author: {
+        id: 1,
         username: "bruni",
         profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
       },
-    ],
-    createdAt: "2023-07-31 18:02:32",
-  },
-  {
-    issueNumber: 2,
-    isOpen: true,
-    title: "Mock data 설정",
-    labels: [
-      {
-        name: "feat",
-        fontColor: "#000",
-        backgroundColor: "#FACA02",
-      },
-    ],
-    milestone: "Sprint #2",
-    author: {
-      id: 2,
-      username: "Kakamotobi",
-      profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
+      assignees: [
+        {
+          username: "bruni",
+          profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
+        },
+      ],
+      createdAt: "2023-07-31 18:02:32",
     },
-    assignees: [
-      {
+    {
+      issueNumber: 2,
+      isOpen: true,
+      title: "Mock data 설정",
+      labels: [
+        {
+          name: "feat",
+          fontColor: "#000",
+          backgroundColor: "#FACA02",
+        },
+      ],
+      milestone: "Sprint #2",
+      author: {
+        id: 2,
         username: "Kakamotobi",
         profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
       },
-      {
+      assignees: [
+        {
+          username: "Kakamotobi",
+          profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
+        },
+        {
+          username: "Zoey",
+          profileUrl: "https://avatars.githubusercontent.com/u/111998760?v=4",
+        },
+      ],
+      createdAt: "2023-07-26 13:22:10",
+    },
+    {
+      issueNumber: 3,
+      isOpen: true,
+      title: "API 연동",
+      labels: [
+        {
+          name: "feat",
+          fontColor: "#000",
+          backgroundColor: "#FACA02",
+        },
+      ],
+      milestone: "Sprint #2",
+      author: {
+        id: 3,
         username: "Zoey",
-        profileUrl: "https://avatars.githubusercontent.com/u/111998760?v=4",
+        profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
       },
-    ],
-    createdAt: "2023-07-26 13:22:10",
-  },
-  {
-    issueNumber: 3,
-    isOpen: true,
-    title: "API 연동",
-    labels: [
-      {
-        name: "feat",
-        fontColor: "#000",
-        backgroundColor: "#FACA02",
-      },
-    ],
-    milestone: "Sprint #2",
-    author: {
-      id: 3,
-      username: "Zoey",
-      profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
+      assignees: [
+        {
+          username: "Kakamotobi",
+          profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
+        },
+        {
+          username: "Zoey",
+          profileUrl: "https://avatars.githubusercontent.com/u/111998760?v=4",
+        },
+      ],
+      createdAt: "2023-05-25 10:42:40",
     },
-    assignees: [
-      {
+    {
+      issueNumber: 4,
+      isOpen: false,
+      title: "프로젝트 초기화",
+      labels: [
+        {
+          name: "feat",
+          fontColor: "#000",
+          backgroundColor: "#FACA02",
+        },
+      ],
+      milestone: "",
+      author: {
+        id: 4,
         username: "Kakamotobi",
         profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
       },
-      {
-        username: "Zoey",
-        profileUrl: "https://avatars.githubusercontent.com/u/111998760?v=4",
-      },
-    ],
-    createdAt: "2023-05-25 10:42:40",
-  },
-  {
-    issueNumber: 4,
-    isOpen: false,
-    title: "프로젝트 초기화",
-    labels: [
-      {
-        name: "feat",
-        fontColor: "#000",
-        backgroundColor: "#FACA02",
-      },
-    ],
-    milestone: "",
-    author: {
-      id: 4,
-      username: "Kakamotobi",
-      profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
+      assignees: [
+        {
+          username: "Kakamotobi",
+          profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
+        },
+      ],
+      createdAt: "2022-12-31 10:42:40",
     },
-    assignees: [
-      {
-        username: "Kakamotobi",
-        profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
-      },
-    ],
-    createdAt: "2022-12-31 10:42:40",
-  },
-];
+  ],
+};
 
 export const issueDetails = {
   issueId: 1,

@@ -16,6 +16,7 @@ import {
   EditLabelsBody,
   EditMilestoneBody,
   NewIssueBody,
+  Pagination,
 } from "./type";
 
 export const postSignup = async (username: string, password: string) => {
@@ -26,8 +27,37 @@ export const postLogin = async (username: string, password: string) => {
   return await fetcher.post("/auth/login", { loginId: username, password });
 };
 
-export const getIssues = async () => {
-  return await fetcherWithBearer.get<IssueItem[]>("/issues");
+export const getGitHubLogin = async (code: string) => {
+  return await fetcher.get(`/auth/login/oauth/github?code=${code}`);
+};
+
+export const postOAuthUsername = async (body: {
+  username: string;
+  email: string;
+}) => {
+  return await fetcher.post("/auth/login/oauth/signup", body);
+};
+
+export const getIssues = async (filterQuery?: string, pageIndex?: number) => {
+  const queryParams = new URLSearchParams();
+
+  if (filterQuery) {
+    queryParams.append("q", filterQuery);
+  }
+
+  if (pageIndex) {
+    queryParams.append("page", pageIndex.toString());
+  }
+
+  const query = queryParams.toString();
+  const queryString = query ? `?${query}` : "";
+
+  const response = await fetcherWithBearer.get<{
+    pagination: Pagination;
+    data: IssueItem[];
+  }>(`/issues${queryString}`);
+
+  return response;
 };
 
 export const getIssueDetails = async (issueId: number) => {
@@ -48,6 +78,13 @@ export const putIssueIsOpen = async (
   return await fetcherWithBearer.put(`/issues/${issueId}/isOpen`, body);
 };
 
+export const putIssuesIsOpen = async (body: {
+  issueIds: number[];
+  state: "open" | "closed";
+}) => {
+  return await fetcherWithBearer.put(`/issues`, body);
+};
+
 export const putIssueContent = async (
   issueId: number,
   body: { content: string }
@@ -64,6 +101,10 @@ export const putIssueComment = async (
     `/issues/${issueId}/comments/${commentId}`,
     body
   );
+};
+
+export const deleteIssue = async (issueId: number) => {
+  return await fetcherWithBearer.delete(`/issues/${issueId}`);
 };
 
 export const getIssueSidebar = async (issueId: number) => {
@@ -101,8 +142,16 @@ export const deleteLabel = async (labelId: number) => {
   return await fetcherWithBearer.delete(`/labels/${labelId}`);
 };
 
+export const getLabelCount = async () => {
+  return await fetcherWithBearer.get<{ count: number }>(`/labels/count`);
+};
+
 export const getMilestones = async (state: "open" | "closed" = "open") => {
   return await fetcherWithBearer.get<Milestone[]>(`/milestones?state=${state}`);
+};
+
+export const getMilestoneCount = async () => {
+  return await fetcherWithBearer.get<{ count: number }>(`/milestones/count`);
 };
 
 export const getUsers = async () => {

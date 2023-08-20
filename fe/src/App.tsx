@@ -10,6 +10,7 @@ import NewIssuePage from "@pages/MainPage/NewIssuePage";
 import NotFoundPage from "@pages/NotFoundPage";
 import GlobalStyle from "@styles/GlobalStyle";
 import { darkMode, lightMode } from "@styles/designSystem";
+import { IssuesFilterProvider } from "context/IssuesFilterContext";
 import { useAuth } from "context/authContext";
 import { ThemeModeContext } from "context/themeModeContext";
 import { useContext } from "react";
@@ -30,7 +31,14 @@ export default function App() {
       <>
         {isLoggedIn ? (
           <Route path="/" element={<MainPage />}>
-            <Route index element={<IssuesPage />} />
+            <Route
+              index
+              element={
+                <IssuesFilterProvider>
+                  <IssuesPage />
+                </IssuesFilterProvider>
+              }
+            />
             <Route path="issues/:issueId" element={<IssueDetailPage />} />
             <Route path="labels" element={<LabelPage />} />
             <Route path="milestones" element={<MilestonePage />} />

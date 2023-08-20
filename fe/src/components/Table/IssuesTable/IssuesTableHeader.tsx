@@ -1,87 +1,153 @@
 import alertIcon from "@assets/icon/alertCircle.svg";
 import archiveIcon from "@assets/icon/archive.svg";
 import DropdownIndicator from "@components/Dropdown/DropdownIndicator";
+import { DropdownItemType } from "@components/Dropdown/types";
+import RadioGroup from "@components/common/Group/RadioGroup";
 import InputCheckbox from "@components/common/Input/InputCheckbox";
 import TabBar from "@components/common/TabBar";
+import { putIssuesIsOpen } from "api";
+import {
+  useIssuesFilter,
+  useIssuesFilterDispatch,
+} from "context/IssuesFilterContext";
+import { useState } from "react";
 import { styled } from "styled-components";
 import { TableHeader } from "../Table.style";
+import IssuesFiltersDropdowns from "./IssuesFiltersDropdowns";
 
 export default function IssuesTableHeader({
   numOpen,
   numClosed,
+  isAllIssuesSelected,
+  selectedIssueIds,
+  toggleSelectAll,
+  refetchIssuesList,
+  deselectAllIssues,
 }: {
   numOpen: number;
   numClosed: number;
+  isAllIssuesSelected: boolean;
+  selectedIssueIds: Set<number>;
+  toggleSelectAll: () => void;
+  refetchIssuesList: () => void;
+  deselectAllIssues: () => void;
 }) {
+  const [issueStateDropdown, setIssueStateDropdown] = useState<
+    "open" | "closed"
+  >("open");
+
+  const { issuesFilter } = useIssuesFilter();
+  const issuesFilterDispatch = useIssuesFilterDispatch();
+
+  const currentStatus = issuesFilter.state.status;
+  const currentTabName = currentStatus ? tabNames[currentStatus] : "";
+  const numSelectedIssues = selectedIssueIds.size;
+
   const tabBarLeftInfo = {
     name: "열린 이슈",
     count: numOpen,
     iconSrc: alertIcon,
-    callback: () => console.log("열린 이슈"),
+    callback: () => {
+      issuesFilterDispatch({ type: "SET_FILTER_BAR", payload: "open" });
+    },
   };
+
   const tabBarRightInfo = {
     name: "닫힌 이슈",
     count: numClosed,
     iconSrc: archiveIcon,
-    callback: () => console.log("닫힌 이슈"),
+    callback: () => {
+      issuesFilterDispatch({ type: "SET_FILTER_BAR", payload: "closed" });
+    },
+  };
+
+  const onIssueStateSelect = (state: "open" | "closed") => {
+    setIssueStateDropdown(state);
+  };
+
+  const onUpdateSelectedIssuesState = async () => {
+    try {
+      const res = await putIssuesIsOpen({
+        issueIds: selectedIssueIds ? [...selectedIssueIds] : [],
+        state: issueStateDropdown,
+      });
+
+      if (res.status === 200) {
+        refetchIssuesList();
+        deselectAllIssues();
+      }
+    } catch (error) {
+      // TODO
+      console.error(error);
+    }
   };
 
   return (
     <TableHeader>
       <TableHeaderContents>
         <div className="left-wrapper">
-          <InputCheckbox />
-          <TabBar
-            currentTabName="열린 이슈"
-            left={tabBarLeftInfo}
-            right={tabBarRightInfo}
-            borderStyle="none"
+          <InputCheckbox
+            checked={isAllIssuesSelected}
+            onChange={toggleSelectAll}
           />
+          {numSelectedIssues > 0 ? (
+            <div className="num-selected-issues">
+              {numSelectedIssues}개 이슈 선택
+            </div>
+          ) : (
+            <TabBar
+              currentTabName={currentTabName}
+              left={tabBarLeftInfo}
+              right={tabBarRightInfo}
+              borderStyle="none"
+            />
+          )}
         </div>
 
-        {/* TODO: dropdownList */}
         <div className="right-wrapper">
-          <DropdownIndicator
-            displayName="담당자"
-            dropdownPanelVariant="filter"
-            dropdownName="assignee"
-            dropdownList={[
-              {
-                id: 1,
-                variant: "withImg",
-                name: "assignee",
-                content: "Kakamotobi",
-                imgSrc: "https://avatars.githubusercontent.com/u/79886384?v=4",
-              },
-            ]}
-            dropdownPanelPosition="right"
-          />
-          <DropdownIndicator
-            displayName="레이블"
-            dropdownPanelVariant="filter"
-            dropdownName="label"
-            dropdownList={[]}
-            dropdownPanelPosition="right"
-          />
-          <DropdownIndicator
-            displayName="마일스톤"
-            dropdownPanelVariant="filter"
-            dropdownName="milestone"
-            dropdownList={[]}
-            dropdownPanelPosition="right"
-          />
-          <DropdownIndicator
-            displayName="작성자"
-            dropdownPanelVariant="filter"
-            dropdownName="author"
-            dropdownList={[]}
-            dropdownPanelPosition="right"
-          />
+          {numSelectedIssues > 0 ? (
+            <RadioGroup
+              value={issueStateDropdown}
+              onChange={onIssueStateSelect}>
+              <DropdownIndicator
+                displayName="상태수정"
+                dropdownPanelVariant="select"
+                dropdownName="issueState"
+                dropdownList={issueStateDropdownList}
+                dropdownPanelPosition="right"
+                dropdownOption="single"
+                valueType="name"
+                outsideClickHandler={onUpdateSelectedIssuesState}
+              />
+            </RadioGroup>
+          ) : (
+            <IssuesFiltersDropdowns />
+          )}
         </div>
       </TableHeaderContents>
     </TableHeader>
   );
 }
+
+const tabNames = {
+  open: "열린 이슈",
+  closed: "닫힌 이슈",
+};
+
+const issueStateDropdownList: DropdownItemType[] = [
+  {
+    id: 0,
+    variant: "plain",
+    name: "open",
+    content: "선택한 이슈 열기",
+  },
+  {
+    id: 1,
+    variant: "plain",
+    name: "closed",
+    content: "선택한 이슈 닫기",
+  },
+];
 
 const TableHeaderContents = styled.div`
   width: 100%;
@@ -99,6 +165,11 @@ const TableHeaderContents = styled.div`
 
     > *:last-child {
       gap: 24px;
+    }
+
+    .num-selected-issues {
+      font: ${({ theme: { font } }) => font.displayBold16};
+      color: ${({ theme: { neutral } }) => neutral.text.default};
     }
   }
 

@@ -1,6 +1,9 @@
 import { createContext } from "react";
 
-export const RadioContext = createContext<{
-  value: number;
-  onChange: (value: number) => void;
-} | null>(null);
+type RadioContextType<T> = {
+  value: T;
+  onChange: (value: T) => void;
+};
+
+// 실제 사용 시에는 T를 제네릭으로 받아서 사용하면 됨
+export const RadioContext = createContext<RadioContextType<any> | null>(null);

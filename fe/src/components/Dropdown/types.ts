@@ -12,15 +12,14 @@ export type DropdownName = keyof typeof DropdownNameKOR;
 
 export type DropdownPanelVariant = "filter" | "select" | "modify";
 
-export type DropdownOption = "multiple" | "single";
-
 export type DropdownPanelType = {
   variant: DropdownPanelVariant;
   dropdownName: DropdownName;
   dropdownList: DropdownItemType[];
   position: "left" | "right";
   onOutsideClick: (evt: MouseEvent) => void;
-  dropdownOption: DropdownOption;
+  valueType: "id" | "content" | "name";
+  dropdownOption: "multiple" | "single";
 };
 
 export type DropdownItemType =

@@ -78,6 +78,44 @@ export const handlers = [
     );
   }),
 
+  rest.get("/api/auth/login/oauth", async (_, res, ctx) => {
+    // 최초 로그인인 경우
+    return res(ctx.status(202), ctx.json({ email: "email@email.com" }));
+
+    // 최초 로그인이 아닌 경우
+    // return res(
+    //   ctx.status(200),
+    //   ctx.json({
+    //     token: {
+    //       tokenType: "bearer",
+    //       accessToken: "q13t302hv2ht0",
+    //       expirationTime: 1791720452298,
+    //     },
+    //     user: {
+    //       username: "username",
+    //       profileUrl: "https://avatars.githubusercontent.com/u/48426991?v=4",
+    //     },
+    //   })
+    // );
+  }),
+
+  rest.post("/api/auth/signup/oauth", async (_, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        token: {
+          tokenType: "bearer",
+          accessToken: "q13t302hv2ht0",
+          expirationTime: 1791720452298,
+        },
+        user: {
+          username: "username",
+          profileUrl: "https://avatars.githubusercontent.com/u/48426991?v=4",
+        },
+      })
+    );
+  }),
+
   rest.get("/api/issues", async (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(issueList));
   }),
@@ -91,6 +129,14 @@ export const handlers = [
   }),
 
   rest.put("/api/issues/:issueId/isOpen", async (_, res, ctx) => {
+    return res(ctx.status(200));
+  }),
+
+  rest.put("/api/issues", async (_, res, ctx) => {
+    return res(ctx.status(200));
+  }),
+
+  rest.delete("/api/issues/:issueId", async (_, res, ctx) => {
     return res(ctx.status(200));
   }),
 
@@ -119,7 +165,10 @@ export const handlers = [
   }),
 
   rest.post("/api/issues", async (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ issueId: issueList.length + 1 }));
+    return res(
+      ctx.status(200),
+      ctx.json({ issueId: issueList.data.length + 1 })
+    );
   }),
 
   rest.post("/api/images/upload", async (_, res, ctx) => {
@@ -212,5 +261,13 @@ export const handlers = [
 
   rest.delete("/api/milestones/:milestoneId", async (_, res, ctx) => {
     return res(ctx.status(204));
+  }),
+
+  rest.get("/api/labels/count", async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ count: 6 }));
+  }),
+
+  rest.get("/api/milestones/count", async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ count: 13 }));
   }),
 ];

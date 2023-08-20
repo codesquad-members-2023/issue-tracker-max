@@ -8,7 +8,7 @@ import { Table } from "@components/Table/Table.style";
 import Button from "@components/common/Button";
 import TabBar from "@components/common/TabBar";
 import useFetch from "@hooks/useFetch";
-import { getLabels, getMilestones } from "api";
+import { getLabels, getMilestoneCount } from "api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
@@ -17,7 +17,7 @@ export default function LabelPage() {
   const navigate = useNavigate();
 
   const { data: labelsList, reFetch: updateLabelsList } = useFetch(getLabels);
-  const { data: milestonesList } = useFetch(getMilestones);
+  const { data: milestone } = useFetch(getMilestoneCount);
   const [isLabelEditorOpen, setIsLabelEditorOpen] = useState(false);
 
   const tabBarLeftInfo = {
@@ -28,7 +28,7 @@ export default function LabelPage() {
   };
   const tabBarRightInfo = {
     name: "마일스톤",
-    count: milestonesList?.length,
+    count: milestone?.count,
     iconSrc: milestoneIcon,
     callback: () => navigate("/milestones"),
   };
