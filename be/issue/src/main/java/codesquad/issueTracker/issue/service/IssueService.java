@@ -68,24 +68,30 @@ public class IssueService {
         Issue issue = IssueWriteRequestDto.toEntity(request, id);
         Long savedIssueId = issueRepository.insert(issue);
 
-        // 라벨 리스트가 null 이 아니면 해당 라벨이 존재하는지 검증 후  라벨과 이슈 연결 테이블에 insert
         if (labels != null) {
-            duplicatedId(labels);
-            labels.stream()
-                    .map(labelId -> labelService.validateLabelsId(labelId))
-                    .map(existLabel -> issueRepository.insertLabels(savedIssueId, existLabel.getId()))
-                    .collect(Collectors.toList());
+            insertLabel(labels, savedIssueId);
         }
 
-        // assignee 리스트가 null 이 아니면 assignees( 유저 id )가  존재하는지 검증 후  assignees 테이블에 insert
         if (assignees != null) {
-            duplicatedId(assignees);
-            assignees.stream()
-                    .map(assigneesId -> userService.validateUserId(assigneesId))
-                    .map(existUser -> issueRepository.insertAssignees(savedIssueId, existUser.getId()))
-                    .collect(Collectors.toList());
+            insertAssignee(assignees, savedIssueId);
         }
         return savedIssueId;
+    }
+
+    private List<Long> insertLabel(List<Long> labels, Long savedIssueId) {
+        duplicatedId(labels);
+        return labels.stream()
+                .map(labelId -> labelService.validateLabelsId(labelId))
+                .map(existLabel -> issueRepository.insertLabels(savedIssueId, existLabel.getId()))
+                .collect(Collectors.toList());
+    }
+
+    private List<Long> insertAssignee(List<Long> assignees, Long savedIssueId) {
+        duplicatedId(assignees);
+        return assignees.stream()
+                .map(assigneesId -> userService.validateUserId(assigneesId))
+                .map(existUser -> issueRepository.insertAssignees(savedIssueId, existUser.getId()))
+                .collect(Collectors.toList());
     }
 
     private void duplicatedId(List<Long> list) {
