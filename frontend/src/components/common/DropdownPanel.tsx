@@ -1,36 +1,84 @@
 import { styled } from 'styled-components';
 import Icons from '../../design/Icons';
-import { v4 as uuidV4 } from 'uuid';
+import Option from '../../constant/Option';
+import DropdownPanelElement from '../../types/DropdownPanelElement';
+import { useState } from 'react';
+import DropdownType from '../../constant/DropdownType';
+import Label from '../label/Label';
 
-enum Option {
-  Available,
-  Selected,
-}
+export default function DropdownPanel<T extends DropdownType>({
+  label,
+  baseElements,
+}: {
+  type: T;
+  label: string;
+  baseElements: DropdownPanelElement<T>[];
+}) {
+  const [elements, setElements] =
+    useState<DropdownPanelElement<T>[]>(baseElements);
 
-const dummy = [
-  ['label', Option.Selected],
-  ['label', Option.Available],
-] as [string, Option][];
-
-export default function DropdownPanel({ label }: { label: string }) {
+  const itemCheckHandler = (e: React.ChangeEvent, index: number) => {
+    const input = e.target as HTMLInputElement;
+    const form = input.closest('form');
+    const formObject = formDataToObject(new FormData(form!));
+    setElements((elements) =>
+      elements.map((element, _index) => {
+        if (_index === index) {
+          element.option = !input.checked ? Option.Available : Option.Selected;
+        }
+        return element;
+      })
+    );
+    console.log(formObject);
+  };
   return (
     <Container>
       <Header>{label}</Header>
       <DropdownElements>
-        {dummy.map(([text, option]) => {
-          const key = uuidV4()
-          const Icon = Icons.userImageSmall;
+        {elements.map((element, index) => {
+          const {
+            text,
+            option,
+            imageUrl,
+            textColor,
+            backgroundColor,
+            name,
+          }: {
+            text: string;
+            option: Option;
+            imageUrl?: string;
+            textColor?: string;
+            backgroundColor?: string;
+            name?: string;
+          } = element;
+
           return (
-            <li key={key}>
-              <Element htmlFor={key} $option={option}>
-                <Icon />
+            <li key={text}>
+              <Element htmlFor={text} $option={option}>
+                {textColor ? (
+                  <Label
+                    {...{
+                      textColor: textColor!,
+                      backgroundColor: backgroundColor!,
+                      name: name!,
+                    }}
+                  />
+                ) : (
+                  imageUrl && <UserImage src={imageUrl} alt={text} />
+                )}
                 <Text>{text}</Text>
+
                 <input
                   type="checkbox"
-                  id={key}
-                  checked={option ? true : false}
+                  id={text}
+                  name={textToName(text)}
+                  onChange={(e) => itemCheckHandler(e, index)}
                 />
-                {option ? <Icons.checkOnCircle /> : <Icons.checkOffCircle />}
+                {option === Option.Selected ? (
+                  <Icons.checkOnCircle />
+                ) : (
+                  <Icons.checkOffCircle />
+                )}
               </Element>
             </li>
           );
@@ -38,6 +86,23 @@ export default function DropdownPanel({ label }: { label: string }) {
       </DropdownElements>
     </Container>
   );
+}
+
+function textToName(text: string) {
+  switch (text) {
+    case '열린 이슈':
+      return 'status[open]';
+    case '내가 작성한 이슈':
+      return 'status[author]';
+    case '나에게 할당된 이슈':
+      return 'status[assignee]';
+    case '내가 댓글을 남긴 이슈':
+      return 'status[commented]';
+    case '닫힌 이슈':
+      return 'status[closed]';
+    default:
+      return '';
+  }
 }
 
 const Container = styled.article`
@@ -57,6 +122,7 @@ const Header = styled.h3`
 
 const DropdownElements = styled.ul`
   & > li {
+    background-color: ${({ theme }) => theme.color.neutral.surface.strong};
     padding: 8px 16px;
     display: flex;
     align-items: center;
@@ -71,6 +137,7 @@ const DropdownElements = styled.ul`
 const Element = styled.label<{ $option: Option }>`
   width: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 8px;
   ${({ theme, $option }) =>
@@ -83,8 +150,36 @@ const Element = styled.label<{ $option: Option }>`
   & > input {
     display: none;
   }
+
+  & > svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+`;
+
+const UserImage = styled.img`
+  width: 16px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.objectStyles.radius.half};
 `;
 
 const Text = styled.span`
   width: 100%;
 `;
+
+function formDataToObject(formData: FormData) {
+  const object: Record<string, (string | number)[]> = {};
+
+  for (const [name] of formData.entries()) {
+    const [key, value]: string[] = name.split(/\[|\]/).filter(Boolean);
+
+    if (!object[key]) {
+      object[key] = [];
+    }
+    object[key] = [...object[key], value];
+  }
+
+  return object;
+}

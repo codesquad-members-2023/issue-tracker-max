@@ -1,19 +1,28 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useEffect, useState, useRef } from 'react';
 import { styled } from 'styled-components';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import ButtonSmall from './button/ButtonSmall';
 import React from 'react';
 
 type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-  labelName: string;
-  placeholder?: string;
-  disabled?: boolean;
+  labelName?: string;
+  onAddFileMarkdown?: (url: string) => void;
 };
 
 export default function TextArea(props: TextAreaProps) {
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [textValue, setTextValue] = useState<string>('');
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const { labelName, placeholder, disabled } = props;
+  const axiosPrivate = useAxiosPrivate();
+  const fileInput = useRef<HTMLInputElement>(null);
+  const {
+    value,
+    labelName,
+    placeholder,
+    disabled,
+    onAddFileMarkdown,
+    ...rest
+  } = props;
 
   useEffect(() => {
     if (isFocused && !isTyping) {
@@ -22,7 +31,7 @@ export default function TextArea(props: TextAreaProps) {
         setIsTyping(false);
       }, 2000);
     }
-  }, [textValue]);
+  }, [value]);
 
   const handleBlur = () => {
     setIsFocused(false);
@@ -32,39 +41,78 @@ export default function TextArea(props: TextAreaProps) {
     setIsFocused(true);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextValue(e.target.value);
+  const onUploadFile = () => {
+    if (!fileInput.current) {
+      return;
+    }
+    fileInput.current.click();
+  };
+
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append('fileName', file.name);
+    formData.append('file', file as File);
+
+    try {
+      const res = await axiosPrivate.post('/api/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      if (res.data) {
+        console.log(res.data);
+        onAddFileMarkdown?.(res.data.message.imgUrl);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
     <Wrapper $isFocused={isFocused} onFocus={handleFocus} onBlur={handleBlur}>
       <Section>
-        {(isFocused || textValue) && <Label>{labelName}</Label>}
+        {labelName && isFocused && <Label>{labelName}</Label>}
         <StyledTextArea
+          value={value}
           placeholder={placeholder}
-          value={textValue}
           disabled={disabled}
           spellCheck="false"
           $isFocused={isFocused}
-          onChange={handleChange}></StyledTextArea>
+          {...rest}></StyledTextArea>
       </Section>
       <Bottom>
-        {isTyping && (
-          <TextCounter>띄어쓰기 포함 {textValue.length}자</TextCounter>
+        {isTyping && typeof value === 'string' && (
+          <TextCounter>띄어쓰기 포함 {value.length}자</TextCounter>
         )}
-        <ButtonSmall type="submit" ghost flexible iconName="paperClip">
+        <ButtonSmall
+          type="button"
+          ghost
+          flexible
+          iconName="paperClip"
+          onClick={onUploadFile}>
           파일 첨부하기
         </ButtonSmall>
+        <FileInputForm>
+          <FileInput
+            name="file"
+            type="file"
+            ref={fileInput}
+            hidden
+            onChange={onFileChange}
+          />
+        </FileInputForm>
       </Bottom>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div<{ $isFocused: boolean }>`
-  width: 340px;
   min-height: 184px;
   display: flex;
   flex-direction: column;
+  align-self: stretch;
   background: ${({ theme, $isFocused }) =>
     $isFocused
       ? theme.color.neutral.surface.strong
@@ -81,6 +129,7 @@ const Section = styled.div`
   margin: 16px;
   display: flex;
   flex-direction: column;
+  flex: 1;
 `;
 
 const Label = styled.label`
@@ -121,3 +170,7 @@ const TextCounter = styled.span`
   top: -32px;
   right: 30px;
 `;
+
+const FileInputForm = styled.form``;
+
+const FileInput = styled.input``;

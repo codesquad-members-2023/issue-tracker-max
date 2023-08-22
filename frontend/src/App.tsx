@@ -8,7 +8,10 @@ import Components from './pages/Components';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Callback from './pages/GitHubCallback';
+import Issues from './pages/Issues';
 import AddIssue from './pages/AddIssue';
+import IssueDetail from './pages/IssueDetail';
+import Options from './pages/Options';
 
 import LogoDarkLarge from './asset/logo/logo_dark_large.svg';
 import LogoDarkMedium from './asset/logo/logo_dark_medium.svg';
@@ -16,9 +19,6 @@ import LogoLightLarge from './asset/logo/logo_light_large.svg';
 import LogoLightMedium from './asset/logo/logo_light_medium.svg';
 import { AppContext } from './main';
 import RequireAuth from './routes/RequireAuth';
-import Options from './pages/Options';
-import Main from './pages/Main';
-import Issues from './pages/Issues';
 
 function App() {
   const [isLight, setIsLight] = useState<boolean>(true);
@@ -48,10 +48,12 @@ function App() {
         <Route path="/component" element={<Components />} />
         <Route path="/callback" element={<Callback />} />
         <Route path="/issues" element={<Issues />} />
+        <Route path="/addIssue" element={<AddIssue />} />
+        <Route path="/issues/:issueId" element={<IssueDetail />} />
+
         {/* protected routes */}
         <Route element={<RequireAuth />}>
-          <Route path="/" element={<Main />} />
-          <Route path="/addIssue" element={<AddIssue />} />
+          <Route path="/" element={<Issues />} />
         </Route>
       </Routes>
     </ThemeProvider>

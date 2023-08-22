@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
+import ReactMarkdown from 'react-markdown';
 import InformationTag from './InformationTag';
 import ButtonSmall from './button/ButtonSmall';
 import DefaultUserImg from '../../asset/icons/userImageLarge.svg';
@@ -7,18 +8,23 @@ import DefaultUserImg from '../../asset/icons/userImageLarge.svg';
 type CommentProps = {
   userInfo: userInfoType;
   timeStamp: string;
-  comment: string;
+  content: string;
 };
 
 type userInfoType = {
+  userId?: number;
   userImg?: string;
   userName: string;
 };
 
-export default function Comment(props: CommentProps) {
+export default function Comment({
+  userInfo,
+  timeStamp,
+  content,
+}: CommentProps) {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [textValue, setTextValue] = useState<string>(props.comment);
+  const [textValue, setTextValue] = useState<string>(content);
 
   useEffect(() => {
     if (isEdit && !isTyping) {
@@ -28,8 +34,6 @@ export default function Comment(props: CommentProps) {
       }, 2000);
     }
   }, [textValue]);
-
-  const { userInfo, timeStamp } = props;
 
   const handleEdit = () => {
     isEdit ? setIsEdit(false) : setIsEdit(true);
@@ -80,7 +84,9 @@ export default function Comment(props: CommentProps) {
             value={textValue}
             onChange={handleChange}></TextArea>
         ) : (
-          <TextBox>{textValue}</TextBox>
+          <TextBox>
+            <ReactMarkdown children={textValue} />
+          </TextBox>
         )}
       </Body>
       {isEdit && (
@@ -101,6 +107,7 @@ const Wrapper = styled.div`
   min-width: 640px;
   display: flex;
   flex-direction: column;
+  align-self: stretch;
   border: ${({ theme }) => theme.objectStyles.border.default};
   border-color: ${({ theme }) => theme.color.neutral.border.default};
   border-radius: ${({ theme }) => theme.objectStyles.radius.large};

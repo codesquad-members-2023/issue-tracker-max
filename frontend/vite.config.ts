@@ -7,7 +7,8 @@ export default defineConfig({
   // server: {
   //   proxy: {
   //     '/api': {
-  //       target: 'http://43.202.134.94:8080',
+  //       target:
+  //         'http://ec2-3-39-194-173.ap-northeast-2.compute.amazonaws.com:8080',
   //       changeOrigin: true,
   //       secure: false,
   //     },

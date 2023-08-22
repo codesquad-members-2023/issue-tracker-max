@@ -37,6 +37,9 @@ export const handlers = [
   rest.get('/api/labels', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(labelData));
   }),
+  rest.get('/api/milestones', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(milestoneData));
+  }),
 ];
 
 const successLogin = {
@@ -98,6 +101,32 @@ const labelData = {
         backgroundColor: 'FFF3FF',
         name: 'refactor',
         description: '리팩터링',
+      },
+    ],
+  },
+};
+
+const milestoneData = {
+  status: 'OK',
+  message: {
+    labelCount: 2,
+    anotherMilestoneCount: 2,
+    milestones: [
+      {
+        id: 1,
+        name: 'sprint1',
+        description: '설명임',
+        doneDate: '2023-07-25',
+        closedIssueCount: 1,
+        openIssueCount: 1,
+      },
+      {
+        id: 2,
+        name: 'sprint2',
+        description: '설명임',
+        doneDate: '2023-07-26',
+        closedIssueCount: 0,
+        openIssueCount: 1,
       },
     ],
   },
