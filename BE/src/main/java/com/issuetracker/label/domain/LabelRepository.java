@@ -6,6 +6,8 @@ public interface LabelRepository {
 
 	boolean existByIds(List<Long> labelIds);
 
+	boolean existsByTitle(String title);
+
 	Long save(Label label);
 
 	int update(Label label);
@@ -13,6 +15,8 @@ public interface LabelRepository {
 	int delete(Label label);
 
 	List<Label> findAll();
+
+	List<Label> searchOrderByTitle();
 
 	boolean existById(Long id);
 

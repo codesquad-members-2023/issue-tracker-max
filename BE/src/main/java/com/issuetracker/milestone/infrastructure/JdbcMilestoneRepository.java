@@ -21,7 +21,8 @@ import com.issuetracker.milestone.domain.MilestoneRepository;
 public class JdbcMilestoneRepository implements MilestoneRepository {
 
 	private static final String EXIST_BY_ID_SQL = "SELECT EXISTS(SELECT 1 FROM milestone WHERE is_deleted = false AND id = :id)";
-	private static final String FIND_ALL_FOR_FILTER = "SELECT id, title FROM milestone WHERE milestone.is_deleted = false ORDER BY is_open DESC";
+	private static final String EXIST_BY_TITLE_SQL = "SELECT EXISTS(SELECT 1 FROM milestone WHERE is_deleted = false AND title = :title)";
+	private static final String FIND_ALL_FOR_FILTER = "SELECT milestone.id, milestone.title, IFNULL((SUM(issue.is_open = false) / COUNT(issue.id) * 100), 0) AS progress FROM milestone LEFT OUTER JOIN issue ON issue.milestone_id = milestone.id WHERE milestone.is_deleted = false GROUP BY milestone.id ORDER BY milestone.title";
 	private static final String SAVE_SQL = "INSERT INTO milestone(title, description, deadline, is_open) VALUE(:title, :description, :deadline, true)";
 	private static final String UPDATE_SQL = "UPDATE milestone SET title = :title, description = :description, deadline = :deadline WHERE id = :id";
 	private static final String UPDATE_OPEN_STATUS_SQL = "UPDATE milestone SET is_open = :isOpen WHERE id = :id";
@@ -70,7 +71,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 		+ "LEFT JOIN issue "
 		+ "ON milestone.id = issue.milestone_id "
 		+ "WHERE milestone.is_deleted = false "
-		+ "AND milestone.id NOT IN (SELECT sub_issue.milestone_id FROM issue sub_issue WHERE sub_issue.id = :issueId) "
+		+ "AND milestone.id != COALESCE((SELECT sub_issue.milestone_id FROM issue sub_issue WHERE sub_issue.id = :issueId), 0) "
 		+ "GROUP BY milestone.id "
 		+ "ORDER BY milestone.title";
 	private static final String CALCULATE_COUNT_METADATA
@@ -92,6 +93,11 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 	}
 
 	@Override
+	public boolean existsByTitle(String title) {
+		return jdbcTemplate.queryForObject(EXIST_BY_TITLE_SQL, Map.of("title", title), Boolean.class);
+	}
+
+	@Override
 	public List<Milestone> findAllForFilter() {
 
 		RowMapper<Milestone> milestoneRowMapper =
@@ -99,6 +105,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
 				Milestone.builder()
 					.id(rs.getLong("id"))
 					.title(rs.getString("title"))
+					.progress(rs.getInt("progress"))
 					.build();
 
 		return jdbcTemplate.query(FIND_ALL_FOR_FILTER, milestoneRowMapper);

@@ -20,13 +20,21 @@
         <association property="milestone" javaType="Milestone">
             <id property="id" column="milestone_id" />
             <result property="title" column="milestone_title" />
+            <result property="progress" column="milestone_progress" />
         </association>
 
         <collection property="labels" ofType="Label">
             <id property="id" column="label_id" />
             <result property="title" column="label_title" />
-            <result property="color" column="label_color" />
+            <result property="backgroundColor" column="label_background_color" />
+            <result property="textColor" column="label_text_color" />
             <result property="description" column="label_description" />
+        </collection>
+
+        <collection property="assignees" ofType="Member">
+            <id property="id" column="assignees_id" />
+            <result property="nickname" column="assignees_nickname" />
+            <result property="profileImageUrl" column="assignees_profile_image_url" />
         </collection>
     </resultMap>
 
@@ -73,7 +81,8 @@
         <collection property="labels" ofType="Label">
             <id property="id" column="label_id" />
             <result property="title" column="label_title" />
-            <result property="color" column="label_color" />
+            <result property="backgroundColor" column="label_background_color" />
+            <result property="textColor" column="label_text_color" />
             <result property="description" column="label_description" />
         </collection>
     </resultMap>
@@ -89,13 +98,21 @@
                 author.profile_image_url as author_profile_image_url,
                 milestone.id as milestone_id,
                 milestone.title as milestone_title,
+                milestone.progress as milestone_progress,
                 label.id as label_id,
                 label.title as label_title,
-                label.color as label_color,
-                label.description as label_description
+                label.background_color as label_background_color,
+                label.text_color as label_text_color,
+                label.description as label_description,
+                member.id as assignees_id,
+                member.nickname as assignees_nickname,
+                member.profile_image_url as assignees_profile_image_url
         FROM issue
         INNER JOIN member author ON author.id = issue.author_id
-        LEFT OUTER JOIN milestone ON issue.milestone_id = milestone.id AND milestone.is_deleted = 0
+        LEFT OUTER JOIN ( SELECT milestone.id, milestone.title, milestone.is_deleted, IFNULL((SUM(issue.is_open = 0) / COUNT(issue.id) * 100), 0) AS progress
+                            FROM milestone
+                            LEFT OUTER JOIN issue ON issue.milestone_id = milestone.id
+                            GROUP BY milestone.id, milestone.title) as milestone ON issue.milestone_id = milestone.id AND milestone.is_deleted = 0
         LEFT OUTER JOIN assigned_label ON issue.id = assigned_label.issue_id
         LEFT OUTER JOIN label ON assigned_label.label_id = label.id AND label.is_deleted = 0
         LEFT OUTER JOIN assignee ON issue.id = assignee.issue_id
@@ -107,44 +124,45 @@
                     issue.is_open = #{isOpen}
                 </trim>
             </if>
-            <if test="assigneeIds != null and assigneeIds.size() > 0">
+            <if test="assigneeNames != null and !assigneeNames.isEmpty()">
                 <trim prefix="AND">
                     issue.id IN (
                         SELECT issue_id
                         FROM assignee
-                        WHERE member_id IN
-                        <foreach collection="assigneeIds" item="assigneeId" separator="," open="(" close=")">
-                            #{assigneeId}
+                        INNER JOIN member ON member.id = assignee.member_id
+                        WHERE member.nickname IN
+                        <foreach collection="assigneeNames" item="assigneeName" separator="," open="(" close=")">
+                            #{assigneeName}
                         </foreach>
                         GROUP BY issue_id
-                        HAVING COUNT(DISTINCT member_id) = ${assigneeIds.size}
+                        HAVING COUNT(DISTINCT member.nickname) = ${assigneeNames.size}
                     )
                 </trim>
             </if>
-            <if test="labelIds != null and labelIds.size() > 0">
+            <if test="assigneeNames != null and !labelTitles.isEmpty()">
                 <trim prefix="AND">
                     issue.id IN (
-                        SELECT issue_id
+                        SELECT assigned_label.issue_id
                         FROM assigned_label
-                        WHERE label_id IN
-                        <foreach collection="labelIds" item="labelId" separator="," open="(" close=")">
-                            #{labelId}
+                        INNER JOIN label ON label.id = assigned_label.label_id AND label.is_deleted = 0
+                        WHERE label.title IN
+                        <foreach collection="labelTitles" item="labelTitle" separator="," open="(" close=")">
+                            #{labelTitle}
                         </foreach>
                         GROUP BY issue_id
-                        HAVING COUNT(DISTINCT label_id) = ${labelIds.size}
+                        HAVING COUNT(DISTINCT label.title) = ${labelTitles.size}
                     )
                 </trim>
-
             </if>
 
-            <if test="milestoneId != null">
+            <if test="milestoneTitle != null and !''.equals(milestoneTitle)">
                 <trim prefix="AND">
-                    issue.milestone_id = #{milestoneId}
+                    milestone.title = #{milestoneTitle}
                 </trim>
             </if>
-            <if test="authorId != null">
+            <if test="authorName != null and !''.equals(authorName)">
                 <trim prefix="AND">
-                    issue.author_id = #{authorId}
+                    author.nickname = #{authorName}
                 </trim>
             </if>
             <if test="commentAuthorId != null">
@@ -152,7 +170,22 @@
                     issue_comment.author_id = #{commentAuthorId}
                 </trim>
             </if>
-        ORDER BY issue.id desc, label.id
+            <if test="no != null and no.contains('milestone')">
+                <trim prefix="AND">
+                    issue.milestone_id is null
+                </trim>
+            </if>
+            <if test="no != null and no.contains('assignee')">
+                <trim prefix="AND">
+                    assignee.issue_id is null
+                </trim>
+            </if>
+            <if test="no != null and no.contains('label')">
+                <trim prefix="AND">
+                    assigned_label.issue_id is null
+                </trim>
+            </if>
+        ORDER BY issue.id desc, label.id, member.id
     </select>
 
     <select id="findById" resultMap="issueDetailResultMap" parameterType="Long">
@@ -169,7 +202,8 @@
                         milestone.progress as milestone_progress,
                         label.id as label_id,
                         label.title as label_title,
-                        label.color as label_color,
+                        label.background_color as label_background_color,
+                        label.text_color as label_text_color,
                         label.description as label_description,
                         member.id as assignees_id,
                         member.nickname as assignees_nickname,
@@ -182,7 +216,7 @@
                         issue_comment_author.profile_image_url as issue_comment_author_profile_image_url
             FROM issue
            INNER JOIN member author ON author.id = issue.author_id
-            LEFT OUTER JOIN ( SELECT milestone.id, milestone.title, milestone.is_deleted, (SUM(issue.is_open = 0) / COUNT(issue.id) * 100) AS progress
+            LEFT OUTER JOIN ( SELECT milestone.id, milestone.title, milestone.is_deleted, IFNULL((SUM(issue.is_open = 0) / COUNT(issue.id) * 100), 0) AS progress
                                 FROM milestone
                                INNER JOIN issue ON issue.milestone_id = milestone.id
                                GROUP BY milestone.id, milestone.title) as milestone ON issue.milestone_id = milestone.id AND milestone.is_deleted = 0

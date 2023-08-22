@@ -8,6 +8,16 @@ spring:
 spring:
   config:
     activate:
+      on-profile: testDB
+  datasource:
+    url: jdbc:tc:mysql:8.0.34:///test
+    username: root
+    password: root
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+---
+spring:
+  config:
+    activate:
       on-profile: common
   mvc:
     throw-exception-if-no-handler-found: true
@@ -18,6 +28,11 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
+
+cloud:
+  aws:
+    stack:
+      auto: false
 
 mybatis:
   type-aliases-package: com.issuetracker.issue.domain, com.issuetracker.label.domain, com.issuetracker.milestone.domain, com.issuetracker.member.domain

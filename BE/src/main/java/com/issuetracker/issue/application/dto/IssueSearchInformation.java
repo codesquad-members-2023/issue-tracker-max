@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import com.issuetracker.issue.domain.IssueRead;
 import com.issuetracker.label.application.dto.LabelInformation;
+import com.issuetracker.member.application.dto.MemberInformation;
+import com.issuetracker.member.ui.dto.MemberResponse;
 import com.issuetracker.milestone.application.dto.MilestoneSearchInformation;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +25,7 @@ public class IssueSearchInformation {
 	private String authorProfileUrl;
 	private List<LabelInformation> labels;
 	private MilestoneSearchInformation milestone;
+	private List<MemberInformation> assignees;
 
 	public static IssueSearchInformation from(IssueRead issueRead) {
 		return new IssueSearchInformation(
@@ -33,7 +36,8 @@ public class IssueSearchInformation {
 			issueRead.getAuthor().getNickname(),
 			issueRead.getAuthor().getProfileImageUrl(),
 			LabelInformation.from(issueRead.getLabels()),
-			MilestoneSearchInformation.from(issueRead.getMilestone())
+			MilestoneSearchInformation.from(issueRead.getMilestone()),
+			MemberInformation.from(issueRead.getAssignees())
 		);
 	}
 

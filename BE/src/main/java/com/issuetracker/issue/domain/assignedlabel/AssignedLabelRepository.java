@@ -16,5 +16,5 @@ public interface AssignedLabelRepository {
 
 	long save(AssignedLabel assignedLabel);
 
-	int delete(Long id);
+	int delete(long issueId, long labelId);
 }

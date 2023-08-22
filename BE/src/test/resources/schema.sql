@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS issue_comment;
 DROP TABLE IF EXISTS assigned_label;
 DROP TABLE IF EXISTS label;
 DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS git_member;
 DROP TABLE IF EXISTS milestone;
 
 CREATE TABLE assignee (
@@ -43,11 +44,12 @@ CREATE TABLE assigned_label (
 )ENGINE=memory;
 
 CREATE TABLE label (
-   id           bigint        NOT NULL AUTO_INCREMENT,
-   title        varchar(50)   NOT NULL,
-   description  varchar(100)  DEFAULT NULL,
-   color        varchar(7)    NOT NULL,
-   is_deleted     tinyint(1)  NOT NULL DEFAULT 0,
+   id               bigint        NOT NULL AUTO_INCREMENT,
+   title            varchar(50)   NOT NULL,
+   description      varchar(100)  DEFAULT NULL,
+   background_color varchar(7)    NOT NULL,
+   text_color       varchar(7)    NOT NULL,
+   is_deleted       tinyint(1)    NOT NULL DEFAULT 0,
    PRIMARY KEY (id)
 )ENGINE=memory;
 
@@ -58,6 +60,14 @@ CREATE TABLE member (
     nickname          varchar(16)      NOT NULL,
     profile_image_url varchar(1000),
     PRIMARY KEY (id)
+)ENGINE=memory;
+
+CREATE TABLE git_member (
+    id bigint NOT NULL AUTO_INCREMENT,
+    oauth_id bigint NOT NULL,
+    member_id bigint NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY oauth_id_UNIQUE (oauth_id)
 )ENGINE=memory;
 
 CREATE TABLE milestone (

@@ -16,5 +16,5 @@ public interface AssigneeRepository {
 
 	long save(Assignee assignee);
 
-	int delete(Long id);
+	int delete(long issueId, long memberId);
 }

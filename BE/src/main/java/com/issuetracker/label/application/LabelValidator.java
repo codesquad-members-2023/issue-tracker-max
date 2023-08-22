@@ -5,8 +5,8 @@ import java.util.Objects;
 
 import org.springframework.stereotype.Component;
 
-import com.issuetracker.config.exception.CustomHttpException;
-import com.issuetracker.config.exception.ErrorType;
+import com.issuetracker.common.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.ErrorType;
 import com.issuetracker.label.domain.LabelRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,18 @@ public class LabelValidator {
 		}
 
 		if (!labelRepository.existByIds(ids)) {
+			throw new CustomHttpException(ErrorType.LABEL_NOT_FOUND);
+		}
+	}
+
+	public void verifyDuplicationTitle(String title) {
+		if (labelRepository.existsByTitle(title)) {
+			throw new CustomHttpException(ErrorType.LABEL_TITLE_DUPLICATION);
+		}
+	}
+
+	public void verifyUpdatedOrDeletedCount(int count) {
+		if (count != 1) {
 			throw new CustomHttpException(ErrorType.LABEL_NOT_FOUND);
 		}
 	}

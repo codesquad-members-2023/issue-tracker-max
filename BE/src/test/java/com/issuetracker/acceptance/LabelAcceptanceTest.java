@@ -1,5 +1,6 @@
 package com.issuetracker.acceptance;
 
+import static com.issuetracker.util.fixture.LabelFixture.LABEL1;
 import static com.issuetracker.util.steps.LabelSteps.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelCreateRequest labelCreateRequest = new LabelCreateRequest(
 			"레이블 제목",
 			"레이블 설명",
+			"#ffffff",
 			"#ffffff"
 		);
 
@@ -54,6 +56,7 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelCreateRequest labelCreateRequest = new LabelCreateRequest(
 			"",
 			"레이블 설명",
+			"#ffffff",
 			"#ffffff"
 		);
 
@@ -75,6 +78,7 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelCreateRequest labelCreateRequest = new LabelCreateRequest(
 			"레이블 제목",
 			null,
+			"#ffffff",
 			"#ffffff"
 		);
 
@@ -97,7 +101,29 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelCreateRequest labelCreateRequest = new LabelCreateRequest(
 			"레이블 제목",
 			"레이블 설명",
-			"#HEX코드가아니다"
+			"#HEX코드가아니다",
+			"#ffffff"
+		);
+
+		// when
+		var response = 레이블_생성_요청(labelCreateRequest);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * When 레이블 생성시 제목이 중복인 경우
+	 * Then 요청이 실패한다
+	 */
+	@Test
+	void 레이블_생성시_제목이_중복인_경우_요청이_실패한다() {
+		// given
+		LabelCreateRequest labelCreateRequest = new LabelCreateRequest(
+			LABEL1.getTitle(),
+			"레이블 설명",
+			"#ffffff",
+			"#ffffff"
 		);
 
 		// when
@@ -119,7 +145,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelUpdateRequest labelUpdateRequest = new LabelUpdateRequest(
 			"수정된 레이블 제목",
 			"수정된 레이블 설명",
-			"#000000"
+			"#000000",
+			"#ffffff"
 		);
 
 		// when
@@ -142,7 +169,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelUpdateRequest labelUpdateRequest = new LabelUpdateRequest(
 			"",
 			"수정된 레이블 설명",
-			"#000000"
+			"#000000",
+			"#ffffff"
 		);
 
 		// when
@@ -164,7 +192,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelUpdateRequest labelUpdateRequest = new LabelUpdateRequest(
 			"수정된 레이블 제목",
 			null,
-			"#000000"
+			"#000000",
+			"#ffffff"
 		);
 
 		// when
@@ -187,7 +216,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		LabelUpdateRequest labelUpdateRequest = new LabelUpdateRequest(
 			"수정된 레이블 제목",
 			"수정된 레이블 설명",
-			"#HEX코드가아니다"
+			"#HEX코드가아니다",
+			"#ffffff"
 		);
 
 		// when
@@ -241,7 +271,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		SoftAssertions softAssertions = new SoftAssertions();
 		softAssertions.assertThat(lastLabelResponse.getId()).isEqualTo(response.jsonPath().getLong("id"));
 		softAssertions.assertThat(lastLabelResponse.getTitle()).isEqualTo(labelCreateRequest.getTitle());
-		softAssertions.assertThat(lastLabelResponse.getColor()).isEqualTo(labelCreateRequest.getColor());
+		softAssertions.assertThat(lastLabelResponse.getTextColor()).isEqualTo(labelCreateRequest.getTextColor());
+		softAssertions.assertThat(lastLabelResponse.getBackgroundColor()).isEqualTo(labelCreateRequest.getBackgroundColor());
 		softAssertions.assertAll();
 	}
 
@@ -257,7 +288,8 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 		SoftAssertions softAssertions = new SoftAssertions();
 		softAssertions.assertThat(lastLabelResponse.getId()).isEqualTo(labelId);
 		softAssertions.assertThat(lastLabelResponse.getTitle()).isEqualTo(labelUpdateRequest.getTitle());
-		softAssertions.assertThat(lastLabelResponse.getColor()).isEqualTo(labelUpdateRequest.getColor());
+		softAssertions.assertThat(lastLabelResponse.getTextColor()).isEqualTo(labelUpdateRequest.getTextColor());
+		softAssertions.assertThat(lastLabelResponse.getBackgroundColor()).isEqualTo(labelUpdateRequest.getBackgroundColor());
 		softAssertions.assertAll();
 	}
 

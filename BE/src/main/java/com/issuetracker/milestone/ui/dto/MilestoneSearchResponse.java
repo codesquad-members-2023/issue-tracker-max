@@ -18,6 +18,7 @@ public class MilestoneSearchResponse {
 
 	private Long id;
 	private String title;
+	private int progress;
 
 	public static MilestoneSearchResponse from(MilestoneSearchInformation milestone) {
 		if (Objects.isNull(milestone)) {
@@ -26,7 +27,8 @@ public class MilestoneSearchResponse {
 
 		return new MilestoneSearchResponse(
 			milestone.getId(),
-			milestone.getTitle()
+			milestone.getTitle(),
+			milestone.getProgress()
 		);
 	}
 

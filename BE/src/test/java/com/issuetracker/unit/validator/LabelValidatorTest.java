@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.issuetracker.config.exception.CustomHttpException;
+import com.issuetracker.common.config.exception.CustomHttpException;
 import com.issuetracker.label.application.LabelValidator;
 import com.issuetracker.label.domain.LabelRepository;
 import com.issuetracker.util.MockTest;

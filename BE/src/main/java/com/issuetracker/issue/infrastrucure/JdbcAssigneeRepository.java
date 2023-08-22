@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -20,7 +21,7 @@ import com.issuetracker.member.domain.Member;
 public class JdbcAssigneeRepository implements AssigneeRepository {
 
 	private static final String SAVE_SQL = "INSERT INTO assignee(issue_id, member_id) VALUES(:issueId, :memberId)";
-	private static final String DELETE_SQL = "DELETE FROM assignee WHERE id = :id";
+	private static final String DELETE_SQL = "DELETE FROM assignee WHERE issue_id =:issueId AND member_id =:memberId";
 	private static final String FIND_ALL_SQL = "SELECT DISTINCT member.id, member.nickname, member.profile_image_url FROM member INNER JOIN assignee ON member.id = assignee.member_id ORDER BY member.id";
 	private static final String FIND_ALL_ASSIGNED_TO_ISSUE
 		= "SELECT member.id, member.nickname, member.profile_image_url "
@@ -74,8 +75,11 @@ public class JdbcAssigneeRepository implements AssigneeRepository {
 	}
 
 	@Override
-	public int delete(Long id) {
-		return jdbcTemplate.update(DELETE_SQL, Map.of("id", id));
+	public int delete(long issueId, long memberId) {
+		SqlParameterSource param = new MapSqlParameterSource()
+			.addValue("issueId", issueId)
+			.addValue("memberId", memberId);
+		return jdbcTemplate.update(DELETE_SQL, param);
 	}
 
 	private static final RowMapper<Member> MEMBER_ROW_MAPPER = (rs, rowNum) ->

@@ -2,7 +2,6 @@ package com.issuetracker.issue.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 import com.issuetracker.issue.domain.comment.IssueCommentRead;
 import com.issuetracker.label.domain.Label;
@@ -30,7 +29,8 @@ public class IssueDetailRead {
 	private List<Label> labels;
 
 	@Builder
-	private IssueDetailRead(Long id, String title, String content, boolean isOpen, LocalDateTime createAt, Member author,
+	private IssueDetailRead(Long id, String title, String content, boolean isOpen, LocalDateTime createAt,
+		Member author,
 		Milestone milestone, List<Member> assignees, List<Label> labels, List<IssueCommentRead> comments) {
 		this.id = id;
 		this.title = title;

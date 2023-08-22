@@ -12,20 +12,22 @@ import lombok.Getter;
 public class IssueSearchRequest {
 
 	private Boolean isOpen;
-	private List<Long> assigneeIds;
-	private List<Long> labelIds;
-	private Long milestoneId;
-	private Long authorId;
+	private List<String> assigneeNames;
+	private List<String> labelTitles;
+	private String milestoneTitle;
+	private String authorName;
 	private Boolean isCommentedByMe;
+	private List<String> no;
 
 	public IssueSearchInputData toIssueSearchData(Long loginMemberId) { // 여기서 로그인한 유저 아이디 받기
 		return new IssueSearchInputData(
 			isOpen,
-			assigneeIds,
-			labelIds,
-			milestoneId,
-			authorId,
-			getCommentAuthorId(loginMemberId)
+			assigneeNames,
+			labelTitles,
+			milestoneTitle,
+			authorName,
+			getCommentAuthorId(loginMemberId),
+			no
 		);
 	}
 
